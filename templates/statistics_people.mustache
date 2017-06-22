@@ -1,0 +1,47 @@
+<table class="table table-striped">
+<thead>
+	<tr>
+		<th rowspan="2">Activités</th>
+		<th colspan="4" class="text-center">Semestre 1</th>
+		<th colspan="4" class="text-center">Semestre 2</th>
+	</tr>
+	<tr>
+		<th class="col-md-1">accepté</th>
+		<th class="col-md-1">LP</th>
+		<th class="col-md-1">LC</th>
+		<th class="col-md-1">refusé</th>
+		<th class="col-md-1">accepté</th>
+		<th class="col-md-1">LP</th>
+		<th class="col-md-1">LC</th>
+		<th class="col-md-1">refusé</th>
+	</tr>
+</thead>
+<tbody>
+{{#statistics}}
+	<tr>
+		<td>{{name}}</td>
+		<td>{{semester1_accepted}}</td>
+		<td>{{semester1_main}}</td>
+		<td>{{semester1_second}}</td>
+		<td>{{semester1_refused}}</td>
+		<td>{{semester2_accepted}}</td>
+		<td>{{semester2_main}}</td>
+		<td>{{semester2_second}}</td>
+		<td>{{semester2_refused}}</td>
+	</tr>
+{{/statistics}}
+</tbody>
+<tfoot>
+	<tr class="info">
+		<td>Total</td>
+		<td>{{total.semester1_accepted}}</td>
+		<td>{{total.semester1_main}}</td>
+		<td>{{total.semester1_second}}</td>
+		<td>{{total.semester1_refused}}</td>
+		<td>{{total.semester2_accepted}}</td>
+		<td>{{total.semester2_main}}</td>
+		<td>{{total.semester2_second}}</td>
+		<td>{{total.semester2_refused}}</td>
+	</tr>
+</tfoot>
+</table>
