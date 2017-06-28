@@ -17,19 +17,17 @@
 /**
  * Add page to admin menu.
  *
- * @package    local_apsolu_auth
+ * @package    local_apsolu
  * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+defined('MOODLE_INTERNAL') || die();
 
 $capabilities = array(
     'moodle/category:manage',
     'moodle/course:create',
 );
-
-$capabilities = array('moodle/site:config');
 
 if ($hassiteconfig or has_any_capability($capabilities, context_system::instance())) {
     if (empty($ADMIN->locate('apsolu'))) {
