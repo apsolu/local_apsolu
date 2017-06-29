@@ -46,7 +46,7 @@ foreach ($roles as $role) {
 }
 
 if (isset($roleid) === false) {
-	$role = reset($roles)
+	$role = reset($roles);
 	$roleid = $role->id;
 }
 
