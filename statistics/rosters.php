@@ -24,108 +24,144 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+require_once($CFG->libdir.'/excellib.class.php');
 require_once($CFG->dirroot.'/enrol/select/locallib.php');
+require_once($CFG->dirroot.'/local/apsolu/statistics/locallib.php');
+
+$format = optional_param('format', null, PARAM_TEXT);
+$institution = optional_param('institution', null, PARAM_TEXT);
 
 // Set sub-tabs.
-$role = optional_param('role', null, PARAM_INT);
+$roleid = optional_param('role', null, PARAM_INT);
 $roles = UniversiteRennes2\Apsolu\get_custom_student_roles();
 
-if (isset($roles[$role]) === false) {
-	$role = null;
+if (isset($roles[$roleid]) === false) {
+	$roleid = null;
 }
 
 $subtabtree = array();
-foreach ($roles as $datarole) {
-    $url = new moodle_url('/local/apsolu/statistics/index.php', array('page' => $page, 'role' => $datarole->id));
-    $subtabtree[] = new tabobject($datarole->id, $url, $datarole->name);
+foreach ($roles as $role) {
+    $url = new moodle_url('/local/apsolu/statistics/index.php', array('page' => $page, 'role' => $role->id));
+    $subtabtree[] = new tabobject($role->id, $url, $role->name);
 }
 
-if (isset($role) === false) {
-	$role = current($roles)->id;
+if (isset($roleid) === false) {
+	$roleid = current($roles)->id;
 }
 
-echo $OUTPUT->tabtree($subtabtree, $role);
+$statistics = get_rosters_statistics($roleid, $institution);
 
-$semester1 = array(mktime(0, 0, 0, 8, 1, 2016), mktime(0, 0, 0, 1, 1, 2017));
-$semester2 = array(mktime(0, 0, 0, 1, 1, 2017), mktime(0, 0, 0, 7, 1, 2017));
+$notification = (count($statistics) === 0);
+if ($notification === true) {
+	$statistics = get_rosters_statistics($roleid, null);
+}
 
-$stats = array();
+if (isset($format) === true && $notification === false) {
+	// Download xls.
+
+	// Creating a workbook.
+	if (empty($institution) === true) {
+		$filename = preg_replace('/[^a-zA-Z0-9_\.]/', '', 'tous_les_établissements_'.$roles[$roleid]->shortname.'.xls');
+	} else {
+		$filename = preg_replace('/[^a-zA-Z0-9_\.]/', '', trim($institution).'_'.$roles[$roleid]->shortname.'.xls');
+	}
+
+	$workbook = new MoodleExcelWorkbook($filename);
+
+	// Adding the worksheet.
+	$myxls = $workbook->add_worksheet();
+
+	$excelformat = new MoodleExcelFormat(array('border' => PHPExcel_Style_Border::BORDER_THIN));
+
+	// Set headers.
+	$headers = array();
+	$headers[] = 'Activités';
+	$headers[] = 'S1 acceptés';
+	$headers[] = 'S1 LP';
+	$headers[] = 'S1 LC';
+	$headers[] = 'S1 refusés';
+	$headers[] = 'S2 acceptés';
+	$headers[] = 'S2 LP';
+	$headers[] = 'S2 LC';
+	$headers[] = 'S2 refusés';
+
+	foreach ($headers as $position => $value) {
+		$myxls->write_string(0, $position, $value, $excelformat);
+	}
+
+	// Set data.
+	$line = 1;
+	foreach ($statistics as $statistic) {
+		$myxls->write_string($line, 0, $statistic->name, $excelformat);
+		$myxls->write_string($line, 1, $statistic->semester1_accepted, $excelformat);
+		$myxls->write_string($line, 2, $statistic->semester1_main, $excelformat);
+		$myxls->write_string($line, 3, $statistic->semester1_wait, $excelformat);
+		$myxls->write_string($line, 4, $statistic->semester1_refused, $excelformat);
+		$myxls->write_string($line, 5, $statistic->semester2_accepted, $excelformat);
+		$myxls->write_string($line, 6, $statistic->semester2_main, $excelformat);
+		$myxls->write_string($line, 7, $statistic->semester2_wait, $excelformat);
+		$myxls->write_string($line, 8, $statistic->semester2_refused, $excelformat);
+
+		$line++;
+	}
+
+	$workbook->close();
+	exit(0);
+}
+
+// Display table.
+
 $total = (object) [
 	'semester1_accepted' => 0,
 	'semester1_main' => 0,
-	'semester1_second' => 0,
+	'semester1_wait' => 0,
 	'semester1_refused' => 0,
 	'semester2_accepted' => 0,
 	'semester2_main' => 0,
-	'semester2_second' => 0,
+	'semester2_wait' => 0,
 	'semester2_refused' => 0,
 	];
 
-foreach (array(1 => $semester1, 2 => $semester2) as $name => $semester) {
-	$sql = "SELECT COUNT(u.id) AS total, cc.name, ue.status".
-		" FROM {user} u".
-		" JOIN {user_enrolments} ue ON u.id = ue.userid".
-		" JOIN {enrol} e ON e.id = ue.enrolid".
-		" JOIN {course} c ON c.id = e.courseid".
-		" JOIN {course_categories} cc ON cc.id = c.category".
-		" JOIN {apsolu_courses} ac ON c.id = ac.id".
-		" JOIN {context} ctx ON ctx.instanceid = c.id AND ctx.contextlevel = 50".
-		" JOIN {role_assignments} ra ON ra.contextid = ctx.id AND u.id = ra.userid AND ra.itemid = e.id".
-		" JOIN {role} r ON r.id = ra.roleid".
-		" WHERE e.enrol = 'select'".
-		" AND e.customint7 >= :starttime".
-		" AND e.customint8 <= :endtime";
-	$parameters = array('starttime' => $semester[0], 'endtime' => $semester[1]);
+foreach ($statistics as $statistic) {
+	$total->semester1_accepted += $statistic->semester1_accepted;
+	$total->semester1_main += $statistic->semester1_main;
+	$total->semester1_wait += $statistic->semester1_wait;
+	$total->semester1_refused += $statistic->semester1_refused;
 
-	if (isset($role) === true) {
-		$sql .= " AND r.id = :roleid";
-		$parameters['roleid'] = $role;
-	}
-
-	$sql .= " GROUP BY cc.name, ue.status";
-	$records = $DB->get_recordset_sql($sql, $parameters);
-
-	foreach ($records as $record) {
-		if (isset($stats[$record->name]) === false) {
-			$stats[$record->name] = new stdClass();
-			$stats[$record->name]->name = $record->name;
-			$stats[$record->name]->semester1_accepted = 0;
-			$stats[$record->name]->semester1_main = 0;
-			$stats[$record->name]->semester1_second = 0;
-			$stats[$record->name]->semester1_refused = 0;
-			$stats[$record->name]->semester2 = new stdClass();
-			$stats[$record->name]->semester2_accepted = 0;
-			$stats[$record->name]->semester2_main = 0;
-			$stats[$record->name]->semester2_second = 0;
-			$stats[$record->name]->semester2_refused = 0;
-		}
-
-		switch($record->status) {
-			case '0':
-				$stats[$record->name]->{'semester'.$name.'_accepted'} = $record->total;
-				$total->{'semester'.$name.'_accepted'} += $record->total;
-				break;
-			case '1':
-				$stats[$record->name]->{'semester'.$name.'_main'} = $record->total;
-				$total->{'semester'.$name.'_main'} += $record->total;
-				break;
-			case '2':
-				$stats[$record->name]->{'semester'.$name.'_second'} = $record->total;
-				$total->{'semester'.$name.'_second'} += $record->total;
-				break;
-			case '3':
-				$stats[$record->name]->{'semester'.$name.'_refused'} = $record->total;
-				$total->{'semester'.$name.'_refused'} += $record->total;
-				break;
-		}
-	}
+	$total->semester2_accepted += $statistic->semester2_accepted;
+	$total->semester2_main += $statistic->semester2_main;
+	$total->semester2_wait += $statistic->semester2_wait;
+	$total->semester2_refused += $statistic->semester2_refused;
 }
 
-$stats = array_values($stats);
-
 $data = new stdClass();
-$data->statistics = $stats;
+$data->statistics = $statistics;
 $data->total = $total;
 
-echo $OUTPUT->render_from_template('local_apsolu/statistics_people', $data);
+echo $OUTPUT->header();
+echo $OUTPUT->tabtree($tabtree, $page);
+echo $OUTPUT->tabtree($subtabtree, $roleid);
 
+if ($notification === true) {
+	echo $OUTPUT->notification('Aucune donnée à télécharger', 'notifysuccess');
+}
+
+// Set institutions.
+$url = new moodle_url('/local/apsolu/statistics/index.php', array('page' => $page, 'role' => $roleid, 'format' => 'xls'));
+
+echo html_writer::start_tag('div', array('class' => 'institutionpicker'));
+echo '<ul class="list-inline text-right">';
+echo '<li><a class="btn btn-primary " href="'.$url.'" title="Télécharger les données au format excel">Tous les établissements <span class="glyphicon glyphicon-download" aria-hidden="true"></span></a></li>';
+foreach ($DB->get_records_sql('SELECT DISTINCT u.institution FROM {user} u WHERE u.auth="shibboleth" AND u.deleted = 0 ORDER BY u.institution') as $record) {
+	if (empty($record->institution) === true || strpos($record->institution, '{') !== false) {
+		continue;
+	}
+
+	$url = new moodle_url('/local/apsolu/statistics/index.php', array('page' => $page, 'role' => $roleid, 'institution' => $record->institution, 'format' => 'xls'));
+	echo '<li><a class="btn btn-primary" href="'.$url.'" title="Télécharger les données au format excel">'.trim($record->institution).' <span class="glyphicon glyphicon-download" aria-hidden="true"></span></a></li>';
+}
+echo '</ul>';
+echo html_writer::end_tag('div');
+
+echo $OUTPUT->render_from_template('local_apsolu/statistics_people', $data);
+echo $OUTPUT->footer();
