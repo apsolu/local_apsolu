@@ -46,7 +46,8 @@ foreach ($roles as $role) {
 }
 
 if (isset($roleid) === false) {
-	$roleid = current($roles)->id;
+	$role = reset($roles)
+	$roleid = $role->id;
 }
 
 $statistics = get_rosters_statistics($roleid, $institution);
