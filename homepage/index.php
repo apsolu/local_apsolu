@@ -49,6 +49,7 @@ if ($cache <= $now->sub(new DateInterval('PT5M'))) {
         " JOIN {course} c ON cc.id = c.category".
         " JOIN {apsolu_courses} ac ON ac.id = c.id".
         " WHERE c.visible = 1".
+        " AND ac.on_homepage = 1".
         " ORDER BY cc.name";
     $activities = $DB->get_records_sql($sql);
 

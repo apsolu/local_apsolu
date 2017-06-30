@@ -1,0 +1,296 @@
+html{
+    height: 100%;
+}
+
+#page-site-index{
+    height: 100%;
+    margin : 0 !important;
+    padding: 0;
+}
+
+#page-site-index #block-region-side-pre,
+#page-site-index #block-region-side-post,
+#page-site-index #page-header,
+#page-site-index .moodleheader,
+#page-site-index #page-footer{
+    display: none;
+}
+
+#page-site-index #page,
+#page-site-index #page-content,
+#page-site-index #region-main-box,
+#page-site-index #region-main-box > div,
+#page-site-index #region-main,
+#page-site-index #region-main > div{
+    float: none;
+    height: 100%;
+    margin: 0;
+    max-width: 100%;
+    padding: 0;
+    width: 100%;
+    left: 0;
+}
+
+.navbar-header .guest{
+    display: none;
+}
+
+#apsolu-page{
+    height: 100%;
+}
+
+.apsolu-pages{
+    background-attachment: fixed;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: block;
+    min-height: 100%;
+    overflow: hidden;
+    padding-top: 2%;
+}
+
+.apsolu-pages:nth-child(1){
+    background-image: url([[pix:local_apsolu|homepage/image_5]]);
+}
+.apsolu-pages:nth-child(2){
+    background-image: url([[pix:local_apsolu|homepage/image_2]]);
+}
+.apsolu-pages:nth-child(3){
+    background-image: url([[pix:local_apsolu|homepage/image_4]]);
+}
+.apsolu-pages:nth-child(4){
+    background-image: url([[pix:local_apsolu|homepage/image_5]]);
+}
+.apsolu-pages:nth-child(5){
+    background-image: url([[pix:local_apsolu|homepage/image_1]]);
+}
+
+.apsolu-contents{
+    padding-top: 3em;
+    padding-bottom: 20px;
+    margin: auto;
+}
+
+.apsolu-opac-text{
+    background-color: rgba(255, 255, 255, .8);
+    border: .1em solid #FFF;
+    border-radius: .5em;
+    padding: 3em 1em 1em 1em;
+}
+
+#accueil .apsolu-opac-text,
+#inscription .apsolu-opac-text{
+    margin-top: 2%;
+}
+
+/* menu */
+.apsolu-scroll-menu {
+    position: fixed;
+    top: 15%;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 1.5em;
+    z-index: 1;
+}
+
+.apsolu-scroll-menu ul {
+    margin: 0;
+    padding: 0;
+    border-left: 5px solid #6F787B;
+    overflow: hidden;
+}
+
+.apsolu-scroll-menu li {
+    padding: 0;
+    margin-top: 3px;
+    list-style: none;
+}
+
+.apsolu-scroll-menu li:first-child {
+    margin-top: 0;
+}
+
+.apsolu-scroll-menu a {
+    padding: 5px 10px;
+    background-color: #6F787B;
+    background-image: linear-gradient(to right, rgba(111, 120, 123, 1), rgba(111, 120, 123, 0) 10%);
+    border: 1px solid #434241;
+    border-left: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    color: #050505;
+    display: block;
+}
+
+.apsolu-scroll-menu a:hover {
+    background-color: #8F989B;
+}
+
+.apsolu-scroll-menu a:focus {
+    color: #ffffff;
+}
+
+.apsolu-scroll-menu .btn-login {
+    background-color: #008A0C;
+    border-color: #004A00;
+    color: #FFFFFF;
+}
+
+.apsolu-scroll-menu .btn-login:hover {
+    background-color: #20AA2C;
+}
+
+@media (max-width: 994px) {
+    .apsolu-scroll-menu {
+        bottom: 0;
+        display: block;
+        left: unset;
+        position: fixed;
+        top: unset;
+        width: 100%;
+    }
+
+    #apsolu-scroll-menu-links {
+        background-color: #434241;
+        border: none;
+        display: block;
+        margin: auto;
+        text-align: center;
+        width: 100%;
+    }
+
+    #apsolu-scroll-menu-links li {
+        display: inline-block;
+    }
+
+    .apsolu-scroll-menu a {
+        background: none;
+        border: 1px solid #ffffff;
+        color: #ffffff;
+        font-size: .7em;
+    }
+}
+
+
+/* home */
+#apsolu-logo-div{
+    align-items: center;
+    display: flex;
+    margin-bottom: 2em;
+}
+
+#logo-siuaps-div img{
+    width: 45%;
+}
+
+#logo-rennes1-div img{
+    width: 75%;
+}
+
+#logo-rennes2-div img{
+    width: 45%;
+}
+
+/* activities */
+#activites .list-group-item{
+    background-color: transparent;
+    border: none;
+}
+
+#apsolu-activities-list-h3{
+    margin-top: -1em;
+}
+
+.apsolu-activities-list-h4 {
+    cursor: pointer;
+    display: inline;
+    font-size: 14px;
+    line-height: 1.5em;
+    margin: 0;
+    padding: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.apsolu-activities-description-div {
+    background-color: #ffffff;
+    border: 1px #000000 outset;
+    margin: 1em 0;
+    padding: .5em;
+}
+
+h4.apsolu-activities-list-h4-link {
+    background-image: url('[[pix:core|t/expanded]]');
+    background-position: 5px center;
+    background-repeat: no-repeat;
+    padding-left: 20px;
+}
+
+h4.apsolu-activities-list-h4-link-back {
+    background-image: url('[[pix:core|e/undo]]');
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    padding-left: 30px;
+}
+
+.apsolu-activities-back-return-div {
+    cursor: pointer;
+    margin-right: .5em;
+}
+
+.list-inline > .apsolu-roles-list-li {
+    padding: 0;
+}
+
+#apsolu-activities-content-legend-div li {
+    font-weight: bold;
+    background: #F9F9F9;
+    padding: 3px 5px;
+}
+
+.table-striped > tbody > tr:nth-of-type(2n) {
+    background-color: #E9E9E9;
+}
+
+/* inscription */
+#inscription {
+    padding-bottom: 15%;
+}
+
+.apsolu-inscription {
+    text-align: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.apsolu-inscription a {
+    white-space: normal;
+    margin-top: 20px;
+}
+
+.apsolu-register-dl{
+    margin-left: 2em;
+}
+
+.apsolu-register-dt,
+.apsolu-register-dd{
+    display: inline;
+}
+
+.apsolu-register-dt:after{
+    content: ' : ';
+}
+
+.apsolu-photo-credits {
+    font-size: .85em;
+    margin: 0;
+    padding: 2em 0 0 0;
+}
+
+.apsolu-photo-credits a {
+    text-decoration: underline;
+}
