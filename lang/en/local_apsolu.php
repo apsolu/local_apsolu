@@ -25,6 +25,25 @@
 
 $string['pluginname'] = 'APSOLU';
 
+// Configuration.
+$string['semester1'] = 'Semestre 1';
+$string['semester1_enrol_startdate'] = 'Date de début d\'inscription du S1';
+$string['semester1_enrol_enddate'] = 'Date de fin d\'inscription du S1';
+$string['semester1_startdate'] = 'Date de début des cours du S1';
+$string['semester1_enddate'] = 'Date de fin des cours du S1';
+$string['semester1_reenrol_startdate'] = 'Date de début de réinscription du S1';
+$string['semester1_reenrol_enddate'] = 'Date de fin de réinscription du S1';
+$string['semester2'] = 'Semestre 2';
+$string['semester2_enrol_startdate'] = 'Date de début d\'inscription du S2';
+$string['semester2_enrol_enddate'] = 'Date de fin d\'inscription du S2';
+$string['semester2_startdate'] = 'Date de début des cours du S2';
+$string['semester2_enddate'] = 'Date de fin des cours du S2';
+$string['payments_startdate'] = 'Date de début des paiements';
+$string['payments_enddate'] = 'Date de fin des paiments';
+$string['semester1_grading_deadline'] = 'Date limite pour rendre les notes du S1';
+$string['semester2_grading_deadline'] = 'Date limite pour rendre les notes du S2';
+
+// Homepage.
 $string['homepage_home'] = 'Accueil';
 $string['homepage_activities'] = 'Les activités';
 $string['homepage_signup'] = 'S\'inscrire';
@@ -62,6 +81,7 @@ $string['homepage_signupsummary'] = '<ul>'.
 $string['homepage_sesame'] = 'J\'ai un compte Sésame';
 $string['homepage_nosesame'] = 'Je n\'ai pas de compte Sésame';
 
+// Settings.
 $string['settings_root'] = 'Gestion du SIUAPS';
 $string['settings_configuration'] = 'Configuration';
 $string['settings_configuration_calendar'] = 'Dates et calendrier';
@@ -71,6 +91,7 @@ $string['settings_federations'] = 'FFSU';
 $string['settings_statistics'] = 'Statistiques';
 $string['settings_statistics_rosters'] = 'Effectifs';
 
+// Webservices.
 $string['ws_local_apsolu_enrol_user_description'] = 'Inscris un étudiant à un cours.';
 $string['ws_local_apsolu_get_active_course_students_description'] = 'Retourne les étudiants ayant une inscription valide dans un cours.';
 $string['ws_local_apsolu_get_authentification_token_description'] = 'Retourne le token d\'identification de l\'utilisateur qui a passé sa carte.';
