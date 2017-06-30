@@ -34,6 +34,14 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
         $ADMIN->add('root', new admin_category('apsolu', get_string('settings_root', 'local_apsolu')), 'users');
     }
 
+    // Configuration.
+    $ADMIN->add('apsolu', new admin_category('local_apsolu_configuration', get_string('settings_configuration', 'local_apsolu')));
+
+    $str = get_string('settings_configuration_calendar', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/configuration/index.php', array('type' => 'calendar'));
+    $ADMIN->add('local_apsolu_configuration', new admin_externalpage('local_apsolu_configuration_calendar', $str, $url, $capabilities));
+
+    // Statistics.
     $ADMIN->add('apsolu', new admin_category('local_apsolu_statistics', get_string('settings_statistics', 'local_apsolu')));
 
     $str = get_string('settings_statistics_rosters', 'local_apsolu');

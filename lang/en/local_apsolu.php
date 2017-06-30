@@ -25,7 +25,46 @@
 
 $string['pluginname'] = 'APSOLU';
 
+$string['homepage_home'] = 'Accueil';
+$string['homepage_activities'] = 'Les activités';
+$string['homepage_signup'] = 'S\'inscrire';
+$string['homepage_login'] = 'Se connecter';
+$string['homepage_siuaps'] = 'Service interuniversitaire des activités physiques et sportives';
+$string['homepage_ur1'] = 'Université de Rennes 1';
+$string['homepage_ur2'] = 'Université Rennes 2';
+$string['homepage_summary'] = '<p>Bienvenue sur le site de gestion des inscriptions du <strong><a href="https://siuaps.univ-rennes.fr">Service Inter-Universitaire des Activités Physiques et Sportives</a></strong> (SIUAPS) de Rennes.</p>'.
+'<p>Le SIUAPS propose à l’ensemble des étudiants et des personnels des Universités de <strong><a href="https://www.univ-rennes1.fr">Rennes&nbsp;1</a></strong> et <strong><a href="https://www.univ-rennes2.fr">Rennes&nbsp;2</a></strong> une formation pour tous les niveaux à la pratique des activités physiques et sportives.</p>';
+$string['homepage_activitieslist'] = 'Liste des activités';
+$string['homepage_signupsummary'] = '<ul>'.
+    '<li>'.
+        '<p>Les <strong>cours du SIUAPS</strong> sont accessibles à tous les étudiants et tous les personnels des universités de Rennes&nbsp;1 et de Rennes&nbsp;2.</p>'.
+        '<p>Pour les personnels et pour les étudiants qui souhaitent avoir une pratique libre, vous devez vous acquitter de la carte sport (non remboursable) :</p>'.
+        '<dl id="apsolu-register-dl">'.
+            '<div>'.
+                '<dt class="apsolu-register-dt">Tarif étudiants</dt>'.
+                '<dd class="apsolu-register-dd">26€</dd>'.
+            '</div>'.
+            '<div>'.
+                '<dt class="apsolu-register-dt">Tarif personnels</dt>'.
+                '<dd class="apsolu-register-dd">40€</dd>'.
+            '</div>'.
+        '</dl>'.
+        '<p>Elle est obligatoire et autorise la participation à plusieurs activités.</p>'.
+    '</li>'.
+    '<li>'.
+        '<p>Deux <strong>salles de musculation</strong> sont mises à disposition pendant les heures d\'ouverture sur les campus de Beaulieu et de Villejean.</p>'.
+        '<p>L\'acquittement d\'une carte musculation de 42€ est nécessaire. Elle permet l\'accès illimité aux salles.</p>'.
+    '</li>'.
+    '<li>'.
+    '<p>Des <strong>compétitions</strong> et des <strong>rencontres universitaires</strong> sont organisées au sein des associations sportives de Rennes&nbsp;1 ou de Rennes&nbsp;2. Les étudiants qui souhaitent y participer doivent s\'acquitter de la licence FFSU de 15€ et fournir un certificat médical de non contre indication à la pratique en compétition du sport choisi.</p>'.
+    '</li>'.
+'</ul>';
+$string['homepage_sesame'] = 'J\'ai un compte Sésame';
+$string['homepage_nosesame'] = 'Je n\'ai pas de compte Sésame';
+
 $string['settings_root'] = 'Gestion du SIUAPS';
+$string['settings_configuration'] = 'Configuration';
+$string['settings_configuration_calendar'] = 'Dates et calendrier';
 $string['settings_activities'] = 'Activités physiques';
 $string['settings_complements'] = 'Activités complémentaires';
 $string['settings_federations'] = 'FFSU';
