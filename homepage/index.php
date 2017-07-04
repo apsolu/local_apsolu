@@ -64,6 +64,7 @@ if ($cache <= $now->sub(new DateInterval('PT5M'))) {
         " JOIN {apsolu_locations} al ON al.id = ac.locationid".
         " JOIN {apsolu_periods} ap ON ap.id = ac.periodid".
         " WHERE c.visible = 1".
+        " AND ac.on_homepage = 1".
         " ORDER BY cc.id, ac.numweekday, ac.starttime, ask.name, al.name";
     $slots = $DB->get_records_sql($sql);
 
