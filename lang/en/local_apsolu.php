@@ -81,6 +81,26 @@ $string['homepage_signupsummary'] = '<ul>'.
 $string['homepage_sesame'] = 'J\'ai un compte Sésame';
 $string['homepage_nosesame'] = 'Je n\'ai pas de compte Sésame';
 
+// Attendances.
+$string['attendance'] = 'Prise des présences';
+$string['attendance_select_session'] = 'Sélectionner une session';
+$string['attendance_present'] = 'Présent';
+$string['attendance_late'] = 'En retard';
+$string['attendance_excused'] = 'Dispensé';
+$string['attendance_absent'] = 'Absent';
+$string['attendance_display_inactive_enrolments'] = 'Afficher les inscriptions inatives';
+$string['attendance_active_enrolment'] = 'Inscription ative';
+$string['attendance_presence'] = 'Présence';
+$string['attendance_comment'] = 'Commentaire';
+$string['attendance_course_presences_count'] = 'Nombre de présences pour ce cours';
+$string['attendance_activity_presences_count'] = 'Nombre de présences pour cette activité';
+$string['attendance_valid_account'] = 'Compte valide';
+$string['attendance_sport_card'] = 'Carte sport';
+$string['attendance_allowed_enrolment'] = 'Inscription autorisée';
+$string['attendance_enrolments_management'] = 'Gestion des inscriptions';
+$string['attendance_edit_enrolment'] = 'Modifier l\'inscription';
+$string['attendance_ontime_enrolment'] = 'Inscription ponctuelle';
+
 // Settings.
 $string['settings_root'] = 'Gestion du SIUAPS';
 $string['settings_configuration'] = 'Configuration';
