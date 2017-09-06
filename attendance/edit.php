@@ -154,11 +154,11 @@ if ($session === false) {
 
 // Récupérer tous les inscrits.
 // TODO: jointure avec colleges
-$sql = "SELECT u.*, ue.timestart, ue.timeend, ue.enrolid".
+$sql = "SELECT u.*, ue.timestart, ue.timeend, ue.enrolid, e.enrol".
     " FROM {user} u".
     " JOIN {user_enrolments} ue ON u.id = ue.userid".
     " JOIN {enrol} e ON e.id = ue.enrolid".
-    " JOIN {role_assignments} ra ON u.id = ra.userid AND e.id = ra.itemid".
+    " JOIN {role_assignments} ra ON u.id = ra.userid AND ((e.id = ra.itemid) OR (e.enrol = 'manual' AND ra.itemid = 0))".
     " JOIN {role} r ON r.id = ra.roleid".
     " JOIN {context} ctx ON ra.contextid = ctx.id AND ctx.instanceid = e.courseid".
     " WHERE ue.status = 0". // Only active.
@@ -281,10 +281,9 @@ echo '<table class="table table-striped">'.
     '<tbody>';
 
 foreach ($students as $student) {
-    $enrolment_status = 1;
-    if ($student->timestart < time() || $student->timeend > time()) {
-        $enrolment_status = 0;
-    }
+    $activestart = ($student->timestart == 0 || $student->timestart < time());
+    $activeend = ($student->timeend == 0 || $student->timeend > time());
+    $enrolment_status = intval($activestart && $activeend);
 
     if (isset($unactive_enrolements) === false && $enrolment_status === 0) {
         // Unactive enrolement !
@@ -346,7 +345,7 @@ foreach ($students as $student) {
     // TODO: est-ce qu'il est autorisé ?
 
     if (isset($student->enrolid) === true) {
-        $enrolment_link = '<a href="'.$CFG->wwwroot.'/enrol/select/manage.php?enrolid='.$student->enrolid.'">'.get_string('attendance_edit_enrolment', 'local_apsolu').'</a>';
+        $enrolment_link = '<a href="'.$CFG->wwwroot.'/enrol/'.$student->enrol.'/manage.php?enrolid='.$student->enrolid.'">'.get_string('attendance_edit_enrolment', 'local_apsolu').'</a>';
     } else {
         $enrolment_link = get_string('attendance_ontime_enrolment', 'local_apsolu');
     }
