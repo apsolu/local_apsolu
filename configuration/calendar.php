@@ -26,7 +26,7 @@ require_once($CFG->dirroot.'/local/apsolu/configuration/calendar_form.php');
 
 // Build form.
 $attributes = array(
-	'semester1_enrol_startdate',
+    'semester1_enrol_startdate',
     'semester1_enrol_enddate',
     'semester1_startdate',
     'semester1_enddate',
@@ -36,11 +36,11 @@ $attributes = array(
     'semester2_enrol_enddate',
     'semester2_startdate',
     'semester2_enddate',
-	'payments_startdate',
-	'payments_enddate',
+    'payments_startdate',
+    'payments_enddate',
     'semester1_grading_deadline',
     'semester2_grading_deadline',
-	);
+    );
 
 $defaults = new stdClass();
 foreach ($attributes as $attribute) {
@@ -54,12 +54,12 @@ $mform = new local_apsolu_calendar_form(null, $customdata);
 echo $OUTPUT->header();
 
 if ($data = $mform->get_data()) {
-	foreach ($attributes as $attribute) {
-		if ($defaults->{$attribute} !== $data->{$attribute}) {
-			// TODO: update enrol_select methods.
-		}
-		set_config($attribute, $data->{$attribute}, 'local_apsolu');
-	}
+    foreach ($attributes as $attribute) {
+        if ($defaults->{$attribute} !== $data->{$attribute}) {
+            // TODO: update enrol_select methods.
+        }
+        set_config($attribute, $data->{$attribute}, 'local_apsolu');
+    }
 
     echo $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
 }

@@ -21,74 +21,74 @@
  */
 
 function get_rosters_statistics($roleid, $institution) {
-	global $DB;
+    global $DB;
 
-	$semester1 = array(get_config('local_apsolu', 'semester1_startdate'), get_config('local_apsolu', 'semester1_enddate'));
-	$semester2 = array(get_config('local_apsolu', 'semester2_startdate'), get_config('local_apsolu', 'semester2_enddate'));
+    $semester1 = array(get_config('local_apsolu', 'semester1_startdate'), get_config('local_apsolu', 'semester1_enddate'));
+    $semester2 = array(get_config('local_apsolu', 'semester2_startdate'), get_config('local_apsolu', 'semester2_enddate'));
 
-	$stats = array();
+    $stats = array();
 
-	foreach (array(1 => $semester1, 2 => $semester2) as $name => $semester) {
-		$parameters = array(
-			'starttime' => $semester[0],
-			'endtime' => $semester[1],
-			'roleid' => $roleid,
-		);
+    foreach (array(1 => $semester1, 2 => $semester2) as $name => $semester) {
+        $parameters = array(
+            'starttime' => $semester[0],
+            'endtime' => $semester[1],
+            'roleid' => $roleid,
+        );
 
-		$sql = "SELECT COUNT(u.id) AS total, cc.name, ue.status".
-			" FROM {user} u".
-			" JOIN {user_enrolments} ue ON u.id = ue.userid".
-			" JOIN {enrol} e ON e.id = ue.enrolid".
-			" JOIN {course} c ON c.id = e.courseid".
-			" JOIN {course_categories} cc ON cc.id = c.category".
-			" JOIN {apsolu_courses} ac ON c.id = ac.id".
-			" JOIN {context} ctx ON ctx.instanceid = c.id AND ctx.contextlevel = 50".
-			" JOIN {role_assignments} ra ON ra.contextid = ctx.id AND u.id = ra.userid AND ra.itemid = e.id".
-			" JOIN {role} r ON r.id = ra.roleid".
-			" WHERE e.enrol = 'select'".
-			" AND e.customint7 >= :starttime".
-			" AND e.customint8 <= :endtime".
-			" AND r.id = :roleid";
+        $sql = "SELECT COUNT(u.id) AS total, cc.name, ue.status".
+            " FROM {user} u".
+            " JOIN {user_enrolments} ue ON u.id = ue.userid".
+            " JOIN {enrol} e ON e.id = ue.enrolid".
+            " JOIN {course} c ON c.id = e.courseid".
+            " JOIN {course_categories} cc ON cc.id = c.category".
+            " JOIN {apsolu_courses} ac ON c.id = ac.id".
+            " JOIN {context} ctx ON ctx.instanceid = c.id AND ctx.contextlevel = 50".
+            " JOIN {role_assignments} ra ON ra.contextid = ctx.id AND u.id = ra.userid AND ra.itemid = e.id".
+            " JOIN {role} r ON r.id = ra.roleid".
+            " WHERE e.enrol = 'select'".
+            " AND e.customint7 >= :starttime".
+            " AND e.customint8 <= :endtime".
+            " AND r.id = :roleid";
 
-		if (empty($institution) === false) {
-			$sql .= " AND u.institution = :institution";
-			$parameters['institution'] = $institution;
-		}
+        if (empty($institution) === false) {
+            $sql .= " AND u.institution = :institution";
+            $parameters['institution'] = $institution;
+        }
 
-		$sql .= " GROUP BY cc.name, ue.status";
+        $sql .= " GROUP BY cc.name, ue.status";
 
-		$records = $DB->get_recordset_sql($sql, $parameters);
+        $records = $DB->get_recordset_sql($sql, $parameters);
 
-		foreach ($records as $record) {
-			if (isset($stats[$record->name]) === false) {
-				$stats[$record->name] = new stdClass();
-				$stats[$record->name]->name = $record->name;
-				$stats[$record->name]->semester1_accepted = 0;
-				$stats[$record->name]->semester1_main = 0;
-				$stats[$record->name]->semester1_wait = 0;
-				$stats[$record->name]->semester1_refused = 0;
-				$stats[$record->name]->semester2_accepted = 0;
-				$stats[$record->name]->semester2_main = 0;
-				$stats[$record->name]->semester2_wait = 0;
-				$stats[$record->name]->semester2_refused = 0;
-			}
+        foreach ($records as $record) {
+            if (isset($stats[$record->name]) === false) {
+                $stats[$record->name] = new stdClass();
+                $stats[$record->name]->name = $record->name;
+                $stats[$record->name]->semester1_accepted = 0;
+                $stats[$record->name]->semester1_main = 0;
+                $stats[$record->name]->semester1_wait = 0;
+                $stats[$record->name]->semester1_refused = 0;
+                $stats[$record->name]->semester2_accepted = 0;
+                $stats[$record->name]->semester2_main = 0;
+                $stats[$record->name]->semester2_wait = 0;
+                $stats[$record->name]->semester2_refused = 0;
+            }
 
-			switch($record->status) {
-				case '0':
-					$stats[$record->name]->{'semester'.$name.'_accepted'} = $record->total;
-					break;
-				case '2':
-					$stats[$record->name]->{'semester'.$name.'_main'} = $record->total;
-					break;
-				case '3':
-					$stats[$record->name]->{'semester'.$name.'_wait'} = $record->total;
-					break;
-				case '4':
-					$stats[$record->name]->{'semester'.$name.'_refused'} = $record->total;
-					break;
-			}
-		}
-	}
+            switch($record->status) {
+                case '0':
+                    $stats[$record->name]->{'semester'.$name.'_accepted'} = $record->total;
+                    break;
+                case '2':
+                    $stats[$record->name]->{'semester'.$name.'_main'} = $record->total;
+                    break;
+                case '3':
+                    $stats[$record->name]->{'semester'.$name.'_wait'} = $record->total;
+                    break;
+                case '4':
+                    $stats[$record->name]->{'semester'.$name.'_refused'} = $record->total;
+                    break;
+            }
+        }
+    }
 
-	return array_values($stats);
+    return array_values($stats);
 }
