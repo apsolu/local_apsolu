@@ -23,8 +23,8 @@
 function get_rosters_statistics($roleid, $institution) {
 	global $DB;
 
-	$semester1 = array(mktime(0, 0, 0, 8, 1, 2016), mktime(0, 0, 0, 1, 1, 2017));
-	$semester2 = array(mktime(0, 0, 0, 1, 1, 2017), mktime(0, 0, 0, 7, 1, 2017));
+	$semester1 = array(get_config('local_apsolu', 'semester1_startdate'), get_config('local_apsolu', 'semester1_enddate'));
+	$semester2 = array(get_config('local_apsolu', 'semester2_startdate'), get_config('local_apsolu', 'semester2_enddate'));
 
 	$stats = array();
 
