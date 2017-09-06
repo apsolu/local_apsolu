@@ -64,5 +64,7 @@ if ($data = $mform->get_data()) {
     echo $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
 }
 
+echo $OUTPUT->notification('Page en construction. Ne pas modifier.', 'notifywarning');
+
 $mform->display();
 echo $OUTPUT->footer();
