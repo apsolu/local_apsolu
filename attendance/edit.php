@@ -157,7 +157,7 @@ if ($session === false) {
 
 // Récupérer tous les inscrits.
 // TODO: jointure avec colleges
-$sql = "SELECT u.*, ue.timestart, ue.timeend, ue.enrolid, e.enrol".
+$sql = "SELECT u.*, ue.timestart, ue.timeend, ue.enrolid, e.enrol, ra.roleid".
     " FROM {user} u".
     " JOIN {user_enrolments} ue ON u.id = ue.userid".
     " JOIN {enrol} e ON e.id = ue.enrolid".
@@ -183,6 +183,7 @@ foreach ($DB->get_records_sql($sql, array('courseid' => $courseid)) as $student)
         $student->timestart = time() + 60;
         $student->timeend = time() + 60;
         $student->enrolid = null;
+        $student->roleid = null;
 
         $students[$student->id] = $student;
     }
@@ -234,6 +235,8 @@ $sql = "SELECT aap.studentid, COUNT(*) AS total".
 $activity_presences = $DB->get_records_sql($sql, array('categoryid' => $course->category));
 
 $presences = $DB->get_records('apsolu_attendance_presences', array('sessionid' => $sessionid), $sort='', $fields='studentid, statusid, description, id');
+
+$roles = role_fix_names($DB->get_records('role'));
 
 $notification = false;
 if (isset($_POST['apsolu']) === true) {
@@ -363,6 +366,11 @@ foreach ($students as $student) {
     }
 
     // TODO: est-ce qu'il est autorisé ?
+    if (isset($roles[$student->roleid]) === true) {
+        $rolename = $roles[$student->roleid]->name;
+    } else {
+        $rolename = '-';
+    }
 
     if (isset($student->enrolid) === true) {
         $enrolment_link = '<a href="'.$CFG->wwwroot.'/enrol/'.$student->enrol.'/manage.php?enrolid='.$student->enrolid.'">'.get_string('attendance_edit_enrolment', 'local_apsolu').'</a>';
@@ -381,7 +389,7 @@ foreach ($students as $student) {
         '<td>'.$activity_presences[$student->id]->total.'</td>'.
         '<td>'.$validsesame.'</td>'.
         '<td>'.$cardpaid.'</td>'.
-        '<td>-</td>'.
+        '<td>-<br />'.$rolename.'</td>'.
         '<td>'.$enrolment_link.'</td>'.
         '</tr>';
 }
