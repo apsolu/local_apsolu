@@ -233,6 +233,7 @@ $sql = "SELECT aap.studentid, COUNT(*) AS total".
     " FROM {apsolu_attendance_presences} aap".
     " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid".
     " WHERE aas.courseid = :courseid".
+    " AND aap.statusid != 4". // Exclus les absences.
     " GROUP BY studentid";
 $course_presences = $DB->get_records_sql($sql, array('courseid' => $courseid));
 
@@ -240,6 +241,7 @@ $sql = "SELECT aap.studentid, COUNT(*) AS total".
     " FROM {apsolu_attendance_presences} aap".
     " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid".
     " WHERE aas.activityid = :categoryid".
+    " AND aap.statusid != 4". // Exclus les absences.
     " GROUP BY aap.studentid";
 $activity_presences = $DB->get_records_sql($sql, array('categoryid' => $course->category));
 
