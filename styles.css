@@ -294,3 +294,9 @@ h4.apsolu-activities-list-h4-link-back {
 .apsolu-photo-credits a {
     text-decoration: underline;
 }
+
+/* attendance */
+#apsolu-attendance-check-javascript-helper {
+    border: .1em solid #9F9F9F;
+    padding: .5em;
+}

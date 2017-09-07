@@ -57,6 +57,9 @@ $fullname = $course->fullname;
 $PAGE->set_title($title);
 $PAGE->set_heading($fullname);
 
+// Call javascript.
+$PAGE->requires->js_call_amd('local_apsolu/attendance', 'initialise');
+
 echo $OUTPUT->header();
 echo $OUTPUT->heading($pagedesc);
 
@@ -261,7 +264,7 @@ if ($notification === true) {
     echo $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
 }
 echo '<form method="post" action="'.$CFG->wwwroot.'/local/apsolu/attendance/edit.php?courseid='.$courseid.'&amp;sessionid='.$sessionid.'" />';
-echo '<table class="table table-striped">'.
+echo '<table class="table table-striped" id="apsolu-attendance-table">'.
     '<thead>'.
         '<tr>'.
             '<th>'.get_string('attendance_active_enrolment', 'local_apsolu').'</th>'.
