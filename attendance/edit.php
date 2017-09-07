@@ -188,6 +188,23 @@ foreach ($DB->get_records_sql($sql, array('courseid' => $courseid)) as $student)
     }
 }
 
+// Tri les étudiants alphabétiquement.
+uasort($students, function($a, $b) {
+    if ($a->lastname > $b->lastname) {
+        return 1;
+    } else if ($a->lastname < $b->lastname) {
+        return -1;
+    } else {
+        if ($a->firstname > $b->firstname) {
+            return 1;
+        } else if ($a->firstname < $b->firstname) {
+            return -1;
+        }
+    }
+
+    return 0;
+});
+
 // Attendance form.
 $args = array(
     'courseid' => $course->id,
@@ -269,8 +286,8 @@ echo '<table class="table table-striped" id="apsolu-attendance-table">'.
         '<tr>'.
             '<th>'.get_string('attendance_active_enrolment', 'local_apsolu').'</th>'.
             '<th>'.get_string('pictureofuser').'</th>'.
-            '<th>'.get_string('firstname').'</th>'.
             '<th>'.get_string('lastname').'</th>'.
+            '<th>'.get_string('firstname').'</th>'.
             '<th>'.get_string('attendance_presence', 'local_apsolu').'</th>'.
             '<th>'.get_string('attendance_comment', 'local_apsolu').'</th>'.
             '<th>'.get_string('attendance_course_presences_count', 'local_apsolu').'</th>'.
@@ -356,8 +373,8 @@ foreach ($students as $student) {
     echo '<tr>'.
         '<td>'.$enrolment_status.'</td>'.
         '<td>'.$OUTPUT->render($picture).'</td>'.
-        '<td>'.$student->firstname.'</td>'.
         '<td>'.$student->lastname.'</td>'.
+        '<td>'.$student->firstname.'</td>'.
         '<td'.$status_style.'>'.$radios.'</td>'.
         '<td><textarea name="comment['.$student->id.']">'.htmlentities($presences[$student->id]->description, ENT_COMPAT, 'UTF-8').'</textarea></td>'.
         '<td>'.$course_presences[$student->id]->total.'</td>'.
