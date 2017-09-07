@@ -36,8 +36,13 @@ class edit_select_form extends moodleform {
         $data = new stdClass();
         $data->courseid = $this->_customdata['courseid']; // this contains the data of this form
         $data->sessionid = $this->_customdata['sessionid'];
-        if (isset($this->_customdata['unactive_enrolements']) == true) {
-            $data->unactive_enrolements = $this->_customdata['unactive_enrolements'];
+
+        if (isset($this->_customdata['invalid_enrolments']) == true) {
+            $data->invalid_enrolments = $this->_customdata['invalid_enrolments'];
+        }
+
+        if (isset($this->_customdata['inactive_enrolments']) == true) {
+            $data->unactive_enrolments = $this->_customdata['inactive_enrolments'];
         }
 
         // Sessions.
@@ -49,9 +54,13 @@ class edit_select_form extends moodleform {
         $mform->addElement('select', 'sessionid', get_string('attendance_select_session', 'local_apsolu'), $sessions);
         $mform->setType('sessionid', PARAM_INT);
 
-        // Unactive enrolments.
-        $mform->addElement('checkbox', 'unactive_enrolements', get_string('attendance_display_inactive_enrolments', 'local_apsolu'));
-        $mform->setType('unactive_enrolements', PARAM_INT);
+        // Invalid enrolments.
+        $mform->addElement('checkbox', 'invalid_enrolments', get_string('attendance_display_invalid_enrolments', 'local_apsolu'));
+        $mform->setType('invalid_enrolments', PARAM_INT);
+
+        // Inactive enrolments.
+        $mform->addElement('checkbox', 'inactive_enrolments', get_string('attendance_display_inactive_enrolments', 'local_apsolu'));
+        $mform->setType('inactive_enrolments', PARAM_INT);
 
         // Courseid.
         $mform->addElement('hidden', 'courseid', null);

@@ -22,9 +22,9 @@
 require_once(__DIR__.'/../../../config.php');
 
 $courseid = optional_param('courseid', 0, PARAM_INT); // Course id.
-$sessionid = optional_param('sessionid', 0, PARAM_INT); // Course id.
-$unactive_enrolements = optional_param('unactive_enrolements', null, PARAM_INT); // Course id.
-// $returnto = optional_param('returnto', 0, PARAM_ALPHANUM); // Generic navigation return page switch.
+$sessionid = optional_param('sessionid', 0, PARAM_INT); // Session id.
+$invalid_enrolments = optional_param('invalid_enrolments', null, PARAM_INT);
+$inactive_enrolments = optional_param('inactive_enrolments', null, PARAM_INT);
 
 $PAGE->set_pagelayout('admin');
 $PAGE->set_url('/local/apsolu/attendance/edit.php', array('courseid' => $courseid));
@@ -139,8 +139,13 @@ $args = array(
     'sessionid' => $sessionid,
     'sessions' => $sessions,
 );
-if (isset($unactive_enrolements) === true) {
-    $args['unactive_enrolements'] = 1;
+
+if (isset($invalid_enrolments) === true) {
+    $args['invalid_enrolments'] = 1;
+}
+
+if (isset($inactive_enrolments) === true) {
+    $args['inactive_enrolments'] = 1;
 }
 
 // TODO: à revoir...
@@ -157,19 +162,22 @@ if ($session === false) {
 
 // Récupérer tous les inscrits.
 // TODO: jointure avec colleges
-$sql = "SELECT u.*, ue.timestart, ue.timeend, ue.enrolid, e.enrol, ra.roleid".
+$sql = "SELECT u.*, ue.status, ue.timestart, ue.timeend, ue.enrolid, e.enrol, ra.roleid".
     " FROM {user} u".
     " JOIN {user_enrolments} ue ON u.id = ue.userid".
     " JOIN {enrol} e ON e.id = ue.enrolid".
     " JOIN {role_assignments} ra ON u.id = ra.userid AND ((e.id = ra.itemid) OR (e.enrol = 'manual' AND ra.itemid = 0))".
     " JOIN {role} r ON r.id = ra.roleid".
     " JOIN {context} ctx ON ra.contextid = ctx.id AND ctx.instanceid = e.courseid".
-    " WHERE ue.status = 0". // Only active.
+    " WHERE ue.status >= 0". // Only active.
     " AND e.status = 0". // Only active.
     " AND e.courseid = :courseid".
     " AND ctx.contextlevel = 50". // Course level.
     " AND r.archetype = 'student'".
     " ORDER BY u.lastname, u.firstname";
+if (isset($invalid_enrolments) === false) {
+    $sql = str_replace('WHERE ue.status >= 0', 'WHERE ue.status = 0', $sql);
+}
 $students = $DB->get_records_sql($sql, array('courseid' => $courseid));
 
 // TODO: récupérer les gens inscrits ponctuellement.
@@ -180,6 +188,7 @@ $sql = "SELECT DISTINCT u.*".
     " WHERE aas.courseid = :courseid";
 foreach ($DB->get_records_sql($sql, array('courseid' => $courseid)) as $student) {
     if (isset($students[$student->id]) === false) {
+        $student->status = null;
         $student->timestart = time() + 60;
         $student->timeend = time() + 60;
         $student->enrolid = null;
@@ -280,9 +289,11 @@ if (isset($_POST['apsolu']) === true) {
 }
 
 echo '<h3>'.$title.' : '.$session->name.'</h3>';
+
 if ($notification === true) {
     echo $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
 }
+
 echo '<form method="post" action="'.$CFG->wwwroot.'/local/apsolu/attendance/edit.php?courseid='.$courseid.'&amp;sessionid='.$sessionid.'" />';
 echo '<table class="table table-striped" id="apsolu-attendance-table">'.
     '<thead>'.
@@ -297,8 +308,13 @@ echo '<table class="table table-striped" id="apsolu-attendance-table">'.
             '<th>'.get_string('attendance_activity_presences_count', 'local_apsolu').'</th>'.
             '<th>'.get_string('attendance_valid_account', 'local_apsolu').'</th>'.
             '<th>'.get_string('attendance_sport_card', 'local_apsolu').'</th>'.
-            '<th>'.get_string('attendance_allowed_enrolment', 'local_apsolu').'</th>'.
-            '<th>'.get_string('attendance_enrolments_management', 'local_apsolu').'</th>'.
+            '<th>'.get_string('attendance_allowed_enrolment', 'local_apsolu').'</th>';
+
+if (isset($invalid_enrolments) === true) {
+    echo '<th>'.get_string('attendance_enrolment_list', 'local_apsolu').'</th>';
+}
+
+echo '<th>'.get_string('attendance_enrolments_management', 'local_apsolu').'</th>'.
         '</tr>'.
     '</thead>'.
     '<tbody>';
@@ -308,8 +324,8 @@ foreach ($students as $student) {
     $activeend = ($student->timeend == 0 || $student->timeend > time());
     $enrolment_status = intval($activestart && $activeend);
 
-    if (isset($unactive_enrolements) === false && $enrolment_status === 0) {
-        // Unactive enrolement !
+    if (isset($inactive_enrolments) === false && $enrolment_status === 0) {
+        // Inactive enrolement !
         continue;
     }
 
@@ -389,17 +405,33 @@ foreach ($students as $student) {
         '<td>'.$activity_presences[$student->id]->total.'</td>'.
         '<td>'.$validsesame.'</td>'.
         '<td>'.$cardpaid.'</td>'.
-        '<td>-<br />'.$rolename.'</td>'.
-        '<td>'.$enrolment_link.'</td>'.
+        '<td>-<br />'.$rolename.'</td>';
+
+    if (isset($invalid_enrolments) === true) {
+        if ($student->status === null) {
+            echo '<td>-</td>';
+        } else {
+            echo '<td>'.enrol_select_plugin::get_enrolment_list_name($student->status, 'short').'</td>';
+        }
+    }
+
+    echo '<td>'.$enrolment_link.'</td>'.
         '</tr>';
 }
 echo '</tbody>'.
     '</table>';
+
 echo '<p class="text-right">'.
     '<input class="btn btn-primary" type="submit" name="apsolu" value="'.get_string('savechanges').'" />';
-if (isset($unactive_enrolements) === true) {
-    echo '<input type="hidden" name="unactive_enrolements" value="1" />';
+
+if (isset($invalid_enrolments) === true) {
+    echo '<input type="hidden" name="invalid_enrolments" value="1" />';
 }
+
+if (isset($inactive_enrolments) === true) {
+    echo '<input type="hidden" name="inactive_enrolments" value="1" />';
+}
+
 echo '</p>';
 echo '</form>';
 
