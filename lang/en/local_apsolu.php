@@ -83,11 +83,21 @@ $string['homepage_nosesame'] = 'Je n\'ai pas de compte Sésame';
 
 // Attendances.
 $string['attendance'] = 'Prise des présences';
+$string['attendance_sessionsview'] = 'Vue par sessions';
+$string['attendance_overview'] = 'Vue d\'ensemble';
 $string['attendance_select_session'] = 'Sélectionner une session';
 $string['attendance_present'] = 'Présent';
+$string['attendance_present_short'] = 'P';
+$string['attendance_present_style'] = 'success';
 $string['attendance_late'] = 'En retard';
+$string['attendance_late_short'] = 'R';
+$string['attendance_late_style'] = 'warning';
 $string['attendance_excused'] = 'Dispensé';
+$string['attendance_excused_short'] = 'D';
+$string['attendance_excused_style'] = 'info';
 $string['attendance_absent'] = 'Absent';
+$string['attendance_absent_short'] = 'A';
+$string['attendance_absent_style'] = 'danger';
 $string['attendance_display_inactive_enrolments'] = 'Afficher les inscriptions inactives (semestres précédents)';
 $string['attendance_display_invalid_enrolments'] = 'Afficher les inscriptions non validées (liste principale et liste complémentaire)';
 $string['attendance_active_enrolment'] = 'Inscription active';
@@ -102,6 +112,7 @@ $string['attendance_enrolment_list'] = 'Liste d\'inscription';
 $string['attendance_enrolments_management'] = 'Gestion des inscriptions';
 $string['attendance_edit_enrolment'] = 'Modifier l\'inscription';
 $string['attendance_ontime_enrolment'] = 'Inscription ponctuelle';
+$string['strftimeabbrday'] = '%d %b';
 
 // Settings.
 $string['settings_root'] = 'Gestion du SIUAPS';

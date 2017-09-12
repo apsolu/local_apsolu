@@ -60,7 +60,18 @@ $PAGE->set_heading($fullname);
 // Call javascript.
 $PAGE->requires->js_call_amd('local_apsolu/attendance', 'initialise');
 
+// Build tabtree.
+$tabsbar = array();
+
+$url = new moodle_url('/local/apsolu/attendance/edit.php', array('courseid' => $courseid));
+$tabsbar[] = new tabobject('sessions', $url, get_string('attendance_sessionsview', 'local_apsolu'));
+
+$url = new moodle_url('/local/apsolu/attendance/overview.php', array('courseid' => $courseid));
+$tabsbar[] = new tabobject('overview', $url, get_string('attendance_overview', 'local_apsolu'));
+
+
 echo $OUTPUT->header();
+echo $OUTPUT->tabtree($tabsbar, 'sessions');
 echo $OUTPUT->heading($pagedesc);
 
 $sessions = $DB->get_records('apsolu_attendance_sessions', array('courseid' => $courseid));
@@ -321,6 +332,8 @@ echo '<th>'.get_string('attendance_enrolments_management', 'local_apsolu').'</th
     '</thead>'.
     '<tbody>';
 
+$statuses = $DB->get_records('apsolu_attendance_statuses');
+
 foreach ($students as $student) {
     $activestart = ($student->timestart == 0 || $student->timestart < time());
     $activeend = ($student->timeend == 0 || $student->timeend > time());
@@ -339,8 +352,6 @@ foreach ($students as $student) {
 
     $picture = new user_picture($student);
     $picture->size = 50;
-
-    $statuses = $DB->get_records('apsolu_attendance_statuses');
 
     $radios = '';
     $found = false;

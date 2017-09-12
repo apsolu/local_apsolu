@@ -300,3 +300,16 @@ h4.apsolu-activities-list-h4-link-back {
     border: .1em solid #9F9F9F;
     padding: .5em;
 }
+
+.apsolu-comments-details {
+	float: right;
+}
+
+.apsolu-comments-summary {
+	cursor: pointer;
+}
+
+.apsolu-comments-div {
+	background-color: #dddddd;
+	padding: .5em;
+}
