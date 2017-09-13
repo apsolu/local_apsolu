@@ -133,7 +133,7 @@ foreach ($sessions as $session) {
     $sessions_select[$session->id] = $session->name;
 
     if ($sessionid === 0) {
-        if ($session->sessiontime > time()) {
+        if (($session->sessiontime + 12 * 60 * 60) > time()) {
             $sessionid = $session->id;
         }
     }
