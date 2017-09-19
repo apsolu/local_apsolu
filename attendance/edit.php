@@ -173,8 +173,10 @@ if ($session === false) {
 
 // Récupérer tous les inscrits.
 // TODO: jointure avec colleges
-$sql = "SELECT u.*, ue.status, ue.timestart, ue.timeend, ue.enrolid, e.enrol, ra.roleid".
+$sql = "SELECT u.*, ue.status, ue.timestart, ue.timeend, ue.enrolid, e.enrol, ra.roleid, uid1.data AS validsesame, uid2.data AS cardpaid".
     " FROM {user} u".
+    " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = 11". // validsesame
+    " LEFT JOIN {user_info_data} uid2 ON u.id = uid2.userid AND uid2.fieldid = 12". // cardpaid
     " JOIN {user_enrolments} ue ON u.id = ue.userid".
     " JOIN {enrol} e ON e.id = ue.enrolid".
     " JOIN {role_assignments} ra ON u.id = ra.userid AND ((e.id = ra.itemid) OR (e.enrol = 'manual' AND ra.itemid = 0))".
@@ -192,10 +194,12 @@ if (isset($invalid_enrolments) === false) {
 $students = $DB->get_records_sql($sql, array('courseid' => $courseid));
 
 // TODO: récupérer les gens inscrits ponctuellement.
-$sql = "SELECT DISTINCT u.*".
+$sql = "SELECT DISTINCT u.*, uid1.data AS validsesame, uid2.data AS cardpaid".
     " FROM {user} u".
     " JOIN {apsolu_attendance_presences} aap ON u.id = aap.studentid".
     " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid".
+    " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = 11". // validsesame
+    " LEFT JOIN {user_info_data} uid2 ON u.id = uid2.userid AND uid2.fieldid = 12". // cardpaid
     " WHERE aas.courseid = :courseid";
 foreach ($DB->get_records_sql($sql, array('courseid' => $courseid)) as $student) {
     if (isset($students[$student->id]) === false) {
@@ -345,9 +349,11 @@ foreach ($students as $student) {
     }
 
     if ($enrolment_status === 1) {
-        $enrolment_status = '<span class="text-success">'.get_string('active').'</span>';
+        $enrolment_status = get_string('active');
+        $enrolment_status_style = 'text-center';
     } else {
-        $enrolment_status = '<span class="text-danger">'.get_string('inactive').'</span>';
+        $enrolment_status = get_string('inactive');
+        $enrolment_status_style = 'text-center warning';
     }
 
     $picture = new user_picture($student);
@@ -385,30 +391,51 @@ foreach ($students as $student) {
     }
 
     $validsesame = get_string('no');
+    $validsesame_style = 'danger';
     if (isset($student->validsesame) && $student->validsesame === '1') {
         $validsesame = get_string('yes');
+        $validsesame_style = 'success';
     }
 
     $cardpaid = get_string('no');
+    $cardpaid_style = 'danger';
     if (isset($student->cardpaid) && $student->cardpaid === '1') {
         $cardpaid = get_string('yes');
+        $cardpaid_style = 'success';
     }
 
-    // TODO: est-ce qu'il est autorisé ?
+    $allow_style = 'warning';
     if (isset($roles[$student->roleid]) === true) {
+        $sql = "SELECT ac.id".
+           " FROM {apsolu_colleges} ac".
+           " JOIN {apsolu_colleges_members} acm ON ac.id = acm.collegeid".
+           " JOIN {cohort_members} cm ON cm.cohortid = acm.cohortid".
+           " JOIN {enrol_select_cohorts} esc ON cm.cohortid = esc.cohortid".
+           " WHERE cm.userid = :userid".
+           " AND ac.roleid = :roleid".
+           " AND esc.enrolid = :enrolid";
+        $allow = $DB->get_records_sql($sql, array('userid' => $student->id, 'roleid' => $student->roleid, 'enrolid' => $student->enrolid));
+        if (count($allow) > 0 && $validsesame === get_string('yes')) {
+            $allow = get_string('attendance_allowed_enrolment', 'local_apsolu');
+            $allow_style = 'success';
+        } else {
+            $allow = get_string('no');
+            $allow_style = 'danger';
+        }
         $rolename = $roles[$student->roleid]->name;
     } else {
         $rolename = '-';
+        $allow = '';
     }
 
     if (isset($student->enrolid) === true) {
-        $enrolment_link = '<a href="'.$CFG->wwwroot.'/enrol/'.$student->enrol.'/manage.php?enrolid='.$student->enrolid.'">'.get_string('attendance_edit_enrolment', 'local_apsolu').'</a>';
+        $enrolment_link = '<a class="btn btn-default" href="'.$CFG->wwwroot.'/enrol/'.$student->enrol.'/manage.php?enrolid='.$student->enrolid.'">'.get_string('attendance_edit_enrolment', 'local_apsolu').'</a>';
     } else {
         $enrolment_link = get_string('attendance_ontime_enrolment', 'local_apsolu');
     }
 
     echo '<tr>'.
-        '<td>'.$enrolment_status.'</td>'.
+        '<td class="'.$enrolment_status_style.'">'.$enrolment_status.'</td>'.
         '<td>'.$OUTPUT->render($picture).'</td>'.
         '<td>'.$student->lastname.'</td>'.
         '<td>'.$student->firstname.'</td>'.
@@ -416,9 +443,9 @@ foreach ($students as $student) {
         '<td><textarea name="comment['.$student->id.']">'.htmlentities($presences[$student->id]->description, ENT_COMPAT, 'UTF-8').'</textarea></td>'.
         '<td>'.$course_presences[$student->id]->total.'</td>'.
         '<td>'.$activity_presences[$student->id]->total.'</td>'.
-        '<td>'.$validsesame.'</td>'.
-        '<td>'.$cardpaid.'</td>'.
-        '<td>-<br />'.$rolename.'</td>';
+        '<td class="'.$validsesame_style.'">'.$validsesame.'</td>'.
+        '<td class="'.$cardpaid_style.'">'.$cardpaid.'</td>'.
+        '<td class="'.$allow_style.'">'.$rolename.'<hr />'.$allow.'</td>';
 
     if (isset($invalid_enrolments) === true) {
         if ($student->status === null) {
