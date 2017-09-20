@@ -124,6 +124,9 @@ $string['settings_federations'] = 'FFSU';
 $string['settings_statistics'] = 'Statistiques';
 $string['settings_statistics_rosters'] = 'Effectifs';
 
+// Tasks.
+$string['set_high_level_athletes'] = 'Moulinette pour les sportifs de haut-niveau';
+
 // Webservices.
 $string['ws_local_apsolu_enrol_user_description'] = 'Inscris un étudiant à un cours.';
 $string['ws_local_apsolu_get_active_course_students_description'] = 'Retourne les étudiants ayant une inscription valide dans un cours.';

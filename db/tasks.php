@@ -15,25 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Tasks for component 'local_apsolu'
  *
- * @package    local_apsolu
- * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @package    local
+ * @subpackage apsolu
+ * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-// The current plugin version (Date: YYYYMMDDXX).
-$plugin->version   = 2017092000;
-
-// Requires this Moodle version.
-$plugin->requires  = 2012112900;
-
-// Full name of the plugin (used for diagnostics).
-$plugin->component = 'local_apsolu';
-
-// Dependencies on another plugin.
-$plugin->dependencies = array(
-    'enrol_select' => '2016011220',
+// Tâche exécutée toutes les 15 minutes.
+$tasks = array(
+    array(
+        'classname' => 'local_apsolu\task\set_high_level_athletes',
+        'blocking' => 0,
+        'minute' => '*/15',
+        'hour' => '*',
+        'day' => '*',
+        'dayofweek' => '*',
+        'month' => '*'
+    )
 );
