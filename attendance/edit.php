@@ -191,7 +191,14 @@ $sql = "SELECT u.*, ue.status, ue.timestart, ue.timeend, ue.enrolid, e.enrol, ra
 if (isset($invalid_enrolments) === false) {
     $sql = str_replace('WHERE ue.status >= 0', 'WHERE ue.status = 0', $sql);
 }
-$students = $DB->get_records_sql($sql, array('courseid' => $courseid));
+
+if (in_array($courseid, array(210, 331, 329, 330), true) === true) {
+    // Hack pour les cours de football.
+    $sql = str_replace(' AND e.courseid = :courseid', ' AND e.courseid IN(210, 331, 329, 330)', $sql);
+    $students = $DB->get_records_sql($sql);
+} else {
+    $students = $DB->get_records_sql($sql, array('courseid' => $courseid));
+}
 
 // TODO: récupérer les gens inscrits ponctuellement.
 $sql = "SELECT DISTINCT u.*, uid1.data AS validsesame, uid2.data AS cardpaid".
