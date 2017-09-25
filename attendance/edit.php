@@ -313,6 +313,7 @@ if ($notification === true) {
 
 echo '<form method="post" action="'.$CFG->wwwroot.'/local/apsolu/attendance/edit.php?courseid='.$courseid.'&amp;sessionid='.$sessionid.'" />';
 echo '<table class="table table-striped" id="apsolu-attendance-table">'.
+    '<caption class="text-left">'.get_string('attendance_table_caption', 'local_apsolu', (object) ['count_students' => count($students)]).'</caption>'.
     '<thead>'.
         '<tr>'.
             '<th>'.get_string('attendance_active_enrolment', 'local_apsolu').'</th>'.

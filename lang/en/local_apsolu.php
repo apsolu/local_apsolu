@@ -103,6 +103,7 @@ $string['attendance_undefined_short'] = '-';
 $string['attendance_undefined_style'] = 'left';
 $string['attendance_display_inactive_enrolments'] = 'Afficher les inscriptions inactives (semestres précédents)';
 $string['attendance_display_invalid_enrolments'] = 'Afficher les inscriptions non validées (liste principale et liste complémentaire)';
+$string['attendance_table_caption'] = 'Nombre d\'inscrits potentiels : {$a->count_students} étudiant(s)';
 $string['attendance_active_enrolment'] = 'Inscription active';
 $string['attendance_presence'] = 'Présence';
 $string['attendance_comment'] = 'Commentaire';
