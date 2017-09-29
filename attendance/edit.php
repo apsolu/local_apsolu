@@ -322,9 +322,11 @@ echo '<form method="post" action="'.$CFG->wwwroot.'/local/apsolu/attendance/edit
 echo '<table class="table table-striped" id="apsolu-attendance-table">'.
     '<caption class="text-left">'.get_string('attendance_table_caption', 'local_apsolu', (object) ['count_students' => count($students)]).'</caption>'.
     '<thead>'.
-        '<tr>'.
-            '<th>'.get_string('attendance_active_enrolment', 'local_apsolu').'</th>'.
-            '<th>'.get_string('pictureofuser').'</th>'.
+        '<tr>';
+if (isset($inactive_enrolments) === true) {
+    echo '<th>'.get_string('attendance_enrolment_state', 'local_apsolu').'</th>';
+}
+echo '<th>'.get_string('pictureofuser').'</th>'.
             '<th>'.get_string('lastname').'</th>'.
             '<th>'.get_string('firstname').'</th>'.
             '<th>'.get_string('attendance_presence', 'local_apsolu').'</th>'.
@@ -333,7 +335,7 @@ echo '<table class="table table-striped" id="apsolu-attendance-table">'.
             '<th>'.get_string('attendance_activity_presences_count', 'local_apsolu').'</th>'.
             '<th>'.get_string('attendance_valid_account', 'local_apsolu').'</th>'.
             '<th>'.get_string('attendance_sport_card', 'local_apsolu').'</th>'.
-            '<th>'.get_string('attendance_allowed_enrolment', 'local_apsolu').'</th>';
+            '<th>'.get_string('attendance_enrolment_type', 'local_apsolu').'</th>';
 
 if (isset($invalid_enrolments) === true) {
     echo '<th>'.get_string('attendance_enrolment_list', 'local_apsolu').'</th>';
@@ -427,7 +429,7 @@ foreach ($students as $student) {
             $allow = get_string('attendance_allowed_enrolment', 'local_apsolu');
             $allow_style = 'success';
         } else {
-            $allow = get_string('no');
+            $allow = get_string('attendance_forbidden_enrolment', 'local_apsolu');
             $allow_style = 'danger';
         }
         $rolename = $roles[$student->roleid]->name;
@@ -442,9 +444,11 @@ foreach ($students as $student) {
         $enrolment_link = get_string('attendance_ontime_enrolment', 'local_apsolu');
     }
 
-    echo '<tr>'.
-        '<td class="'.$enrolment_status_style.'">'.$enrolment_status.'</td>'.
-        '<td>'.$OUTPUT->render($picture).'</td>'.
+    echo '<tr>';
+    if (isset($inactive_enrolments) === true) {
+        echo '<td class="'.$enrolment_status_style.'">'.$enrolment_status.'</td>';
+    }
+    echo '<td>'.$OUTPUT->render($picture).'</td>'.
         '<td>'.$student->lastname.'</td>'.
         '<td>'.$student->firstname.'</td>'.
         '<td'.$status_style.'>'.$radios.'</td>'.
