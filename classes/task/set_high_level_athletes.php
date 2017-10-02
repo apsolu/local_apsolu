@@ -51,23 +51,24 @@ class set_high_level_athletes extends \core\task\scheduled_task {
             return false;
         }
 
-        $members = $DB->get_records('groups_members', array('groupid' => $group->id));
+        $members = $DB->get_records('groups_members', array('groupid' => $group->id), $sort = '', $fields = 'userid');
         foreach ($members as $member) {
             $data = new \stdClass();
-            $data->userid = $user->id;
+            $data->userid = $member->userid;
             $data->fieldid = $field->id;
             $data->data = '1';
+            $data->dataformat = '0';
 
             $conditions = array('userid' => $data->userid, 'fieldid' => $data->fieldid);
-            if ($data = $DB->get_record('user_info_data', $conditions)) {
-                if ($data->data !== $data->data) {
-                    $data->id = $data->id;
+            if ($record = $DB->get_record('user_info_data', $conditions)) {
+                if ($data->data !== $record->data) {
+                    $data->id = $record->id;
                     $DB->update_record('user_info_data', $data);
-                    mtrace("\t update ".$field->shortname." : #".$data->userid." ".$data->data);
+                    mtrace("\t update ".$field->shortname." : userid=".$data->userid." data=".$data->data);
                 }
             } else {
                 $DB->insert_record('user_info_data', $data);
-                mtrace("\t insert ".$field->shortname." : #".$data->userid."".$data->data);
+                mtrace("\t insert ".$field->shortname." : userid=".$data->userid." data=".$data->data);
             }
         }
 
@@ -80,7 +81,7 @@ class set_high_level_athletes extends \core\task\scheduled_task {
             if (isset($members[$data->userid]) === false) {
                 $data->data = 0;
                 $DB->update_record('user_info_data', $data);
-                mtrace("\t remove ".$field->shortname." : #".$data->userid." ".$data->data);
+                mtrace("\t remove ".$field->shortname." : userid=".$data->userid." data=".$data->data);
             }
         }
     }
