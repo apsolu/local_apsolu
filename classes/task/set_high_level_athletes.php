@@ -36,8 +36,11 @@ class set_high_level_athletes extends \core\task\scheduled_task {
     public function execute() {
         global $DB;
 
-        // TODO: faire une page pour configurer le groupe et le cours (menu déroulant + ids) à synchroniser.
         // TODO: carte muscu offerte.
+
+        // TODO: faire une page pour configurer le groupe et le cours (menu déroulant + ids) à synchroniser.
+        $groupingid = 1;
+        $courseid = 320;
 
         $field = $DB->get_record('user_info_field', array('shortname' => 'highlevelathlete'));
         if ($field === false) {
@@ -45,13 +48,17 @@ class set_high_level_athletes extends \core\task\scheduled_task {
             return false;
         }
 
-        $group = $DB->get_record('groups', array('id' => 53, 'courseid' => 320));
-        if ($group === false) {
-            mtrace('Le groupe "athlètes de haut niveau validés" n\'existe pas.');
+        $grouping = $DB->get_record('groupings', array('id' => $groupingid, 'courseid' => $courseid));
+        if ($grouping === false) {
+            mtrace('Le groupement "athlètes de haut niveau validés" n\'existe pas.');
             return false;
         }
 
-        $members = $DB->get_records('groups_members', array('groupid' => $group->id), $sort = '', $fields = 'userid');
+        $sql = "SELECT DISTINCT gm.userid".
+            " FROM {groups_members} gm".
+            " JOIN {groupings_groups} gg ON gg.groupid = gm.groupid".
+            " WHERE gg.groupingid = :groupingid";
+        $members = $DB->get_records_sql($sql, array('groupingid' => $grouping->id));
         foreach ($members as $member) {
             $data = new \stdClass();
             $data->userid = $member->userid;
