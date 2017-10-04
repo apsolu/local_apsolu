@@ -69,7 +69,6 @@ $tabsbar[] = new tabobject('sessions', $url, get_string('attendance_sessionsview
 $url = new moodle_url('/local/apsolu/attendance/overview.php', array('courseid' => $courseid));
 $tabsbar[] = new tabobject('overview', $url, get_string('attendance_overview', 'local_apsolu'));
 
-
 echo $OUTPUT->header();
 echo $OUTPUT->tabtree($tabsbar, 'overview');
 echo $OUTPUT->heading($pagedesc);
@@ -83,20 +82,35 @@ $sql = "SELECT DISTINCT u.*".
 $users = $DB->get_records_sql($sql, array('courseid' => $courseid));
 
 $sessions = $DB->get_records('apsolu_attendance_sessions', array('courseid' => $courseid));
+$statuses = $DB->get_records('apsolu_attendance_statuses');
 
-echo '<table class="table table-bordered">'.
+echo '<div class="table-no-responsive">'.
+'<table class="table table-bordered">'.
     '<thead>'.
         '<tr>'.
-            '<th>'.get_string('pictureofuser').'</th>'.
-            '<th>'.get_string('lastname').'</th>'.
-            '<th>'.get_string('firstname').'</th>';
+            '<th rowspan="2">'.get_string('pictureofuser').'</th>'.
+            '<th rowspan="2">'.get_string('lastname').'</th>'.
+            '<th rowspan="2">'.get_string('firstname').'</th>';
 foreach ($sessions as $session) {
-    echo '<th class="text-center">'.userdate($session->sessiontime, get_string('strftimeabbrday', 'local_apsolu')).'</th>';
+    echo '<th rowspan="2" class="text-center">'.userdate($session->sessiontime, get_string('strftimeabbrday', 'local_apsolu')).'</th>';
+}
+echo '<th colspan="'.count($statuses).'" class="text-center">Total</th></tr>';
+
+$total_presence = new stdClass();
+echo '<tr>';
+foreach ($statuses as $status) {
+    echo '<th>'.get_string($status->code, 'local_apsolu').'</th>';
+    $total_presence->{$status->code} = 0;
 }
 echo '</tr></thead><tbody>';
 
+$session_presences = array();
+
 $statuses = $DB->get_records('apsolu_attendance_statuses');
 foreach ($users as $user) {
+    // Initialise le compteur de présence pour l'utilisateur.
+    $user_presences = clone $total_presence;
+
     $picture = new user_picture($user);
     $picture->size = 50;
 
@@ -107,9 +121,18 @@ foreach ($users as $user) {
 
     $presences = $DB->get_records('apsolu_attendance_presences', array('studentid' => $user->id), $sort = '', $field = 'sessionid, statusid, description');
     foreach ($sessions as $session) {
+        if (isset($session_presences[$session->id]) === false) {
+            // Initialise le compteur de présence de cette session.
+            $session_presences[$session->id] = clone $total_presence;
+        }
+
         if (isset($presences[$session->id]) === true) {
             $presence = $presences[$session->id];
             $code = $statuses[$presence->statusid]->code;
+
+            // Incrémente le compteur de présences pour la session.
+            $session_presences[$session->id]->{$code}++;
+            $user_presences->{$code}++;
 
             if (empty($presence->description) === true) {
                 $comment = '';
@@ -130,9 +153,24 @@ foreach ($users as $user) {
         }
     }
 
+    foreach ($user_presences as $presence) {
+        echo '<th class="text-center">'.$presence.'</th>';
+    }
+
     echo '</tr>';
 }
 
-echo '</tbody></table>';
+echo '</tbody>';
+echo '</tfoot>';
+foreach ((array) $total_presence as $code => $value) {
+    echo '<tr>';
+    echo '<th colspan="3">Total '.get_string($code, 'local_apsolu').'</th>';
+    foreach ($session_presences as $presence) {
+        echo '<th class="text-center">'.$presence->{$code}.'</th>';
+    }
+    echo '</tr>';
+}
+echo '</tfoot>';
+echo '</table></div>';
 
 echo $OUTPUT->footer();
