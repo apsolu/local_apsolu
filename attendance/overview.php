@@ -79,58 +79,58 @@ $sql = "SELECT DISTINCT u.*".
     " JOIN {apsolu_attendance_presences} aap ON u.id = aap.studentid".
     " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid".
     " WHERE aas.courseid = :courseid".
-	" ORDER BY u.lastname, u.firstname, u.institution";
+    " ORDER BY u.lastname, u.firstname, u.institution";
 $users = $DB->get_records_sql($sql, array('courseid' => $courseid));
 
 $sessions = $DB->get_records('apsolu_attendance_sessions', array('courseid' => $courseid));
 
 echo '<table class="table table-bordered">'.
-	'<thead>'.
-		'<tr>'.
-			'<th>'.get_string('pictureofuser').'</th>'.
-			'<th>'.get_string('lastname').'</th>'.
-			'<th>'.get_string('firstname').'</th>';
+    '<thead>'.
+        '<tr>'.
+            '<th>'.get_string('pictureofuser').'</th>'.
+            '<th>'.get_string('lastname').'</th>'.
+            '<th>'.get_string('firstname').'</th>';
 foreach ($sessions as $session) {
-	echo '<th class="text-center">'.userdate($session->sessiontime, get_string('strftimeabbrday', 'local_apsolu')).'</th>';
+    echo '<th class="text-center">'.userdate($session->sessiontime, get_string('strftimeabbrday', 'local_apsolu')).'</th>';
 }
 echo '</tr></thead><tbody>';
 
 $statuses = $DB->get_records('apsolu_attendance_statuses');
 foreach ($users as $user) {
-	$picture = new user_picture($user);
-	$picture->size = 50;
+    $picture = new user_picture($user);
+    $picture->size = 50;
 
-	echo '<tr>';
-	echo '<td>'.$OUTPUT->render($picture).'</td>';
-	echo '<td>'.$user->lastname.'</td>';
-	echo '<td>'.$user->firstname.'</td>';
+    echo '<tr>';
+    echo '<td>'.$OUTPUT->render($picture).'</td>';
+    echo '<td>'.$user->lastname.'</td>';
+    echo '<td>'.$user->firstname.'</td>';
 
-	$presences = $DB->get_records('apsolu_attendance_presences', array('studentid' => $user->id), $sort = '', $field = 'sessionid, statusid, description');
-	foreach ($sessions as $session) {
-		if (isset($presences[$session->id]) === true) {
-			$presence = $presences[$session->id];
-			$code = $statuses[$presence->statusid]->code;
+    $presences = $DB->get_records('apsolu_attendance_presences', array('studentid' => $user->id), $sort = '', $field = 'sessionid, statusid, description');
+    foreach ($sessions as $session) {
+        if (isset($presences[$session->id]) === true) {
+            $presence = $presences[$session->id];
+            $code = $statuses[$presence->statusid]->code;
 
-			if (empty($presence->description) === true) {
-				$comment = '';
-			} else {
-				$comment = '<details class="apsolu-comments-details">'.
-					'<summary class="apsolu-comments-summary"><img alt="'.get_string('comments').'" class="iconsmall" src="'.$OUTPUT->pix_url('t/message').'" /></summary>'.
-					'<div class="apsolu-comments-div">'.$presence->description.'</div>'.
-					'</details>';
-			}
+            if (empty($presence->description) === true) {
+                $comment = '';
+            } else {
+                $comment = '<details class="apsolu-comments-details">'.
+                    '<summary class="apsolu-comments-summary"><img alt="'.get_string('comments').'" class="iconsmall" src="'.$OUTPUT->pix_url('t/message').'" /></summary>'.
+                    '<div class="apsolu-comments-div">'.$presence->description.'</div>'.
+                    '</details>';
+            }
 
-			$abbr = get_string($code.'_short', 'local_apsolu');
-			$label = get_string($code, 'local_apsolu');
-			$style = get_string($code.'_style', 'local_apsolu');
+            $abbr = get_string($code.'_short', 'local_apsolu');
+            $label = get_string($code, 'local_apsolu');
+            $style = get_string($code.'_style', 'local_apsolu');
 
-			echo '<td class="'.$style.' text-center"><abbr title="'.$label.'">'.$abbr.'</abbr>'.$comment.'</td>';
-		} else {
-			echo '<td class="text-center">-</td>';
-		}
-	}
+            echo '<td class="'.$style.' text-center"><abbr title="'.$label.'">'.$abbr.'</abbr>'.$comment.'</td>';
+        } else {
+            echo '<td class="text-center">-</td>';
+        }
+    }
 
-	echo '</tr>';
+    echo '</tr>';
 }
 
 echo '</tbody></table>';
