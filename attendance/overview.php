@@ -94,7 +94,7 @@ echo '<div class="table-no-responsive">'.
 foreach ($sessions as $session) {
     echo '<th rowspan="2" class="text-center">'.userdate($session->sessiontime, get_string('strftimeabbrday', 'local_apsolu')).'</th>';
 }
-echo '<th colspan="'.count($statuses).'" class="text-center">Total</th></tr>';
+echo '<th colspan="'.count($statuses).'" class="text-center">'.get_string('attendance_presences_summary', 'local_apsolu').'</th></tr>';
 
 $total_presence = new stdClass();
 echo '<tr>';
@@ -164,7 +164,7 @@ echo '</tbody>';
 echo '</tfoot>';
 foreach ((array) $total_presence as $code => $value) {
     echo '<tr>';
-    echo '<th colspan="3">Total '.get_string($code, 'local_apsolu').'</th>';
+    echo '<th colspan="3">'.get_string($code.'_total', 'local_apsolu').'</th>';
     foreach ($session_presences as $presence) {
         echo '<th class="text-center">'.$presence->{$code}.'</th>';
     }
