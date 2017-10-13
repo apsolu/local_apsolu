@@ -115,10 +115,10 @@ if ($formdata = $mform->get_data()) {
                 $params->licenseid = $licenseid;
                 $params->profile = html_writer::link('/user/profile.php?id='.$license->userid, $users[$email]->firstname.' '.$users[$email]->lastname);
                 if (empty($oldlicenseid) === true) {
-                    $result[] = get_string('federation_update_new_license', 'local_apsolu', $params);
+                    $result[] = get_string('federation_insert_license', 'local_apsolu', $params);
                 } else {
                     $params->oldlicenseid = $oldlicenseid;
-                    $result[] = get_string('federation_update_old_license', 'local_apsolu', $params);
+                    $result[] = get_string('federation_update_license', 'local_apsolu', $params);
                 }
             }
 

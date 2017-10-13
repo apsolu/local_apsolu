@@ -56,8 +56,7 @@ $string['federation_import'] = 'Importer';
 $string['federation_preview'] = 'Aperçu';
 $string['federation_result'] = 'Résultat';
 $string['federation_insert_license'] = 'Le numéro de licence {$a->licenseid} a été ajouté au profil de {$a->profile}';
-$string['federation_update_new_license'] = 'Le numéro de licence {$a->licenseid} a été mis à jour dans le profile de {$a->profile} (ancien numéro: {$a->oldlicenseid})';
-$string['federation_update_old_license'] = 'Le numéro de licence {$a->licenseid} a été mis à jour dans le profile de {$a->profile} (ancien numéro: {$a->oldlicenseid})';
+$string['federation_update_license'] = 'Le numéro de licence {$a->licenseid} a été mis à jour dans le profile de {$a->profile} (ancien numéro: {$a->oldlicenseid})';
 $string['federation_no_import'] = 'Aucune donnée insérée ou modifiée.';
 
 // Homepage.
