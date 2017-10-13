@@ -43,6 +43,23 @@ $string['payments_enddate'] = 'Date de fin des paiments';
 $string['semester1_grading_deadline'] = 'Date limite pour rendre les notes du S1';
 $string['semester2_grading_deadline'] = 'Date limite pour rendre les notes du S2';
 
+// Federation.
+$string['federation_importation'] = 'Importation des licences FFSU';
+$string['federation_importation_help'] = 'Pour importer des licences FFSU, vous devez renseigner un fichier csv comportant 2 colonnes :
+
+- la première colonne doit contenir les numéros de licence
+- la seconde colonne doit contenir l\'adresse du licencié
+
+La première ligne du fichier n\'est pas traitée';
+$string['federation_licenseid'] = 'Numéro de licence';
+$string['federation_import'] = 'Importer';
+$string['federation_preview'] = 'Aperçu';
+$string['federation_result'] = 'Résultat';
+$string['federation_insert_license'] = 'Le numéro de licence {$a->licenseid} a été ajouté au profil de {$a->profile}';
+$string['federation_update_new_license'] = 'Le numéro de licence {$a->licenseid} a été mis à jour dans le profile de {$a->profile} (ancien numéro: {$a->oldlicenseid})';
+$string['federation_update_old_license'] = 'Le numéro de licence {$a->licenseid} a été mis à jour dans le profile de {$a->profile} (ancien numéro: {$a->oldlicenseid})';
+$string['federation_no_import'] = 'Aucune donnée insérée ou modifiée.';
+
 // Homepage.
 $string['homepage_home'] = 'Accueil';
 $string['homepage_activities'] = 'Les activités';
@@ -132,11 +149,15 @@ $string['settings_configuration_calendar'] = 'Dates et calendrier';
 $string['settings_activities'] = 'Activités physiques';
 $string['settings_complements'] = 'Activités complémentaires';
 $string['settings_federations'] = 'FFSU';
+$string['settings_federation'] = 'FFSU';
+$string['settings_federation_import'] = 'Importation des licences FFSU';
 $string['settings_statistics'] = 'Statistiques';
 $string['settings_statistics_rosters'] = 'Effectifs';
 
 // Tasks.
 $string['set_high_level_athletes'] = 'Moulinette pour les sportifs de haut-niveau';
+$string['task_set_high_level_athletes'] = 'Tâche pour traiter les sportifs de haut-niveau';
+$string['task_run_mailqueue'] = 'Tâche pour envoyer les notifications';
 
 // Webservices.
 $string['ws_local_apsolu_enrol_user_description'] = 'Inscris un étudiant à un cours.';

@@ -38,8 +38,15 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     $ADMIN->add('apsolu', new admin_category('local_apsolu_configuration', get_string('settings_configuration', 'local_apsolu')));
 
     $str = get_string('settings_configuration_calendar', 'local_apsolu');
-    $url = new moodle_url('/local/apsolu/configuration/index.php', array('type' => 'calendar'));
+    $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'calendar'));
     $ADMIN->add('local_apsolu_configuration', new admin_externalpage('local_apsolu_configuration_calendar', $str, $url, $capabilities));
+
+    // Fédération FSU.
+    $ADMIN->add('apsolu', new admin_category('local_apsolu_federation', get_string('settings_federation', 'local_apsolu')));
+
+    $str = get_string('settings_federation_import', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/federation/index.php', array('page' => 'import'));
+    $ADMIN->add('local_apsolu_federation', new admin_externalpage('local_apsolu_federation_import', $str, $url, $capabilities));
 
     // Statistics.
     $ADMIN->add('apsolu', new admin_category('local_apsolu_statistics', get_string('settings_statistics', 'local_apsolu')));
