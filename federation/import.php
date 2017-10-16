@@ -44,7 +44,8 @@ if ($formdata = $mform->get_data()) {
             " FROM {user} u".
             " JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = 13 AND uid1.data = 1". // TODO: certificat médical.
             " JOIN {user_info_data} uid2 ON u.id = uid2.userid AND uid2.fieldid = 9 AND uid2.data = 1". // TODO: fédération paid
-            " LEFT JOIN {user_info_data} uid3 ON u.id = uid3.userid AND uid3.fieldid = 14"; // TODO: federationumber.
+            " LEFT JOIN {user_info_data} uid3 ON u.id = uid3.userid AND uid3.fieldid = 14". // TODO: federationumber.
+            " WHERE u.auth = 'shibboleth'";
         $users = $DB->get_records_sql($sql);
     }
 
@@ -82,7 +83,13 @@ if ($formdata = $mform->get_data()) {
             }
 
             $email = trim($line[1]);
-            if (isset($users[$email]) === false) {
+            $email1 = str_replace(array('@etudiant.uhb.fr', '@uhb.fr'), array('@etudiant.univ-rennes2.fr', '@univ-rennes2.fr'), $email);
+            $email2 = str_replace(array('@etudiant.univ-rennes2.fr', '@univ-rennes2.fr'), array('@etudiant.uhb.fr', '@uhb.fr'), $email);
+            if (isset($users[$email1]) === true) {
+                $email = $email1;
+            } else if (isset($users[$email2]) === true) {
+                $email = $email2;
+            } else {
                 continue;
             }
 
