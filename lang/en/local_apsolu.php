@@ -25,6 +25,9 @@
 
 $string['pluginname'] = 'APSOLU';
 
+// Général.
+$string['close_link'] = '<a id="apsolu-cancel-a" href="{$a->href}" class="{$a->class}">Fermer</a>';
+
 // Configuration.
 $string['semester1'] = 'Semestre 1';
 $string['semester1_enrol_startdate'] = 'Date de début d\'inscription du S1';
@@ -128,13 +131,16 @@ $string['attendance_table_caption'] = 'Nombre d\'inscrits potentiels : {$a->coun
 $string['attendance_enrolment_state'] = 'État de l\'inscription';
 $string['attendance_presence'] = 'Présence';
 $string['attendance_comment'] = 'Commentaire';
-$string['attendance_course_presences_count'] = 'Nombre de présences pour ce cours';
-$string['attendance_activity_presences_count'] = 'Nombre de présences pour cette activité';
+$string['attendance_course_presences_count'] = '<abbr title="Nombre">Nb</abbr> de présences pour ce cours';
+$string['attendance_activity_presences_count'] = '<abbr title="Nombre">Nb</abbr> de présences pour cette activité';
 $string['attendance_valid_account'] = 'Compte valide';
+$string['attendance_invalid_account'] = 'Compte Sésame non valide';
 $string['attendance_sport_card'] = 'Carte sport';
+$string['attendance_no_sport_card'] = 'Carte sport absente';
 $string['attendance_enrolment_type'] = 'Type d\'inscription';
+$string['attendance_complement'] = 'Information';
 $string['attendance_allowed_enrolment'] = 'Inscription autorisée';
-$string['attendance_forbidden_enrolment'] = 'Inscription non autorisée';
+$string['attendance_forbidden_enrolment'] = 'Type d\'inscription non autorisée';
 $string['attendance_enrolment_list'] = 'Liste d\'inscription';
 $string['attendance_enrolments_management'] = 'Gestion des inscriptions';
 $string['attendance_edit_enrolment'] = 'Modifier l\'inscription';
@@ -152,11 +158,26 @@ $string['settings_federation'] = 'FFSU';
 $string['settings_federation_import'] = 'Importation des licences FFSU';
 $string['settings_statistics'] = 'Statistiques';
 $string['settings_statistics_rosters'] = 'Effectifs';
+$string['settings_users'] = 'Utilisateurs';
+$string['settings_users_merge'] = 'Fusion de comptes';
 
 // Tasks.
 $string['set_high_level_athletes'] = 'Moulinette pour les sportifs de haut-niveau';
 $string['task_set_high_level_athletes'] = 'Tâche pour traiter les sportifs de haut-niveau';
 $string['task_run_mailqueue'] = 'Tâche pour envoyer les notifications';
+
+// Users.
+$string['users_merge_accounts'] = 'Fusionner les comptes';
+$string['users_email_users'] = 'Comptes manuels';
+$string['users_shibboleth_users'] = 'Comptes Sésame';
+$string['users_require_email_user'] = 'Vous devez sélectionner un utilisateur ayant un compte manuel.';
+$string['users_require_shibboleth_user'] = 'Vous devez sélectionner un utilisateur ayant un compte Sésame.';
+$string['users_not_mergeable'] = 'Les 2 comptes sélectionnés ne peuvent pas être fusionnés.';
+$string['users_not_mergeable_support'] = 'Merci de contacter la DSI.';
+$string['users_accounts_merged'] = 'Le compte Sésame <a href="{$a->wwwroot}/user/profile.php?id={$a->id2}">{$a->username2}</a> a été fusionné avec le compte <a href="{$a->wwwroot}/user/profile.php?id={$a->id1}">{$a->username1}</a>.<br />'.
+' Le compte <a href="{$a->wwwroot}/user/profile.php?id={$a->id1}">{$a->username1}</a> a été supprimé.';
+$string['users_not_confirmed_shibboleth'] = 'Le compte Sésame sélectionné n\'est pas valide. L\'inscription universitaire n\'est peut-être pas validée pour l\'année en cours.';
+$string['users_enrolments_shibboleth'] = 'Le compte Sésame sélectionné contient déjà des inscriptions.';
 
 // Webservices.
 $string['ws_local_apsolu_enrol_user_description'] = 'Inscris un étudiant à un cours.';

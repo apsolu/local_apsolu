@@ -152,7 +152,10 @@ $args = array(
 );
 
 if (isset($invalid_enrolments) === true) {
+    $lists_style = '';
     $args['invalid_enrolments'] = 1;
+} else {
+    $lists_style = ' style="display: none;"';
 }
 
 if (isset($inactive_enrolments) === true) {
@@ -173,7 +176,7 @@ if ($session === false) {
 
 // Récupérer tous les inscrits.
 // TODO: jointure avec colleges
-$sql = "SELECT u.*, ue.status, ue.timestart, ue.timeend, ue.enrolid, e.enrol, ra.roleid, uid1.data AS validsesame, uid2.data AS cardpaid".
+$sql = "SELECT u.*, ue.id AS ueid, ue.status, ue.timestart, ue.timeend, ue.enrolid, e.enrol, ra.id AS raid, ra.roleid, uid1.data AS validsesame, uid2.data AS cardpaid".
     " FROM {user} u".
     " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = 11". // validsesame
     " LEFT JOIN {user_info_data} uid2 ON u.id = uid2.userid AND uid2.fieldid = 12". // cardpaid
@@ -333,15 +336,10 @@ echo '<th>'.get_string('pictureofuser').'</th>'.
             '<th>'.get_string('attendance_comment', 'local_apsolu').'</th>'.
             '<th>'.get_string('attendance_course_presences_count', 'local_apsolu').'</th>'.
             '<th>'.get_string('attendance_activity_presences_count', 'local_apsolu').'</th>'.
-            '<th>'.get_string('attendance_valid_account', 'local_apsolu').'</th>'.
-            '<th>'.get_string('attendance_sport_card', 'local_apsolu').'</th>'.
-            '<th>'.get_string('attendance_enrolment_type', 'local_apsolu').'</th>';
-
-if (isset($invalid_enrolments) === true) {
-    echo '<th>'.get_string('attendance_enrolment_list', 'local_apsolu').'</th>';
-}
-
-echo '<th>'.get_string('attendance_enrolments_management', 'local_apsolu').'</th>'.
+            '<th>'.get_string('attendance_enrolment_type', 'local_apsolu').'</th>'.
+            '<th'.$lists_style.'>'.get_string('attendance_enrolment_list', 'local_apsolu').'</th>'.
+            '<th>'.get_string('attendance_complement', 'local_apsolu').'</th>'.
+            '<th>'.get_string('attendance_enrolments_management', 'local_apsolu').'</th>'.
         '</tr>'.
     '</thead>'.
     '<tbody>';
@@ -400,21 +398,20 @@ foreach ($students as $student) {
         $activity_presences[$student->id]->total = 0;
     }
 
-    $validsesame = get_string('no');
-    $validsesame_style = 'danger';
-    if (isset($student->validsesame) && $student->validsesame === '1') {
-        $validsesame = get_string('yes');
-        $validsesame_style = 'success';
+    // Information.
+    $informations = array();
+
+    $informations_style = 'none';
+    if (isset($student->validsesame) === false || $student->validsesame !== '1') {
+        $informations[] = get_string('attendance_invalid_account', 'local_apsolu');
+        $informations_style = 'danger';
     }
 
-    $cardpaid = get_string('no');
-    $cardpaid_style = 'danger';
-    if (isset($student->cardpaid) && $student->cardpaid === '1') {
-        $cardpaid = get_string('yes');
-        $cardpaid_style = 'success';
+    if (isset($student->cardpaid) === false || $student->cardpaid !== '1') {
+        $informations[] = get_string('attendance_no_sport_card', 'local_apsolu');
+        $informations_style = 'danger';
     }
 
-    $allow_style = 'warning';
     if (isset($roles[$student->roleid]) === true) {
         $sql = "SELECT ac.id".
            " FROM {apsolu_colleges} ac".
@@ -425,21 +422,17 @@ foreach ($students as $student) {
            " AND ac.roleid = :roleid".
            " AND esc.enrolid = :enrolid";
         $allow = $DB->get_records_sql($sql, array('userid' => $student->id, 'roleid' => $student->roleid, 'enrolid' => $student->enrolid));
-        if (count($allow) > 0 && $validsesame === get_string('yes')) {
-            $allow = get_string('attendance_allowed_enrolment', 'local_apsolu');
-            $allow_style = 'success';
-        } else {
-            $allow = get_string('attendance_forbidden_enrolment', 'local_apsolu');
-            $allow_style = 'danger';
+        if (count($allow) === 0 || (isset($student->validsesame) === false || $student->validsesame !== '1')) {
+            $informations[] = get_string('attendance_forbidden_enrolment', 'local_apsolu');
+            $informations_style = 'danger';
         }
         $rolename = $roles[$student->roleid]->name;
     } else {
         $rolename = '-';
-        $allow = '';
     }
 
     if (isset($student->enrolid) === true) {
-        $enrolment_link = '<a class="btn btn-default" href="'.$CFG->wwwroot.'/enrol/'.$student->enrol.'/manage.php?enrolid='.$student->enrolid.'">'.get_string('attendance_edit_enrolment', 'local_apsolu').'</a>';
+        $enrolment_link = '<a class="btn btn-default apsolu-attendance-edit-enrolments" data-userid="'.$student->id.'" data-courseid="'.$courseid.'" data-ueid="'.$student->ueid.'" data-listid="'.$student->status.'" data-raid="'.$student->raid.'" data-roleid="'.$student->roleid.'" href="'.$CFG->wwwroot.'/enrol/'.$student->enrol.'/manage.php?enrolid='.$student->enrolid.'">'.get_string('attendance_edit_enrolment', 'local_apsolu').'</a>';
     } else {
         $enrolment_link = get_string('attendance_ontime_enrolment', 'local_apsolu');
     }
@@ -455,19 +448,16 @@ foreach ($students as $student) {
         '<td><textarea name="comment['.$student->id.']">'.htmlentities($presences[$student->id]->description, ENT_COMPAT, 'UTF-8').'</textarea></td>'.
         '<td>'.$course_presences[$student->id]->total.'</td>'.
         '<td>'.$activity_presences[$student->id]->total.'</td>'.
-        '<td class="'.$validsesame_style.'">'.$validsesame.'</td>'.
-        '<td class="'.$cardpaid_style.'">'.$cardpaid.'</td>'.
-        '<td class="'.$allow_style.'">'.$rolename.'<hr />'.$allow.'</td>';
+        '<td class="apsolu-attendance-role" data-raid="'.$student->raid.'">'.$rolename.'</td>';
 
-    if (isset($invalid_enrolments) === true) {
-        if ($student->status === null) {
-            echo '<td>-</td>';
-        } else {
-            echo '<td>'.enrol_select_plugin::get_enrolment_list_name($student->status, 'short').'</td>';
-        }
+    if ($student->status === null) {
+        echo '<td'.$lists_style.'>-</td>';
+    } else {
+        echo '<td class="apsolu-attendance-status" data-ueid="'.$student->ueid.'"'.$lists_style.'>'.enrol_select_plugin::get_enrolment_list_name($student->status, 'short').'</td>';
     }
 
-    echo '<td>'.$enrolment_link.'</td>'.
+    echo '<td class="'.$informations_style.'">'.implode('<br />', $informations).'</td>'.
+            '<td>'.$enrolment_link.'</td>'.
         '</tr>';
 }
 echo '</tbody>'.
