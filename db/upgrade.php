@@ -32,14 +32,14 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
     $result = true;
 
-    if ($result && $oldversion < 2016082400) {
+    $version = 2017120600;
+    if ($result && $oldversion < $version) {
+        // Create cache directory for homepage.
         $cachedir = $CFG->dataroot.'/apsolu/local_apsolu/cache/homepage';
 
         $result = mkdir($cachedir, $CFG->directorypermissions, $recursive = true);
-    }
 
-    $version = 2017072100;
-    if ($result && $oldversion < $version) {
+        // Create attendance tables.
         $table = new xmldb_table('apsolu_attendance_sessions');
 
         // If the table does not exist, create it along with its fields.
@@ -80,12 +80,6 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
 
-        // Savepoint reached.
-        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
-    }
-
-    $version = 2017082201;
-    if ($result && $oldversion < $version) {
         $table = new xmldb_table('apsolu_attendance_statuses');
 
         // If the table does not exist, create it along with its fields.

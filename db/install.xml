@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<XMLDB PATH="local/apsolu/db" VERSION="2017061200" COMMENT="XMLDB file for apsolu" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../lib/xmldb/xmldb.xsd">
+<TABLES>
+    <!-- ATTENDANCE SESSIONS -->
+    <TABLE NAME="apsolu_attendance_sessions" COMMENT="apsolu_attendance_sessions table">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" NEXT="event" />
+            <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="false" PREVIOUS="id" NEXT="sessiontime" />
+            <FIELD NAME="sessiontime" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="name" NEXT="courseid" />
+            <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="sessiontime" NEXT="activityid" />
+            <FIELD NAME="activityid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="courseid" NEXT="timecreated" />
+            <FIELD NAME="locationid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="activityid" NEXT="timecreated" />
+            <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="locationid" NEXT="timemodified" />
+            <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="timecreated" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_attendance_sessions" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="courseid" UNIQUE="false" FIELDS="courseid" />
+            <INDEX NAME="activityid" UNIQUE="false" FIELDS="activityid" />
+            <INDEX NAME="locatoinid" UNIQUE="false" FIELDS="locationid" />
+        </INDEXES>
+    </TABLE>
+
+    <!-- ATTENDANCE PRESENCES -->
+    <TABLE NAME="apsolu_attendance_presences" COMMENT="apsolu_attendance_presences table">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="true" NEXT="studentid" />
+            <FIELD NAME="studentid" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="false" PREVIOUS="id" NEXT="teacherid" />
+            <FIELD NAME="teacherid" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="false" PREVIOUS="studentid" NEXT="statusid" />
+            <FIELD NAME="statusid" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="false" PREVIOUS="teacherid" NEXT="description" />
+            <FIELD NAME="description" TYPE="char" LENGTH="255" NOTNULL="false" PREVIOUS="statusid" NEXT="timecreated" COMMENT="comment about studenet presence" />
+            <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="description" NEXT="timemodified" />
+            <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="timecreated" NEXT="sessionid" />
+            <FIELD NAME="sessionid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="timemodified" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_attendance_presences" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="unique_presence" UNIQUE="true" FIELDS="studentid,sessionid" />
+        </INDEXES>
+    </TABLE>
+
+    <!-- ATTENDANCE STATUSES -->
+    <TABLE NAME="apsolu_attendance_statuses" COMMENT="apsolu_attendance_statuses table">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="true" NEXT="name" />
+            <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="false" PREVIOUS="id" NEXT="code" />
+            <FIELD NAME="code" TYPE="char" LENGTH="255" NOTNULL="false" PREVIOUS="name" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_courses_groupings" />
+        </KEYS>
+    </TABLE>
+</TABLES>
+</XMLDB>
