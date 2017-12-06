@@ -185,22 +185,33 @@ $sql = "SELECT u.*, ue.id AS ueid, ue.status, ue.timestart, ue.timeend, ue.enrol
     " JOIN {role_assignments} ra ON u.id = ra.userid AND ((e.id = ra.itemid) OR (e.enrol = 'manual' AND ra.itemid = 0))".
     " JOIN {role} r ON r.id = ra.roleid".
     " JOIN {context} ctx ON ra.contextid = ctx.id AND ctx.instanceid = e.courseid".
-    " WHERE ue.status >= 0". // Only active.
-    " AND e.status = 0". // Only active.
+    " WHERE e.status = 0". // Only active enrolments.
     " AND e.courseid = :courseid".
     " AND ctx.contextlevel = 50". // Course level.
-    " AND r.archetype = 'student'".
-    " ORDER BY u.lastname, u.firstname";
+    " AND r.archetype = 'student'";
+$params = array();
+
 if (isset($invalid_enrolments) === false) {
-    $sql = str_replace('WHERE ue.status >= 0', 'WHERE ue.status = 0', $sql);
+    // Récupération des inscriptions courantes.
+    $sql .= "AND ue.status = 0".
+        " AND (ue.timestart < :timestart OR ue.timestart = 0)".
+        " AND (ue.timeend > :timeend OR ue.timeend = 0)";
+    $params['timestart'] = $session->sessiontime;
+    $params['timeend'] = $session->sessiontime;
+} else {
+    // Récupération de toutes les inscriptions.
+    $sql .= " AND ue.status >= 0";
 }
+
+$sql .= " ORDER BY u.lastname, u.firstname";
 
 if (in_array($courseid, array(210, 331, 329, 330), true) === true) {
     // Hack pour les cours de football.
     $sql = str_replace(' AND e.courseid = :courseid', ' AND e.courseid IN(210, 331, 329, 330)', $sql);
     $students = $DB->get_records_sql($sql);
 } else {
-    $students = $DB->get_records_sql($sql, array('courseid' => $courseid));
+    $params['courseid'] = $courseid;
+    $students = $DB->get_records_sql($sql, $params);
 }
 
 // TODO: récupérer les gens inscrits ponctuellement.
