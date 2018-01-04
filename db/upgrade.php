@@ -37,7 +37,9 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         // Create cache directory for homepage.
         $cachedir = $CFG->dataroot.'/apsolu/local_apsolu/cache/homepage';
 
-        $result = mkdir($cachedir, $CFG->directorypermissions, $recursive = true);
+        if (is_dir($cachedir) === false) {
+            $result = mkdir($cachedir, $CFG->directorypermissions, $recursive = true);
+        }
 
         // Create attendance tables.
         $table = new xmldb_table('apsolu_attendance_sessions');
