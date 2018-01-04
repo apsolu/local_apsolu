@@ -228,6 +228,7 @@ foreach ($DB->get_records_sql($sql, array('courseid' => $courseid)) as $student)
         $student->timestart = time() + 60;
         $student->timeend = time() + 60;
         $student->enrolid = null;
+        $student->raid = null;
         $student->roleid = null;
 
         $students[$student->id] = $student;
