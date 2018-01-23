@@ -69,6 +69,8 @@ $tabsbar[] = new tabobject('sessions', $url, get_string('attendance_sessionsview
 $url = new moodle_url('/local/apsolu/attendance/overview.php', array('courseid' => $courseid));
 $tabsbar[] = new tabobject('overview', $url, get_string('attendance_overview', 'local_apsolu'));
 
+$url = new moodle_url('/local/apsolu/attendance/sessions/index.php', array('courseid' => $courseid));
+$tabsbar[] = new tabobject('sessions_edit', $url, get_string('attendance_sessions_edit', 'local_apsolu'));
 
 echo $OUTPUT->header();
 echo $OUTPUT->tabtree($tabsbar, 'sessions');
