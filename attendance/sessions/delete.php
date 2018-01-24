@@ -56,16 +56,23 @@ if (count($presences) > 0) {
         if ($forum === false) {
             $notifications[] = $OUTPUT->notification(get_string('attendance_error_no_news_forum', 'local_apsolu'), 'notifyproblem');
         } else {
+            // Load locations.
+            $locations = array();
+            foreach ($DB->get_records('apsolu_locations', $conditions = null, $sort = 'name') as $location) {
+                $locations[$location->id] = $location->name;
+            }
+
             list($course, $cm) = get_course_and_cm_from_instance($forum, 'forum');
             $context = context_module::instance($cm->id);
 
             $sessiontime = userdate($session->sessiontime, get_string('strftimedate', 'local_apsolu'));
+            $variables = (object) ['datetime' => userdate($session->sessiontime, get_string('strftimedatetime', 'local_apsolu')), 'location' => $locations[$session->locationid]];
 
             // Create the discussion.
             $discussion = new stdClass();
             $discussion->course = $course->id;
             $discussion->forum = $forum->id;
-            $discussion->message = get_string('attendance_forum_delete_session_message', 'local_apsolu', $sessiontime);
+            $discussion->message = get_string('attendance_forum_delete_session_message', 'local_apsolu', $variables);
             $discussion->messageformat = FORMAT_HTML;   // Force formatting for now.
             $discussion->messagetrust = trusttext_trusted($context);
             $discussion->itemid = array();

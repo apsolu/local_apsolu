@@ -106,7 +106,7 @@ $string['attendance_sessionsview'] = 'Vue par sessions';
 $string['attendance_overview'] = 'Vue d\'ensemble';
 $string['attendance_sessions_edit'] = 'Éditer des sessions';
 $string['attendance_no_periods'] = 'Aucune période de cours définie.';
-$string['attendance_no_sessions'] = 'Aucune période de cours définie.';
+$string['attendance_no_sessions'] = 'Aucune session de cours définie.';
 $string['attendance_add_session'] = 'Ajouter une nouvelle session';
 $string['attendance_undeletable_session'] = 'La session "{$a}" ne peut pas être supprimée car des présences ont déjà été prises.';
 $string['attendance_delete_session'] = 'Supprimer la session "{$a}" ?';
@@ -152,28 +152,43 @@ $string['attendance_enrolments_management'] = 'Gestion des inscriptions';
 $string['attendance_edit_enrolment'] = 'Modifier l\'inscription';
 $string['attendance_ontime_enrolment'] = 'Inscription ponctuelle';
 $string['attendance_forum_notify'] = 'Notifier dans le forum';
-$string['attendance_error_no_modification'] = 'La notification dans le forum des annonces n\'a pas été publiée car ni le jour de la session, ni le lieu du créneau n\'ont été modifés.';
+$string['attendance_error_no_modification'] = 'La notification dans le forum des annonces n\'a pas été publiée car ni le jour de la session, ni le lieu de la session n\'ont été modifés.';
 $string['attendance_error_no_news_forum'] = 'Le forum des annonces est absent de ce cours. Il est donc impossible d\'écrire le message dans ce forum pour notifier les étudiants.';
 $string['attendance_success_message_forum'] = 'La notification a été publiée dans le forum des annonces.';
 $string['attendance_error_message_forum'] = 'La notification n\'a pas pu être publiée dans le forum des annonces.';
 $string['attendance_forum_create_session_subject'] = 'ajout d\'une session le {$a}';
-$string['attendance_forum_create_session_message'] = '<p>Ajout d\'une session :</p>'.
+$string['attendance_forum_create_session_message'] = '<p>Bonjour,</p>'.
+    '<p>Une session de cours a été ajoutée :</p>'.
     '<dl class="dl-horizontal">'.
         '<dt>Jour</dt>'.
         '<dd>{$a->datetime}</dd>'.
         '<dt>Lieu</dt>'.
         '<dd>{$a->location}<dd>'.
-    '</dl>';
+    '</dl>'.
+    '<p>Pensez à en prendre note dans votre agenda. ;-)</p>'.
+    '<p>Cordialement</p>';
 $string['attendance_forum_edit_session_subject'] = 'modification de la session du {$a}';
-$string['attendance_forum_edit_session_message'] = '<p>Modification de la session :</p>'.
+$string['attendance_forum_edit_session_message'] = '<p>Bonjour,</p>'.
+    '<p>Une session de cours a été modifiée :</p>'.
     '<dl class="dl-horizontal">'.
         '<dt>Jour</dt>'.
         '<dd>{$a->datetime}</dd>'.
         '<dt>Lieu</dt>'.
         '<dd>{$a->location}<dd>'.
-    '</dl>';
+    '</dl>'.
+    '<p>Pensez à en prendre note dans votre agenda. ;-)</p>'.
+    '<p>Cordialement</p>';
 $string['attendance_forum_delete_session_subject'] = 'suppression de la session du {$a}';
-$string['attendance_forum_delete_session_message'] = '<p>La session du {$a} ne sera pas assurée.</p>';
+$string['attendance_forum_delete_session_message'] = '<p>Bonjour,</p>'.
+    '<p>Une session de cours a été supprimée :</p>'.
+    '<dl class="dl-horizontal">'.
+        '<dt>Jour</dt>'.
+        '<dd>{$a->datetime}</dd>'.
+        '<dt>Lieu</dt>'.
+        '<dd>{$a->location}<dd>'.
+    '</dl>'.
+    '<p>Pensez à en prendre note dans votre agenda. ;-)</p>'.
+    '<p>Cordialement</p>';
 $string['strftimeabbrday'] = '%d %b';
 $string['strftimedatetime'] = '%A %d %B à %Hh%M';
 $string['strftimedate'] = '%A %d %B';
