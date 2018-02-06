@@ -45,6 +45,8 @@ $string['payments_startdate'] = 'Date de début des paiements';
 $string['payments_enddate'] = 'Date de fin des paiments';
 $string['semester1_grading_deadline'] = 'Date limite pour rendre les notes du S1';
 $string['semester2_grading_deadline'] = 'Date limite pour rendre les notes du S2';
+$string['functional_contact'] = 'Contact fonctionnel';
+$string['technical_contact'] = 'Contact technique';
 
 // Federation.
 $string['federation_importation'] = 'Importation des licences FFSU';
@@ -197,6 +199,7 @@ $string['strftimedate'] = '%A %d %B';
 $string['settings_root'] = 'Gestion du SIUAPS';
 $string['settings_configuration'] = 'Configuration';
 $string['settings_configuration_calendar'] = 'Dates et calendrier';
+$string['settings_configuration_contacts'] = 'Adresses de contact';
 $string['settings_activities'] = 'Activités physiques';
 $string['settings_complements'] = 'Activités complémentaires';
 $string['settings_federations'] = 'FFSU';
