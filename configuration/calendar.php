@@ -52,6 +52,7 @@ $customdata = array($defaults);
 $mform = new local_apsolu_calendar_form(null, $customdata);
 
 echo $OUTPUT->header();
+echo $OUTPUT->heading(get_string('settings_configuration_calendar', 'local_apsolu'));
 
 if ($data = $mform->get_data()) {
     foreach ($attributes as $attribute) {
