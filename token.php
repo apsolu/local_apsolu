@@ -33,13 +33,19 @@ if ($card) {
             $response = new stdClass();
             $response->token = $externaltoken->token;
         } else {
-            $response->token = 'external token pas found';
+            if (empty($CFG->debug) === false) {
+                $response->debug = 'user token not found / generated';
+            }
         }
     } else {
-        $response->token = 'service pas found';
+        if (empty($CFG->debug) === false) {
+            $response->debug = 'webservice not found / disabled';
+        }
     }
 } else {
-    $response->token = 'card pas found';
+    if (empty($CFG->debug) === false) {
+        $response->debug = 'user cardid not found';
+    }
 }
 
 echo json_encode($response);
