@@ -77,7 +77,7 @@ class local_apsolu_webservices extends external_api {
             " FROM {user} u".
             " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = 16". // Numéro de carte VU.
             " LEFT JOIN {user_info_data} uid2 ON u.id = uid2.userid AND uid2.fieldid = 12". // Carte sport.
-            " WHERE u.timemodified > :timemodified".
+            " WHERE u.timemodified >= :timemodified".
             " AND u.deleted = 0".
             " ORDER BY u.lastname, u.firstname";
         foreach ($DB->get_records_sql($sql, array('timemodified' => $since)) as $record) {
@@ -151,7 +151,7 @@ class local_apsolu_webservices extends external_api {
             " FROM {course_categories} cc".
             " JOIN {course} c ON cc.id = c.category".
             " JOIN {apsolu_courses} ac ON c.id = ac.id".
-            " WHERE c.timemodified > :timemodified".
+            " WHERE c.timemodified >= :timemodified".
             " ORDER BY cc.name";
         foreach ($DB->get_records_sql($sql, array('timemodified' => $since)) as $record) {
             $activity = new stdClass();
@@ -212,7 +212,7 @@ class local_apsolu_webservices extends external_api {
             " FROM {course} c".
             " JOIN {apsolu_courses} ac ON c.id = ac.id".
             " JOIN {apsolu_skills} sk ON sk.id = ac.skillid".
-            " WHERE c.timemodified > :timemodified".
+            " WHERE c.timemodified >= :timemodified".
             " ORDER BY c.fullname";
         foreach ($DB->get_records_sql($sql, array('timemodified' => $since)) as $record) {
             $course = new stdClass();
@@ -288,7 +288,7 @@ class local_apsolu_webservices extends external_api {
             " LEFT JOIN {apsolu_attendance_presences} aap ON ra.userid = aap.studentid AND aap.statusid IN (1, 2)". // Present + late.
             " LEFT JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid".
             " LEFT JOIN {user_info_data} uid1 ON ra.userid = uid1.userid AND uid1.fieldid = 11". // Compte Sésame validé.
-            " WHERE ra.timemodified > :timemodified".
+            " WHERE ra.timemodified >= :timemodified".
             " AND ra.component = 'enrol_select'".
             " AND ue.timeend > :now".
             " GROUP BY ra.id, ra.userid, ctx.instanceid";
@@ -375,7 +375,7 @@ class local_apsolu_webservices extends external_api {
             " AND e.status = 0".  // Active.
             " AND ue.status > 0". // Inactive.
             // " AND ue.timecreated != ue.timemodified".
-            " AND ue.timemodified > :timemodified";
+            " AND ue.timemodified >= :timemodified";
         // uhb_dump_sql($sql, array('timemodified' => $since));
         return $DB->get_records_sql($sql, array('timemodified' => $since));
     }
@@ -429,7 +429,7 @@ class local_apsolu_webservices extends external_api {
             " FROM {role_assignments} ra".
             " JOIN {context} ctx ON ctx.id = ra.contextid".
             " JOIN {apsolu_courses} c ON ctx.instanceid = c.id".
-            " WHERE ra.timemodified > :timemodified".
+            " WHERE ra.timemodified >= :timemodified".
             " AND ra.roleid = 3". // Enseignant.
             " ORDER BY ra.userid, ctx.instanceid";
         foreach ($DB->get_records_sql($sql, array('timemodified' => $since)) as $record) {
