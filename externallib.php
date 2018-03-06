@@ -73,8 +73,9 @@ class local_apsolu_webservices extends external_api {
             return $data;
         }
 
-        $sql = "SELECT u.id AS iduser, u.username, u.auth, u.firstname, u.lastname, uid1.data AS cardnumber, 'category', u.institution, uid2.data AS nosportcard".
+        $sql = "SELECT DISTINCT u.id AS iduser, u.username, u.auth, u.firstname, u.lastname, uid1.data AS cardnumber, 'category', u.institution, uid2.data AS nosportcard".
             " FROM {user} u".
+            " JOIN {user_enrolments} ue ON u.id = ue.userid AND status = 0". // Restreint le téléchargement des utilisateurs à ceux qui ont ou ont eu au moins une inscription active dans une activité. TODO: à supprimer à la fin du test.
             " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = 16". // Numéro de carte VU.
             " LEFT JOIN {user_info_data} uid2 ON u.id = uid2.userid AND uid2.fieldid = 12". // Carte sport.
             " WHERE u.timemodified >= :timemodified".
