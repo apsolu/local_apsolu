@@ -209,13 +209,18 @@ class local_apsolu_webservices extends external_api {
             return $data;
         }
 
+        $semester1_enrol_startdate = get_config('local_apsolu', 'semester1_enrol_startdate');
+        $semester1_enrol_startdate = strftime('%Y-%m-%d', $semester1_enrol_startdate);
+
         $sql = "SELECT c.id AS idcourse, c.category AS idactivity, ac.event, sk.name AS skill, ac.numweekday, ac.starttime, ac.endtime".
             " FROM {course} c".
             " JOIN {apsolu_courses} ac ON c.id = ac.id".
             " JOIN {apsolu_skills} sk ON sk.id = ac.skillid".
+            " JOIN {apsolu_periods} ap ON ap.id = ac.periodid".
             " WHERE c.timemodified >= :timemodified".
+            " AND ap.weeks >= :semester1_enrol_startdate".
             " ORDER BY c.fullname";
-        foreach ($DB->get_records_sql($sql, array('timemodified' => $since)) as $record) {
+        foreach ($DB->get_records_sql($sql, array('timemodified' => $since, 'semester1_enrol_startdate' => $semester1_enrol_startdate)) as $record) {
             $course = new stdClass();
             $course->idcourse = $record->idcourse;
             $course->idactivity = $record->idactivity;
