@@ -626,9 +626,56 @@ class local_apsolu_webservices extends external_api {
 
         $sql = "SELECT id".
             " FROM {apsolu_attendance_sessions}".
-            " WHERE courseid = :courseid";
+            " WHERE courseid = :courseid".
             " AND sessiontime BETWEEN :beforesessiontime AND :aftersessiontime";
-        $session = $DB->get_record_sql($sql, array('courseid' => $course->id, 'beforesessiontime' => $beforesessiontime, 'aftersessiontime' => $aftersessiontime), MUST_EXIST);
+
+        // Cherche la première session dont l'heure de début est comprise dans un interval de 2h avec l'horodatage de la présence saisie.
+        $sessions = $DB->get_records_sql($sql, array('courseid' => $course->id, 'beforesessiontime' => $beforesessiontime, 'aftersessiontime' => $aftersessiontime));
+        $session = current($sessions);
+
+        if (isset($session->id) === false) {
+            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'session non trouvée dans un interval de 2h');
+
+            $beforesessiontime = strtotime('monday this week', $timestamp);
+            $aftersessiontime = strtotime('sunday this week', $timestamp);
+
+            // Cherche la première session dont l'heure de début est comprise dans l'interval de la semaine correspondant à l'horodatage de la présence saisie.
+            $sessions = $DB->get_records_sql($sql, array('courseid' => $course->id, 'beforesessiontime' => $beforesessiontime, 'aftersessiontime' => $aftersessiontime));
+            $session = current($sessions);
+        }
+
+        if (isset($session->id) === false) {
+            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'session non trouvée dans un interval de la semaine');
+
+            $sql = "SELECT id".
+                " FROM {apsolu_attendance_sessions}".
+                " WHERE courseid = :courseid".
+                " AND sessiontime >= :timestamp";
+
+            // Cherche la première session dont l'heure de début est supérieure à l'horodatage de la présence saisie.
+            $sessions = $DB->get_record_sql($sql, array('courseid' => $course->id, 'beforesessiontime' => $beforesessiontime, 'aftersessiontime' => $aftersessiontime));
+            $session = current($sessions);
+        }
+
+        if (isset($session->id) === false) {
+            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'session non trouvée dans un interval de la semaine');
+
+            $sql = "SELECT id".
+                " FROM {apsolu_attendance_sessions}".
+                " WHERE courseid = :courseid".
+                " AND sessiontime <= :timestamp".
+                " ORDER BY sessiontime DESC";
+
+            // Cherche la première session dont l'heure de début est inférieure à l'horodatage de la présence saisie.
+            $sessions = $DB->get_record_sql($sql, array('courseid' => $course->id, 'beforesessiontime' => $beforesessiontime, 'aftersessiontime' => $aftersessiontime));
+            $session = current($sessions);
+        }
+
+        if (isset($session->id) === false) {
+            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'impossible de trouver une session pour ce cours');
+
+            return array('success' => true);
+        }
 
         $presence = new stdClass();
         $presence->studentid = $iduser;
@@ -642,7 +689,9 @@ class local_apsolu_webservices extends external_api {
         try {
             $DB->insert_record('apsolu_attendance_presences', $presence);
         } catch (Exception $exception) {
-            return array('success' => false);
+            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'impossible d\'enregistrer la présence');
+
+            return array('success' => true);
         }
 
         return array('success' => true);
