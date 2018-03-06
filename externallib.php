@@ -70,6 +70,7 @@ class local_apsolu_webservices extends external_api {
 
         // Vérifier que le token appartienne à un enseignant du SIUAPS.
         if (local_apsolu_is_valid_token() === false) {
+            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, 'token non valide']);
             return $data;
         }
 
@@ -145,6 +146,7 @@ class local_apsolu_webservices extends external_api {
 
         // Vérifier que le token appartienne à un enseignant du SIUAPS.
         if (local_apsolu_is_valid_token() === false) {
+            local_apsolu_write_log(__METHOD__, ['since='.$since, 'token non valide']);
             return $data;
         }
 
@@ -206,6 +208,7 @@ class local_apsolu_webservices extends external_api {
 
         // Vérifier que le token appartienne à un enseignant du SIUAPS.
         if (local_apsolu_is_valid_token() === false) {
+            local_apsolu_write_log(__METHOD__, ['since='.$since, 'token non valide']);
             return $data;
         }
 
@@ -282,6 +285,7 @@ class local_apsolu_webservices extends external_api {
 
         // Vérifier que le token appartienne à un enseignant du SIUAPS.
         if (local_apsolu_is_valid_token() === false) {
+            local_apsolu_write_log(__METHOD__, ['since='.$since, 'token non valide']);
             return $data;
         }
 
@@ -367,6 +371,7 @@ class local_apsolu_webservices extends external_api {
 
         // Vérifier que le token appartienne à un enseignant du SIUAPS.
         if (local_apsolu_is_valid_token() === false) {
+            local_apsolu_write_log(__METHOD__, ['since='.$since, 'token non valide']);
             return $data;
         }
 
@@ -428,6 +433,7 @@ class local_apsolu_webservices extends external_api {
 
         // Vérifier que le token appartienne à un enseignant du SIUAPS.
         if (local_apsolu_is_valid_token() === false) {
+            local_apsolu_write_log(__METHOD__, ['since='.$since, 'token non valide']);
             return $data;
         }
 
@@ -490,6 +496,7 @@ class local_apsolu_webservices extends external_api {
 
         // Vérifier que le token appartienne à un enseignant du SIUAPS.
         if (local_apsolu_is_valid_token() === false) {
+            local_apsolu_write_log(__METHOD__, ['since='.$since, 'from='.$from, 'token non valide']);
             return $data;
         }
 
@@ -562,6 +569,7 @@ class local_apsolu_webservices extends external_api {
 
         // Vérifier que le token appartienne à un enseignant du SIUAPS.
         if (local_apsolu_is_valid_token() === false) {
+            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, 'token non valide']);
             return $data;
         }
 
@@ -569,6 +577,8 @@ class local_apsolu_webservices extends external_api {
             $userfield = (object) ['id' => $iduser, 'profile_field_apsoluidcardnumber' => $cardnumber];
             profile_save_data($userfield);
         } catch (Exception $exception) {
+            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, 'impossible d\'enregistrer la carte en DB']);
+
             return array('success' => false);
         }
 
@@ -616,6 +626,7 @@ class local_apsolu_webservices extends external_api {
 
         // Vérifier que le token appartienne à un enseignant du SIUAPS.
         if (local_apsolu_is_valid_token() === false) {
+            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'token non valide']);
             return $data;
         }
 
