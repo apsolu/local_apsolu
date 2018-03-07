@@ -664,7 +664,7 @@ class local_apsolu_webservices extends external_api {
                 " AND sessiontime >= :timestamp";
 
             // Cherche la première session dont l'heure de début est supérieure à l'horodatage de la présence saisie.
-            $sessions = $DB->get_record_sql($sql, array('courseid' => $course->id, 'timestamp' => $timestamp));
+            $sessions = $DB->get_records_sql($sql, array('courseid' => $course->id, 'timestamp' => $timestamp));
             $session = current($sessions);
         }
 
@@ -678,7 +678,7 @@ class local_apsolu_webservices extends external_api {
                 " ORDER BY sessiontime DESC";
 
             // Cherche la première session dont l'heure de début est inférieure à l'horodatage de la présence saisie.
-            $sessions = $DB->get_record_sql($sql, array('courseid' => $course->id, 'timestamp' => $timestamp));
+            $sessions = $DB->get_records_sql($sql, array('courseid' => $course->id, 'timestamp' => $timestamp));
             $session = current($sessions);
         }
 
