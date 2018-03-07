@@ -664,12 +664,12 @@ class local_apsolu_webservices extends external_api {
                 " AND sessiontime >= :timestamp";
 
             // Cherche la première session dont l'heure de début est supérieure à l'horodatage de la présence saisie.
-            $sessions = $DB->get_record_sql($sql, array('courseid' => $course->id, 'beforesessiontime' => $beforesessiontime, 'aftersessiontime' => $aftersessiontime));
+            $sessions = $DB->get_record_sql($sql, array('courseid' => $course->id, 'timestamp' => $timestamp));
             $session = current($sessions);
         }
 
         if (isset($session->id) === false) {
-            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'session non trouvée dans un interval de la semaine']);
+            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'impossible de trouver une session supérieure à la date du timestamp']);
 
             $sql = "SELECT id".
                 " FROM {apsolu_attendance_sessions}".
@@ -678,11 +678,12 @@ class local_apsolu_webservices extends external_api {
                 " ORDER BY sessiontime DESC";
 
             // Cherche la première session dont l'heure de début est inférieure à l'horodatage de la présence saisie.
-            $sessions = $DB->get_record_sql($sql, array('courseid' => $course->id, 'beforesessiontime' => $beforesessiontime, 'aftersessiontime' => $aftersessiontime));
+            $sessions = $DB->get_record_sql($sql, array('courseid' => $course->id, 'timestamp' => $timestamp));
             $session = current($sessions);
         }
 
         if (isset($session->id) === false) {
+            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'impossible de trouver une session inférieure à la date du timestamp']);
             local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'impossible de trouver une session pour ce cours']);
 
             return array('success' => true);
