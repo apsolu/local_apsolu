@@ -645,7 +645,7 @@ class local_apsolu_webservices extends external_api {
         $session = current($sessions);
 
         if (isset($session->id) === false) {
-            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'session non trouvée dans un interval de 2h');
+            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'session non trouvée dans un interval de 2h']);
 
             $beforesessiontime = strtotime('monday this week', $timestamp);
             $aftersessiontime = strtotime('sunday this week', $timestamp);
@@ -656,7 +656,7 @@ class local_apsolu_webservices extends external_api {
         }
 
         if (isset($session->id) === false) {
-            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'session non trouvée dans un interval de la semaine');
+            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'session non trouvée dans un interval de la semaine']);
 
             $sql = "SELECT id".
                 " FROM {apsolu_attendance_sessions}".
@@ -669,7 +669,7 @@ class local_apsolu_webservices extends external_api {
         }
 
         if (isset($session->id) === false) {
-            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'session non trouvée dans un interval de la semaine');
+            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'session non trouvée dans un interval de la semaine']);
 
             $sql = "SELECT id".
                 " FROM {apsolu_attendance_sessions}".
@@ -683,7 +683,7 @@ class local_apsolu_webservices extends external_api {
         }
 
         if (isset($session->id) === false) {
-            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'impossible de trouver une session pour ce cours');
+            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'impossible de trouver une session pour ce cours']);
 
             return array('success' => true);
         }
@@ -700,7 +700,7 @@ class local_apsolu_webservices extends external_api {
         try {
             $DB->insert_record('apsolu_attendance_presences', $presence);
         } catch (Exception $exception) {
-            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'impossible d\'enregistrer la présence');
+            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'impossible d\'enregistrer la présence']);
 
             return array('success' => true);
         }
