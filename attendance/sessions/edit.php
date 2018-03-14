@@ -130,6 +130,26 @@ if ($mdata = $mform->get_data()) {
             $fakemform = array();
             if ($discussionid = forum_add_discussion($discussion, $fakemform)) {
                 $notifications[] = $OUTPUT->notification(get_string('attendance_success_message_forum', 'local_apsolu'), 'notifysuccess');
+
+                // Notifie le secrétariat.
+                $functional_contact_mail = get_config('local_apsolu', 'functional_contact');
+                if (filter_var($functional_contact_mail, FILTER_VALIDATE_EMAIL) !== false) {
+                    if (isset($CFG->divertallemailsto) === true) {
+                        $functional_contact_mail = $CFG->divertallemailsto;
+                    }
+
+                    require_once $CFG->libdir.'/phpmailer/moodle_phpmailer.php';
+
+                    $mailer = new moodle_phpmailer();
+                    $mailer->AddAddress($functional_contact_mail);
+                    $mailer->Subject = $subject.' ('.$course->fullname.')';
+                    $mailer->Body = $message.'<p><a href="'.$CFG->wwwroot.'/mod/forum/view.php?id='.$cm->id.'">Voir le message</a></p>';
+                    $mailer->From = $CFG->noreplyaddress;
+                    $mailer->FromName = '';
+                    $mailer->CharSet = 'UTF-8';
+                    $mailer->isHTML();
+                    $mailer->Send();
+                }
             } else {
                 $notifications[] = $OUTPUT->notification(get_string('attendance_error_message_forum', 'local_apsolu'), 'notifyproblem');
             }

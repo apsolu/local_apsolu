@@ -68,18 +68,21 @@ if (count($presences) > 0) {
             $sessiontime = userdate($session->sessiontime, get_string('strftimedate', 'local_apsolu'));
             $variables = (object) ['datetime' => userdate($session->sessiontime, get_string('strftimedatetime', 'local_apsolu')), 'location' => $locations[$session->locationid]];
 
+            $subject = get_string('attendance_forum_delete_session_subject', 'local_apsolu', $sessiontime);
+            $message = get_string('attendance_forum_delete_session_message', 'local_apsolu', $variables);
+
             // Create the discussion.
             $discussion = new stdClass();
             $discussion->course = $course->id;
             $discussion->forum = $forum->id;
-            $discussion->message = get_string('attendance_forum_delete_session_message', 'local_apsolu', $variables);
+            $discussion->message = $message;
             $discussion->messageformat = FORMAT_HTML;   // Force formatting for now.
             $discussion->messagetrust = trusttext_trusted($context);
             $discussion->itemid = array();
             $discussion->groupid = 0;
             $discussion->mailnow = 0;
-            $discussion->subject = get_string('attendance_forum_delete_session_subject', 'local_apsolu', $sessiontime);
-            $discussion->name = get_string('attendance_forum_delete_session_subject', 'local_apsolu', $sessiontime);
+            $discussion->subject = $subject;
+            $discussion->name = $subject;
             $discussion->timestart = 0;
             $discussion->timeend = 0;
             $discussion->attachments = array();
@@ -89,6 +92,26 @@ if (count($presences) > 0) {
                 $notifications[] = $OUTPUT->notification(get_string('attendance_success_message_forum', 'local_apsolu'), 'notifysuccess');
             } else {
                 $notifications[] = $OUTPUT->notification(get_string('attendance_error_message_forum', 'local_apsolu'), 'notifyproblem');
+            }
+
+            // Notifie le secrétariat.
+            $functional_contact_mail = get_config('local_apsolu', 'functional_contact');
+            if (filter_var($functional_contact_mail, FILTER_VALIDATE_EMAIL) !== false) {
+                if (isset($CFG->divertallemailsto) === true) {
+                    $functional_contact_mail = $CFG->divertallemailsto;
+                }
+
+                require_once $CFG->libdir.'/phpmailer/moodle_phpmailer.php';
+
+                $mailer = new moodle_phpmailer();
+                $mailer->AddAddress($functional_contact_mail);
+                $mailer->Subject = $subject.' ('.$course->fullname.')';
+                $mailer->Body = $message.'<p><a href="'.$CFG->wwwroot.'/mod/forum/view.php?id='.$cm->id.'">Voir le message</a></p>';
+                $mailer->From = $CFG->noreplyaddress;
+                $mailer->FromName = '';
+                $mailer->CharSet = 'UTF-8';
+                $mailer->isHTML();
+                $mailer->Send();
             }
         }
 
