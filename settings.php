@@ -37,7 +37,7 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     // Activités physiques.
     $ADMIN->add('apsolu', new admin_category('local_apsolu_courses', get_string('settings_activities', 'local_apsolu_courses')));
 
-    $types = array('overview', 'courses', 'groupings', 'categories', 'skills', 'periods', 'locations', 'areas', 'managers');
+    $types = array('overview', 'courses', 'groupings', 'categories', 'skills', 'periods', 'locations', 'areas', 'cities', 'managers');
     foreach ($types as $type) {
         $label = get_string($type, 'local_apsolu_courses');
         $url = new moodle_url('/local/apsolu_courses/index.php?tab='.$type);
