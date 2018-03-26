@@ -578,6 +578,7 @@ class local_apsolu_webservices extends external_api {
         try {
             $userfield = (object) ['id' => $iduser, 'profile_field_apsoluidcardnumber' => $cardnumber];
             profile_save_data($userfield);
+            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, 'enregistrement d\'une nouvelle carte']);
         } catch (Exception $exception) {
             local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, 'impossible d\'enregistrer la carte en DB']);
 
