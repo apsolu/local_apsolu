@@ -70,7 +70,7 @@ class local_apsolu_webservices extends external_api {
 
         // Vérifier que le token appartienne à un enseignant du SIUAPS.
         if (local_apsolu_is_valid_token() === false) {
-            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, 'token non valide']);
+            local_apsolu_write_log(__METHOD__, ['since='.$since, 'token non valide']);
             return $data;
         }
 
@@ -221,7 +221,7 @@ class local_apsolu_webservices extends external_api {
             " JOIN {apsolu_skills} sk ON sk.id = ac.skillid".
             " JOIN {apsolu_periods} ap ON ap.id = ac.periodid".
             " WHERE c.timemodified >= :timemodified".
-            " AND ap.weeks >= :semester1_enrol_startdate".
+            " AND ap.weeks >= :semester1_enrol_startdate". // On ne propose que les cours de l'année en cours ; pas les cours antérieurs au S1.
             " ORDER BY c.fullname";
         foreach ($DB->get_records_sql($sql, array('timemodified' => $since, 'semester1_enrol_startdate' => $semester1_enrol_startdate)) as $record) {
             $course = new stdClass();
@@ -295,15 +295,17 @@ class local_apsolu_webservices extends external_api {
             " JOIN {user_enrolments} ue ON ra.userid = ue.userid AND ra.itemid = ue.enrolid AND ue.status = 0".
             " JOIN {context} ctx ON ctx.id = ra.contextid".
             " JOIN {apsolu_courses} c ON ctx.instanceid = c.id".
-            " LEFT JOIN {apsolu_attendance_presences} aap ON ra.userid = aap.studentid AND aap.statusid IN (1, 2)". // Present + late.
-            " LEFT JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid".
+            " JOIN {apsolu_attendance_sessions} aas ON ctx.instanceid = aas.courseid".
+            " LEFT JOIN {apsolu_attendance_presences} aap ON aas.id = aap.sessionid AND ra.userid = aap.studentid AND aap.statusid IN (1, 2)". // Present + late.
             " LEFT JOIN {user_info_data} uid1 ON ra.userid = uid1.userid AND uid1.fieldid = 11". // Compte Sésame validé.
             " WHERE ra.timemodified >= :timemodified".
             " AND ra.component = 'enrol_select'".
-            " AND ue.timeend > :now".
+            " AND ue.timeend > :now". // TODO: à retirer ? Permet de limiter le nombre de résultat pour les tests ?
+            // " AND ue.timestart < :now AND (ue.timeend = 0 OR ue.timeend > :now)". // Pour n'avoir que les inscriptions des cours en cours.
             " GROUP BY ra.id, ra.userid, ctx.instanceid";
 
         foreach ($DB->get_records_sql($sql, array('timemodified' => $since, 'now' => time())) as $record) {
+            // Calcul la validité de l'inscription.
             $sql = "SELECT DISTINCT ac.id".
                 " FROM {apsolu_colleges} ac".
                 " JOIN {apsolu_colleges_members} acm ON ac.id = acm.collegeid".
