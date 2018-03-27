@@ -579,6 +579,12 @@ class local_apsolu_webservices extends external_api {
             $userfield = (object) ['id' => $iduser, 'profile_field_apsoluidcardnumber' => $cardnumber];
             profile_save_data($userfield);
             local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, 'enregistrement d\'une nouvelle carte']);
+
+            // TODO: proposer un bug report à Moodle.org ?
+            $user = $DB->get_record('user', array('id' => $iduser));
+            $user->timemodified = time();
+            $DB->update_record('user', $user);
+            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'timemodified='.$user->timemodified, 'mise à jour du champ timemodified de l\'utilisateur']);
         } catch (Exception $exception) {
             local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, 'impossible d\'enregistrer la carte en DB']);
 
