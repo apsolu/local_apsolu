@@ -751,14 +751,14 @@ class local_apsolu_webservices extends external_api {
      *
      * @return array
      */
-    public static function debugging($iddevice, $message, $timestamp) {
-        global $DB;
+    public static function debugging($serial, $idteacher, $message, $timestamp) {
+        global $CFG, $DB;
 
-        local_apsolu_write_log(__METHOD__, ['iddevice='.$iddevice, 'message='.$message, 'timestamp='.$timestamp]);
+        local_apsolu_write_log(__METHOD__, ['serial='.$serial, 'idteacher='.$idteacher, 'message='.$message, 'timestamp='.$timestamp]);
 
         // Vérifier que le token appartienne à un enseignant du SIUAPS.
         if (local_apsolu_is_valid_token() === false) {
-            local_apsolu_write_log(__METHOD__, ['iddevice='.$iddevice, 'message='.$message, 'timestamp='.$timestamp, get_string('invalidtoken', 'webservice')]);
+            local_apsolu_write_log(__METHOD__, ['serial='.$serial, 'idteacher='.$idteacher, 'message='.$message, 'timestamp='.$timestamp, get_string('invalidtoken', 'webservice')]);
 
             return array('success' => false);
         }
@@ -780,7 +780,8 @@ class local_apsolu_webservices extends external_api {
     public static function debugging_parameters() {
         return new external_function_parameters(
             array(
-                'iddevice' => new external_value(PARAM_INT, get_string('ws_value_iddevice', 'local_apsolu'), VALUE_DEFAULT, '0'),
+                'serial' => new external_value(PARAM_ALPHANUM, get_string('ws_value_serial', 'local_apsolu'), VALUE_DEFAULT, ''),
+                'idteacher' => new external_value(PARAM_INT, get_string('ws_value_idteacher', 'local_apsolu'), VALUE_DEFAULT, '0'),
                 'message' => new external_value(PARAM_TEXT, get_string('ws_value_message', 'local_apsolu'), VALUE_DEFAULT, ''),
                 'timestamp' => new external_value(PARAM_INT, get_string('ws_value_timestamp', 'local_apsolu'), VALUE_DEFAULT, '0'),
                 )

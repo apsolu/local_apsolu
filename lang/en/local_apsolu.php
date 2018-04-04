@@ -265,5 +265,6 @@ $string['ws_value_category'] = 'type d\'utilisateur (uniquement étudiant ou ens
 $string['ws_value_institution'] = 'institution de rattachement de l\'utilisateur';
 $string['ws_value_nosportcard'] = 'jeton apparaissant quand l\'utilisateur n\'a pas payé sa carte sport';
 $string['ws_value_boolean'] = 'un booléen vrai/faux';
-$string['ws_value_iddevice'] = 'identifiant de l\'équipement';
+$string['ws_value_serial'] = 'numéro de série de l\'équipement';
+$string['ws_value_idteacher'] = 'identifiant de l\'enseignant';
 $string['ws_value_message'] = 'message de type texte';
