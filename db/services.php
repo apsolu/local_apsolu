@@ -91,6 +91,7 @@ $functions = array(
         'loginrequired' => true,
         'ajax' => true,
     ),
+    // Function set_card().
     'local_apsolu_set_card' => array(
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'set_card',
@@ -100,11 +101,22 @@ $functions = array(
         'loginrequired' => true,
         'ajax' => true,
     ),
+    // Function set_presence().
     'local_apsolu_set_presence' => array(
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'set_presence',
         'classpath'   => 'local/apsolu/externallib.php',
         'description' => get_string('ws_local_apsolu_set_presence_description', 'local_apsolu'),
+        'type'        => 'write',
+        'loginrequired' => true,
+        'ajax' => true,
+    ),
+    // Function debugging().
+    'local_apsolu_debugging' => array(
+        'classname'   => 'local_apsolu_webservices',
+        'methodname'  => 'debugging',
+        'classpath'   => 'local/apsolu/externallib.php',
+        'description' => get_string('ws_local_apsolu_debugging_description', 'local_apsolu'),
         'type'        => 'write',
         'loginrequired' => true,
         'ajax' => true,
@@ -124,6 +136,7 @@ $services = array(
             'local_apsolu_get_attendances',
             'local_apsolu_set_card',
             'local_apsolu_set_presence',
+            'local_apsolu_debugging',
             ),
         'restrictedusers' => 1,
         'enabled' => 0,

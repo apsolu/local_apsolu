@@ -745,4 +745,58 @@ class local_apsolu_webservices extends external_api {
             )
         );
     }
+
+    /**
+     * Get debug messages.
+     *
+     * @return array
+     */
+    public static function debugging($iddevice, $message, $timestamp) {
+        global $DB;
+
+        local_apsolu_write_log(__METHOD__, ['iddevice='.$iddevice, 'message='.$message, 'timestamp='.$timestamp]);
+
+        // Vérifier que le token appartienne à un enseignant du SIUAPS.
+        if (local_apsolu_is_valid_token() === false) {
+            local_apsolu_write_log(__METHOD__, ['iddevice='.$iddevice, 'message='.$message, 'timestamp='.$timestamp, 'token non valide']);
+
+            return array('success' => false);
+        }
+
+        if (isset($CFG->apsolu_enable_ws_debugging) === true) {
+            file_put_contents($CFG->apsolu_enable_ws_debugging, strftime('%c').' '.__METHOD__.' '.$message.PHP_EOL, FILE_APPEND);
+
+            return array('success' => true);
+        }
+
+        return array('success' => false);
+    }
+
+    /**
+     * Describes the parameters for debugging.
+     *
+     * @return external_external_function_parameters
+     */
+    public static function debugging_parameters() {
+        return new external_function_parameters(
+            array(
+                'iddevice' => new external_value(PARAM_INT, get_string('ws_value_iddevice', 'local_apsolu'), VALUE_DEFAULT, '0'),
+                'message' => new external_value(PARAM_TEXT, get_string('ws_value_message', 'local_apsolu'), VALUE_DEFAULT, ''),
+                'timestamp' => new external_value(PARAM_INT, get_string('ws_value_timestamp', 'local_apsolu'), VALUE_DEFAULT, '0'),
+                )
+        );
+    }
+
+    /**
+     * Describes the debugging return value.
+     *
+     * @return external_single_structure
+     */
+    public static function debugging_returns() {
+        return new external_single_structure(
+            array(
+                'success' => new external_value(PARAM_BOOL, get_string('ws_value_boolean', 'local_apsolu')),
+            )
+        );
+    }
 }

@@ -239,6 +239,7 @@ $string['ws_local_apsolu_get_attendances_description'] = 'Retourne toutes les pr
 $string['ws_local_apsolu_set_card_description'] = 'Associe un utilisateur et une carte donnés';
 $string['ws_local_apsolu_set_presence_description'] = 'Ajoute une présence via un utilisateur, un cours et un timestamp donnés';
 $string['ws_local_apsolu_ping_description'] = 'Réponds pong.';
+$string['ws_local_apsolu_debugging_description'] = 'Enregistre des remontées d\'information.';
 
 $string['ws_value_since'] = 'Timestamp UNIX permettant de retourner les données uniquement modifiées depuis ce timestamp.';
 $string['ws_value_from'] = 'Timestamp UNIX permettant de retourner les données correspondant à des créneaux supérieur ou également à ce timestamp.';
@@ -264,3 +265,5 @@ $string['ws_value_category'] = 'type d\'utilisateur (uniquement étudiant ou ens
 $string['ws_value_institution'] = 'institution de rattachement de l\'utilisateur';
 $string['ws_value_nosportcard'] = 'jeton apparaissant quand l\'utilisateur n\'a pas payé sa carte sport';
 $string['ws_value_boolean'] = 'un booléen vrai/faux';
+$string['ws_value_iddevice'] = 'identifiant de l\'équipement';
+$string['ws_value_message'] = 'message de type texte';
