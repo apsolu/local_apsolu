@@ -27,6 +27,24 @@ $string['pluginname'] = 'APSOLU';
 
 // Général.
 $string['close_link'] = '<a id="apsolu-cancel-a" href="{$a->href}" class="{$a->class}">Fermer</a>';
+$string['display'] = 'Afficher';
+$string['export'] = 'Exporter au format Excel';
+$string['notify'] = 'Notifier';
+$string['paid'] = 'Payé';
+$string['sexe'] = 'Sexe';
+$string['male'] = 'Garçon';
+$string['female'] = 'Fille';
+$string['no_students'] = 'Aucun étudiant';
+$string['defaultnotifysubject'] = 'Notification du SIUAPS';
+
+$string['accessdenied'] = 'Vous n\'avez pas le droit d\'accéder à cette page.';
+$string['departmentslist'] = 'Liste des départements';
+
+$string['studentname'] = 'Nom de famille';
+$string['studentname_help'] = 'Noms de famille partiels d\'une ou plusieurs personnnes séparés par des virgules.<br />Exemple: neveu,niece';
+
+$string['departments'] = 'Départements';
+$string['departments_help'] = 'Noms partiels d\'un ou plusieurs départements séparés par des virgules.<br />Exemple: pharma,ondo';
 
 // Configuration.
 $string['semester1'] = 'Semestre 1';
@@ -63,6 +81,20 @@ $string['federation_result'] = 'Résultat';
 $string['federation_insert_license'] = 'Le numéro de licence {$a->licenseid} a été ajouté au profil de {$a->profile}';
 $string['federation_update_license'] = 'Le numéro de licence {$a->licenseid} a été mis à jour dans le profile de {$a->profile} (ancien numéro: {$a->oldlicenseid})';
 $string['federation_no_import'] = 'Aucune donnée insérée ou modifiée.';
+
+// Grades.
+$string['grades_mygradedstudents'] = 'Mes étudiants à évaluer';
+$string['grades_mystudents'] = 'Liste de mes étudiants';
+$string['grades_grade1'] = 'Note pratique S1';
+$string['grades_grade2'] = 'Note théorique S1';
+$string['grades_grade3'] = 'Note pratique S2';
+$string['grades_grade4'] = 'Note théorique S2';
+$string['grades_practicegrade'] = 'Note pratique';
+$string['grades_theorygrade'] = 'Note théorique';
+$string['grades_firstsemester'] = '1er semestre';
+$string['grades_secondsemester'] = '2nd semestre';
+$string['grades_accessdenied'] = 'Vous n\'avez pas le droit d\'accéder à cette page.';
+$string['grades_no_grading_student'] = 'Aucun étudiant à noter.';
 
 // Homepage.
 $string['homepage_home'] = 'Accueil';
@@ -194,6 +226,10 @@ $string['attendance_forum_delete_session_message'] = '<p>Bonjour,</p>'.
 $string['strftimeabbrday'] = '%d %b';
 $string['strftimedatetime'] = '%A %d %B à %Hh%M';
 $string['strftimedate'] = '%A %d %B';
+
+// Reports.
+$string['reports_found_students'] = '{$a} utilisateur(s) trouvé(s)';
+$string['reports_mystudents'] = 'Liste de mes étudiants';
 
 // Settings.
 $string['settings_root'] = 'Gestion du SIUAPS';

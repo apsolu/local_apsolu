@@ -1,0 +1,37 @@
+{{^counttr}}
+<p class="alert alert-warning">Vous n'avez pas de rôle enseignant dans un cours.</p>
+{{/counttr}}
+
+{{#counttr}}
+<table class="table table-striped">
+<thead>
+	<tr>
+		<th rowspan="2" class="text-center">{{#str}}fullnamecourse{{/str}}</th>
+		<th colspan="6" class="text-center">{{#str}}enrolments,enrol{{/str}}</th>
+		<th rowspan="2" class="text-center">{{#str}}actions{{/str}}</th>
+	</tr>
+	<tr>
+		<th class="text-center">{{#str}}enrolstartdate,enrol_select{{/str}}</th>
+		<th class="text-center">{{#str}}enrolenddate,enrol_select{{/str}}</th>
+		<th class="text-center">{{#str}}roles,block_apsolu_teachers{{/str}}</th>
+		<th class="text-center">{{#str}}cohorts,block_apsolu_teachers{{/str}}</th>
+		<th class="text-center">{{#str}}main_list,enrol_select{{/str}}</th>
+		<th class="text-center">{{#str}}wait_list,enrol_select{{/str}}</th>
+	</tr>
+</thead>
+<tbody>
+	{{#tr}}
+		<tr>
+		{{#td}}
+			{{^attributes}}
+			<td>{{{value}}}</td>
+			{{/attributes}}
+			{{#attributes}}
+			<td {{{attributes}}}>{{{value}}}</td>
+			{{/attributes}}
+		{{/td}}
+		</tr>
+	{{/tr}}
+</tbody>
+</table>
+{{/counttr}}

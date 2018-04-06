@@ -54,5 +54,41 @@
             <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_courses_groupings" />
         </KEYS>
     </TABLE>
+
+	<!-- GRADES -->
+    <TABLE NAME="apsolu_grades" COMMENT="Table to store grades">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="courseid" />
+            <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="userid" />
+            <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="courseid" NEXT="teacherid" />
+            <FIELD NAME="teacherid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="userid" NEXT="grade1" />
+            <FIELD NAME="grade1" TYPE="char" LENGTH="3" NOTNULL="true" PREVIOUS="teacherid" NEXT="grade2" />
+            <FIELD NAME="grade2" TYPE="char" LENGTH="3" NOTNULL="true" PREVIOUS="grade1" NEXT="grade3" />
+            <FIELD NAME="grade3" TYPE="char" LENGTH="3" NOTNULL="true" PREVIOUS="grade2" NEXT="grade4" />
+            <FIELD NAME="grade4" TYPE="char" LENGTH="3" NOTNULL="true" PREVIOUS="grade3" NEXT="timecreated" />
+            <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="grade4" NEXT="timemodified" />
+            <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="timecreated" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_grades" />
+        </KEYS>
+    </TABLE>
+
+	<!-- GRADES HISTORY -->
+    <TABLE NAME="apsolu_grades_history" COMMENT="Table to store grades history">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="gradeid" />
+            <FIELD NAME="gradeid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="teacherid" />
+            <FIELD NAME="teacherid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="gradeid" NEXT="grade1" />
+            <FIELD NAME="grade1" TYPE="char" LENGTH="3" NOTNULL="true" PREVIOUS="teacherid" NEXT="grade2" />
+            <FIELD NAME="grade2" TYPE="char" LENGTH="3" NOTNULL="true" PREVIOUS="grade1" NEXT="grade3" />
+            <FIELD NAME="grade3" TYPE="char" LENGTH="3" NOTNULL="true" PREVIOUS="grade2" NEXT="grade4" />
+            <FIELD NAME="grade4" TYPE="char" LENGTH="3" NOTNULL="true" PREVIOUS="grade3" NEXT="timemodified" />
+            <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="timecreated" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_grades_history" />
+        </KEYS>
+    </TABLE>
 </TABLES>
 </XMLDB>

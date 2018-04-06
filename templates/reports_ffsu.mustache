@@ -1,0 +1,55 @@
+{{^users}}
+<p class="alert alert-info">{{#str}}no_student, local_apsolu{{/str}}</p>
+{{/users}}
+
+{{#count_users}}
+<p class="alert alert-info">{{found_users}}</p>
+
+<p>{{#str}}select{{/str}} <button type="button" class="btn btn-link checkall">{{#str}}any{{/str}}</button> / <button type="button" class="btn btn-link uncheckall">{{#str}}none{{/str}}</button></p>
+
+<form action="{{action}}" method="post">
+	<table class="table table-striped table-sortable">
+	<thead>
+		<tr>
+			<th>{{#str}}action{{/str}}</th>
+			<th>{{#str}}pictureofuser{{/str}}</th>
+			<th>{{#str}}lastname{{/str}}</th>
+			<th>{{#str}}firstname{{/str}}</th>
+			<th>{{#str}}idnumber{{/str}}</th>
+			<th>{{#str}}sex,local_apsolu_auth{{/str}}</th>
+			<th>{{#str}}institution{{/str}}</th>
+			<th>{{#str}}department{{/str}}</th>
+			<th>{{#str}}ufr,local_apsolu_auth{{/str}}</th>
+			<th>{{#str}}lmd,local_apsolu_auth{{/str}}</th>
+			<th>{{#str}}group{{/str}}</th>
+			<th>{{#str}}federation_number,local_apsolu_courses{{/str}}</th>
+			<th>{{#str}}medical_certificate,local_apsolu_courses{{/str}}</th>
+			<th>{{#str}}federation_paid,local_apsolu_courses{{/str}}</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#users}}
+		<tr>
+			<td><input type="checkbox" class="apsolu-select-manage-users-input-checkbox" name="users[]" value="{{id}}" /></td>
+			<td>{{{htmlpicture}}}</td>
+			<td>{{lastname}}</td>
+			<td>{{firstname}}</td>
+			<td>{{idnumber}}</td>
+			<td>{{customfields.apsolusex}}</td>
+			<td>{{institution}}</td>
+			<td>{{department}}</td>
+			<td>{{customfields.apsoluufr}}</td>
+			<td>{{customfields.apsolulmd}}</td>
+			<td>{{sport}}</td>
+			<td>{{customfields.apsolufederationnumber}}</td>
+			<td>{{^customfields.apsolumedicalcertificate}}{{#str}}no{{/str}}{{/customfields.apsolumedicalcertificate}}{{#customfields.apsolumedicalcertificate}}{{#str}}yes{{/str}}{{/customfields.apsolumedicalcertificate}}</td>
+			<td>{{^customfields.apsolufederationpaid}}{{#str}}no{{/str}}{{/customfields.apsolufederationpaid}}{{#customfields.apsolufederationpaid}}{{#str}}yes{{/str}}{{/customfields.apsolufederationpaid}}</td>
+		</tr>
+		{{/users}}
+	</tbody>
+	</table>
+
+	<p>{{#str}}select{{/str}} <button type="button" class="btn btn-link checkall">{{#str}}any{{/str}}</button> / <button type="button" class="btn btn-link uncheckall">{{#str}}none{{/str}}</button></p>
+	<p><input type="submit" class="btn btn-primary" name="notify" value="{{#str}}notify, local_apsolu{{/str}}" /></p>
+</form>
+{{/count_users}}

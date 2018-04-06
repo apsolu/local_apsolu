@@ -1,0 +1,74 @@
+<ul class="nav nav-tabs">
+{{#periods}}
+	<li {{#active}}class="active"{{/active}}><a data-toggle="tab" href="#{{shortname}}">{{label}}</a></li>
+{{/periods}}
+</ul>
+
+<form id="apsolu-form-grades" method="post" action="{{action}}">
+	{{#count_saved_students}}
+	<p class="alert alert-success">{{count_saved_students}} note(s) enregistrée(s)</p>
+	{{/count_saved_students}}
+
+	<div class="tab-content">
+		{{#periods}}
+		<div id="{{shortname}}" class="tab-pane fade in{{#active}} active{{/active}}">
+
+			{{#require_grades}}
+			<p class="alert alert-danger">{{require_grades}} élément(s) en attente de notation.</p>
+			{{/require_grades}}
+
+			{{^count_users}}
+			<p class="alert alert-info">{{#str}}grades_no_grading_student, local_apsolu{{/str}}</p>
+			{{/count_users}}
+
+			{{#count_users}}
+				<table class="table table-bordered table-sortable">
+					<thead>
+						<tr>
+							<th rowspan="2">{{#str}}pictureofuser{{/str}}</th>
+							<th rowspan="2">{{#str}}lastname{{/str}}</th>
+							<th rowspan="2">{{#str}}firstname{{/str}}</th>
+							<th rowspan="2">Établissement</th>
+							<th rowspan="2">UFR</th>
+							<th rowspan="2">LMD</th>
+							<th rowspan="2">Rôle</th>
+							<th colspan="6" class="text-center">{{label}}</th>
+						</tr>
+						<tr>
+							<th>ABI</th>
+							<th>ABJ</th>
+							<th>Note pratique</th>
+							<th>ABI</th>
+							<th>ABJ</th>
+							<th>Note théorique</th>
+						</tr>
+					</thead>
+
+					<tbody>
+					{{#users}}
+						<tr>
+							<td>{{{htmlpicture}}}</td>
+							<td>{{lastname}}</td>
+							<td>{{firstname}}</td>
+							<td>{{institution}}</td>
+							<td>{{ufr}}</td>
+							<td>{{lmd}}</td>
+							<td>{{rolename}}</td>
+							{{#grades}}
+								{{{.}}}
+							{{/grades}}
+						</tr>
+					{{/users}}
+					</tbody>
+				</table>
+			{{/count_users}}
+
+		</div>
+		{{/periods}}
+	</div>
+
+	{{#count_overall_users}}
+	<p class="text-right"><input type="submit" value="Enregistrer" name="grading" /><input type="hidden" name="courseid" value="{{courseid}}" /></p>
+	{{/count_overall_users}}
+</form>
+
