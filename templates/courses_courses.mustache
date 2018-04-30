@@ -1,0 +1,58 @@
+<h1>{{#str}}courses_list, local_apsolu{{/str}}</h1>
+
+{{#notification}}
+	{{{notification}}}
+{{/notification}}
+
+<ul class="list list-inline text-right">
+	<li><a class="btn btn-default" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=export">{{#str}}courses_csv_export, local_apsolu{{/str}}</a></li>
+	<li><a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=edit">{{#str}}course_add, local_apsolu{{/str}}</a></li>
+</ul>
+
+{{^courses}}
+<p class="alert alert-info">{{#str}}no_course, local_apsolu{{/str}}</p>
+{{/courses}}
+
+{{#count_courses}}
+<table class="table table-striped" id="table-courses-sortable">
+<thead>
+	<tr>
+		<th>{{#str}}idnumbercourse{{/str}}</th>
+		<th>{{#str}}groupings, local_apsolu{{/str}}</th>
+		<th>{{#str}}categories, local_apsolu{{/str}}</th>
+		<th>{{#str}}skills, local_apsolu{{/str}}</th>
+		<th>{{#str}}weekdays, local_apsolu{{/str}}</th>
+		<th>{{#str}}schedule, local_apsolu{{/str}}</th>
+		<th>{{#str}}locations, local_apsolu{{/str}}</th>
+		<th>{{#str}}periods, local_apsolu{{/str}}</th>
+		<th>{{#str}}federation, local_apsolu{{/str}}</th>
+		<th>{{#str}}teachers{{/str}}</th>
+		<th>{{#str}}actions{{/str}}</th>
+	</tr>
+</thead>
+<tbody>
+	{{#courses}}
+	<tr class="apsolu-row-{{alt_class}}{{^visible}} apsolu-row-disabled{{/visible}}">
+		<td><a href="{{wwwroot}}/course/view.php?id={{id}}">{{id}}</a></td>
+		<td>{{grouping}}</td>
+		<td>{{fullname}}</td>
+		<td>{{skill}}</td>
+		<td>{{weekday}}</td>
+		<td>{{schedule}}</td>
+		<td>{{location}}</td>
+		<td>{{period}}</td>
+		<td>{{#license}}{{#str}}yes{{/str}}{{/license}}{{^license}}{{#str}}no{{/str}}{{/license}}</td>
+		<td>{{#teachers}}<div>{{firstname}} {{lastname}}</div>{{/teachers}}</td>
+		<td>
+			<ul class="list-inline">
+				<li><a href="{{wwwroot}}/course/view.php?id={{id}}">{{#pix}}t/preview,core,{{#str}}go_to_course, local_apsolu{{/str}}{{/pix}}</a></li>
+				<li><a href="{{wwwroot}}/enrol/users.php?id={{id}}">{{#pix}}t/enrolusers,core,{{#str}}enrol_teachers, local_apsolu{{/str}}{{/pix}}</a></li>
+				<li><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=edit&courseid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></li>
+				<li><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=delete&courseid={{id}}">{{#pix}}t/delete,core,{{#str}}delete{{/str}}{{/pix}}</a></li>
+			</ul>
+		</td>
+	</tr>
+	{{/courses}}
+</tbody>
+</table>
+{{/count_courses}}

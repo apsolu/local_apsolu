@@ -1,0 +1,103 @@
+<div class="row">
+	{{^payment_centers}}
+	<div class="alert alert-info">
+		<p>{{#str}}no_courses, local_apsolu{{/str}}</p>
+		<p>{{#str}}no_courses_complements, local_apsolu{{/str}}</p>
+	</div>
+	{{/payment_centers}}
+
+	{{#count_payment_centers}}
+		{{#can_paid}}
+		<div class="alert alert-info">
+			{{#str}}warning_payment, local_apsolu{{/str}}
+		</div>
+		{{/can_paid}}
+	{{/count_payment_centers}}
+
+	{{#payment_centers}}
+	{{^can_paid}}
+	<div class="alert alert-warning">
+		<p>{{#str}}no_paybox, local_apsolu{{/str}}</p>
+	</div>
+	{{/can_paid}}
+
+	{{#can_paid}}
+	<div class="col-lg-6 col-md-12">
+		<h1 class="apsolu-payment-h1 text-center">{{name}}</h1>
+		<form method="post" action="{{action_url}}" class="apsolu-payment-forms">
+			<dl>
+				{{#count_activities}}
+				<div class="apsolu-payment-section-div">
+					<div class="clearfix apsolu-payment-section-head-div">
+						<dt class="pull-left">{{#str}}activities, local_apsolu{{/str}}</dt>
+						<dd class="pull-right">{{activities_price_format}} euros</dd>
+					</div>
+					<dd class="apsolu-payment-section-comment-div">{{#str}}activitiesdescription, local_apsolu{{/str}}</dd>
+					<dd>
+						<ul class="list list-unstyled">
+							{{#activities}}
+							<li>{{fullname}}</li>
+							{{/activities}}
+						</ul>
+					</dd>
+				</div>
+				{{/count_activities}}
+
+				{{#count_complements}}
+				<div class="apsolu-payment-section-div">
+					{{#complements}}
+					<div class="clearfix apsolu-payment-section-head-div">
+						<dt class="pull-left">{{fullname}}</dt>
+						<dd class="pull-right">{{price}} euros</dd>
+					</div>
+					<dd class="apsolu-payment-section-comment-div">{{summary}}</dd>
+					{{/complements}}
+				</div>
+				{{/count_complements}}
+
+				<div class="apsolu-payment-section-div">
+					<div class="clearfix apsolu-payment-section-head-div">
+						<dt class="pull-left apsolu-payment-details">Montant total</dt>
+						<dd class="pull-right apsolu-payment-details">{{total_amount_format}} euros</dd>
+					</div>
+					<div class="clearfix apsolu-payment-section-head-div">
+						<dt class="pull-left apsolu-payment-details">Montant payé</dt>
+						<dd class="pull-right apsolu-payment-details">{{paid_amount_format}} euros</dd>
+					</div>
+					<div class="clearfix apsolu-payment-section-head-div apsolu-payment-due-amount-div">
+						<dt class="pull-left">Reste à payer</dt>
+						<dd class="pull-right"><strong>{{due_amount_format}} euros</strong></dd>
+					</div>
+
+				</div>
+			</dl>
+
+			<p class="text-right apsolu-payment-section-div">
+				<!-- PAYBOX -->
+				<input type="hidden" name="PBX_SITE" value="{{paybox.PBX_SITE}}" />
+				<input type="hidden" name="PBX_RANG" value="{{paybox.PBX_RANG}}" />
+				<input type="hidden" name="PBX_IDENTIFIANT" value="{{paybox.PBX_IDENTIFIANT}}" />
+				<input type="hidden" name="PBX_TOTAL" value="{{paybox.PBX_TOTAL}}" />
+				<input type="hidden" name="PBX_DEVISE" value="{{paybox.PBX_DEVISE}}" />
+				<input type="hidden" name="PBX_CMD" value="{{paybox.PBX_CMD}}" />
+				<input type="hidden" name="PBX_PORTEUR" value="{{paybox.PBX_PORTEUR}}" />
+				<input type="hidden" name="PBX_RETOUR" value="{{paybox.PBX_RETOUR}}" />
+				<input type="hidden" name="PBX_HASH" value="{{paybox.PBX_HASH}}" />
+				<input type="hidden" name="PBX_TIME" value="{{paybox.PBX_TIME}}" />
+				<input type="hidden" name="PBX_EFFECTUE" value="{{paybox.PBX_EFFECTUE}}" />
+				<input type="hidden" name="PBX_REFUSE" value="{{paybox.PBX_REFUSE}}" />
+				<input type="hidden" name="PBX_ANNULE" value="{{paybox.PBX_ANNULE}}" />
+				<input type="hidden" name="PBX_ATTENTE" value="{{paybox.PBX_ATTENTE}}" />
+				<input type="hidden" name="PBX_REPONDRE_A" value="{{paybox.PBX_REPONDRE_A}}" />
+				<input type="hidden" name="PBX_TYPEPAIEMENT" value="{{paybox.PBX_TYPEPAIEMENT}}" />
+				<input type="hidden" name="PBX_TYPECARTE" value="{{paybox.PBX_TYPECARTE}}" />
+				<input type="hidden" name="PBX_HMAC" value="{{paybox.PBX_HMAC}}" />
+
+				<!-- submit -->
+				<input class="btn btn-default btn-xs" type="submit" value="payer" {{^due_amount}}disabled="disabled"{{/due_amount}}/>
+			</p>
+		</form>
+	</div>
+	{{/can_paid}}
+	{{/payment_centers}}
+</div>

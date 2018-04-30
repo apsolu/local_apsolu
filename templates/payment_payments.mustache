@@ -1,0 +1,84 @@
+{{#user_selector}}
+
+<p class="text-right"><a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=payments&action=extract">Extraction csv des paiements</a></p>
+
+<form method="post" action="{{action}}">
+    <div>
+        <label for="userid">{{#str}}users,moodle{{/str}}</label>
+        {{{user_selector}}}
+    </div>
+
+    <p>
+        <input class="btn btn-default" type="submit" value="{{#str}}select_user, local_apsolu{{/str}}" />
+    </p>
+</form>
+{{/user_selector}}
+
+{{^user_selector}}
+	<p class="apsolu-payment-user-profile">{{{useridentity}}}</p>
+
+	{{^has_sesame}}
+	<p class="alert alert-danger">{{#str}}no_sesame, local_apsolu{{/str}}</p>
+	{{/has_sesame}}
+
+	{{^has_sync}}
+	<p class="alert alert-danger">{{#str}}no_sync, local_apsolu{{/str}}</p>
+	{{/has_sync}}
+
+	<p class="text-left"><a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=payments&action=edit&userid={{userid}}" class="btn btn-primary">Ajouter un paiement</a></p>
+
+	{{^count_payments}}
+	<div class="alert alert-info">
+		<p>{{#str}}no_payments, local_apsolu{{/str}}</p>
+	</div>
+	{{/count_payments}}
+
+	{{#count_payments}}
+	<table class="table table-striped">
+		<thead>
+		<tr>
+			<th>{{#str}}payment_number, local_apsolu{{/str}}</th>
+			<th>{{#str}}date, local_apsolu{{/str}}</th>
+			<th>{{#str}}amount, local_apsolu{{/str}}</th>
+			<th>{{#str}}method, local_apsolu{{/str}}</th>
+			<th>{{#str}}source, local_apsolu{{/str}}</th>
+			<th>{{#str}}items, local_apsolu{{/str}}</th>
+			<th>{{#str}}status, local_apsolu{{/str}}</th>
+			<th>{{#str}}actions, local_apsolu{{/str}}</th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#payments}}
+		<tr>
+			<td>{{id}}</td>
+			<td>{{timepaid}}</td>
+			<td>{{amount_string}}</td>
+			<td>{{method_string}}</td>
+			<td>{{source_string}}</td>
+			<td>{{#count_items}}<ul class="list">{{#items}}<li>{{.}}</li>{{/items}}</ul>{{/count_items}}</td>
+
+			{{^status}}
+			{{^amount}}
+			{{! le flag n'est pas positionné sur "payer", mais le montant est nul !}}
+			<td class="success text-center">{{#str}}status_success, local_apsolu{{/str}}</td>
+			{{/amount}}
+			{{#amount}}
+			{{! le flag n'est pas positionné sur "payer" et le montant n'est pas nul !}}
+			<td class="danger text-center">{{#str}}status_error, local_apsolu{{/str}}</td>
+			{{/amount}}
+			<td><a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=payments&action=edit&userid={{userid}}&&paymentid={{id}}">{{#pix}}i/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></td>
+			{{/status}}
+
+			{{#status}}
+			{{! le flag est positionné sur "payer" !}}
+			<td class="success text-center">{{#str}}status_success, local_apsolu{{/str}}</td>
+			<td>-</td>
+			{{/status}}
+		</tr>
+		{{/payments}}
+		</tbody>
+	</table>
+	{{/count_payments}}
+
+	<p class="text-right"><a class="btn btn-default" href="{{backurl}}">{{#str}}research_user, local_apsolu{{/str}}</a></p>
+{{/user_selector}}

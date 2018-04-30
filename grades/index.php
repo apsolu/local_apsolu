@@ -29,10 +29,10 @@ $courseid = optional_param('courseid', null, PARAM_INT);
 $PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('admin');
 $PAGE->set_url('/blocks/apsolu_teachers/grades.php');
-$PAGE->set_title(get_string('grades_mygradedstudents', 'local_apsolu'));
+$PAGE->set_title(get_string('mygradedstudents', 'local_apsolu'));
 
 // Navigation.
-$PAGE->navbar->add(get_string('grades_mygradedstudents', 'local_apsolu'));
+$PAGE->navbar->add(get_string('mygradedstudents', 'local_apsolu'));
 
 $PAGE->requires->js_call_amd('local_apsolu/grades', 'initialise');
 
@@ -232,10 +232,10 @@ if ($courseid) {
 
     foreach ($data->periods as $index => $period) {
         if ($index === 0) {
-            $period->label = get_string('grades_firstsemester', 'local_apsolu');
+            $period->label = get_string('firstsemester', 'local_apsolu');
             $period->shortname = 'semester1';
         } else {
-            $period->label = get_string('grades_secondsemester', 'local_apsolu');
+            $period->label = get_string('secondsemester', 'local_apsolu');
             $period->shortname = 'semester2';
 
         }
@@ -263,11 +263,11 @@ if ($courseid) {
             }
 
             for ($i = 1; $i < 5; $i++) {
-                ${'grade'.$i.'str'} = get_string('grades_practicegrade', 'local_apsolu');
+                ${'grade'.$i.'str'} = get_string('practicegrade', 'local_apsolu');
                 ${'grade'.$i.'attr'} = 'readonly="1" ';
             }
 
-            $grade2str = $grade4str = get_string('grades_theorygrade', 'local_apsolu');
+            $grade2str = $grade4str = get_string('theorygrade', 'local_apsolu');
 
             if ($current_semester_index === 0) {
                 // Semestre 1.
@@ -345,7 +345,7 @@ if ($courseid) {
 }
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('grades_mystudents', 'local_apsolu'));
+echo $OUTPUT->heading(get_string('mystudents', 'local_apsolu'));
 $coursesmform->display();
 if ($courseid) {
     echo $OUTPUT->render_from_template('local_apsolu/grades', $data);

@@ -1,0 +1,43 @@
+<h1>{{#str}}complements_list, local_apsolu{{/str}}</h1>
+
+{{#notification}}
+	{{{notification}}}
+{{/notification}}
+
+<p class="text-right">
+	<a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/complements.php?tab=complements&action=edit">{{#str}}complement_add, local_apsolu{{/str}}</a>
+</p>
+
+{{^complements}}
+<p class="alert alert-info">{{#str}}no_complement, local_apsolu{{/str}}</p>
+{{/complements}}
+
+{{#count_complements}}
+<table class="table table-striped table-sortable">
+<thead>
+	<tr>
+		<th>{{#str}}complements, local_apsolu{{/str}}</th>
+		<th>{{#str}}description{{/str}}</th>
+		<th>{{#str}}prices, local_apsolu{{/str}}</th>
+		<th>{{#str}}federation, local_apsolu{{/str}}</th>
+		<th>{{#str}}actions{{/str}}</th>
+	</tr>
+</thead>
+<tbody>
+	{{#complements}}
+	<tr>
+		<td>{{fullname}}</td>
+		<td>{{summary}}</td>
+		<td>{{price}}</td>
+		<td>{{#federation}}{{#str}}yes{{/str}}{{/federation}}{{^federation}}{{#str}}no{{/str}}{{/federation}}</td>
+		<td>
+			<ul class="list-inline">
+				<li><a href="{{wwwroot}}/course/view.php?id={{id}}">{{#pix}}t/preview,core,{{#str}}go_to_course, local_apsolu{{/str}}{{/pix}}</a></li>
+				<li><a href="{{wwwroot}}/local/apsolu/courses/complements.php?tab=complements&action=edit&complementid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></li>
+			</ul>
+		</td>
+	</tr>
+	{{/complements}}
+</tbody>
+</table>
+{{/count_complements}}

@@ -127,5 +127,136 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 2018042500;
+    if ($result && $oldversion < $version) {
+        $table = new xmldb_table('apsolu_complements');
+
+        // If the table does not exist, create it along with its fields.
+        if ($dbman->table_exists($table) === false) {
+            // Adding fields.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+            $table->add_field('price', XMLDB_TYPE_FLOAT, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0', null);
+
+            // Adding key.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+            // Create table.
+            $dbman->create_table($table);
+        }
+
+        $field = new xmldb_field('paymentcenterid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $not_null = false, null, null, null);
+
+        foreach (array('apsolu_courses', 'apsolu_complements') as $tablename) {
+            $table = new xmldb_table($tablename);
+
+            if ($dbman->field_exists($table, $field) === false) {
+                $dbman->add_field($table, $field);
+            }
+        }
+
+        $field = new xmldb_field('generic_name', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, $not_null = false, null, null, null);
+
+        $table = new xmldb_table('apsolu_periods');
+
+        if ($dbman->field_exists($table, $field) === false) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('federation', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $not_null = false, null, $default = 0, null);
+
+        $table = new xmldb_table('apsolu_courses_categories');
+
+        if ($dbman->field_exists($table, $field) === false) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('license', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $not_null = false, null, $default = 0, null);
+
+        $table = new xmldb_table('apsolu_courses');
+
+        if ($dbman->field_exists($table, $field) === false) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('federation', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $not_null = false, null, $default = 0, null);
+
+        $table = new xmldb_table('apsolu_complements');
+
+        if ($dbman->field_exists($table, $field) === false) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add missing indexes !
+        $tables = array();
+        $tables['apsolu_courses'] = array('skillid', 'locationid', 'periodid', 'paymentcenterid');
+        $tables['apsolu_locations'] = array('areaid', 'managerid');
+        $tables['apsolu_complements'] = array('paymentcenterid');
+
+        foreach ($tables as $tablename => $indexes) {
+            $table = new xmldb_table($tablename);
+            foreach ($indexes as $indexname) {
+                $index = new xmldb_index($indexname, XMLDB_INDEX_NOTUNIQUE, array($indexname));
+
+                if ($dbman->index_exists($table, $index) === false) {
+                    $dbman->add_index($table, $index);
+                }
+            }
+        }
+
+        $field = new xmldb_field('on_homepage', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $not_null = false, null, $default = 1, null);
+
+        $table = new xmldb_table('apsolu_courses');
+
+        if ($dbman->field_exists($table, $field) === false) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Create cities table.
+        $table = new xmldb_table('apsolu_cities');
+
+        // If the table does not exist, create it along with its fields.
+        if ($dbman->table_exists($table) === false) {
+            // Adding fields.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+            $table->add_field('name', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+
+            // Adding key.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+            // Create table.
+            $dbman->create_table($table);
+        }
+
+        // Add cityid field to areas table.
+        $field = new xmldb_field('cityid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $not_null = false, null, $default = 1, null);
+
+        $table = new xmldb_table('apsolu_areas');
+
+        if ($dbman->field_exists($table, $field) === false) {
+            $dbman->add_field($table, $field);
+
+            $table->add_key('cityid', XMLDB_KEY_FOREIGN, array('cityid'), 'apsolu_cities', array('id'));
+        }
+
+        // Add missing indexes !
+        $tables = array();
+        $tables['apsolu_payments'] = array('userid', 'paymentcenterid');
+        $tables['apsolu_payments_items'] = array('paymentid', 'courseid', 'roleid');
+
+        foreach ($tables as $tablename => $indexes) {
+            $table = new xmldb_table($tablename);
+            foreach ($indexes as $indexname) {
+                $index = new xmldb_index($indexname, XMLDB_INDEX_NOTUNIQUE, array($indexname));
+
+                if ($dbman->index_exists($table, $index) === false) {
+                    $dbman->add_index($table, $index);
+                }
+            }
+        }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
     return $result;
 }

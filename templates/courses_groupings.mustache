@@ -1,0 +1,32 @@
+<h1>{{#str}}groupings_list, local_apsolu{{/str}}</h1>
+
+{{#notification}}
+	{{{notification}}}
+{{/notification}}
+
+<p class="text-right">
+	<a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=groupings&action=edit">{{#str}}grouping_add, local_apsolu{{/str}}</a>
+</p>
+
+{{^groupings}}
+<p class="alert alert-info">{{#str}}no_grouping, local_apsolu{{/str}}</p>
+{{/groupings}}
+
+{{#count_groupings}}
+<table class="table table-striped table-sortable">
+<thead>
+	<tr>
+		<th>{{#str}}groupings, local_apsolu{{/str}}</th>
+		<th>{{#str}}actions{{/str}}</th>
+	</tr>
+</thead>
+<tbody>
+	{{#groupings}}
+	<tr>
+		<td>{{name}}</td>
+		<td><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=groupings&action=edit&groupingid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></td>
+	</tr>
+	{{/groupings}}
+</tbody>
+</table>
+{{/count_groupings}}

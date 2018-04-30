@@ -1,4 +1,4 @@
-define(['jquery', 'local_apsolu_courses/jquery.tablesorter'], function($) {
+define(['jquery', 'local_apsolu/jquery.tablesorter'], function($) {
     return {
         initialise : function(){
 
@@ -9,7 +9,7 @@ define(['jquery', 'local_apsolu_courses/jquery.tablesorter'], function($) {
 
                 if ($(this).prop("checked")) {
                     if (name.substring(0, 3) == "abj") {
-                        // 
+                        //
                         $("input[name='abi"+id+"']").prop('checked', false);
                     } else {
                         $("input[name='abj"+id+"']").prop('checked', false);

@@ -55,6 +55,244 @@
         </KEYS>
     </TABLE>
 
+    <!-- COURSES (SLOTS) -->
+    <TABLE NAME="apsolu_courses" COMMENT="Extend courses data">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" NEXT="event" COMMENT="Data from mdl_course.id" />
+            <FIELD NAME="event" TYPE="char" LENGTH="255" NOTNULL="false" PREVIOUS="id" NEXT="skillid" COMMENT="eg: 100m,200m" />
+            <FIELD NAME="skillid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="event" NEXT="locationid" />
+            <FIELD NAME="locationid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="skillid" NEXT="weekday" />
+            <FIELD NAME="weekday" TYPE="char" LENGTH="255" NOTNULL="true" PREVIOUS="locationid" NEXT="starttime" />
+            <FIELD NAME="numweekday" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="weekday" NEXT="starttime" />
+            <FIELD NAME="starttime" TYPE="char" LENGTH="5" NOTNULL="true" PREVIOUS="weekday" NEXT="endtime" />
+            <FIELD NAME="endtime" TYPE="char" LENGTH="5" NOTNULL="true" PREVIOUS="starttime" NEXT="periodid" />
+            <FIELD NAME="license" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="endtime" NEXT="on_homepage" />
+            <FIELD NAME="on_homepage" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="license" NEXT="periodid" />
+            <FIELD NAME="periodid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="license" NEXT="paymentcenterid" />
+            <FIELD NAME="paymentcenterid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" PREVIOUS="periodid" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_courses" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="skillid" UNIQUE="false" FIELDS="skillid"/>
+            <INDEX NAME="locationid" UNIQUE="false" FIELDS="locationid"/>
+            <INDEX NAME="periodid" UNIQUE="false" FIELDS="periodid"/>
+            <INDEX NAME="paymentcenterid" UNIQUE="false" FIELDS="paymentcenterid"/>
+        </INDEXES>
+    </TABLE>
+
+    <!-- CATEGORIES (SPORTS) -->
+    <TABLE NAME="apsolu_courses_categories" COMMENT="Extend courses data">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="true" NEXT="url" COMMENT="Data from mdl_course_categories.id" />
+            <FIELD NAME="url" TYPE="char" LENGTH="255" NOTNULL="false" PREVIOUS="id" NEXT="federation" />
+            <FIELD NAME="federation" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="false" PREVIOUS="url" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_courses_categories" />
+        </KEYS>
+    </TABLE>
+
+    <!-- GROUPINGS (SPORTS SETS) -->
+    <TABLE NAME="apsolu_courses_groupings" COMMENT="Extend courses data">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="true" NEXT="url" COMMENT="Data from mdl_course_categories.id" />
+            <FIELD NAME="url" TYPE="char" LENGTH="255" NOTNULL="false" PREVIOUS="id" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_courses_groupings" />
+        </KEYS>
+    </TABLE>
+
+    <!-- SKILLS -->
+    <TABLE NAME="apsolu_skills" COMMENT="Extend courses data">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="true" NEXT="shortname" />
+            <FIELD NAME="shortname" TYPE="char" LENGTH="128" NOTNULL="true" PREVIOUS="id" NEXT="name" />
+            <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" PREVIOUS="shortname" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_skills" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="unique_name" UNIQUE="true" FIELDS="name" />
+        </INDEXES>
+    </TABLE>
+
+    <!-- Payments (commands) -->
+    <TABLE NAME="apsolu_payments" COMMENT="Table apsolu_payments">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" />
+            <FIELD NAME="method" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="eg: card, coins, check" />
+            <FIELD NAME="source" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="eg: apsolu, apogée, manual" />
+            <FIELD NAME="amount" TYPE="float" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="status" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="timepaid" TYPE="char" LENGTH="19" NOTNULL="false" />
+            <FIELD NAME="timecreated" TYPE="char" LENGTH="19" NOTNULL="true" />
+            <FIELD NAME="timemodified" TYPE="char" LENGTH="19" NOTNULL="true" />
+            <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="paymentcenterid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" PREVIOUS="periodid" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_payments" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
+            <INDEX NAME="paymentcenterid" UNIQUE="false" FIELDS="paymentcenterid"/>
+        </INDEXES>
+    </TABLE>
+
+    <!-- Payments items -->
+    <TABLE NAME="apsolu_payments_items" COMMENT="Table apsolu_payments_items">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="true" />
+            <FIELD NAME="paymentid" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="false" />
+            <FIELD NAME="courseid" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="false" />
+            <FIELD NAME="roleid" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="false" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_payments_items" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="paymentid" UNIQUE="false" FIELDS="paymentid"/>
+            <INDEX NAME="courseid" UNIQUE="false" FIELDS="courseid"/>
+            <INDEX NAME="roleid" UNIQUE="false" FIELDS="roleid"/>
+        </INDEXES>
+    </TABLE>
+
+    <!-- Payments transactions -->
+    <TABLE NAME="apsolu_payments_transactions" COMMENT="Table apsolu_payments_transactions">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="true" />
+            <FIELD NAME="timecreated" TYPE="char" LENGTH="19" NOTNULL="true" />
+            <FIELD NAME="amount" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="false" />
+            <FIELD NAME="reference" TYPE="char" LENGTH="32" NOTNULL="true" />
+            <FIELD NAME="auto" TYPE="char" LENGTH="32" NOTNULL="true" />
+            <FIELD NAME="error" TYPE="char" LENGTH="32" NOTNULL="true" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_payments_transactions" />
+        </KEYS>
+    </TABLE>
+
+    <!-- Payment centers -->
+    <TABLE NAME="apsolu_payments_centers" COMMENT="Table apsolu_payments_centers">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="true" />
+            <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
+            <FIELD NAME="idnumber" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="sitenumber" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="rank" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="hmac" TYPE="char" LENGTH="255" NOTNULL="true" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_payments_centers" />
+        </KEYS>
+    </TABLE>
+
+    <!-- PERIODS -->
+    <TABLE NAME="apsolu_periods" COMMENT="Extend courses data">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="true" NEXT="name" />
+            <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" PREVIOUS="id" NEXT="generic_name" />
+            <FIELD NAME="generic_name" TYPE="char" LENGTH="255" NOTNULL="true" PREVIOUS="name" NEXT="weeks" />
+            <FIELD NAME="weeks" TYPE="char" LENGTH="255" NOTNULL="true" PREVIOUS="name" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_periods" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="unique_name" UNIQUE="true" FIELDS="name" />
+        </INDEXES>
+    </TABLE>
+
+    <!-- LOCATIONS -->
+    <TABLE NAME="apsolu_locations" COMMENT="Extend courses data">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="true" NEXT="name" />
+            <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" PREVIOUS="id" NEXT="address" />
+            <FIELD NAME="address" TYPE="text" NOTNULL="false" PREVIOUS="name" NEXT="email" />
+            <FIELD NAME="email" TYPE="char" LENGTH="255" NOTNULL="true" PREVIOUS="address" NEXT="phone" />
+            <FIELD NAME="phone" TYPE="char" LENGTH="255" NOTNULL="true" PREVIOUS="email" NEXT="longitude" />
+            <FIELD NAME="longitude" TYPE="float" NOTNULL="false" PREVIOUS="phone" NEXT="latitude" />
+            <FIELD NAME="latitude" TYPE="float" NOTNULL="false" PREVIOUS="longitude" NEXT="wifi_access" />
+            <FIELD NAME="wifi_access" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" PREVIOUS="latitude" NEXT="indoor" />
+            <FIELD NAME="indoor" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" PREVIOUS="wifi_access" NEXT="restricted_access" />
+            <FIELD NAME="restricted_access" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" PREVIOUS="indoor" NEXT="areaid" />
+            <FIELD NAME="areaid" TYPE="int" LENGTH="10" NOTNULL="false" PREVIOUS="restricted_access" NEXT="managerid" />
+            <FIELD NAME="managerid" TYPE="int" LENGTH="10" NOTNULL="false" PREVIOUS="areaid" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_locations" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="unique_name" UNIQUE="true" FIELDS="name" />
+            <INDEX NAME="areaid" UNIQUE="false" FIELDS="areaid"/>
+            <INDEX NAME="managerid" UNIQUE="false" FIELDS="managerid"/>
+        </INDEXES>
+    </TABLE>
+
+    <!-- AREAS -->
+    <TABLE NAME="apsolu_areas" COMMENT="Extend courses data">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="true" NEXT="name" />
+            <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" PREVIOUS="id" NEXT="cityid" />
+            <FIELD NAME="cityid" TYPE="int" LENGTH="10" UNSIGNED="true" PREVIOUS="name" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_areas" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="unique_name" UNIQUE="true" FIELDS="name" />
+            <INDEX NAME="cityid" UNIQUE="false" FIELDS="cityid"/>
+        </INDEXES>
+    </TABLE>
+
+    <!-- CITIES -->
+    <TABLE NAME="apsolu_cities" COMMENT="Extend courses data">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="true" NEXT="name" />
+            <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" PREVIOUS="id" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_cities" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="unique_name" UNIQUE="true" FIELDS="name" />
+        </INDEXES>
+    </TABLE>
+
+    <!-- MANAGERS -->
+    <TABLE NAME="apsolu_managers" COMMENT="Extend courses data">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="true" NEXT="name" />
+            <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" PREVIOUS="id" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_managers" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="unique_name" UNIQUE="true" FIELDS="name" />
+        </INDEXES>
+    </TABLE>
+
+    <!-- COMPLEMENTS -->
+    <TABLE NAME="apsolu_complements" COMMENT="Extend courses data">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="true" NEXT="price" />
+            <FIELD NAME="price" TYPE="float" LENGTH="10" NOTNULL="true" PREVIOUS="id" NEXT="federation" />
+            <FIELD NAME="federation" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="false" PREVIOUS="price" NEXT="paymentcenterid" />
+            <FIELD NAME="paymentcenterid" TYPE="int" LENGTH="10" NOTNULL="true" PREVIOUS="federation" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_complements" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="paymentcenterid" UNIQUE="false" FIELDS="paymentcenterid"/>
+        </INDEXES>
+    </TABLE>
+
 	<!-- GRADES -->
     <TABLE NAME="apsolu_grades" COMMENT="Table to store grades">
         <FIELDS>

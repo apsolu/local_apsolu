@@ -1,0 +1,69 @@
+<h1>{{#str}}federations_users_list, local_apsolu{{/str}}</h1>
+
+{{#notification}}
+	{{{notification}}}
+{{/notification}}
+
+<ul class="list list-inline">
+	<li><a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/complements.php?tab=federations&action=export&institution=rennes1">{{#str}}federations_users_list_export_r1, local_apsolu{{/str}}</a></li>
+	<li><a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/complements.php?tab=federations&action=export&institution=rennes2">{{#str}}federations_users_list_export_r2, local_apsolu{{/str}}</a></li>
+</ul>
+
+{{#user_selector}}
+<form method="post" action="{{action}}">
+    <div>
+        <label for="userid">{{#str}}users,moodle{{/str}}</label>
+        {{{user_selector}}}
+    </div>
+
+    <p>
+        <input class="btn btn-default" type="submit" value="{{#str}}select_user, local_apsolu{{/str}}" />
+    </p>
+</form>
+
+{{/user_selector}}
+
+{{^user_selector}}
+{{^users}}
+<p class="alert alert-info">{{#str}}no_user, local_apsolu{{/str}}</p>
+{{/users}}
+
+{{#count_users}}
+<table class="table table-striped table-sortable">
+<thead>
+	<tr>
+		<th>{{#str}}pictureofuser{{/str}}</th>
+		<th>{{#str}}firstname{{/str}}</th>
+		<th>{{#str}}lastname{{/str}}</th>
+		<th>{{#str}}institution{{/str}}</th>
+		<th>{{#str}}categories, local_apsolu{{/str}}</th>
+		<th>{{#str}}federation_number, local_apsolu{{/str}}</th>
+		<th>{{#str}}medical_certificate, local_apsolu{{/str}}</th>
+		<th>{{#str}}federation_paid, local_apsolu{{/str}}</th>
+		<th>{{#str}}actions{{/str}}</th>
+	</tr>
+</thead>
+<tbody>
+	{{#users}}
+	<tr>
+		<td>{{{htmlpicture}}}</td>
+		<td>{{firstname}}</td>
+		<td>{{lastname}}</td>
+		<td>{{institution}}</td>
+		<td>{{categories}}</td>
+		<td>{{federationnumber}}</td>
+		<td>{{medicalcertificate}}</td>
+		<td>{{federationpaid}}</td>
+		<td>
+			<ul class="list-inline">
+				<li><a target="_blank" href="{{wwwroot}}/user/editadvanced.php?id={{id}}">{{#pix}}t/assignroles,core,{{#str}}edit{{/str}}{{/pix}}</a></li>
+			</ul>
+		</td>
+	</tr>
+	{{/users}}
+</tbody>
+</table>
+{{/count_users}}
+
+<p class="text-right"><a class="btn btn-default" href="{{wwwroot}}/local/apsolu/courses/complements.php?tab=federations">{{#str}}research_user, local_apsolu{{/str}}</a></p>
+{{/user_selector}}

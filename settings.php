@@ -30,33 +30,51 @@ $capabilities = array(
 );
 
 if ($hassiteconfig or has_any_capability($capabilities, context_system::instance())) {
-    if (empty($ADMIN->locate('apsolu'))) {
-        $ADMIN->add('root', new admin_category('apsolu', get_string('settings_root', 'local_apsolu')), 'users');
+    // Ajoute un noeud Apsolu au menu d'administration.
+    if (empty($ADMIN->locate('apsolu')) === true) {
+        // Crée le noeud.
+        $apsolu_root = new admin_category('apsolu', get_string('settings_root', 'local_apsolu'));
+        // Tri les enfants par ordre alphabétique.
+        $apsolu_root->set_sorting($sort = true);
+        // Place le noeud Apsolu avant le noeud Utilisateurs de Moodle.
+        $ADMIN->add('root', $apsolu_root, 'users');
     }
 
     // Activités physiques.
-    $ADMIN->add('apsolu', new admin_category('local_apsolu_courses', get_string('settings_activities', 'local_apsolu_courses')));
+    $ADMIN->add('apsolu', new admin_category('local_apsolu_courses', get_string('settings_activities', 'local_apsolu')));
+    $ADMIN->add('local_apsolu_courses', new admin_category('local_apsolu_courses_courses', get_string('courses', 'local_apsolu')));
+    $ADMIN->add('local_apsolu_courses', new admin_category('local_apsolu_courses_locations', get_string('locations', 'local_apsolu')));
 
-    $types = array('overview', 'courses', 'groupings', 'categories', 'skills', 'periods', 'locations', 'areas', 'cities', 'managers');
-    foreach ($types as $type) {
-        $label = get_string($type, 'local_apsolu_courses');
-        $url = new moodle_url('/local/apsolu_courses/index.php?tab='.$type);
-        $page = new admin_externalpage('local_apsolu_courses_'.$type, $label, $url, $capabilities);
+    $items = array();
+    $items['courses'] = array('courses', 'groupings', 'categories', 'skills', 'periods');
+    $items['locations'] = array('locations', 'areas', 'cities', 'managers');
 
-        $ADMIN->add('local_apsolu_courses', $page);
+    $label = get_string('overview', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/courses/index.php?tab=overview');
+    $page = new admin_externalpage('local_apsolu_courses_overview', $label, $url, $capabilities);
+    $ADMIN->add('local_apsolu_courses', $page);
+
+    foreach ($items as $subtype => $tabs) {
+        foreach ($tabs as $tab) {
+            $label = get_string($tab, 'local_apsolu');
+            $url = new moodle_url('/local/apsolu/courses/index.php?tab='.$tab);
+            $page = new admin_externalpage('local_apsolu_courses_'.$subtype.'_'.$tab, $label, $url, $capabilities);
+
+            $ADMIN->add('local_apsolu_courses_'.$subtype, $page);
+        }
     }
 
     // Activités complémentaires.
-    $ADMIN->add('apsolu', new admin_category('local_apsolu_complements', get_string('settings_complements', 'local_apsolu_courses')));
+    $ADMIN->add('apsolu', new admin_category('local_apsolu_complements', get_string('settings_complements', 'local_apsolu')));
 
     // Activités complémentaires > Activités complémentaires.
-    $label = get_string('settings_complements', 'local_apsolu_courses');
-    $url = new moodle_url('/local/apsolu_courses/complements.php?tab=complements');
+    $label = get_string('settings_complements', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/courses/complements.php?tab=complements');
     $ADMIN->add('local_apsolu_complements', new admin_externalpage('local_apsolu_complements_complements', $label, $url, $capabilities));
 
     // Activités complémentaires > FFSU.
-    $label = get_string('settings_federations', 'local_apsolu_courses');
-    $url = new moodle_url('/local/apsolu_courses/complements.php?tab=federations');
+    $label = get_string('settings_federations', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/courses/complements.php?tab=federations');
     $ADMIN->add('local_apsolu_complements', new admin_externalpage('local_apsolu_complements_federations', $label, $url, $capabilities));
 
     // Configuration.
@@ -81,85 +99,43 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     $ADMIN->add('local_apsolu_federation', new admin_externalpage('local_apsolu_federation_import', $str, $url, $capabilities));
 
     // Notations.
-    $ADMIN->add('apsolu', new admin_category('local_apsolu_grades', get_string('grades', 'local_apsolu_courses')));
+    $ADMIN->add('apsolu', new admin_category('local_apsolu_grades', get_string('grades', 'local_apsolu')));
 
     // Notations > Exporter.
-    $label = get_string('export', 'local_apsolu_courses');
-    $url = new moodle_url('/local/apsolu_courses/grades.php?tab=export');
+    $label = get_string('export', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/grades/grades.php?tab=export');
     $ADMIN->add('local_apsolu_grades', new admin_externalpage('local_apsolu_grades_export', $label, $url, $capabilities));
 
     // Paiements.
-    $ADMIN->add('apsolu', new admin_category('local_apsolu_payment',  get_string('settings_payments', 'local_apsolu_payment')));
+    $ADMIN->add('apsolu', new admin_category('local_apsolu_payment',  get_string('settings_payments', 'local_apsolu')));
 
     $isgod = has_capability('moodle/site:config', context_system::instance());
 
     // Paiements > Configurations.
     if ($isgod === true) {
-        $label = get_string('configurations', 'local_apsolu_payment');
-        $url = new moodle_url('/local/apsolu_payment/admin.php', array('tab' => 'configurations'));
+        $label = get_string('configurations', 'local_apsolu');
+        $url = new moodle_url('/local/apsolu/payment/admin.php', array('tab' => 'configurations'));
         $ADMIN->add('local_apsolu_payment', new admin_externalpage('local_apsolu_payment_configurations', $label, $url, $capabilities));
     }
 
     // Paiements > Centres de paiement.
     if ($isgod === true) {
-        $label = get_string('payment_centers', 'local_apsolu_payment');
-        $url = new moodle_url('/local/apsolu_payment/admin.php', array('tab' => 'centers'));
+        $label = get_string('payment_centers', 'local_apsolu');
+        $url = new moodle_url('/local/apsolu/payment/admin.php', array('tab' => 'centers'));
         $ADMIN->add('local_apsolu_payment', new admin_externalpage('local_apsolu_payment_centers', $label, $url, $capabilities));
     }
 
     // Paiements > Frais d'inscription.
-    $label = get_string('settings_payment', 'local_apsolu_payment');
-    $url = new moodle_url('/local/apsolu_payment/admin.php', array('tab' => 'payments'));
+    $label = get_string('settings_payment', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/payment/admin.php', array('tab' => 'payments'));
     $ADMIN->add('local_apsolu_payment', new admin_externalpage('local_apsolu_payment_payments', $label, $url, $capabilities));
 
     // Paiements > Notification.
     $label = get_string('notifications');
-    $url = new moodle_url('/local/apsolu_payment/admin.php', array('tab' => 'notifications'));
+    $url = new moodle_url('/local/apsolu/payment/admin.php', array('tab' => 'notifications'));
     $ADMIN->add('local_apsolu_payment', new admin_externalpage('local_apsolu_payment_notifications', $label, $url, $capabilities));
 
     // Paiements > Population.
     $url = new moodle_url('/enrol/select/administration.php?tab=colleges');
     $ADMIN->add('local_apsolu_payment', new admin_externalpage('enrol_select_colleges', get_string('colleges', 'enrol_select'), $url, $capabilities));
-
-    // Rapports.
-    $ADMIN->add('apsolu', new admin_category('local_apsolu_reports', get_string('reports', 'local_apsolu_courses')));
-
-    // Rapports > Extractions.
-    $label = get_string('extractions', 'local_apsolu_courses');
-    $url = new moodle_url('/blocks/apsolu_teachers/extractions.php', array('manager' => 1));
-    $ADMIN->add('local_apsolu_reports', new admin_externalpage('local_apsolu_reports_extractions', $label, $url, $capabilities));
-
-    // Rapports > FFSU.
-    $label = get_string('federations', 'local_apsolu_courses');
-    $url = new moodle_url('/blocks/apsolu_teachers/ffsu.php');
-    $ADMIN->add('local_apsolu_reports', new admin_externalpage('local_apsolu_reports_federations', $label, $url, $capabilities));
-
-    // Rapports > Statistiques générales.
-    $label = get_string('statistics_general', 'local_apsolu_courses');
-    $url = new moodle_url('/local/apsolu_courses/reports.php?tab=general');
-    $ADMIN->add('local_apsolu_reports', new admin_externalpage('local_apsolu_reports_general', $label, $url, $capabilities));
-
-    // Rapports > Statistiques (semestre 1).
-    $label = get_string('statistics_semester1', 'local_apsolu_courses');
-    $url = new moodle_url('/local/apsolu_courses/reports.php?tab=semester1');
-    $ADMIN->add('local_apsolu_reports', new admin_externalpage('local_apsolu_reports_semester1', $label, $url, $capabilities));
-
-    // Rapports > Statistiques (semestre 2).
-    $label = get_string('statistics_semester2', 'local_apsolu_courses');
-    $url = new moodle_url('/local/apsolu_courses/reports.php?tab=semester2');
-    $ADMIN->add('local_apsolu_reports', new admin_externalpage('local_apsolu_reports_semester2', $label, $url, $capabilities));
-
-    // Statistics.
-    $ADMIN->add('apsolu', new admin_category('local_apsolu_statistics', get_string('settings_statistics', 'local_apsolu')));
-
-    $str = get_string('settings_statistics_rosters', 'local_apsolu');
-    $url = new moodle_url('/local/apsolu/statistics/index.php', array('type' => 'rosters'));
-    $ADMIN->add('local_apsolu_statistics', new admin_externalpage('local_apsolu_statistics_rosters', $str, $url, $capabilities));
-
-    // Users.
-    $ADMIN->add('apsolu', new admin_category('local_apsolu_users', get_string('settings_users', 'local_apsolu')));
-
-    $str = get_string('settings_users_merge', 'local_apsolu');
-    $url = new moodle_url('/local/apsolu/users/index.php', array('type' => 'merge'));
-    $ADMIN->add('local_apsolu_users', new admin_externalpage('local_apsolu_users_merge', $str, $url, $capabilities));
 }

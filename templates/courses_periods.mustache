@@ -1,0 +1,44 @@
+<h1>{{#str}}periods_list, local_apsolu{{/str}}</h1>
+
+{{#notification}}
+	{{{notification}}}
+{{/notification}}
+
+<p class="text-right">
+	<a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=periods&action=edit">{{#str}}period_add, local_apsolu{{/str}}</a>
+</p>
+
+{{^periods}}
+<p class="alert alert-info">{{#str}}no_period, local_apsolu{{/str}}</p>
+{{/periods}}
+
+{{#count_periods}}
+<table class="table table-striped table-sortable">
+<thead>
+	<tr>
+		<th>{{#str}}periods, local_apsolu{{/str}}</th>
+		<th>{{#str}}generic_name, local_apsolu{{/str}}</th>
+		<th>{{#str}}weeks, local_apsolu{{/str}}</th>
+		<th>{{#str}}actions{{/str}}</th>
+	</tr>
+</thead>
+<tbody>
+	{{#periods}}
+	<tr>
+		<td>{{name}}</td>
+		<td>{{generic_name}}</td>
+		<td>
+		{{#count_weeks}}
+		<ul>
+			{{#weeks}}
+			<li>{{.}}</li>
+			{{/weeks}}
+		</ul>
+		{{/count_weeks}}
+		</td>
+		<td><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=periods&action=edit&periodid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></td>
+	</tr>
+	{{/periods}}
+</tbody>
+</table>
+{{/count_periods}}

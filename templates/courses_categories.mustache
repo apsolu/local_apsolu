@@ -1,0 +1,36 @@
+<h1>{{#str}}categories_list, local_apsolu{{/str}}</h1>
+
+{{#notification}}
+	{{{notification}}}
+{{/notification}}
+
+<p class="text-right">
+	<a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=categories&action=edit">{{#str}}category_add, local_apsolu{{/str}}</a>
+</p>
+
+{{^categories}}
+<p class="alert alert-info">{{#str}}no_category, local_apsolu{{/str}}</p>
+{{/categories}}
+
+{{#count_categories}}
+<table class="table table-striped table-sortable">
+<thead>
+	<tr>
+		<th>{{#str}}categories, local_apsolu{{/str}}</th>
+		<th>{{#str}}groupings, local_apsolu{{/str}}</th>
+		<th>{{#str}}federation, local_apsolu{{/str}}</th>
+		<th>{{#str}}actions{{/str}}</th>
+	</tr>
+</thead>
+<tbody>
+	{{#categories}}
+	<tr>
+		<td>{{name}}</td>
+		<td>{{grouping}}</td>
+		<td>{{#federation}}{{#str}}yes{{/str}}{{/federation}}{{^federation}}{{#str}}no{{/str}}{{/federation}}</td>
+		<td><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=categories&action=edit&categoryid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></td>
+	</tr>
+	{{/categories}}
+</tbody>
+</table>
+{{/count_categories}}

@@ -314,3 +314,74 @@ h4.apsolu-activities-list-h4-link-back {
 	background-color: #dddddd;
 	padding: .5em;
 }
+
+
+/* courses */
+input[list]{
+    background-image: url([[pix:core|t/expanded]]) !important;
+    background-position: center right !important;
+    background-repeat: no-repeat !important;
+}
+
+.apsolu-category-level1-div, .apsolu-category-level1-h2, .apsolu-category-level2-div, .apsolu-category-level2-h2 {
+    font-size: 1em;
+    margin: 0;
+    padding: 0 0 0 1em;
+}
+
+.apsolu-category-level2-div {
+    padding: 0 0 0 2em;
+}
+
+.apsolu-category-level1-h2{
+    background-color: lightgray;
+    border-bottom: .1em black dotted;
+    font-size: 1.2em;
+}
+
+.apsolu-row-odd {
+    background-color: #f9f9f9;
+}
+
+.apsolu-row-disabled {
+    background-color: lightgray;
+    text-decoration: line-through;
+}
+
+.table-sortable thead tr .header {
+    background-color: transparent;
+    background-image: url([[pix:core|t/sort]]);
+    background-repeat: no-repeat;
+    background-position: 95% center;
+    cursor: pointer;
+    padding-right: 5%;
+}
+
+.table-sortable thead tr .headerSortUp {
+    /*background-color: #F39C12;*/
+    /*background-color: #434241;*/
+    background-image: url([[pix:core|t/sort_asc]]);
+    /*color: #F39C12;*/
+    color: #BB5500;
+}
+
+.table-sortable thead tr .headerSortDown {
+    /*background-color: #F39C12;*/
+    /*background-color: #434241;*/
+    background-image: url([[pix:core|t/sort_desc]]);
+    /*color: #F39C12;*/
+    color: #BB5500;
+}
+
+.local-apsolu-courses-details {
+    margin: 1em 2em;
+    padding: 2em;
+}
+
+.local-apsolu-courses-summary {
+    display: list-item;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 1em;
+    text-decoration: underline;
+}

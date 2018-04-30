@@ -1,0 +1,24 @@
+<h1>{{#str}}configurations, local_apsolu{{/str}}</h1>
+
+{{#notification}}
+	{{{notification}}}
+{{/notification}}
+
+<table class="table table-striped">
+<thead>
+	<tr>
+		<th>{{#str}}names, local_apsolu{{/str}}</th>
+		<th>{{#str}}values, local_apsolu{{/str}}</th>
+		<th>{{#str}}actions{{/str}}</th>
+	</tr>
+</thead>
+<tbody>
+	{{#configurations}}
+	<tr>
+		<td>{{name}}</td>
+		<td>{{value}}</td>
+		<td><a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=configurations&action=edit&configurationid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></td>
+	</tr>
+	{{/configurations}}
+</tbody>
+</table>

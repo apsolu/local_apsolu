@@ -1,0 +1,61 @@
+{{^count_courses}}
+<p class="alert alert-info">{{#str}}no_course, local_apsolu{{/str}}
+{{/count_courses}}
+
+{{#count_courses}}
+<table class="table table-stripped table-bordered">
+<thead>
+	<tr>
+		<th>{{#str}}courses, local_apsolu{{/str}}</th>
+		<th>{{#str}}enrolname,enrol_select{{/str}}</th>
+		<th>{{#str}}accepted_list,enrol_select{{/str}}</th>
+		<th>{{#str}}main_list,enrol_select{{/str}}</th>
+		<th>{{#str}}wait_list,enrol_select{{/str}}</th>
+		<th>{{#str}}deleted_list,enrol_select{{/str}}</th>
+		<th>{{#str}}actions{{/str}}</th>
+	</tr>
+</thead>
+<tbody>
+{{#courses}}
+	{{^multiple_enrols}}
+	<tr>
+		<td>{{fullname}}</td>
+		{{^count_enrols}}
+		<td colspan="6" class="warning">{{#str}}no_enrols, local_apsolu{{/str}}</td>
+		{{/count_enrols}}
+
+		{{#count_enrols}}
+		{{#enrols}}
+		<td>{{name}}</td>
+		<td>{{count_accepted_list}}</td>
+		<td>{{count_main_list}}/{{customint1}}</td>
+		<td>{{count_wait_list}}/{{customint2}}</td>
+		<td>{{count_deleted_list}}</td>
+		<td><a href="{{wwwroot}}/enrol/select/manage.php?enrolid={{id}}">{{#str}}edit,core{{/str}}</a></td>
+		{{/enrols}}
+		{{/count_enrols}}
+	</tr>
+	{{/multiple_enrols}}
+
+	{{#multiple_enrols}}
+	<tr>
+		<td rowspan="{{count_enrols}}">{{fullname}}</td>
+		{{#enrols}}
+		<td>{{name}}</td>
+		<td>{{count_accepted_list}}</td>
+		<td>{{count_main_list}}/{{customint1}}</td>
+		<td>{{count_wait_list}}/{{customint2}}</td>
+		<td>{{count_deleted_list}}</td>
+		<td><a href="{{wwwroot}}/enrol/select/manage.php?enrolid={{id}}">{{#str}}edit,core{{/str}}</a></td>
+		</tr>
+		<tr>
+		{{/enrols}}
+	</tr>
+	{{/multiple_enrols}}
+
+{{/courses}}
+</tbody>
+</table>
+{{/count_courses}}
+
+<p class="text-right"><a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=overview">{{#str}}back, local_apsolu{{/str}}</a></p>

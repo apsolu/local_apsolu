@@ -1,0 +1,40 @@
+<h1>{{#str}}payment_centers, local_apsolu{{/str}}</h1>
+
+{{#notification}}
+	{{{notification}}}
+{{/notification}}
+
+<p class="text-right">
+	<a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=centers&action=edit">{{#str}}center_add, local_apsolu{{/str}}</a>
+</p>
+
+{{^centers}}
+<p class="alert alert-info">{{#str}}no_center, local_apsolu{{/str}}</p>
+{{/centers}}
+
+{{#count_centers}}
+<table class="table table-striped">
+<thead>
+	<tr>
+		<th>{{#str}}payment_centers, local_apsolu{{/str}}</th>
+		<th>{{#str}}paybox_idnumber, local_apsolu{{/str}}</th>
+		<th>{{#str}}paybox_sitenumber, local_apsolu{{/str}}</th>
+		<th>{{#str}}paybox_rank, local_apsolu{{/str}}</th>
+		<th>{{#str}}paybox_hmac, local_apsolu{{/str}}</th>
+		<th>{{#str}}actions{{/str}}</th>
+	</tr>
+</thead>
+<tbody>
+	{{#centers}}
+	<tr>
+		<td>{{name}}</td>
+		<td>{{idnumber}}</td>
+		<td>{{sitenumber}}</td>
+		<td>{{rank}}</td>
+		<td>{{hmac}}</td>
+		<td><a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=centers&action=edit&centerid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></td>
+	</tr>
+	{{/centers}}
+</tbody>
+</table>
+{{/count_centers}}

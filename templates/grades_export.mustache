@@ -1,0 +1,51 @@
+{{^users}}
+<p class="alert alert-info">{{#str}}no_student, local_apsolu{{/str}}</p>
+{{/users}}
+
+{{#count_users}}
+<p class="alert alert-info">{{found_users}}</p>
+
+<form action="{{action}}" method="post">
+	<table class="table table-striped table-sortable table-bordered">
+	<thead>
+		<tr>
+			<th rowspan="2">{{#str}}pictureofuser{{/str}}</th>
+			<th rowspan="2">{{#str}}lastname{{/str}}</th>
+			<th rowspan="2">{{#str}}firstname{{/str}}</th>
+			<th rowspan="2">{{#str}}idnumber{{/str}}</th>
+			<th rowspan="2">{{#str}}sex, local_apsolu{{/str}}</th>
+			<th rowspan="2">{{#str}}institution{{/str}}</th>
+			<th rowspan="2">{{#str}}department{{/str}}</th>
+			<th rowspan="2">{{#str}}ufr, local_apsolu{{/str}}</th>
+			<th rowspan="2">{{#str}}lmd, local_apsolu{{/str}}</th>
+			<th rowspan="2">{{#str}}role, local_apsolu{{/str}}</th>
+			<th rowspan="2">{{#str}}course{{/str}}</th>
+			<th colspan="2">{{semester}}</th>
+		</tr>
+		<tr>
+			<th>{{#str}}practicegrade, local_apsolu{{/str}}</th>
+			<th>{{#str}}theorygrade, local_apsolu{{/str}}</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#users}}
+		<tr>
+			<td>{{{htmlpicture}}}</td>
+			<td>{{lastname}}</td>
+			<td>{{firstname}}</td>
+			<td>{{idnumber}}</td>
+			<td>{{customfields.sex}}</td>
+			<td>{{institution}}</td>
+			<td>{{department}}</td>
+			<td>{{customfields.ufr}}</td>
+			<td>{{customfields.lmd}}</td>
+			<td>{{rolename}}</td>
+			<td>{{course}}</td>
+			<td>{{grade1}}</td>
+			<td>{{grade2}}</td>
+		</tr>
+		{{/users}}
+	</tbody>
+	</table>
+</form>
+{{/count_users}}

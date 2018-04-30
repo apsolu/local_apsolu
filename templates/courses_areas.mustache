@@ -1,0 +1,34 @@
+<h1>{{#str}}areas_list, local_apsolu{{/str}}</h1>
+
+{{#notification}}
+	{{{notification}}}
+{{/notification}}
+
+<p class="text-right">
+	<a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=areas&action=edit">{{#str}}area_add, local_apsolu{{/str}}</a>
+</p>
+
+{{^areas}}
+<p class="alert alert-info">{{#str}}no_area, local_apsolu{{/str}}</p>
+{{/areas}}
+
+{{#count_areas}}
+<table class="table table-striped table-sortable">
+<thead>
+	<tr>
+		<th>{{#str}}areas, local_apsolu{{/str}}</th>
+		<th>{{#str}}cities, local_apsolu{{/str}}</th>
+		<th>{{#str}}actions{{/str}}</th>
+	</tr>
+</thead>
+<tbody>
+	{{#areas}}
+	<tr>
+		<td>{{name}}</td>
+		<td>{{city}}</td>
+		<td><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=areas&action=edit&areaid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></td>
+	</tr>
+	{{/areas}}
+</tbody>
+</table>
+{{/count_areas}}

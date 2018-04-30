@@ -1,0 +1,32 @@
+<h1>{{#str}}cities_list, local_apsolu{{/str}}</h1>
+
+{{#notification}}
+	{{{notification}}}
+{{/notification}}
+
+<p class="text-right">
+	<a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=cities&action=edit">{{#str}}city_add, local_apsolu{{/str}}</a>
+</p>
+
+{{^cities}}
+<p class="alert alert-info">{{#str}}no_city, local_apsolu{{/str}}</p>
+{{/cities}}
+
+{{#count_cities}}
+<table class="table table-striped table-sortable">
+<thead>
+	<tr>
+		<th>{{#str}}cities, local_apsolu{{/str}}</th>
+		<th>{{#str}}actions{{/str}}</th>
+	</tr>
+</thead>
+<tbody>
+	{{#cities}}
+	<tr>
+		<td>{{name}}</td>
+		<td><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=cities&action=edit&cityid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></td>
+	</tr>
+	{{/cities}}
+</tbody>
+</table>
+{{/count_cities}}

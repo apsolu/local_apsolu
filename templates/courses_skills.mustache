@@ -1,0 +1,36 @@
+<h1>{{#str}}skills_list, local_apsolu{{/str}}</h1>
+
+{{#notification}}
+	{{{notification}}}
+{{/notification}}
+
+<ul class="list list-inline text-right">
+	<li><a class="btn btn-default" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=skills&action=export">{{#str}}skills_csv_export, local_apsolu{{/str}}</a></li>
+	<li><a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=skills&action=edit">{{#str}}skill_add, local_apsolu{{/str}}</a></li>
+</ul>
+
+{{^skills}}
+<p class="alert alert-info">{{#str}}no_skill, local_apsolu{{/str}}</p>
+{{/skills}}
+
+{{#count_skills}}
+<table class="table table-striped table-sortable">
+<thead>
+	<tr>
+		<th>{{#str}}skill_shortnames, local_apsolu{{/str}}</th>
+		<th>{{#str}}skill_fullnames, local_apsolu{{/str}}</th>
+		<th>{{#str}}actions{{/str}}</th>
+	</tr>
+</thead>
+<tbody>
+	{{#skills}}
+	<tr>
+		<td>{{name}}</td>
+		<td>{{shortname}}</td>
+		<td><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=skills&action=edit&skillid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></td>
+	</tr>
+	{{/skills}}
+</tbody>
+</table>
+
+{{/count_skills}}
