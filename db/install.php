@@ -28,6 +28,7 @@
 function xmldb_local_apsolu_install() {
     global $DB;
 
+    // Ajoute les différents types de présences.
     $statuses = array('present', 'late', 'excused', 'absent');
     foreach ($statuses as $status) {
         $record = new stdClass();
@@ -35,6 +36,71 @@ function xmldb_local_apsolu_install() {
         $record->code = 'attendance_'.$status;
 
         $DB->insert_record('apsolu_attendance_statuses', $record);
+    }
+
+    // Ajoute les différents champs de profil complémentaires.
+    $fields = $DB->get_records('user_info_field', array(), $sort = 'sortorder DESC');
+    if (count($fields) === 0) {
+        // Ajoute une sous-catégorie de champs complémentaires.
+        $category = $DB->get_record('user_info_category', array('sortorder' => 1));
+        if ($category === false) {
+            $category = new stdClass();
+            $category->name = get_string('fields_complements_category', 'local_apsolu');
+            $category->sortorder = 1;
+            $category->id = $DB->insert_record('user_info_category', $category);
+        }
+
+        $field = (object) [
+            'datatype' => 'text',
+            'description' => '',
+            'descriptionformat' => '',
+            'categoryid' => $category->id,
+            'sortorder' => '0',
+            'required' => '0',
+            'locked' => '1',
+            'visible' => '1',
+            'forceunique' => '0',
+            'signup' => '0',
+            'defaultdata' => '',
+            'defaultdataformat' => '0',
+            'param1' => '30',
+            'param2' => '2048',
+            'param3' => '0',
+            'param4' => '',
+            'param5' => '',
+           ];
+    } else {
+        $field = current($fields);
+        unset($field->id);
+    }
+
+    $customs = array();
+    $customs[] = (object) ['shortname' => 'apsolupostalcode', 'datatype' => 'text', 'param1' => 30, 'param2' => 2048, 'param3' => 0, 'visible' => 0];
+    $customs[] = (object) ['shortname' => 'apsolusex', 'datatype' => 'text', 'param1' => 30, 'param2' => 2048, 'param3' => 0, 'visible' => 0];
+    $customs[] = (object) ['shortname' => 'apsolubirthday', 'datatype' => 'text', 'param1' => 30, 'param2' => 2048, 'param3' => 0, 'visible' => 1];
+    $customs[] = (object) ['shortname' => 'apsoluufr', 'datatype' => 'text', 'param1' => 30, 'param2' => 2048, 'param3' => 0, 'visible' => 1];
+    $customs[] = (object) ['shortname' => 'apsolucycle', 'datatype' => 'text', 'param1' => 30, 'param2' => 2048, 'param3' => 0, 'visible' => 1];
+    $customs[] = (object) ['shortname' => 'apsolucardpaid', 'datatype' => 'checkbox', 'param1' => null, 'param2' => null, 'param3' => null, 'visible' => 0];
+    $customs[] = (object) ['shortname' => 'apsolufederationpaid', 'datatype' => 'checkbox', 'param1' => null, 'param2' => null, 'param3' => null, 'visible' => 0];
+    $customs[] = (object) ['shortname' => 'apsolumuscupaid', 'datatype' => 'checkbox', 'param1' => null, 'param2' => null, 'param3' => null, 'visible' => 0];
+    $customs[] = (object) ['shortname' => 'apsolusesame', 'datatype' => 'checkbox', 'param1' => null, 'param2' => null, 'param3' => null, 'visible' => 0];
+    $customs[] = (object) ['shortname' => 'apsolumedicalcertificate', 'datatype' => 'checkbox', 'param1' => null, 'param2' => null, 'param3' => null, 'visible' => 1];
+    $customs[] = (object) ['shortname' => 'apsolufederationnumber', 'datatype' => 'text', 'param1' => 30, 'param2' => 2048, 'param3' => 0, 'visible' => 1];
+    $customs[] = (object) ['shortname' => 'apsoluhighlevelathlete', 'datatype' => 'checkbox', 'param1' => null, 'param2' => null, 'param3' => null, 'visible' => 0];
+    $customs[] = (object) ['shortname' => 'apsoluidcardnumber', 'datatype' => 'text', 'param1' => 30, 'param2' => 2048, 'param3' => 0, 'visible' => 0];
+    $customs[] = (object) ['shortname' => 'apsoludoublecursus', 'datatype' => 'checkbox', 'param1' => null, 'param2' => null, 'param3' => null, 'visible' => 0];
+
+    foreach ($customs as $custom) {
+        $field->shortname = $custom->shortname;
+        $field->name = get_string('fields_'.$field->shortname, 'local_apsolu');
+        $field->datatype = $custom->datatype;
+        $field->visible = $custom->visible;
+        $field->param1 = $custom->param1;
+        $field->param2 = $custom->param2;
+        $field->param3 = $custom->param3;
+        $field->sortorder++;
+
+        $DB->insert_record('user_info_field', $field);
     }
 
     return true;

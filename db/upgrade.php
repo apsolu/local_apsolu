@@ -258,5 +258,91 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 2018071704;
+    if ($result && $oldversion < $version) {
+        $fields = $DB->get_records('user_info_field', array(), $sort = 'sortorder DESC');
+        if (count($fields) === 0) {
+            // Ajoute une sous-catégorie de champs complémentaires.
+            $category = $DB->get_record('user_info_category', array('sortorder' => 1));
+            if ($category === false) {
+                $category = new stdClass();
+                $category->name = get_string('fields_complements_category', 'local_apsolu');
+                $category->sortorder = 1;
+                $category->id = $DB->insert_record('user_info_category', $category);
+            }
+
+            $field = (object) [
+                'datatype' => 'text',
+                'description' => '',
+                'descriptionformat' => '',
+                'categoryid' => $category->id,
+                'sortorder' => '0',
+                'required' => '0',
+                'locked' => '1',
+                'visible' => '1',
+                'forceunique' => '0',
+                'signup' => '0',
+                'defaultdata' => '',
+                'defaultdataformat' => '0',
+                'param1' => '30',
+                'param2' => '2048',
+                'param3' => '0',
+                'param4' => '',
+                'param5' => '',
+               ];
+        } else {
+            $field = current($fields);
+            unset($field->id);
+        }
+
+        // Ajoute ou renomme les champs de profil complémentaires.
+        $customs = array();
+        $customs['postalcode'] = (object) ['shortname' => 'apsolupostalcode', 'datatype' => 'text', 'param1' => 30, 'param2' => 2048, 'param3' => 0, 'visible' => 0];
+        $customs['sex'] = (object) ['shortname' => 'apsolusex', 'datatype' => 'text', 'param1' => 30, 'param2' => 2048, 'param3' => 0, 'visible' => 0];
+        $customs['birthday'] = (object) ['shortname' => 'apsolubirthday', 'datatype' => 'text', 'param1' => 30, 'param2' => 2048, 'param3' => 0, 'visible' => 1];
+        $customs['ufr'] = (object) ['shortname' => 'apsoluufr', 'datatype' => 'text', 'param1' => 30, 'param2' => 2048, 'param3' => 0, 'visible' => 1];
+        $customs['lmd'] = (object) ['shortname' => 'apsolucycle', 'datatype' => 'text', 'param1' => 30, 'param2' => 2048, 'param3' => 0, 'visible' => 1];
+        $customs['cardpaid'] = (object) ['shortname' => 'apsolucardpaid', 'datatype' => 'checkbox', 'param1' => null, 'param2' => null, 'param3' => null, 'visible' => 0];
+        $customs['federationpaid'] = (object) ['shortname' => 'apsolufederationpaid', 'datatype' => 'checkbox', 'param1' => null, 'param2' => null, 'param3' => null, 'visible' => 0];
+        $customs['muscupaid'] = (object) ['shortname' => 'apsolumuscupaid', 'datatype' => 'checkbox', 'param1' => null, 'param2' => null, 'param3' => null, 'visible' => 0];
+        $customs['validsesame'] = (object) ['shortname' => 'apsolusesame', 'datatype' => 'checkbox', 'param1' => null, 'param2' => null, 'param3' => null, 'visible' => 0];
+        $customs['medicalcertificate'] = (object) ['shortname' => 'apsolumedicalcertificate', 'datatype' => 'checkbox', 'param1' => null, 'param2' => null, 'param3' => null, 'visible' => 1];
+        $customs['federationnumber'] = (object) ['shortname' => 'apsolufederationnumber', 'datatype' => 'text', 'param1' => 30, 'param2' => 2048, 'param3' => 0, 'visible' => 1];
+        $customs['highlevelathlete'] = (object) ['shortname' => 'apsoluhighlevelathlete', 'datatype' => 'checkbox', 'param1' => null, 'param2' => null, 'param3' => null, 'visible' => 0];
+        $customs['apsoluidcardnumber'] = (object) ['shortname' => 'apsoluidcardnumber', 'datatype' => 'text', 'param1' => 30, 'param2' => 2048, 'param3' => 0, 'visible' => 0];
+        $customs['apsoludoublecursus'] = (object) ['shortname' => 'apsoludoublecursus', 'datatype' => 'checkbox', 'param1' => null, 'param2' => null, 'param3' => null, 'visible' => 0];
+
+        foreach ($customs as $oldname => $custom) {
+            $field_ = $DB->get_record('user_info_field', array('shortname' => $oldname));
+            if ($field_ !== false) {
+                // Renomme le champ.
+                $field_->shortname = $custom->shortname;
+                $field_->name = get_string('fields_'.$field_->shortname, 'local_apsolu');
+
+                $DB->update_record('user_info_field', $field_);
+
+                continue;
+            }
+
+            $field_ = $DB->get_record('user_info_field', array('shortname' => $custom->shortname));
+            if ($field_ === false) {
+                // Insert les nouveaux champs.
+                $field->shortname = $custom->shortname;
+                $field->name = get_string('fields_'.$field->shortname, 'local_apsolu');
+                $field->datatype = $custom->datatype;
+                $field->visible = $custom->visible;
+                $field->param1 = $custom->param1;
+                $field->param2 = $custom->param2;
+                $field->param3 = $custom->param3;
+                $field->sortorder++;
+
+                $DB->insert_record('user_info_field', $field);
+            }
+        }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
     return $result;
 }

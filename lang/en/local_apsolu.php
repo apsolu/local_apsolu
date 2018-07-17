@@ -506,6 +506,23 @@ $string['error_missing_items'] = 'Vous devez cocher au moins une carte (carte sp
 $string['found_students'] = '{$a} utilisateur(s) trouvé(s)';
 $string['mystudents'] = 'Liste de mes étudiants';
 
+// Fields.
+$string['fields_complements_category'] = 'Informations complémentaires';
+$string['fields_apsolupostalcode'] = 'Code postal';
+$string['fields_apsolusex'] = 'Sexe';
+$string['fields_apsolubirthday'] = 'Date de naissance';
+$string['fields_apsoluufr'] = 'UFR';
+$string['fields_apsolucycle'] = 'Cycle LMD';
+$string['fields_apsolucardpaid'] = 'Carte sport payée';
+$string['fields_apsolufederationpaid'] = 'Adhésion à l\'association payée';
+$string['fields_apsolumuscupaid'] = 'Musculation payée';
+$string['fields_apsolusesame'] = 'Compte Sésame validé';
+$string['fields_apsolumedicalcertificate'] = 'Certificat médical';
+$string['fields_apsolufederationnumber'] = 'Numéro de licence FFSU';
+$string['fields_apsoluhighlevelathlete'] = 'Sportif de haut niveau';
+$string['fields_apsoluidcardnumber'] = 'Carte vie universitaire';
+$string['fields_apsoludoublecursus'] = 'Double cursus';
+
 // Settings.
 $string['settings_root'] = 'APSOLU';
 $string['settings_configuration'] = 'Configuration';
