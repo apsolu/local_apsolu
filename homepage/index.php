@@ -54,7 +54,7 @@ if ($cache <= $now->sub(new DateInterval('PT5M'))) {
     $activities = $DB->get_records_sql($sql);
 
     // Get courses.
-    $sql = "SELECT DISTINCT ac.id, ac.event, ask.name AS skill, al.name AS location,".
+    $sql = "SELECT DISTINCT ac.id, ac.event, ask.name AS skill, al.name AS location, city.name AS city,".
         " ac.weekday, ac.numweekday, ac.starttime, ac.endtime, ap.generic_name AS period, cc.id AS activity,".
         " 0 AS count_teachers, 0 AS count_roles".
         " FROM {apsolu_courses} ac".
@@ -62,6 +62,8 @@ if ($cache <= $now->sub(new DateInterval('PT5M'))) {
         " JOIN {course_categories} cc ON cc.id = c.category".
         " JOIN {apsolu_skills} ask ON ask.id = ac.skillid".
         " JOIN {apsolu_locations} al ON al.id = ac.locationid".
+        " JOIN {apsolu_areas} aa ON aa.id = al.areaid".
+        " JOIN {apsolu_cities} city ON city.id = aa.cityid".
         " JOIN {apsolu_periods} ap ON ap.id = ac.periodid".
         " WHERE c.visible = 1".
         " AND ac.on_homepage = 1".
