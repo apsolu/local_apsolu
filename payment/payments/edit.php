@@ -101,7 +101,7 @@ foreach ($DB->get_records('apsolu_payments_centers') as $center) {
 }
 
 $courses = array(
-    '0' => get_string('activities', 'local_apsolu'),
+    '0' => get_string('sportcard', 'local_apsolu'),
     '250' => get_string('bodybuilding', 'local_apsolu'),
     '249' => get_string('association', 'local_apsolu'),
     );

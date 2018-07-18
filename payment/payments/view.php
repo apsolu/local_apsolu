@@ -70,7 +70,7 @@ if (isset($userid)) {
                     $payment->items[] = get_string('bodybuilding', 'local_apsolu');
                     break;
                 default:
-                    $payment->items[] = get_string('activities', 'local_apsolu');
+                    $payment->items[] = get_string('sportcard', 'local_apsolu');
             }
             $payment->count_items++;
         }

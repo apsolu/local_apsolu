@@ -50,7 +50,7 @@ $headers = array(
     get_string('date', 'local_apsolu'),
     get_string('amount', 'local_apsolu'),
     get_string('payment_number', 'local_apsolu'),
-    get_string('activities', 'local_apsolu'),
+    get_string('sportcard', 'local_apsolu'),
     get_string('bodybuilding', 'local_apsolu'),
     get_string('highlevelathlete', 'theme_apsolu'),
     get_string('source_apogee', 'local_apsolu'),

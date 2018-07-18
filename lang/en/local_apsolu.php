@@ -36,6 +36,7 @@ $string['no_student'] = 'Aucun étudiant';
 $string['defaultnotifysubject'] = 'Notification du SIUAPS';
 $string['general'] = 'Générales';
 $string['payment'] = 'Paiement';
+$string['activities'] = 'Activités';
 
 $string['accessdenied'] = 'Vous n\'avez pas le droit d\'accéder à cette page.';
 $string['departmentslist'] = 'Liste des départements';
@@ -120,6 +121,9 @@ $string['skill_fullnames'] = 'Noms complets';
 $string['skill_shortname'] = 'Nom abrégé';
 $string['skill_shortnames'] = 'Noms abrégés';
 $string['no_skill'] = 'Aucun niveau';
+
+// Skills descriptions.
+$string['skills_descriptions'] = 'Description des niveaux';
 
 // Genders.
 $string['genders'] = 'Genres / types';
@@ -446,7 +450,7 @@ $string['status_refused'] = 'Paiement refusé.';
 $string['status_wait'] = 'Paiement en attente.';
 $string['status_cancel'] = 'Paiement annulé.';
 $string['status_unknown'] = 'Le retour du paiement ne s\'est pas passé comme prévu. Merci de prendre contact avec le SIUAPS.';
-$string['activities'] = 'Carte sport';
+$string['sportcard'] = 'Carte sport';
 $string['activitiesdescription'] = 'Accès aux cours, aux installations extérieures';
 $string['bodybuilding'] = 'Carte musculation';
 $string['bodybuildingdescription'] = 'Accès aux salles de musculation en autonomie sur des créneaux dédiés';
@@ -489,6 +493,8 @@ $string['source_apsolu'] = 'Apsolu';
 $string['source_manual'] = 'Saisie manuelle';
 $string['status_success'] = 'Payé';
 $string['status_error'] = 'Non payé';
+$string['opened_period'] = 'L\'ouverture des paiements aura lieu le {$a->date}.';
+$string['closed_period'] = 'Le module des paiements est actuellement fermé.';
 
 // Administration - notifications.
 $string['notifications'] = 'Notifications';

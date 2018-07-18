@@ -20,6 +20,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace UniversiteRennes2\Apsolu;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once(__DIR__.'/../../locallib.php');
@@ -71,7 +73,7 @@ foreach ($DB->get_records_sql($sql) as $course) {
     $courses[] = $course;
 }
 
-$data = new stdClass();
+$data = new \stdClass();
 $data->wwwroot = $CFG->wwwroot;
 $data->courses = array_values($courses);
 $data->count_courses = count($courses);

@@ -42,17 +42,16 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
 
     // Activités physiques.
     $ADMIN->add('apsolu', new admin_category('local_apsolu_courses', get_string('settings_activities', 'local_apsolu')));
-    $ADMIN->add('local_apsolu_courses', new admin_category('local_apsolu_courses_courses', get_string('courses', 'local_apsolu')));
+    $ADMIN->add('local_apsolu_courses', new admin_category('local_apsolu_courses_courses', get_string('activities', 'local_apsolu')));
     $ADMIN->add('local_apsolu_courses', new admin_category('local_apsolu_courses_locations', get_string('locations', 'local_apsolu')));
+    $ADMIN->add('local_apsolu_courses', new admin_category('local_apsolu_courses_periods', get_string('periods', 'local_apsolu')));
+    $ADMIN->add('local_apsolu_courses', new admin_category('local_apsolu_courses_skills', get_string('skills', 'local_apsolu')));
 
     $items = array();
-    $items['courses'] = array('courses', 'groupings', 'categories', 'skills', 'periods');
+    $items['courses'] = array('groupings', 'categories');
+    $items['periods'] = array('periods');
+    $items['skills'] = array('skills', 'skills_descriptions');
     $items['locations'] = array('locations', 'areas', 'cities', 'managers');
-
-    $label = get_string('overview', 'local_apsolu');
-    $url = new moodle_url('/local/apsolu/courses/index.php?tab=overview');
-    $page = new admin_externalpage('local_apsolu_courses_overview', $label, $url, $capabilities);
-    $ADMIN->add('local_apsolu_courses', $page);
 
     foreach ($items as $subtype => $tabs) {
         foreach ($tabs as $tab) {
@@ -62,6 +61,13 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
 
             $ADMIN->add('local_apsolu_courses_'.$subtype, $page);
         }
+    }
+
+    foreach (array('courses', 'overview') as $tab) {
+        $label = get_string($tab, 'local_apsolu');
+        $url = new moodle_url('/local/apsolu/courses/index.php?tab='.$tab);
+        $page = new admin_externalpage('local_apsolu_courses_courses_'.$tab, $label, $url, $capabilities);
+        $ADMIN->add('local_apsolu_courses', $page);
     }
 
     // Activités complémentaires.
