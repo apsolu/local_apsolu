@@ -344,5 +344,29 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 2018071801;
+    if ($result && $oldversion < $version) {
+        // Create skills descriptions tables.
+        $table = new xmldb_table('apsolu_skills_descriptions');
+
+        // If the table does not exist, create it along with its fields.
+        if ($dbman->table_exists($table) === false) {
+            // Adding fields.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+            $table->add_field('description', XMLDB_TYPE_TEXT, $precision=null, $unsigned=null, $notnull=null, $sequence=null, $default=null, $previous=null);
+            $table->add_field('activityid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = 0, null);
+            $table->add_field('skillid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = 0, null);
+
+            // Adding key.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+            // Create table.
+            $dbman->create_table($table);
+        }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
     return $result;
 }

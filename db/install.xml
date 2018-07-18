@@ -30,7 +30,7 @@
             <FIELD NAME="studentid" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="false" PREVIOUS="id" NEXT="teacherid" />
             <FIELD NAME="teacherid" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="false" PREVIOUS="studentid" NEXT="statusid" />
             <FIELD NAME="statusid" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="false" PREVIOUS="teacherid" NEXT="description" />
-            <FIELD NAME="description" TYPE="char" LENGTH="255" NOTNULL="false" PREVIOUS="statusid" NEXT="timecreated" COMMENT="comment about studenet presence" />
+            <FIELD NAME="description" TYPE="char" LENGTH="255" NOTNULL="false" PREVIOUS="statusid" NEXT="timecreated" COMMENT="comment about student presence" />
             <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="description" NEXT="timemodified" />
             <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="timecreated" NEXT="sessionid" />
             <FIELD NAME="sessionid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="timemodified" />
@@ -327,6 +327,23 @@
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_grades_history" />
         </KEYS>
+    </TABLE>
+
+    <!-- SKILLS DESCRIPTIONS -->
+    <TABLE NAME="apsolu_skills_descriptions" COMMENT="apsolu_skills_descriptions table">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" UNSIGNED="true" SEQUENCE="true" />
+            <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="activityid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="skillid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_skills_descriptions" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="activityid" UNIQUE="false" FIELDS="activityid"/>
+            <INDEX NAME="skillid" UNIQUE="false" FIELDS="skillid"/>
+        </INDEXES>
     </TABLE>
 </TABLES>
 </XMLDB>
