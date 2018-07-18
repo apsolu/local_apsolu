@@ -116,6 +116,7 @@ if ($count_sessions === 0) {
         $session->activityid = $course->category;
         $session->timecreated = time();
         $session->timemodified = time();
+        $session->locationid = $activity->locationid;
         $session->id = $DB->insert_record('apsolu_attendance_sessions', $session);
 
         $sessions[$session->id] = $session;
