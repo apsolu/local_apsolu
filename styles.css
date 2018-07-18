@@ -194,61 +194,45 @@ html{
     width: 45%;
 }
 
-/* activities */
+/* homepage : activities */
 #activites .list-group-item{
     background-color: transparent;
     border: none;
+}
+
+#apsolu-activities-list-ul {
+    margin-bottom: 0;
+}
+
+#apsolu-activities-list-ul .list-group-item {
+    padding: .2em .5em;
+}
+
+#apsolu-sites-content-div{
+    background-color: #fff;
+    border-color: #ccc;
+    color: #333;
+    margin: .2em -.5em;
+    padding: .5em 0;
+}
+
+.apsolu-homepage-activities-items-span {
+    background-color: #fff;
+    border-color: #ccc;
+    color: #333;
+    display: block;
+    padding: .5em 0;
+    width: 100%;
 }
 
 #apsolu-activities-list-h3{
     margin-top: -1em;
 }
 
-.apsolu-activities-list-h4 {
-    cursor: pointer;
-    display: inline;
-    font-size: 14px;
-    line-height: 1.5em;
-    margin: 0;
-    padding: 0;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.apsolu-activities-description-div {
-    background-color: #ffffff;
-    border: 1px #000000 outset;
-    margin: 1em 0;
-    padding: .5em;
-}
-
-h4.apsolu-activities-list-h4-link {
-    background-image: url('[[pix:core|t/expanded]]');
-    background-position: 5px center;
-    background-repeat: no-repeat;
-    padding-left: 20px;
-}
-
-h4.apsolu-activities-list-h4-link-back {
-    background-image: url('[[pix:core|e/undo]]');
-    background-position: 10px center;
-    background-repeat: no-repeat;
-    padding-left: 30px;
-}
-
-.apsolu-activities-back-return-div {
-    cursor: pointer;
-    margin-right: .5em;
-}
-
-.list-inline > .apsolu-roles-list-li {
-    padding: 0;
-}
-
-#apsolu-activities-content-legend-div li {
-    font-weight: bold;
-    background: #F9F9F9;
-    padding: 3px 5px;
+#apsolu-sites-content-div {
+    background-color: #fff;
+    border-color: #ccc;
+    color: #333;
 }
 
 .table-striped > tbody > tr:nth-of-type(2n) {
