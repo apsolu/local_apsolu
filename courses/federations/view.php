@@ -20,6 +20,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace UniversiteRennes2\Apsolu;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot.'/local/apsolu/locallib.php');
@@ -31,13 +33,13 @@ if (isset($userid)) {
     $user = $DB->get_record('user', array('id' => $userid), '*', MUST_EXIST);
     $users[$user->id] = $user;
 
-    $data = new stdClass();
+    $data = new \stdClass();
     $data->wwwroot = $CFG->wwwroot;
     $data->users = array();
     $data->count_users = 0;
 
     foreach ($users as $user) {
-        $user->htmlpicture = $OUTPUT->render(new user_picture($user));
+        $user->htmlpicture = $OUTPUT->render(new \user_picture($user));
 
         $customfields = profile_user_record($user->id);
 
@@ -84,7 +86,7 @@ if (isset($userid)) {
     $userselector = ob_get_contents();
     ob_end_clean();
 
-    $data = new stdClass();
+    $data = new \stdClass();
     $data->wwwroot = $CFG->wwwroot;
     $data->action = $CFG->wwwroot.'/local/apsolu/courses/complements.php?tab=federations';
     $data->user_selector = $userselector;

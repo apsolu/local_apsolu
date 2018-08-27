@@ -24,8 +24,9 @@
 
 if (defined('UHB_CLI')) {
     define('CLI_SCRIPT', true);
-    require(__DIR__.'/../../../config.php');
+    require(__DIR__.'/../../../../config.php');
 
+    $institution = 'rennes2';
     $institutioncondition = '';
 } else {
     defined('MOODLE_INTERNAL') || die;
