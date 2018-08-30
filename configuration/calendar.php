@@ -56,16 +56,58 @@ echo $OUTPUT->heading(get_string('settings_configuration_calendar', 'local_apsol
 
 if ($data = $mform->get_data()) {
     foreach ($attributes as $attribute) {
-        if ($defaults->{$attribute} !== $data->{$attribute}) {
-            // TODO: update enrol_select methods.
+        if ($defaults->{$attribute} != $data->{$attribute}) {
+            // Mets à jour les méthodes d'inscription enrol_select.
+            switch ($attribute) {
+                case 'semester1_enrol_startdate':
+                case 'semester2_enrol_startdate':
+                    $field = 'enrolstartdate';
+                    break;
+                case 'semester1_enrol_enddate':
+                case 'semester2_enrol_enddate':
+                    $field = 'enrolenddate';
+                    break;
+                case 'semester1_startdate':
+                case 'semester2_startdate':
+                    $field = 'customint7';
+                    break;
+                case 'semester1_enddate':
+                case 'semester2_enddate':
+                    $field = 'customint8';
+                    break;
+                case 'semester1_reenrol_startdate':
+                    $field = 'customint4';
+                    break;
+                case 'semester1_reenrol_enddate':
+                    $field = 'customint5';
+                    break;
+            }
+
+            if (substr($attribute, 0, 9) === 'semester1') {
+                $customchar1 = 's1';
+            } else {
+                $customchar1 = 's2';
+            }
+
+            $sql = "UPDATE {enrol} SET ".$field." = :".$field." WHERE enrol = 'select' AND customchar1 = :customchar1";
+            $DB->execute($sql, array($field => $data->{$attribute}, 'customchar1' => $customchar1));
+
+            if (in_array($field, array('customint7', 'customint8'), $strict = true) === true) {
+                // Mets à jour les dates d'accès au cours des étudiants.
+                if ($field === 'customint7') {
+                    $sql = "UPDATE {user_enrolments} SET timestart = :value WHERE enrolid IN (SELECT id FROM {enrol} WHERE enrol = 'select' AND customchar1 = :customchar1)";
+                } else {
+                    $sql = "UPDATE {user_enrolments} SET timeend = :value WHERE enrolid IN (SELECT id FROM {enrol} WHERE enrol = 'select' AND customchar1 = :customchar1)";
+                }
+                $DB->execute($sql, array('value' => $data->{$attribute}, 'customchar1' => $customchar1));
+            }
         }
+
         set_config($attribute, $data->{$attribute}, 'local_apsolu');
     }
 
     echo $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
 }
-
-echo $OUTPUT->notification('Page en construction. Ne pas modifier.', 'notifywarning');
 
 $mform->display();
 echo $OUTPUT->footer();
