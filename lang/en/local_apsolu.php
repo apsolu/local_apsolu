@@ -307,28 +307,27 @@ $string['homepage_summary'] = '<p>Bienvenue sur le site de gestion des inscripti
 $string['homepage_activitieslist'] = 'Liste des activités';
 $string['homepage_signupsummary'] = '<ul>'.
     '<li>'.
-        '<p>Les <strong>cours du SIUAPS</strong> sont accessibles à tous les étudiants et tous les personnels des universités de Rennes&nbsp;1 et de Rennes&nbsp;2.</p>'.
-        '<p>Pour les personnels et pour les étudiants qui souhaitent avoir une pratique libre, vous devez vous acquitter de la carte sport (non remboursable) :</p>'.
-        '<dl id="apsolu-register-dl">'.
-            '<div>'.
-                '<dt class="apsolu-register-dt">Tarif étudiants</dt>'.
-                '<dd class="apsolu-register-dd">26€</dd>'.
-            '</div>'.
-            '<div>'.
-                '<dt class="apsolu-register-dt">Tarif personnels</dt>'.
-                '<dd class="apsolu-register-dd">40€</dd>'.
-            '</div>'.
+        '<p>Les <b>cours du SIUAPS</b> sont accessibles à tous les étudiants et tous les personnels des universités de Rennes&nbsp;1 et de Rennes&nbsp;2, au coût suivant selon le cas :</p>'.
+        '<dl>'.
+            '<dt>Tarif étudiants :</dt>'.
+            '<dd>'.
+                '<ul>'.
+                '<li>Cette année, la participation à un premier créneau hebdomadaire est <em>gratuite<sup>*</sup></em> ;</li>'.
+                '<li>30€ à partir d’un 2<sup>ème</sup> créneau dans le même semestre</li>'.
+                '</ul>'.
+            '</dd>'.
+            '<dt>Tarif personnels :</dt>'.
+            '<dd>'.
+                '<ul>'.
+                    '<li>40€</li>'.
+                '</ul>'.
+            '</dd>'.
         '</dl>'.
-        '<p>Elle est obligatoire et autorise la participation à plusieurs activités.</p>'.
+        '<p><em><sup>*</sup> Préalablement à votre inscription à l’Université, vous avez payé votre Contribution Vie Etudiante et Campus (Médecine, sport, culture, FSDIE…) au CROUS. Cette taxe comprend un premier niveau d’accès au sport dans votre établissement dans la limite des places disponibles.</em></p>'.
     '</li>'.
-    '<li>'.
-        '<p>Deux <strong>salles de musculation</strong> sont mises à disposition pendant les heures d\'ouverture sur les campus de Beaulieu et de Villejean.</p>'.
-        '<p>L\'acquittement d\'une carte musculation de 42€ est nécessaire. Elle permet l\'accès illimité aux salles.</p>'.
-    '</li>'.
-    '<li>'.
-    '<p>Des <strong>compétitions</strong> et des <strong>rencontres universitaires</strong> sont organisées au sein des associations sportives de Rennes&nbsp;1 ou de Rennes&nbsp;2. Les étudiants qui souhaitent y participer doivent s\'acquitter de la licence FFSU de 15€ et fournir un certificat médical de non contre indication à la pratique en compétition du sport choisi.</p>'.
-    '</li>'.
-'</ul>';
+    '<li>À Rennes uniquement, deux <b>salles de musculation</b> sont mises à disposition pendant les heures d\'ouverture sur les campus de Beaulieu et de Villejean. L\'acquittement d\'une carte musculation de 42€ est nécessaire. Elle permet l\'accès illimité aux salles.</li>'.
+    '<li>À Rennes et à St Brieuc, Des <b>compétitions</b> et des <b>rencontres universitaires</b> sont organisées au sein des associations sportives de Rennes&nbsp;1 ou de Rennes&nbsp;2. Les étudiants qui souhaitent y participer doivent s\'acquitter de la licence FFSU (15€ à Rennes, 20€ à St Brieuc), et fournir un certificat médical de non contre-indication à la pratique en compétition du sport choisi.</li>'.
+    '</ul>';
 $string['homepage_sesame'] = 'J\'ai un compte Sésame';
 $string['homepage_nosesame'] = 'Je n\'ai pas de compte Sésame';
 
