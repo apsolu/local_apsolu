@@ -33,13 +33,17 @@ $PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise');
 // Set tabs.
 $coursestabs = array('courses', 'groupings', 'categories', 'skills', 'periods', 'overview');
 $locationstabs = array('locations', 'areas', 'cities', 'managers');
+$skillstabs = array('skills', 'skills_descriptions');
 $periodstabs = array('periods');
 
 // Set default tabs.
 if (in_array($tab, $locationstabs, $strict = true) === true) {
     $subpage = 'locations';
     $tabslist = $locationstabs;
-}else if (in_array($tab, $periodstabs, $strict = true) === true) {
+} else if (in_array($tab, $skillstabs, $strict = true) === true) {
+    $subpage = 'skills';
+    $tabslist = $skillstabs;
+} else if (in_array($tab, $periodstabs, $strict = true) === true) {
     $subpage = 'periods';
     $tabslist = $periodstabs;
 } else {
