@@ -211,7 +211,7 @@ $sql .= " ORDER BY u.lastname, u.firstname";
 if (in_array($courseid, array(210, 331, 329, 330), true) === true) {
     // Hack pour les cours de football.
     $sql = str_replace(' AND e.courseid = :courseid', ' AND e.courseid IN(210, 331, 329, 330)', $sql);
-    $students = $DB->get_records_sql($sql);
+    $students = $DB->get_records_sql($sql, $params);
 } else {
     $params['courseid'] = $courseid;
     $students = $DB->get_records_sql($sql, $params);
