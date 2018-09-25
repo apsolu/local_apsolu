@@ -115,12 +115,15 @@ class Payment {
         if ($card->trial > 0) {
             foreach ($enrols as $enrol) {
                 // TODO: mauvais component.
+                // TODO: n'utilise pas un champ indexé ! ÇA RAME !
                 $conditions = array('component' => 'local_apsolu_presence', 'courseid' => $enrol->courseid, 'relateduserid' => $userid);
                 if ($DB->count_records('logstore_standard_log', $conditions) >= $card->trial) {
                     debugging('Carte '.$card->fullname.' due (fin des séances d\'essais).');
                     return self::DUE;
                 }
             }
+
+            return self::FREE;
         }
 
         // Vérifie les activités offertes.
