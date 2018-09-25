@@ -377,3 +377,19 @@ input[list]{
 #page-admin-local-apsolu-payment-admin form select[multiple='multiple'] {
     max-width: 500px;
 }
+
+#apsolu-payment-total-div {
+    border-top: 1px solid gray;
+    margin-top: 1em;
+    padding-top: .5em;
+}
+
+#apsolu-payment-paid-div {
+    border-bottom: 1px solid gray;
+    margin-bottom: 1em;
+    padding-bottom: .5em;
+}
+
+#apsolu-payment-total-div, #apsolu-payment-paid-div {
+    background-color: #eeeeee;
+}

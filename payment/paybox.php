@@ -108,27 +108,29 @@ try {
     // Set user payment flag.
     $items = $DB->get_records('apsolu_payments_items', array('paymentid' => $_GET['Ref']));
     foreach ($items as $itemid => $item) {
-        $complement = $DB->get_record('apsolu_complements', array('id' => $item->courseid));
-        if ($complement) {
-            if ($complement->federation == 1) {
-                // A payé le carte FFSU.
-                $userfield = (object) ['id' => $user->id, 'profile_field_federationpaid' => 1];
+        // TODO: à supprimer... on ne devrait plus avoir besoin des champs apsolufederationpaid, apsolumuscupaid et apsolucardpaid.
+        switch ($item->cardid) {
+            case 4:
+                // FFSU.
+                $userfield = (object) ['id' => $user->id, 'profile_field_apsolufederationpaid' => 1];
                 profile_save_data($userfield);
 
-                $outputsuccesscontent .= strftime('%c').' '.$ip.' :: set federationpaid attribute to value 1 for user '.$userstr.PHP_EOL;
-            } else {
-                // A payé la musculation.
-                $userfield = (object) ['id' => $user->id, 'profile_field_muscupaid' => 1];
+                $outputsuccesscontent .= strftime('%c').' '.$ip.' :: set apsolufederationpaid attribute to value 1 for user '.$userstr.PHP_EOL;
+                break;
+            case 3:
+                // Musculation.
+                $userfield = (object) ['id' => $user->id, 'profile_field_apsolumuscupaid' => 1];
                 profile_save_data($userfield);
 
-                $outputsuccesscontent .= strftime('%c').' '.$ip.' :: set muscupaid attribute to value 1 for user '.$userstr.PHP_EOL;
-            }
-        } else {
-            // A payé la carte sport.
-            $userfield = (object) ['id' => $user->id, 'profile_field_cardpaid' => 1];
-            profile_save_data($userfield);
+                $outputsuccesscontent .= strftime('%c').' '.$ip.' :: set apsolumuscupaid attribute to value 1 for user '.$userstr.PHP_EOL;
+                break;
+            case 2:
+            case 1:
+                // Carte sport.
+                $userfield = (object) ['id' => $user->id, 'profile_field_apsolucardpaid' => 1];
+                profile_save_data($userfield);
 
-            $outputsuccesscontent .= strftime('%c').' '.$ip.' :: set cardpaid attribute to value 1 for user '.$userstr.PHP_EOL;
+                $outputsuccesscontent .= strftime('%c').' '.$ip.' :: set apsolucardpaid attribute to value 1 for user '.$userstr.PHP_EOL;
         }
     }
 

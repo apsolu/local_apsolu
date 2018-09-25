@@ -26,49 +26,31 @@
 		<h1 class="apsolu-payment-h1 text-center">{{name}}</h1>
 		<form method="post" action="{{action_url}}" class="apsolu-payment-forms">
 			<dl>
-				{{#count_activities}}
+				{{#count_cards}}
 				<div class="apsolu-payment-section-div">
+					{{#cards}}
 					<div class="clearfix apsolu-payment-section-head-div">
-						<dt class="pull-left">{{#str}}activities, local_apsolu{{/str}}</dt>
-						<dd class="pull-right">{{activities_price_format}} euros</dd>
-					</div>
-					<dd class="apsolu-payment-section-comment-div">{{#str}}activitiesdescription, local_apsolu{{/str}}</dd>
-					<dd>
-						<ul class="list list-unstyled">
-							{{#activities}}
-							<li>{{fullname}}</li>
-							{{/activities}}
-						</ul>
-					</dd>
-				</div>
-				{{/count_activities}}
-
-				{{#count_complements}}
-				<div class="apsolu-payment-section-div">
-					{{#complements}}
-					<div class="clearfix apsolu-payment-section-head-div">
-						<dt class="pull-left">{{fullname}}</dt>
-						<dd class="pull-right">{{price}} euros</dd>
+						<dt class="pull-left">{{name}}</dt>
+						<dd class="pull-right">{{price_format}} euros</dd>
 					</div>
 					<dd class="apsolu-payment-section-comment-div">{{summary}}</dd>
-					{{/complements}}
+					{{/cards}}
 				</div>
-				{{/count_complements}}
+				{{/count_cards}}
 
 				<div class="apsolu-payment-section-div">
-					<div class="clearfix apsolu-payment-section-head-div">
+					<div id="apsolu-payment-total-div" class="clearfix apsolu-payment-section-head-div">
 						<dt class="pull-left apsolu-payment-details">Montant total</dt>
 						<dd class="pull-right apsolu-payment-details">{{total_amount_format}} euros</dd>
 					</div>
-					<div class="clearfix apsolu-payment-section-head-div">
+					<div id="apsolu-payment-paid-div" class="clearfix apsolu-payment-section-head-div">
 						<dt class="pull-left apsolu-payment-details">Montant payé</dt>
 						<dd class="pull-right apsolu-payment-details">{{paid_amount_format}} euros</dd>
 					</div>
-					<div class="clearfix apsolu-payment-section-head-div apsolu-payment-due-amount-div">
+					<div id="apsolu-payment-due-div" class="clearfix apsolu-payment-section-head-div apsolu-payment-due-amount-div">
 						<dt class="pull-left">Reste à payer</dt>
 						<dd class="pull-right"><strong>{{due_amount_format}} euros</strong></dd>
 					</div>
-
 				</div>
 			</dl>
 
@@ -94,7 +76,7 @@
 				<input type="hidden" name="PBX_HMAC" value="{{paybox.PBX_HMAC}}" />
 
 				<!-- submit -->
-				<input class="btn btn-default btn-xs" type="submit" value="payer" {{^due_amount}}disabled="disabled"{{/due_amount}}/>
+				<input class="btn {{#due_amount}}btn-primary{{/due_amount}}{{^due_amount}}btn-default{{/due_amount}} btn-xs" type="submit" value="payer" {{^due_amount}}disabled="disabled"{{/due_amount}}/>
 			</p>
 		</form>
 	</div>

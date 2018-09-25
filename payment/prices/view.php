@@ -58,6 +58,7 @@ foreach ($cards as $card) {
             $card->count_cohorts++;
         }
     }
+    sort($card->cohorts);
 
     $card->roles = array();
     $card->count_roles = 0;

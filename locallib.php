@@ -229,6 +229,7 @@ function get_user_payments_sum($paymentcenterid, $userid = null) {
     return $sum->price;
 }
 
+
 function get_data_user_payment_centers($userid = null) {
     global $CFG, $DB, $USER;
 
@@ -365,7 +366,8 @@ function get_data_user_payment_centers($userid = null) {
                 $DB->update_record('apsolu_payments', $payment);
             }
 
-            $items = $DB->get_records('apsolu_payments_items', array('paymentid' => $payment->id), $sort = '', $fields = 'courseid, id');
+            // $items = $DB->get_records('apsolu_payments_items', array('paymentid' => $payment->id), $sort = '', $fields = 'courseid, id');
+            $items = array();
 
             // TODO: à revoir pour être plus souple...
             switch ($centerid) {
@@ -408,12 +410,14 @@ function get_data_user_payment_centers($userid = null) {
                 $DB->delete_records('apsolu_payments_items', array('id' => $item->id));
             }
 
+            /*
             $items = $DB->get_records('apsolu_payments_items', array('paymentid' => $payment->id), $sort = '', $fields = 'courseid, id');
             if (count($items) === 0) {
                 // TODO: raise an exception !
                 unset($paymentcenters[$centerid]);
                 continue;
             }
+             */
         }
 
         // Mise en forme.
