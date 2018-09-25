@@ -362,10 +362,18 @@ input[list]{
     padding: 2em;
 }
 
+.local-apsolu-cards-summary,
 .local-apsolu-courses-summary {
     display: list-item;
     cursor: pointer;
+    text-decoration: underline;
+}
+
+.local-apsolu-courses-summary {
     font-weight: bold;
     margin-bottom: 1em;
-    text-decoration: underline;
+}
+
+#page-admin-local-apsolu-payment-admin form select[multiple='multiple'] {
+    max-width: 500px;
 }

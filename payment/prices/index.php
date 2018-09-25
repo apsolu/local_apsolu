@@ -16,30 +16,16 @@
 
 /**
  * @package    local_apsolu
- * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require(__DIR__.'/../../../config.php');
-require_once($CFG->libdir . '/adminlib.php');
+defined('MOODLE_INTERNAL') || die;
 
-$page = optional_param('page', 'calendar', PARAM_ALPHA);
+$actions = array('view', 'edit');
 
-// Set tabs.
-$pages = array('calendars', 'calendarstypes', 'contacts', 'dates');
-
-$tabtree = array();
-foreach ($pages as $pagename) {
-    $url = new moodle_url('/local/apsolu/index.php', array('page' => $pagename));
-    $tabtree[] = new tabobject($pagename, $url, get_string('settings_configuration_'.$pagename, 'local_apsolu'));
+if (!in_array($action, $actions, true)) {
+    $action = 'view';
 }
 
-// Set default tabs.
-if (in_array($page, $pages, true) === false) {
-    $page = $pages[0];
-}
-
-// Setup admin access requirement.
-admin_externalpage_setup('local_apsolu_configuration_'.$page);
-
-require(__DIR__.'/'.$page.'.php');
+require(__DIR__.'/'.$action.'.php');

@@ -1,0 +1,48 @@
+{{#notification}}
+	{{{notification}}}
+{{/notification}}
+
+<p class="text-right">
+	<a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/configuration/index.php?page=calendars&action=edit">{{#str}}calendar_add, local_apsolu{{/str}}</a>
+</p>
+
+{{^calendars}}
+<p class="alert alert-info">{{#str}}no_calendar, local_apsolu{{/str}}</p>
+{{/calendars}}
+
+{{#count_calendars}}
+<table class="table table-striped">
+<thead>
+	<tr>
+		<th>{{#str}}name{{/str}}</th>
+    <th>{{#str}}enrolstartdate, local_apsolu{{/str}}</th>
+    <th>{{#str}}enrolenddate, local_apsolu{{/str}}</th>
+    <th>{{#str}}coursestartdate, local_apsolu{{/str}}</th>
+    <th>{{#str}}courseenddate, local_apsolu{{/str}}</th>
+    <th>{{#str}}reenrolstartdate, local_apsolu{{/str}}</th>
+    <th>{{#str}}reenrolenddate, local_apsolu{{/str}}</th>
+    <th>{{#str}}gradestartdate, local_apsolu{{/str}}</th>
+    <th>{{#str}}gradeenddate, local_apsolu{{/str}}</th>
+		<th>{{#str}}calendartype, local_apsolu{{/str}}</th>
+		<th>{{#str}}actions{{/str}}</th>
+	</tr>
+</thead>
+<tbody>
+	{{#calendars}}
+	<tr>
+		<td>{{name}}</td>
+    <td>{{#userdate}} {{enrolstartdate}}, {{#str}} strftimedate {{/str}} {{/userdate}}</td>
+    <td>{{#userdate}} {{enrolenddate}}, {{#str}} strftimedate {{/str}} {{/userdate}}</td>
+    <td>{{#userdate}} {{coursestartdate}}, {{#str}} strftimedate {{/str}} {{/userdate}}</td>
+    <td>{{#userdate}} {{courseenddate}}, {{#str}} strftimedate {{/str}} {{/userdate}}</td>
+    <td>{{#userdate}} {{reenrolstartdate}}, {{#str}} strftimedate {{/str}} {{/userdate}}</td>
+    <td>{{#userdate}} {{reenrolenddate}}, {{#str}} strftimedate {{/str}} {{/userdate}}</td>
+    <td>{{#userdate}} {{gradestartdate}}, {{#str}} strftimedate {{/str}} {{/userdate}}</td>
+    <td>{{#userdate}} {{gradeenddate}}, {{#str}} strftimedate {{/str}} {{/userdate}}</td>
+		<td>{{type}}</td>
+		<td><a href="{{wwwroot}}/local/apsolu/configuration/index.php?page=calendars&action=edit&calendarid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></td>
+	</tr>
+	{{/calendars}}
+</tbody>
+</table>
+{{/count_calendars}}

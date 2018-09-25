@@ -20,26 +20,27 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require(__DIR__.'/../../../config.php');
-require_once($CFG->libdir . '/adminlib.php');
+defined('MOODLE_INTERNAL') || die;
 
-$page = optional_param('page', 'calendar', PARAM_ALPHA);
+echo $OUTPUT->header();
+echo $OUTPUT->heading(get_string('settings_configuration_calendars_types', 'local_apsolu'));
 
-// Set tabs.
-$pages = array('calendars', 'calendarstypes', 'contacts', 'dates');
+$calendars_types = $DB->get_records('apsolu_calendars_types', $conditions = array(), $sort = 'name');
 
-$tabtree = array();
-foreach ($pages as $pagename) {
-    $url = new moodle_url('/local/apsolu/index.php', array('page' => $pagename));
-    $tabtree[] = new tabobject($pagename, $url, get_string('settings_configuration_'.$pagename, 'local_apsolu'));
+$data = new stdClass();
+$data->wwwroot = $CFG->wwwroot;
+$data->calendars_types = array();
+$data->count_calendars_types = 0;
+
+foreach ($calendars_types as $calendar) {
+    $data->calendars_types[] = $calendar;
+    $data->count_calendars_types++;
 }
 
-// Set default tabs.
-if (in_array($page, $pages, true) === false) {
-    $page = $pages[0];
+if (isset($notificationform)) {
+    $data->notification = $notificationform;
 }
 
-// Setup admin access requirement.
-admin_externalpage_setup('local_apsolu_configuration_'.$page);
+echo $OUTPUT->render_from_template('local_apsolu/configuration_calendars_types', $data);
 
-require(__DIR__.'/'.$page.'.php');
+echo $OUTPUT->footer();

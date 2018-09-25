@@ -368,5 +368,116 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 2018091801;
+    if ($result && $oldversion < $version) {
+        $table = new xmldb_table('apsolu_calendars');
+        if ($dbman->table_exists($table) === false) {
+            // Adding fields.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+            $table->add_field('name', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('enrolstartdate', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('enrolenddate', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('coursestartdate', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('courseenddate', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('reenrolstartdate', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('reenrolenddate', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('gradestartdate', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('gradeenddate', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('typeid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+
+            // Adding key.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+            // Create table.
+            $dbman->create_table($table);
+        }
+
+        $table = new xmldb_table('apsolu_calendars_types');
+        if ($dbman->table_exists($table) === false) {
+            // Adding fields.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+            $table->add_field('name', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+
+            // Adding key.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+            // Create table.
+            $dbman->create_table($table);
+        }
+
+        $table = new xmldb_table('apsolu_payments_cards');
+
+        if ($dbman->table_exists($table) === false) {
+            // Adding fields.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+            $table->add_field('name', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('fullname', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('trial', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = 0, null);
+            $table->add_field('price', XMLDB_TYPE_FLOAT, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0', null);
+            $table->add_field('centerid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+
+            // Adding key.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+            // Create table.
+            $dbman->create_table($table);
+        }
+
+        $table = new xmldb_table('apsolu_payments_cards_cohort');
+        if ($dbman->table_exists($table) === false) {
+            // Adding fields.
+            $table->add_field('cardid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('cohortid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+
+            // Adding key.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('cardid', 'cohortid'));
+
+            // Create table.
+            $dbman->create_table($table);
+        }
+
+        $table = new xmldb_table('apsolu_payments_cards_roles');
+        if ($dbman->table_exists($table) === false) {
+            // Adding fields.
+            $table->add_field('cardid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('roleid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+
+            // Adding key.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('cardid', 'roleid'));
+
+            // Create table.
+            $dbman->create_table($table);
+        }
+
+        $table = new xmldb_table('apsolu_payments_cards_cals');
+        if ($dbman->table_exists($table) === false) {
+            // Adding fields.
+            $table->add_field('cardid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('calendartypeid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('value', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+
+            // Adding key.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('cardid', 'calendartypeid'));
+
+            // Create table.
+            $dbman->create_table($table);
+        }
+
+        $table = new xmldb_table('apsolu_payments_items');
+        if ($dbman->table_exists($table) === true) {
+            $dbman->drop_table($table);
+        }
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+        $table->add_field('paymentid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = 0, null);
+        $table->add_field('cardid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = 0, null);
+
+        // Adding key.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Create table.
+        $dbman->create_table($table);
+    }
+
     return $result;
 }

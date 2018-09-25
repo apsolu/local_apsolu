@@ -86,15 +86,25 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     // Configuration.
     $ADMIN->add('apsolu', new admin_category('local_apsolu_configuration', get_string('settings_configuration', 'local_apsolu')));
 
-    // Configuration > Calendrier.
-    $str = get_string('settings_configuration_calendar', 'local_apsolu');
-    $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'calendar'));
-    $ADMIN->add('local_apsolu_configuration', new admin_externalpage('local_apsolu_configuration_calendar', $str, $url, $capabilities));
+    // Configuration > Calendriers.
+    $str = get_string('settings_configuration_calendars', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'calendars'));
+    $ADMIN->add('local_apsolu_configuration', new admin_externalpage('local_apsolu_configuration_calendars', $str, $url, $capabilities));
 
     // Configuration > Contacts.
     $str = get_string('settings_configuration_contacts', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'contacts'));
     $ADMIN->add('local_apsolu_configuration', new admin_externalpage('local_apsolu_configuration_contacts', $str, $url, $capabilities));
+
+    // Configuration > Dates.
+    $str = get_string('settings_configuration_dates', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'dates'));
+    $ADMIN->add('local_apsolu_configuration', new admin_externalpage('local_apsolu_configuration_dates', $str, $url, $capabilities));
+
+    // Configuration > Type de calendriers.
+    $str = get_string('settings_configuration_calendarstypes', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'calendarstypes'));
+    $ADMIN->add('local_apsolu_configuration', new admin_externalpage('local_apsolu_configuration_calendarstypes', $str, $url, $capabilities));
 
     // Fédération FSU.
     $ADMIN->add('apsolu', new admin_category('local_apsolu_federation', get_string('settings_federation', 'local_apsolu')));
@@ -103,6 +113,13 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     $str = get_string('settings_federation_import', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/federation/index.php', array('page' => 'import'));
     $ADMIN->add('local_apsolu_federation', new admin_externalpage('local_apsolu_federation_import', $str, $url, $capabilities));
+
+    // Inscriptions.
+    $ADMIN->add('apsolu', new admin_category('local_apsolu_enrol', get_string('enrolments', 'enrol')));
+
+    // Inscriptions > Population.
+    $url = new moodle_url('/enrol/select/administration.php?tab=colleges');
+    $ADMIN->add('local_apsolu_enrol', new admin_externalpage('enrol_select_colleges', get_string('colleges', 'enrol_select'), $url, $capabilities));
 
     // Notations.
     $ADMIN->add('apsolu', new admin_category('local_apsolu_grades', get_string('grades', 'local_apsolu')));
@@ -131,8 +148,8 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
         $ADMIN->add('local_apsolu_payment', new admin_externalpage('local_apsolu_payment_centers', $label, $url, $capabilities));
     }
 
-    // Paiements > Frais d'inscription.
-    $label = get_string('settings_payment', 'local_apsolu');
+    // Paiements > Paiements.
+    $label = get_string('settings_payments', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/payment/admin.php', array('tab' => 'payments'));
     $ADMIN->add('local_apsolu_payment', new admin_externalpage('local_apsolu_payment_payments', $label, $url, $capabilities));
 
@@ -141,7 +158,8 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     $url = new moodle_url('/local/apsolu/payment/admin.php', array('tab' => 'notifications'));
     $ADMIN->add('local_apsolu_payment', new admin_externalpage('local_apsolu_payment_notifications', $label, $url, $capabilities));
 
-    // Paiements > Population.
-    $url = new moodle_url('/enrol/select/administration.php?tab=colleges');
-    $ADMIN->add('local_apsolu_payment', new admin_externalpage('enrol_select_colleges', get_string('colleges', 'enrol_select'), $url, $capabilities));
+    // Paiements > Tarif.
+    $label = get_string('payment_cards', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/payment/admin.php', array('tab' => 'prices'));
+    $ADMIN->add('local_apsolu_payment', new admin_externalpage('local_apsolu_payment_prices', $label, $url, $capabilities));
 }

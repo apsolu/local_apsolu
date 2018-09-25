@@ -1,0 +1,30 @@
+{{#notification}}
+	{{{notification}}}
+{{/notification}}
+
+<p class="text-right">
+	<a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/configuration/index.php?page=calendarstypes&action=edit">{{#str}}calendar_type_add, local_apsolu{{/str}}</a>
+</p>
+
+{{^calendars_types}}
+<p class="alert alert-info">{{#str}}no_calendar_type, local_apsolu{{/str}}</p>
+{{/calendars_types}}
+
+{{#count_calendars_types}}
+<table class="table table-striped">
+<thead>
+	<tr>
+		<th>{{#str}}name{{/str}}</th>
+		<th>{{#str}}actions{{/str}}</th>
+	</tr>
+</thead>
+<tbody>
+	{{#calendars_types}}
+	<tr>
+		<td>{{name}}</td>
+		<td><a href="{{wwwroot}}/local/apsolu/configuration/index.php?page=calendarstypes&action=edit&typeid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></td>
+	</tr>
+	{{/calendars_types}}
+</tbody>
+</table>
+{{/count_calendars_types}}

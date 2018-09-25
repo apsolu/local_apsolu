@@ -1,0 +1,80 @@
+<h1>{{#str}}payment_cards, local_apsolu{{/str}}</h1>
+
+{{#notification}}
+	{{{notification}}}
+{{/notification}}
+
+<p class="text-right">
+	<a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=prices&action=edit">{{#str}}card_add, local_apsolu{{/str}}</a>
+</p>
+
+{{^cards}}
+<p class="alert alert-info">{{#str}}no_card, local_apsolu{{/str}}</p>
+{{/cards}}
+
+{{#count_cards}}
+<table class="table table-striped">
+<thead>
+	<tr>
+		<th>{{#str}}shortname{{/str}}</th>
+		<th>{{#str}}fullname{{/str}}</th>
+		<th>{{#str}}price, local_apsolu{{/str}}</th>
+		<th>{{#str}}center, local_apsolu{{/str}}</th>
+		<th>{{#str}}freetrial, local_apsolu{{/str}}</th>
+		<th>{{#str}}shortfreecourses, local_apsolu{{/str}}</th>
+		<th>{{#str}}cohorts, cohort{{/str}}</th>
+		<th>{{#str}}roles{{/str}}</th>
+		<th>{{#str}}actions{{/str}}</th>
+	</tr>
+</thead>
+<tbody>
+	{{#cards}}
+	<tr>
+		<td>{{name}}</td>
+		<td>{{fullname}}</td>
+		<td>{{price}}</td>
+		<td>{{center}}</td>
+		<td>{{trial}}</td>
+
+		{{^count_calendars_types}}
+		<td class="danger">{{#str}}none{{/str}}</td>
+		{{/count_calendars_types}}
+		{{#count_calendars_types}}
+		<td>
+				<ul>
+				{{#calendars_types}}<li>{{.}}</li>{{/calendars_types}}
+				</ul>
+		</td>
+		{{/count_calendars_types}}
+
+		{{^count_cohorts}}
+		<td class="danger">{{#str}}none{{/str}}</td>
+		{{/count_cohorts}}
+		{{#count_cohorts}}
+		<td>
+			<details>
+				<summary class="local-apsolu-cards-summary">{{#str}}cohorts, cohort{{/str}}</summary>
+				<ul>
+				{{#cohorts}}<li>{{.}}</li>{{/cohorts}}
+				</ul>
+			</details>
+		</td>
+		{{/count_cohorts}}
+
+		{{^count_roles}}
+		<td class="danger">{{#str}}none{{/str}}</td>
+		{{/count_roles}}
+		{{#count_roles}}
+		<td>
+				<ul>
+				{{#roles}}<li>{{.}}</li>{{/roles}}
+				</ul>
+		</td>
+		{{/count_roles}}
+
+		<td><a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=prices&action=edit&cardid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></td>
+	</tr>
+	{{/cards}}
+</tbody>
+</table>
+{{/count_cards}}

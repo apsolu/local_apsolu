@@ -29,9 +29,9 @@ $tab = optional_param('tab', 'payments', PARAM_ALPHA);
 $action = optional_param('action', 'view', PARAM_ALPHA);
 
 // Set tabs.
-$tabslist = array('payments', 'notifications');
+$tabslist = array('payments', 'notifications', 'prices');
 if (has_capability('moodle/site:config', context_system::instance())) {
-    $tabslist += array('configurations', 'centers');
+    $tabslist = array_merge(array('configurations', 'centers'), $tabslist);
 }
 
 $tabsbar = array();
