@@ -368,7 +368,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
-    $version = 2018091801;
+    $version = 2018092000;
     if ($result && $oldversion < $version) {
         $table = new xmldb_table('apsolu_calendars');
         if ($dbman->table_exists($table) === false) {
@@ -477,6 +477,15 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
         // Create table.
         $dbman->create_table($table);
+
+        // Corrige un problème sur le champ apsoludoublecursus.
+        $record = $DB->get_record('user_info_field', array('shortname' => 'apsoludoublecursus'));
+        if ($record !== false) {
+            $record->forceunique = 0;
+            $record->defaultdata = 0;
+
+            $DB->update_record('user_info_field', $record);
+        }
     }
 
     return $result;
