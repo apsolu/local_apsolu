@@ -47,8 +47,8 @@ $outputinfocontent = strftime('%c').' '.$ip.' :: '.$response.PHP_EOL;
 
 file_put_contents($outputinfo, $outputinfocontent, FILE_APPEND | LOCK_EX);
 
-require(__DIR__.'/../../config.php');
-require_once(__DIR__.'/locallib.php');
+require(__DIR__.'/../../../config.php');
+require_once($CFG->dirroot.'/local/apsolu/locallib.php');
 require_once($CFG->dirroot.'/user/profile/lib.php');
 
 $ip = getremoteaddr();
