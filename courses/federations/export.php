@@ -367,7 +367,7 @@ if (!defined('UHB_CLI')) {
 foreach ($users as $user) {
     $customfields = profile_user_record($user->id);
 
-    if (!isset($customfields->validsesame) || $customfields->validsesame != 1) {
+    if (!isset($customfields->apsolusesame) || $customfields->apsolusesame != 1) {
         // Compte Sésame invalide.
         continue;
     }

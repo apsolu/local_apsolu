@@ -179,9 +179,9 @@ if ($session === false) {
 
 // Récupérer tous les inscrits.
 // TODO: jointure avec colleges
-$sql = "SELECT u.*, ue.id AS ueid, ue.status, ue.timestart, ue.timeend, ue.enrolid, e.enrol, ra.id AS raid, ra.roleid, uid1.data AS validsesame, uid2.data AS cardpaid".
+$sql = "SELECT u.*, ue.id AS ueid, ue.status, ue.timestart, ue.timeend, ue.enrolid, e.enrol, ra.id AS raid, ra.roleid, uid1.data AS apsolusesame, uid2.data AS cardpaid".
     " FROM {user} u".
-    " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = 11". // validsesame
+    " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = 11". // apsolusesame
     " LEFT JOIN {user_info_data} uid2 ON u.id = uid2.userid AND uid2.fieldid = 12". // cardpaid
     " JOIN {user_enrolments} ue ON u.id = ue.userid".
     " JOIN {enrol} e ON e.id = ue.enrolid".
@@ -218,11 +218,11 @@ if (in_array($courseid, array(210, 331, 329, 330), true) === true) {
 }
 
 // TODO: récupérer les gens inscrits ponctuellement.
-$sql = "SELECT DISTINCT u.*, uid1.data AS validsesame, uid2.data AS cardpaid".
+$sql = "SELECT DISTINCT u.*, uid1.data AS apsolusesame, uid2.data AS cardpaid".
     " FROM {user} u".
     " JOIN {apsolu_attendance_presences} aap ON u.id = aap.studentid".
     " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid".
-    " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = 11". // validsesame
+    " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = 11". // apsolusesame
     " LEFT JOIN {user_info_data} uid2 ON u.id = uid2.userid AND uid2.fieldid = 12". // cardpaid
     " WHERE aas.courseid = :courseid";
 foreach ($DB->get_records_sql($sql, array('courseid' => $courseid)) as $student) {
@@ -417,7 +417,7 @@ foreach ($students as $student) {
     $informations = array();
 
     $informations_style = 'none';
-    if (isset($student->validsesame) === false || $student->validsesame !== '1') {
+    if (isset($student->apsolusesame) === false || $student->apsolusesame !== '1') {
         $informations[] = get_string('attendance_invalid_account', 'local_apsolu');
         $informations_style = 'danger';
     }
@@ -437,7 +437,7 @@ foreach ($students as $student) {
            " AND ac.roleid = :roleid".
            " AND esc.enrolid = :enrolid";
         $allow = $DB->get_records_sql($sql, array('userid' => $student->id, 'roleid' => $student->roleid, 'enrolid' => $student->enrolid));
-        if (count($allow) === 0 || (isset($student->validsesame) === false || $student->validsesame !== '1')) {
+        if (count($allow) === 0 || (isset($student->apsolusesame) === false || $student->apsolusesame !== '1')) {
             $informations[] = get_string('attendance_forbidden_enrolment', 'local_apsolu');
             $informations_style = 'danger';
         }

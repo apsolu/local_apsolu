@@ -38,7 +38,7 @@ if (isset($userid)) {
     $data->payments = array();
     $data->count_payments = 0;
     $data->has_sesame = ($user->auth === 'shibboleth');
-    $data->has_sync = (isset($customfields->validsesame) && $customfields->validsesame == 1);
+    $data->has_sync = (isset($customfields->apsolusesame) && $customfields->apsolusesame == 1);
 
     $payments = $DB->get_records('apsolu_payments', array('userid' => $userid), $sort = 'timemodified');
     foreach ($payments as $payment) {
