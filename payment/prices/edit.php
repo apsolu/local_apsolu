@@ -90,7 +90,7 @@ if ($data = $mform->get_data()) {
     $instance->centerid = trim($data->centerid);
 
     if ($instance->id == 0) {
-        $DB->insert_record('apsolu_payments_cards', $instance);
+        $instance->id = $DB->insert_record('apsolu_payments_cards', $instance);
     } else {
         $DB->update_record('apsolu_payments_cards', $instance);
     }
