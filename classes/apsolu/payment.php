@@ -102,8 +102,9 @@ class Payment {
             " FROM {apsolu_payments} ap".
             " JOIN {apsolu_payments_items} api ON ap.id = api.paymentid".
             " WHERE api.cardid = :cardid".
+            " AND ap.userid = :userid".
             " AND ap.timepaid IS NOT NULL";
-        $payment = $DB->get_record_sql($sql, array('cardid' => $card->id));
+        $payment = $DB->get_record_sql($sql, array('cardid' => $card->id, 'userid' => $userid));
         if ($payment !== false) {
             debugging('Carte '.$card->fullname.' payée !');
             return $payment->status; // self::PAID or self::GIFT.
