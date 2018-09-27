@@ -59,6 +59,11 @@ $string['needcalendarstypefirst'] = 'Vous devez créer un type de calendrier pou
 $string['freecourses'] = 'Nombre de créneaux offerts pour les cours du calendrier <em>{$a}</em>';
 $string['shortfreecourses'] = 'Nombre de créneaux offerts';
 
+$string['paymentdue'] = 'Dû';
+$string['paymentpaid'] = 'Payé';
+$string['paymentfree'] = 'Non dû';
+$string['paymentgift'] = 'Offert';
+
 $string['accessdenied'] = 'Vous n\'avez pas le droit d\'accéder à cette page.';
 $string['departmentslist'] = 'Liste des départements';
 
@@ -450,8 +455,7 @@ $string['paymentsiuaps'] = 'Paiement auprès du SIUAPS';
 $string['paymentasso'] = 'Paiement auprès de l\'Association Sportive';
 $string['opened_period'] = 'L\'ouverture des paiements aura lieu le {$a->date}.';
 $string['closed_period'] = 'Le module des paiements est actuellement fermé.';
-$string['no_sesame'] = 'L\'utilisateur n\'a pas de compte Sésame.';
-$string['no_sync'] = 'L\'utilisateur n\'est pas ou plus présent dans le référentiel de son établissement.';
+$string['no_sesame'] = 'L\'utilisateur n\'a pas de compte Sésame valide ou n\'est plus présent dans le référentiel de son établissement.';
 $string['invalid_user'] = '<p>Vous n\'êtes pas autorisé à payer.</p>';
 $string['invalid_user_no_sesame'] = '<p>Actuellement, vous n\'utilisez pas votre compte Sésame pour accéder cette plateforme.<br />'.
     ' Avant d\'accéder aux paiments, vous devez suivre <a href="{$a->url}">cette procédure pour transformer votre compte</a>.</p>';

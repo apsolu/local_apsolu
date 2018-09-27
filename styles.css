@@ -393,3 +393,10 @@ input[list]{
 #apsolu-payment-total-div, #apsolu-payment-paid-div {
     background-color: #eeeeee;
 }
+
+.apsolu-payment-user-profile {
+    border-bottom: 1px lightgray solid;
+    border-top: 1px lightgray solid;
+    margin: 1em 0;
+    padding: .5em 0;
+}

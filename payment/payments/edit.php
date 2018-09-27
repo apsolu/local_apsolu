@@ -20,15 +20,18 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use UniversiteRennes2\Apsolu\Payment;
+
 defined('MOODLE_INTERNAL') || die;
 
 require(__DIR__.'/edit_form.php');
 require_once($CFG->dirroot.'/user/profile/lib.php');
 require_once($CFG->dirroot.'/local/apsolu/locallib.php');
+require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
 
 // Get user id.
 $userid = required_param('userid', PARAM_INT);
-$user = $DB->get_record('user', array('id' => $userid, 'auth' => 'shibboleth'));
+$user = $DB->get_record('user', array('id' => $userid, 'deleted' => '0'));
 
 if ($user === false) {
     print_error('invaliduser');
@@ -46,19 +49,6 @@ if ($paymentid !== null) {
     } else if (empty($payment->timepaid) === false) {
         redirect($backurl, get_string('error_payment_not_editable', 'local_apsolu'), null, \core\output\notification::NOTIFY_ERROR);
         exit(1);
-    } else {
-        foreach ($DB->get_records('apsolu_payments_items', array('paymentid' => $paymentid)) as $item) {
-            switch ($item->courseid) {
-                case 249:
-                    $payment->course249 = 1;
-                    break;
-                case 250:
-                    $payment->course250 = 1;
-                    break;
-                default:
-                    $payment->course0 = 1;
-            }
-        }
     }
 }
 
@@ -75,6 +65,11 @@ if ($paymentid === null) {
     $payment->timemodified = '';
     $payment->userid = $userid;
     $payment->paymentcenterid = '1';
+} else {
+    foreach ($DB->get_records('apsolu_payments_items', array('paymentid' => $payment->id)) as $item) {
+        $cardname = 'card'.$item->cardid;
+        $payment->{$cardname} = 1;
+    }
 }
 
 // Build form.
@@ -91,8 +86,9 @@ $sources = array(
     );
 
 $statuses = array(
-    '1' => get_string('status_success', 'local_apsolu'),
-    '0' => get_string('status_error', 'local_apsolu'),
+    Payment::PAID => get_string('paymentpaid', 'local_apsolu'),
+    Payment::DUE => get_string('paymentdue', 'local_apsolu'),
+    Payment::GIFT => get_string('paymentgift', 'local_apsolu'),
     );
 
 $centers = array();
@@ -100,22 +96,30 @@ foreach ($DB->get_records('apsolu_payments_centers') as $center) {
     $centers[$center->id] = $center->name;
 }
 
-$courses = array(
-    '0' => get_string('sportcard', 'local_apsolu'),
-    '250' => get_string('bodybuilding', 'local_apsolu'),
-    '249' => get_string('association', 'local_apsolu'),
-    );
+$cards = array();
+foreach ($DB->get_records('apsolu_payments_cards', $conditions = array(), $sort = 'fullname') as $card) {
+    $sql = "SELECT *".
+        " FROM {apsolu_payments} ap".
+        " JOIN {apsolu_payments_items} api ON ap.id = api.paymentid".
+        " WHERE ap.timepaid IS NOT NULL".
+        " AND api.cardid = :cardid".
+        " AND ap.userid = :userid";
+    if ($DB->get_record_sql($sql, array('cardid' => $card->id, 'userid' => $userid)) !== false) {
+        continue;
+    }
+    $cards[$card->id] = $card->fullname;
+}
 
-$customdata = array('payment' => $payment, 'methods' => $methods, 'sources' => $sources, 'statuses' => $statuses, 'centers' => $centers, 'courses' => $courses);
+$customdata = array('payment' => $payment, 'methods' => $methods, 'sources' => $sources, 'statuses' => $statuses, 'centers' => $centers, 'cards' => $cards);
 $mform = new local_apsolu_payment_payments_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
     // Save data.
     $items = array();
-    foreach ($courses as $courseid => $coursename) {
-        $name = 'course'.$courseid;
+    foreach ($cards as $cardid => $cardname) {
+        $name = 'card'.$cardid;
         if (isset($data->{$name}) === true) {
-            $items[] = $courseid;
+            $items[] = $cardid;
         }
     }
 
@@ -126,68 +130,49 @@ if ($data = $mform->get_data()) {
     $payment->method = $data->method;
     $payment->source = $data->source;
     $payment->amount = $data->amount;
-    $payment->status = $data->status;
-    $payment->timecreated = strftime('%FT%T');
-    $payment->timemodified = $payment->timecreated;
-    if ($payment->status === '1') {
-        $payment->timepaid = $payment->timemodified;
-    } else {
-        $payment->timepaid = null;
-    }
+    $payment->status = intval($data->status);
+    $payment->timemodified = strftime('%FT%T');
     $payment->paymentcenterid = $data->center;
+
+    switch ($payment->status) {
+        case Payment::PAID:
+        case Payment::GIFT:
+            if ($payment->status === Payment::GIFT) {
+                $payment->amount = 0;
+            }
+            $payment->timepaid = $payment->timemodified;
+            break;
+        default:
+            $payment->timepaid = null;
+    }
 
     try {
         $transaction = $DB->start_delegated_transaction();
 
         if (empty($payment->id) === true) {
+            $payment->timecreated = strftime('%FT%T');
+
             unset($payment->id);
-            $paymentid = $DB->insert_record('apsolu_payments', $payment);
+            $payment->id = $DB->insert_record('apsolu_payments', $payment);
         } else {
-            $paymentid = $payment->id;
             $DB->update_record('apsolu_payments', $payment);
         }
 
-        foreach ($items as $courseid) {
-            if (empty($payment->id) === true) {
-                $item = new stdClass();
-                $item->paymentid = $paymentid;
-                $item->courseid = $courseid;
-                $item->roleid = 0;
+        $sql = "DELETE FROM {apsolu_payments_items} WHERE paymentid = :paymentid";
+        $DB->execute($sql, array('paymentid' => $payment->id));
 
-                $DB->insert_record('apsolu_payments_items', $item);
-            }
+        foreach ($items as $cardid) {
+            $item = new stdClass();
+            $item->paymentid = $payment->id;
+            $item->cardid = $cardid;
 
-            if ($payment->status === '1') {
-                switch ($courseid) { // TODO: à refaire !
-                    case '249':
-                        $fieldid = 9;
-                        break;
-                    case '250':
-                        $fieldid = 10;
-                        break;
-                    default:
-                        $fieldid = 12;
-                }
-
-                $profile = $DB->get_record('user_info_data', array('fieldid' => $fieldid, 'userid' => $userid));
-                if ($profile === false) {
-                    $profile = new stdClass();
-                    $profile->userid = $userid;
-                    $profile->fieldid = $fieldid;
-                    $profile->data = 1;
-
-                    $DB->insert_record('user_info_data', $profile);
-                } else {
-                    $profile->data = 1;
-                    $DB->update_record('user_info_data', $profile);
-                }
-            }
+            $DB->insert_record('apsolu_payments_items', $item);
         }
 
-        $event = \local_apsolu_payment\event\update_user_payment::create(array(
+        $event = \local_apsolu\event\update_user_payment::create(array(
             'relateduserid' => $userid,
             'context' => context_system::instance(),
-            'other' => json_encode(array('payment' => $payment)),
+            'other' => json_encode(array('payment' => $payment, 'items' => $items)),
         ));
         $event->trigger();
 

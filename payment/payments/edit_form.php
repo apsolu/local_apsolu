@@ -37,7 +37,7 @@ class local_apsolu_payment_payments_edit_form extends moodleform {
         $sources = $this->_customdata['sources'];
         $statuses = $this->_customdata['statuses'];
         $centers = $this->_customdata['centers'];
-        $courses = $this->_customdata['courses'];
+        $cards = $this->_customdata['cards'];
 
         // Method field.
         $mform->addElement('select', 'method', get_string('method', 'local_apsolu'), $methods);
@@ -60,9 +60,9 @@ class local_apsolu_payment_payments_edit_form extends moodleform {
         $mform->addRule('center', get_string('required'), 'required', null, 'client');
 
         // Courses field.
-        foreach ($courses as $courseid => $coursename) {
-            $mform->addElement('checkbox', 'course'.$courseid, $coursename);
-            $mform->setType('course'.$courseid, PARAM_INT);
+        foreach ($cards as $cardid => $cardname) {
+            $mform->addElement('checkbox', 'card'.$cardid, $cardname);
+            $mform->setType('card'.$cardid, PARAM_INT);
         }
 
         // TODO: disable les checkboxes en fonction des centres de paiement.

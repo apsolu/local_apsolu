@@ -39,13 +39,7 @@ class update_user_payment extends \core\event\base {
     }
 
     public function get_description() {
-        $other = json_decode($this->other);
-
-        if (isset($other->location)) {
-            $description = 'User #'.$this->userid.' marks user #'.$this->relateduserid.' as present at '.$other->location.'.';
-        } else {
-            $description = 'User #'.$this->userid.' marks user #'.$this->relateduserid.' as present.';
-        }
+        $description = 'User #'.$this->userid.' marks user #'.$this->relateduserid.' (info: '.$other.').';
 
         return $description;
     }

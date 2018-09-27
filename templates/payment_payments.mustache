@@ -15,17 +15,17 @@
 {{/user_selector}}
 
 {{^user_selector}}
-	<p class="apsolu-payment-user-profile">{{{useridentity}}}</p>
+
+	<p class="text-right"><a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=payments&action=edit&userid={{userid}}" class="btn btn-primary">Ajouter un paiement</a></p>
+
+	<div class="apsolu-payment-user-profile">
+		<p>{{{useridentity}}}</p>
+		<p class="small">{{#str}}type_auth, plugin{{/str}} : {{user_auth}}</p>
+	</div>
 
 	{{^has_sesame}}
 	<p class="alert alert-danger">{{#str}}no_sesame, local_apsolu{{/str}}</p>
 	{{/has_sesame}}
-
-	{{^has_sync}}
-	<p class="alert alert-danger">{{#str}}no_sync, local_apsolu{{/str}}</p>
-	{{/has_sync}}
-
-	<p class="text-left"><a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=payments&action=edit&userid={{userid}}" class="btn btn-primary">Ajouter un paiement</a></p>
 
 	{{^count_payments}}
 	<div class="alert alert-info">
@@ -56,22 +56,13 @@
 			<td>{{method_string}}</td>
 			<td>{{source_string}}</td>
 			<td>{{#count_items}}<ul class="list">{{#items}}<li>{{.}}</li>{{/items}}</ul>{{/count_items}}</td>
+			<td class="{{status_style}} text-center">{{status_string}}</td>
 
 			{{^status}}
-			{{^amount}}
-			{{! le flag n'est pas positionné sur "payer", mais le montant est nul !}}
-			<td class="success text-center">{{#str}}status_success, local_apsolu{{/str}}</td>
-			{{/amount}}
-			{{#amount}}
-			{{! le flag n'est pas positionné sur "payer" et le montant n'est pas nul !}}
-			<td class="danger text-center">{{#str}}status_error, local_apsolu{{/str}}</td>
-			{{/amount}}
 			<td><a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=payments&action=edit&userid={{userid}}&&paymentid={{id}}">{{#pix}}i/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></td>
 			{{/status}}
 
 			{{#status}}
-			{{! le flag est positionné sur "payer" !}}
-			<td class="success text-center">{{#str}}status_success, local_apsolu{{/str}}</td>
 			<td>-</td>
 			{{/status}}
 		</tr>

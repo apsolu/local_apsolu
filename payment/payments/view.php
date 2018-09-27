@@ -20,10 +20,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use UniversiteRennes2\Apsolu\Payment;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot.'/local/apsolu/locallib.php');
 require_once($CFG->dirroot.'/user/profile/lib.php');
+require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
 
 $userid = optional_param('userid', null, PARAM_INT);
 
@@ -37,8 +40,8 @@ if (isset($userid)) {
     $data->useridentity = $OUTPUT->render(new user_picture($user)).' '.fullname($user);
     $data->payments = array();
     $data->count_payments = 0;
-    $data->has_sesame = ($user->auth === 'shibboleth');
-    $data->has_sync = (isset($customfields->apsolusesame) && $customfields->apsolusesame == 1);
+    $data->has_sesame = (isset($customfields->apsolusesame) && $customfields->apsolusesame == 1);
+    $data->user_auth = get_string('pluginname', 'auth_'.$user->auth);
 
     $payments = $DB->get_records('apsolu_payments', array('userid' => $userid), $sort = 'timemodified');
     foreach ($payments as $payment) {
@@ -54,24 +57,30 @@ if (isset($userid)) {
         $payment->method_string = get_string('method_'.$payment->method, 'local_apsolu');
         $payment->source_string = get_string('source_'.$payment->source, 'local_apsolu');
 
+        switch ($payment->status) {
+            case Payment::PAID:
+                $payment->status_style = 'success';
+                $payment->status_string = get_string('paymentpaid', 'local_apsolu');
+                break;
+            case Payment::GIFT:
+                $payment->status_style = 'success';
+                $payment->status_string = get_string('paymentgift', 'local_apsolu');
+                break;
+            case Payment::DUE:
+            default:
+                $payment->status_style = 'danger';
+                $payment->status_string = get_string('paymentdue', 'local_apsolu');
+        }
+
         $payment->items = array();
         $payment->count_items = 0;
-        $sql = "SELECT api.*, c.fullname".
+        $sql = "SELECT api.*, apc.fullname".
             " FROM {apsolu_payments_items} api".
-            " LEFT JOIN {course} c ON c.id = api.courseid".
+            " JOIN {apsolu_payments_cards} apc ON apc.id = api.cardid".
             " WHERE api.paymentid = :paymentid";
         $items = $DB->get_records_sql($sql, array('paymentid' => $payment->id));
         foreach ($items as $item) {
-            switch ($item->courseid) {
-                case '249':
-                    $payment->items[] = get_string('association', 'local_apsolu');
-                    break;
-                case '250':
-                    $payment->items[] = get_string('bodybuilding', 'local_apsolu');
-                    break;
-                default:
-                    $payment->items[] = get_string('sportcard', 'local_apsolu');
-            }
+            $payment->items[] = $item->fullname;
             $payment->count_items++;
         }
 
