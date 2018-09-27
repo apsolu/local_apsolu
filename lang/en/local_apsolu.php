@@ -475,6 +475,7 @@ $string['status_wait'] = 'Paiement en attente.';
 $string['status_cancel'] = 'Paiement annulé.';
 $string['status_unknown'] = 'Le retour du paiement ne s\'est pas passé comme prévu. Merci de prendre contact avec le SIUAPS.';
 $string['sportcard'] = 'Carte sport';
+$string['cards'] = 'Cartes';
 $string['activitiesdescription'] = 'Accès aux cours, aux installations extérieures';
 $string['bodybuilding'] = 'Carte musculation';
 $string['bodybuildingdescription'] = 'Accès aux salles de musculation en autonomie sur des créneaux dédiés';
