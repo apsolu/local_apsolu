@@ -422,7 +422,7 @@ foreach ($students as $student) {
         $informations_style = 'danger';
     }
 
-    if (isset($student->cardpaid) === false || $student->cardpaid !== '1') {
+    if (isset($student->apsolucardpaid) === false || $student->apsolucardpaid !== '1') {
         $informations[] = get_string('attendance_no_sport_card', 'local_apsolu');
         $informations_style = 'danger';
     }
