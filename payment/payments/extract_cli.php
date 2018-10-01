@@ -79,7 +79,7 @@ $payments = $DB->get_records_sql($sql);
 foreach ($payments as $payment) {
     raise_memory_limit(MEMORY_EXTRA);
 
-    $usercards = $DB->get_records('apsolu_payments_items', array('paymentid' => $payment->id));
+    $usercards = $DB->get_records('apsolu_payments_items', array('paymentid' => $payment->id), $sort = null, $fields = 'cardid');
 
     if (isset($highlevelathletes[$payment->userid]) === true) {
         $payment->highlevelathlete = get_string('yes');
