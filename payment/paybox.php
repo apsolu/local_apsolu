@@ -124,6 +124,7 @@ try {
 
                 $outputsuccesscontent .= strftime('%c').' '.$ip.' :: set apsolumuscupaid attribute to value 1 for user '.$userstr.PHP_EOL;
                 break;
+            case 6:
             case 2:
             case 1:
                 // Carte sport.
