@@ -22,7 +22,7 @@
 
 define('CLI_SCRIPT', true);
 
-require __DIR__.'/../../../config.php';
+require __DIR__.'/../../../../config.php';
 
 $storages = array(
     $CFG->dataroot.'/apsolu/local_apsolu_payment/',
@@ -39,6 +39,8 @@ foreach ($storages as $storage) {
 require_once($CFG->dirroot.'/user/profile/lib.php');
 require_once($CFG->libdir . '/csvlib.class.php');
 
+$cards = $DB->get_records('apsolu_payments_cards', array('centerid' => 1), $sort = 'name, fullname');
+
 $filename = 'liste_des_paiements';
 $headers = array(
     get_string('lastname'),
@@ -46,58 +48,43 @@ $headers = array(
     get_string('idnumber'),
     get_string('institution'),
     get_string('department'),
+    get_string('fields_apsoluhighlevelathlete', 'local_apsolu'),
     get_string('method', 'local_apsolu'),
     get_string('date', 'local_apsolu'),
     get_string('amount', 'local_apsolu'),
-    get_string('payment_number', 'local_apsolu'),
-    get_string('sportcard', 'local_apsolu'),
-    get_string('bodybuilding', 'local_apsolu'),
-    get_string('highlevelathlete', 'theme_apsolu'),
-    get_string('source_apogee', 'local_apsolu'),
-    get_string('payments', 'local_apsolu'),
-    );
+    get_string('payment_number', 'local_apsolu')
+);
+
+foreach ($cards as $card) {
+    $headers[] = $card->fullname;
+}
 
 $fp = fopen($storages[1].'/extraction_paiement.csv', 'w');
 fputcsv($fp, $headers);
 
+$sql = "SELECT uid.userid".
+    " FROM {user_info_data} uid".
+    " JOIN {user_info_field} uif ON uif.id = uid.fieldid".
+    " WHERE uif.shortname = 'apsoluhighlevelathlete'".
+    " AND uid.data = 1";
+$highlevelathletes = $DB->get_records_sql($sql);
+
 $sql = "SELECT ap.*, u.lastname, u.firstname, u.idnumber, u.institution, u.department".
-    " FROM {user} u".
-    " JOIN {apsolu_payments} ap ON u.id = ap.userid".
+    " FROM {apsolu_payments} ap".
+    " JOIN {user} u ON u.id = ap.userid".
     " WHERE ap.status = 1".
-    " AND ap.paymentcenterid = 1". // Caisse Rennes 1.
-    " AND ap.amount > 0". // Bug R2.
+    " AND ap.paymentcenterid = 1". // Caisse Rennes SIUAPS.
     " ORDER BY ap.timepaid DESC, u.lastname, u.firstname, u.institution";
 $payments = $DB->get_records_sql($sql);
 foreach ($payments as $payment) {
     raise_memory_limit(MEMORY_EXTRA);
 
-    $customfields = profile_user_record($payment->userid);
+    $usercards = $DB->get_records('apsolu_payments_items', array('paymentid' => $payment->id));
 
-    if (isset($customfields->muscupaid) && $customfields->muscupaid == 1) {
-        $bodybuilding = get_string('yes');
+    if (isset($highlevelathletes[$payment->userid]) === true) {
+        $payment->highlevelathlete = get_string('yes');
     } else {
-        $bodybuilding = get_string('no');
-    }
-
-    if (isset($customfields->cardpaid) && $customfields->cardpaid == 1) {
-        $card = get_string('yes');
-    } else {
-        $card = get_string('no');
-    }
-
-    if (isset($customfields->highlevelathlete) && $customfields->highlevelathlete == 1) {
-        $highathlete = get_string('yes');
-    } else {
-        $highathlete = get_string('no');
-    }
-
-    $got_apogee = ((isset($customfields->optionpaid) && $customfields->optionpaid == 1) ||
-        (isset($customfields->bonificationpaid) && $customfields->bonificationpaid == 1) ||
-        (isset($customfields->librepaid) && $customfields->librepaid == 1));
-    if ($got_apogee) {
-        $apogee = get_string('yes');
-    } else {
-        $apogee = get_string('no');
+        $payment->highlevelathlete = get_string('no');
     }
 
     try {
@@ -107,35 +94,8 @@ foreach ($payments as $payment) {
         $timepaid = '';
     }
 
-    if ($payment->method === 'paybox') {
-        $transactionid = $payment->id;
-    } else {
-        $transactionid = '';
-    }
-
-    // Autres transactions.
-    $others = array();
-
-    $sql = "SELECT ap.*".
-        " FROM {apsolu_payments} ap".
-        " WHERE ap.status = 1".
-        " AND ap.paymentcenterid = 1". // Caisse Rennes 1.
-        " AND ap.amount > 0". // Bug R2.
-        " AND ap.userid = :userid".
-        " AND ap.id != :id";
-    foreach ($DB->get_records_sql($sql, array('id' => $payment->id, 'userid' => $payment->userid)) as $other) {
-        try {
-            $othertimepaid = new DateTime($other->timepaid);
-            $othertimepaid = $othertimepaid->format('d-m-Y H:i');
-        } catch(Exception $exception) {
-            $othertimepaid = '';
-        }
-
-        if ($other->source === 'apsolu') {
-            $others[] = $other->amount.' € le '.$othertimepaid;
-        } else {
-            $others[] = $other->amount.' € le '.$othertimepaid.' (via '.$other->source.')';
-        }
+    if ($payment->method !== 'paybox') {
+        $payment->id = '';
     }
 
     $data = array(
@@ -144,16 +104,21 @@ foreach ($payments as $payment) {
         $payment->idnumber,
         $payment->institution,
         $payment->department,
+        $payment->highlevelathlete,
         get_string('method_'.$payment->method, 'local_apsolu'),
         $timepaid,
         $payment->amount,
-        $transactionid,
-        $card,
-        $bodybuilding,
-        $highathlete,
-        $apogee,
-        implode(', ', $others),
+        $payment->id,
         );
+
+    foreach ($cards as $card) {
+        if (isset($usercards[$card->id]) === true) {
+            $data[] = get_string('yes');
+        } else {
+            $data[] = get_string('no');
+        }
+    }
+
     fputcsv($fp, $data);
 }
 
