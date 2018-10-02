@@ -467,8 +467,8 @@ $string['no_courses_complements'] = 'Pour les cours du SIUAPS, si vous êtes ins
 $string['no_paybox'] = 'Notre prestataire de paiement semble rencontrer des difficultés techniques. Merci de réessayer ultérieurement.';
 $string['warning_payment'] = '<p><strong>Attention</strong> : vérifiez les cours qui vous sont facturés. Si vous ne souhaitez plus suivre une activité, merci de contacter votre enseignant.</p>'.
     '<p>Le SIUAPS ne procèdera à aucun remboursement.'.
-    ' Si vous constatez une erreur dans le montant à payer, merci d\'envoyer un mail à l\'adresse <a href="mailto:admin-inscription-siuaps@univ-rennes2.fr">admin-inscription-siuaps@univ-rennes2.fr</a>.</p>'.
-    '<p>Enfin, si vous rencontrez le problème "Demande de paiement dupliquée. Accès refusé !", merci de réessayer votre paiement le lendemain.</p>';
+    ' Si vous constatez une erreur dans le montant à payer, merci d\'envoyer un mail à l\'adresse <a href="mailto:{$a}">{$a}</a>.</p>'.
+    '<p>Enfin, si vous rencontrez le problème "<em>Demande de paiement dupliquée. Accès refusé !</em>", merci de réessayer votre paiement le lendemain.</p>';
 $string['status_accepted'] = 'Paiement accepté.';
 $string['status_refused'] = 'Paiement refusé.';
 $string['status_wait'] = 'Paiement en attente.';

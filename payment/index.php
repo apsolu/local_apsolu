@@ -236,6 +236,11 @@ $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
 $data->payment_centers = array_values($paymentcenters);
 $data->count_payment_centers = count($data->payment_centers);
+$data->functional_contact = get_config('local_apsolu', 'functional_contact');
+if (empty($data->functional_contact) === true) {
+    $admin = get_admin();
+    $data->functional_contact = $admin->email;
+}
 
 $payboxserver = false;
 
