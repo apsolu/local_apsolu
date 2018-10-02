@@ -372,17 +372,17 @@ foreach ($users as $user) {
         continue;
     }
 
-    if (!isset($customfields->federationpaid) || $customfields->federationpaid != 1) {
+    if (!isset($customfields->apsolufederationpaid) || $customfields->apsolufederationpaid != 1) {
         // Carte FFSU impayée.
         continue;
     }
 
-    if (!isset($customfields->medicalcertificate) || $customfields->medicalcertificate != 1) {
+    if (!isset($customfields->apsolumedicalcertificate) || $customfields->apsolumedicalcertificate != 1) {
         // Pas de certificat médical.
         continue;
     }
 
-    if (isset($customfields->federationnumber) && !empty($customfields->federationnumber)) {
+    if (isset($customfields->apsolufederationnumber) && !empty($customfields->apsolufederationnumber)) {
         // Possède déjà un numéro FFSU.
         continue;
     }
@@ -394,22 +394,22 @@ foreach ($users as $user) {
         $data[] = 'VA0F';
     } else if ($user->institution === 'ENSCR') {
         $data[] = 'VA0D';
-    } else if (isset($customfields->ufr)) {
-        if ($customfields->ufr === 'UFR APS' || $customfields->ufr === 'UFR STAPS') {
+    } else if (isset($customfields->apsoluufr)) {
+        if ($customfields->apsoluufr === 'UFR APS' || $customfields->apsoluufr === 'UFR STAPS') {
             $data[] = 'VB01';
         } else if ($user->institution === 'Rennes 2') {
             $data[] = 'VB00';
-        } else if ($customfields->ufr === 'Droit') {
+        } else if ($customfields->apsoluufr === 'Droit') {
             $data[] = 'VA0E';
-        } else if ($customfields->ufr === 'IGR Rennes') {
+        } else if ($customfields->apsoluufr === 'IGR Rennes') {
             $data[] = 'VA0H';
-        } else if ($customfields->ufr === 'Odonto.') {
+        } else if ($customfields->apsoluufr === 'Odonto.') {
             $data[] = 'VA0K';
-        } else if ($customfields->ufr === 'Medecine' || $customfields->ufr === 'Pharmacie') {
+        } else if ($customfields->apsoluufr === 'Medecine' || $customfields->apsoluufr === 'Pharmacie') {
             $data[] = 'VA0J';
-        } else if ($customfields->ufr === 'Sc. Eco.') {
+        } else if ($customfields->apsoluufr === 'Sc. Eco.') {
             $data[] = 'VA0G';
-        } else if ($customfields->ufr === 'IUT Rennes') {
+        } else if ($customfields->apsoluufr === 'IUT Rennes') {
             $data[] = 'VA1I';
         } else {
             $data[] = 'VA0A';
@@ -420,24 +420,24 @@ foreach ($users as $user) {
 
     $data[] = $user->lastname;
     $data[] = $user->firstname;
-    if (isset($customfields->sex) && in_array($customfields->sex, array('M', 'F'), true)) {
-        $data[] = $customfields->sex;
+    if (isset($customfields->apsolusex) && in_array($customfields->apsolusex, array('M', 'F'), true)) {
+        $data[] = $customfields->apsolusex;
     } else {
         $data[] = '';
     }
 
-    if (isset($customfields->birthday) && strlen($customfields->birthday) === 10) {
-        $year = substr($customfields->birthday, 6, 4);
-        $month = substr($customfields->birthday, 3, 2);
-        $day = substr($customfields->birthday, 0, 2);
+    if (isset($customfields->apsolubirthday) && strlen($customfields->apsolubirthday) === 10) {
+        $year = substr($customfields->apsolubirthday, 6, 4);
+        $month = substr($customfields->apsolubirthday, 3, 2);
+        $day = substr($customfields->apsolubirthday, 0, 2);
         $data[] = $year.'-'.$month.'-'.$day;
     } else {
         $data[] = '';
     }
     $data[] = $user->address;
     $data[] = '';
-    if (isset($customfields->postalcode)) {
-        $data[] = $customfields->postalcode;
+    if (isset($customfields->apsolupostalcode)) {
+        $data[] = $customfields->apsolupostalcode;
     } else {
         $data[] = '';
     }
@@ -456,8 +456,8 @@ foreach ($users as $user) {
     }
 
     // Study_year.
-    if (isset($customfields->lmd)) {
-        switch($customfields->lmd) {
+    if (isset($customfields->apsolucycle)) {
+        switch($customfields->apsolucycle) {
             case 'L1':
                 $data[] = 1;
                 break;
@@ -481,8 +481,8 @@ foreach ($users as $user) {
                 $data[] = 7;
                 break;
             default:
-                if (defined('UHB_CLI') && !empty($customfields->lmd)) {
-                    echo $customfields->lmd.PHP_EOL;
+                if (defined('UHB_CLI') && !empty($customfields->apsolucycle)) {
+                    echo $customfields->apsolucycle.PHP_EOL;
                 }
                 $data[] = '';
         }
