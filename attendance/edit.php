@@ -19,7 +19,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use UniversiteRennes2\Apsolu\Payment;
+
 require_once(__DIR__.'/../../../config.php');
+require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
 
 $courseid = optional_param('courseid', 0, PARAM_INT); // Course id.
 $sessionid = optional_param('sessionid', 0, PARAM_INT); // Session id.
@@ -361,6 +364,9 @@ echo '<th>'.get_string('pictureofuser').'</th>'.
 
 $statuses = $DB->get_records('apsolu_attendance_statuses');
 
+$payments = Payment::get_users_cards_status_per_course($courseid);
+$paymentsimages = Payment::get_statuses_images();
+
 foreach ($students as $student) {
     $activestart = ($student->timestart == 0 || $student->timestart < time());
     $activeend = ($student->timeend == 0 || $student->timeend > time());
@@ -422,25 +428,19 @@ foreach ($students as $student) {
         $informations_style = 'danger';
     }
 
-    if (isset($student->apsolucardpaid) === false || $student->apsolucardpaid !== '1') {
-        $informations[] = get_string('attendance_no_sport_card', 'local_apsolu');
+    if (isset($payments[$student->id]) === true) {
+        foreach ($payments[$student->id] as $card) {
+            $informations[] = $paymentsimages[$card->status]->image.' '.$card->fullname;
+            if ($card->status === Payment::DUE) {
+                $informations_style = 'danger';
+            }
+        }
+    } else {
+        $informations[] = get_string('attendance_forbidden_enrolment', 'local_apsolu');
         $informations_style = 'danger';
     }
 
     if (isset($roles[$student->roleid]) === true) {
-        $sql = "SELECT ac.id".
-           " FROM {apsolu_colleges} ac".
-           " JOIN {apsolu_colleges_members} acm ON ac.id = acm.collegeid".
-           " JOIN {cohort_members} cm ON cm.cohortid = acm.cohortid".
-           " JOIN {enrol_select_cohorts} esc ON cm.cohortid = esc.cohortid".
-           " WHERE cm.userid = :userid".
-           " AND ac.roleid = :roleid".
-           " AND esc.enrolid = :enrolid";
-        $allow = $DB->get_records_sql($sql, array('userid' => $student->id, 'roleid' => $student->roleid, 'enrolid' => $student->enrolid));
-        if (count($allow) === 0 || (isset($student->apsolusesame) === false || $student->apsolusesame !== '1')) {
-            $informations[] = get_string('attendance_forbidden_enrolment', 'local_apsolu');
-            $informations_style = 'danger';
-        }
         $rolename = $roles[$student->roleid]->name;
     } else {
         $rolename = '-';

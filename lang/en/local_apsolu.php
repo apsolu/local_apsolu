@@ -526,6 +526,14 @@ $string['card_add'] = 'Ajouter un tarif';
 $string['payment_cards'] = 'Tarifs';
 $string['freetrial'] = 'Nombre de sessions gratuites';
 $string['startat'] = 'À partir de';
+$string['alt_paid'] = 'payé';
+$string['alt_due'] = 'dû';
+$string['alt_free'] = 'gratuit';
+$string['alt_gift'] = 'offert';
+$string['definition_paid'] = 'paiment effectué';
+$string['definition_due'] = 'paiment à effectuer';
+$string['definition_free'] = 'pas de paiment à effectuer';
+$string['definition_gift'] = 'carte offerte';
 
 // Administration - notifications.
 $string['notifications'] = 'Notifications';

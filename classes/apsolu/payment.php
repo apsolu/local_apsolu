@@ -24,13 +24,15 @@
 
 namespace UniversiteRennes2\Apsolu;
 
+use stdClass;
+
 class Payment {
     const DUE = 0;
     const PAID = 1;
     const FREE = 2;
     const GIFT = 3;
 
-    public static function get_user_cards($paid = null, $userid = null) {
+    public static function get_user_cards($userid = null) {
         global $DB, $USER;
 
         if ($userid === null) {
@@ -110,7 +112,7 @@ class Payment {
             return $payment->status; // self::PAID or self::GIFT.
         }
 
-        $enrols = Payment::get_user_enrols_by_card($card->id);
+        $enrols = Payment::get_user_enrols_by_card($card->id, $userid);
 
         // Vérifie les séances d'essais.
         if ($card->trial > 0) {
@@ -218,5 +220,88 @@ class Payment {
         $paybox->PBX_HMAC = strtoupper(hash_hmac($paybox->PBX_HASH, $message, $binkey));
 
         return $paybox;
+    }
+
+    public static function get_course_cards($courseid) {
+        global $DB;
+
+        $sql = "SELECT DISTINCT apc.id, apc.name, apc.fullname, apc.trial, apc.price, apc.centerid".
+            " FROM {apsolu_payments_cards} apc".
+            " JOIN {enrol_select_cards} esc ON esc.cardid = apc.id".
+            " JOIN {enrol} e ON e.id = esc.enrolid".
+            " JOIN {course} c ON c.id = e.courseid".
+            " WHERE e.enrol = 'select'".
+            " AND c.id = :courseid".
+            " AND e.status = 0". // Méthode d'inscription active.
+            " ORDER BY apc.fullname";
+        return $DB->get_records_sql($sql, array('courseid' => $courseid));
+    }
+
+    public static function get_users_cards_status_per_course($courseid) {
+        global $DB;
+
+        $users = array();
+
+        // Sélectionner les cartes dûes pour chaque utilisateur dans un cours.
+        $sql = "SELECT apc.*, ue.userid".
+            " FROM {apsolu_payments_cards} apc".
+            " JOIN {enrol_select_cards} esc ON esc.cardid = apc.id".
+            " JOIN {enrol} e ON e.id = esc.enrolid".
+            " JOIN {course} c ON c.id = e.courseid".
+            // Check cohorts.
+            " JOIN {enrol_select_cohorts} ewc ON e.id = ewc.enrolid".
+            " JOIN {cohort_members} cm ON cm.cohortid = ewc.cohortid".
+            " JOIN {user_enrolments} ue ON e.id = ue.enrolid AND ue.userid = cm.userid".
+            " JOIN {role_assignments} ra ON ra.userid = ue.userid AND ra.userid = cm.userid AND ra.itemid = e.id".
+            " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50 AND ctx.instanceid = c.id".
+            " JOIN {apsolu_colleges} acol ON acol.roleid = ra.roleid".
+            " JOIN {apsolu_colleges_members} acm ON acol.id = acm.collegeid AND acm.cohortid = cm.cohortid".
+            //
+            " JOIN {apsolu_payments_cards_cohort} apcc ON apc.id = apcc.cardid AND apcc.cohortid = cm.cohortid".
+            " JOIN {apsolu_payments_cards_roles} apcr ON apc.id = apcr.cardid AND apcr.roleid = ra.roleid".
+            " WHERE e.enrol = 'select'".
+            " AND c.id = :courseid".
+            " AND e.status = 0". // Méthode d'inscription active.
+            " AND ue.status = 0"; // Inscription validée.
+        foreach ($DB->get_recordset_sql($sql, array('courseid' => $courseid)) as $record) {
+            if (isset($users[$record->userid]) === false) {
+                $users[$record->userid] = array();
+            }
+
+            $userid = $record->userid;
+            unset($record->userid);
+
+            $record->status = self::get_user_card_status($record, $userid);
+
+            $users[$userid][$record->id] = $record;
+        }
+
+        return $users;
+    }
+
+    public static function get_statuses_labels() {
+        $labels = array();
+        $labels[self::DUE] = 'due';
+        $labels[self::PAID] = 'paid';
+        $labels[self::FREE] = 'free';
+        $labels[self::GIFT] = 'gift';
+
+        return $labels;
+    }
+
+    public static function get_statuses_images() {
+        global $OUTPUT;
+
+        $images = array();
+        foreach (self::get_statuses_labels() as $statusid => $statusname) {
+            $alt = 'alt_'.$statusname;
+            $definition = 'definition_'.$statusname;
+
+            $images[$statusid] = new stdClass();
+            $images[$statusid]->image = $OUTPUT->pix_icon('t/'.$statusname, get_string($alt, 'local_apsolu'), 'local_apsolu', array('title' => get_string($alt, 'local_apsolu'), 'width' => '12px', 'height' => '12px'));
+            $images[$statusid]->definition = get_string($definition, 'local_apsolu');
+        }
+
+        return $images;
     }
 }
