@@ -50,9 +50,10 @@ class Payment {
             " JOIN {user_enrolments} ue ON e.id = ue.enrolid AND ue.userid = cm.userid".
             " JOIN {role_assignments} ra ON ra.userid = ue.userid AND ra.userid = cm.userid AND ra.itemid = e.id".
             " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50 AND ctx.instanceid = c.id".
-            " JOIN {apsolu_colleges} acol ON acol.roleid = ra.roleid".
-            " JOIN {apsolu_colleges_members} acm ON acol.id = acm.collegeid AND acm.cohortid = cm.cohortid".
-            //
+            // Check colleges.
+            // " JOIN {apsolu_colleges} acol ON acol.roleid = ra.roleid".
+            // " JOIN {apsolu_colleges_members} acm ON acol.id = acm.collegeid AND acm.cohortid = cm.cohortid".
+            // Check cards w/ cohorts/roles.
             " JOIN {apsolu_payments_cards_cohort} apcc ON apc.id = apcc.cardid AND apcc.cohortid = cm.cohortid".
             " JOIN {apsolu_payments_cards_roles} apcr ON apc.id = apcr.cardid AND apcr.roleid = ra.roleid".
             " WHERE e.enrol = 'select'".
@@ -81,8 +82,9 @@ class Payment {
             " JOIN {user_enrolments} ue ON e.id = ue.enrolid AND ue.userid = cm.userid".
             " JOIN {role_assignments} ra ON ra.userid = ue.userid AND ra.userid = cm.userid AND ra.itemid = e.id".
             " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50 AND ctx.instanceid = c.id".
-            " JOIN {apsolu_colleges} acol ON acol.roleid = ra.roleid".
-            " JOIN {apsolu_colleges_members} acm ON acol.id = acm.collegeid AND acm.cohortid = cm.cohortid".
+            // Check colleges.
+            // " JOIN {apsolu_colleges} acol ON acol.roleid = ra.roleid".
+            // " JOIN {apsolu_colleges_members} acm ON acol.id = acm.collegeid AND acm.cohortid = cm.cohortid".
             " WHERE e.enrol = 'select'".
             " AND c.visible = 1". // Cours visible.
             " AND e.status = 0". // Méthode d'inscription active.
@@ -254,9 +256,10 @@ class Payment {
             " JOIN {user_enrolments} ue ON e.id = ue.enrolid AND ue.userid = cm.userid".
             " JOIN {role_assignments} ra ON ra.userid = ue.userid AND ra.userid = cm.userid AND ra.itemid = e.id".
             " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50 AND ctx.instanceid = c.id".
-            " JOIN {apsolu_colleges} acol ON acol.roleid = ra.roleid".
-            " JOIN {apsolu_colleges_members} acm ON acol.id = acm.collegeid AND acm.cohortid = cm.cohortid".
-            //
+            // Check colleges.
+            // " JOIN {apsolu_colleges} acol ON acol.roleid = ra.roleid".
+            // " JOIN {apsolu_colleges_members} acm ON acol.id = acm.collegeid AND acm.cohortid = cm.cohortid".
+            // Check cards w/ cohorts/roles.
             " JOIN {apsolu_payments_cards_cohort} apcc ON apc.id = apcc.cardid AND apcc.cohortid = cm.cohortid".
             " JOIN {apsolu_payments_cards_roles} apcr ON apc.id = apcr.cardid AND apcr.roleid = ra.roleid".
             " WHERE e.enrol = 'select'".
