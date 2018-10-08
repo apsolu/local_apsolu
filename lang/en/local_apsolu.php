@@ -557,6 +557,7 @@ $string['fields_apsolupostalcode'] = 'Code postal';
 $string['fields_apsolusex'] = 'Sexe';
 $string['fields_apsolubirthday'] = 'Date de naissance';
 $string['fields_apsoluufr'] = 'UFR';
+$string['ufrs_help'] = 'Noms partiels d\'une ou plusieurs UFR séparées par des virgules.<br />Exemple: math,langue';
 $string['fields_apsolucycle'] = 'Cycle LMD';
 $string['fields_apsolucardpaid'] = 'Carte sport payée';
 $string['fields_apsolufederationpaid'] = 'Adhésion à l\'association payée';
