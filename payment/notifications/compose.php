@@ -72,7 +72,7 @@ if ($data = $mform->get_data()) {
     }
 
     // Display notification and display elements list.
-    $notificationform = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
+    $notificationform = $OUTPUT->notification(get_string('dunningsaved', 'local_apsolu'), 'notifysuccess');
 }
 
 $data = new stdClass();

@@ -63,6 +63,12 @@ $string['author'] = 'Auteur';
 $string['compose'] = 'Rédaction';
 $string['timecreated'] = 'Date de création';
 $string['countposts'] = 'Nombre de messages envoyés';
+$string['nohistory'] = 'Aucun historique';
+$string['dunningsaved'] = 'La relance de paiement a été enregistrée. Les notifications seront envoyées au plus tard dans une heure.';
+$string['state'] = 'État';
+$string['waiting'] = 'En attente';
+$string['running'] = 'En cours';
+$string['finished'] = 'Terminé';
 
 $string['paymentdue'] = 'Dû';
 $string['paymentpaid'] = 'Payé';

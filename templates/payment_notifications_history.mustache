@@ -5,14 +5,20 @@
 	<li class="active"><a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=notifications&action=history">{{#str}}history, local_apsolu{{/str}}</a></li>
 </ul>
 
+{{^count_dunnings}}
+<p class="alert alert-info">{{#str}}nohistory, local_apsolu{{/str}}</p>
+{{/count_dunnings}}
+
+{{#count_dunnings}}
 <table class="table table-striped">
 <thead>
 	<tr>
 		<th>{{#str}}timecreated, local_apsolu{{/str}}</th>
+		<th>{{#str}}author, local_apsolu{{/str}}</th>
 		<th>{{#str}}subject, local_apsolu{{/str}}</th>
 		<th>{{#str}}message, local_apsolu{{/str}}</th>
-		<th>{{#str}}author, local_apsolu{{/str}}</th>
 		<th>{{#str}}countposts, local_apsolu{{/str}}</th>
+		<th>{{#str}}state, local_apsolu{{/str}}</th>
 	</tr>
 </thead>
 <tbody>
@@ -20,11 +26,13 @@
 {{#dunnings}}
 	<tr>
 		<td>{{timecreated}}</td>
+		<td>{{firstname}} {{lastname}}</td>
 		<td>{{subject}}</td>
 		<td>{{{message}}}</td>
-		<td>{{firstname}} {{lastname}}</td>
 		<td>{{count_posts}}</td>
+		<td class="{{status_style}}">{{status}}</td>
 	</tr>
 {{/dunnings}}
 </tbody>
 </table>
+{{/count_dunnings}}

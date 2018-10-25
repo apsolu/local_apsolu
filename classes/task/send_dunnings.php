@@ -51,6 +51,8 @@ class send_dunnings extends \core\task\scheduled_task {
             $dunning->timestarted = time();
             $DB->update_record('apsolu_dunnings', $dunning);
 
+            $dunning->messagetext = strip_tags(str_replace('</p>', PHP_EOL, $dunning->message));
+
             $sender = $DB->get_record('user', array('id' => $dunning->userid));
             $receivers = array();
 
@@ -90,7 +92,7 @@ class send_dunnings extends \core\task\scheduled_task {
                         if (isset($receivers[$user->id]) === false) {
                             $receivers[$user->id] = 1;
 
-                            email_to_user($user, $sender, $dunning->subject, strip_tags($dunning->message), $dunning->message);
+                            email_to_user($user, $sender, $dunning->subject, $dunning->messagetext, $dunning->message);
 
                             mtrace("   - relance envoyée à ".$user->email);
 

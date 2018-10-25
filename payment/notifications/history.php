@@ -41,6 +41,17 @@ foreach ($dunnings as $dunning) {
     $dunning->message = nl2br($dunning->message);
     $dunning->timecreated = userdate($dunning->timecreated, get_string('strftimedatetime', 'local_apsolu'));
 
+    if (empty($dunning->timestarted) === true) {
+        $dunning->status = get_string('waiting', 'local_apsolu');
+        $dunning->status_style = 'warning';
+    } else if (empty($dunning->timeended) === true) {
+        $dunning->status = get_string('running', 'local_apsolu');
+        $dunning->status_style = 'success';
+    } else {
+        $dunning->status = get_string('finished', 'local_apsolu');
+        $dunning->status_style = 'info';
+    }
+
     $data->dunnings[] = $dunning;
     $data->count_dunnings++;
 }
