@@ -488,5 +488,60 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         }
     }
 
+    $version = 2018102500;
+    if ($result && $oldversion < $version) {
+        $table = new xmldb_table('apsolu_dunnings');
+        if ($dbman->table_exists($table) === false) {
+            // Adding fields.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+            $table->add_field('subject', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('message', XMLDB_TYPE_TEXT, $precision=null, $unsigned=null, $notnull=null, $sequence=null, $default=null, $previous=null);
+            $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('timestarted', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $notnull=null, null, null, null);
+            $table->add_field('timeended', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $notnull=null, null, null, null);
+            $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+
+            // Adding key.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+            $table->add_index($indexname = 'timestarted', XMLDB_INDEX_NOTUNIQUE, $fields = array('timestarted'));
+
+            // Create table.
+            $dbman->create_table($table);
+        }
+
+        $table = new xmldb_table('apsolu_dunnings_posts');
+        if ($dbman->table_exists($table) === false) {
+            // Adding fields.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+            $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('dunningid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+
+            // Adding key.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+            // Create table.
+            $dbman->create_table($table);
+        }
+
+        $table = new xmldb_table('apsolu_dunnings_cards');
+        if ($dbman->table_exists($table) === false) {
+            // Adding fields.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+            $table->add_field('dunningid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('cardid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+
+            // Adding key.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+            // Create table.
+            $dbman->create_table($table);
+        }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
     return $result;
 }

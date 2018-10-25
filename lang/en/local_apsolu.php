@@ -59,6 +59,11 @@ $string['needcalendarstypefirst'] = 'Vous devez créer un type de calendrier pou
 $string['freecourses'] = 'Nombre de créneaux offerts pour les cours du calendrier <em>{$a}</em>';
 $string['shortfreecourses'] = 'Nombre de créneaux offerts';
 
+$string['author'] = 'Auteur';
+$string['compose'] = 'Rédaction';
+$string['timecreated'] = 'Date de création';
+$string['countposts'] = 'Nombre de messages envoyés';
+
 $string['paymentdue'] = 'Dû';
 $string['paymentpaid'] = 'Payé';
 $string['paymentfree'] = 'Non dû';
@@ -534,6 +539,8 @@ $string['definition_paid'] = 'paiment effectué';
 $string['definition_due'] = 'paiment à effectuer';
 $string['definition_free'] = 'pas de paiment à effectuer';
 $string['definition_gift'] = 'carte offerte';
+$string['dunning'] = 'Relance de paiement';
+$string['history'] = 'Historique';
 
 // Administration - notifications.
 $string['notifications'] = 'Notifications';
@@ -589,6 +596,7 @@ $string['settings_payments'] = 'Paiements';
 $string['set_high_level_athletes'] = 'Moulinette pour les sportifs de haut-niveau';
 $string['task_set_high_level_athletes'] = 'Tâche pour traiter les sportifs de haut-niveau';
 $string['task_run_mailqueue'] = 'Tâche pour envoyer les notifications';
+$string['task_send_dunnings'] = 'Tâche pour envoyer les relances de paiements';
 
 // Webservices.
 $string['ws_local_apsolu_get_users_description'] = 'Retourne tous les utilisateurs';

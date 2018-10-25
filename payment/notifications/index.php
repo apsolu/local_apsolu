@@ -15,33 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Tasks for component 'local_apsolu'
- *
- * @package    local
- * @subpackage apsolu
- * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @package    local_apsolu_payment
+ * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$tasks = array(
-    array(
-        // Tâche exécutée toutes les 15 minutes.
-        'classname' => 'local_apsolu\task\set_high_level_athletes',
-        'blocking' => 0,
-        'minute' => '*/15',
-        'hour' => '*',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
-        // Tâche exécutée toutes les heures.
-        'classname' => 'local_apsolu\task\send_dunnings',
-        'blocking' => 0,
-        'minute' => '0',
-        'hour' => '*',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-);
+defined('MOODLE_INTERNAL') || die;
+
+$actions = array('compose', 'history');
+
+if (in_array($action, $actions, $strict = true) === false) {
+    $action = 'compose';
+}
+
+require(__DIR__.'/'.$action.'.php');

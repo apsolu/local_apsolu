@@ -1,0 +1,30 @@
+<h1>{{#str}}dunning, local_apsolu{{/str}}</h1>
+
+<ul class="nav nav-tabs">
+	<li><a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=notifications&action=compose">{{#str}}compose, local_apsolu{{/str}}</a></li>
+	<li class="active"><a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=notifications&action=history">{{#str}}history, local_apsolu{{/str}}</a></li>
+</ul>
+
+<table class="table table-striped">
+<thead>
+	<tr>
+		<th>{{#str}}timecreated, local_apsolu{{/str}}</th>
+		<th>{{#str}}subject, local_apsolu{{/str}}</th>
+		<th>{{#str}}message, local_apsolu{{/str}}</th>
+		<th>{{#str}}author, local_apsolu{{/str}}</th>
+		<th>{{#str}}countposts, local_apsolu{{/str}}</th>
+	</tr>
+</thead>
+<tbody>
+
+{{#dunnings}}
+	<tr>
+		<td>{{timecreated}}</td>
+		<td>{{subject}}</td>
+		<td>{{{message}}}</td>
+		<td>{{firstname}} {{lastname}}</td>
+		<td>{{count_posts}}</td>
+	</tr>
+{{/dunnings}}
+</tbody>
+</table>
