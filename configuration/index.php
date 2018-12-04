@@ -23,10 +23,10 @@
 require(__DIR__.'/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
-$page = optional_param('page', 'calendar', PARAM_ALPHA);
+$page = optional_param('page', 'calendars', PARAM_ALPHA);
 
 // Set tabs.
-$pages = array('calendars', 'calendarstypes', 'contacts', 'dates');
+$pages = array('calendars', 'calendarstypes', 'contacts', 'dates', 'header');
 
 $tabtree = array();
 foreach ($pages as $pagename) {

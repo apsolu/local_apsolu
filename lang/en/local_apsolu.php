@@ -590,6 +590,7 @@ $string['settings_configuration_calendarstypes'] = 'Types de calendriers';
 $string['settings_configuration_calendars_types'] = 'Types de calendriers';
 $string['settings_configuration_contacts'] = 'Adresses de contact';
 $string['settings_configuration_dates'] = 'Dates';
+$string['settings_configuration_header'] = 'Bandeau';
 $string['settings_activities'] = 'Activités physiques';
 $string['settings_complements'] = 'Activités complémentaires';
 $string['settings_federations'] = 'FFSU';
