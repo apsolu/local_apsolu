@@ -18,11 +18,11 @@ if (!$CFG->enablewebservices) {
 $response = new stdClass();
 $response->token = null;
 
-$sql = "SELECT * FROM {user_info_data} WHERE data = :data AND fieldid = :fieldid";
-
-// $card = $DB->get_record('user_info_data', array('data' => $cardnumber, 'fieldid' => 16));
+$sql = "SELECT uid.*".
+    " FROM {user_info_data} uid".
+    " JOIN {user_info_field} uif ON uif.id = uid.fieldid AND uif.shortname = 'apsoluidcardnumber'".
+    " WHERE uid.data = :data";
 $card = $DB->get_record_sql($sql, array('data' => $cardnumber, 'fieldid' => 16));
-
 
 if ($card) {
     $service = $DB->get_record('external_services', array('component' => 'local_apsolu', 'enabled' => 1));
