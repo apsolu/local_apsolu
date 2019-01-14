@@ -22,7 +22,7 @@ $sql = "SELECT uid.*".
     " FROM {user_info_data} uid".
     " JOIN {user_info_field} uif ON uif.id = uid.fieldid AND uif.shortname = 'apsoluidcardnumber'".
     " WHERE uid.data = :data";
-$card = $DB->get_record_sql($sql, array('data' => $cardnumber, 'fieldid' => 16));
+$card = $DB->get_record_sql($sql, array('data' => $cardnumber));
 
 if ($card) {
     $service = $DB->get_record('external_services', array('component' => 'local_apsolu', 'enabled' => 1));
