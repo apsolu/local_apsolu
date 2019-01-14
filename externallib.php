@@ -577,8 +577,19 @@ class local_apsolu_webservices extends external_api {
 
         try {
             $userfield = (object) ['id' => $iduser, 'profile_field_apsoluidcardnumber' => $cardnumber];
+
+            $errors = profile_validation($userfield, $files = array());
+            if (count($errors) > 0) {
+                local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, 'impossible d\'enregistrer la carte ('.json_encode($errors).')']);
+                throw new Exception(json_encode($errors));
+            }
+
             profile_save_data($userfield);
             local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, 'enregistrement d\'une nouvelle carte']);
+
+            // Ajoute le témoin que la carte provient d'une source externe.
+            $userfield = (object) ['id' => $iduser, 'profile_field_apsoluidcardnumberexternal' => 1];
+            profile_save_data($userfield);
 
             // TODO: proposer un bug report à Moodle.org ?
             $user = $DB->get_record('user', array('id' => $iduser));
