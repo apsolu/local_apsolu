@@ -291,6 +291,8 @@ class local_apsolu_webservices extends external_api {
             return $data;
         }
 
+        $fields = $DB->get_records('user_info_field', $conditions = array(), $sort = '', $fields = 'shortname, id');
+
         $sql = "SELECT ra.id AS idregistration, ra.userid, ctx.instanceid AS idcourse, COUNT(aap.id) AS nbpresence, ra.roleid, ra.itemid AS enrolid, uid1.data AS sesame".
             " FROM {role_assignments} ra".
             " JOIN {role} r ON r.id = ra.roleid AND r.archetype = 'student'".
@@ -298,15 +300,13 @@ class local_apsolu_webservices extends external_api {
             " JOIN {context} ctx ON ctx.id = ra.contextid".
             " JOIN {apsolu_courses} c ON ctx.instanceid = c.id".
             " JOIN {apsolu_attendance_sessions} aas ON ctx.instanceid = aas.courseid".
-            " LEFT JOIN {apsolu_attendance_presences} aap ON aas.id = aap.sessionid AND ra.userid = aap.studentid AND aap.statusid IN (1, 2)". // Present + late.
-            " LEFT JOIN {user_info_data} uid1 ON ra.userid = uid1.userid AND uid1.fieldid = 11". // Compte Sésame validé.
+            " JOIN {apsolu_attendance_presences} aap ON aas.id = aap.sessionid AND ra.userid = aap.studentid AND aap.statusid IN (1, 2)". // Present + late.
+            " LEFT JOIN {user_info_data} uid1 ON ra.userid = uid1.userid AND uid1.fieldid = :apsolusesame". // Compte Sésame validé.
             " WHERE ra.timemodified >= :timemodified".
             " AND ra.component = 'enrol_select'".
-            " AND ue.timeend > :now". // TODO: à retirer ? Permet de limiter le nombre de résultat pour les tests ?
-            // " AND ue.timestart < :now AND (ue.timeend = 0 OR ue.timeend > :now)". // Pour n'avoir que les inscriptions des cours en cours.
             " GROUP BY ra.id, ra.userid, ctx.instanceid";
 
-        foreach ($DB->get_records_sql($sql, array('timemodified' => $since, 'now' => time())) as $record) {
+        foreach ($DB->get_records_sql($sql, array('timemodified' => $since, 'apsolusesame' => $fields['apsolusesame']->id)) as $record) {
             // Calcul la validité de l'inscription.
             $sql = "SELECT DISTINCT ac.id".
                 " FROM {apsolu_colleges} ac".
