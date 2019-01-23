@@ -302,23 +302,12 @@ class local_apsolu_webservices extends external_api {
             " JOIN {apsolu_attendance_sessions} aas ON ctx.instanceid = aas.courseid".
             " JOIN {apsolu_attendance_presences} aap ON aas.id = aap.sessionid AND ra.userid = aap.studentid AND aap.statusid IN (1, 2)". // Present + late.
             " LEFT JOIN {user_info_data} uid1 ON ra.userid = uid1.userid AND uid1.fieldid = :apsolusesame". // Compte Sésame validé.
-            " WHERE ra.component = 'enrol_select'";
-        $params = array('apsolusesame' => $fields['apsolusesame']->id);
+            " WHERE ra.component = 'enrol_select'".
+            " AND ue.timeend >= :now".
+            " AND ue.timemodified >= :timemodified".
+            " GROUP BY ra.id, ra.userid, ctx.instanceid";
 
-        if (empty($since) === true) {
-            $sql .= " AND ra.timemodified >= :timemodified";
-            $params['timemodified'] = $since;
-        } else {
-            $sql .= " AND (ue.timemodified >= :timemodified".
-                " OR ue.timeend BETWEEN :since AND :now)";
-            $params['timemodified'] = $since;
-            $params['since'] = $since;
-            $params['now'] = time();
-        }
-
-        $sql .= " GROUP BY ra.id, ra.userid, ctx.instanceid";
-
-        foreach ($DB->get_records_sql($sql, $params) as $record) {
+        foreach ($DB->get_records_sql($sql, array('apsolusesame' => $fields['apsolusesame']->id, 'now' => time(), 'timemodified' => $since)) as $record) {
             // Calcul la validité de l'inscription.
             $sql = "SELECT DISTINCT ac.id".
                 " FROM {apsolu_colleges} ac".
@@ -391,6 +380,11 @@ class local_apsolu_webservices extends external_api {
             return $data;
         }
 
+        if (empty($since) === true) {
+            // Normalement, à l'initialisation, on n'a pas besoin des désinscriptions.
+            return array();
+        }
+
         $sql = "SELECT DISTINCT ra.id AS idregistration, ra.userid AS iduser, ctx.instanceid AS idcourse".
             " FROM {role_assignments} ra".
             " JOIN {role} r ON r.id = ra.roleid AND r.archetype = 'student'".
@@ -400,14 +394,8 @@ class local_apsolu_webservices extends external_api {
             " WHERE ra.component = 'enrol_select'".
             " AND e.enrol = 'select'".
             " AND e.status = 0".  // Active.
-            " AND ue.status > 0"; // Inactive.
-
-        if (empty($since) === true) {
-            $sql .= " AND ue.timemodified >= :timemodified";
-            return $DB->get_records_sql($sql, array('timemodified' => $since));
-        }
-
-        $sql .= " AND (ue.timemodified >= :timemodified".
+            " AND ue.status > 0". // Inactive.
+            " AND (ue.timemodified >= :timemodified".
             " OR ue.timeend BETWEEN :since AND :now)";
         return $DB->get_records_sql($sql, array('timemodified' => $since, 'since' => $since, 'now' => time()));
     }
