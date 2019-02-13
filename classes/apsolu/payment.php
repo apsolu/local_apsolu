@@ -32,6 +32,14 @@ class Payment {
     const FREE = 2;
     const GIFT = 3;
 
+    /**
+      * Retourne pour un utilisateur donné, les cartes qui le concerne potentiellement.
+      * Attention ! Ce ne sont pas les cartes dûes.
+      *
+      * @param $userid int|null Si null, le $userid sera calculé en fonction de l'utilisateur courant.
+      *
+      * @return array
+      */
     public static function get_user_cards($userid = null) {
         global $DB, $USER;
 
@@ -65,6 +73,14 @@ class Payment {
         return $DB->get_records_sql($sql, array('userid' => $userid));
     }
 
+    /**
+      * Retourne une instance d'inscription en fonction d'une carte et d'un utilisateur.
+      *
+      * @param $cardid int
+      * @param $userid int|null Si null, le $userid sera calculé en fonction de l'utilisateur courant.
+      *
+      * @return array
+      */
     public static function get_user_enrols_by_card($cardid, $userid = null) {
         global $DB, $USER;
 
@@ -94,6 +110,15 @@ class Payment {
         return $DB->get_records_sql($sql, array('cardid' => $cardid, 'userid' => $userid));
     }
 
+    /**
+      * Calcul pour un utilisateur donné si la carte est dûe.
+      * Attention ! Ne vérifie pas si l'utilisateur est éligible/concerné par cette carte.
+      *
+      * @param $card stdclass
+      * @param $userid int|null Si null, le $userid sera calculé en fonction de l'utilisateur courant.
+      *
+      * @return int Statut de paiement défini au niveau de la classe Payment.
+      */
     public static function get_user_card_status($card, $userid = null) {
         global $DB, $USER;
 
@@ -137,6 +162,7 @@ class Payment {
         $enrolcalendars = array();
         foreach ($enrols as $enrol) {
             if (isset($calendars[$enrol->customchar1]) === false) {
+                debugging('Aucun calendrier pour l\'inscription #'.$enrol->id.' (course #'.$enrol->courseid.')');
                 continue;
             }
 
@@ -162,6 +188,13 @@ class Payment {
         return self::FREE;
     }
 
+    /**
+      * Retourne un objet contenant toutes les informations nécessaires pour le formulaire HTML Paybox.
+      *
+      * @param $payment stdclass
+      *
+      * @return stdclass
+      */
     public static function get_paybox_settings($payment) {
         global $CFG, $DB, $USER;
 
@@ -224,6 +257,13 @@ class Payment {
         return $paybox;
     }
 
+    /**
+      * Retourne les cartes requises pour un cours donné.
+      *
+      * @param $courseid int
+      *
+      * @return array
+      */
     public static function get_course_cards($courseid) {
         global $DB;
 
@@ -239,6 +279,13 @@ class Payment {
         return $DB->get_records_sql($sql, array('courseid' => $courseid));
     }
 
+    /**
+      * Retourne pour un cours donné le statut du paiement des utilisateurs inscrits.
+      *
+      * @param $courseid int
+      *
+      * @return array
+      */
     public static function get_users_cards_status_per_course($courseid) {
         global $DB;
 
@@ -282,6 +329,11 @@ class Payment {
         return $users;
     }
 
+    /**
+      * Retourne un tableau des clés de traduction des statuts de paiement, indéxé par le code des statuts de paiement.
+      *
+      * @return array
+      */
     public static function get_statuses_labels() {
         $labels = array();
         $labels[self::DUE] = 'due';
@@ -292,6 +344,11 @@ class Payment {
         return $labels;
     }
 
+    /**
+      * Retourne un tableau d'objets contenant la représentation HTML et le libellé d'un statuts de paiement.
+      *
+      * @return array
+      */
     public static function get_statuses_images() {
         global $OUTPUT;
 
