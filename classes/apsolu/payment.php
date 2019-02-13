@@ -74,6 +74,44 @@ class Payment {
     }
 
     /**
+      * Retourne tous les utilisateurs concernés par une carte donnée.
+      *
+      * @param $cardid int
+      *
+      * @return array
+      */
+    public static function get_card_users($cardid) {
+        global $DB;
+
+        $sql = "SELECT DISTINCT u.*".
+            " FROM {user} u".
+            " JOIN {user_info_data} uid ON u.id = uid.userid".
+            " JOIN {user_info_field} uif ON uif.id = uid.fieldid".
+            " JOIN {user_enrolments} ue ON u.id = ue.userid".
+            " JOIN {enrol} e ON e.id = ue.enrolid".
+            " JOIN {enrol_select_cards} esc ON e.id = esc.enrolid".
+            " JOIN {course} c ON c.id = e.courseid".
+            // Check cohorts.
+            " JOIN {enrol_select_cohorts} ewc ON e.id = ewc.enrolid".
+            " JOIN {cohort_members} cm ON cm.cohortid = ewc.cohortid AND u.id = cm.userid".
+            " JOIN {role_assignments} ra ON ra.userid = ue.userid AND ra.userid = cm.userid AND ra.itemid = e.id".
+            " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50 AND ctx.instanceid = c.id".
+            // Check colleges.
+            // " JOIN {apsolu_colleges} acol ON acol.roleid = ra.roleid".
+            // " JOIN {apsolu_colleges_members} acm ON acol.id = acm.collegeid AND acm.cohortid = cm.cohortid".
+            // Check cards w/ cohorts/roles.
+            " JOIN {apsolu_payments_cards_cohort} apcc ON esc.cardid = apcc.cardid AND apcc.cohortid = cm.cohortid".
+            " JOIN {apsolu_payments_cards_roles} apcr ON esc.cardid = apcr.cardid AND apcr.roleid = ra.roleid".
+            " WHERE e.enrol = 'select'".
+            " AND c.visible = 1". // Cours visible.
+            " AND e.status = 0". // Méthode d'inscription active.
+            " AND ue.status = 0". // Inscription validée.
+            " AND uif.shortname = 'apsolusesame'". // Compte Sésame validé.
+            " AND esc.cardid = :cardid";
+        return $DB->get_records_sql($sql, array('cardid' => $cardid));
+    }
+
+    /**
       * Retourne une instance d'inscription en fonction d'une carte et d'un utilisateur.
       *
       * @param $cardid int

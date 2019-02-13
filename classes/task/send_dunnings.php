@@ -46,7 +46,7 @@ class send_dunnings extends \core\task\scheduled_task {
         }
 
         foreach ($dunnings as $dunning) {
-            mtrace("relance du ".userdate($dunning->timecreated, get_string('strftimedatetime', 'local_apsolu'))." intitulée ".$dunning->subject);
+            mtrace('relance du '.userdate($dunning->timecreated, get_string('strftimedatetime', 'local_apsolu')).' intitulée '.$dunning->subject);
 
             $dunning->timestarted = time();
             $DB->update_record('apsolu_dunnings', $dunning);
@@ -62,30 +62,9 @@ class send_dunnings extends \core\task\scheduled_task {
                 " WHERE adc.dunningid = :dunningid";
             $cards = $DB->get_records_sql($sql, array('dunningid' => $dunning->id));
             foreach ($cards as $card) {
-                $sql = "SELECT DISTINCT u.*".
-                    " FROM {user} u".
-                    " JOIN {user_info_data} uid ON u.id = uid.userid".
-                    " JOIN {user_info_field} uif ON uif.id = uid.fieldid".
-                    " JOIN {user_enrolments} ue ON u.id = ue.userid".
-                    " JOIN {enrol} e ON e.id = ue.enrolid".
-                    " JOIN {enrol_select_cards} esc ON e.id = esc.enrolid".
-                    " JOIN {course} c ON c.id = e.courseid".
-                    // Check cohorts.
-                    " JOIN {enrol_select_cohorts} ewc ON e.id = ewc.enrolid".
-                    " JOIN {cohort_members} cm ON cm.cohortid = ewc.cohortid AND u.id = cm.userid".
-                    " JOIN {role_assignments} ra ON ra.userid = ue.userid AND ra.userid = cm.userid AND ra.itemid = e.id".
-                    " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50 AND ctx.instanceid = c.id".
-                    // Check colleges.
-                    // " JOIN {apsolu_colleges} acol ON acol.roleid = ra.roleid".
-                    // " JOIN {apsolu_colleges_members} acm ON acol.id = acm.collegeid AND acm.cohortid = cm.cohortid".
-                    " WHERE e.enrol = 'select'".
-                    " AND c.visible = 1". // Cours visible.
-                    " AND e.status = 0". // Méthode d'inscription active.
-                    " AND ue.status = 0". // Inscription validée.
-                    " AND uif.shortname = 'apsolusesame'". // Compte Sésame validé.
-                    " AND esc.cardid = :cardid";
-                $users = $DB->get_records_sql($sql, array('cardid' => $card->id));
+                mtrace(' - carte '.$card->fullname);
 
+                $users = Payment::get_card_users($card->id);
                 foreach ($users as $user) {
                     $status = Payment::get_user_card_status($card, $user->id);
                     if ($status === Payment::DUE) {
@@ -94,7 +73,7 @@ class send_dunnings extends \core\task\scheduled_task {
 
                             email_to_user($user, $sender, $dunning->subject, $dunning->messagetext, $dunning->message);
 
-                            mtrace("   - relance envoyée à ".$user->email);
+                            mtrace('   - relance envoyée à '.$user->email.' (#'.$user->id.' '.$user->firstname.' '.$user->lastname.')');
 
                             $post = new stdClass();
                             $post->timecreated = time();
@@ -109,7 +88,7 @@ class send_dunnings extends \core\task\scheduled_task {
             $dunning->timeended = time();
             $DB->update_record('apsolu_dunnings', $dunning);
 
-            mtrace("=> ".count($receivers)." relances envoyées.");
+            mtrace('=> '.count($receivers).' relances envoyées.');
         }
     }
 }
