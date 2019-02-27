@@ -140,5 +140,8 @@ $services = array(
             ),
         'restrictedusers' => 1,
         'enabled' => 0,
+        'shortname' => 'apsolu',
+        'downloadfiles' => 0,
+        'uploadfiles' => 0,
     ),
 );
