@@ -33,11 +33,11 @@ class edit_enrolment_form extends moodleform {
     function definition() {
         $mform = $this->_form;
 
-        list($data, $lists, $roles) = $this->_customdata;
+        list($data, $statuses, $roles) = $this->_customdata;
 
-        // Lists.
-        $mform->addElement('select', 'listid', get_string('list', 'enrol_select'), $lists);
-        $mform->setType('listid', PARAM_INT);
+        // Statuses.
+        $mform->addElement('select', 'statusid', get_string('list', 'enrol_select'), $statuses);
+        $mform->setType('statusid', PARAM_INT);
 
         // Roles.
         $mform->addElement('select', 'roleid', get_string('role'), $roles);
@@ -51,13 +51,9 @@ class edit_enrolment_form extends moodleform {
         $mform->addElement('hidden', 'courseid', null);
         $mform->setType('courseid', PARAM_INT);
 
-        // UEid.
-        $mform->addElement('hidden', 'ueid', null);
-        $mform->setType('ueid', PARAM_INT);
-
-        // RAid.
-        $mform->addElement('hidden', 'raid', null);
-        $mform->setType('raid', PARAM_INT);
+        // Enrolid.
+        $mform->addElement('hidden', 'enrolid', null);
+        $mform->setType('enrolid', PARAM_INT);
 
         // Submit buttons.
         $attributes = array('class' => 'btn btn-primary');

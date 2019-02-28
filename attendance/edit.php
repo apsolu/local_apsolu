@@ -447,7 +447,7 @@ foreach ($students as $student) {
     }
 
     if (isset($student->enrolid) === true) {
-        $enrolment_link = '<a class="btn btn-default apsolu-attendance-edit-enrolments" data-userid="'.$student->id.'" data-courseid="'.$courseid.'" data-ueid="'.$student->ueid.'" data-listid="'.$student->status.'" data-raid="'.$student->raid.'" data-roleid="'.$student->roleid.'" href="'.$CFG->wwwroot.'/enrol/'.$student->enrol.'/manage.php?enrolid='.$student->enrolid.'">'.get_string('attendance_edit_enrolment', 'local_apsolu').'</a>';
+        $enrolment_link = '<a class="btn btn-default apsolu-attendance-edit-enrolments" data-userid="'.$student->id.'" data-courseid="'.$courseid.'" data-enrolid="'.$student->enrolid.'" data-statusid="'.$student->status.'" data-roleid="'.$student->roleid.'" href="'.$CFG->wwwroot.'/enrol/'.$student->enrol.'/manage.php?enrolid='.$student->enrolid.'">'.get_string('attendance_edit_enrolment', 'local_apsolu').'</a>';
     } else {
         $enrolment_link = get_string('attendance_ontime_enrolment', 'local_apsolu');
     }
@@ -463,12 +463,12 @@ foreach ($students as $student) {
         '<td><textarea name="comment['.$student->id.']">'.htmlentities($presences[$student->id]->description, ENT_COMPAT, 'UTF-8').'</textarea></td>'.
         '<td>'.$course_presences[$student->id]->total.'</td>'.
         '<td>'.$activity_presences[$student->id]->total.'</td>'.
-        '<td class="apsolu-attendance-role" data-raid="'.$student->raid.'">'.$rolename.'</td>';
+        '<td class="apsolu-attendance-role" data-userid="'.$student->id.'">'.$rolename.'</td>';
 
     if ($student->status === null) {
         echo '<td'.$lists_style.'>-</td>';
     } else {
-        echo '<td class="apsolu-attendance-status" data-ueid="'.$student->ueid.'"'.$lists_style.'>'.enrol_select_plugin::get_enrolment_list_name($student->status, 'short').'</td>';
+        echo '<td class="apsolu-attendance-status" data-userid="'.$student->id.'"'.$lists_style.'>'.enrol_select_plugin::get_enrolment_list_name($student->status, 'short').'</td>';
     }
 
     echo '<td class="'.$informations_style.'">'.implode('<br />', $informations).'</td>'.

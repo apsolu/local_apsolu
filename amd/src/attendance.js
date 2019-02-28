@@ -42,10 +42,9 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
                 data = new Object();
                 data.userid = $(this).data('userid');
                 data.courseid = $(this).data('courseid');
-                data.listid = $(this).data('listid');
-                data.ueid = $(this).data('ueid');
+                data.enrolid = $(this).data('enrolid');
+                data.statusid = $(this).data('statusid');
                 data.roleid = $(this).data('roleid');
-                data.raid = $(this).data('raid');
 
                 // Build form.
                 $.ajax({
@@ -73,6 +72,12 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
                 $('#apsolu-attendance-ajax-edit-enrolment form').submit(function(event) {
                     event.preventDefault();
 
+                    // Supprime le précédent popup afin de donner un indice visuel en cas de renvoi du formulaire.
+                    var popup = document.querySelector("#apsolu-attendance-popup .alert");
+                    if (popup !== null) {
+                        popup.remove();
+                    }
+
                     $.ajax({
                         url: M.cfg.wwwroot+"/local/apsolu/attendance/ajax/edit_enrolment.php",
                         type: 'POST',
@@ -82,16 +87,20 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
                     .done(function(result){
                         $('#apsolu-attendance-popup').html(result.form);
 
-                        var list = $('.apsolu-attendance-status[data-ueid='+result.ueid+']');
-                        if (list.length == 1) {
-                            list.html(result.list);
-                            $('.apsolu-attendance-edit-enrolments[data-ueid='+result.ueid+']').data('listid', result.listid);
+                        // Mets à jour la colonne "Liste d'inscription".
+                        var status = $('.apsolu-attendance-status[data-userid='+result.userid+']');
+                        if (status.length == 1) {
+                            status.html(result.status);
+                            $('.apsolu-attendance-edit-enrolments[data-userid='+result.userid+']').data('statusid', result.statusid);
                         }
 
-                        var role = $('.apsolu-attendance-role[data-raid='+result.raid+']');
+                        // Mets à jour la colonne "Type d'inscription".
+                        var role = $('.apsolu-attendance-role[data-userid='+result.userid+']');
+                            console.log(result.role);
                         if (role.length == 1) {
+                            console.log(result.role);
                             role.html(result.role);
-                            $('.apsolu-attendance-edit-enrolments[data-raid='+result.raid+']').data('roleid', result.roleid);
+                            $('.apsolu-attendance-edit-enrolments[data-userid='+result.userid+']').data('roleid', result.roleid);
                         }
 
                         apsolu_attendance_handle_edit_enrolments_form();

@@ -27,12 +27,11 @@ require_once(__DIR__.'/../../../../config.php');
 require($CFG->dirroot.'/enrol/select/lib.php');
 require(__DIR__.'/edit_enrolment_form.php');
 
-$userid = required_param('userid', PARAM_INT); // Course id.
+$userid = required_param('userid', PARAM_INT); // User id.
 $courseid = required_param('courseid', PARAM_INT); // Course id.
-$listid = required_param('listid', PARAM_INT); // List id (user enrolment status).
-$ueid = required_param('ueid', PARAM_INT); // User enrolement id.
+$enrolid = required_param('enrolid', PARAM_INT); // Enrol id.
+$statusid = required_param('statusid', PARAM_INT); // Status id (user enrolment status).
 $roleid = required_param('roleid', PARAM_INT); // Role id.
-$raid = required_param('raid', PARAM_INT); // Role assignment id.
 
 // Set permissions.
 require_login();
@@ -43,10 +42,10 @@ $context = context_course::instance($courseid);
 
 $PAGE->set_context($context);
 
-$data = (object) ['userid' => $userid, 'courseid' => $courseid, 'listid' => $listid, 'ueid' => $ueid, 'roleid' => $roleid, 'raid' => $raid];
-$lists = array();
+$data = (object) ['userid' => $userid, 'courseid' => $courseid, 'enrolid' => $enrolid, 'statusid' => $statusid, 'roleid' => $roleid];
+$statuses = array();
 foreach (enrol_select_plugin::$states as $stateid => $state) {
-    $lists[$stateid] = enrol_select_plugin::get_enrolment_list_name($stateid);
+    $statuses[$stateid] = enrol_select_plugin::get_enrolment_list_name($stateid);
 }
 
 $roles = array();
@@ -58,7 +57,7 @@ $json = new stdClass();
 
 // Initialize form.
 $url = new moodle_url('/local/apsolu/attendance/ajax/edit_enrolment.php');
-$params = array($data, $lists, $roles);
+$params = array($data, $statuses, $roles);
 
 $mform = new edit_enrolment_form($url, $params);
 
@@ -67,18 +66,16 @@ if ($data = $mform->get_data()) {
     try {
         $transaction = $DB->start_delegated_transaction();
 
-        $sql = "UPDATE {user_enrolments} SET status = :status WHERE id = :id AND userid = :userid";
-        $DB->execute($sql, array('status' => $data->listid, 'id' => $data->ueid, 'userid' => $userid));
+        $instance = $DB->get_record('enrol', array('id' => $enrolid, 'enrol' => 'select'), '*', MUST_EXIST);
 
-        $sql = "UPDATE {role_assignments} SET roleid = :roleid WHERE id = :id AND userid = :userid";
-        $DB->execute($sql, array('roleid' => $data->roleid, 'id' => $data->raid, 'userid' => $userid));
+        $enrolselectplugin = new enrol_select_plugin();
+        $enrolselectplugin->enrol_user($instance, $student->id, $data->roleid, $timestart = 0, $timeend = 0, $status = $data->statusid, $recovergrades = null);
 
-        $json->list = $lists[$data->listid];
-        $json->listid = $data->listid;
-        $json->ueid = $data->ueid;
+        $json->status = $statuses[$data->statusid];
+        $json->statusid = $data->statusid;
         $json->role = $roles[$data->roleid];
         $json->roleid = $data->roleid;
-        $json->raid = $data->raid;
+        $json->userid = $student->id;
 
         $notification = get_string('changessaved');
 
