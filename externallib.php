@@ -52,7 +52,7 @@ function local_apsolu_write_log($method, $arguments) {
             // Place systématiquement en début de tableau le token utilisé.
             array_unshift($arguments, 'token='.optional_param('wstoken', '', PARAM_ALPHANUM));
 
-            file_put_contents($CFG->apsolu_enable_ws_logging, strftime('%c').' '.$method.' '.implode(', ', $arguments).PHP_EOL, FILE_APPEND);
+            file_put_contents($CFG->apsolu_enable_ws_logging, strftime('%c').' '.$method.' '.implode(', ', $arguments).PHP_EOL, FILE_APPEND | LOCK_EX);
         }
     }
 }
@@ -872,7 +872,9 @@ class local_apsolu_webservices extends external_api {
     public static function debugging($serial, $idteacher, $message, $timestamp) {
         global $CFG, $DB;
 
-        local_apsolu_write_log(__METHOD__, ['serial='.$serial, 'idteacher='.$idteacher, 'message='.$message, 'timestamp='.$timestamp]);
+        if (isset($CFG->apsolu_enable_ws_debugging) === false) {
+            return array('success' => false);
+        }
 
         // Vérifier que le token appartienne à un enseignant du SIUAPS.
         if (local_apsolu_is_valid_token() === false) {
@@ -881,13 +883,9 @@ class local_apsolu_webservices extends external_api {
             return array('success' => false);
         }
 
-        if (isset($CFG->apsolu_enable_ws_debugging) === true) {
-            file_put_contents($CFG->apsolu_enable_ws_debugging, strftime('%c').' '.__METHOD__.' '.$message.PHP_EOL, FILE_APPEND);
+        local_apsolu_write_log(__METHOD__, ['serial='.$serial, 'idteacher='.$idteacher, 'message='.$message, 'timestamp='.$timestamp]);
 
-            return array('success' => true);
-        }
-
-        return array('success' => false);
+        return array('success' => true);
     }
 
     /**
