@@ -44,4 +44,14 @@ $tasks = array(
         'dayofweek' => '*',
         'month' => '*'
     ),
+    array(
+        // Tâche exécutée toutes les heures.
+        'classname' => 'local_apsolu\task\grant_ws_access',
+        'blocking' => 0,
+        'minute' => '0',
+        'hour' => '*',
+        'day' => '*',
+        'dayofweek' => '*',
+        'month' => '*'
+    ),
 );

@@ -55,6 +55,86 @@ function local_apsolu_write_log($method, $arguments) {
     }
 }
 
+/*
+ * Fonction qui génère ou retire les tokens d'accès aux webservices Apsolu pour les utilisateurs ayant un rôle enseignant au SIUAPS.
+ *
+ * @return void
+ */
+function local_apsolu_grant_ws_access() {
+    global $CFG, $DB;
+
+    require_once($CFG->libdir . '/externallib.php');
+    require_once($CFG->dirroot . '/webservice/lib.php');
+
+    $service = $DB->get_record('external_services', array('shortname' => 'apsolu'));
+    if ($service === false) {
+        mtrace('Le webservice apsolu n\'existe pas.');
+        return;
+    }
+
+    $webservicemanager = new \webservice();
+
+    $tokens = $DB->get_records('external_tokens', array('externalserviceid' => $service->id), $sort = '', $fields = 'userid, id');
+
+    // Ajoute les tokens.
+    $sql = "SELECT DISTINCT u.id, u.firstname, u.lastname".
+        " FROM {user} u".
+        " JOIN {role_assignments} ra ON u.id = ra.userid".
+        " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50".
+        " JOIN {apsolu_courses} ac ON ac.id = ctx.instanceid".
+        " JOIN {course} c ON c.id = ac.id AND c.visible = 1".
+        " WHERE ra.roleid = 3"; // Teacher.
+    $users = $DB->get_records_sql($sql);
+    foreach ($users as $user) {
+        if (isset($tokens[$user->id]) === true) {
+            continue;
+        }
+
+        $serviceuser = new \stdClass();
+        $serviceuser->externalserviceid = $service->id;
+        $serviceuser->userid = $user->id;
+        $webservicemanager->add_ws_authorised_user($serviceuser);
+
+        $params = array(
+            'objectid' => $serviceuser->externalserviceid,
+            'relateduserid' => $serviceuser->userid
+            );
+        $event = \core\event\webservice_service_user_added::create($params);
+        $event->trigger();
+
+        external_generate_token(EXTERNAL_TOKEN_PERMANENT, $service->id, $user->id, \context_system::instance(), $validuntil = 0, $iprestriction = '');
+
+        mtrace('-> Token créé pour l\'utilisateur #'.$user->id.' '.$user->firstname.' '.$user->lastname);
+    }
+
+    // Supprime les tokens.
+    foreach ($tokens as $token) {
+        if (isset($users[$token->userid]) === true) {
+            continue;
+        }
+
+        $user = $DB->get_record('user', array('id' => $token->userid));
+
+        if ($user === false) {
+            mtrace('Token supprimé pour l\'utilisateur #'.$token->userid.' (non trouvable dans la table user)');
+            continue;
+        }
+
+        $webservicemanager->delete_user_ws_token($token->id);
+
+        $webservicemanager->remove_ws_authorised_user($user, $service->id);
+
+        $params = array(
+            'objectid' => $service->id,
+            'relateduserid' => $user->id,
+        );
+        $event = \core\event\webservice_service_user_removed::create($params);
+        $event->trigger();
+
+        mtrace('-> Token supprimé pour l\'utilisateur #'.$user->id.' '.$user->firstname.' '.$user->lastname);
+    }
+}
+
 class local_apsolu_webservices extends external_api {
     /**
      * Returns users list.

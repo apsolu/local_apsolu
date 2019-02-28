@@ -604,6 +604,7 @@ $string['set_high_level_athletes'] = 'Moulinette pour les sportifs de haut-nivea
 $string['task_set_high_level_athletes'] = 'Tâche pour traiter les sportifs de haut-niveau';
 $string['task_run_mailqueue'] = 'Tâche pour envoyer les notifications';
 $string['task_send_dunnings'] = 'Tâche pour envoyer les relances de paiements';
+$string['task_grant_ws_access'] = 'Tâche pour attribuer des droits d\'accès aux webservices APSOLU';
 
 // Webservices.
 $string['ws_local_apsolu_get_users_description'] = 'Retourne tous les utilisateurs';

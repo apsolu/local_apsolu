@@ -15,25 +15,28 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Tasks to grant access to webservice.
  *
- * @package    local_apsolu
- * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @package    local
+ * @subpackage apsolu
+ * @copyright  2019 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_apsolu\task;
 
-// The current plugin version (Date: YYYYMMDDXX).
-$plugin->version   = 2019022801;
+class grant_ws_access extends \core\task\scheduled_task {
+    public function get_name() {
+        // Shown in admin screens.
+        return get_string('task_grant_ws_access', 'local_apsolu');
+    }
 
-// Requires this Moodle version.
-$plugin->requires  = 2012112900;
+    public function execute() {
+        global $CFG;
 
-// Full name of the plugin (used for diagnostics).
-$plugin->component = 'local_apsolu';
+        require_once($CFG->dirroot.'/local/apsolu/externallib.php');
 
-// Dependencies on another plugin.
-$plugin->dependencies = array(
-    'enrol_select' => '2016011220',
-);
+        // Crée des accès aux webservices pour les enseignants du SIUAPS.
+        local_apsolu_grant_ws_access();
+    }
+}
