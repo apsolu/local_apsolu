@@ -34,11 +34,13 @@ $statusid = required_param('statusid', PARAM_INT); // Status id (user enrolment 
 $roleid = required_param('roleid', PARAM_INT); // Role id.
 
 // Set permissions.
-require_login();
+$course = get_course($courseid);
+require_login($course);
 
 $student = $DB->get_record('user', array('id' => $userid), '*', MUST_EXIST);
 
 $context = context_course::instance($courseid);
+require_capability('moodle/course:update', $context);
 
 $PAGE->set_context($context);
 
