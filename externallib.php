@@ -20,6 +20,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use UniversiteRennes2\Apsolu\Payment;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir.'/externallib.php');
@@ -371,6 +373,9 @@ class local_apsolu_webservices extends external_api {
             return $data;
         }
 
+        require_once(__DIR__.'/classes/apsolu/payment.php');
+
+        $courses = array();
         $fields = $DB->get_records('user_info_field', $conditions = array(), $sort = '', $fields = 'shortname, id');
 
         $sql = "SELECT ra.id AS idregistration, ra.userid, ctx.instanceid AS idcourse, COUNT(aap.id) AS nbpresence, ra.roleid, ra.itemid AS enrolid, uid1.data AS sesame".
@@ -382,29 +387,42 @@ class local_apsolu_webservices extends external_api {
             " JOIN {apsolu_attendance_sessions} aas ON ctx.instanceid = aas.courseid".
             " JOIN {apsolu_attendance_presences} aap ON aas.id = aap.sessionid AND ra.userid = aap.studentid AND aap.statusid IN (1, 2)". // Present + late.
             " LEFT JOIN {user_info_data} uid1 ON ra.userid = uid1.userid AND uid1.fieldid = :apsolusesame". // Compte Sésame validé.
+            " LEFT JOIN {apsolu_payments} ap ON ra.userid = ap.userid". // Nouveau paiement.
             " WHERE ra.component = 'enrol_select'".
             " AND ue.timeend >= :now".
-            " AND ue.timemodified >= :timemodified".
+            " AND (ue.timemodified >= :timemodified1 OR ra.timemodified >= :timemodified2 OR (ap.timepaid IS NOT NULL AND ap.timepaid >= :timemodified3))".
             " GROUP BY ra.id, ra.userid, ctx.instanceid";
 
-        foreach ($DB->get_records_sql($sql, array('apsolusesame' => $fields['apsolusesame']->id, 'now' => time(), 'timemodified' => $since)) as $record) {
-            // Calcul la validité de l'inscription.
-            $sql = "SELECT DISTINCT ac.id".
-                " FROM {apsolu_colleges} ac".
-                " JOIN {apsolu_colleges_members} acm ON ac.id = acm.collegeid".
-                " JOIN {cohort_members} cm ON cm.cohortid = acm.cohortid".
-                " JOIN {enrol_select_cohorts} esc ON cm.cohortid = esc.cohortid".
-                " WHERE cm.userid = :userid".
-                " AND ac.roleid = :roleid".
-                " AND esc.enrolid = :enrolid";
-            $colleges = $DB->get_records_sql($sql, array('userid' => $record->userid, 'roleid' => $record->roleid, 'enrolid' => $record->enrolid));
+        $params = array();
+        $params['apsolusesame'] = $fields['apsolusesame']->id;
+        $params['now'] = time();
+        $params['timemodified1'] = $since;
+        $params['timemodified2'] = $since;
+        $params['timemodified3'] = strftime('%FT%T', $since);
+
+        foreach ($DB->get_records_sql($sql, $params) as $record) {
+            if (isset($courses[$record->idcourse]) === false) {
+                $courses[$record->idcourse] = Payment::get_users_cards_status_per_course($record->idcourse);
+            }
 
             $registration = new stdClass();
             $registration->idregistration = $record->idregistration;
             $registration->iduser = $record->userid;
             $registration->idcourse = $record->idcourse;
             $registration->nbpresence = $record->nbpresence;
-            $registration->validity = (count($colleges) > 0 && $record->sesame === '1');
+            if (isset($courses[$record->idcourse][$record->userid]) === true) {
+                $registration->validity = true;
+                $registration->sportcard = null;
+                foreach ($courses[$record->idcourse][$record->userid] as $card) {
+                    if ($registration->sportcard === null || $card->status < $registration->sportcard) {
+                        $registration->sportcard = $card->status;
+                    }
+                }
+            } else {
+                $registration->validity = false;
+                $registration->sportcard = Payment::FREE;
+            }
+            $registration->evaluation = $record->roleid;
 
             $data[] = $registration;
         }
@@ -437,6 +455,8 @@ class local_apsolu_webservices extends external_api {
                     'idcourse' => new external_value(PARAM_INT, get_string('ws_value_idcourse', 'local_apsolu')),
                     'nbpresence' => new external_value(PARAM_INT, get_string('ws_value_nbpresence', 'local_apsolu')),
                     'validity' => new external_value(PARAM_BOOL, get_string('ws_value_validity', 'local_apsolu')),
+                    'sportcard' => new external_value(PARAM_INT, get_string('ws_value_sportcard', 'local_apsolu')),
+                    'evaluation' => new external_value(PARAM_INT, get_string('ws_value_evaluation', 'local_apsolu')),
                 )
             )
         );
