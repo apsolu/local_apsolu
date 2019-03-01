@@ -20,6 +20,7 @@
  */
 
 use UniversiteRennes2\Apsolu\Payment;
+use local_apsolu\core\attendance as Attendance;
 
 require_once(__DIR__.'/../../../config.php');
 require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
@@ -272,21 +273,8 @@ $mform = new edit_form($url, $args);
 $mform->display();
 */
 
-$sql = "SELECT aap.studentid, COUNT(*) AS total".
-    " FROM {apsolu_attendance_presences} aap".
-    " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid".
-    " WHERE aas.courseid = :courseid".
-    " AND aap.statusid != 4". // Exclus les absences.
-    " GROUP BY studentid";
-$course_presences = $DB->get_records_sql($sql, array('courseid' => $courseid));
-
-$sql = "SELECT aap.studentid, COUNT(*) AS total".
-    " FROM {apsolu_attendance_presences} aap".
-    " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid".
-    " WHERE aas.activityid = :categoryid".
-    " AND aap.statusid != 4". // Exclus les absences.
-    " GROUP BY aap.studentid";
-$activity_presences = $DB->get_records_sql($sql, array('categoryid' => $course->category));
+$course_presences = Attendance::get_course_presences($courseid);
+$activity_presences = Attendance::get_activity_presences($course->category);
 
 $presences = $DB->get_records('apsolu_attendance_presences', array('sessionid' => $sessionid), $sort='', $fields='studentid, statusid, description, id');
 
@@ -409,14 +397,12 @@ foreach ($students as $student) {
         $presences[$student->id]->description = '';
     }
 
-    if (isset($course_presences[$student->id]->total) === false) {
-        $course_presences[$student->id] = new stdClass();
-        $course_presences[$student->id]->total = 0;
+    if (isset($course_presences[$student->id]) === false) {
+        $course_presences[$student->id] = array('Présences: 0');
     }
 
-    if (isset($activity_presences[$student->id]->total) === false) {
-        $activity_presences[$student->id] = new stdClass();
-        $activity_presences[$student->id]->total = 0;
+    if (isset($activity_presences[$student->id]) === false) {
+        $activity_presences[$student->id] = array('Présences: 0');
     }
 
     // Information.
@@ -461,8 +447,8 @@ foreach ($students as $student) {
         '<td>'.$student->firstname.'</td>'.
         '<td'.$status_style.'>'.$radios.'</td>'.
         '<td><textarea name="comment['.$student->id.']">'.htmlentities($presences[$student->id]->description, ENT_COMPAT, 'UTF-8').'</textarea></td>'.
-        '<td>'.$course_presences[$student->id]->total.'</td>'.
-        '<td>'.$activity_presences[$student->id]->total.'</td>'.
+        '<td><ul><li>'.implode('</li><li>', $course_presences[$student->id]).'</li></ul></td>'.
+        '<td><ul><li>'.implode('</li><li>', $activity_presences[$student->id]).'</li></ul></td>'.
         '<td class="apsolu-attendance-role" data-userid="'.$student->id.'">'.$rolename.'</td>';
 
     if ($student->status === null) {
