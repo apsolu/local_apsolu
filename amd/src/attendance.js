@@ -96,9 +96,7 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
 
                         // Mets à jour la colonne "Type d'inscription".
                         var role = $('.apsolu-attendance-role[data-userid='+result.userid+']');
-                            console.log(result.role);
                         if (role.length == 1) {
-                            console.log(result.role);
                             role.html(result.role);
                             $('.apsolu-attendance-edit-enrolments[data-userid='+result.userid+']').data('roleid', result.roleid);
                         }
