@@ -32,7 +32,7 @@ class attendance {
      *
      * @return array[userid][] = 'Sem. 1 : 4'.
      */
-    public static function get_activity_presences($categoryid) {
+    public static function getActivityPresences($categoryid) {
         global $DB;
 
         $sql = "SELECT aap.studentid, act.name, COUNT(*) AS total".
@@ -64,7 +64,7 @@ class attendance {
      *
      * @return array[userid][] = 'Sem. 1 : 4'.
      */
-    public static function get_course_presences($courseid) {
+    public static function getCoursePresences($courseid) {
         global $DB;
 
         $sql = "SELECT aap.studentid, act.name, COUNT(*) AS total".
@@ -96,7 +96,7 @@ class attendance {
      *
      * @return array[enrolid] = (object) ['id' => enrolid, 'total' => total de présences].
      */
-    public static function get_user_presences($userid) {
+    public static function getUserPresences($userid) {
         global $DB;
 
         $sql = "SELECT e.id, COUNT(*) AS total".

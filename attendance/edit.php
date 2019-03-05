@@ -273,8 +273,8 @@ $mform = new edit_form($url, $args);
 $mform->display();
 */
 
-$course_presences = Attendance::get_course_presences($courseid);
-$activity_presences = Attendance::get_activity_presences($course->category);
+$course_presences = Attendance::getCoursePresences($courseid);
+$activity_presences = Attendance::getActivityPresences($course->category);
 
 $presences = $DB->get_records('apsolu_attendance_presences', array('sessionid' => $sessionid), $sort='', $fields='studentid, statusid, description, id');
 

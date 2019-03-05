@@ -22,9 +22,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace UniversiteRennes2\Apsolu;
+namespace local_apsolu\core;
 
-class CustomFields {
+class customfields {
     public static function getCustomFields() {
         global $DB;
 
