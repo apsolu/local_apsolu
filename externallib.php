@@ -385,9 +385,9 @@ class local_apsolu_webservices extends external_api {
             " JOIN {context} ctx ON ctx.id = ra.contextid".
             " JOIN {apsolu_courses} c ON ctx.instanceid = c.id".
             " JOIN {apsolu_attendance_sessions} aas ON ctx.instanceid = aas.courseid".
-            " JOIN {apsolu_attendance_presences} aap ON aas.id = aap.sessionid AND ra.userid = aap.studentid AND aap.statusid IN (1, 2)". // Present + late.
+            " LEFT JOIN {apsolu_attendance_presences} aap ON aas.id = aap.sessionid AND ra.userid = aap.studentid AND aap.statusid IN (1, 2)". // Present + late.
             " LEFT JOIN {user_info_data} uid1 ON ra.userid = uid1.userid AND uid1.fieldid = :apsolusesame". // Compte Sésame validé.
-            " LEFT JOIN {apsolu_payments} ap ON ra.userid = ap.userid". // Nouveau paiement.
+            " LEFT JOIN {apsolu_payments} ap ON ra.userid = ap.userid AND ap.paymentcenterid = c.paymentcenterid". // Nouveau paiement.
             " WHERE ra.component = 'enrol_select'".
             " AND ue.timeend >= :now".
             " AND (ue.timemodified >= :timemodified1 OR ra.timemodified >= :timemodified2 OR (ap.timepaid IS NOT NULL AND ap.timepaid >= :timemodified3))".
