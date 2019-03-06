@@ -382,14 +382,18 @@ class local_apsolu_webservices extends external_api {
             " FROM {role_assignments} ra".
             " JOIN {role} r ON r.id = ra.roleid AND r.archetype = 'student'".
             " JOIN {user_enrolments} ue ON ra.userid = ue.userid AND ra.itemid = ue.enrolid AND ue.status = 0".
+            " JOIN {enrol} e ON e.id = ue.enrolid AND e.id = ra.itemid".
             " JOIN {context} ctx ON ctx.id = ra.contextid".
             " JOIN {apsolu_courses} c ON ctx.instanceid = c.id".
             " JOIN {apsolu_attendance_sessions} aas ON ctx.instanceid = aas.courseid".
             " LEFT JOIN {apsolu_attendance_presences} aap ON aas.id = aap.sessionid AND ra.userid = aap.studentid AND aap.statusid IN (1, 2)". // Present + late.
             " LEFT JOIN {user_info_data} uid1 ON ra.userid = uid1.userid AND uid1.fieldid = :apsolusesame". // Compte Sésame validé.
-            " LEFT JOIN {apsolu_payments} ap ON ra.userid = ap.userid AND ap.paymentcenterid = c.paymentcenterid". // Nouveau paiement.
+            " LEFT JOIN {apsolu_payments} ap ON ra.userid = ap.userid AND ap.paymentcenterid = c.paymentcenterid AND ap.timepaid IS NOT NULL".  // Nouveau paiement.
+            " LEFT JOIN {apsolu_payments_items} api ON ap.id = api.paymentid".
+            " LEFT JOIN {enrol_select_cards} esc ON api.cardid = esc.cardid AND e.id = esc.enrolid". // Vérifie que la carte payée correspond au cours.
             " WHERE ra.component = 'enrol_select'".
-            " AND ue.timeend >= :now".
+            " AND ue.timeend >= :now". // Limite les méthodes d'inscription en cours.
+            " AND aas.sessiontime BETWEEN e.customint7 AND e.customint8".
             " AND (ue.timemodified >= :timemodified1 OR ra.timemodified >= :timemodified2 OR (ap.timepaid IS NOT NULL AND ap.timepaid >= :timemodified3))".
             " GROUP BY ra.id, ra.userid, ctx.instanceid";
 
