@@ -378,6 +378,22 @@ class local_apsolu_webservices extends external_api {
         $courses = array();
         $fields = $DB->get_records('user_info_field', $conditions = array(), $sort = '', $fields = 'shortname, id');
 
+        $params = array();
+        $params['apsolusesame'] = $fields['apsolusesame']->id;
+        $params['now'] = time();
+        $params['timemodified1'] = $since;
+        $params['timemodified2'] = $since;
+
+        if (empty($since) !== true) {
+            $timeconditions = " AND (ue.timemodified >= :timemodified1 OR ra.timemodified >= :timemodified2)";
+        } else {
+            // Détecte tous les nouveaux paiements.
+            // Note: retourne potentiellement trop d'enregistrements.
+            // Exemple: une personne inscrite à un cours, et qui aurait payé sa carte de musculation ou sa FFSU sortirait dans les résultats.
+            $timeconditions = " AND (ue.timemodified >= :timemodified1 OR ra.timemodified >= :timemodified2 OR ue.userid IN (SELECT ap.userid FROM {apsolu_payments} ap WHERE ap.timepaid >= :timemodified3))";
+            $params['timemodified3'] = strftime('%FT%T', $since);
+        }
+
         $sql = "SELECT ra.id AS idregistration, ra.userid, ctx.instanceid AS idcourse, COUNT(aap.id) AS nbpresence, ra.roleid, ra.itemid AS enrolid, uid1.data AS sesame".
             " FROM {role_assignments} ra".
             " JOIN {role} r ON r.id = ra.roleid AND r.archetype = 'student'".
@@ -388,21 +404,11 @@ class local_apsolu_webservices extends external_api {
             " JOIN {apsolu_attendance_sessions} aas ON ctx.instanceid = aas.courseid".
             " LEFT JOIN {apsolu_attendance_presences} aap ON aas.id = aap.sessionid AND ra.userid = aap.studentid AND aap.statusid IN (1, 2)". // Present + late.
             " LEFT JOIN {user_info_data} uid1 ON ra.userid = uid1.userid AND uid1.fieldid = :apsolusesame". // Compte Sésame validé.
-            " LEFT JOIN {apsolu_payments} ap ON ra.userid = ap.userid AND ap.paymentcenterid = c.paymentcenterid AND ap.timepaid IS NOT NULL".  // Nouveau paiement.
-            " LEFT JOIN {apsolu_payments_items} api ON ap.id = api.paymentid".
-            " LEFT JOIN {enrol_select_cards} esc ON api.cardid = esc.cardid AND e.id = esc.enrolid". // Vérifie que la carte payée correspond au cours.
             " WHERE ra.component = 'enrol_select'".
             " AND ue.timeend >= :now". // Limite les méthodes d'inscription en cours.
             " AND aas.sessiontime BETWEEN e.customint7 AND e.customint8".
-            " AND (ue.timemodified >= :timemodified1 OR ra.timemodified >= :timemodified2 OR (ap.timepaid IS NOT NULL AND ap.timepaid >= :timemodified3))".
+            $timeconditions.
             " GROUP BY ra.id, ra.userid, ctx.instanceid";
-
-        $params = array();
-        $params['apsolusesame'] = $fields['apsolusesame']->id;
-        $params['now'] = time();
-        $params['timemodified1'] = $since;
-        $params['timemodified2'] = $since;
-        $params['timemodified3'] = strftime('%FT%T', $since);
 
         foreach ($DB->get_records_sql($sql, $params) as $record) {
             if (isset($courses[$record->idcourse]) === false) {
