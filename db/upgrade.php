@@ -543,5 +543,35 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 2019030700;
+    if ($result && $oldversion < $version) {
+        // Corrige tous les indexes manquants en base de données.
+        $tables = array();
+        $tables['apsolu_areas'] = array('cityid');
+        $tables['apsolu_attendance_presences'] = array('studentid', 'teacherid', 'statusid', 'sessionid');
+        $tables['apsolu_attendance_sessions'] = array('courseid', 'locationid', 'activityid');
+        $tables['apsolu_calendars'] = array('typeid');
+        $tables['apsolu_colleges'] = array('roleid');
+        $tables['apsolu_dunnings'] = array('userid');
+        $tables['apsolu_dunnings_cards'] = array('dunningid', 'cardid');
+        $tables['apsolu_dunnings_posts'] = array('dunningid', 'userid');
+        $tables['apsolu_grades'] = array('courseid', 'userid', 'teacherid');
+        $tables['apsolu_grades_history'] = array('gradeid', 'teacherid');
+        $tables['apsolu_payments_cards'] = array('centerid');
+        $tables['apsolu_payments_items'] = array('paymentid', 'cardid');
+        $tables['apsolu_skills_descriptions'] = array('activityid', 'skillid');
+
+        foreach ($tables as $tablename => $indexes) {
+            $table = new xmldb_table($tablename);
+            foreach ($indexes as $indexname) {
+                $index = new xmldb_index($indexname, XMLDB_INDEX_NOTUNIQUE, array($indexname));
+
+                if ($dbman->index_exists($table, $index) === false) {
+                    $dbman->add_index($table, $index);
+                }
+            }
+        }
+    }
+
     return $result;
 }

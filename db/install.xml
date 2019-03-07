@@ -40,6 +40,10 @@
         </KEYS>
         <INDEXES>
             <INDEX NAME="unique_presence" UNIQUE="true" FIELDS="studentid,sessionid" />
+            <INDEX NAME="studentid" UNIQUE="false" FIELDS="studentid" />
+            <INDEX NAME="teacherid" UNIQUE="false" FIELDS="teacherid" />
+            <INDEX NAME="statusid" UNIQUE="false" FIELDS="statusid" />
+            <INDEX NAME="sessionid" UNIQUE="false" FIELDS="sessionid" />
         </INDEXES>
     </TABLE>
 
@@ -308,6 +312,11 @@
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_grades" />
         </KEYS>
+        <INDEXES>
+            <INDEX NAME="courseid" UNIQUE="false" FIELDS="courseid"/>
+            <INDEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
+            <INDEX NAME="teacherid" UNIQUE="false" FIELDS="teacherid"/>
+        </INDEXES>
     </TABLE>
 
 	<!-- GRADES HISTORY -->
@@ -325,6 +334,10 @@
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_grades_history" />
         </KEYS>
+        <INDEXES>
+            <INDEX NAME="gradeid" UNIQUE="false" FIELDS="gradeid"/>
+            <INDEX NAME="teacherid" UNIQUE="false" FIELDS="teacherid"/>
+        </INDEXES>
     </TABLE>
 
     <!-- SKILLS DESCRIPTIONS -->
@@ -446,6 +459,7 @@
         </KEYS>
         <INDEXES>
             <INDEX NAME="timestarted" UNIQUE="false" FIELDS="timestarted" />
+            <INDEX NAME="userid" UNIQUE="false" FIELDS="userid" />
         </INDEXES>
     </TABLE>
 
@@ -460,6 +474,10 @@
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_dunnings_posts" />
         </KEYS>
+        <INDEXES>
+            <INDEX NAME="dunningid" UNIQUE="false" FIELDS="dunningid" />
+            <INDEX NAME="userid" UNIQUE="false" FIELDS="userid" />
+        </INDEXES>
     </TABLE>
 
     <!-- DUNNINGS CARDS -->
@@ -472,6 +490,10 @@
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_dunnings_posts" />
         </KEYS>
+        <INDEXES>
+            <INDEX NAME="dunningid" UNIQUE="false" FIELDS="dunningid" />
+            <INDEX NAME="cardid" UNIQUE="false" FIELDS="cardid" />
+        </INDEXES>
     </TABLE>
 </TABLES>
 </XMLDB>
