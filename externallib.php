@@ -20,6 +20,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\customfields as CustomFields;
 use UniversiteRennes2\Apsolu\Payment;
 
 defined('MOODLE_INTERNAL') || die;
@@ -693,6 +694,15 @@ class local_apsolu_webservices extends external_api {
         }
 
         try {
+            $fields = CustomFields::getCustomFields();
+
+            $card = $DB->get_record('user_info_data', array('fieldid' => $fields['apsoluidcardnumber']->id, 'userid' => $iduser));
+            if ($card === false || empty($card->data) === true) {
+                $previouscard = '<vide>';
+            } else {
+                $previouscard = $card->data;
+            }
+
             $userfield = (object) ['id' => $iduser, 'profile_field_apsoluidcardnumber' => $cardnumber];
 
             $errors = profile_validation($userfield, $files = array());
@@ -702,7 +712,7 @@ class local_apsolu_webservices extends external_api {
             }
 
             profile_save_data($userfield);
-            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, 'enregistrement d\'une nouvelle carte']);
+            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, 'previouscard='.$previouscard, 'enregistrement d\'une nouvelle carte']);
 
             // Ajoute le témoin que la carte provient d'une source externe.
             $userfield = (object) ['id' => $iduser, 'profile_field_apsoluidcardnumberexternal' => 1];
