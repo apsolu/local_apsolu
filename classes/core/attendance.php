@@ -28,6 +28,61 @@ use stdClass;
 
 class attendance {
     /**
+     * Méthode permettant de récupérer le nombre de présences par étudiant et par semestre à partir d'un ID d'activité.
+     *
+     * @param int $categorid ID de l'activité sportive.
+     * @param bool $active Si vrai, récupère uniquement les présences du semestre courant.
+     *
+     * @return array[userid][] = '4'.
+     */
+    public static function countActivityPresences($categoryid, $active = true) {
+        global $DB;
+
+        $conditions = array();
+        $params = array();
+        $params['categoryid'] = $categoryid;
+        if ($active === true) {
+            $conditions[] = 'AND ue.timeend >= :now'; // Limite les méthodes d'inscription en cours.
+            $conditions[] = 'AND aas.sessiontime BETWEEN e.customint7 AND e.customint8';
+            $params['now'] = time();
+        }
+
+        // Récupère toutes les présences dans une activité (note: permet de récupérer les présences d'étudiants non-inscrits au cours).
+        $sql = "SELECT aap.studentid, COUNT(*) AS total".
+            " FROM {apsolu_attendance_presences} aap".
+            " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid".
+            " JOIN {enrol} e ON e.courseid = aas.courseid".
+            " JOIN {user_enrolments} ue ON e.id = ue.enrolid AND aap.studentid = ue.userid".
+            " WHERE aas.activityid = :categoryid".
+            " AND e.enrol = 'select'".
+            " AND ue.status = 0".
+            " AND aap.statusid != 4". // Exclus les absences.
+            " ".implode(' ', $conditions).
+            " GROUP BY aas.activityid, aap.studentid";
+        $presences = array();
+        foreach ($DB->get_recordset_sql($sql, $params) as $recordset) {
+            $presences[$recordset->studentid] = $recordset->total;
+        }
+
+        // Récupère toutes les inscriptions actives (note: permet de récupérer les étudiants qui ne sont jamais venus en cours).
+        $sql = "SELECT DISTINCT ue.userid".
+            " FROM {user_enrolments} ue".
+            " JOIN {enrol} e ON e.id = ue.enrolid".
+            " JOIN {course} c ON c.id = e.courseid".
+            " WHERE c.category = :categoryid".
+            " AND e.enrol = 'select'".
+            " AND ue.status = 0".
+            " ".$conditions[0];
+        foreach ($DB->get_recordset_sql($sql, $params) as $recordset) {
+            if (isset($presences[$recordset->userid]) === false) {
+                $presences[$recordset->userid] = 0;
+            }
+        }
+
+        return $presences;
+    }
+
+    /**
      * Méthode permettant de récupérer les présences par étudiant et par semestre à partir d'un ID d'activité.
      *
      * @return array[userid][] = 'Sem. 1 : 4'.

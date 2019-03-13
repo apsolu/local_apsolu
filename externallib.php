@@ -20,6 +20,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\attendance as Attendance;
 use local_apsolu\core\customfields as CustomFields;
 use UniversiteRennes2\Apsolu\Payment;
 
@@ -377,6 +378,7 @@ class local_apsolu_webservices extends external_api {
         require_once(__DIR__.'/classes/apsolu/payment.php');
 
         $courses = array();
+        $activities = array();
         $fields = $DB->get_records('user_info_field', $conditions = array(), $sort = '', $fields = 'shortname, id');
 
         $params = array();
@@ -395,13 +397,14 @@ class local_apsolu_webservices extends external_api {
             $params['timemodified3'] = strftime('%FT%T', $since);
         }
 
-        $sql = "SELECT ra.id AS idregistration, ra.userid, ctx.instanceid AS idcourse, COUNT(aap.id) AS nbpresence, ra.roleid, ra.itemid AS enrolid, uid1.data AS sesame".
+        $sql = "SELECT ra.id AS idregistration, ra.userid, c.id AS idcourse, c.category AS idactivity, COUNT(aap.id) AS nbpresence, ra.roleid, ra.itemid AS enrolid, uid1.data AS sesame".
             " FROM {role_assignments} ra".
             " JOIN {role} r ON r.id = ra.roleid AND r.archetype = 'student'".
             " JOIN {user_enrolments} ue ON ra.userid = ue.userid AND ra.itemid = ue.enrolid AND ue.status = 0".
             " JOIN {enrol} e ON e.id = ue.enrolid AND e.id = ra.itemid".
             " JOIN {context} ctx ON ctx.id = ra.contextid".
-            " JOIN {apsolu_courses} c ON ctx.instanceid = c.id".
+            " JOIN {course} c ON c.id = ctx.instanceid".
+            " JOIN {apsolu_courses} ac ON c.id = ac.id".
             " JOIN {apsolu_attendance_sessions} aas ON ctx.instanceid = aas.courseid".
             " LEFT JOIN {apsolu_attendance_presences} aap ON aas.id = aap.sessionid AND ra.userid = aap.studentid AND aap.statusid IN (1, 2)". // Present + late.
             " LEFT JOIN {user_info_data} uid1 ON ra.userid = uid1.userid AND uid1.fieldid = :apsolusesame". // Compte Sésame validé.
@@ -416,11 +419,20 @@ class local_apsolu_webservices extends external_api {
                 $courses[$record->idcourse] = Payment::get_users_cards_status_per_course($record->idcourse);
             }
 
+            if (isset($activities[$record->idactivity]) === false) {
+                $activities[$record->idactivity] = Attendance::countActivityPresences($record->idactivity);
+            }
+
+            if (isset($activities[$record->idactivity][$record->userid]) === false) {
+                $activities[$record->idactivity][$record->userid] = 0;
+            }
+
             $registration = new stdClass();
             $registration->idregistration = $record->idregistration;
             $registration->iduser = $record->userid;
             $registration->idcourse = $record->idcourse;
             $registration->nbpresence = $record->nbpresence;
+            $registration->nbpresenceglobale = $activities[$record->idactivity][$record->userid];
             if (isset($courses[$record->idcourse][$record->userid]) === true) {
                 $registration->validity = true;
                 $registration->sportcard = null;
