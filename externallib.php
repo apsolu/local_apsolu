@@ -477,6 +477,7 @@ class local_apsolu_webservices extends external_api {
                     'iduser' => new external_value(PARAM_INT, get_string('ws_value_iduser', 'local_apsolu')),
                     'idcourse' => new external_value(PARAM_INT, get_string('ws_value_idcourse', 'local_apsolu')),
                     'nbpresence' => new external_value(PARAM_INT, get_string('ws_value_nbpresence', 'local_apsolu')),
+                    'nbpresenceglobale' => new external_value(PARAM_INT, get_string('ws_value_nbpresenceglobale', 'local_apsolu')),
                     'validity' => new external_value(PARAM_BOOL, get_string('ws_value_validity', 'local_apsolu')),
                     'sportcard' => new external_value(PARAM_INT, get_string('ws_value_sportcard', 'local_apsolu')),
                     'evaluation' => new external_value(PARAM_INT, get_string('ws_value_evaluation', 'local_apsolu')),
