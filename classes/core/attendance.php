@@ -41,9 +41,9 @@ class attendance {
         $conditions = array();
         $params = array();
         $params['categoryid'] = $categoryid;
+
         if ($active === true) {
-            $conditions[] = 'AND ue.timeend >= :now'; // Limite les méthodes d'inscription en cours.
-            $conditions[] = 'AND aas.sessiontime BETWEEN e.customint7 AND e.customint8';
+            $conditions[] = 'AND e.customint8 >= :now'; // Limite aux méthodes d'inscription en cours.
             $params['now'] = time();
         }
 
@@ -51,12 +51,10 @@ class attendance {
         $sql = "SELECT aap.studentid, COUNT(*) AS total".
             " FROM {apsolu_attendance_presences} aap".
             " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid".
-            " JOIN {enrol} e ON e.courseid = aas.courseid".
-            " JOIN {user_enrolments} ue ON e.id = ue.enrolid AND aap.studentid = ue.userid".
+            " JOIN {enrol} e ON e.courseid = aas.courseid AND e.enrol = 'select'".
             " WHERE aas.activityid = :categoryid".
-            " AND e.enrol = 'select'".
-            " AND ue.status = 0".
             " AND aap.statusid != 4". // Exclus les absences.
+            " AND aas.sessiontime BETWEEN e.customint7 AND e.customint8".
             " ".implode(' ', $conditions).
             " GROUP BY aas.activityid, aap.studentid";
         $presences = array();
@@ -72,7 +70,7 @@ class attendance {
             " WHERE c.category = :categoryid".
             " AND e.enrol = 'select'".
             " AND ue.status = 0".
-            " ".$conditions[0];
+            " ".implode(' ', $conditions);
         foreach ($DB->get_recordset_sql($sql, $params) as $recordset) {
             if (isset($presences[$recordset->userid]) === false) {
                 $presences[$recordset->userid] = 0;

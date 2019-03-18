@@ -381,22 +381,9 @@ class local_apsolu_webservices extends external_api {
         $activities = array();
         $fields = $DB->get_records('user_info_field', $conditions = array(), $sort = '', $fields = 'shortname, id');
 
-        $params = array();
-        $params['apsolusesame'] = $fields['apsolusesame']->id;
-        $params['now'] = time();
-        $params['timemodified1'] = $since;
-        $params['timemodified2'] = $since;
-
-        if (empty($since) !== true) {
-            $timeconditions = " AND (ue.timemodified >= :timemodified1 OR ra.timemodified >= :timemodified2)";
-        } else {
-            // Détecte tous les nouveaux paiements.
-            // Note: retourne potentiellement trop d'enregistrements.
-            // Exemple: une personne inscrite à un cours, et qui aurait payé sa carte de musculation ou sa FFSU sortirait dans les résultats.
-            $timeconditions = " AND (ue.timemodified >= :timemodified1 OR ra.timemodified >= :timemodified2 OR ue.userid IN (SELECT ap.userid FROM {apsolu_payments} ap WHERE ap.timepaid >= :timemodified3))";
-            $params['timemodified3'] = strftime('%FT%T', $since);
-        }
-
+        // Note: cette requête retourne potentiellement trop d'enregistrements.
+        // Exemple: une personne inscrite à un cours, et qui aurait payé sa carte de musculation ou sa FFSU sortirait dans les résultats.
+        // Exemple: une personne inscrite à un cours, et qui aurait une nouvelle présence dans un autre cours sortirait dans les résultats.
         $sql = "SELECT ra.id AS idregistration, ra.userid, c.id AS idcourse, c.category AS idactivity, COUNT(aap.id) AS nbpresence, ra.roleid, ra.itemid AS enrolid, uid1.data AS sesame".
             " FROM {role_assignments} ra".
             " JOIN {role} r ON r.id = ra.roleid AND r.archetype = 'student'".
@@ -411,8 +398,21 @@ class local_apsolu_webservices extends external_api {
             " WHERE ra.component = 'enrol_select'".
             " AND ue.timeend >= :now". // Limite les méthodes d'inscription en cours.
             " AND aas.sessiontime BETWEEN e.customint7 AND e.customint8".
-            $timeconditions.
+            " AND (".
+                " ue.timemodified >= :timemodified1". // Détecte les changements de statut (liste primaire, liste secondaire, etc).
+                " OR ra.timemodified >= :timemodified2". // Détecte les changements de rôle (évalué, libre, etc).
+                " OR ue.userid IN (SELECT aap.studentid FROM {apsolu_attendance_presences} aap WHERE aap.timemodified >= :timemodified3)". // Détecte les nouvelles présences.
+                " OR ue.userid IN (SELECT ap.userid FROM {apsolu_payments} ap WHERE ap.timepaid >= :timemodified4)". // Détecte les nouveaux paiements.
+            " )".
             " GROUP BY ra.id, ra.userid, ctx.instanceid";
+
+        $params = array();
+        $params['apsolusesame'] = $fields['apsolusesame']->id;
+        $params['now'] = time();
+        $params['timemodified1'] = $since;
+        $params['timemodified2'] = $since;
+        $params['timemodified3'] = $since;
+        $params['timemodified4'] = strftime('%FT%T', $since);
 
         foreach ($DB->get_records_sql($sql, $params) as $record) {
             if (isset($courses[$record->idcourse]) === false) {
