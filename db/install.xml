@@ -421,7 +421,7 @@
     </TABLE>
 
     <!-- PAYMENTS CARDS ROLE -->
-    <TABLE NAME="apsolu_payments_cards_role" COMMENT="apsolu_payments_cards_role table">
+    <TABLE NAME="apsolu_payments_cards_roles" COMMENT="apsolu_payments_cards_roles table">
         <FIELDS>
             <FIELD NAME="cardid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="roleid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
