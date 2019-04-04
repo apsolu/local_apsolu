@@ -291,14 +291,14 @@ $string['ufrs'] = 'UFR';
 $string['ufrs_help'] = 'Noms partiels d\'une ou plusieurs UFR séparées par des virgules.<br />Exemple: math,langue';
 
 // Error.
-$string['courses_error_no_grouping'] = 'Aucun groupement d\'activités trouvé. Merci d\'ajouter un groupement d\'activités avant de créer une activité.';
-$string['courses_error_no_category'] = 'Aucune activité sportive trouvée. Merci d\'ajouter une activité sportive avant de créer un créneau.';
-$string['courses_error_no_skill'] = 'Aucun niveau de pratique sportive trouvé. Merci d\'ajouter un niveau de pratique sportive avant de créer un créneau.';
-$string['courses_error_no_location'] = 'Aucun lieu de pratique sportive trouvé. Merci d\'ajouter un lieu de pratique sportive avant de créer un créneau.';
-$string['courses_error_no_period'] = 'Aucune période de pratique sportive trouvée. Merci d\'ajouter une période de pratique sportive avant de créer un créneau.';
-$string['courses_error_no_area'] = 'Aucune zone géographique trouvée. Merci d\'ajouter une zone géographique avant de créer un lieu.';
-$string['courses_error_no_manager'] = 'Aucun gestionnaire de lieu trouvé. Merci d\'ajouter un gestionnaire de lieu avant de créer un lieu.';
-$string['courses_error_no_center'] = 'Aucun centre de paiement trouvée. Merci d\'ajouter un centre de paiement avant de créer un créneau.';
+$string['error_no_grouping'] = 'Aucun groupement d\'activités trouvé. Merci d\'ajouter un groupement d\'activités avant de créer une activité.';
+$string['error_no_category'] = 'Aucune activité sportive trouvée. Merci d\'ajouter une activité sportive avant de créer un créneau.';
+$string['error_no_skill'] = 'Aucun niveau de pratique sportive trouvé. Merci d\'ajouter un niveau de pratique sportive avant de créer un créneau.';
+$string['error_no_location'] = 'Aucun lieu de pratique sportive trouvé. Merci d\'ajouter un lieu de pratique sportive avant de créer un créneau.';
+$string['error_no_period'] = 'Aucune période de pratique sportive trouvée. Merci d\'ajouter une période de pratique sportive avant de créer un créneau.';
+$string['error_no_area'] = 'Aucune zone géographique trouvée. Merci d\'ajouter une zone géographique avant de créer un lieu.';
+$string['error_no_manager'] = 'Aucun gestionnaire de lieu trouvé. Merci d\'ajouter un gestionnaire de lieu avant de créer un lieu.';
+$string['error_no_center'] = 'Aucun centre de paiement trouvée. Merci d\'ajouter un centre de paiement avant de créer un créneau.';
 
 
 // Federation.
