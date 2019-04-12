@@ -152,14 +152,56 @@ if ($data = $mform->get_data()) {
     $course->shortname = $course->fullname;
 
     if ($course->id == 0) {
+        // Créé le cours.
         $newcourse = create_course($course);
         $course->id = $newcourse->id;
 
+        // Créé l'instance apsolu_courses.
         $sql = "INSERT INTO {apsolu_courses} (id, event, skillid, locationid, weekday, numweekday, starttime, endtime, periodid, paymentcenterid, license, on_homepage)".
             " VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
         $params = array($course->id, $course->event, $course->skillid, $course->locationid, $course->weekday,
             $course->numweekday, $course->starttime, $course->endtime, $course->periodid, $course->paymentcenterid, $course->license, $course->on_homepage);
         $DB->execute($sql, $params);
+
+        // Ajoute une méthode d'inscription manuelle.
+        $instance = $DB->get_record('enrol', array('enrol' => 'manual', 'courseid' => $course->id));
+        if ($instance === false) {
+            $plugin = enrol_get_plugin('manual');
+
+            $fields = $plugin->get_instance_defaults();
+
+            $instance = new stdClass();
+            $instance->id = $plugin->add_instance($course, $fields);
+        }
+
+        // Ajoute le bloc apsolu_course.
+        try {
+            $blocktype = 'apsolu_course';
+            $context = context_course::instance($course->id, MUST_EXIST);
+
+            $blockinstance = new stdClass();
+            $blockinstance->blockname = $blocktype;
+            $blockinstance->parentcontextid = $context->id;
+            $blockinstance->showinsubcontexts = 0;
+            $blockinstance->pagetypepattern = 'course-view-*';
+            $blockinstance->subpagepattern = NULL;
+            $blockinstance->defaultregion = 'side-pre'; // Dans la colonne de gauche.
+            $blockinstance->defaultweight = -1; // Avant le bloc "Paramètres du cours".
+            $blockinstance->configdata = '';
+            $blockinstance->timecreated = time();
+            $blockinstance->timemodified = time();
+            $blockinstance->id = $DB->insert_record('block_instances', $blockinstance);
+
+            // Ensure the block context is created.
+            context_block::instance($blockinstance->id);
+
+            // If the new instance was created, allow it to do additional setup
+            if ($block = block_instance($blocktype, $blockinstance)) {
+                $block->instance_create();
+            }
+        } catch (Exception $exception) {
+            debugging($exception->getMessage(), DEBUG_DEVELOPER);
+        }
     } else {
         $DB->update_record('course', $course);
         $DB->update_record('apsolu_courses', $course);
