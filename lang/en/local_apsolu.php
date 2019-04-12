@@ -298,7 +298,7 @@ $string['error_no_location'] = 'Aucun lieu de pratique sportive trouvé. Merci d
 $string['error_no_period'] = 'Aucune période de pratique sportive trouvée. Merci d\'ajouter une période de pratique sportive avant de créer un créneau.';
 $string['error_no_area'] = 'Aucune zone géographique trouvée. Merci d\'ajouter une zone géographique avant de créer un lieu.';
 $string['error_no_manager'] = 'Aucun gestionnaire de lieu trouvé. Merci d\'ajouter un gestionnaire de lieu avant de créer un lieu.';
-$string['error_no_center'] = 'Aucun centre de paiement trouvée. Merci d\'ajouter un centre de paiement avant de créer un créneau.';
+$string['error_no_center'] = 'Aucun centre de paiement trouvé. Merci d\'ajouter un centre de paiement avant de créer un créneau.';
 
 
 // Federation.
