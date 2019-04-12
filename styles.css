@@ -1,42 +1,54 @@
-html{
+html {
     height: 100%;
 }
 
-#page-site-index{
+.navbar-header .guest {
+    display: none;
+}
+
+/* Homepage. */
+#page-site-index {
     height: 100%;
     margin : 0 !important;
     padding: 0;
 }
 
-#page-site-index #block-region-side-pre,
-#page-site-index #block-region-side-post,
+#page-site-index #page-content {
+    display: block;
+}
+
 #page-site-index #page-header,
-#page-site-index .moodleheader,
-#page-site-index #page-footer{
+#page-site-index #page-content > .columnleft,
+#page-site-index #page-content > .columnright,
+#page-site-index #page-footer {
     display: none;
+}
+
+#page-site-index #page,
+#page-site-index #region-main {
+    margin: 0;
+    padding: 0;
+}
+
+#page-site-index #page-content.blocks-pre .region-main {
+    flex: 0 0 100%;
+    max-width: none;
 }
 
 #page-site-index #page,
 #page-site-index #page-content,
 #page-site-index #region-main-box,
-#page-site-index #region-main-box > div,
 #page-site-index #region-main,
-#page-site-index #region-main > div{
+#page-site-index #region-main > div,
+#apsolu-page {
+    display: block;
     float: none;
     height: 100%;
+    left: 0;
     margin: 0;
     max-width: 100%;
     padding: 0;
     width: 100%;
-    left: 0;
-}
-
-.navbar-header .guest{
-    display: none;
-}
-
-#apsolu-page{
-    height: 100%;
 }
 
 .apsolu-pages{
@@ -267,6 +279,13 @@ html{
 
 .apsolu-register-dt:after{
     content: ' : ';
+}
+
+#apsolu-logo-div,
+.apsolu-photo-credits,
+#page-site-index #authentification {
+    /* TODO: fix temporaire. Afficher les crédits et les logos plus tard. */
+    display: none;
 }
 
 .apsolu-photo-credits {
