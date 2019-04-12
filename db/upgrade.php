@@ -571,6 +571,9 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
                 }
             }
         }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
     return $result;
