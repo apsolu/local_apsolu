@@ -52,7 +52,11 @@ class local_apsolu_courses_categories_edit_form extends moodleform {
         $mform->setType('url', PARAM_URL);
 
         // Federation field.
-        $mform->addElement('selectyesno', 'federation', get_string('federation', 'local_apsolu'));
+        if (isset($CFG->is_siuaps_rennes) === true) {
+            $mform->addElement('selectyesno', 'federation', get_string('federation', 'local_apsolu'));
+        } else {
+            $mform->addElement('hidden', 'federation', 0);
+        }
         $mform->setType('federation', PARAM_INT);
 
         // Description field.

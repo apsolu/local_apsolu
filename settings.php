@@ -50,7 +50,11 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     $items = array();
     $items['courses'] = array('groupings', 'categories', 'courses');
     $items['periods'] = array('periods');
-    $items['skills'] = array('skills', 'skills_descriptions');
+    if (isset($CFG->is_siuaps_rennes) === true) {
+        $items['skills'] = array('skills', 'skills_descriptions');
+    } else {
+        $items['skills'] = array('skills');
+    }
     $items['locations'] = array('locations', 'areas', 'cities', 'managers');
 
     foreach ($items as $subtype => $tabs) {
@@ -69,17 +73,19 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     $ADMIN->add('local_apsolu_courses', $page);
 
     // Activités complémentaires.
-    $ADMIN->add('apsolu', new admin_category('local_apsolu_complements', get_string('settings_complements', 'local_apsolu')));
+    if (isset($CFG->is_siuaps_rennes) === true) {
+        $ADMIN->add('apsolu', new admin_category('local_apsolu_complements', get_string('settings_complements', 'local_apsolu')));
 
-    // Activités complémentaires > Activités complémentaires.
-    $label = get_string('settings_complements', 'local_apsolu');
-    $url = new moodle_url('/local/apsolu/courses/complements.php?tab=complements');
-    $ADMIN->add('local_apsolu_complements', new admin_externalpage('local_apsolu_complements_complements', $label, $url, $capabilities));
+        // Activités complémentaires > Activités complémentaires.
+        $label = get_string('settings_complements', 'local_apsolu');
+        $url = new moodle_url('/local/apsolu/courses/complements.php?tab=complements');
+        $ADMIN->add('local_apsolu_complements', new admin_externalpage('local_apsolu_complements_complements', $label, $url, $capabilities));
 
-    // Activités complémentaires > FFSU.
-    $label = get_string('settings_federations', 'local_apsolu');
-    $url = new moodle_url('/local/apsolu/courses/complements.php?tab=federations');
-    $ADMIN->add('local_apsolu_complements', new admin_externalpage('local_apsolu_complements_federations', $label, $url, $capabilities));
+        // Activités complémentaires > FFSU.
+        $label = get_string('settings_federations', 'local_apsolu');
+        $url = new moodle_url('/local/apsolu/courses/complements.php?tab=federations');
+        $ADMIN->add('local_apsolu_complements', new admin_externalpage('local_apsolu_complements_federations', $label, $url, $capabilities));
+    }
 
     // Configuration.
     $ADMIN->add('apsolu', new admin_category('local_apsolu_configuration', get_string('settings_configuration', 'local_apsolu')));
@@ -100,12 +106,14 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     $ADMIN->add('local_apsolu_configuration', new admin_externalpage('local_apsolu_configuration_calendarstypes', $str, $url, $capabilities));
 
     // Fédération FSU.
-    $ADMIN->add('apsolu', new admin_category('local_apsolu_federation', get_string('settings_federation', 'local_apsolu')));
+    if (isset($CFG->is_siuaps_rennes) === true) {
+        $ADMIN->add('apsolu', new admin_category('local_apsolu_federation', get_string('settings_federation', 'local_apsolu')));
 
-    // Importer les licences.
-    $str = get_string('settings_federation_import', 'local_apsolu');
-    $url = new moodle_url('/local/apsolu/federation/index.php', array('page' => 'import'));
-    $ADMIN->add('local_apsolu_federation', new admin_externalpage('local_apsolu_federation_import', $str, $url, $capabilities));
+        // Importer les licences.
+        $str = get_string('settings_federation_import', 'local_apsolu');
+        $url = new moodle_url('/local/apsolu/federation/index.php', array('page' => 'import'));
+        $ADMIN->add('local_apsolu_federation', new admin_externalpage('local_apsolu_federation_import', $str, $url, $capabilities));
+    }
 
     // Inscriptions.
     $ADMIN->add('apsolu', new admin_category('local_apsolu_enrol', get_string('enrolments', 'enrol')));

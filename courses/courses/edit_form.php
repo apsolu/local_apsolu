@@ -77,9 +77,13 @@ class local_apsolu_courses_courses_edit_form extends moodleform {
         $mform->addRule('endtime', get_string('required'), 'required', null, 'client');
 
         // License field.
-        $mform->addElement('selectyesno', 'license', get_string('license', 'local_apsolu'));
+        if (isset($CFG->is_siuaps_rennes) === true) {
+            $mform->addElement('selectyesno', 'license', get_string('license', 'local_apsolu'));
+            $mform->addRule('license', get_string('required'), 'required', null, 'client');
+        } else {
+            $mform->addElement('hidden', 'license', 0);
+        }
         $mform->setType('license', PARAM_INT);
-        $mform->addRule('license', get_string('required'), 'required', null, 'client');
 
         // On homepage field.
         $mform->addElement('selectyesno', 'on_homepage', get_string('on_homepage', 'local_apsolu'));
