@@ -590,7 +590,7 @@ $string['settings_configuration_calendarstypes'] = 'Types de calendriers';
 $string['settings_configuration_calendars_types'] = 'Types de calendriers';
 $string['settings_configuration_contacts'] = 'Adresses de contact';
 $string['settings_configuration_dates'] = 'Dates';
-$string['settings_configuration_header'] = 'Bandeau';
+$string['settings_configuration_header'] = 'Message d\'entête';
 $string['settings_activities'] = 'Activités physiques';
 $string['settings_complements'] = 'Activités complémentaires';
 $string['settings_federations'] = 'FFSU';
@@ -598,6 +598,8 @@ $string['settings_federation'] = 'FFSU';
 $string['settings_federation_import'] = 'Importation des licences FFSU';
 $string['settings_payment'] = 'Frais d\'inscription';
 $string['settings_payments'] = 'Paiements';
+$string['settings_payments_list'] = 'Liste des paiements';
+$string['settings_payments_servers'] = 'Adresses des serveurs PayBox';
 
 // Tasks.
 $string['set_high_level_athletes'] = 'Moulinette pour les sportifs de haut-niveau';
