@@ -59,7 +59,7 @@ html {
     display: block;
     min-height: 100%;
     overflow: hidden;
-    padding-top: 2%;
+    padding-top: 5%;
 }
 
 .apsolu-pages:nth-child(1){
@@ -283,7 +283,10 @@ html {
 
 #apsolu-logo-div,
 .apsolu-photo-credits,
-#page-site-index #authentification {
+#page-site-index #authentification,
+#page-site-index .apsolu-scroll-menu,
+#page-site-index #activites,
+#page-site-index #inscription {
     /* TODO: fix temporaire. Afficher les crédits et les logos plus tard. */
     display: none;
 }
