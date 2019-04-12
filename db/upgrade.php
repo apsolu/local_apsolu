@@ -576,5 +576,17 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 2019041200;
+    if ($result && $oldversion < $version) {
+        // Augmente la taille du champ weeks de la table apsolu_periods à 1024 caractères.
+        $table = new xmldb_table('apsolu_periods');
+        $field = new xmldb_field('weeks', XMLDB_TYPE_CHAR, '1024', null, null, null, null);
+
+        $dbman->change_field_precision($table, $field);
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
     return $result;
 }
