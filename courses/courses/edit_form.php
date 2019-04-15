@@ -35,7 +35,7 @@ class local_apsolu_courses_courses_edit_form extends moodleform {
         list($course, $categories, $skills, $locations, $periods, $weekdays, $centers) = $this->_customdata;
 
         // Category field (Sport).
-        $mform->addElement('select', 'category', get_string('category', 'local_apsolu'), $categories);
+        $mform->addElement('select', 'category', get_string('sport', 'local_apsolu'), $categories);
         $mform->setType('category', PARAM_INT);
         $mform->addRule('category', get_string('required'), 'required', null, 'client');
         // See MDL-53725.
