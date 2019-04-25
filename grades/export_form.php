@@ -32,7 +32,7 @@ class local_apsolu_courses_grades_export_form extends moodleform {
         global $CFG, $DB;
 
         $mform = $this->_form;
-        list($defaults, $courses, $institutions, $roles, $semesters) = $this->_customdata;
+        list($defaults, $courses, $cities, $institutions, $roles, $semesters) = $this->_customdata;
 
         $mform->addElement('text', 'lastnames', get_string('studentname', 'local_apsolu'), array('size' => '48'));
         $mform->setType('lastnames', PARAM_TEXT);
@@ -42,6 +42,12 @@ class local_apsolu_courses_grades_export_form extends moodleform {
         $mform->setType('courses', PARAM_TEXT);
         $mform->addRule('courses', get_string('required'), 'required', null, 'client');
         $select->setMultiple(true);
+
+        if (count($cities) > 1) {
+            $select = $mform->addElement('select', 'cities', get_string('cities', 'local_apsolu'), $cities, array('size' => 4));
+            $mform->setType('cities', PARAM_INT);
+            $select->setMultiple(true);
+        }
 
         $select = $mform->addElement('select', 'institutions', get_string('institution'), $institutions, array('size' => 6));
         $mform->setType('institutions', PARAM_TEXT);

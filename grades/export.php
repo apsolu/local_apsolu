@@ -43,6 +43,12 @@ foreach ($records as $record) {
     $courses[$record->id] = $record->fullname;
 }
 
+// Load sites.
+$cities = array();
+foreach ($DB->get_records('apsolu_cities', null, $sort = 'name') as $city) {
+    $cities[$city->id] = $city->name;
+}
+
 // Load institutions.
 $sql = "SELECT DISTINCT institution FROM {user} WHERE id > 2 AND deleted = 0 AND auth = 'shibboleth' ORDER BY institution";
 $institutions = array();
@@ -78,8 +84,8 @@ $timestart_semester2 = mktime(0, 0, 0, 1, 1, $year+1);
 $timeend_semester2 = mktime(0, 0, 0, 7, 1, $year+1);
 
 // Build form.
-$defaults = (object) ['courses' => '*', 'departments' => '', 'roles' => '*', 'semesters' => '*'];
-$customdata = array($defaults, $courses, $institutions, $roles, $semesters);
+$defaults = (object) ['courses' => '*', 'cities' => '', 'departments' => '', 'roles' => '*', 'semesters' => '*'];
+$customdata = array($defaults, $courses, $cities, $institutions, $roles, $semesters);
 $mform = new local_apsolu_courses_grades_export_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
@@ -93,6 +99,8 @@ if ($data = $mform->get_data()) {
         " JOIN {enrol} e ON e.id = ue.enrolid AND e.enrol = 'select' AND e.status = 0".
         " JOIN {course} c ON c.id = e.courseid".
         " JOIN {apsolu_courses} ac ON ac.id = c.id".
+        " JOIN {apsolu_locations} al ON al.id = ac.locationid".
+        " JOIN {apsolu_areas} aa ON aa.id = al.areaid".
         " LEFT JOIN {apsolu_grades} ag ON ac.id = ag.courseid AND u.id = ag.userid".
         " JOIN {context} ctx ON c.id = ctx.instanceid AND ctx.contextlevel = 50".
         " JOIN {role_assignments} ra1 ON ctx.id = ra1.contextid AND ra1.userid = u.id AND ra1.itemid = e.id".
@@ -126,6 +134,20 @@ if ($data = $mform->get_data()) {
 
         if (isset($courses[0])) {
             $where[] = "c.id IN (".implode(', ', $courses).")";
+        }
+    }
+
+    // Sites filter.
+    if (isset($data->cities) === true) {
+        $cities = array();
+        foreach ($data->cities as $city) {
+            if (ctype_digit($city) === true) {
+                $cities[] = $city;
+            }
+        }
+
+        if (isset($cities[0]) === true) {
+            $where[] = "aa.cityid IN (".implode(', ', $cities).")";
         }
     }
 
