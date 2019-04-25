@@ -58,6 +58,15 @@ foreach ($DB->get_records_sql($sql) as $record) {
     }
 }
 
+// Departments list.
+$departmentslist = array();
+foreach ($DB->get_records_sql('SELECT DISTINCT department FROM {user} ORDER BY department') as $record) {
+    if (empty($record->department) === true) {
+        continue;
+    }
+    $departmentslist[] = $record->department;
+}
+
 // Load roles.
 $roles = array();
 foreach ($DB->get_records('role', array('archetype' => 'student')) as $role) {
@@ -262,7 +271,7 @@ if ($data = $mform->get_data()) {
 
         $mform->display();
         echo $OUTPUT->render_from_template('local_apsolu/grades_export', $datatemplate);
-        echo $OUTPUT->render_from_template('local_apsolu/grades_departments', (object) ['departments' => array_values($customdata[3])]);
+        echo $OUTPUT->render_from_template('local_apsolu/grades_departments', (object) ['departments' => $departmentslist]);
 
     } else {
         // TODO: export csv
@@ -361,5 +370,5 @@ if ($data = $mform->get_data()) {
     }
 } else {
     $mform->display();
-    echo $OUTPUT->render_from_template('local_apsolu/grades_departments', (object) ['departments' => array_values($customdata[3])]);
+    echo $OUTPUT->render_from_template('local_apsolu/grades_departments', (object) ['departments' => $departmentslist]);
 }
