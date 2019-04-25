@@ -217,8 +217,8 @@ if ($data = $mform->get_data()) {
 
     if (empty($course->id) === false) {
         echo '<ul class="list-inline text-right">'.
-            '<li><a class="btn btn-primary" href="'.$CFG->wwwroot.'/enrol/users.php?id='.$course->id.'">Inscrire un utilisateur</a></li>'.
-            '<li><a class="btn btn-primary" href="'.$CFG->wwwroot.'/enrol/instances.php?id='.$course->id.'">Méthode d\'inscription</a></li>'.
+            '<li class="list-inline-item"><a class="btn btn-primary" href="'.$CFG->wwwroot.'/user/index.php?id='.$course->id.'">Inscrire un utilisateur</a></li>'.
+            '<li class="list-inline-item"><a class="btn btn-primary" href="'.$CFG->wwwroot.'/enrol/instances.php?id='.$course->id.'">Méthode d\'inscription</a></li>'.
             '</ul>';
     }
 
