@@ -286,6 +286,8 @@ $string['semester2'] = 'Semestre 2';
 $string['semester1_grading_deadline'] = 'Date limite pour rendre les notes du S1';
 $string['semester2_grading_deadline'] = 'Date limite pour rendre les notes du S2';
 
+$string['cycle'] = 'Cycle LMD';
+
 $string['ufr'] = 'UFR';
 $string['ufrs'] = 'UFR';
 $string['ufrs_help'] = 'Noms partiels d\'une ou plusieurs UFR séparées par des virgules.<br />Exemple: math,langue';

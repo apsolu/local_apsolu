@@ -322,7 +322,7 @@ if ($data = $mform->get_data()) {
         $headers[] = get_string('institution');
         $headers[] = get_string('department');
         $headers[] = get_string('ufr', 'local_apsolu');
-        $headers[] = get_string('lmd', 'local_apsolu');
+        $headers[] = get_string('cycle', 'local_apsolu');
         $headers[] = get_string('practicegrade', 'local_apsolu');
         $headers[] = get_string('theorygrade', 'local_apsolu');
         $headers[] = get_string('course');
@@ -353,11 +353,11 @@ if ($data = $mform->get_data()) {
             $myxls->write_string($line, 0, $users[$user->id]->lastname, $excelformat);
             $myxls->write_string($line, 1, $users[$user->id]->firstname, $excelformat);
             $myxls->write_string($line, 2, $users[$user->id]->idnumber, $excelformat);
-            $myxls->write_string($line, 3, $users[$user->id]->customfields->sex, $excelformat);
+            $myxls->write_string($line, 3, $users[$user->id]->customfields->apsolusex, $excelformat);
             $myxls->write_string($line, 4, $users[$user->id]->institution, $excelformat);
             $myxls->write_string($line, 5, $users[$user->id]->department, $excelformat);
-            $myxls->write_string($line, 6, $users[$user->id]->customfields->ufr, $excelformat);
-            $myxls->write_string($line, 7, $users[$user->id]->customfields->lmd, $excelformat);
+            $myxls->write_string($line, 6, $users[$user->id]->customfields->apsoluufr, $excelformat);
+            $myxls->write_string($line, 7, $users[$user->id]->customfields->apsolucycle, $excelformat);
             $myxls->write_string($line, 8, $grade1, $excelformat);
             $myxls->write_string($line, 9, $grade2, $excelformat);
             $myxls->write_string($line, 10, $user->course, $excelformat);
