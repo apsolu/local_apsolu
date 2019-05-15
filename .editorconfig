@@ -12,10 +12,6 @@ indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.{html,mustache,tpl}]
-indent_size = 2
-indent_style = tab
-
 [{composer.json,makefile}]
 indent_size = 4
 indent_style = tab

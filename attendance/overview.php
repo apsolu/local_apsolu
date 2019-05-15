@@ -26,7 +26,7 @@ $sessionid = optional_param('sessionid', 0, PARAM_INT); // Session id.
 $invalid_enrolments = optional_param('invalid_enrolments', null, PARAM_INT);
 $inactive_enrolments = optional_param('inactive_enrolments', null, PARAM_INT);
 
-$PAGE->set_pagelayout('admin');
+$PAGE->set_pagelayout('base'); // Désactive l'affichage des blocs.
 $PAGE->set_url('/local/apsolu/attendance/edit.php', array('courseid' => $courseid));
 
 // Basic access control checks.
@@ -150,7 +150,7 @@ foreach ($users as $user) {
             $label = get_string($code, 'local_apsolu');
             $style = get_string($code.'_style', 'local_apsolu');
 
-            echo '<td class="'.$style.' text-center"><abbr title="'.$label.'">'.$abbr.'</abbr>'.$comment.'</td>';
+            echo '<td class="table-'.$style.' text-center"><abbr title="'.$label.'">'.$abbr.'</abbr>'.$comment.'</td>';
         } else {
             echo '<td class="text-center">-</td>';
         }

@@ -1,17 +1,17 @@
 {{^period}}
-    <p class="alert alert-info">{{#str}}attendance_no_periods,local_apsolu{{/str}}</p>
+    <p class="alert alert-info">{{#str}}attendance_no_periods, local_apsolu{{/str}}</p>
 {{/period}}
 
 {{#period}}
-	<ul class="list-inline text-right">
-		<li><a class="btn btn-primary" href="{{ url }}/local/apsolu/attendance/sessions/index.php?action=edit&courseid={{ courseid }}&sessionid=0">{{#str}}attendance_add_session,local_apsolu{{/str}}</a></li>
-	</ul>
+    <ul class="list-inline text-right">
+        <li class="list-inline-item"><a class="btn btn-primary" href="{{ url }}/local/apsolu/attendance/sessions/index.php?action=edit&courseid={{ courseid }}&sessionid=0">{{#str}}attendance_add_session, local_apsolu{{/str}}</a></li>
+    </ul>
 
-	{{^count_sessions}}
-    	<p class="alert alert-info">{{#str}}attendance_no_sessions,local_apsolu{{/str}}</p>
-	{{/count_sessions}}
+    {{^count_sessions}}
+        <p class="alert alert-info">{{#str}}attendance_no_sessions, local_apsolu{{/str}}</p>
+    {{/count_sessions}}
 
-	{{#count_sessions}}
+    {{#count_sessions}}
     <table class="table table-striped">
         <thead>
         <tr>
@@ -22,22 +22,22 @@
         </tr>
         </thead>
         <tbody>
-		{{#sessions}}
+        {{#sessions}}
         <tr>
             <td>{{ name }}</td>
             <td>{{ sessiontimestr }}</td>
             <td>{{ location }}</td>
             <td>
                 <ul class="list-inline">
-                    <li><a class="btn btn-xs btn-primary" href="{{ url }}/local/apsolu/attendance/sessions/index.php?action=edit&courseid={{ courseid }}&sessionid={{ id }}">{{#str}}edit{{/str}}</a></li>
+                    <li class="list-inline-item"><a class="btn btn-xs btn-primary" href="{{ url }}/local/apsolu/attendance/sessions/index.php?action=edit&courseid={{ courseid }}&sessionid={{ id }}">{{#str}}edit{{/str}}</a></li>
                     {{^count}}
-                    <li><a class="btn btn-xs btn-danger" href="{{ url }}/local/apsolu/attendance/sessions/index.php?action=delete&courseid={{ courseid }}&sessionid={{ id }}">{{#str}}delete{{/str}}</a></li>
+                    <li class="list-inline-item"><a class="btn btn-xs btn-danger" href="{{ url }}/local/apsolu/attendance/sessions/index.php?action=delete&courseid={{ courseid }}&sessionid={{ id }}">{{#str}}delete{{/str}}</a></li>
                     {{/count}}
                 </ul>
             </td>
         </tr>
-		{{/sessions}}
-		</tbody>
-		</table>
-	{{/count_sessions}}
+        {{/sessions}}
+        </tbody>
+        </table>
+    {{/count_sessions}}
 {{/period}}

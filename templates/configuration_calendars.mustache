@@ -1,9 +1,9 @@
 {{#notification}}
-	{{{notification}}}
+    {{{notification}}}
 {{/notification}}
 
 <p class="text-right">
-	<a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/configuration/index.php?page=calendars&action=edit">{{#str}}calendar_add, local_apsolu{{/str}}</a>
+    <a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/configuration/index.php?page=calendars&action=edit">{{#str}}calendar_add, local_apsolu{{/str}}</a>
 </p>
 
 {{^calendars}}
@@ -13,36 +13,36 @@
 {{#count_calendars}}
 <table class="table table-striped">
 <thead>
-	<tr>
-		<th>{{#str}}name{{/str}}</th>
-    <th>{{#str}}enrolstartdate, local_apsolu{{/str}}</th>
-    <th>{{#str}}enrolenddate, local_apsolu{{/str}}</th>
-    <th>{{#str}}coursestartdate, local_apsolu{{/str}}</th>
-    <th>{{#str}}courseenddate, local_apsolu{{/str}}</th>
-    <th>{{#str}}reenrolstartdate, local_apsolu{{/str}}</th>
-    <th>{{#str}}reenrolenddate, local_apsolu{{/str}}</th>
-    <th>{{#str}}gradestartdate, local_apsolu{{/str}}</th>
-    <th>{{#str}}gradeenddate, local_apsolu{{/str}}</th>
-		<th>{{#str}}calendartype, local_apsolu{{/str}}</th>
-		<th>{{#str}}actions{{/str}}</th>
-	</tr>
+    <tr>
+        <th>{{#str}}name{{/str}}</th>
+        <th>{{#str}}enrolstartdate, local_apsolu{{/str}}</th>
+        <th>{{#str}}enrolenddate, local_apsolu{{/str}}</th>
+        <th>{{#str}}coursestartdate, local_apsolu{{/str}}</th>
+        <th>{{#str}}courseenddate, local_apsolu{{/str}}</th>
+        <th>{{#str}}reenrolstartdate, local_apsolu{{/str}}</th>
+        <th>{{#str}}reenrolenddate, local_apsolu{{/str}}</th>
+        <th>{{#str}}gradestartdate, local_apsolu{{/str}}</th>
+        <th>{{#str}}gradeenddate, local_apsolu{{/str}}</th>
+        <th>{{#str}}calendartype, local_apsolu{{/str}}</th>
+        <th>{{#str}}actions{{/str}}</th>
+    </tr>
 </thead>
 <tbody>
-	{{#calendars}}
-	<tr>
-		<td>{{name}}</td>
-    <td>{{#userdate}} {{enrolstartdate}}, {{#str}} strftimedate {{/str}} {{/userdate}}</td>
-    <td>{{#userdate}} {{enrolenddate}}, {{#str}} strftimedate {{/str}} {{/userdate}}</td>
-    <td>{{#userdate}} {{coursestartdate}}, {{#str}} strftimedate {{/str}} {{/userdate}}</td>
-    <td>{{#userdate}} {{courseenddate}}, {{#str}} strftimedate {{/str}} {{/userdate}}</td>
-    <td>{{#userdate}} {{reenrolstartdate}}, {{#str}} strftimedate {{/str}} {{/userdate}}</td>
-    <td>{{#userdate}} {{reenrolenddate}}, {{#str}} strftimedate {{/str}} {{/userdate}}</td>
-    <td>{{#userdate}} {{gradestartdate}}, {{#str}} strftimedate {{/str}} {{/userdate}}</td>
-    <td>{{#userdate}} {{gradeenddate}}, {{#str}} strftimedate {{/str}} {{/userdate}}</td>
-		<td>{{type}}</td>
-		<td><a href="{{wwwroot}}/local/apsolu/configuration/index.php?page=calendars&action=edit&calendarid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></td>
-	</tr>
-	{{/calendars}}
+    {{#calendars}}
+    <tr>
+        <td>{{name}}</td>
+        <td>{{#enrolstartdate}}{{#userdate}} {{enrolstartdate}}, {{#str}} strftimedate {{/str}} {{/userdate}}{{/enrolstartdate}}</td>
+        <td>{{#enrolenddate}}{{#userdate}} {{enrolenddate}}, {{#str}} strftimedate {{/str}} {{/userdate}}{{/enrolenddate}}</td>
+        <td>{{#coursestartdate}}{{#userdate}} {{coursestartdate}}, {{#str}} strftimedate {{/str}} {{/userdate}}{{/coursestartdate}}</td>
+        <td>{{#courseenddate}}{{#userdate}} {{courseenddate}}, {{#str}} strftimedate {{/str}} {{/userdate}}{{/courseenddate}}</td>
+        <td>{{#reenrolstartdate}}{{#userdate}} {{reenrolstartdate}}, {{#str}} strftimedate {{/str}} {{/userdate}}{{/reenrolstartdate}}</td>
+        <td>{{#reenrolenddate}}{{#userdate}} {{reenrolenddate}}, {{#str}} strftimedate {{/str}} {{/userdate}}{{/reenrolenddate}}</td>
+        <td>{{#gradestartdate}}{{#userdate}} {{gradestartdate}}, {{#str}} strftimedate {{/str}} {{/userdate}}{{/gradestartdate}}</td>
+        <td>{{#gradeenddate}}{{#userdate}} {{gradeenddate}}, {{#str}} strftimedate {{/str}} {{/userdate}}{{/gradeenddate}}</td>
+        <td>{{type}}</td>
+        <td><a href="{{wwwroot}}/local/apsolu/configuration/index.php?page=calendars&action=edit&calendarid={{id}}">{{#pix}}t/edit, core, {{#str}}edit{{/str}}{{/pix}}</a></td>
+    </tr>
+    {{/calendars}}
 </tbody>
 </table>
 {{/count_calendars}}

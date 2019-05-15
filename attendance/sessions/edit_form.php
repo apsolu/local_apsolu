@@ -46,7 +46,7 @@ class local_apsolu_attendance_sessions_edit_form extends moodleform {
         $mform->addRule('sessiontime', get_string('required'), 'required', null, 'client');
 
         // Location field.
-        $mform->addElement('select', 'locationid', get_string('courses_location', 'local_apsolu'), $locations);
+        $mform->addElement('select', 'locationid', get_string('location', 'local_apsolu'), $locations);
         $mform->setType('locationid', PARAM_INT);
         $mform->addRule('locationid', get_string('required'), 'required', null, 'client');
 
@@ -62,7 +62,7 @@ class local_apsolu_attendance_sessions_edit_form extends moodleform {
         $attributes = new stdClass();
         $attributes->href = $CFG->wwwroot.'/local/apsolu/attendance/sessions/index.php?courseid='.$session->courseid;
         $attributes->class = 'btn btn-default';
-        $buttonarray[] = &$mform->createElement('static', '', '', get_string('courses_cancel_link', 'local_apsolu', $attributes));
+        $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
         $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
 
