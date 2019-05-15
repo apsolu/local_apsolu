@@ -45,7 +45,7 @@ class local_apsolu_courses_periods_edit_form extends moodleform {
         $mform->addRule('generic_name', get_string('required'), 'required', null, 'client');
 
         // Weeks field.
-        if (date('n') >= 6) {
+        if (date('n') >= 5) {
                $year = date('Y');
         } else {
                $year = date('Y') - 1;
