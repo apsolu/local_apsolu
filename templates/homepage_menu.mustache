@@ -1,13 +1,13 @@
 <div class="apsolu-scroll-menu">
     <ul id="apsolu-scroll-menu-links" class="pull-left">
-        <li><a id="apsolu-home-a" class="btn btn-lg" data-scroll="1" data-options='{ "easing": "easeOutCubic" }' href="#accueil">{{#str}}homepage_home,local_apsolu{{/str}}</a></li>
-        <li><a id="apsolu-activities-a" class="btn btn-lg" data-scroll="1" data-options='{ "easing": "easeOutCubic" }' href="#activites">{{#str}}homepage_activities,local_apsolu{{/str}}</a></li>
-        <li><a id="apsolu-signup-a" class="btn btn-lg" data-scroll="1" data-options='{ "easing": "easeOutCubic" }' href="#inscription">{{#str}}homepage_signup,local_apsolu{{/str}}</a></li>
+        <li><a id="apsolu-home-a" class="btn btn-lg" href="#accueil">{{#str}}homepage_home, local_apsolu{{/str}}</a></li>
+        <li><a id="apsolu-activities-a" class="btn btn-lg" href="#activites">{{#str}}homepage_activities, local_apsolu{{/str}}</a></li>
+        <li><a id="apsolu-signup-a" class="btn btn-lg" href="#inscription">{{#str}}homepage_signup, local_apsolu{{/str}}</a></li>
 		{{#dashboard_link}}
-			<li><a id="apsolu-myhome-a" class="btn btn-lg btn-login" href="{{.}}">{{#str}}myhome,moodle{{/str}}</a></li>
+			<li><a id="apsolu-myhome-a" class="btn btn-lg btn-login" href="{{ . }}">{{#str}}myhome, moodle{{/str}}</a></li>
 		{{/dashboard_link}}
 		{{#login_link}}
-			<li><a id="apsolu-login-a" class="btn btn-lg btn-login" data-scroll="1" data-options='{ "easing": "easeOutCubic" }' href="{{.}}">{{#str}}login,moodle{{/str}}</a></li>
+			<li><a id="apsolu-login-a" class="btn btn-lg btn-login" href="{{ . }}">{{#str}}login, moodle{{/str}}</a></li>
 		{{/login_link}}
     </ul>
 </div>

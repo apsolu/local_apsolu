@@ -74,7 +74,9 @@ if ($cache <= $now->sub(new DateInterval('PT5M'))) {
 $data = new stdClass();
 $data->sites = $sites;
 $data->activities = $activities;
+$data->count_activities = count($activities);
 $data->wwwroot = $CFG->wwwroot;
+$data->is_siuaps_rennes = $CFG->is_siuaps_rennes;
 
 // Set last menu link.
 if (isloggedin() && !isguestuser()) {
@@ -83,8 +85,7 @@ if (isloggedin() && !isguestuser()) {
     $data->login_link = $CFG->wwwroot.'/#authentification';
 }
 
-// Call javascript.
-$PAGE->requires->js_call_amd('local_apsolu/homepage', 'initialise');
+$PAGE->set_pagelayout('base'); // Désactive l'affichage des blocs (ou pas).
 
 // Call template.
 echo $OUTPUT->render_from_template('local_apsolu/homepage_index', $data);

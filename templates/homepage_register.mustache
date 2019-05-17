@@ -1,18 +1,20 @@
 <div class="apsolu-pages" id="inscription">
 	<div class="apsolu-contents col-md-8 col-md-offset-2">
 		<div class="apsolu-opac-text">
-			<h2 class="sr-only">{{#str}}homepage_signup,local_apsolu{{/str}}</h2>
-			<div>{{#str}}homepage_signupsummary,local_apsolu{{/str}}</div>
-			<p class="apsolu-photo-credits text-right"><a target="_blank" href="https://commons.wikimedia.org/wiki/File:Women_heptathlon_LJ_French_Athletics_Championships_2013_t144221.jpg">Crédit photo #3</a></p>
+			<h2 class="sr-only">{{#str}}homepage_signup, local_apsolu{{/str}}</h2>
+			<div>{{#str}}homepage_signupsummary, local_apsolu{{/str}}</div>
+            {{#is_siuaps_rennes}}
+			<!-- <p class="apsolu-photo-credits text-right"><a target="_blank" href="https://commons.wikimedia.org/wiki/File:Women_heptathlon_LJ_French_Athletics_Championships_2013_t144221.jpg">Crédit photo #3</a></p> -->
+            {{/is_siuaps_rennes}}
 		</div>
 	</div>
 	{{#login_link}}
 	<ul class="apsolu-inscription row justify-content-md-center" id="authentification">
 		<li class="col-md-4 col-md-offset-2">
-			<a class="btn btn-success btn-lg" href="{{wwwroot}}/auth/shibboleth/login.php">{{#str}}homepage_sesame,local_apsolu{{/str}}</a>
+			<a class="btn btn-success btn-lg" href="{{wwwroot}}/auth/shibboleth/login.php">{{#str}}homepage_sesame, local_apsolu{{/str}}</a>
 		</li>
 		<li class="col-md-4">
-			<a class="btn btn-default btn-lg" href="{{wwwroot}}/login/index.php?manual=1">{{#str}}homepage_nosesame,local_apsolu{{/str}}</a>
+			<a class="btn btn-default btn-lg" href="{{wwwroot}}/login/index.php?manual=1">{{#str}}homepage_nosesame, local_apsolu{{/str}}</a>
 		</li>
 	</ul>
 	{{/login_link}}

@@ -4,26 +4,27 @@
 			<h2 class="sr-only">{{#str}}homepage_activities,local_apsolu{{/str}}</h2>
 			<h3 id="apsolu-activities-list-h3">{{#str}}homepage_activitieslist,local_apsolu{{/str}}</h3>
 
-			<div id="apsolu-activities-content-div">
-				{{! activities }}
-				<ul id="apsolu-activities-list-ul" class="list-group row">
-					{{#activities}}
-						<li class="list-group-item col-md-3 text-center"><span class="apsolu-homepage-activities-items-span">{{name}}</span></li>
-					{{/activities}}
-				</ul>
-			</div>
-
-			<div id="apsolu-sites-content-div" class="row text-center">
+			<div id="apsolu-sites-content-div" class="text-right">
 				{{! sites }}
-				<p>Accéder à la liste complète des activités de :</p>
 				<ul id="apsolu-sites-list-ul" class="list-inline">
 					{{#sites}}
-						<li><a class="btn btn-primary" href="{{wwwroot}}/enrol/select/presentation/index.php?siteid={{id}}">{{name}}</a></li>
+						<li class="list-inline-item"><a class="btn btn-outline-primary" href="{{wwwroot}}/enrol/select/presentation/index.php?siteid={{id}}">{{name}}</a></li>
 					{{/sites}}
 				</ul>
 			</div>
 
+			<div id="apsolu-activities-content-div">
+				{{! activities }}
+				<ul id="apsolu-activities-list-ul" class="list-unstyled row">
+					{{#activities}}
+						<li class="col-md-3 my-1 overflow-hidden text-center"><span class="apsolu-homepage-activities-items-span">{{name}}</span></li>
+					{{/activities}}
+				</ul>
+			</div>
+
+            {{#is_siuaps_rennes}}
 			<!-- <p class="apsolu-photo-credits text-right"><a target="_blank" href="https://commons.wikimedia.org/wiki/File:USO-Sale_Sharks_-_20131205_-_Ballon_flottant.jpg">Crédit photo #2</a></p> -->
+            {{/is_siuaps_rennes}}
 		</div>
 	</div>
 </div>

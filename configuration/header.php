@@ -44,7 +44,9 @@ if ($data = $mform->get_data()) {
     if (empty($data->apsoluheaderactive) === true) {
         set_config('additionalhtmltopofbody', '');
     } else {
-        set_config('additionalhtmltopofbody', $data->apsoluheadercontent);
+        // Encapsule le HTML dans une div afin de pouvoir masquer le contenu sur la page d'accueil du site.
+        $additionalhtmltopofbody = sprintf('<div id="apsolu-topofbody">%s</div>', $data->apsoluheadercontent);
+        set_config('additionalhtmltopofbody', $additionalhtmltopofbody);
     }
 
     $notification = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
