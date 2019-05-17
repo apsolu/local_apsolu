@@ -76,7 +76,7 @@ $data->sites = $sites;
 $data->activities = $activities;
 $data->count_activities = count($activities);
 $data->wwwroot = $CFG->wwwroot;
-$data->is_siuaps_rennes = $CFG->is_siuaps_rennes;
+$data->is_siuaps_rennes = isset($CFG->is_siuaps_rennes);
 
 // Set last menu link.
 if (isloggedin() && !isguestuser()) {
