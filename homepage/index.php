@@ -82,7 +82,11 @@ $data->is_siuaps_rennes = $CFG->is_siuaps_rennes;
 if (isloggedin() && !isguestuser()) {
     $data->dashboard_link = $CFG->wwwroot.'/my/';
 } else {
-    $data->login_link = $CFG->wwwroot.'/#authentification';
+    if ($data->is_siuaps_rennes === true) {
+        $data->login_link = $CFG->wwwroot.'/#authentification';
+    } else {
+        $data->login_link = $CFG->wwwroot.'/login/index.php';
+    }
 }
 
 $PAGE->set_pagelayout('base'); // Désactive l'affichage des blocs (ou pas).
