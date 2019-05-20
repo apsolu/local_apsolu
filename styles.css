@@ -99,7 +99,7 @@ html {
     margin-top: 2%;
 }
 
-/* menu */
+/* Homepage: menu */
 .apsolu-scroll-menu {
     position: fixed;
     top: 15%;
@@ -129,37 +129,11 @@ html {
 }
 
 .apsolu-scroll-menu .btn {
-    background-color: #6F787B;
-    background-image: linear-gradient(to right, rgba(111, 120, 123, 1), rgba(111, 120, 123, 0) 10%);
-    border: 1px solid #434241;
     border-left: none;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-    color: #050505;
     display: block;
     padding: 5px 10px;
-}
-
-.apsolu-scroll-menu .btn:hover {
-    background-color: #8F989B;
-}
-
-.apsolu-scroll-menu .btn:active,
-.apsolu-scroll-menu .btn:focus {
-    color: #ffffff;
-}
-.apsolu-scroll-menu .btn:active {
-    color: #ffffff;
-}
-
-.apsolu-scroll-menu .btn-login {
-    background-color: #008A0C;
-    border-color: #004A00;
-    color: #FFFFFF;
-}
-
-.apsolu-scroll-menu .btn-login:hover {
-    background-color: #20AA2C;
 }
 
 @media (max-width: 994px) {
@@ -173,8 +147,6 @@ html {
     }
 
     #apsolu-scroll-menu-links {
-        background-color: #434241;
-        border: none;
         display: block;
         margin: auto;
         text-align: center;
@@ -186,43 +158,34 @@ html {
     }
 
     .apsolu-scroll-menu .btn {
-        background: none;
-        border: 1px solid #ffffff;
-        color: #ffffff;
         font-size: .7em;
     }
 }
 
 
-/* home */
-#apsolu-logo-div{
+/* Homepage: home. */
+#apsolu-logo-div {
     align-items: center;
     display: flex;
     margin-bottom: 2em;
 }
 
-#logo-siuaps-div img{
+#logo-siuaps-div img {
     height: auto;
     width: 45%;
 }
 
-#logo-rennes1-div img{
+#logo-rennes1-div img {
     height: auto;
     width: 75%;
 }
 
-#logo-rennes2-div img{
+#logo-rennes2-div img {
     height: auto;
     width: 45%;
 }
 
-/* homepage : activities */
-
-#activites .list-group-item{
-    background-color: transparent;
-    border: none;
-}
-
+/* Homepage : activities. */
 #apsolu-activities-list-ul {
     margin-bottom: 0;
 }
@@ -231,18 +194,7 @@ html {
     padding: .2em .5em;
 }
 
-#apsolu-sites-content-div .btn {
-    background-color: #ffffff;
-}
-
-#apsolu-sites-content-div .btn:hover {
-    background-color: #1177d1;
-}
-
 .apsolu-homepage-activities-items-span {
-    background-color: #fff;
-    border-color: #ccc;
-    color: #333;
     display: block;
     padding: .5em 0;
     overflow: hidden;
@@ -252,15 +204,11 @@ html {
     word-break: break-all;
 }
 
-#apsolu-activities-list-h3{
+#apsolu-activities-list-h3 {
     margin-top: -1em;
 }
 
-.table-striped > tbody > tr:nth-of-type(2n) {
-    background-color: #E9E9E9;
-}
-
-/* inscription */
+/* Homepage: inscription. */
 #inscription {
     padding-bottom: 15%;
 }
