@@ -210,6 +210,7 @@ $string['cities'] = 'Sites';
 $string['cities_list'] = 'Liste des sites';
 $string['city_add'] = 'Ajouter un site';
 $string['no_city'] = 'Aucun site';
+$string['all_cities'] = 'Tous les sites';
 
 // Managers.
 $string['managers'] = 'Gestionnaires de lieux';
