@@ -6,6 +6,12 @@ html {
     display: none;
 }
 
+/* Masque les autres moyens d'authentification sur la page de login. */
+#page-login-index .forgetpass ~ h6,
+#page-login-index .forgetpass ~ .potentialidplist {
+    display: none;
+}
+
 /* Homepage. */
 #page-site-index {
     height: 100%;
