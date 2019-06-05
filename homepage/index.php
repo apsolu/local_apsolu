@@ -89,6 +89,10 @@ if (isloggedin() && !isguestuser()) {
     }
 }
 
+if ($data->is_siuaps_rennes === true) {
+    $data->logo = $OUTPUT->get_compact_logo_url($maxwidth = 144, $maxheight = 144);
+}
+
 $PAGE->set_pagelayout('base'); // Désactive l'affichage des blocs (ou pas).
 
 // Call template.
