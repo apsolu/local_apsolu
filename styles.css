@@ -375,3 +375,8 @@ input[list]{
     margin: 1em 0;
     padding: .5em 0;
 }
+
+#table-courses-sortable .tot {
+    font-size: .85em;
+    padding: 0 1em;
+}
