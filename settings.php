@@ -179,4 +179,9 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     $str = get_string('settings_configuration_header', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'header'));
     $ADMIN->add('local_apsolu_appearance', new admin_externalpage('local_apsolu_configuration_header', $str, $url, $capabilities));
+
+    // Configuration > Page d'accueil.
+    $str = get_string('settings_configuration_homepage', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/homepage/settings.php', array('page' => 'homepage'));
+    $ADMIN->add('local_apsolu_appearance', new admin_externalpage('local_apsolu_appearance_homepage', $str, $url, $capabilities));
 }

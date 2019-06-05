@@ -39,6 +39,7 @@ if (is_file($activitiescachefile)) {
     $cache = $now;
 }
 
+// Génère la liste des activités.
 if ($cache <= $now->sub(new DateInterval('PT5M'))) {
     // Rebuild cache.
     require_once($CFG->dirroot.'/enrol/select/locallib.php');
@@ -77,15 +78,21 @@ $data->activities = $activities;
 $data->count_activities = count($activities);
 $data->wwwroot = $CFG->wwwroot;
 $data->is_siuaps_rennes = isset($CFG->is_siuaps_rennes);
-
+$data->section1_text = get_config('local_apsolu', 'homepage_section1_text');
+$data->section3_text = get_config('local_apsolu', 'homepage_section3_text');
+var_dump(get_config('local_apsolu', 'homepage_section1_text'));
 // Set last menu link.
 if (isloggedin() && !isguestuser()) {
+    // Si l'utilisateur est déjà authentifié, on le renvoie vers son tableau de bord.
     $data->dashboard_link = $CFG->wwwroot.'/my/';
 } else {
-    if ($data->is_siuaps_rennes === true) {
-        $data->login_link = $CFG->wwwroot.'/#authentification';
-    } else {
+    $data->institutional_account_url = get_config('local_apsolu', 'homepage_section4_institutional_account_url');
+    $data->non_institutional_account_url = get_config('local_apsolu', 'homepage_section4_non_institutional_account_url');
+
+    if (empty($data->institutional_account_url) === true && empty($data->non_institutional_account_url) === true) {
         $data->login_link = $CFG->wwwroot.'/login/index.php';
+    } else {
+        $data->login_link = $CFG->wwwroot.'/#authentification';
     }
 }
 

@@ -24,6 +24,26 @@
 
 $string['pluginname'] = 'APSOLU';
 
+// Nouvelles chaines, triées par clé.
+$string['activity_list'] = 'Liste des activités';
+$string['author_credit'] = 'Crédit d\'auteurs';
+$string['background_image'] = 'Image de fond';
+$string['home'] = 'Accueil';
+$string['i_have_an_institutional_account'] = 'J\'ai un compte Sésame';
+$string['i_have_not_an_institutional_account'] = 'Je n\'ai pas de compte Sésame';
+$string['institutional_account_authentification_url'] = 'URL d\'authentification des comptes institutionnels';
+$string['login'] = 'Se connecter';
+$string['named_section'] = 'Section "{$a}"';
+$string['non_institutional_account_authentification_url'] = 'URL d\'authentification des comptes non institutionnels';
+$string['section_text'] = 'Texte de la section';
+$string['section2_text'] = '<div class="alert alert-info">Le tableau des activités est généré automatiquement.</div>';
+$string['signup'] = 'S\'inscrire';
+$string['siuaps'] = 'Service interuniversitaire des activités physiques et sportives';
+$string['the_activities'] = 'Les activités';
+$string['use_apsolu_homepage'] = 'Utiliser la page d\'accueil APSOLU';
+
+// Anciennes chaines dépréciées, qui utilisent de mauvaises clés de nommage.
+
 // Général.
 $string['close_link'] = '<a id="apsolu-cancel-a" href="{$a->href}" class="{$a->class}">Fermer</a>';
 $string['display'] = 'Afficher';
@@ -594,6 +614,7 @@ $string['settings_configuration_calendars_types'] = 'Types de calendriers';
 $string['settings_configuration_contacts'] = 'Adresses de contact';
 $string['settings_configuration_dates'] = 'Dates';
 $string['settings_configuration_header'] = 'Message d\'entête';
+$string['settings_configuration_homepage'] = 'Page d\'accueil';
 $string['settings_activities'] = 'Activités physiques';
 $string['settings_complements'] = 'Activités complémentaires';
 $string['settings_federations'] = 'FFSU';
