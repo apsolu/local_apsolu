@@ -5,8 +5,8 @@
 {{/notification}}
 
 <ul class="list list-inline text-right">
-	<li><a class="btn btn-default" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=export">{{#str}}courses_csv_export, local_apsolu{{/str}}</a></li>
-	<li><a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=edit">{{#str}}course_add, local_apsolu{{/str}}</a></li>
+	<li class="list-inline-item"><a class="btn btn-default" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=export">{{#str}}courses_csv_export, local_apsolu{{/str}}</a></li>
+	<li class="list-inline-item"><a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=edit">{{#str}}course_add, local_apsolu{{/str}}</a></li>
 </ul>
 
 {{^courses}}
@@ -45,10 +45,10 @@
 		<td>{{#teachers}}<div>{{firstname}} {{lastname}}</div>{{/teachers}}</td>
 		<td>
 			<ul class="list-inline">
-				<li><a href="{{wwwroot}}/course/view.php?id={{id}}">{{#pix}}t/preview,core,{{#str}}go_to_course, local_apsolu{{/str}}{{/pix}}</a></li>
-				<li><a href="{{wwwroot}}/user/index.php?id={{id}}">{{#pix}}t/enrolusers,core,{{#str}}enrol_teachers, local_apsolu{{/str}}{{/pix}}</a></li>
-				<li><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=edit&courseid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></li>
-				<li><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=delete&courseid={{id}}">{{#pix}}t/delete,core,{{#str}}delete{{/str}}{{/pix}}</a></li>
+				<li class="list-inline-item"><a href="{{wwwroot}}/course/view.php?id={{id}}">{{#pix}}t/preview,core,{{#str}}go_to_course, local_apsolu{{/str}}{{/pix}}</a></li>
+				<li class="list-inline-item"><a href="{{wwwroot}}/user/index.php?id={{id}}">{{#pix}}t/enrolusers,core,{{#str}}enrol_teachers, local_apsolu{{/str}}{{/pix}}</a></li>
+				<li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=edit&courseid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></li>
+				<li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=delete&courseid={{id}}">{{#pix}}t/delete,core,{{#str}}delete{{/str}}{{/pix}}</a></li>
 			</ul>
 		</td>
 	</tr>
