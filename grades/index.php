@@ -21,14 +21,13 @@
  */
 
 require_once(__DIR__.'/../../../config.php');
-// require_once($CFG->dirroot.'/blocks/apsolu_teachers/locallib.php');
 require_once($CFG->dirroot.'/local/apsolu/grades/grades_courses_form.php');
 
 $courseid = optional_param('courseid', null, PARAM_INT);
 
 $PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('admin');
-$PAGE->set_url('/blocks/apsolu_teachers/grades.php');
+$PAGE->set_url('/local/apsolu/grades/index.php');
 $PAGE->set_title(get_string('mygradedstudents', 'local_apsolu'));
 
 // Navigation.
