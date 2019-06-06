@@ -80,7 +80,7 @@ $data->wwwroot = $CFG->wwwroot;
 $data->is_siuaps_rennes = isset($CFG->is_siuaps_rennes);
 $data->section1_text = get_config('local_apsolu', 'homepage_section1_text');
 $data->section3_text = get_config('local_apsolu', 'homepage_section3_text');
-var_dump(get_config('local_apsolu', 'homepage_section1_text'));
+
 // Set last menu link.
 if (isloggedin() && !isguestuser()) {
     // Si l'utilisateur est déjà authentifié, on le renvoie vers son tableau de bord.
