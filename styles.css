@@ -8,6 +8,7 @@ html {
 
 /* Masque les autres moyens d'authentification sur la page de login. */
 #page-auth-shibboleth-login .container .card:nth-child(2),
+#page-login-index #apsolu-topofbody,
 #page-login-index .forgetpass ~ h6,
 #page-login-index .forgetpass ~ .potentialidplist,
 #page-site-index.notloggedin .usermenu .login {
