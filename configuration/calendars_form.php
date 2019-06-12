@@ -32,6 +32,13 @@ class local_apsolu_calendar_edit_form extends moodleform {
 
         list($defaults, $calendarstypes) = $this->_customdata;
 
+        if (empty($defaults->id) === false) {
+            // Avertissement affiché lorsqu'on modifie un calendrier existant.
+            $mform->addElement('html', '<div class="alert alert-info">'.get_string('calendar_modification_warning', 'local_apsolu').'</div>');
+        }
+
+        $mform->addElement('header', 'general', get_string('general'));
+        $mform->setExpanded('general');
         $attributes = array('size' => '20', 'maxlength' => '255');
         $mform->addElement('text', 'name', get_string('calendarname', 'local_apsolu'), $attributes);
         $mform->setType('name', PARAM_TEXT);

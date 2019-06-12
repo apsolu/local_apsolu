@@ -28,6 +28,7 @@ $string['pluginname'] = 'APSOLU';
 $string['activity_list'] = 'Liste des activités';
 $string['author_credit'] = 'Crédit d\'auteurs';
 $string['background_image'] = 'Image de fond';
+$string['calendar_modification_warning'] = '<p><strong>Attention : </strong> l\'enregistrement de cette page entraînera la modification automatique des dates de toutes les méthodes d\'inscription associées à ce calendrier.</p>';
 $string['home'] = 'Accueil';
 $string['i_have_an_institutional_account'] = 'J\'ai un compte Sésame';
 $string['i_have_not_an_institutional_account'] = 'Je n\'ai pas de compte Sésame';
