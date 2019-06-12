@@ -39,6 +39,7 @@ $string['section_text'] = 'Texte de la section';
 $string['section2_text'] = '<div class="alert alert-info">Le tableau des activités est généré automatiquement.</div>';
 $string['signup'] = 'S\'inscrire';
 $string['siuaps'] = 'Service interuniversitaire des activités physiques et sportives';
+$string['strftimedatetimeshort'] = '%a %d %b %Y %H:%M';
 $string['the_activities'] = 'Les activités';
 $string['use_apsolu_homepage'] = 'Utiliser la page d\'accueil APSOLU';
 

@@ -31,14 +31,14 @@
     {{#calendars}}
     <tr>
         <td>{{name}}</td>
-        <td>{{#enrolstartdate}}{{#userdate}} {{enrolstartdate}}, {{#str}} strftimedate {{/str}} {{/userdate}}{{/enrolstartdate}}</td>
-        <td>{{#enrolenddate}}{{#userdate}} {{enrolenddate}}, {{#str}} strftimedate {{/str}} {{/userdate}}{{/enrolenddate}}</td>
-        <td>{{#coursestartdate}}{{#userdate}} {{coursestartdate}}, {{#str}} strftimedate {{/str}} {{/userdate}}{{/coursestartdate}}</td>
-        <td>{{#courseenddate}}{{#userdate}} {{courseenddate}}, {{#str}} strftimedate {{/str}} {{/userdate}}{{/courseenddate}}</td>
-        <td>{{#reenrolstartdate}}{{#userdate}} {{reenrolstartdate}}, {{#str}} strftimedate {{/str}} {{/userdate}}{{/reenrolstartdate}}</td>
-        <td>{{#reenrolenddate}}{{#userdate}} {{reenrolenddate}}, {{#str}} strftimedate {{/str}} {{/userdate}}{{/reenrolenddate}}</td>
-        <td>{{#gradestartdate}}{{#userdate}} {{gradestartdate}}, {{#str}} strftimedate {{/str}} {{/userdate}}{{/gradestartdate}}</td>
-        <td>{{#gradeenddate}}{{#userdate}} {{gradeenddate}}, {{#str}} strftimedate {{/str}} {{/userdate}}{{/gradeenddate}}</td>
+        <td>{{#enrolstartdate}}{{#userdate}} {{enrolstartdate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/enrolstartdate}}</td>
+        <td>{{#enrolenddate}}{{#userdate}} {{enrolenddate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/enrolenddate}}</td>
+        <td>{{#coursestartdate}}{{#userdate}} {{coursestartdate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/coursestartdate}}</td>
+        <td>{{#courseenddate}}{{#userdate}} {{courseenddate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/courseenddate}}</td>
+        <td>{{#reenrolstartdate}}{{#userdate}} {{reenrolstartdate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/reenrolstartdate}}</td>
+        <td>{{#reenrolenddate}}{{#userdate}} {{reenrolenddate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/reenrolenddate}}</td>
+        <td>{{#gradestartdate}}{{#userdate}} {{gradestartdate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/gradestartdate}}</td>
+        <td>{{#gradeenddate}}{{#userdate}} {{gradeenddate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/gradeenddate}}</td>
         <td>{{type}}</td>
         <td><a href="{{wwwroot}}/local/apsolu/configuration/index.php?page=calendars&action=edit&calendarid={{id}}">{{#pix}}t/edit, core, {{#str}}edit{{/str}}{{/pix}}</a></td>
     </tr>
