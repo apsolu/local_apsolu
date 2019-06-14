@@ -15,6 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Génère un fichier CSV exportant tous les cours, avec une colonne pour les enseignants et une colonne par méthodes d'inscription.
+ *
+ * La colonne des méthodes d'inscription contient les dates d'inscription, les quotas, les rôles acceptés et les tarifs requis.
+ *
  * @package    local_apsolu
  * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -56,6 +60,60 @@ foreach ($DB->get_recordset_sql($sql) as $teacher) {
     } else {
         $courses[$teacher->instanceid]->teachers .= ', '.$user;
     }
+}
+
+// Liste des rôles.
+$roles = role_fix_names($DB->get_records('role'));
+
+// Liste des rôles par méthodes d'inscription.
+$enrol_roles = array();
+foreach ($DB->get_recordset('enrol_select_roles') as $enrol) {
+    if (isset($enrol_roles[$enrol->enrolid]) === false) {
+        $enrol_roles[$enrol->enrolid] = array();
+    }
+
+    $enrol_roles[$enrol->enrolid][] = $roles[$enrol->roleid]->name;
+}
+
+// Liste des tarifs.
+$cards = $DB->get_records('apsolu_payments_cards');
+
+// Liste des tarifs par méthodes d'inscription.
+$enrol_cards = array();
+foreach ($DB->get_recordset('enrol_select_cards') as $enrol) {
+    if (isset($enrol_cards[$enrol->enrolid]) === false) {
+        $enrol_cards[$enrol->enrolid] = array();
+    }
+
+    $enrol_cards[$enrol->enrolid][] = $cards[$enrol->cardid]->fullname;
+}
+
+// Liste des méthodes d'inscription.
+foreach ($DB->get_records('enrol', array('enrol' => 'select'), $sort = 'enrolstartdate') as $enrol) {
+    if (isset($courses[$enrol->courseid]) === false) {
+        continue;
+    }
+
+    $enrolstartdate = userdate($enrol->enrolstartdate, get_string('strftimedatetimeshort'));
+    $enrolenddate = userdate($enrol->enrolenddate, get_string('strftimedatetimeshort'));
+
+    $main_quota = $enrol->customint1;
+    $wait_quota = $enrol->customint2;
+
+    $roles = '-';
+    if (isset($enrol_roles[$enrol->id]) === true) {
+        sort($enrol_roles[$enrol->id]);
+        $roles = implode(', ', $enrol_roles[$enrol->id]);
+    }
+
+    $cards = '-';
+    if (isset($enrol_cards[$enrol->id]) === true) {
+        sort($enrol_cards[$enrol->id]);
+        $cards = implode(', ', $enrol_cards[$enrol->id]);
+    }
+
+    $index = 'enrol'.$enrol->id;
+    $courses[$enrol->courseid]->{$index} = sprintf('Déb. ins.: %s, fin ins.: %s, LP: %s, LC: %s, rôles: %s, cartes: %s', $enrolstartdate, $enrolenddate, $main_quota, $wait_quota, $roles, $cards);
 }
 
 // Génération du fichier csv.
