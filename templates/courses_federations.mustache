@@ -4,9 +4,9 @@
 	{{{notification}}}
 {{/notification}}
 
-<ul class="list list-inline">
-	<li><a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/complements.php?tab=federations&action=export&institution=rennes1">{{#str}}federations_users_list_export_r1, local_apsolu{{/str}}</a></li>
-	<li><a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/complements.php?tab=federations&action=export&institution=rennes2">{{#str}}federations_users_list_export_r2, local_apsolu{{/str}}</a></li>
+<ul class="list-inline">
+	<li class="list-inline-item"><a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/complements.php?tab=federations&action=export&institution=rennes1">{{#str}}federations_users_list_export_r1, local_apsolu{{/str}}</a></li>
+	<li class="list-inline-item"><a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/complements.php?tab=federations&action=export&institution=rennes2">{{#str}}federations_users_list_export_r2, local_apsolu{{/str}}</a></li>
 </ul>
 
 {{#user_selector}}
@@ -56,7 +56,7 @@
 		<td>{{federationpaid}}</td>
 		<td>
 			<ul class="list-inline">
-				<li><a target="_blank" href="{{wwwroot}}/user/editadvanced.php?id={{id}}">{{#pix}}t/assignroles,core,{{#str}}edit{{/str}}{{/pix}}</a></li>
+				<li class="list-inline-item"><a target="_blank" href="{{wwwroot}}/user/editadvanced.php?id={{id}}">{{#pix}}t/assignroles,core,{{#str}}edit{{/str}}{{/pix}}</a></li>
 			</ul>
 		</td>
 	</tr>
