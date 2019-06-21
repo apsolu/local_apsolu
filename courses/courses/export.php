@@ -120,6 +120,7 @@ foreach ($DB->get_records('enrol', array('enrol' => 'select'), $sort = 'enrolsta
 $filename = str_replace(' ', '_', strtolower(get_string('courses', 'local_apsolu')));
 
 $headers = array(
+    get_string('idnumbercourse'),
     get_string('groupings', 'local_apsolu'),
     get_string('categories', 'local_apsolu'),
     get_string('skills', 'local_apsolu'),
@@ -137,7 +138,6 @@ $csvexport->set_filename($filename);
 $csvexport->add_data($headers);
 
 foreach ($courses as $course) {
-    unset($course->id);
     $course->weekday = get_string($course->weekday, 'calendar');
     $csvexport->add_data((array) $course);
 }
