@@ -21,6 +21,7 @@
 
 use UniversiteRennes2\Apsolu\Payment;
 use local_apsolu\core\attendance as Attendance;
+use local_apsolu\core\customfields;
 
 require_once(__DIR__.'/../../../config.php');
 require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
@@ -181,12 +182,14 @@ if ($session === false) {
     print_error('needcoursecategroyid');
 }
 
+$customfields = customfields::getCustomFields();
+
 // Récupérer tous les inscrits.
 // TODO: jointure avec colleges
 $sql = "SELECT u.*, ue.id AS ueid, ue.status, ue.timestart, ue.timeend, ue.enrolid, e.enrol, ra.id AS raid, ra.roleid, uid1.data AS apsolusesame, uid2.data AS apsolucardpaid".
     " FROM {user} u".
-    " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = 11". // apsolusesame
-    " LEFT JOIN {user_info_data} uid2 ON u.id = uid2.userid AND uid2.fieldid = 12". // apsolucardpaid
+    " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = :apsolusesame".
+    " LEFT JOIN {user_info_data} uid2 ON u.id = uid2.userid AND uid2.fieldid = :apsolucardpaid".
     " JOIN {user_enrolments} ue ON u.id = ue.userid".
     " JOIN {enrol} e ON e.id = ue.enrolid".
     " JOIN {role_assignments} ra ON u.id = ra.userid AND ((e.id = ra.itemid) OR (e.enrol = 'manual' AND ra.itemid = 0))".
@@ -196,7 +199,10 @@ $sql = "SELECT u.*, ue.id AS ueid, ue.status, ue.timestart, ue.timeend, ue.enrol
     " AND e.courseid = :courseid".
     " AND ctx.contextlevel = 50". // Course level.
     " AND r.archetype = 'student'";
+
 $params = array();
+$params['apsolusesame'] = $customfields['apsolusesame']->id;
+$params['apsolucardpaid'] = $customfields['apsolucardpaid']->id;
 
 if (isset($invalid_enrolments) === false) {
     // Récupération des inscriptions courantes.
@@ -226,10 +232,16 @@ $sql = "SELECT DISTINCT u.*, uid1.data AS apsolusesame, uid2.data AS apsolucardp
     " FROM {user} u".
     " JOIN {apsolu_attendance_presences} aap ON u.id = aap.studentid".
     " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid".
-    " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = 11". // apsolusesame
-    " LEFT JOIN {user_info_data} uid2 ON u.id = uid2.userid AND uid2.fieldid = 12". // apsolucardpaid
+    " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = :apsolusesame".
+    " LEFT JOIN {user_info_data} uid2 ON u.id = uid2.userid AND uid2.fieldid = :apsolucardpaid".
     " WHERE aas.courseid = :courseid";
-foreach ($DB->get_records_sql($sql, array('courseid' => $courseid)) as $student) {
+
+$params = array();
+$params['apsolusesame'] = $customfields['apsolusesame']->id;
+$params['apsolucardpaid'] = $customfields['apsolucardpaid']->id;
+$params['courseid'] = $courseid;
+
+foreach ($DB->get_records_sql($sql, $params) as $student) {
     if (isset($students[$student->id]) === false) {
         $student->status = null;
         $student->timestart = time() + 60;
