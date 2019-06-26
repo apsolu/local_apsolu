@@ -20,7 +20,7 @@
  */
 
 use UniversiteRennes2\Apsolu\Payment;
-use local_apsolu\core\attendance as Attendance;
+use local_apsolu\core\attendance;
 use local_apsolu\core\customfields;
 
 require_once(__DIR__.'/../../../config.php');
@@ -285,8 +285,8 @@ $mform = new edit_form($url, $args);
 $mform->display();
 */
 
-$course_presences = Attendance::getCoursePresences($courseid);
-$activity_presences = Attendance::getActivityPresences($course->category);
+$course_presences = attendance::getCoursePresences($courseid);
+$activity_presences = attendance::getActivityPresences($course->category);
 
 $presences = $DB->get_records('apsolu_attendance_presences', array('sessionid' => $sessionid), $sort='', $fields='studentid, statusid, description, id');
 
