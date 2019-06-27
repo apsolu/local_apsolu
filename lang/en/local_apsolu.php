@@ -26,8 +26,11 @@ $string['pluginname'] = 'APSOLU';
 
 // Nouvelles chaines, triées par clé.
 $string['activity_list'] = 'Liste des activités';
+$string['are_you_sure_you_want_to_delete_this_calendar'] = 'Voulez-vous vraiment supprimer le calendrier "{$a}" ?';
 $string['author_credit'] = 'Crédit d\'auteurs';
 $string['background_image'] = 'Image de fond';
+$string['calendar_deleted'] = 'Calendrier supprimé';
+$string['an_error_occurred_while_deleting_record'] = 'Une erreur est survenue lors de la suppression de l\'enregistrement.';
 $string['calendar_modification_warning'] = '<p><strong>Attention : </strong> l\'enregistrement de cette page entraînera la modification automatique des dates de toutes les méthodes d\'inscription associées à ce calendrier.</p>';
 $string['home'] = 'Accueil';
 $string['i_have_an_institutional_account'] = 'J\'ai un compte Sésame';
@@ -36,6 +39,8 @@ $string['institutional_account_authentification_url'] = 'URL d\'authentification
 $string['login'] = 'Se connecter';
 $string['named_section'] = 'Section "{$a}"';
 $string['non_institutional_account_authentification_url'] = 'URL d\'authentification des comptes non institutionnels';
+$string['this_calendar_is_not_used_by_courses'] = 'Ce calendrier n\'est utilisé dans aucun cours.';
+$string['this_calendar_is_used_by_courses'] = 'Ce calendrier est actuellement utilisé par {$a} cours.';
 $string['section_text'] = 'Texte de la section';
 $string['section2_text'] = '<div class="alert alert-info">Le tableau des activités est généré automatiquement.</div>';
 $string['signup'] = 'S\'inscrire';

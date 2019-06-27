@@ -1,0 +1,17 @@
+<div class="alert alert-danger">
+    <p>{{#str}}are_you_sure_you_want_to_delete_this_calendar, local_apsolu, {{calendarname}}{{/str}}</p>
+    {{^count_courses}}
+        {{#str}}this_calendar_is_not_used_by_courses, local_apsolu{{/str}}
+    {{/count_courses}}
+
+    {{#count_courses}}
+    <details>
+        <summary>{{#str}}this_calendar_is_used_by_courses, local_apsolu, {{count_courses}}{{/str}}</summary>
+        <ul>
+            {{#courses}}
+            <li><a href="{{wwwroot}}/course/view.php?id={{id}}">{{fullname}}</a></li>
+            {{/courses}}
+        </ul>
+    </details>
+    {{/count_courses}}
+</div>
