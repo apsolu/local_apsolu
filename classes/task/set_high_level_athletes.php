@@ -34,7 +34,12 @@ class set_high_level_athletes extends \core\task\scheduled_task {
     }
 
     public function execute() {
-        global $DB;
+        global $CFG, $DB;
+
+        if (isset($CFG->is_siuaps_rennes) === false) {
+            // TODO: implémenter l'équivalent pour les autres universités.
+            return true;
+        }
 
         // TODO: carte muscu offerte.
 
