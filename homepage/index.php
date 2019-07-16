@@ -86,10 +86,21 @@ if (isloggedin() && !isguestuser()) {
     // Si l'utilisateur est déjà authentifié, on le renvoie vers son tableau de bord.
     $data->dashboard_link = $CFG->wwwroot.'/my/';
 } else {
-    $data->institutional_account_url = get_config('local_apsolu', 'homepage_section4_institutional_account_url');
-    $data->non_institutional_account_url = get_config('local_apsolu', 'homepage_section4_non_institutional_account_url');
+    $no_auth = true;
 
-    if (empty($data->institutional_account_url) === true && empty($data->non_institutional_account_url) === true) {
+    $data->institutional_account_url = get_config('local_apsolu', 'homepage_section4_institutional_account_url');
+    if (empty($data->institutional_account_url) === false) {
+        $data->institutional_account_url = new moodle_url($data->institutional_account_url);
+        $no_auth = false;
+    }
+
+    $data->non_institutional_account_url = get_config('local_apsolu', 'homepage_section4_non_institutional_account_url');
+    if (empty($data->non_institutional_account_url) === false) {
+        $data->non_institutional_account_url = new moodle_url($data->non_institutional_account_url);
+        $no_auth = false;
+    }
+
+    if ($no_auth === true) {
         $data->login_link = $CFG->wwwroot.'/login/index.php';
     } else {
         $data->login_link = $CFG->wwwroot.'/#authentification';
