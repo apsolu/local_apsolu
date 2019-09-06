@@ -218,9 +218,13 @@ if (isset($invalid_enrolments) === false) {
 
 $sql .= " ORDER BY u.lastname, u.firstname";
 
-if (in_array($courseid, array(210, 331, 329, 330), true) === true) {
+if (isset($CFG->is_siuaps_rennes) === true && in_array($courseid, array(210, 218, 6, 330), true) === true) {
     // Hack pour les cours de football.
-    $sql = str_replace(' AND e.courseid = :courseid', ' AND e.courseid IN(210, 331, 329, 330)', $sql);
+    if (in_array($courseid, array(210, 218), true) === true) {
+        $sql = str_replace(' AND e.courseid = :courseid', ' AND e.courseid IN(210, 218)', $sql);
+    } else {
+        $sql = str_replace(' AND e.courseid = :courseid', ' AND e.courseid IN(6, 330)', $sql);
+    }
     $students = $DB->get_records_sql($sql, $params);
 } else {
     $params['courseid'] = $courseid;
