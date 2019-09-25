@@ -46,17 +46,29 @@ function local_apsolu_is_valid_token() {
     return ($token !== false);
 }
 
+/**
+ * Fonction permettant d'écrire dans les logs si la variable $CFG->apsolu_enable_ws_logging est définie et correspond à un chemin accessible en écriture.
+ *
+ * @param $method string nom de la méthode utilisé (calculée automatiquement avec la constante __METHOD__)
+ * @param $arguments array un tableau contenant les arguments utilisés pour appeler la méthode
+ *
+ * @return bool retourne True lorsque le fichier a été écrit, False si le fichier n'a pas été écrit
+ */
 function local_apsolu_write_log($method, $arguments) {
     global $CFG;
 
     if (isset($CFG->apsolu_enable_ws_logging) === true) {
-        if (is_file($CFG->apsolu_enable_ws_logging) === true) {
+        if (is_writable($CFG->apsolu_enable_ws_logging) === true) {
             // Place systématiquement en début de tableau le token utilisé.
             array_unshift($arguments, 'token='.optional_param('wstoken', '', PARAM_ALPHANUM));
 
-            file_put_contents($CFG->apsolu_enable_ws_logging, strftime('%c').' '.$method.' '.implode(', ', $arguments).PHP_EOL, FILE_APPEND | LOCK_EX);
+            $result = file_put_contents($CFG->apsolu_enable_ws_logging, strftime('%c').' '.$method.' '.implode(', ', $arguments).PHP_EOL, FILE_APPEND | LOCK_EX);
+
+            return $result !== false;
         }
     }
+
+    return false;
 }
 
 /*
@@ -916,9 +928,9 @@ class local_apsolu_webservices extends external_api {
             return array('success' => false);
         }
 
-        local_apsolu_write_log(__METHOD__, ['serial='.$serial, 'idteacher='.$idteacher, 'message='.$message, 'timestamp='.$timestamp]);
+        $return = local_apsolu_write_log(__METHOD__, ['serial='.$serial, 'idteacher='.$idteacher, 'message='.$message, 'timestamp='.$timestamp]);
 
-        return array('success' => true);
+        return array('success' => $return);
     }
 
     /**
