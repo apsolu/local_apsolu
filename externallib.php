@@ -708,17 +708,17 @@ class local_apsolu_webservices extends external_api {
 
         require_once($CFG->dirroot.'/user/profile/lib.php');
 
-        $data = array('success' => false);
+        $data = array('success' => false, 'cardnumber' => '');
 
         local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber]);
 
-        // Vérifier que le token appartienne à un enseignant du SIUAPS.
-        if (local_apsolu_is_valid_token() === false) {
-            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, get_string('invalidtoken', 'webservice')]);
-            return $data;
-        }
-
         try {
+            // Vérifier que le token appartienne à un enseignant du SIUAPS.
+            if (local_apsolu_is_valid_token() === false) {
+                local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, get_string('invalidtoken', 'webservice')]);
+                throw new Exception(get_string('invalidtoken', 'webservice'));
+            }
+
             $fields = CustomFields::getCustomFields();
 
             $card = $DB->get_record('user_info_data', array('fieldid' => $fields['apsoluidcardnumber']->id, 'userid' => $iduser));
@@ -748,13 +748,21 @@ class local_apsolu_webservices extends external_api {
             $user->timemodified = time();
             $DB->update_record('user', $user);
             local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'timemodified='.$user->timemodified, 'mise à jour du champ timemodified de l\'utilisateur']);
+
+            $data['success'] = true;
         } catch (Exception $exception) {
             local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, 'impossible d\'enregistrer la carte en DB']);
-
-            return array('success' => false);
         }
 
-        return array('success' => true);
+        // Récupère la carte actuelle de l'utilisateur.
+        $card = $DB->get_record('user_info_data', array('fieldid' => $fields['apsoluidcardnumber']->id, 'userid' => $iduser));
+        if ($card !== false && empty($card->data) === false) {
+            $data['cardnumber'] = $card->data;
+        }
+
+        local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, 'retourne '.json_encode($data)]);
+
+        return $data;
     }
 
     /**
@@ -780,6 +788,7 @@ class local_apsolu_webservices extends external_api {
         return new external_single_structure(
             array(
                 'success' => new external_value(PARAM_BOOL, get_string('ws_value_boolean', 'local_apsolu')),
+                'cardnumber' => new external_value(PARAM_ALPHANUM, get_string('ws_value_cardnumber', 'local_apsolu')),
             )
         );
     }
