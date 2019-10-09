@@ -751,7 +751,7 @@ class local_apsolu_webservices extends external_api {
 
             $data['success'] = true;
         } catch (Exception $exception) {
-            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, 'impossible d\'enregistrer la carte en DB']);
+            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, 'exception='.$exception->getMessage(), 'impossible d\'enregistrer la carte en DB']);
         }
 
         // Récupère la carte actuelle de l'utilisateur.
