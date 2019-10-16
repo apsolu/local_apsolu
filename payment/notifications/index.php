@@ -22,7 +22,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$actions = array('compose', 'history');
+$actions = array('compose', 'history', 'posts');
 
 if (in_array($action, $actions, $strict = true) === false) {
     $action = 'compose';

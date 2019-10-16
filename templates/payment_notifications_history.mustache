@@ -1,8 +1,8 @@
 <h1>{{#str}}dunning, local_apsolu{{/str}}</h1>
 
-<ul class="nav nav-tabs">
-	<li><a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=notifications&action=compose">{{#str}}compose, local_apsolu{{/str}}</a></li>
-	<li class="active"><a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=notifications&action=history">{{#str}}history, local_apsolu{{/str}}</a></li>
+<ul class="nav nav-tabs mb-3">
+	<li class="nav-item"><a class="nav-link" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=notifications&action=compose">{{#str}}compose, local_apsolu{{/str}}</a></li>
+	<li class="nav-item"><a class="nav-link active" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=notifications&action=history">{{#str}}history, local_apsolu{{/str}}</a></li>
 </ul>
 
 {{^count_dunnings}}
@@ -17,6 +17,7 @@
 		<th>{{#str}}author, local_apsolu{{/str}}</th>
 		<th>{{#str}}subject, local_apsolu{{/str}}</th>
 		<th>{{#str}}message, local_apsolu{{/str}}</th>
+		<th>{{#str}}cards, local_apsolu{{/str}}</th>
 		<th>{{#str}}countposts, local_apsolu{{/str}}</th>
 		<th>{{#str}}state, local_apsolu{{/str}}</th>
 	</tr>
@@ -28,8 +29,9 @@
 		<td>{{timecreated}}</td>
 		<td>{{firstname}} {{lastname}}</td>
 		<td>{{subject}}</td>
-		<td>{{{message}}}</td>
-		<td>{{count_posts}}</td>
+		<td><details><summary>{{#str}}show{{/str}}</summary><div class="well">{{{message}}}</div></details></td>
+		<td>{{#count_cards}}<ul>{{#cards}}<li>{{fullname}}</li>{{/cards}}</ul>{{/count_cards}}</td>
+		<td>{{^count_posts}}0{{/count_posts}}{{#count_posts}}<a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=notifications&action=posts&dunningid={{id}}">{{count_posts}}</a>{{/count_posts}}</td>
 		<td class="{{status_style}}">{{status}}</td>
 	</tr>
 {{/dunnings}}

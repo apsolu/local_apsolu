@@ -28,6 +28,7 @@ require_once($CFG->dirroot.'/local/apsolu/payment/notifications/compose_form.php
 // Generate object.
 $compose = new stdClass();
 $compose->id = 0;
+$compose->simulation = 1;
 $compose->subject = '';
 $compose->message = '';
 $compose->cards = array();
@@ -48,6 +49,11 @@ if ($data = $mform->get_data()) {
     $compose->timestarted = null;
     $compose->timeended = null;
     $compose->userid = $USER->id;
+
+    if (empty($data->simulation) === false) {
+        // TODO: créer un champ dédié à la simulation dans la table.
+        $compose->subject = '[x] '.$compose->subject;
+    }
 
     $compose->cards = array();
 

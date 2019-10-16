@@ -53,6 +53,8 @@ class send_dunnings extends \core\task\scheduled_task {
 
             $dunning->messagetext = strip_tags(str_replace('</p>', PHP_EOL, $dunning->message));
 
+            $simulation = (substr($dunning->subject, 0, 4) === '[x] ');
+
             $sender = $DB->get_record('user', array('id' => $dunning->userid));
             $receivers = array();
 
@@ -71,9 +73,11 @@ class send_dunnings extends \core\task\scheduled_task {
                         if (isset($receivers[$user->id]) === false) {
                             $receivers[$user->id] = 1;
 
-                            email_to_user($user, $sender, $dunning->subject, $dunning->messagetext, $dunning->message);
+                            if ($simulation === false) {
+                                email_to_user($user, $sender, $dunning->subject, $dunning->messagetext, $dunning->message);
 
-                            mtrace('   - relance envoyée à '.$user->email.' (#'.$user->id.' '.$user->firstname.' '.$user->lastname.')');
+                                mtrace('   - relance envoyée à '.$user->email.' (#'.$user->id.' '.$user->firstname.' '.$user->lastname.')');
+                            }
 
                             $post = new stdClass();
                             $post->timecreated = time();
@@ -88,7 +92,11 @@ class send_dunnings extends \core\task\scheduled_task {
             $dunning->timeended = time();
             $DB->update_record('apsolu_dunnings', $dunning);
 
-            mtrace('=> '.count($receivers).' relances envoyées.');
+            if ($simulation === true) {
+                mtrace('=> '.count($receivers).' envois simulés.');
+            } else {
+                mtrace('=> '.count($receivers).' relances envoyées.');
+            }
         }
     }
 }

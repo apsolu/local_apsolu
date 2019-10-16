@@ -39,14 +39,17 @@ $string['institutional_account_authentification_url'] = 'URL d\'authentification
 $string['login'] = 'Se connecter';
 $string['named_section'] = 'Section "{$a}"';
 $string['non_institutional_account_authentification_url'] = 'URL d\'authentification des comptes non institutionnels';
-$string['this_calendar_is_not_used_by_courses'] = 'Ce calendrier n\'est utilisé dans aucun cours.';
-$string['this_calendar_is_used_by_courses'] = 'Ce calendrier est actuellement utilisé par {$a} cours.';
+$string['return'] = 'Revenir';
 $string['section_text'] = 'Texte de la section';
 $string['section2_text'] = '<div class="alert alert-info">Le tableau des activités est généré automatiquement.</div>';
 $string['signup'] = 'S\'inscrire';
+$string['simulation'] = 'Simulation';
+$string['simulation_help'] = 'Si la valeur est positionnée à "oui", les notifications ne seront pas envoyées aux utilisateurs.';
 $string['siuaps'] = 'Service interuniversitaire des activités physiques et sportives';
 $string['strftimedatetimeshort'] = '%a %d %b %Y %H:%M';
 $string['the_activities'] = 'Les activités';
+$string['this_calendar_is_not_used_by_courses'] = 'Ce calendrier n\'est utilisé dans aucun cours.';
+$string['this_calendar_is_used_by_courses'] = 'Ce calendrier est actuellement utilisé par {$a} cours.';
 $string['use_apsolu_homepage'] = 'Utiliser la page d\'accueil APSOLU';
 
 // Anciennes chaines dépréciées, qui utilisent de mauvaises clés de nommage.

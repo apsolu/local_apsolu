@@ -37,6 +37,12 @@ $sql = "SELECT ad.*, u.firstname, u.lastname, COUNT(adp.id) AS count_posts".
     " ORDER BY ad.timecreated DESC";
 $dunnings = $DB->get_records_sql($sql);
 
+$sql = "SELECT ".$DB->sql_concat('dc.dunningid', '" "', 'c.id').", c.*, dc.dunningid".
+    " FROM {apsolu_payments_cards} c".
+    " JOIN {apsolu_dunnings_cards} dc ON c.id = dc.cardid".
+    " ORDER BY c.name";
+$cards = $DB->get_records_sql($sql);
+
 foreach ($dunnings as $dunning) {
     $dunning->message = nl2br($dunning->message);
     $dunning->timecreated = userdate($dunning->timecreated, get_string('strftimedatetime', 'local_apsolu'));
@@ -50,6 +56,16 @@ foreach ($dunnings as $dunning) {
     } else {
         $dunning->status = get_string('finished', 'local_apsolu');
         $dunning->status_style = 'info';
+    }
+
+    $dunning->cards = array();
+    $dunning->count_cards = 0;
+    foreach ($cards as $recordid => $card) {
+        if ($dunning->id === $card->dunningid) {
+            $dunning->cards[] = $card;
+            $dunning->count_cards++;
+            unset($cards[$recordid]);
+        }
     }
 
     $data->dunnings[] = $dunning;

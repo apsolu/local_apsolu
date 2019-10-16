@@ -1,0 +1,42 @@
+<h1>{{#str}}dunning, local_apsolu{{/str}}</h1>
+
+<ul class="nav nav-tabs mb-3">
+	<li class="nav-item"><a class="nav-link" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=notifications&action=compose">{{#str}}compose, local_apsolu{{/str}}</a></li>
+	<li class="nav-item"><a class="nav-link" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=notifications&action=history">{{#str}}history, local_apsolu{{/str}}</a></li>
+	<li class="nav-item"><a class="nav-link active" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=notifications&action=posts&dunningid={{dunning.id}}">{{#str}}notifications, local_apsolu{{/str}}</a></li>
+</ul>
+
+{{#dunning}}
+<dl>
+    <dt>{{#str}}subject, local_apsolu{{/str}}</dt>
+    <dd>{{subject}}</dd>
+</dl>
+{{/dunning}}
+
+{{^count_posts}}
+<p class="alert alert-warning">{{#str}}nodata, local_apsolu{{/str}}</p>
+{{/count_posts}}
+
+{{#count_posts}}
+<table class="table table-striped">
+<thead>
+	<tr>
+		<th>{{#str}}firstname{{/str}} {{#str}}lastname{{/str}}</th>
+		<th>{{#str}}email{{/str}}</th>
+		<th>{{#str}}timecreated, local_apsolu{{/str}}</th>
+	</tr>
+</thead>
+<tbody>
+{{#posts}}
+	<tr>
+		<td><a href="{{wwwroot}}/user/profile.php?id={{userid}}">{{firstname}} {{lastname}}</a></td>
+		<td>{{email}}</td>
+		<td>{{timecreated}}</td>
+	</tr>
+{{/posts}}
+</tbody>
+</table>
+
+{{/count_posts}}
+
+<p><a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=notifications&action=history">{{#str}}return, local_apsolu{{/str}}</a></p>

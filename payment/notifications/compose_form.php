@@ -34,6 +34,12 @@ class local_apsolu_payment_notifications_compose_form extends moodleform {
         $mform = $this->_form;
         list($data, $cards) = $this->_customdata;
 
+        // Preview field.
+        $mform->addElement('selectyesno', 'simulation', get_string('simulation', 'local_apsolu'));
+        $mform->setType('simulation', PARAM_INT);
+        $mform->addRule('simulation', get_string('required'), 'required', null, 'client');
+        $mform->addHelpButton('simulation', 'simulation', 'local_apsolu');
+
         // Subject field.
         $mform->addElement('text', 'subject', get_string('subject', 'local_apsolu'), array('size' => '48'));
         $mform->setType('subject', PARAM_TEXT);
@@ -45,6 +51,7 @@ class local_apsolu_payment_notifications_compose_form extends moodleform {
         $mform->addRule('message', get_string('required'), 'required', null, 'client');
 
         // Cards field.
+        $mform->addElement('header', 'header_cards', get_string('cards', 'local_apsolu'));
         foreach ($cards as $cardid => $card) {
             $mform->addElement('checkbox', 'card'.$cardid, $card->fullname);
             $mform->setType('card'.$cardid, PARAM_INT);
