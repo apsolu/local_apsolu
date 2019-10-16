@@ -719,6 +719,12 @@ class local_apsolu_webservices extends external_api {
                 throw new Exception(get_string('invalidtoken', 'webservice'));
             }
 
+            $user = $DB->get_record('user', array('id' => $iduser));
+            if ($user === false) {
+                local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, get_string('unknownuser')]);
+                return $data;
+            }
+
             $fields = CustomFields::getCustomFields();
 
             $card = $DB->get_record('user_info_data', array('fieldid' => $fields['apsoluidcardnumber']->id, 'userid' => $iduser));
@@ -744,7 +750,6 @@ class local_apsolu_webservices extends external_api {
             profile_save_data($userfield);
 
             // TODO: proposer un bug report à Moodle.org ?
-            $user = $DB->get_record('user', array('id' => $iduser));
             $user->timemodified = time();
             $DB->update_record('user', $user);
             local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'timemodified='.$user->timemodified, 'mise à jour du champ timemodified de l\'utilisateur']);
