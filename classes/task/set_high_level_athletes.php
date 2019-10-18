@@ -47,9 +47,9 @@ class set_high_level_athletes extends \core\task\scheduled_task {
         $groupingid = 1;
         $courseid = 423;
 
-        $field = $DB->get_record('user_info_field', array('shortname' => 'highlevelathlete'));
+        $field = $DB->get_record('user_info_field', array('shortname' => 'apsoluhighlevelathlete'));
         if ($field === false) {
-            mtrace('Le champ "highlevelathlete" n\'existe pas.');
+            mtrace('Le champ "apsoluhighlevelathlete" n\'existe pas.');
             return false;
         }
 
