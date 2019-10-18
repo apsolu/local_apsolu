@@ -45,7 +45,7 @@ class set_high_level_athletes extends \core\task\scheduled_task {
 
         // TODO: faire une page pour configurer le groupe et le cours (menu déroulant + ids) à synchroniser.
         $groupingid = 1;
-        $courseid = 320;
+        $courseid = 423;
 
         $field = $DB->get_record('user_info_field', array('shortname' => 'highlevelathlete'));
         if ($field === false) {
