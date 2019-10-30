@@ -695,6 +695,10 @@ $string['statistics_apply'] = 'Appliquer';
 // Statistics - Webservices
 $string['ws_local_apsolu_get_chartdataset_description'] = 'Retourne le jeu de données pour un graphique';
 $string['ws_local_apsolu_get_reportdataset_description'] = 'Retourne le jeu de données pour un rapport';
+// Statistics - charts
+$string['statistics_chart_criteria_cities'] = 'Sites';
+$string['statistics_chart_criteria_calendarstypes'] = 'Types de calendriers';
+$string['statistics_chart_criteria_complementaries'] = 'Activités complémentaires';
 // Statistics - Reports
 $string['statistics_noavailabledata'] = 'Aucune information disponible';
 $string['statistics_keynumbers'] = 'Chiffres-clés';
