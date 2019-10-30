@@ -949,4 +949,163 @@ class local_apsolu_webservices extends external_api {
             )
         );
     }
+
+    /**
+     * Describes the parameters for debugging.
+     *
+     * @return array
+     */    
+    public static function get_chartdataset($options) {
+      $class = 'local_apsolu\local\statistics\\'.$options['classname'].'\chart'; 
+      return call_user_func(array($class, $options['reportid']),$options);
+    }
+    
+    /**
+     * Describes the parameters for get_chartdataset.
+     *
+     * @return external_external_function_parameters
+     */
+    public static function get_chartdataset_parameters() {
+        return new external_function_parameters(
+          array(
+            'options' => new external_single_structure(
+              array(
+                'classname' => new external_value(PARAM_TEXT,'Nom de la classe'),
+                'reportid' => new external_value(PARAM_TEXT,'Identifiant du rapport'),
+                'criterias' => new external_single_structure(
+                  array(
+                    'cities' =>
+                      new external_multiple_structure( 
+                      new external_single_structure(
+                      array(
+                          'active' => new external_value(PARAM_BOOL,'Site par défaut',VALUE_DEFAULT, null, NULL_ALLOWED),
+                          'id' => new external_value(PARAM_INT,'Identifiant du site',VALUE_DEFAULT, null, NULL_ALLOWED),
+                          'name' => new external_value(PARAM_TEXT,'Nom du site',VALUE_DEFAULT, null, NULL_ALLOWED),
+                      ), 'Cities'), VALUE_DEFAULT, array()
+                      ),
+                    'calendarstypes' =>
+                      new external_multiple_structure( 
+                      new external_single_structure(
+                      array(
+                          'active' => new external_value(PARAM_BOOL,'Site par défaut',VALUE_DEFAULT, null, NULL_ALLOWED),
+                          'id' => new external_value(PARAM_INT,'Identifiant du type de calendrier',VALUE_DEFAULT, null, NULL_ALLOWED),
+                          'name' => new external_value(PARAM_TEXT,'Nom du type de calendrier',VALUE_DEFAULT, null, NULL_ALLOWED),
+                      ), 'CalendarsTypes'), VALUE_DEFAULT, array()
+                      ), 
+                    'complementaries' =>
+                      new external_multiple_structure( 
+                      new external_single_structure(
+                      array(
+                          'active' => new external_value(PARAM_BOOL,'Site par défaut',VALUE_DEFAULT, null, NULL_ALLOWED),
+                          'id' => new external_value(PARAM_INT,'Identifiant de l\'activité complementaire',VALUE_DEFAULT, null, NULL_ALLOWED),
+                          'name' => new external_value(PARAM_TEXT,'Nom de l\'activité complémentaire',VALUE_DEFAULT, null, NULL_ALLOWED),
+                      ), 'Complementaries'), VALUE_DEFAULT, array()
+                      ),                                    
+                  ), 'Criterias', VALUE_DEFAULT, array())
+              ), 'Options', VALUE_DEFAULT, array())
+          ) 
+        );  
+    }
+    
+    /**
+     * Describes the get_chartdataset return value.
+     *
+     * @return external_single_structure
+     */
+    public static function get_chartdataset_returns() {
+      return new external_single_structure(
+        array(
+          'success' => new external_value(PARAM_BOOL, get_string('ws_value_boolean', 'local_apsolu')),
+          'chartdata' => new external_value(PARAM_RAW,'chart object'),
+          )
+        );
+    }    
+    
+    /**
+     * Describes the parameters for debugging.
+     *
+     * @return array
+     */    
+    public static function get_reportdataset($classname,$reportid, $custom = null, $criterias = null) {
+      
+      $class = 'local_apsolu\local\statistics\\'.$classname.'\report'; 
+      $reportObj = new $class();
+      
+
+      // Check if report is defined as a rules
+      if (!is_null ($reportid)) {
+        $report = $reportObj->getReport($reportid);
+        if (!is_null ($report) && property_exists($report, "values")) {  
+          $custom = json_encode($report->values);
+        }
+      }  
+
+      $condition = json_decode($custom);
+              
+      if(!property_exists($condition, "datatype")) {
+        // custom report
+        if ($classname == 'population') {
+          $params = array("WithEnrolments" => $reportObj->WithEnrolments,"WithComplementary" => $reportObj->WithComplementary);
+        }
+        if (!is_null($criterias)){
+          $params = array_merge($params,$criterias);
+        }
+        $data = call_user_func(array($class, $condition->method),$params);
+                  
+        return array('success' => true,
+          'columns'=>json_encode($condition->columns),
+          'data'=>json_encode(array_values($data)),
+          'orders'=>json_encode($condition->orders),
+          'filters'=>json_encode($condition->filters),
+          );
+      } else {
+        // Report using querybuilder
+        $display = $reportObj->getReportDisplay($condition->datatype); 
+        $data = $reportObj->getReportData($custom,$criterias);
+        
+        return array('success' => true,
+          'data'=>json_encode(array_values($data)),
+          'columns'=>json_encode($display['columns']),
+          'orders'=>json_encode($display['orders']),
+          'filters'=>json_encode($display['filters']),
+        );        
+      }
+      
+      return array('success' => false,'columns'=> '','data'=>json_encode(get_string("statistics_noavailabledata","local_apsolu")));
+    }
+    
+    /**
+     * Describes the parameters for get_reportdataset.
+     *
+     * @return external_external_function_parameters
+     */
+    public static function get_reportdataset_parameters() {
+        return new external_function_parameters(
+          array(
+            'classname' => new external_value(PARAM_TEXT,'Nom de la classe',VALUE_DEFAULT, null, NULL_ALLOWED),
+            'reportid' => new external_value(PARAM_TEXT,'Identifiant du rapport',VALUE_DEFAULT, null, NULL_ALLOWED),
+            'querybuilder' => new external_value(PARAM_RAW,'Requête customisée',VALUE_DEFAULT, null, NULL_ALLOWED),
+            'criterias' => new external_value(PARAM_RAW,'filtres de customisation',VALUE_DEFAULT, null, NULL_ALLOWED),
+          ) 
+        );  
+    }
+    
+    /**
+     * Describes the get_reportdataset return value.
+     *
+     * @return external_single_structure
+     */
+    public static function get_reportdataset_returns() {
+      return new external_single_structure(
+        array(
+          'success' => new external_value(PARAM_BOOL, get_string('ws_value_boolean', 'local_apsolu'),VALUE_DEFAULT, null, NULL_ALLOWED),
+          'columns' => new external_value(PARAM_RAW,'report column',VALUE_DEFAULT, null, NULL_ALLOWED),
+          'data' => new external_value(PARAM_RAW,'report data'),
+          'orders' => new external_value(PARAM_RAW,'report orders',VALUE_DEFAULT, null, NULL_ALLOWED),
+          'filters' => new external_value(PARAM_RAW,'report columns filters type',VALUE_DEFAULT, null, NULL_ALLOWED),
+          )
+        );
+    }      
+    
+    
 }

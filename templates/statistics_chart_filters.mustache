@@ -1,0 +1,107 @@
+<div id="chart-filters-{{ uniqid }}" class="float-right"></div>
+
+{{#js}}
+
+require([
+  'jquery',
+  'core/chartjs',
+  'core/ajax',
+  'core/chart_builder',
+  'core/chart_output_chartjs',
+  'core/chart_output_htmltable',
+  'core/mustache',
+  'core/templates',
+], function($, Chartjs, Ajax, Builder, Output, OutputTable, Mustache, Templates) {
+                   
+$.extend({
+  resetChart : function (id,args) {
+    Chartjs.helpers.each(Chartjs.instances, function(instance){
+      if (instance.canvas.parentNode.getAttribute("aria-describedby") == "chart-table-data-" + id){
+        Ajax.call([{
+          methodname: 'local_apsolu_get_chartdataset',
+          args: args,
+          done: function(data) {
+            var chartArea = $('#chart-area-' + id),
+            chartTable = chartArea.find('.chart-table-data'),
+            chartCanvas = chartArea.find('canvas');
+            
+            if (data.success) {
+              chartArea.show();
+              instance.destroy();
+              var data = JSON.parse(data.chartdata);
+              Builder.make(data).then(function(ChartInst) {
+                new Output(chartCanvas, ChartInst);
+                new OutputTable(chartTable, ChartInst);
+              });
+            } else {
+              chartArea.hide();
+              alert (JSON.parse(data.chartdata));
+            }
+          
+          },
+          fail: Notification.exception
+        }]);
+      }
+    })
+  },
+  
+  actionCriterias : function (uniqid,reportid,criteriatype) {
+    $("button[id^='btn-"+criteriatype+"-"+uniqid+"']").each(function(i){
+      $(this).unbind("click");
+      $(this).click(function(){
+        // Set active button
+        $("button[id^='btn-"+criteriatype+"-"+uniqid+"']").each(function(i){
+          $(this).removeClass('active');
+        });
+        if ($(this).attr('value') != "resetCriterias") {
+          $(this).addClass('active');
+        }
+        
+        // build search criterias
+        var criterias = {};
+        var classname = $(this).attr('data-type');
+        $("button.active[id*='-"+uniqid+"-']").each(function(i){
+          var criteria = $(this).attr('data-criteria');
+          var id = $(this).attr('value');
+          criterias[criteria] = [{"id":id,"active":true}];
+        });
+        args = {'options':{"classname":classname,"reportid": reportid,"criterias":criterias}};
+
+        // reset chart from criterias
+        $.resetChart(uniqid,args);
+        
+      });
+    });  
+  },
+  
+});
+
+var options = {{{options}}};
+
+if (options.criterias) {
+  if (options.criterias.cities) {
+    Templates.render('local_apsolu/statistics_chart_filters_criteria', {'btnid':'{{uniqid}}','label':'{{# str }} cities, local_apsolu {{/ str }} : ','criteriatype':'cities','options':options.criterias.cities,'classname':options.classname})
+      .then(function(html, js) {
+          Templates.appendNodeContents('#chart-filters-{{ uniqid }}', html, js);
+          $.actionCriterias("{{uniqid}}",options.reportid,"cities");
+      });
+  }
+  if (options.criterias.calendarstypes) {
+    Templates.render('local_apsolu/statistics_chart_filters_criteria', {'btnid':'{{uniqid}}','label':'{{# str }} calendartype, local_apsolu {{/ str }} : ','criteriatype':'calendarstypes','options':options.criterias.calendarstypes,'classname':options.classname})
+      .then(function(html, js) {
+          Templates.appendNodeContents('#chart-filters-{{ uniqid }}', html, js);
+          $.actionCriterias("{{uniqid}}",options.reportid,"calendarstypes");
+      });
+  }
+  if (options.criterias.complementaries) {
+    Templates.render('local_apsolu/statistics_chart_filters_criteria', {'btnid':'{{uniqid}}','label':'{{# str }} settings_complements, local_apsolu {{/ str }} : ','criteriatype':'complementaries','options':options.criterias.complementaries,'classname':options.classname})
+      .then(function(html, js) {
+          Templates.appendNodeContents('#chart-filters-{{ uniqid }}', html, js);
+          $.actionCriterias("{{uniqid}}",options.reportid,"complementaries");
+      });
+  }  
+}
+
+});
+
+{{/js}}

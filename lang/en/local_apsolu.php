@@ -682,3 +682,35 @@ $string['ws_value_boolean'] = 'un booléen vrai/faux';
 $string['ws_value_serial'] = 'numéro de série de l\'équipement';
 $string['ws_value_idteacher'] = 'identifiant de l\'enseignant';
 $string['ws_value_message'] = 'message de type texte';
+
+// Statistics
+$string['statistics'] = 'Statistiques';
+$string['statistics_population'] = 'Population';
+$string['statistics_dashboard'] = 'Tableau de bord';
+$string['statistics_reports'] = 'Rapports';
+$string['statistics_select_reports'] = 'Sélectionnez un rapport existants';
+$string['statistics_custom'] = 'Recherche personnalisée';
+$string['statistics_clean'] = 'Éffacer';
+$string['statistics_apply'] = 'Appliquer';
+// Statistics - Webservices
+$string['ws_local_apsolu_get_chartdataset_description'] = 'Retourne le jeu de données pour un graphique';
+$string['ws_local_apsolu_get_reportdataset_description'] = 'Retourne le jeu de données pour un rapport';
+// Statistics - Reports
+$string['statistics_noavailabledata'] = 'Aucune information disponible';
+$string['statistics_keynumbers'] = 'Chiffres-clés';
+$string['statistics_wishes'] = 'Voeux';
+$string['statistics_see_details'] = 'Voir le détail';
+$string['statistics_enrollees'] = 'Inscrits';
+$string['statistics_enrollments'] = 'Inscriptions';
+$string['statistics_acceptedlist'] = 'Inscriptions';
+$string['statistics_mainlist'] = 'Principale';
+$string['statistics_waitlist'] = 'Attente';
+$string['statistics_declinelist'] = 'Refusé';
+$string['statistics_bodybuilding'] = 'Musculation';
+$string['statistics_accepted_atleastonce'] = 'Accepté au moins 1 fois';
+$string['statistics_refused_anywhere'] = 'Refusé partout';
+$string['statistics_number'] = 'Nombre';
+$string['statistics_population_datatype_1'] = 'Activités physiques - Inscriptions';
+$string['statistics_population_datatype_2'] = 'Activités physiques - Candidats';
+$string['statistics_population_datatype_3'] = 'Activités complémentaires - Inscriptions';
+$string['statistics_population_datatype_4'] = 'Activités complémentaires - Candidats';

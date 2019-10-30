@@ -1,0 +1,483 @@
+{
+    "operators": ["equal", "not_equal", "in", "not_in", "is_null", "is_not_null"],
+    "reports":[
+        {
+          "id": "enrollment",
+          "label":"Nombre d'inscriptions aux activités physiques",
+          "values": {
+            "datatype":"1"
+          }
+        },
+        {
+          "id": "enrollment_acceptedlist",
+          "label":"Nombre d'inscriptions acceptées aux activités physiques",
+          "values": {
+            "datatype":"1",
+            "sql":"status = 0 "
+          }
+        },
+        {
+          "id": "enrollment_mainlist",
+          "label":"Nombre d'inscriptions sur liste principale aux activités physiques",
+          "values": {
+            "datatype":"1",
+            "sql":"status = 2 "
+          }
+        },
+        {
+          "id": "enrollment_waitinglist",
+          "label":"Nombre d'inscriptions sur liste d'attente aux activités physiques",
+          "values": {
+            "datatype":"1",
+            "sql":"status = 3 "
+          }
+        },
+        {
+          "id": "enrollment_deletedlist",
+          "label":"Nombre d'inscriptions refusé aux activités physiques",
+          "values": {
+            "datatype":"1",
+            "sql":"status = 4 "
+          }
+        },                        
+        {
+          "id": "enrollee",
+          "label":"Nombre d'inscrits aux activités physiques",
+          "values": {
+            "datatype":"2"
+          }
+        },
+        {
+          "id": "complementaries_enrollment",
+          "label":"Nombre d'inscriptions aux activités complémentaires",
+          "values": {
+            "datatype":"3"
+          }
+        },
+        {
+          "id": "complementaries_enrollee",
+          "label":"Inscrits en activité complémentaire",
+          "values": {
+            "datatype":"4",
+            "having":"accepted_list > 0 ",
+            "order" : "institution"
+          }    
+        },        
+        {
+          "id": "accepted_refused",
+          "label": "Inscrits ayant au moins un cours/ Refusés en cours",
+          "values": {
+            "method" : "accepted_refused",
+            "columns" : [
+              {"data":"institution", "title":"Institution"},
+              {"data":"accepted", "title":"Accepté au moins 1 fois"},
+              {"data":"refused", "title":"Refusé partout"}
+            ],
+            "orders":{"0":"asc","1":"asc"},
+            "filters":{"select":[0]}
+          }
+        },
+        {
+          "id": "distribution_userprofile",
+          "label":"Nombre d'inscrits personnels VS Nombre d'inscrits étudiants",
+          "values": {
+            "method" : "distribution_userprofile",
+            "columns" : [
+              {"data":"institution", "title":"Intitution"},
+              {"data":"userprofile", "title":"Type"},
+              {"data":"total", "title":"Total"}
+            ],
+            "orders":{"0":"asc","1":"asc"},
+            "filters":{"select":[0,1]}
+          }
+        },        
+        {
+          "id": "distribution_genders",
+          "label":"Nombre d'inscrits garçons VS Nombre d'inscrits filles",
+          "values": {
+            "method" : "distribution_genders",
+            "columns" : [
+              {"data":"institution", "title":"Intitution"},
+              {"data":"gender", "title":"Genre"},
+              {"data":"total", "title":"Total"}
+            ],
+            "orders":{"0":"asc","1":"asc"},
+            "filters":{"select":[0,1]}
+          }
+        },
+        {
+          "id": "enrol_userprofile",
+          "label":"Nombre d'inscriptions personnels VS nombre d'incriptions étudiants",
+          "values": {
+            "method" : "enrol_userprofile",
+            "columns" : [
+              {"data":"institution", "title":"Intitution"},
+              {"data":"userprofile", "title":"Type"},
+              {"data":"total", "title":"Total"}
+            ],
+            "orders":{"0":"asc","1":"asc"},
+            "filters":{"select":[0,1]}
+          }
+        },        
+        {
+          "id": "enrol_genders",
+          "label":"Nombre d'inscriptions garçons VS Nombre d'inscriptions filles",
+          "values": {
+            "method" : "enrol_genders",
+            "columns" : [
+              {"data":"institution", "title":"Intitution"},
+              {"data":"gender", "title":"Genre"},
+              {"data":"total", "title":"Total"}
+            ],
+            "orders":{"0":"asc","1":"asc"},
+            "filters":{"select":[0,1]}
+          }
+        },        
+        {
+          "id": "accepted_once",
+          "label":"Nombre d'inscrits ayant obtenu une inscription acceptée",
+          "tooltip":"Affiche la liste des personnes ayant obtenues au moins une incription acceptée",
+          "values": {
+            "datatype":"2",
+            "having":"accepted_list > 0 "
+          }
+        },
+        {
+          "id": "not_accepted_once ",
+          "label":"Nombre de candidats à l'inscription n'ayant obtenu aucune inscription",
+          "values": {
+            "datatype":"2",
+            "having":"accepted_list = 0 "
+          }
+        }
+
+    ],
+    "reportsCustomRennes": [
+        {
+          "id": "complementaries_enrollment_mus",
+          "label":"Nombre d'inscriptions en Musculation",
+          "values": {
+            "datatype":"3",
+            "sql":"status = 0 and activityid = 250"
+          }
+        },
+        {
+          "id": "complementaries_enrollment_ffsu",
+          "label":"Nombre d'inscriptions adhésion AS/Licence FFSU",
+          "values": {
+            "datatype":"3",
+            "sql":"status = 0 and activityid = 249"
+          }
+        },
+        {
+          "id": "custom_shnu",
+          "label":"Sportifs de haut niveau qui pratique une activité",
+          "values": {
+            "method" : "custom_shnu",
+            "columns" : [
+              {"data":"idnumber", "title":"Numéro étudiant"},
+              {"data":"firstname", "title":"Prénom"},
+              {"data":"lastname", "title":"Nom"},
+              {"data":"email", "title":"Email"}
+            ],
+            "orders":{"1":"asc","2":"asc"},
+            "filters":{"input":[0,1,2,3]}
+          }
+        },
+        {
+          "id": "custom_apsoluhighlevelathlete",
+          "label":"Sportif de haut niveau inscrits sur l'espace cours",
+          "values": {
+            "method" : "custom_apsoluhighlevelathlete",
+            "columns" : [
+              {"data":"idnumber", "title":"Numéro étudiant"},
+              {"data":"firstname", "title":"Prénom"},
+              {"data":"lastname", "title":"Nom"},
+              {"data":"email", "title":"Email"},
+              {"data":"institution", "title":"Institution"},
+              {"data":"ufr", "title":"UFR"}
+            ],
+            "orders":{"1":"asc","2":"asc"},
+            "filters":{"input":[0,1,2,3],"select":[4,5]}
+          }
+        },
+        {
+          "id": "enrol_roles",
+          "label":"Nombre d'inscriptions libres/Option évalués/Bonification évalués",
+          "values": {
+            "method" : "enrol_roles",
+            "columns" : [
+              {"data":"institution", "title":"Institution"},
+              {"data":"roleshortname", "title":"Role"},
+              {"data":"total", "title":"Total"}
+            ],
+            "orders":{"0":"asc","1":"asc"},
+            "filters":{"select":[0,1]}
+          }
+        },        
+        {
+          "id": "custom_nowishes",
+          "label":"Nombre de visiteurs n'ayant pas fait de vœux",
+          "values": {
+            "method" : "get_nowishes_list",
+            "columns" : [
+              {"data":"idnumber", "title":"Numéro"},
+              {"data":"firstname", "title":"Prénom"},
+              {"data":"lastname", "title":"Nom"},
+              {"data":"email", "title":"Email"},
+              {"data":"institution", "title":"Institution"},
+              {"data":"department", "title":"Département"}
+            ],
+            "orders":{"2":"asc","3":"asc"},
+            "filters":{"input":[1,2,3,4],"select":[5,6]}
+          }
+        },
+        {
+          "id": "custom_shnu_ufr",
+          "label":"Nombre de sportifs de haut-niveau par UFR",
+          "values": {
+            "method" : "get_SHNU_list",
+            "columns" : [
+              {"data":"institution", "title":"Institution"},
+              {"data":"ufr", "title":"UFR"},
+              {"data":"total", "title":"Total"}
+            ],
+            "orders":{"0":"asc"},
+            "filters":{"select":[0,1]}
+          }
+        }
+    ],              
+    "filters": [
+        {
+          "id": "calendarid",
+          "label": "Calendrier",
+          "type": "integer",
+          "input": "select",
+          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
+          "values" : {
+              "table" : "apsolu_calendars",
+              "fields" : "id,name",
+              "sort" : "name"
+          }
+        },   
+        {
+          "id": "calendartypeid",
+          "label": "Type de calendrier",
+          "type": "integer",
+          "input": "select",
+          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
+          "values" : {
+              "table" : "apsolu_calendars_types",
+              "fields" : "id,name",
+              "sort" : "name"
+          }
+        },        
+        {
+          "id": "cityid",
+          "label": "Site",
+          "type": "integer",
+          "input": "select",
+          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
+          "values" : {
+              "table" : "apsolu_cities",
+              "fields" : "id,name",
+              "sort" : "name"
+          }
+        },
+        {
+          "id": "userid",
+          "label": "Identifiant APSOLU",
+          "type": "string",
+          "operators": ["equal", "not_equal", "is_null", "is_not_null"]
+        },        
+        {
+          "id": "idnumber",
+          "label": "Numéro d'étudiant",
+          "type": "string",
+          "operators": ["equal", "not_equal"]
+        },
+        {
+          "id": "firstname",
+          "label": "Prénom",
+          "type": "string",
+          "operators": ["equal", "not_equal", "is_null", "is_not_null"]
+        },                
+        {
+          "id": "lastname",
+          "label": "nom",
+          "type": "string",
+          "operators": ["equal", "not_equal", "is_null", "is_not_null"]
+        },
+        {
+          "id": "email",
+          "label": "Courriel",
+          "type": "string",
+          "operators": ["equal", "not_equal"]
+        },
+        {
+          "id": "sexe",
+          "label": "Sexe",
+          "type": "string",
+          "input": "select",
+          "operators": ["equal", "not_equal"],
+          "values" : {
+              "table" : "user_info_data",
+              "fields" : "data",
+              "conditions" : "fieldid=2",
+              "sort" : "data"
+          }
+        },
+        {
+          "id": "institution",
+          "label": "Institution",
+          "type": "string",
+          "input": "select",
+          "values" : {
+              "table" : "user",
+              "fields" : "institution",
+              "conditions" : "institution<>''",
+              "sort" : "institution"
+          }
+        },
+        {
+          "id": "department",
+          "label": "Département",
+          "type": "string",
+          "input": "select",
+          "operators": ["equal", "not_equal", "in", "not_in", "is_null", "is_not_null"],
+          "values" : {
+              "table" : "user",
+              "fields" : "department",
+              "sort" : "department"
+          }
+        },
+        {
+          "id": "ufr",
+          "label": "UFR",
+          "type": "string",
+          "input": "select",
+          "operators": ["equal", "not_equal"],
+          "values" : {
+              "table" : "user_info_data",
+              "fields" : "data",
+              "conditions" : "fieldid=4",
+              "sort" : "data"
+          }          
+        },
+        {
+          "id": "lmd",
+          "label": "Cycle LMD",
+          "type": "string",
+          "input": "select",
+          "operators": ["equal", "not_equal"],
+          "values" : {
+              "table" : "user_info_data",
+              "fields" : "data",
+              "conditions" : "fieldid=5",
+              "sort" : "data"
+          }          
+        },
+        {
+          "id": "roleshortname",
+          "label": "Type d'inscription",
+          "type": "string",
+          "input": "select",
+          "operators": ["equal", "not_equal"],
+          "values" : {
+              "table" : "role",
+              "fields" : "shortname",
+              "conditions" : "archetype = 'student' and shortname <> 'student'",
+              "sort" : "shortname"
+          }          
+        },
+        {
+          "id": "enrolname",
+          "label": "Inscriptions (semestre)",
+          "type": "string",
+          "input": "select",
+          "operators": ["equal", "not_equal"],
+          "values" : {
+              "table" : "enrol",
+              "fields" : "name",
+              "conditions" : "enrol = 'select'",
+              "sort" : "name"
+          }          
+        },          
+        {
+          "id": "apsolucardpaid",
+          "label": "Carte sport",
+          "type": "string",
+          "input": "select",
+          "operators": ["equal", "not_equal"],
+          "values" : {
+              "Oui":"Oui",
+              "Non":"Non"
+          }          
+        },
+        {
+          "id": "status",
+          "label": "Liste (statut inscription)",
+          "type": "integer",
+          "input": "select",
+          "values" : {
+              "0" : "Liste des étudiants acceptés",
+              "2" : "Liste principale",
+              "3" : "Liste complémentaire",
+              "4" : "Liste des étudiants désinscrits"
+          }          
+        },        
+        {
+          "id": "groupid",
+          "label": "Groupements d'activités",
+          "type": "integer",
+          "input": "select",
+          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
+          "values" : {
+              "table" : "course_categories",
+              "fields" : "id,name",
+              "conditions" : "parent = 0",
+              "sort" : "name"
+          }
+        },
+        {
+          "id": "activityid",
+          "label": "Créneaux horaires",
+          "type": "integer",
+          "input": "select",
+          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
+          "values" : {
+              "table" : "course_categories",
+              "fields" : "id,name",
+              "conditions" : "parent > 0",
+              "sort" : "name"
+          }
+        },
+        {
+          "id": "userprofile",
+          "label": "Type",
+          "type": "integer",
+          "input": "select",
+          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
+          "values" : {
+            "Inconnu":"Inconnu",
+            "Étudiant":"Étudiant",
+            "Personnel":"Personnel"
+          }
+        }
+                        
+        
+    ],
+    "filtersCustomRennes": [
+        {
+          "id": "shnu",
+          "label": "Sportif de haut niveau",
+          "type": "boolean",
+          "input": "select",
+          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
+          "values" : {
+              "true" : "Oui",
+              "false" : "Non"
+          }
+        }
+    ]    
+}

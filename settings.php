@@ -184,4 +184,19 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     $str = get_string('settings_configuration_homepage', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/homepage/settings.php', array('page' => 'homepage'));
     $ADMIN->add('local_apsolu_appearance', new admin_externalpage('local_apsolu_appearance_homepage', $str, $url, $capabilities));
+    
+    // Statistics
+    $ADMIN->add('apsolu', new admin_category('local_apsolu_statistics', get_string('statistics', 'local_apsolu')));
+    $ADMIN->add('local_apsolu_statistics', new admin_category('local_apsolu_statistics_population', get_string('statistics_population', 'local_apsolu')));
+       
+    $label = get_string('statistics_dashboard', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/statistics/population/index.php', array('page' => 'dashboard'));
+    $ADMIN->add('local_apsolu_statistics_population', new admin_externalpage('local_apsolu_statistics_population_dashboard', $label, $url, $capabilities));
+    $label = get_string('statistics_reports', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/statistics/population/index.php', array('page' => 'reports'));
+    $ADMIN->add('local_apsolu_statistics_population', new admin_externalpage('local_apsolu_statistics_population_reports', $label, $url, $capabilities));
+    $label = get_string('statistics_custom', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/statistics/population/index.php', array('page' => 'custom'));
+    $ADMIN->add('local_apsolu_statistics_population', new admin_externalpage('local_apsolu_statistics_population_custom', $label, $url, $capabilities));
+    
 }
