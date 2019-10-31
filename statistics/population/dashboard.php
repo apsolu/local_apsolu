@@ -68,7 +68,18 @@ $data->enrollment_deletedlist['report'] = new moodle_url('/local/apsolu/statisti
 // INSCRITS : Nombre d'inscrits
 $data->enrollee['counter'] = $render->render_reportCounter(['classname'=>'population','reportid'=>'enrollee']);
 $data->enrollee['report'] = new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=enrollee');
-
+// INSCRITS : Nombre d'inscrits acceptés
+$data->enrollee_acceptedlist['counter'] = $render->render_reportCounter(['classname'=>'population','reportid'=>'enrollee_acceptedlist']);
+$data->enrollee_acceptedlist['report'] = new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=enrollee_acceptedlist');
+// INSCRITS : Nombre d'inscrits sur liste principale
+$data->enrollee_mainlist['counter'] = $render->render_reportCounter(['classname'=>'population','reportid'=>'enrollee_mainlist']);
+$data->enrollee_mainlist['report'] = new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=enrollee_mainlist');
+// INSCRITS : Nombre d'inscrits sur liste d'attente
+$data->enrollee_waitinglist['counter'] = $render->render_reportCounter(['classname'=>'population','reportid'=>'enrollee_waitinglist']);
+$data->enrollee_waitinglist['report'] = new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=enrollee_waitinglist');
+// INSCRITS : Nombre d'inscrits refusé
+$data->enrollee_deletedlist['counter'] = $render->render_reportCounter(['classname'=>'population','reportid'=>'enrollee_deletedlist']);
+$data->enrollee_deletedlist['report'] = new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=enrollee_deletedlist');
 
 /**
 * ACTIVITÉS COMPLÉMENTAIRES
@@ -86,14 +97,24 @@ if ($complementaries_enrollment_counter > 0) {
   $data->complementaries_enrollee['report'] = new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=complementaries_enrollee');
   $data->complementaries_enrollee['title'] = $report->getReport("complementaries_enrollee")->label;
   $data->complementaries_enrollee['chart'] = $render->render_chart(['classname'=>'population','reportid'=>'complementaries_enrollee','criterias' => ['complementaries'=>array_values($complementaries)]]);
-  if ($CFG->is_siuaps_rennes){
-    // INSCRIPTIONS : Nombre d'inscriptions en musculation
-    $data->complementaries_enrollment_mus['counter'] = $render->render_reportCounter(['classname'=>'population','reportid'=>'complementaries_enrollment_mus']);
-    $data->complementaries_enrollment_mus['report'] = new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=complementaries_enrollment_mus');
-    // INSCRIPTIONS : Nombre d'inscriptions en FFSU
-    $data->complementaries_enrollment_ffsu['counter'] = $render->render_reportCounter(['classname'=>'population','reportid'=>'complementaries_enrollment_ffsu']);
-    $data->complementaries_enrollment_ffsu['report'] = new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=complementaries_enrollment_ffsu');
+
+  foreach ($complementaries as $complementary) {
+    // INSCRIPTIONS : Nombre d'inscriptions par activités complémentaires
+    $data->complementaries_enrollment_activity[] = array(
+      'title' => $complementary->name,
+      'counter' => $render->render_reportCounter(['classname'=>'population','reportid'=>'complementaries_enrollment','criterias' => ["activityid"=>$complementary->id,"active"=>true]]),
+      'report' => new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=complementaries_enrollment'),
+    );
+    // INSCRITS : Nombre d'inscrits par activités complémentaires
+    /*
+    $data->complementaries_enrollee_activity[] = array(
+      'title' => $complementary->name,
+      'counter' => $render->render_reportCounter(['classname'=>'population','reportid'=>'complementaries_enrollee','criterias' => ["activityid"=>$complementary->id,"active"=>true]]),
+      'report' => new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=complementaries_enrollee'),
+    );
+    */
   }
+
 }
 /**
 * CHARTS

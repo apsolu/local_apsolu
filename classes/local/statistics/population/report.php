@@ -443,44 +443,6 @@ class report extends \local_apsolu\local\statistics\report {
     }  
     
     
-   
-    /**
-      * Retourne la liste des sites
-      *
-      * @return array
-      */
-    public static function get_cities() {
-      global $DB;    
-      return $DB->get_records('apsolu_cities', $conditions = [], $sort = 'name');
-    } 
- 
-    /**
-      * Retourne la liste des types de calendriers
-      *
-      * @return array
-      */
-    public static function get_calendarstypes() {
-      global $DB;    
-      return $DB->get_records('apsolu_calendars_types', $conditions = [], $sort = 'name');
-    }  
-
-    /**
-      * Retourne la liste des activités complémentaires
-      *
-      * @return array
-      */
-    public static function get_complementaries() {
-      global $DB;    
-      
-      $sql = "SELECT DISTINCT c.id, shortname as name 
-        FROM  mdl_apsolu_complements ac
-        INNER JOIN mdl_course c on c.id = ac.id
-        ORDER BY c.shortname";
-        
-      return $DB->get_records_sql($sql);
-    }   
- 
-    
    /**
       * Retourne le nombre d'inscriptions par semester
       *

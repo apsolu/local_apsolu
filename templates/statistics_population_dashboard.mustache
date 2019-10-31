@@ -31,7 +31,7 @@
         </div>
       </div>      
       {{/enrollment_acceptedlist}}
-      {{#enrollee}}
+      {{#enrollee_acceptedlist}}
       <div class="col-md-4">
         <div class="card">
           <div class="card-body text-right">
@@ -44,10 +44,11 @@
           </div>
         </div>
       </div>
-      {{/enrollee}}
+      {{/enrollee_acceptedlist}}
     </div>
     <div class="row">
       <div class="col">
+      {{# str }} statistics_enrollments, local_apsolu {{/ str }} :
       {{#enrollment_mainlist}}
       <a class="mr-3" target="_blank" href="{{{report}}}" title="{{# str }} statistics_see_details, local_apsolu {{/ str }}">
       {{# str }} statistics_mainlist, local_apsolu {{/ str }} <span class="badge badge-pill badge-primary">{{{counter}}}</span></a>
@@ -62,6 +63,27 @@
       {{/enrollment_deletedlist}}
       </div>
     </div>
+    <div class="row">
+      <div class="col">
+      {{# str }} statistics_applicants, local_apsolu {{/ str }} :
+      {{#enrollee_mainlist}}
+      <a class="mr-3" target="_blank" href="{{{report}}}" title="{{# str }} statistics_see_details, local_apsolu {{/ str }}">
+      {{# str }} statistics_mainlist, local_apsolu {{/ str }} <span class="badge badge-pill badge-primary">{{{counter}}}</span></a>
+      {{/enrollee_mainlist}}
+      {{#enrollee_waitinglist}}
+      <a class="mr-3" target="_blank" href="{{{report}}}" title="{{# str }} statistics_see_details, local_apsolu {{/ str }}">
+      {{# str }} statistics_waitlist, local_apsolu {{/ str }} <span class="badge badge-pill badge-primary">{{{counter}}}</span></a>
+      {{/enrollee_waitinglist}}
+      {{#enrollee_deletedlist}}
+      <a class="mr-3" target="_blank" href="{{{report}}}" title="{{# str }} statistics_see_details, local_apsolu {{/ str }}">
+      {{# str }} statistics_declinelist, local_apsolu {{/ str }} <span class="badge badge-pill badge-primary">{{{counter}}}</span></a>
+      {{/enrollee_deletedlist}}
+      {{#enrollee}}
+      <a class="mr-3" target="_blank" href="{{{report}}}" title="{{# str }} statistics_see_details, local_apsolu {{/ str }}">
+      {{# str }} statistics_all, local_apsolu {{/ str }} <span class="badge badge-pill badge-primary">{{{counter}}}</span></a>
+      {{/enrollee}}      
+      </div>
+    </div>    
   </div>
   
   {{#has_complementaries_enrollment}}    
@@ -96,20 +118,16 @@
         </div>
       </div>    
       {{/complementaries_enrollee}}
-      
-      <div class="col-md-4">
-      {{#is_siuaps_rennes}}
-        {{#complementaries_enrollment_mus}}
-        <a target="_blank" href="{{{report}}}" title="{{# str }} statistics_see_details, local_apsolu {{/ str }}">
-        {{# str }} statistics_bodybuilding, local_apsolu {{/ str }} <span class="badge badge-pill badge-primary">{{{counter}}}</span></a></br>
-        {{/complementaries_enrollment_mus}}
-        {{#complementaries_enrollment_ffsu}}
-        <a target="_blank" href="{{{report}}}" title="{{# str }} statistics_see_details, local_apsolu {{/ str }}">
-        {{# str }} federations, local_apsolu {{/ str }} <span class="badge badge-pill badge-primary">{{{counter}}}</span></a></br>
-        {{/complementaries_enrollment_ffsu}}
-      {{/is_siuaps_rennes}}
+    </div>
+    <div class="row">
+      <div class="col">
+        {{# str }} statistics_enrollments, local_apsolu {{/ str }} :
+        {{#complementaries_enrollment_activity}}
+          <a class="mr-3" target="_blank" href="{{{report}}}" title="{{{title}}}">
+          {{{title}}} <span class="badge badge-pill badge-primary">{{{counter}}}</span></a>
+        {{/complementaries_enrollment_activity}}
       </div>
-    </div>           
+    </div>
   </div>
   {{/has_complementaries_enrollment}}
 </div>

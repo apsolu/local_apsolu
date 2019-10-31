@@ -39,14 +39,46 @@
             "datatype":"1",
             "sql":"status = 4 "
           }
-        },                        
+        },
         {
           "id": "enrollee",
           "label":"Nombre d'inscrits aux activités physiques",
           "values": {
             "datatype":"2"
           }
+        },                        
+        {
+          "id": "enrollee_acceptedlist",
+          "label":"Nombre d'inscrits acceptés aux activités physiques",
+          "values": {
+            "datatype":"2",
+            "having":"accepted_list > 0 "
+          }
         },
+        {
+          "id": "enrollee_mainlist",
+          "label":"Nombre d'inscrits sur liste principale aux activités physiques",
+          "values": {
+            "datatype":"2",
+            "having":"main_list > 0 "
+          }
+        },
+        {
+          "id": "enrollee_waitinglist",
+          "label":"Nombre d'inscrits sur liste d'attente aux activités physiques",
+          "values": {
+            "datatype":"2",
+            "having":"wait_list > 0 "
+          }
+        },
+        {
+          "id": "enrollee_deletedlist",
+          "label":"Nombre d'inscrits refusé aux activités physiques",
+          "values": {
+            "datatype":"2",
+            "having":"deleted_list > 0 "
+          }
+        },        
         {
           "id": "complementaries_enrollment",
           "label":"Nombre d'inscriptions aux activités complémentaires",
@@ -149,26 +181,41 @@
             "datatype":"2",
             "having":"accepted_list = 0 "
           }
-        }
+        },
+        {
+          "id": "enrol_roles",
+          "label":"Nombre d'inscriptions libres/Option évalués/Bonification évalués",
+          "values": {
+            "method" : "enrol_roles",
+            "columns" : [
+              {"data":"institution", "title":"Institution"},
+              {"data":"roleshortname", "title":"Role"},
+              {"data":"total", "title":"Total"}
+            ],
+            "orders":{"0":"asc","1":"asc"},
+            "filters":{"select":[0,1]}
+          }
+        },
+        {
+          "id": "custom_nowishes",
+          "label":"Nombre de visiteurs n'ayant pas fait de vœux",
+          "values": {
+            "method" : "get_nowishes_list",
+            "columns" : [
+              {"data":"idnumber", "title":"Numéro"},
+              {"data":"firstname", "title":"Prénom"},
+              {"data":"lastname", "title":"Nom"},
+              {"data":"email", "title":"Email"},
+              {"data":"institution", "title":"Institution"},
+              {"data":"department", "title":"Département"}
+            ],
+            "orders":{"2":"asc","3":"asc"},
+            "filters":{"input":[1,2,3,4],"select":[5,6]}
+          }
+        }                
 
     ],
     "reportsCustomRennes": [
-        {
-          "id": "complementaries_enrollment_mus",
-          "label":"Nombre d'inscriptions en Musculation",
-          "values": {
-            "datatype":"3",
-            "sql":"status = 0 and activityid = 250"
-          }
-        },
-        {
-          "id": "complementaries_enrollment_ffsu",
-          "label":"Nombre d'inscriptions adhésion AS/Licence FFSU",
-          "values": {
-            "datatype":"3",
-            "sql":"status = 0 and activityid = 249"
-          }
-        },
         {
           "id": "custom_shnu",
           "label":"Sportifs de haut niveau qui pratique une activité",
@@ -186,7 +233,7 @@
         },
         {
           "id": "custom_apsoluhighlevelathlete",
-          "label":"Sportif de haut niveau inscrits sur l'espace cours",
+          "label":"Sportifs de haut niveau inscrits sur l'espace cours",
           "values": {
             "method" : "custom_apsoluhighlevelathlete",
             "columns" : [
@@ -199,37 +246,6 @@
             ],
             "orders":{"1":"asc","2":"asc"},
             "filters":{"input":[0,1,2,3],"select":[4,5]}
-          }
-        },
-        {
-          "id": "enrol_roles",
-          "label":"Nombre d'inscriptions libres/Option évalués/Bonification évalués",
-          "values": {
-            "method" : "enrol_roles",
-            "columns" : [
-              {"data":"institution", "title":"Institution"},
-              {"data":"roleshortname", "title":"Role"},
-              {"data":"total", "title":"Total"}
-            ],
-            "orders":{"0":"asc","1":"asc"},
-            "filters":{"select":[0,1]}
-          }
-        },        
-        {
-          "id": "custom_nowishes",
-          "label":"Nombre de visiteurs n'ayant pas fait de vœux",
-          "values": {
-            "method" : "get_nowishes_list",
-            "columns" : [
-              {"data":"idnumber", "title":"Numéro"},
-              {"data":"firstname", "title":"Prénom"},
-              {"data":"lastname", "title":"Nom"},
-              {"data":"email", "title":"Email"},
-              {"data":"institution", "title":"Institution"},
-              {"data":"department", "title":"Département"}
-            ],
-            "orders":{"2":"asc","3":"asc"},
-            "filters":{"input":[1,2,3,4],"select":[5,6]}
           }
         },
         {
