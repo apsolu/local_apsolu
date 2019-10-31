@@ -265,7 +265,7 @@ class report extends \local_apsolu\local\statistics\report {
           $where .= " AND cityid = " . $criterias["cityid"]; 
         }
         if (array_key_exists("calendarstypeid",$criterias) && $criterias["calendarstypeid"] != '') {
-          $where .= " AND alendarstypeid = " . $criterias["calendarstypeid"]; 
+          $where .= " AND calendarstypeid = " . $criterias["calendarstypeid"]; 
         }
         if (array_key_exists("activityid",$criterias) && $criterias["activityid"] != '') {
           $where .= " AND activityid = " . $criterias["activityid"]; 
