@@ -122,11 +122,9 @@ class chart {
         }
 
         $count = new \core\chart_series(get_string("statistics_number","local_apsolu"), array_values($data['serie']));
-        $chart = new \core\chart_bar();
-        $chart->set_stacked(true);
-        $chart->set_horizontal(true);
-        $chart->add_series($count);
+        $chart = new \core\chart_pie();
         $chart->set_labels(array_values($data['labels']));
+        $chart->add_series($count);
  
         return array('success' => true,'chartdata'=>json_encode($chart));
       }
