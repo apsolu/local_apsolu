@@ -20,6 +20,7 @@ require([
   'jquery',
   'core/notification',   
   "core/ajax",
+  "local_apsolu/moment",  
   'local_apsolu/query-builder',
   'local_apsolu/query-builder.fr',
   "local_apsolu/datatables.net",
@@ -28,11 +29,26 @@ require([
   "buttons.bootstrap4",
   "buttons.html5",
   "buttons.colVis",
-  ], function($,notification,Ajax) {
+  "bootstrap-datepicker",
+  "bootstrap-datetimepicker",
+  "moment",
+  ], function($,notification,Ajax,moment) {
+
+  moment.locale('{{{langcode}}}');
+  
+  !function(a){a.fn.datepicker.dates.fr={
+      days:["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"],
+      daysShort:["dim.","lun.","mar.","mer.","jeu.","ven.","sam."],
+      daysMin:["d","l","ma","me","j","v","s"],
+      months:["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"],
+      monthsShort:["janv.","févr.","mars","avril","mai","juin","juil.","août","sept.","oct.","nov.","déc."],
+      today:"Aujourd'hui",
+      monthsTitle:"Mois",clear:"Effacer",weekStart:1,format:"dd/mm/yyyy"}}(jQuery);
   
   var selector = '.report-builder-table';
-  
+
   var builder = $('#querybuilder').queryBuilder({
+    sort_filters: true,
     filters: {{{Filters}}},
     lang_code: '{{{langcode}}}', 
   });
