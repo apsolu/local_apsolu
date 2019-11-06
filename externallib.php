@@ -1047,6 +1047,9 @@ class local_apsolu_webservices extends external_api {
         if ($classname == 'population') {
           $params = array("WithEnrolments" => $reportObj->WithEnrolments,"WithComplementary" => $reportObj->WithComplementary);
         }
+        if ($classname == 'programme') {
+          $params = array("WithProgramme" => $reportObj->WithProgramme);
+        }        
         if (!is_null($criterias)){
           $params = array_merge($params,$criterias);
         }

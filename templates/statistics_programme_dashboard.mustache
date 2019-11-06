@@ -1,0 +1,64 @@
+<h1>{{# str }} statistics_keynumbers, local_apsolu {{/ str }}</h1>
+<div class="row mb-4 mp">
+  <div class="col-md-6">
+    <div class="row">
+      {{#countslotsmainlist}}
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body text-right">
+            <div class="float-left"><i class="fa fa-tags fa-3x text-secondary"></i></div>                                                  
+            <h2 class="card-title">{{{counter}}}</h2>
+            <p class="card-text">
+              {{title}}
+              <a target="_blank" href="{{{report}}}" title="{{# str }} statistics_see_details, local_apsolu {{/ str }}"><i class="fa fa-chevron-circle-right"></i></a>
+            </p>
+          </div>
+        </div>
+      </div>
+      {{/countslotsmainlist}}
+    </div>
+  </div>
+</div>
+
+
+<div class="row mb-4">
+  <div class="col-md-6">
+    {{#groupslots}}
+    <div class="card chart-card">
+      <div class="card-header">
+        <h5 class="card-title">{{title}}</h5>
+      </div>
+      <div class="card-body">
+        {{{chart}}}                
+      </div>
+    </div>
+    {{/groupslots}}
+  </div>
+  <div class="col-md-6">
+    {{#countslotsmainlist}}
+    <div class="card chart-card">
+      <div class="card-header">
+        <h5 class="card-title">{{title}}</h5>
+      </div>
+      <div class="card-body">
+        {{{chart}}}                
+      </div>
+    </div>
+    {{/countslotsmainlist}}
+  </div>  
+</div>
+
+<div class="row mb-4">
+  <div class="col">
+    {{#activityslots}}
+    <div class="card chart-card">
+      <div class="card-header">
+        <h5 class="card-title">{{title}}</h5>
+      </div>
+      <div class="card-body">
+        {{{chart}}}                
+      </div>
+    </div>  
+    {{/activityslots}}  
+  </div>
+</div>

@@ -11,7 +11,9 @@ define([], function () {
             "buttons.bootstrap4": M.cfg.wwwroot + '/local/apsolu/lib/jquery/DataTables/Buttons-1.6.0/js/buttons.bootstrap4.min',
             "buttons.html5": M.cfg.wwwroot + '/local/apsolu/lib/jquery/DataTables/Buttons-1.6.0/js/buttons.html5.min',
             "buttons.colVis": M.cfg.wwwroot + '/local/apsolu/lib/jquery/DataTables/Buttons-1.6.0/js/buttons.colVis.min',
-            
+            "bootstrap-datepicker": M.cfg.wwwroot + '/local/apsolu/lib/jquery/bootstrap-datepicker/js/bootstrap-datepicker.min',
+            "bootstrap-datetimepicker": M.cfg.wwwroot + '/local/apsolu/lib/jquery/bootstrap-datetimepicker/js/bootstrap-datetimepicker',
+            "moment": M.cfg.wwwroot + '/local/apsolu/lib/jquery/moment'
         },
     });
 });

@@ -686,6 +686,7 @@ $string['ws_value_message'] = 'message de type texte';
 // Statistics
 $string['statistics'] = 'Statistiques';
 $string['statistics_population'] = 'Population';
+$string['statistics_programme'] = 'Programmation';
 $string['statistics_dashboard'] = 'Tableau de bord';
 $string['statistics_reports'] = 'Rapports';
 $string['statistics_select_reports'] = 'Sélectionnez un rapport existants';
