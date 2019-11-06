@@ -98,11 +98,10 @@ class report {
             $values = [];
             foreach($records as $record){
               if (sizeof($fields) > 1) {
-                $values[$record[$fields[0]]] = ($record[$fields[1]] == "" ? "Vide" : $record[$fields[1]]);
+                $values[] = [$record[$fields[0]]=>($record[$fields[1]] == "" ? "Vide" : $record[$fields[1]])];  
               } else {
-                
-                $values[($record[$fields[0]] == "" ? " " : $record[$fields[0]])] = ($record[$fields[0]] == "" ? "Vide" : $record[$fields[0]]);
-              }  
+                $values[] = [($record[$fields[0]] == "" ? " " : $record[$fields[0]])=>($record[$fields[0]] == "" ? "Vide" : $record[$fields[0]])];
+              }
             }
             $model->filters[$i]->values = $values;
           }
