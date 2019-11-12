@@ -136,17 +136,13 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     // Paiements.
     $ADMIN->add('apsolu', new admin_category('local_apsolu_payment',  get_string('settings_payments', 'local_apsolu')));
 
-    $isgod = has_capability('moodle/site:config', context_system::instance());
-
-    // Paiements > Adresses des serveurs Paybox.
-    if ($isgod === true) {
+    if (has_capability('local/apsolu:configpaybox', context_system::instance()) === true) {
+        // Paiements > Adresses des serveurs Paybox.
         $label = get_string('settings_payments_servers', 'local_apsolu');
         $url = new moodle_url('/local/apsolu/payment/admin.php', array('tab' => 'configurations'));
         $ADMIN->add('local_apsolu_payment', new admin_externalpage('local_apsolu_payment_configurations', $label, $url, $capabilities));
-    }
 
-    // Paiements > Centres de paiement.
-    if ($isgod === true) {
+        // Paiements > Centres de paiement.
         $label = get_string('payment_centers', 'local_apsolu');
         $url = new moodle_url('/local/apsolu/payment/admin.php', array('tab' => 'centers'));
         $ADMIN->add('local_apsolu_payment', new admin_externalpage('local_apsolu_payment_centers', $label, $url, $capabilities));

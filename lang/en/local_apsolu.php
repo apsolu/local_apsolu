@@ -23,6 +23,7 @@
  */
 
 $string['pluginname'] = 'APSOLU';
+$string['apsolu:configpaybox'] = 'Configurer les comptes PayBox';
 
 // Nouvelles chaines, triées par clé.
 $string['activity_list'] = 'Liste des activités';
