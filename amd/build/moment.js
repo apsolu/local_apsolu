@@ -1,0 +1,1 @@
+define(["local_apsolu/config","moment"],function(n,o){return o});

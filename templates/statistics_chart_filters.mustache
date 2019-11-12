@@ -1,0 +1,17 @@
+<div id="chart-filters-{{ uniqid }}" class="float-right"></div>
+
+{{#js}}
+
+require([
+  'jquery',
+  'local_apsolu/statistics_chart_filters',
+], function($) {
+
+  $(document).ready(function(){
+    var options = {{{options}}};
+    $('#chart-filters-{{{uniqid}}}').renderCriterias('{{{uniqid}}}',options);
+  });
+
+});
+
+{{/js}}

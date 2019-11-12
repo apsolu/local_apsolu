@@ -1,0 +1,267 @@
+<h1>{{# str }} statistics_keynumbers, local_apsolu {{/ str }}</h1>
+<div class="row mb-4 mp">
+  <div class="col-md-6">
+    <h2>{{# str }} settings_activities, local_apsolu {{/ str }}</h2>
+    <div class="row">
+      {{#enrollment}}
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body text-right">
+            <div class="float-left"><i class="fa fa-tags fa-3x text-secondary"></i></div>                                                  
+            <h2 class="card-title">{{{counter}}}</h2>
+            <p class="card-text">
+              {{# str }} statistics_wishes, local_apsolu {{/ str }}
+              <a target="_blank" href="{{{report}}}" title="{{# str }} statistics_see_details, local_apsolu {{/ str }}"><i class="fa fa-chevron-circle-right"></i></a>
+            </p>
+          </div>
+        </div>
+      </div>
+      {{/enrollment}}
+      {{#enrollment_acceptedlist}}
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body text-right">
+            <div class="float-left"><i class="fa fa-sign-in fa-3x text-secondary"></i></div>                                                  
+            <h2 class="card-title">{{{counter}}}</h2>
+            <p class="card-text">
+              {{# str }} statistics_acceptedlist, local_apsolu {{/ str }}
+              <a target="_blank" href="{{{report}}}" title="{{# str }} statistics_see_details, local_apsolu {{/ str }}"><i class="fa fa-chevron-circle-right"></i></a>
+            </p>
+          </div>
+        </div>
+      </div>      
+      {{/enrollment_acceptedlist}}
+      {{#enrollee_acceptedlist}}
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body text-right">
+            <div class="float-left"><i class="fa fa-users fa-3x text-secondary"></i></div>                                                  
+            <h2 class="card-title">{{{counter}}}</h2>
+            <p class="card-text">
+              {{# str }} statistics_enrollees, local_apsolu {{/ str }}
+              <a target="_blank" href="{{{report}}}" title="{{# str }} statistics_see_details, local_apsolu {{/ str }}"><i class="fa fa-chevron-circle-right"></i></a>
+            </p>
+          </div>
+        </div>
+      </div>
+      {{/enrollee_acceptedlist}}
+    </div>
+    <div class="row">
+      <div class="col">
+      {{# str }} statistics_enrollments, local_apsolu {{/ str }} :
+      {{#enrollment_mainlist}}
+      <a class="mr-3" target="_blank" href="{{{report}}}" title="{{# str }} statistics_see_details, local_apsolu {{/ str }}">
+      {{# str }} statistics_mainlist, local_apsolu {{/ str }} <span class="badge badge-pill badge-primary">{{{counter}}}</span></a>
+      {{/enrollment_mainlist}}
+      {{#enrollment_waitinglist}}
+      <a class="mr-3" target="_blank" href="{{{report}}}" title="{{# str }} statistics_see_details, local_apsolu {{/ str }}">
+      {{# str }} statistics_waitlist, local_apsolu {{/ str }} <span class="badge badge-pill badge-primary">{{{counter}}}</span></a>
+      {{/enrollment_waitinglist}}
+      {{#enrollment_deletedlist}}
+      <a class="mr-3" target="_blank" href="{{{report}}}" title="{{# str }} statistics_see_details, local_apsolu {{/ str }}">
+      {{# str }} statistics_declinelist, local_apsolu {{/ str }} <span class="badge badge-pill badge-primary">{{{counter}}}</span></a>
+      {{/enrollment_deletedlist}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+      {{# str }} statistics_applicants, local_apsolu {{/ str }} :
+      {{#enrollee_mainlist}}
+      <a class="mr-3" target="_blank" href="{{{report}}}" title="{{# str }} statistics_see_details, local_apsolu {{/ str }}">
+      {{# str }} statistics_mainlist, local_apsolu {{/ str }} <span class="badge badge-pill badge-primary">{{{counter}}}</span></a>
+      {{/enrollee_mainlist}}
+      {{#enrollee_waitinglist}}
+      <a class="mr-3" target="_blank" href="{{{report}}}" title="{{# str }} statistics_see_details, local_apsolu {{/ str }}">
+      {{# str }} statistics_waitlist, local_apsolu {{/ str }} <span class="badge badge-pill badge-primary">{{{counter}}}</span></a>
+      {{/enrollee_waitinglist}}
+      {{#enrollee_deletedlist}}
+      <a class="mr-3" target="_blank" href="{{{report}}}" title="{{# str }} statistics_see_details, local_apsolu {{/ str }}">
+      {{# str }} statistics_declinelist, local_apsolu {{/ str }} <span class="badge badge-pill badge-primary">{{{counter}}}</span></a>
+      {{/enrollee_deletedlist}}
+      {{#enrollee}}
+      <a class="mr-3" target="_blank" href="{{{report}}}" title="{{# str }} statistics_see_details, local_apsolu {{/ str }}">
+      {{# str }} statistics_all, local_apsolu {{/ str }} <span class="badge badge-pill badge-primary">{{{counter}}}</span></a>
+      {{/enrollee}}      
+      </div>
+    </div>    
+  </div>
+  
+  {{#has_complementaries_enrollment}}    
+  <div class="col-md-6 bg-light pb-4">
+    <h2>{{# str }} settings_complements, local_apsolu {{/ str }}</h2>
+    <div class="row">
+      {{#complementaries_enrollment}}
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body text-right">
+            <div class="float-left"><i class="fa fa-sign-in fa-3x text-secondary"></i></div>                                                  
+            <h2 class="card-title">{{{counter}}}</h2>
+            <p class="card-text">
+              {{# str }} statistics_enrollments, local_apsolu {{/ str }}
+              <a target="_blank" href="{{{report}}}" title="{{# str }} statistics_see_details, local_apsolu {{/ str }}"><i class="fa fa-chevron-circle-right"></i></a>
+            </p>
+          </div>
+        </div>
+      </div>
+      {{/complementaries_enrollment}}
+      {{#complementaries_enrollee}}
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body text-right">
+            <div class="float-left"><i class="fa fa-users fa-3x text-secondary"></i></div>                                                  
+            <h2 class="card-title">{{{counter}}}</h2>
+            <p class="card-text">
+              {{# str }} statistics_enrollees, local_apsolu {{/ str }}
+              <a target="_blank" href="{{{report}}}" title="{{# str }} statistics_see_details, local_apsolu {{/ str }}"><i class="fa fa-chevron-circle-right"></i></a>
+            </p>
+          </div>
+        </div>
+      </div>    
+      {{/complementaries_enrollee}}
+    </div>
+    <div class="row">
+      <div class="col">
+        {{# str }} statistics_enrollments, local_apsolu {{/ str }} :
+        {{#complementaries_enrollment_activity}}
+          <a class="mr-3" target="_blank" href="{{{report}}}" title="{{{title}}}">
+          {{{title}}} <span class="badge badge-pill badge-primary">{{{counter}}}</span></a>
+        {{/complementaries_enrollment_activity}}
+      </div>
+    </div>
+  </div>
+  {{/has_complementaries_enrollment}}
+</div>
+  
+<div class="row mb-4">
+  <div class="col-md-6">
+    {{#enrollee_accepted_refused}}
+    <div class="card chart-card">
+      <div class="card-header">
+        <h5 class="card-title">{{title}}</h5>
+      </div>
+      <div class="card-body">
+        {{{chart}}}                
+      </div>
+    </div>
+    {{/enrollee_accepted_refused}}
+  </div>
+  <div class="col-md-6">
+    {{#has_complementaries_enrollment}}
+    {{#complementaries_enrollee}}
+    <div class="card chart-card">
+      <div class="card-header">
+        <h5 class="card-title">{{title}}</h5>
+      </div>
+      <div class="card-body">
+        {{{chart}}}                
+      </div>
+    </div>  
+    {{/complementaries_enrollee}}  
+    {{/has_complementaries_enrollment}}
+  </div>
+</div>
+
+          
+{{#is_siuaps_rennes}}
+<div class="row mb-4">
+  
+  <div class="col-md-9">
+    {{#shnu_user}}
+    <div class="card chart-card">
+      <div class="card-header">
+        <h5 class="card-title">{{title}}</h5>
+      </div>
+      <div class="card-body">
+        {{{chart}}}           
+      </div>
+    </div>
+    {{/shnu_user}}
+  </div>
+  <div class="col-md-3">
+    {{#shnu}}
+    <div class="card">
+      <div class="card-body text-right">
+        <div class="float-left"><i class="fa fa-heartbeat fa-4x text-secondary"></i></div>                                                  
+        <h1 class="card-title">{{{counter}}}</h1>
+        <p class="card-text">
+          {{title}}
+          <a target="_blank" href="{{{report}}}" title="{{# str }} statistics_see_details, local_apsolu {{/ str }}"><i class="fa fa-chevron-circle-right"></i></a>
+        </p>
+      </div>
+    </div>
+    {{/shnu}}
+  </div>
+  
+</div>
+{{/is_siuaps_rennes}}
+
+<div class="row mb-4">
+  <div class="col-md-6">
+    {{#distribution_userprofile}}
+    <div class="card chart-card">
+      <div class="card-header">
+        <h5 class="card-title">{{title}}</h5>
+      </div>
+      <div class="card-body">
+        {{{chart}}}                 
+      </div>
+    </div>
+    {{/distribution_userprofile}}          
+  </div>
+  <div class="col-md-6">
+    {{#distribution_genders}}
+    <div class="card chart-card">
+      <div class="card-header">
+        <h5 class="card-title">{{title}}</h5>
+      </div>
+      <div class="card-body">
+       {{{chart}}}                 
+      </div>
+    </div>
+    {{/distribution_genders}} 
+  </div>
+</div>
+
+{{#is_siuaps_rennes}}
+<div class="row mb-4">
+  <div class="col">
+    {{#enrol_roles}}
+    <div class="card chart-card">
+      <div class="card-header">
+        <h5 class="card-title">{{title}}</h5>
+      </div>
+      <div class="card-body">
+        {{{chart}}}              
+      </div>
+    </div>
+    {{/enrol_roles}}          
+  </div>
+</div>
+{{/is_siuaps_rennes}}
+
+<div class="row mb-4">
+  <div class="col-md-6">
+    {{#enrol_userprofile}}
+    <div class="card chart-card">
+      <div class="card-header">
+        <h5 class="card-title">{{title}}</h5>
+      </div>
+      <div class="card-body">
+        {{{chart}}}                 
+      </div>
+    </div>
+    {{/enrol_userprofile}}          
+  </div>
+  <div class="col-md-6">
+    {{#enrol_genders}}             
+    <div class="card chart-card">
+      <div class="card-header">
+        <h5 class="card-title">{{title}}</h5>
+      </div>
+      <div class="card-body">
+        {{{chart}}}               
+      </div>
+    </div>
+    {{/enrol_genders}}             
+  </div>
+</div>

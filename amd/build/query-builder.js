@@ -1,0 +1,1 @@
+define(["local_apsolu/config","query-builder"],function(e,n){return n});

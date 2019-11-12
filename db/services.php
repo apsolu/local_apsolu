@@ -121,6 +121,27 @@ $functions = array(
         'loginrequired' => true,
         'ajax' => true,
     ),
+    // Function get_chartdataset().
+    'local_apsolu_get_chartdataset' => array(
+        'classname'   => 'local_apsolu_webservices',
+        'methodname'  => 'get_chartdataset',
+        'classpath'   => 'local/apsolu/externallib.php',
+        'description' => get_string('ws_local_apsolu_get_chartdataset_description', 'local_apsolu'),
+        'type'        => 'read',
+        'loginrequired' => true,
+        'ajax' => true,
+    ),
+    // Function get_reportdataset().
+    'local_apsolu_get_reportdataset' => array(
+        'classname'   => 'local_apsolu_webservices',
+        'methodname'  => 'get_reportdataset',
+        'classpath'   => 'local/apsolu/externallib.php',
+        'description' => get_string('ws_local_apsolu_get_reportdataset_description', 'local_apsolu'),
+        'type'        => 'read',
+        'loginrequired' => true,
+        'ajax' => true,
+    ),        
+  
 );
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
@@ -137,6 +158,8 @@ $services = array(
             'local_apsolu_set_card',
             'local_apsolu_set_presence',
             'local_apsolu_debugging',
+            'local_apsolu_get_chartdataset',
+            'local_apsolu_get_reportdataset',
             ),
         'restrictedusers' => 1,
         'enabled' => 0,

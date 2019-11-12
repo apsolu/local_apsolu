@@ -1,0 +1,1 @@
+define(["local_apsolu/config","datatables.net-bs4"],function(n,a){return a});

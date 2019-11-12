@@ -1,0 +1,222 @@
+{
+    "reports":[
+        {
+          "id": "groupslots",
+          "label":"Nombre de cours proposés par groupe d'activités",
+          "values": {
+            "method" : "groupslots",
+            "columns" : [
+              {"data":"groupname", "title":"Groupe"},
+              {"data":"total", "title":"Total"}
+            ],
+            "orders":{"0":"asc"},
+            "filters":{"select":[0]}
+          }
+        },
+        {
+          "id": "activityslots",
+          "label":"Nombre de cours proposés par activité",
+          "values": {
+            "method" : "activityslots",
+            "columns" : [
+              {"data":"groupname", "title":"Groupe"},
+              {"data":"activityname", "title":"Activité"},
+              {"data":"total", "title":"Total"}
+            ],
+            "orders":{"0":"asc","1":"asc"},
+            "filters":{"select":[0,1]}
+          }          
+        },
+        {
+          "id": "countslotsmainlist",
+          "label":"Nombre de places en liste principale (potentiel d'accueil)",
+          "values": {
+            "method" : "countslotsmainlist",
+            "columns" : [
+              {"data":"total", "title":"total"}
+            ],
+            "orders":{},
+            "filters":{}
+          }                    
+        }                
+    ],
+    "reportsCustomRennes": [],              
+    "filters": [
+        {
+          "id": "groupid",
+          "label": "Groupe",
+          "type": "integer",
+          "input": "select",
+          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
+          "values" : {
+              "table" : "course_categories",
+              "fields" : "id,name",
+              "conditions" : "parent = 0 and id <> 1",
+              "sort" : "name"
+          }
+        },
+        {
+          "id": "activityid",
+          "label": "Activité",
+          "type": "integer",
+          "input": "select",
+          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
+          "values" : {
+              "table" : "course_categories",
+              "fields" : "id,name",
+              "conditions" : "parent > 0",
+              "sort" : "name"
+          }
+        },
+        {
+          "id": "calendarid",
+          "label": "Calendrier",
+          "type": "integer",
+          "input": "select",
+          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
+          "values" : {
+              "table" : "apsolu_calendars",
+              "fields" : "id,name",
+              "sort" : "name"
+          }
+        },   
+        {
+          "id": "calendartypeid",
+          "label": "Type de calendrier",
+          "type": "integer",
+          "input": "select",
+          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
+          "values" : {
+              "table" : "apsolu_calendars_types",
+              "fields" : "id,name",
+              "sort" : "name"
+          }
+        },        
+        {
+          "id": "cityid",
+          "label": "Site",
+          "type": "integer",
+          "input": "select",
+          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
+          "values" : {
+              "table" : "apsolu_cities",
+              "fields" : "id,name",
+              "sort" : "name"
+          }
+        },
+        {
+          "id": "slotid",
+          "label": "Identifiant du créneaux",
+          "type": "string",
+          "operators": ["equal", "not_equal", "is_null", "is_not_null"]
+        },        
+        {
+          "id": "slotnumweekday",
+          "label": "Jour",
+          "type": "integer",
+          "input": "select",
+          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
+          "values" : {
+              "1" : "Lundi",
+              "2" : "Mardi",
+              "3" : "Mercredi",
+              "4" : "Jeudi",
+              "5" : "Vendredi",
+              "6" : "Samedi",
+              "7" : "Dimanche"
+          }
+        },
+        {
+          "id": "slotstart",
+          "label": "Horaire de début",
+          "type": "string",
+          "input": "select",
+          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
+          "values" : {
+              "table" : "apsolu_courses",
+              "fields" : "starttime",
+              "sort" : "starttime"              
+          }
+        },
+        {
+          "id": "slotend",
+          "label": "Horaire de fin",
+          "type": "string",
+          "input": "select",
+          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
+          "values" : {
+              "table" : "apsolu_courses",
+              "fields" : "endtime",
+              "sort" : "endtime"              
+          }
+        },
+        {
+          "id": "actifQuota",
+          "label": "Quota activé",
+          "type": "integer",
+          "input": "select",
+          "operators": ["equal", "not_equal"],
+          "values" : {
+              "Oui" : "Oui",
+              "Non" : "Non"              
+          }
+        },
+        {
+          "id": "coursestartdate",
+          "label": "Débute le",
+          "type": "date",
+          "plugin": "datepicker",
+          "plugin_config": {
+            "format": "dd/mm/yyyy",
+            "todayBtn": "linked",
+            "todayHighlight": true,
+            "autoclose": true,
+            "language": "fr"
+          }
+        },
+        {
+          "id": "courseenddate",
+          "label": "Termine le",
+          "type": "date",
+          "plugin": "datepicker",
+          "plugin_config": {
+            "format": "dd/mm/yyyy",
+            "todayBtn": "linked",
+            "todayHighlight": true,
+            "autoclose": true,
+            "language": "fr"
+          }
+        },
+        {
+          "id": "reenrolstartdate",
+          "label": "Début des réinscriptions",
+          "type": "datetime",
+          "plugin": "datetimepicker",
+          "plugin_config": {
+            "locale": "fr"
+          }
+        },
+        {
+          "id": "reenrolenddate",
+          "label": "Fin des réinscriptions",
+          "type": "datetime",
+          "plugin": "datetimepicker",
+          "plugin_config": {
+            "locale": "fr"
+          }
+        },
+        {
+          "id": "placeid",
+          "label": "Lieux",
+          "type": "string",
+          "input": "select",
+          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
+          "values" : {
+              "table" : "apsolu_locations",
+              "fields" : "id,name",
+              "sort" : "name"              
+          }
+        }        
+    ],
+    "filtersCustomRennes": []    
+}

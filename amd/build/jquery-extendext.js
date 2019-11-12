@@ -1,0 +1,1 @@
+define(["local_apsolu/config","jquery-extendext"],function(e,n){return n});

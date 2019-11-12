@@ -1,0 +1,1 @@
+define(["local_apsolu/config","datatables.net"],function(n,a){return a});

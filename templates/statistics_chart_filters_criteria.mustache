@@ -1,0 +1,11 @@
+<div id="chart-criteria-{{criteriatype}}-{{btnid}}" class="mb-2 text-right">
+<label>{{label}}</label>
+{{#options}}
+  <button class="btn btn-secondary
+  {{#active}} 
+  active
+  {{/active}}
+  btn-sm" id="btn-{{criteriatype}}-{{btnid}}-{{id}}" value="{{id}}" data-type="{{classname}}" data-criteria="{{criteriatype}}">{{name}}</button>
+{{/options}}
+<button class="btn btn-danger btn-sm" id="btn-{{criteriatype}}-{{btnid}}-reset" value="resetCriterias" data-type="{{classname}}" data-criteria="{{criteriatype}}" title="{{# str }} statistics_clean, local_apsolu {{/ str }}"><i class="fa fa-times-circle"></i></button>
+</div>
