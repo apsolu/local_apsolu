@@ -14,6 +14,7 @@ define(
     $.extend({ 
       resetChart : function (id,args) {
         Chartjs.helpers.each(Chartjs.instances, function(instance){
+          if (instance.canvas.parentNode){
           if (instance.canvas.parentNode.getAttribute("aria-describedby") == "chart-table-data-" + id){
             Ajax.call([{
               methodname: 'local_apsolu_get_chartdataset',
@@ -39,6 +40,7 @@ define(
               },
               fail: Notification.exception
             }]);
+          }
           }
         })
       },
