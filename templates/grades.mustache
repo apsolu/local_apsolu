@@ -1,6 +1,8 @@
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs" role="tablist">
 {{#periods}}
-	<li {{#active}}class="active"{{/active}}><a data-toggle="tab" href="#{{shortname}}">{{label}}</a></li>
+	<li class="nav-item">
+    <a class="nav-link{{#active}} active{{/active}}" aria-selected="{{#active}}true{{/active}}{{^active}}false{{/active}}" data-toggle="tab" href="#{{shortname}}" role="tab">{{label}}</a>
+  </li>
 {{/periods}}
 </ul>
 
@@ -9,7 +11,7 @@
 	<p class="alert alert-success">{{count_saved_students}} note(s) enregistrée(s)</p>
 	{{/count_saved_students}}
 
-	<div class="tab-content">
+	<div class="mt-3 tab-content">
 		{{#periods}}
 		<div id="{{shortname}}" class="tab-pane fade in{{#active}} active{{/active}}">
 
@@ -18,7 +20,7 @@
 			{{/require_grades}}
 
 			{{^count_users}}
-			<p class="alert alert-info">{{#str}}grades_no_grading_student, local_apsolu{{/str}}</p>
+			<p class="alert alert-info">{{#str}}no_grading_student, local_apsolu{{/str}}</p>
 			{{/count_users}}
 
 			{{#count_users}}
@@ -68,7 +70,7 @@
 	</div>
 
 	{{#count_overall_users}}
-	<p class="text-right"><input type="submit" value="Enregistrer" name="grading" /><input type="hidden" name="courseid" value="{{courseid}}" /></p>
+	<p class="text-right"><input class="btn btn-primary" type="submit" value="{{#str}}save{{/str}}" name="grading" /><input type="hidden" name="courseid" value="{{courseid}}" /></p>
 	{{/count_overall_users}}
 </form>
 

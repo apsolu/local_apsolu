@@ -35,14 +35,16 @@ class local_apsolu_payment_cards_edit_form extends moodleform {
         list($instance, $cohorts, $roles, $centers, $calendarstypes) = $this->_customdata;
 
         // Libellé du tarif.
-        $mform->addElement('text', 'name', get_string('shortname'), array('size' => '48'));
+        $mform->addElement('text', 'name', get_string('card_shortname', 'local_apsolu'), array('size' => '48'));
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
+        $mform->addHelpButton('name', 'card_shortname', 'local_apsolu'); // liberllé affiché à l'étudiant
 
         // Libellé long du tarif.
-        $mform->addElement('text', 'fullname', get_string('fullname'), array('size' => '48'));
+        $mform->addElement('text', 'fullname', get_string('card_fullname', 'local_apsolu'), array('size' => '48'));
         $mform->setType('fullname', PARAM_TEXT);
         $mform->addRule('fullname', get_string('required'), 'required', null, 'client');
+        $mform->addHelpButton('fullname', 'card_fullname', 'local_apsolu'); // libellé affiché aux gestionnaires
 
         // Paiments.
         $mform->addElement('header', 'header', get_string('payments', 'local_apsolu'));

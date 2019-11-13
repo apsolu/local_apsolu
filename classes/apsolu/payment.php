@@ -103,6 +103,7 @@ class Payment {
             " JOIN {apsolu_payments_cards_cohort} apcc ON esc.cardid = apcc.cardid AND apcc.cohortid = cm.cohortid".
             " JOIN {apsolu_payments_cards_roles} apcr ON esc.cardid = apcr.cardid AND apcr.roleid = ra.roleid".
             " WHERE e.enrol = 'select'".
+            " AND u.deleted = 0". // Utilisateur non supprimé.
             " AND c.visible = 1". // Cours visible.
             " AND e.status = 0". // Méthode d'inscription active.
             " AND ue.status = 0". // Inscription validée.

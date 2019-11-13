@@ -15,17 +15,19 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    local_apsolu_payment
- * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * Mnet hosts block caps.
+ *
+ * @package    local_apsolu
+ * @copyright  2019 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+defined('MOODLE_INTERNAL') || die();
 
-$actions = array('compose', 'history', 'posts');
-
-if (in_array($action, $actions, $strict = true) === false) {
-    $action = 'compose';
-}
-
-require(__DIR__.'/'.$action.'.php');
+$capabilities = array(
+    'local/apsolu:configpaybox' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'riskbitmask' => RISK_CONFIG,
+    ),
+);

@@ -30,7 +30,7 @@ $action = optional_param('action', 'view', PARAM_ALPHA);
 
 // Set tabs.
 $tabslist = array('payments', 'notifications', 'prices');
-if (has_capability('moodle/site:config', context_system::instance())) {
+if (has_capability('local/apsolu:configpaybox', context_system::instance()) === true) {
     $tabslist = array_merge(array('configurations', 'centers'), $tabslist);
 }
 

@@ -82,15 +82,34 @@ if ($courseid) {
     // Un cours a été sélectionné.
     $time = time();
     $current_semester_index = 1;
-    if ($time > get_config('local_apsolu', 'semester1_grading_deadline')) {
+
+    // TODO: à refaire.
+    $sql = "SELECT DISTINCT * FROM {apsolu_calendars} WHERE id IN (SELECT customchar1 FROM {enrol} WHERE courseid = :courseid AND enrol = 'select' AND status = 0 AND typeid = :semester)";
+    $semester1 = $DB->get_record_sql($sql, array('courseid' => $courseid, 'semester' => 1));
+    if ($semester1 === false) {
+        $semester1 = new stdClass();
+        $semester1->gradeenddate = 0;
+        $semester1->enrolstartdate = 0;
+        $semester1->courseenddate = 0;
+        $semester1->reenrolstartdate = 0;
+    }
+
+    $semester2 = $DB->get_record_sql($sql, array('courseid' => $courseid, 'semester' => 2));
+    if ($semester2 === false) {
+        $semester2 = new stdClass();
+        $semester2->courseenddate = 0;
+        $semester2->gradeenddate = 0;
+    }
+
+    if ($semester1 !== false && $time > $semester1->gradeenddate) {
         // La saisie pour le S1 est terminée.
-        $data->periods[0]->timestart = get_config('local_apsolu', 'semester1_enrol_startdate');
-        $data->periods[0]->timeend = get_config('local_apsolu', 'semester1_enddate');
+        $data->periods[0]->timestart = $semester1->enrolstartdate;
+        $data->periods[0]->timeend = $semester1->courseenddate;
 
-        $data->periods[1]->timestart = get_config('local_apsolu', 'semester1_reenrol_startdate');
-        $data->periods[1]->timeend = get_config('local_apsolu', 'semester2_enddate');
+        $data->periods[1]->timestart = $semester1->reenrolstartdate;
+        $data->periods[1]->timeend = $semester2->courseenddate;
 
-        if ($time > get_config('local_apsolu', 'semester2_grading_deadline')) {
+        if ($time > $semester2->gradeenddate) {
             // La saisie pour le S2 est terminée.
             $current_semester_index = -1;
         } else {
@@ -100,12 +119,12 @@ if ($courseid) {
         }
     } else {
         // Dans l'onglet S1, on peut saisir pour le S1.
-        $data->periods[0]->timestart = get_config('local_apsolu', 'semester1_enrol_startdate');
-        $data->periods[0]->timeend = get_config('local_apsolu', 'semester1_enddate');
+        $data->periods[0]->timestart = $semester1->enrolstartdate;
+        $data->periods[0]->timeend = $semester1->courseenddate;
 
         // Dans l'onglet S2, on peut saisir pour le S2.
-        $data->periods[1]->timestart = get_config('local_apsolu', 'semester1_enrol_startdate');
-        $data->periods[1]->timeend = get_config('local_apsolu', 'semester1_enddate');
+        $data->periods[1]->timestart = $semester1->enrolstartdate;
+        $data->periods[1]->timeend = $semester1->courseenddate;
 
         $current_semester_index = 0;
     }
@@ -331,7 +350,7 @@ if ($courseid) {
                 $user->grades[] = ''.
                     '<td'.$classattr.'><input type="checkbox" name="abi['.$user->id.']['.$grade.']" value="1" '.$abi.$gradeattr.'/></td>'.
                     '<td'.$classattr.'><input type="checkbox" name="abj['.$user->id.']['.$grade.']" value="1" '.$abj.$gradeattr.'/></td>'.
-                    '<td'.$classattr.'><input type="text" pattern="[0-9.,]*|abi|abj" name="grade['.$user->id.']['.$grade.']" placeholder="'.$placeholder.'" value="'.$user->{$grade}.'" '.$gradeattr.'/></td>';
+                    '<td'.$classattr.'><input type="text" pattern="[0-9.,]*|abi|abj" name="grade['.$user->id.']['.$grade.']" placeholder="'.$placeholder.'" size="10" value="'.$user->{$grade}.'" '.$gradeattr.'/></td>';
             }
 
             $user->htmlpicture = $OUTPUT->user_picture($user, array('courseid' => $courseid));

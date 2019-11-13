@@ -46,17 +46,29 @@ function local_apsolu_is_valid_token() {
     return ($token !== false);
 }
 
+/**
+ * Fonction permettant d'écrire dans les logs si la variable $CFG->apsolu_enable_ws_logging est définie et correspond à un chemin accessible en écriture.
+ *
+ * @param $method string nom de la méthode utilisé (calculée automatiquement avec la constante __METHOD__)
+ * @param $arguments array un tableau contenant les arguments utilisés pour appeler la méthode
+ *
+ * @return bool retourne True lorsque le fichier a été écrit, False si le fichier n'a pas été écrit
+ */
 function local_apsolu_write_log($method, $arguments) {
     global $CFG;
 
     if (isset($CFG->apsolu_enable_ws_logging) === true) {
-        if (is_file($CFG->apsolu_enable_ws_logging) === true) {
+        if (is_writable($CFG->apsolu_enable_ws_logging) === true) {
             // Place systématiquement en début de tableau le token utilisé.
             array_unshift($arguments, 'token='.optional_param('wstoken', '', PARAM_ALPHANUM));
 
-            file_put_contents($CFG->apsolu_enable_ws_logging, strftime('%c').' '.$method.' '.implode(', ', $arguments).PHP_EOL, FILE_APPEND | LOCK_EX);
+            $result = file_put_contents($CFG->apsolu_enable_ws_logging, strftime('%c').' '.$method.' '.implode(', ', $arguments).PHP_EOL, FILE_APPEND | LOCK_EX);
+
+            return $result !== false;
         }
     }
+
+    return false;
 }
 
 /*
@@ -696,17 +708,23 @@ class local_apsolu_webservices extends external_api {
 
         require_once($CFG->dirroot.'/user/profile/lib.php');
 
-        $data = array('success' => false);
+        $data = array('success' => false, 'cardnumber' => '');
 
         local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber]);
 
-        // Vérifier que le token appartienne à un enseignant du SIUAPS.
-        if (local_apsolu_is_valid_token() === false) {
-            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, get_string('invalidtoken', 'webservice')]);
-            return $data;
-        }
-
         try {
+            // Vérifier que le token appartienne à un enseignant du SIUAPS.
+            if (local_apsolu_is_valid_token() === false) {
+                local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, get_string('invalidtoken', 'webservice')]);
+                throw new Exception(get_string('invalidtoken', 'webservice'));
+            }
+
+            $user = $DB->get_record('user', array('id' => $iduser));
+            if ($user === false) {
+                local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, get_string('unknownuser')]);
+                return $data;
+            }
+
             $fields = CustomFields::getCustomFields();
 
             $card = $DB->get_record('user_info_data', array('fieldid' => $fields['apsoluidcardnumber']->id, 'userid' => $iduser));
@@ -732,17 +750,24 @@ class local_apsolu_webservices extends external_api {
             profile_save_data($userfield);
 
             // TODO: proposer un bug report à Moodle.org ?
-            $user = $DB->get_record('user', array('id' => $iduser));
             $user->timemodified = time();
             $DB->update_record('user', $user);
             local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'timemodified='.$user->timemodified, 'mise à jour du champ timemodified de l\'utilisateur']);
-        } catch (Exception $exception) {
-            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, 'impossible d\'enregistrer la carte en DB']);
 
-            return array('success' => false);
+            $data['success'] = true;
+        } catch (Exception $exception) {
+            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, 'exception='.$exception->getMessage(), 'impossible d\'enregistrer la carte en DB']);
         }
 
-        return array('success' => true);
+        // Récupère la carte actuelle de l'utilisateur.
+        $card = $DB->get_record('user_info_data', array('fieldid' => $fields['apsoluidcardnumber']->id, 'userid' => $iduser));
+        if ($card !== false && empty($card->data) === false) {
+            $data['cardnumber'] = $card->data;
+        }
+
+        local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, 'retourne '.json_encode($data)]);
+
+        return $data;
     }
 
     /**
@@ -768,6 +793,7 @@ class local_apsolu_webservices extends external_api {
         return new external_single_structure(
             array(
                 'success' => new external_value(PARAM_BOOL, get_string('ws_value_boolean', 'local_apsolu')),
+                'cardnumber' => new external_value(PARAM_ALPHANUM, get_string('ws_value_cardnumber', 'local_apsolu')),
             )
         );
     }
@@ -916,9 +942,9 @@ class local_apsolu_webservices extends external_api {
             return array('success' => false);
         }
 
-        local_apsolu_write_log(__METHOD__, ['serial='.$serial, 'idteacher='.$idteacher, 'message='.$message, 'timestamp='.$timestamp]);
+        $return = local_apsolu_write_log(__METHOD__, ['serial='.$serial, 'idteacher='.$idteacher, 'message='.$message, 'timestamp='.$timestamp]);
 
-        return array('success' => true);
+        return array('success' => $return);
     }
 
     /**

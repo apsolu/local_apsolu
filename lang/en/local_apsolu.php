@@ -23,6 +23,7 @@
  */
 
 $string['pluginname'] = 'APSOLU';
+$string['apsolu:configpaybox'] = 'Configurer les comptes PayBox';
 
 // Nouvelles chaines, triées par clé.
 $string['activity_list'] = 'Liste des activités';
@@ -32,6 +33,10 @@ $string['background_image'] = 'Image de fond';
 $string['calendar_deleted'] = 'Calendrier supprimé';
 $string['an_error_occurred_while_deleting_record'] = 'Une erreur est survenue lors de la suppression de l\'enregistrement.';
 $string['calendar_modification_warning'] = '<p><strong>Attention : </strong> l\'enregistrement de cette page entraînera la modification automatique des dates de toutes les méthodes d\'inscription associées à ce calendrier.</p>';
+$string['card_fullname'] = 'Nom complet';
+$string['card_fullname_help'] = 'Libellé affiché aux gestionnaires.';
+$string['card_shortname'] = 'Nom abrégé';
+$string['card_shortname_help'] = 'Libellé affiché aux étudiants.';
 $string['home'] = 'Accueil';
 $string['i_have_an_institutional_account'] = 'J\'ai un compte Sésame';
 $string['i_have_not_an_institutional_account'] = 'Je n\'ai pas de compte Sésame';
@@ -39,14 +44,17 @@ $string['institutional_account_authentification_url'] = 'URL d\'authentification
 $string['login'] = 'Se connecter';
 $string['named_section'] = 'Section "{$a}"';
 $string['non_institutional_account_authentification_url'] = 'URL d\'authentification des comptes non institutionnels';
-$string['this_calendar_is_not_used_by_courses'] = 'Ce calendrier n\'est utilisé dans aucun cours.';
-$string['this_calendar_is_used_by_courses'] = 'Ce calendrier est actuellement utilisé par {$a} cours.';
+$string['return'] = 'Revenir';
 $string['section_text'] = 'Texte de la section';
 $string['section2_text'] = '<div class="alert alert-info">Le tableau des activités est généré automatiquement.</div>';
 $string['signup'] = 'S\'inscrire';
+$string['simulation'] = 'Simulation';
+$string['simulation_help'] = 'Si la valeur est positionnée à "oui", les notifications ne seront pas envoyées aux utilisateurs.';
 $string['siuaps'] = 'Service interuniversitaire des activités physiques et sportives';
 $string['strftimedatetimeshort'] = '%a %d %b %Y %H:%M';
 $string['the_activities'] = 'Les activités';
+$string['this_calendar_is_not_used_by_courses'] = 'Ce calendrier n\'est utilisé dans aucun cours.';
+$string['this_calendar_is_used_by_courses'] = 'Ce calendrier est actuellement utilisé par {$a} cours.';
 $string['use_apsolu_homepage'] = 'Utiliser la page d\'accueil APSOLU';
 
 // Anciennes chaines dépréciées, qui utilisent de mauvaises clés de nommage.

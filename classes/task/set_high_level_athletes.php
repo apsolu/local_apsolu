@@ -44,12 +44,12 @@ class set_high_level_athletes extends \core\task\scheduled_task {
         // TODO: carte muscu offerte.
 
         // TODO: faire une page pour configurer le groupe et le cours (menu déroulant + ids) à synchroniser.
-        $groupingid = 1;
-        $courseid = 320;
+        $groupingid = 4;
+        $courseid = 423;
 
-        $field = $DB->get_record('user_info_field', array('shortname' => 'highlevelathlete'));
+        $field = $DB->get_record('user_info_field', array('shortname' => 'apsoluhighlevelathlete'));
         if ($field === false) {
-            mtrace('Le champ "highlevelathlete" n\'existe pas.');
+            mtrace('Le champ "apsoluhighlevelathlete" n\'existe pas.');
             return false;
         }
 
