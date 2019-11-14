@@ -54,7 +54,7 @@ class report extends \local_apsolu\local\statistics\report {
             Sexe.data as sexe, UFR.data as ufr, LMD.data as lmd, apsoluhighlevelathlete.data as shnu,
             CASE WHEN apsolucardpaid.data THEN "Oui" ELSE "Non" END as apsolucardpaid,
       			E.id as enrolid, E.name as enrolname, UE.status,
-            CASE WHEN (U.email LIKE \'%@etudiant.univ-%\' OR U.email LIKE \'%@eleves.%\' OR U.email LIKE \'%@etud.univ-%\')  
+            CASE WHEN (U.email LIKE \'%@etudiant.univ-%\' OR U.email LIKE \'%@eleves.%\' OR U.email LIKE \'%@etud.univ-%\' OR U.email LIKE \'%@etudiant.%\')  
             	THEN \'Étudiant\'
               ELSE CASE WHEN (U.institution IS NOT NULL AND U.institution <> \'\') OR U.email LIKE \'%@univ-%\'
             		THEN \'Personnel\'
@@ -100,7 +100,7 @@ class report extends \local_apsolu\local\statistics\report {
             Sexe.data as sexe, UFR.data as ufr, LMD.data as lmd, apsoluhighlevelathlete.data as shnu,
             CASE WHEN apsolucardpaid.data THEN "Oui" ELSE "Non" END as apsolucardpaid,
       			E.id as enrolid, E.name as enrolname, UE.status,
-            CASE WHEN (U.email LIKE \'%@etudiant.univ-%\' OR U.email LIKE \'%@eleves.%\' OR U.email LIKE \'%@etud.univ-%\')  
+            CASE WHEN (U.email LIKE \'%@etudiant.univ-%\' OR U.email LIKE \'%@eleves.%\' OR U.email LIKE \'%@etud.univ-%\' OR U.email LIKE \'%@etudiant.%\')  
             	THEN \'Étudiant\'
               ELSE CASE WHEN (U.institution IS NOT NULL AND U.institution <> \'\') OR U.email LIKE \'%@univ-%\'
             		THEN \'Personnel\'
