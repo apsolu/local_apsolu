@@ -218,7 +218,7 @@
     "reportsCustomRennes": [
         {
           "id": "custom_shnu",
-          "label":"Sportifs de haut niveau qui pratique une activité",
+          "label":"Sportifs de haut niveau qui pratiquent une activité",
           "values": {
             "method" : "custom_shnu",
             "columns" : [
@@ -457,7 +457,7 @@
         },
         {
           "id": "activityid",
-          "label": "Créneaux horaires",
+          "label": "Activité",
           "type": "integer",
           "input": "select",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"],

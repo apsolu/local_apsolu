@@ -106,7 +106,7 @@
         },
         {
           "id": "slotid",
-          "label": "Identifiant du créneaux",
+          "label": "Identifiant du créneau",
           "type": "string",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"]
         },        
