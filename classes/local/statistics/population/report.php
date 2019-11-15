@@ -65,7 +65,7 @@ class report extends \local_apsolu\local\statistics\report {
       				ELSE CASE WHEN UE.status = 3 THEN "Liste complémentaire"
       				ELSE CASE WHEN UE.status = 4 THEN "Liste des étudiants désinscrits"
       			END END END END AS statusname,
-      			APSOLU_C.id as slotid, APSOLU_C.event as slotevent,APSOLU_C.weekday as slotweekday, APSOLU_C.starttime as slotstart,	APSOLU_C.endtime as slotend,
+      			APSOLU_C.id as slotid, APSOLU_C.event as slotevent,DAYNAME(CONCAT("1970-09-2", APSOLU_C.numweekday)) as slotweekday, APSOLU_C.starttime as slotstart,	APSOLU_C.endtime as slotend,
       			Activity.id as activityid, Activity.name as activityname, 
       			Grouping.id as groupid, Grouping.name as groupname,
             R.shortname as roleshortname
