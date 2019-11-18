@@ -145,6 +145,76 @@ class attendance {
     }
 
     /**
+     * Méthode renvoyant la classe boostrap 4 correspondant au code du statut.
+     *
+     * Ex: présent en vert, en retard en orange, absence en rouge, etc.
+     *
+     * @param string $status_code Code du statut de présence.
+     *
+     * @return string Nom d'une classe CSS Bootstrap.
+     */
+    public static function getStatusBootstrapStyle(string $status_code) {
+        switch ($status_code) {
+            case 'attendance_present':
+                $style = 'text-success';
+                break;
+            case 'attendance_late':
+                $style = 'text-warning';
+                break;
+            case 'attendance_excused':
+                $style = 'text-info';
+                break;
+            case 'attendance_absent':
+                $style = 'text-danger';
+                break;
+            default:
+                $style = 'text-left';
+        }
+
+        return $style;
+    }
+
+    /**
+     * Méthode listant toutes les présences d'un utilisateur par cours.
+     *
+     * @param int|string $userid Identifiant Moodle de l'utilisateur.
+     *
+     * @return array[courseid] = (object) ['courseid' => courseid, 'fullname' => nom complet du cours, 'session' => nom de la session, 'status' => statut de la présence].
+     */
+    public static function getUserPresencesPerCourses($userid) {
+        global $DB;
+
+        $courses = array();
+
+        $sql = "SELECT c.id, c.fullname, aas.name AS sessionname, aas.sessiontime, aass.code AS status, ac.starttime, ac.endtime".
+            " FROM {course} c".
+            " JOIN {apsolu_courses} ac ON c.id = ac.id".
+            " JOIN {apsolu_attendance_sessions} aas ON c.id = aas.courseid".
+            " JOIN {apsolu_attendance_presences} aap ON aas.id = aap.sessionid".
+            " JOIN {apsolu_attendance_statuses} aass ON aass.id = aap.statusid".
+            " WHERE aap.studentid = :userid".
+            " ORDER BY c.fullname, aas.sessiontime";
+        foreach ($DB->get_recordset_sql($sql, array('userid' => $userid)) as $record) {
+            if (isset($courses[$record->id]) === false) {
+                $course = new stdClass();
+                $course->id = $record->id;
+                $course->fullname = $record->fullname;
+                $course->sessions = array();
+
+                $courses[$course->id] = $course;
+            }
+
+            $record->duration = course::getDuration($record->starttime, $record->endtime);
+            $record->style = self::getStatusBootstrapStyle($record->status);
+            $record->status = get_string($record->status, 'local_apsolu');
+
+            $courses[$record->id]->sessions[] = $record;
+        }
+
+        return $courses;
+    }
+
+    /**
      * Méthode permettant de récupérer toutes les présences par méthode d'inscription à partir d'un ID d'un étudiant.
      *
      * @return array[enrolid] = (object) ['id' => enrolid, 'total' => total de présences].
