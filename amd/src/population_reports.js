@@ -3,15 +3,18 @@ define(
     "jquery",
     'core/notification',    
     "core/ajax",
+    "local_apsolu/moment",
     "local_apsolu/datatables.net",
     "local_apsolu/datatables.net-buttons",
     "local_apsolu/datatables.net-bs4",
     "buttons.bootstrap4",
     "buttons.html5",
   ],
-  function($, notification, Ajax, datatables) {
+  function($, notification, Ajax, moment) {
     return {
       init: function(selector) {
+
+        moment.locale('fr');
 
         $(document).ready(function(){
             var reportid = $( "#id_reportid" ).val(); 
@@ -55,7 +58,13 @@ define(
               // Build results table
               var options = {
                 data : JSON.parse(enrols.data),
-                columns: JSON.parse(enrols.columns),
+                columns: JSON.parse(enrols.columns, function (key, value) {
+                    if (value && (typeof value === 'string') && value.indexOf("function") === 0) {
+                        eval("var jsFunc = " + value);
+                        return jsFunc;
+                    }
+                    return value;
+                }),                
                 order: order,
                 buttons: ['csvHtml5'],
                 dom: '<"top"Bfi>rt<"bottom"lp><"clear">', //'dom': 'lfrtip',
@@ -136,8 +145,14 @@ define(
                               } );
            
                           column.data().unique().sort().each( function ( d, j ) {
+                            var title = $(column.header()).html();
+                            if (title != "Jour")
+                            {                      
                               select.append( '<option value="'+d+'">'+d+'</option>' )
-                          });
+                            } else {
+                              select.append( '<option value="'+moment.weekdays()[d]+'">'+moment.weekdays()[d]+'</option>' )
+                            }
+                          });                                                 
                         }
                       });
                     }

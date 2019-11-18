@@ -83,7 +83,7 @@ class report extends \local_apsolu\local\statistics\report {
           [ 'data' => "cityname", 'title' => "Site"] ,
           [ 'data' => "placename", 'title' => "Lieux"] ,
           [ 'data' => "placeaddress", 'title' => "Adresse"] ,
-          [ 'data' => "slotweekday", 'title' => "Jour"] ,
+          [ 'data' => "slotnumweekday", 'title' => "Jour","render" => "function ( data, type, row ) {return moment.weekdays()[data];}"],
           [ 'data' => "slotstart", 'title' => "Début"] ,                        
           [ 'data' => "slotend", 'title' => "Fin"] ,
           [ 'data' => "actifquota", 'title' => "Quota activé"] ,
