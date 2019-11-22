@@ -35,14 +35,14 @@ class local_apsolu_header_form extends moodleform {
         $mform->setType('apsoluheaderactive', PARAM_INT);
 
         // Message.
-        $mform->addElement('textarea', 'apsoluheadercontent', 'Message', array('cols' => '48'));
+        $mform->addElement('editor', 'apsoluheadercontent', get_string('message', 'local_apsolu'));
         $mform->setType('apsoluheadercontent', PARAM_RAW);
 
         // Submit buttons.
-        $attributes = array('class' => 'btn btn-primary');
-        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'), $attributes);
+        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
 
         $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->closeHeaderBefore('buttonar');
 
         // Hidden fields.
         $mform->addElement('hidden', 'page', 'header');

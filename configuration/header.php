@@ -27,7 +27,7 @@ require_once($CFG->dirroot.'/local/apsolu/configuration/header_form.php');
 // Build form.
 $defaults = new stdClass();
 $defaults->apsoluheaderactive = get_config('local_apsolu', 'apsoluheaderactive');
-$defaults->apsoluheadercontent = get_config('local_apsolu', 'apsoluheadercontent');
+$defaults->apsoluheadercontent = array('text' => get_config('local_apsolu', 'apsoluheadercontent'), 'format' => 1);
 
 $customdata = array($defaults);
 $mform = new local_apsolu_header_form(null, $customdata);
@@ -39,13 +39,13 @@ if ($data = $mform->get_data()) {
     }
 
     set_config('apsoluheaderactive', $data->apsoluheaderactive, 'local_apsolu');
-    set_config('apsoluheadercontent', $data->apsoluheadercontent, 'local_apsolu');
+    set_config('apsoluheadercontent', $data->apsoluheadercontent['text'], 'local_apsolu');
 
     if (empty($data->apsoluheaderactive) === true) {
         set_config('additionalhtmltopofbody', '');
     } else {
         // Encapsule le HTML dans une div afin de pouvoir masquer le contenu sur la page d'accueil du site.
-        $additionalhtmltopofbody = sprintf('<div id="apsolu-topofbody">%s</div>', $data->apsoluheadercontent);
+        $additionalhtmltopofbody = sprintf('<div id="apsolu-topofbody">%s</div>', $data->apsoluheadercontent['text']);
         set_config('additionalhtmltopofbody', $additionalhtmltopofbody);
     }
 
