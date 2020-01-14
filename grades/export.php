@@ -20,6 +20,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\customfields;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot.'/user/profile/lib.php');
@@ -82,11 +84,11 @@ $semesters = array(
 );
 
 if (date('m') > 8) {
-    $year = date('y');
+    $year = date('Y');
 } else {
-    $year = date('y')-1;
+    $year = date('Y')-1;
 }
-
+// TODO: améliorer le calcul des dates de début/fin de semestre. Proposer un champ date ?
 $timestart_semester1 = mktime(0, 0, 0, 8, 1, $year);
 $timeend_semester1 = mktime(0, 0, 0, 1, 1, $year+1);
 $timestart_semester2 = mktime(0, 0, 0, 1, 1, $year+1);
@@ -99,11 +101,13 @@ $mform = new local_apsolu_courses_grades_export_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
     // Save data.
-    $conditions = array();
+    $customfields = customfields::getCustomFields();
+
+    $conditions = array('apsoluufr' => $customfields['apsoluufr']->id);
 
     $sql = "SELECT u.*, r.name AS rolename, ue.status AS listid, c.id AS courseid, c.shortname AS course, ag.grade1, ag.grade2, ag.grade3, ag.grade4, info.data AS ufr".
         " FROM {user} u".
-        " LEFT JOIN {user_info_data} info ON u.id = info.userid AND info.fieldid = 4". // UFR = 4.
+        " LEFT JOIN {user_info_data} info ON u.id = info.userid AND info.fieldid = :apsoluufr".
         " JOIN {user_enrolments} ue ON u.id = ue.userid".
         " JOIN {enrol} e ON e.id = ue.enrolid AND e.enrol = 'select' AND e.status = 0".
         " JOIN {course} c ON c.id = e.courseid".
