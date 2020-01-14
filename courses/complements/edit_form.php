@@ -63,8 +63,7 @@ class local_apsolu_courses_complements_edit_form extends moodleform {
         $mform->setType('summary', PARAM_TEXT);
 
         // Submit buttons.
-        $attributes = array('class' => 'btn btn-primary');
-        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'), $attributes);
+        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 
         $attributes = new stdClass();
         $attributes->href = $CFG->wwwroot.'/local/apsolu/courses/complements.php';

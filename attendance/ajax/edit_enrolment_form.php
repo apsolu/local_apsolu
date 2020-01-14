@@ -56,8 +56,7 @@ class edit_enrolment_form extends moodleform {
         $mform->setType('enrolid', PARAM_INT);
 
         // Submit buttons.
-        $attributes = array('class' => 'btn btn-primary');
-        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'), $attributes);
+        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
 
         $url = new moodle_url('/local/apsolu/attendance/edit.php', array('courseid' => $data->courseid));
         $attributes = new stdClass();

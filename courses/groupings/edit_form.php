@@ -44,8 +44,7 @@ class local_apsolu_courses_groupings_edit_form extends moodleform {
         $mform->setType('url', PARAM_URL);
 
         // Submit buttons.
-        $attributes = array('class' => 'btn btn-primary');
-        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'), $attributes);
+        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 
         $attributes = new stdClass();
         $attributes->href = $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=groupings';

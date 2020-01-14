@@ -90,8 +90,7 @@ class local_apsolu_courses_locations_edit_form extends moodleform {
         // Hope to use instead : $mform->addDatalist('manager', $managers);.
 
         // Submit buttons.
-        $attributes = array('class' => 'btn btn-primary');
-        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'), $attributes);
+        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 
         $attributes = new stdClass();
         $attributes->href = $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=locations';

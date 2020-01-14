@@ -41,8 +41,7 @@ class local_apsolu_contacts_form extends moodleform {
         $mform->addRule('technical_contact', get_string('required'), 'required', null, 'client');
 
         // Submit buttons.
-        $attributes = array('class' => 'btn btn-primary');
-        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'), $attributes);
+        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
 
         $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
 

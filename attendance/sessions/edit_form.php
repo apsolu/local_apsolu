@@ -56,8 +56,7 @@ class local_apsolu_attendance_sessions_edit_form extends moodleform {
         $mform->addRule('notify', get_string('required'), 'required', null, 'client');
 
         // Submit buttons.
-        $attributes = array('class' => 'btn btn-primary');
-        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'), $attributes);
+        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 
         $attributes = new stdClass();
         $attributes->href = $CFG->wwwroot.'/local/apsolu/attendance/sessions/index.php?courseid='.$session->courseid;

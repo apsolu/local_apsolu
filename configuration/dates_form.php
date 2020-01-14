@@ -38,8 +38,7 @@ class local_apsolu_calendar_form extends moodleform {
         $mform->addElement('date_time_selector', 'payments_enddate', get_string('payments_enddate', 'local_apsolu'));
 
         // Submit buttons.
-        $attributes = array('class' => 'btn btn-primary');
-        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'), $attributes);
+        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
 
         $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
 

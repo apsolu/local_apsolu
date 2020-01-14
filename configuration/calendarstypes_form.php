@@ -36,8 +36,7 @@ class local_apsolu_calendarstypes_edit_form extends moodleform {
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'server');
 
         // Submit buttons.
-        $attributes = array('class' => 'btn btn-primary');
-        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'), $attributes);
+        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
 
         $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
 

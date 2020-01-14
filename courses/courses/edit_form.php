@@ -105,8 +105,7 @@ class local_apsolu_courses_courses_edit_form extends moodleform {
         // Hope to use instead : $mform->addDatalist('paymentcenterid', $centers);.
 
         // Submit buttons.
-        $attributes = array('class' => 'btn btn-primary');
-        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'), $attributes);
+        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 
         $attributes = new stdClass();
         $attributes->href = $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=courses';

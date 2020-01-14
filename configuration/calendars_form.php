@@ -75,8 +75,7 @@ class local_apsolu_calendar_edit_form extends moodleform {
         $mform->addElement('date_time_selector', 'gradeenddate', get_string('gradeenddate', 'local_apsolu'), $datetimeoptions);
 
         // Submit buttons.
-        $attributes = array('class' => 'btn btn-primary');
-        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'), $attributes);
+        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
 
         $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
 
