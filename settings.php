@@ -123,6 +123,10 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     $url = new moodle_url('/enrol/select/administration.php?tab=colleges');
     $ADMIN->add('local_apsolu_enrol', new admin_externalpage('enrol_select_colleges', get_string('colleges', 'enrol_select'), $url, $capabilities));
 
+    // Inscriptions > Réinscription en masse.
+    $url = new moodle_url('/enrol/select/administration.php?tab=renewals');
+    $ADMIN->add('local_apsolu_enrol', new admin_externalpage('enrol_select_renewals', get_string('renewals', 'enrol_select'), $url, $capabilities));
+
     // Notations.
     if (isset($CFG->is_siuaps_rennes) === true) {
         $ADMIN->add('apsolu', new admin_category('local_apsolu_grades', get_string('grades', 'local_apsolu')));
