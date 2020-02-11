@@ -1054,6 +1054,8 @@ class local_apsolu_webservices extends external_api {
      */    
     public static function get_reportdataset($classname,$reportid, $custom = null, $criterias = null) {
       
+      raise_memory_limit(MEMORY_EXTRA);
+      
       $class = 'local_apsolu\local\statistics\\'.$classname.'\report'; 
       $reportObj = new $class();
       
