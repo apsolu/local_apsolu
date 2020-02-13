@@ -64,7 +64,14 @@ define(
                         return jsFunc;
                     }
                     return value;
-                }),                
+                }),
+                columnDefs: [
+               		{
+                  	"targets": '_all',
+                    "render": function ( data, type, row, meta ) {
+          							         return type === 'filter' ? (data === null || data === '') ? '(Vide)' : data : data;
+                              }
+                }],                                
                 order: order,
                 buttons: ['csvHtml5'],
                 dom: '<"top"Bfi>rt<"bottom"lp><"clear">', //'dom': 'lfrtip',
@@ -148,7 +155,15 @@ define(
                             var title = $(column.header()).html();
                             if (title != "Jour")
                             {                      
-                              select.append( '<option value="'+d+'">'+d+'</option>' )
+                              if (d === null || d === '') {
+                              	d = '(Vide)';
+                              }                
+                              var values = select.children('option').map(function(i, e){
+                                  return e.value || e.innerText;
+                              }).get();
+                              if( $.inArray(d, values) === -1 ) {
+                                  select.append( '<option value="'+d+'">'+d+'</option>' )
+                              }
                             } else {
                               select.append( '<option value="'+moment.weekdays()[d]+'">'+moment.weekdays()[d]+'</option>' )
                             }

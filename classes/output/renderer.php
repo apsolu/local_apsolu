@@ -82,5 +82,20 @@ class renderer extends plugin_renderer_base {
       }
     }    
     
+    public function render_reportData($options=[]) {
+      if (isset($options['criterias'])) {
+        $result = (object)\local_apsolu_webservices::get_reportdataset($options['classname'],$options['reportid'],null,$options['criterias']);
+      } else {
+        $result = (object)\local_apsolu_webservices::get_reportdataset($options['classname'],$options['reportid']);
+      }
+  
+      if ($result->success) {
+        $Enrolments = json_decode($result->data);
+        return $Enrolments;
+      } else {
+        return get_string("statistics_noavailabledata","local_apsolu");
+      }
+    }
+        
     
 }

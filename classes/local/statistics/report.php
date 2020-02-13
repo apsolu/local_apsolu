@@ -61,6 +61,12 @@ class report {
         }
         return null;      
       } else {
+        foreach($model->reports as $property => $value) {
+          // ne pas inclure les rapports masqués
+          if (property_exists($value, 'hidden')) {
+            unset($model->reports[$property]);
+          }
+        }
         return $model->reports;
       }
       
@@ -98,9 +104,9 @@ class report {
             $values = [];
             foreach($records as $record){
               if (sizeof($fields) > 1) {
-                $values[] = [$record[$fields[0]]=>($record[$fields[1]] == "" ? "Vide" : $record[$fields[1]])];  
+                $values[] = [$record[$fields[0]]=>($record[$fields[1]] == "" ? "(Vide)" : $record[$fields[1]])];  
               } else {
-                $values[] = [($record[$fields[0]] == "" ? " " : $record[$fields[0]])=>($record[$fields[0]] == "" ? "Vide" : $record[$fields[0]])];
+                $values[] = [($record[$fields[0]] == "" ? " " : $record[$fields[0]])=>($record[$fields[0]] == "" ? "(Vide)" : $record[$fields[0]])];
               }
             }
             $model->filters[$i]->values = $values;

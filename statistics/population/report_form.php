@@ -31,12 +31,37 @@ class local_apsolu_statistics_report_form extends moodleform {
         list($reports,$reportid) = $this->_customdata;
 
         $options = array();
-        $options[0] = get_string('none');
-        foreach ($reports as $report) {
-            $options[$report->id] = $report->label;
-        }
         
-        $reportselect = $mform->addElement('select', 'reportid', get_string('statistics_select_reports', 'local_apsolu'), $options);
+        $group = get_string('none');
+        $options[$group] = array();
+        $options[$group][0] = $group;
+        
+        $group = get_string('statistics_enrollments', 'local_apsolu');
+        $options[$group] = array();
+        foreach($reports as $property => $value) {
+          if (property_exists($value, 'group') && $value->group == "statistics_enrollments") {
+            $options[$group][$value->id] = $value->label;           
+          } 
+        }
+
+        $group = get_string('statistics_enrollees', 'local_apsolu');
+        $options[$group] = array();
+        foreach($reports as $property => $value) {
+          if (property_exists($value, 'group') && $value->group == "statistics_enrollees") {
+            $options[$group][$value->id] = $value->label;           
+          } 
+        }
+
+        $group = get_string('other');
+        $options[$group] = array();
+        foreach($reports as $property => $value) {
+          if (!property_exists($value, 'group')) {
+            $options[$group][$value->id] = $value->label;           
+          } 
+        }
+
+        $reportselect = $mform->addElement('selectgroups', 'reportid', get_string('statistics_select_reports', 'local_apsolu'), $options);
+        
         if (!is_null ($reportid)) {
           $reportselect->setSelected($reportid);
         }        

@@ -68,7 +68,12 @@ class report extends \local_apsolu\local\statistics\report {
       			APSOLU_C.id as slotid, APSOLU_C.event as slotevent,APSOLU_C.numweekday as slotnumweekday,DAYNAME(CONCAT("1970-09-2", APSOLU_C.numweekday)) as slotweekday, APSOLU_C.starttime as slotstart,	APSOLU_C.endtime as slotend,
       			Activity.id as activityid, Activity.name as activityname, 
       			Grouping.id as groupid, Grouping.name as groupname,
-            R.shortname as roleshortname
+            (SELECT GROUP_CONCAT(DISTINCT R.shortname ORDER BY R.shortname SEPARATOR \', \') 
+  					FROM mdl_role_assignments ra 
+  					INNER JOIN mdl_context ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50
+  				   INNER JOIN mdl_role R ON ra.roleid = R.id AND R.archetype = \'student\'
+  					WHERE ra.userid = U.id AND ctx.instanceid = C.id
+  					) as roleshortname
       		FROM {user_enrolments} UE
       		INNER JOIN {user} U ON U.id = UE.userid AND U.deleted = 0
           LEFT JOIN {user_info_data} Sexe ON Sexe.userid = U.id AND Sexe.fieldid = (select id from mdl_user_info_field where shortname = \'apsolusex\')
@@ -114,7 +119,12 @@ class report extends \local_apsolu\local\statistics\report {
       			APSOLU_C.id as slotid, 
       			C.id as activityid, C.fullname as activityname, 
 				    Grouping.id as groupid, Grouping.name as groupname, 
-            R.shortname as roleshortname
+            (SELECT GROUP_CONCAT(DISTINCT R.shortname ORDER BY R.shortname SEPARATOR \', \') 
+  					FROM mdl_role_assignments ra 
+  					INNER JOIN mdl_context ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50
+  				   INNER JOIN mdl_role R ON ra.roleid = R.id AND R.archetype = \'student\'
+  					WHERE ra.userid = U.id AND ctx.instanceid = C.id
+  					) as roleshortname
       		FROM {user_enrolments} UE
       		INNER JOIN {user} U ON U.id = UE.userid AND U.deleted = 0
           LEFT JOIN {user_info_data} Sexe ON Sexe.userid = U.id AND Sexe.fieldid = (select id from mdl_user_info_field where shortname = \'apsolusex\')
@@ -204,7 +214,7 @@ class report extends \local_apsolu\local\statistics\report {
                 [ 'data' => "slotend", 'title' => "Heure de fin"],
               ];
               $orders = [2 => 'asc', 3 => 'asc'];
-              $filters = ['input' => [1,2,3,4,7,8],'select' => [0,5,6,9,10,11,12,13,14,15,16,17,18,19] ];
+              $filters = ['input' => [1,2,3,4,7,8,13],'select' => [0,5,6,9,10,11,12,14,15,16,17,18,19] ];
                               
               break;
           }
@@ -370,18 +380,18 @@ class report extends \local_apsolu\local\statistics\report {
         ));
       }      
       
-      $sql = $params["WithEnrolments"] . "SELECT DISTINCT 
-          institution,
-          COUNT(CASE WHEN accepted_list > 0 THEN 1 ELSE NULL END) AS accepted,	
-          COUNT(CASE WHEN accepted_list = 0 THEN 1 ELSE NULL END) AS refused 
-        FROM (			       	
-        	SELECT DISTINCT e.userid,
-            cityid,cityname,
-        		CASE WHEN (e.institution IS NULL OR e.institution = '') THEN 'Autre' ELSE e.institution END AS institution,
-           	COUNT(CASE WHEN status=0 THEN 1 ELSE NULL END) AS accepted_list
-        	FROM enrolments e
-          WHERE cityid in (". $cityid .") AND calendartypeid in (". $calendarstypeid .")         
-        	GROUP BY e.userid,e.cityid,e.institution
+      $sql = $params["WithEnrolments"] . "
+        SELECT DISTINCT 
+        	institution,
+        	SUM(if(accepted_list > 0, 1, 0)) AS accepted,
+        	SUM(if(accepted_list = 0, 1, 0)) AS refused
+        FROM (
+          	SELECT DISTINCT e.userid,
+              cityid,cityname,e.institution,
+             	COUNT(CASE WHEN status=0 THEN 1 ELSE NULL END) AS accepted_list
+          	FROM enrolments e
+            WHERE cityid in (". $cityid .") AND calendartypeid in (". $calendarstypeid .")
+          	GROUP BY e.userid,e.cityid,e.institution
         ) results	
         GROUP BY institution
         ORDER BY institution";
@@ -697,13 +707,67 @@ class report extends \local_apsolu\local\statistics\report {
       } 
       
       $sql = $params["WithEnrolments"] . " SELECT DISTINCT
-          ROW_NUMBER() OVER (ORDER BY institution, roleshortname ASC) AS row_num, 
-        	institution, roleshortname, count(userid) as total
-        FROM enrolments e
-        WHERE e.status=0 AND cityid in (". $cityid .") AND calendartypeid in (". $calendarstypeid .")
-        GROUP BY institution, roleshortname
-        ORDER BY institution, roleshortname";
+        	ROW_NUMBER() OVER (ORDER BY institution, shortname ASC) AS row_num, 
+        	institution, shortname as roleshortname, sum(total) as total
+        FROM (      	
+        	SELECT DISTINCT e.institution,R.shortname, e.roleshortname, count(userid) as total
+        	FROM enrolments e
+        	INNER JOIN mdl_role R ON e.roleshortname like CONCAT('%',R.shortname,'%') AND R.archetype = 'student' and shortname <> 'student'
+          WHERE e.status=0 
+          AND cityid in (". $cityid .") AND calendartypeid in (". $calendarstypeid .") 
+        	GROUP BY e.institution, R.shortname, e.roleshortname
+        ) ROLES
+        GROUP BY institution, shortname
+        ORDER BY institution, shortname";
 
       return $DB->get_records_sql($sql);
-    }                     	            
+    }
+    
+    
+    /**
+      * Tableau de bord des activités physiques
+      *
+      * @return array
+      */
+    public static function dashboard($params) {
+      global $DB;
+
+      $sql = $params["WithEnrolments"] . " SELECT COUNT(e.status) AS wish_list,
+      	SUM(if(e.status=0, 1, 0)) AS accepted_list,
+      	SUM(if(e.status=2, 1, 0)) AS main_list,
+      	SUM(if(e.status=3, 1, 0)) AS wait_list,
+      	SUM(if(e.status=4, 1, 0)) AS deleted_list,
+      	COUNT(DISTINCT e.userid) AS enrollee_wish_list,
+      	COUNT(DISTINCT if(e.status=0, e.userid, NULL)) AS enrollee_accepted_list,
+      	COUNT(DISTINCT if(e.status=2, e.userid, NULL)) AS enrollee_main_list,	
+      	COUNT(DISTINCT if(e.status=3, e.userid, NULL)) AS enrollee_wait_list,	
+      	COUNT(DISTINCT if(e.status=4, e.userid, NULL)) AS enrollee_deleted_list
+      FROM enrolments e";
+
+      return $DB->get_records_sql($sql);
+    }
+    
+    /**
+      * Tableau de bord des activités complémentaires
+      *
+      * @return array
+      */
+    public static function dashboard_complementaries($params) {
+      global $DB;
+
+      $complementaries = parent::get_complementaries();
+
+      $sql = $params["WithComplementary"] . " SELECT 
+        COUNT(e.status) AS enrollment,
+      	COUNT(DISTINCT e.userid) AS enrollee ";
+      
+      foreach ($complementaries as $complementary) {
+        $sql .= " ,SUM(if(e.activityid=".$complementary->id.", 1, 0)) AS enrollment_".$complementary->id; 
+      }        
+        
+      $sql .= " FROM enrolments e";
+
+      return $DB->get_records_sql($sql);
+    }    
+    
 }
