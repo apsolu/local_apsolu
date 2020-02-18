@@ -46,6 +46,7 @@ $string['named_section'] = 'Section "{$a}"';
 $string['no_recorded_attendances'] = 'Aucune présence enregistrée';
 $string['no_sessions'] = 'Aucune séance';
 $string['non_institutional_account_authentification_url'] = 'URL d\'authentification des comptes non institutionnels';
+$string['payment_prefix'] = 'Préfixe de paiement';
 $string['return'] = 'Revenir';
 $string['section_text'] = 'Texte de la section';
 $string['section2_text'] = '<div class="alert alert-info">Le tableau des activités est généré automatiquement.</div>';
@@ -513,11 +514,11 @@ $string['invalid_user_no_sesame'] = '<p>Actuellement, vous n\'utilisez pas votre
 $string['invalid_user_invalid_sesame'] = '<p>Votre compte ne semble pas être présent dans le référentiel communiqué au SIUAPS.<br />'.
     ' Si vous avez un compte Sésame en cours de validité dans votre établissement et une inscription pour l\'année universitaire en cours, merci d\'envoyer un courriel à <a href="mailto:{$a->email}">{$a->email}</a> en précisant que votre compte est bien valable actuellement.</p>';
 $string['no_courses'] = 'Vous ne pouvez pas payer car vous n\'avez aucune inscription validée ou valide pour le moment.';
-$string['no_courses_complements'] = 'Pour les cours du SIUAPS, si vous êtes inscrit en évaluation, vérifier avec votre enseignant que vous êtes autorisé à l\'être.< br/>'.
+$string['no_courses_complements'] = 'Pour les cours du SIUAPS, si vous êtes inscrit en évaluation, vérifier avec votre enseignant que vous êtes autorisé à l\'être.<br />'.
 ' Pour l\'accès aux salles de musculation, vous devez avoir validé votre séance gratuite avant de pouvoir payer.';
 $string['no_paybox'] = 'Notre prestataire de paiement semble rencontrer des difficultés techniques. Merci de réessayer ultérieurement.';
 $string['warning_payment'] = '<p><strong>Attention</strong> : vérifiez les cours qui vous sont facturés. Si vous ne souhaitez plus suivre une activité, merci de contacter votre enseignant.</p>'.
-    '<p>Le SIUAPS ne procèdera à aucun remboursement.'.
+    '<p>Aucun remboursement ne sera procédé.'.
     ' Si vous constatez une erreur dans le montant à payer, merci d\'envoyer un mail à l\'adresse <a href="mailto:{$a}">{$a}</a>.</p>'.
     '<p>Enfin, si vous rencontrez le problème "<em>Demande de paiement dupliquée. Accès refusé !</em>", merci de réessayer votre paiement le lendemain.</p>';
 $string['status_accepted'] = 'Paiement accepté.';

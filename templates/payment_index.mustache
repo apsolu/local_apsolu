@@ -2,7 +2,9 @@
 	{{^payment_centers}}
 	<div class="alert alert-info">
 		<p>{{#str}}no_courses, local_apsolu{{/str}}</p>
+		{{#is_siuaps_rennes}}
 		<p>{{#str}}no_courses_complements, local_apsolu{{/str}}</p>
+		{{/is_siuaps_rennes}}
 	</div>
 	{{/payment_centers}}
 

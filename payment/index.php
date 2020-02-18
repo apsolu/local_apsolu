@@ -80,8 +80,12 @@ if (isset($customfields->apsolusesame) === false || $customfields->apsolusesame 
 
     $data = new stdClass();
     if ($USER->auth === 'shibboleth') {
-        $admin = current(get_admins());
-        $options = (object) ['email' => $admin->email];
+        if (empty($data->functional_contact) === false) {
+            $options = (object) ['email' => $data->functional_contact];
+        } else {
+            $admin = current(get_admins());
+            $options = (object) ['email' => $admin->email];
+        }
         $data->alert = get_string('invalid_user_invalid_sesame', 'local_apsolu', $options);
     } else {
         $options = (object) ['url' => $CFG->wwwroot.'/local/apsolu_auth/edit.php'];
@@ -234,6 +238,7 @@ echo $OUTPUT->header();
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
+$data->is_siuaps_rennes = isset($CFG->is_siuaps_rennes);
 $data->payment_centers = array_values($paymentcenters);
 $data->count_payment_centers = count($data->payment_centers);
 $data->functional_contact = get_config('local_apsolu', 'functional_contact');
