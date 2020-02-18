@@ -38,29 +38,35 @@ class local_apsolu_payment_centers_edit_form extends moodleform {
         $mform->addElement('text', 'name', get_string('name'), array('size' => '48'));
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
+        $mform->addHelpButton('name', 'payment_center', 'local_apsolu');
 
         // Prefix field.
         $mform->addElement('text', 'prefix', get_string('payment_prefix', 'local_apsolu'), array('size' => '48'));
         $mform->setType('prefix', PARAM_ALPHANUMEXT);
+        $mform->addHelpButton('prefix', 'payment_prefix', 'local_apsolu');
 
         // Idnumber field.
         $mform->addElement('text', 'idnumber', get_string('paybox_idnumber', 'local_apsolu'), array('size' => '48'));
         $mform->setType('idnumber', PARAM_INT);
+        $mform->addHelpButton('idnumber', 'paybox_idnumber', 'local_apsolu');
         $mform->addRule('idnumber', get_string('required'), 'required', null, 'client');
 
         // Site number field.
         $mform->addElement('text', 'sitenumber', get_string('paybox_sitenumber', 'local_apsolu'), array('size' => '48'));
         $mform->setType('sitenumber', PARAM_INT);
+        $mform->addHelpButton('sitenumber', 'paybox_sitenumber', 'local_apsolu');
         $mform->addRule('sitenumber', get_string('required'), 'required', null, 'client');
 
         // Rank field.
         $mform->addElement('text', 'rank', get_string('paybox_rank', 'local_apsolu'), array('size' => '48'));
         $mform->setType('rank', PARAM_INT);
+        $mform->addHelpButton('rank', 'paybox_rank', 'local_apsolu');
         $mform->addRule('rank', get_string('required'), 'required', null, 'client');
 
         // HMAC field.
         $mform->addElement('text', 'hmac', get_string('paybox_hmac', 'local_apsolu'));
         $mform->setType('hmac', PARAM_ALPHANUM);
+        $mform->addHelpButton('hmac', 'paybox_hmac', 'local_apsolu');
 
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
