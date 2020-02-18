@@ -17,6 +17,7 @@
 <thead>
 	<tr>
 		<th>{{#str}}payment_centers, local_apsolu{{/str}}</th>
+		<th>{{#str}}payment_prefix, local_apsolu{{/str}}</th>
 		<th>{{#str}}paybox_idnumber, local_apsolu{{/str}}</th>
 		<th>{{#str}}paybox_sitenumber, local_apsolu{{/str}}</th>
 		<th>{{#str}}paybox_rank, local_apsolu{{/str}}</th>
@@ -28,6 +29,7 @@
 	{{#centers}}
 	<tr>
 		<td>{{name}}</td>
+		<td>{{#prefix}}{{prefix}}{{/prefix}}{{^prefix}}<em>{{#str}}none{{/str}}</em>{{/prefix}}</td>
 		<td>{{idnumber}}</td>
 		<td>{{sitenumber}}</td>
 		<td>{{rank}}</td>

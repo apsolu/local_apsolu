@@ -588,5 +588,19 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 2020021800;
+    if ($result && $oldversion < $version) {
+        // Ajoute une colonne 'prefix' sur la table 'apsolu_payments_centers'.
+        $table = new xmldb_table('apsolu_payments_centers');
+        $field = new xmldb_field('prefix', XMLDB_TYPE_TEXT, $precision=null, $unsigned=null, $notnull=null, $sequence=null, $default=null, $previous='name');
+
+        if ($dbman->field_exists($table, $field) === false) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
     return $result;
 }

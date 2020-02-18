@@ -39,6 +39,10 @@ class local_apsolu_payment_centers_edit_form extends moodleform {
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
 
+        // Prefix field.
+        $mform->addElement('text', 'prefix', get_string('payment_prefix', 'local_apsolu'), array('size' => '48'));
+        $mform->setType('prefix', PARAM_ALPHANUMEXT);
+
         // Idnumber field.
         $mform->addElement('text', 'idnumber', get_string('paybox_idnumber', 'local_apsolu'), array('size' => '48'));
         $mform->setType('idnumber', PARAM_INT);

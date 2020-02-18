@@ -215,6 +215,7 @@ foreach ($paymentcenters as $centerid => $paymentcenter) {
         $payment->userid = $USER->id;
         $payment->paymentcenterid = $paymentcenter->id;
         $payment->id = $DB->insert_record('apsolu_payments', $payment);
+        $payment->prefix = $paymentcenter->prefix;
 
         foreach ($paymentcenter->cards as $card) {
             if ($card->status === Payment::DUE) {

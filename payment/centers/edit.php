@@ -37,6 +37,7 @@ if ($center === false) {
     $center = new stdClass();
     $center->id = 0;
     $center->name = '';
+    $center->prefix = '';
     $center->idnumber = '';
     $center->sitenumber = '';
     $center->rank = '';
@@ -54,6 +55,7 @@ if ($data = $mform->get_data()) {
     $center = new stdClass();
     $center->id = $data->centerid;
     $center->name = trim($data->name);
+    $center->prefix = trim($data->prefix);
     $center->idnumber = trim($data->idnumber);
     $center->sitenumber = trim($data->sitenumber);
     $center->rank = trim($data->rank);

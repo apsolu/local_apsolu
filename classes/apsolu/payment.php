@@ -258,7 +258,7 @@ class Payment {
         $paybox->PBX_DEVISE = 978;
 
         // Référence commande côté commerçant.
-        $paybox->PBX_CMD = $payment->id;
+        $paybox->PBX_CMD = $payment->prefix.$payment->id;
 
         // Adresse Email de l’acheteur.
         $paybox->PBX_PORTEUR = $USER->email;
