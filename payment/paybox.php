@@ -64,9 +64,14 @@ try {
         throw new Exception('Invalid args: '.var_export($_GET, true));
     }
 
-    $payment = $DB->get_record('apsolu_payments', array('id' => $_GET['Ref']));
+    // Gère les préfixes de paiement dans les numéros de commande.
+    if (preg_match('/([0-9]+)$/', $_GET['Ref'], $matches) === false) {
+        throw new Exception('Unknown payment (cannot parse id): '.$_GET['Ref']);
+    }
+
+    $payment = $DB->get_record('apsolu_payments', array('id' => $matches[1]));
     if (!$payment) {
-        throw new Exception('Unknown payment: '.$_GET['Ref']);
+        throw new Exception('Unknown payment (not found): '.$_GET['Ref']);
     }
 
     $user = $DB->get_record('user', array('id' => $payment->userid));
