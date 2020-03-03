@@ -69,7 +69,7 @@ class local_apsolu_payment_payments_edit_form extends moodleform {
 
         // Amount field.
         $mform->addElement('text', 'amount', get_string('amount', 'local_apsolu'));
-        $mform->setType('amount', PARAM_FLOAT);
+        $mform->setType('amount', PARAM_LOCALISEDFLOAT);
         $mform->addRule('amount', get_string('required'), 'required', null, 'client');
 
         // Submit buttons.

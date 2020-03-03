@@ -51,7 +51,7 @@ class local_apsolu_courses_complements_edit_form extends moodleform {
 
         // Price field.
         $mform->addElement('text', 'price', get_string('price', 'local_apsolu'));
-        $mform->setType('price', PARAM_TEXT);
+        $mform->setType('price', PARAM_LOCALISEDFLOAT);
         $mform->addRule('price', get_string('required'), 'required', null, 'client');
 
         // Federation field.

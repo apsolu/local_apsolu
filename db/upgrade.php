@@ -602,5 +602,46 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 2020030300;
+    if ($result && $oldversion < $version) {
+        $table = new xmldb_table('apsolu_dunnings');
+
+        // Renomme le champ 'timeend' de la table 'apsolu_dunnings'.
+        $field = new xmldb_field('timeend', XMLDB_TYPE_INTEGER, $precision = '10', $unsigned = XMLDB_UNSIGNED, $notnull = null, $sequence = null, $default = null, $previous = null);
+        if ($dbman->field_exists($table, $field) === true) {
+            $dbman->rename_field($table, $field, 'timeended');
+        }
+
+        // Rend nullable le champ 'timestarted' de la table 'apsolu_dunnings'.
+        $index = new xmldb_index($indexname = 'timestarted', XMLDB_INDEX_NOTUNIQUE, $fields = array('timestarted'));
+        $dbman->drop_index($table, $index);
+
+        $field = new xmldb_field('timestarted', XMLDB_TYPE_INTEGER, $precision = '10', $unsigned = XMLDB_UNSIGNED, $notnull = null, $sequence = null, $default = null, $previous = null);
+        $dbman->change_field_type($table, $field);
+
+        $dbman->add_index($table, $index);
+
+        // Rend nullable le champ 'timeend' de la table 'apsolu_dunnings'.
+        $table = new xmldb_table('apsolu_dunnings');
+        $field = new xmldb_field('timeended', XMLDB_TYPE_INTEGER, $precision = '10', $unsigned = XMLDB_UNSIGNED, $notnull = null, $sequence = null, $default = null, $previous = null);
+        $dbman->change_field_type($table, $field);
+
+        // Permet de saisir des montants de paiement avec des virgules.
+        $table = new xmldb_table('apsolu_payments');
+        $field = new xmldb_field('amount', XMLDB_TYPE_NUMBER, $precision = '10,2', $unsigned = XMLDB_UNSIGNED, $notnull = null, $sequence = null, $default = null, $previous = null);
+        $dbman->change_field_type($table, $field);
+
+        $table = new xmldb_table('apsolu_complements');
+        $field = new xmldb_field('price', XMLDB_TYPE_NUMBER, $precision = '10,2', $unsigned = XMLDB_UNSIGNED, $notnull = null, $sequence = null, $default = null, $previous = null);
+        $dbman->change_field_type($table, $field);
+
+        $table = new xmldb_table('apsolu_payments_cards');
+        $field = new xmldb_field('price', XMLDB_TYPE_NUMBER, $precision = '10,2', $unsigned = XMLDB_UNSIGNED, $notnull = null, $sequence = null, $default = null, $previous = null);
+        $dbman->change_field_type($table, $field);
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
     return $result;
 }

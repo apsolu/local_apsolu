@@ -130,7 +130,7 @@
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" />
             <FIELD NAME="method" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="eg: card, coins, check" />
             <FIELD NAME="source" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="eg: apsolu, apogée, manual" />
-            <FIELD NAME="amount" TYPE="float" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="amount" TYPE="float" LENGTH="10" DECIMALS="2" DEFAULT="0.00" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" />
             <FIELD NAME="status" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="timepaid" TYPE="char" LENGTH="19" NOTNULL="false" SEQUENCE="false" />
             <FIELD NAME="timecreated" TYPE="char" LENGTH="19" NOTNULL="true" SEQUENCE="false" />
@@ -168,7 +168,7 @@
         <FIELDS>
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" />
             <FIELD NAME="timecreated" TYPE="char" LENGTH="19" NOTNULL="true" SEQUENCE="false" />
-            <FIELD NAME="amount" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" />
+            <FIELD NAME="amount" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Paybox retourne un montant entier. Exemple: un montant de 10.50€ donnera 1050." />
             <FIELD NAME="reference" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
             <FIELD NAME="auto" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
             <FIELD NAME="error" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
@@ -284,7 +284,7 @@
     <TABLE NAME="apsolu_complements" COMMENT="Extend courses data">
         <FIELDS>
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" />
-            <FIELD NAME="price" TYPE="float" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="price" TYPE="float" LENGTH="10" DECIMALS="2" DEFAULT="0.00" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" />
             <FIELD NAME="federation" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" />
             <FIELD NAME="paymentcenterid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
         </FIELDS>
@@ -399,7 +399,7 @@
             <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
             <FIELD NAME="fullname" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
             <FIELD NAME="trial" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="price" TYPE="float" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="price" TYPE="float" LENGTH="10" DECIMALS="2" DEFAULT="0.00" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" />
             <FIELD NAME="centerid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
         </FIELDS>
         <KEYS>
@@ -451,8 +451,8 @@
             <FIELD NAME="subject" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
             <FIELD NAME="message" TYPE="text" NOTNULL="false" SEQUENCE="false" />
             <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="timestarted" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="timeend" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="timestarted" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" />
+            <FIELD NAME="timeended" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" />
             <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
         </FIELDS>
         <KEYS>

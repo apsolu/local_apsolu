@@ -58,7 +58,7 @@ class local_apsolu_payment_cards_edit_form extends moodleform {
 
         // Prix.
         $mform->addElement('text', 'price', get_string('price', 'local_apsolu'), array('size' => '48'));
-        $mform->setType('price', PARAM_FLOAT);
+        $mform->setType('price', PARAM_LOCALISEDFLOAT);
         $mform->addRule('price', get_string('required'), 'required', null, 'client');
 
         // Nombre de sessions offertes.
