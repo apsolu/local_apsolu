@@ -643,5 +643,26 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 2020050700;
+    if ($result && $oldversion < $version) {
+        $field = new xmldb_field('paymentcenterid');
+
+        foreach (array('apsolu_courses', 'apsolu_complements') as $tablename) {
+            $table = new xmldb_table($tablename);
+
+            $index = new xmldb_index('paymentcenterid', XMLDB_INDEX_UNIQUE, array('paymentcenterid'));
+            if ($dbman->index_exists($table, $index) === true) {
+                $dbman->drop_index($table, $index);
+            }
+
+            if ($dbman->field_exists($table, $field) === true) {
+                $dbman->drop_field($table, $field);
+            }
+        }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
     return $result;
 }

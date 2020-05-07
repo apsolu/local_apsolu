@@ -73,7 +73,6 @@
             <FIELD NAME="license" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="on_homepage" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="periodid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="paymentcenterid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" />
         </FIELDS>
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_courses" />
@@ -82,7 +81,6 @@
             <INDEX NAME="skillid" UNIQUE="false" FIELDS="skillid"/>
             <INDEX NAME="locationid" UNIQUE="false" FIELDS="locationid"/>
             <INDEX NAME="periodid" UNIQUE="false" FIELDS="periodid"/>
-            <INDEX NAME="paymentcenterid" UNIQUE="false" FIELDS="paymentcenterid"/>
         </INDEXES>
     </TABLE>
 
@@ -286,14 +284,10 @@
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" />
             <FIELD NAME="price" TYPE="float" LENGTH="10" DECIMALS="2" DEFAULT="0.00" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" />
             <FIELD NAME="federation" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" />
-            <FIELD NAME="paymentcenterid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
         </FIELDS>
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_complements" />
         </KEYS>
-        <INDEXES>
-            <INDEX NAME="paymentcenterid" UNIQUE="false" FIELDS="paymentcenterid"/>
-        </INDEXES>
     </TABLE>
 
 	<!-- GRADES -->
