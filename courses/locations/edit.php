@@ -20,6 +20,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\location as Location;
+
 defined('MOODLE_INTERNAL') || die;
 
 require(__DIR__.'/edit_form.php');
@@ -28,28 +30,9 @@ require(__DIR__.'/edit_form.php');
 $locationid = optional_param('locationid', 0, PARAM_INT);
 
 // Generate object.
-$location = false;
-if ($locationid != 0) {
-    $location = $DB->get_record('apsolu_locations', array('id' => $locationid));
-}
-
-if ($location === false) {
-    $location = new stdClass();
-    $location->id = 0;
-    $location->name = '';
-    $location->area = '';
-    $location->address = '';
-    $location->email = '';
-    $location->phone = '';
-    $location->longitude = '';
-    $location->latitude = '';
-    $location->wifi_access = 1;
-    $location->indoor = '';
-    $location->restricted_access = '';
-    $location->manager = '';
-} else {
-    $location->area = $location->areaid;
-    $location->manager = $location->managerid;
+$location = new Location();
+if ($locationid !== 0) {
+    $location->load($locationid);
 }
 
 // Load areas.
@@ -77,34 +60,25 @@ $customdata = array($location, $areas, $managers);
 $mform = new local_apsolu_courses_locations_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
-    // Save data.
-    $location = new stdClass();
-    $location->id = $data->locationid;
-    $location->name = $data->name;
-    $location->areaid = $data->area;
-    $location->address = $data->address;
-    $location->email = $data->email;
-    $location->phone = $data->phone;
-    $location->longitude = $data->longitude;
-    $location->latitude = $data->latitude;
-    $location->wifi_access = $data->wifi_access;
-    $location->indoor = $data->indoor;
-    $location->restricted_access = $data->restricted_access;
-    $location->managerid = $data->manager;
-
-    if ($location->id == 0) {
-        $location->id = $DB->insert_record('apsolu_locations', $location);
-    } else {
-        $DB->update_record('apsolu_locations', $location);
+    // Message à afficher à la fin de l'enregistrement.
+    $message = get_string('location_updated', 'local_apsolu');
+    if (empty($location->id) === true) {
+        $message = get_string('location_saved', 'local_apsolu');
     }
 
-    // Display notification and display elements list.
-    $notificationform = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
+    // Save data.
+    $location->save($data);
 
-    require(__DIR__.'/view.php');
-} else {
-    // Display form.
-    echo '<h1>'.get_string('location_add', 'local_apsolu').'</h1>';
-
-    $mform->display();
+    // Redirige vers la page générale.
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'locations'));
+    redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
+
+// Display form.
+$heading = get_string('edit_location', 'local_apsolu');
+if (empty($location->id) === true) {
+    $heading = get_string('add_location', 'local_apsolu');
+}
+
+echo $OUTPUT->heading($heading);
+$mform->display();

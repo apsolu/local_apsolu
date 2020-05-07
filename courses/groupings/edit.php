@@ -20,6 +20,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\grouping as Grouping;
+
 defined('MOODLE_INTERNAL') || die;
 
 require(__DIR__.'/edit_form.php');
@@ -28,65 +30,35 @@ require(__DIR__.'/edit_form.php');
 $groupingid = optional_param('groupingid', 0, PARAM_INT);
 
 // Generate object.
-$grouping = false;
-if ($groupingid != 0) {
-    $sql = "SELECT *".
-        " FROM {apsolu_courses_groupings} acc".
-        " JOIN {course_categories} cc ON  acc.id=cc.id".
-        " WHERE cc.id = ?".
-        " ORDER BY cc.name, cc.sortorder";
-    $grouping = $DB->get_record_sql($sql, array($groupingid));
-}
-
-if ($grouping === false) {
-    $grouping = new stdClass();
-    $grouping->id = 0;
-    $grouping->name = '';
-    $grouping->url = '';
-    $grouping->parent = 0;
+$grouping = new Grouping();
+if ($groupingid !== 0) {
+    $grouping->load($groupingid);
 }
 
 // Build form.
-$customdata = array('grouping' => $grouping);
+$customdata = array($grouping);
 $mform = new local_apsolu_courses_groupings_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
-    // Save data.
-    $grouping = new stdClass();
-    $grouping->id = $data->groupingid;
-    $grouping->url = $data->url;
-
-    if ($grouping->id == 0) {
-        require_once($CFG->dirroot.'/lib/coursecatlib.php');
-
-        $grouping = new stdClass();
-        $grouping->name = trim($data->name);
-        $grouping->parent = 0;
-        $coursecat = coursecat::create($grouping);
-
-        $grouping->id = $coursecat->id;
-        $grouping->url = $data->url;
-
-        $sql = "INSERT INTO {apsolu_courses_groupings} (id, url) VALUES(?,?)";
-        $DB->execute($sql, array($grouping->id, $grouping->url));
-    } else {
-        $DB->update_record('apsolu_courses_groupings', $grouping);
-
-        $grouping = $DB->get_record('course_categories', array('id' => $grouping->id));
-        if ($grouping) {
-            $grouping->name = $data->name;
-            $grouping->parent = 0;
-            $DB->update_record('course_categories', $grouping);
-        }
+    // Message à afficher à la fin de l'enregistrement.
+    $message = get_string('grouping_updated', 'local_apsolu');
+    if (empty($grouping->id) === true) {
+        $message = get_string('grouping_saved', 'local_apsolu');
     }
 
-    // Display notification and display elements list.
-    $notificationform = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
+    // Save data.
+    $grouping->save($data);
 
-    require(__DIR__.'/view.php');
-} else {
-    // Display form.
-    echo '<h1>'.get_string('grouping_add', 'local_apsolu').'</h1>';
-
-    $mform->display();
+    // Redirige vers la page générale.
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'groupings'));
+    redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
+
+// Display form.
+$heading = get_string('edit_grouping', 'local_apsolu');
+if (empty($grouping->id) === true) {
+    $heading = get_string('add_grouping', 'local_apsolu');
+}
+
+echo $OUTPUT->heading($heading);
+$mform->display();

@@ -40,9 +40,9 @@ class local_apsolu_courses_areas_edit_form extends moodleform {
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
 
         // Cities field.
-        $mform->addElement('select', 'city', get_string('city', 'local_apsolu'), $cities);
-        $mform->setType('city', PARAM_TEXT);
-        $mform->addRule('city', get_string('required'), 'required', null, 'client');
+        $mform->addElement('select', 'cityid', get_string('city', 'local_apsolu'), $cities);
+        $mform->setType('cityid', PARAM_TEXT);
+        $mform->addRule('cityid', get_string('required'), 'required', null, 'client');
 
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));

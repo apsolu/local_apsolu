@@ -20,6 +20,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\period as Period;
+
 defined('MOODLE_INTERNAL') || die;
 
 require(__DIR__.'/edit_form.php');
@@ -28,45 +30,38 @@ require(__DIR__.'/edit_form.php');
 $periodid = optional_param('periodid', 0, PARAM_INT);
 
 // Generate object.
-$period = false;
-if ($periodid != 0) {
-    $period = $DB->get_record('apsolu_periods', array('id' => $periodid));
+$period = new Period();
+if ($periodid !== 0) {
+    $period->load($periodid);
 }
 
-if ($period === false) {
-    $period = new stdClass();
-    $period->id = 0;
-    $period->name = '';
-    $period->generic_name = '';
-    $period->weeks = '';
-} else {
-    $period->weeks = explode(',', $period->weeks);
-}
+$period->weeks = explode(',', $period->weeks);
 
 // Build form.
 $customdata = array('period' => $period);
 $mform = new local_apsolu_courses_periods_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
-    // Save data.
-    $period = new stdClass();
-    $period->id = $data->periodid;
-    $period->name = $data->name;
-    $period->generic_name = $data->generic_name;
-    $period->weeks = implode(',', $data->weeks);
-    if ($period->id == 0) {
-        $period->id = $DB->insert_record('apsolu_periods', $period);
-    } else {
-        $DB->update_record('apsolu_periods', $period);
+    // Message à afficher à la fin de l'enregistrement.
+    $message = get_string('period_updated', 'local_apsolu');
+    if (empty($period->id) === true) {
+        $message = get_string('period_saved', 'local_apsolu');
     }
 
-    // Display notification and display elements list.
-    $notificationform = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
+    // Save data.
+    $data->weeks = implode(',', $data->weeks);
+    $period->save($data);
 
-    require(__DIR__.'/view.php');
-} else {
-    // Display form.
-    echo '<h1>'.get_string('period_add', 'local_apsolu').'</h1>';
-
-    $mform->display();
+    // Redirige vers la page générale.
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'periods'));
+    redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
+
+// Display form.
+$heading = get_string('edit_period', 'local_apsolu');
+if (empty($period->id) === true) {
+    $heading = get_string('add_period', 'local_apsolu');
+}
+
+echo $OUTPUT->heading($heading);
+$mform->display();

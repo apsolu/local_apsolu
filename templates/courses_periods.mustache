@@ -36,7 +36,12 @@
 		</ul>
 		{{/count_weeks}}
 		</td>
-		<td><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=periods&action=edit&periodid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></td>
+		<td>
+			<ul class="list-inline">
+				<li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=periods&action=edit&periodid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></li>
+				<li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=periods&action=delete&periodid={{id}}">{{#pix}}t/delete,core,{{#str}}delete{{/str}}{{/pix}}</a></li>
+			</ul>
+		</td>
 	</tr>
 	{{/periods}}
 </tbody>

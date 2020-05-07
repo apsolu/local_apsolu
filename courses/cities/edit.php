@@ -20,6 +20,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\city as City;
+
 defined('MOODLE_INTERNAL') || die;
 
 require(__DIR__.'/edit_form.php');
@@ -28,15 +30,9 @@ require(__DIR__.'/edit_form.php');
 $cityid = optional_param('cityid', 0, PARAM_INT);
 
 // Generate object.
-$city = false;
-if ($cityid != 0) {
-    $city = $DB->get_record('apsolu_cities', array('id' => $cityid));
-}
-
-if ($city === false) {
-    $city = new stdClass();
-    $city->id = 0;
-    $city->name = '';
+$city = new City();
+if ($cityid !== 0) {
+    $city->load($cityid);
 }
 
 // Build form.
@@ -44,24 +40,25 @@ $customdata = array('city' => $city);
 $mform = new local_apsolu_courses_cities_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
-    // Save data.
-    $city = new stdClass();
-    $city->id = $data->cityid;
-    $city->name = $data->name;
-
-    if ($city->id == 0) {
-        $city->id = $DB->insert_record('apsolu_cities', $city);
-    } else {
-        $DB->update_record('apsolu_cities', $city);
+    // Message à afficher à la fin de l'enregistrement.
+    $message = get_string('city_updated', 'local_apsolu');
+    if (empty($city->id) === true) {
+        $message = get_string('city_saved', 'local_apsolu');
     }
 
-    // Display notification and display elements list.
-    $notificationform = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
+    // Save data.
+    $city->save($data);
 
-    require(__DIR__.'/view.php');
-} else {
-    // Display form.
-    echo '<h1>'.get_string('city_add', 'local_apsolu').'</h1>';
-
-    $mform->display();
+    // Redirige vers la page générale.
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'cities'));
+    redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
+
+// Display form.
+$heading = get_string('edit_city', 'local_apsolu');
+if (empty($manager->id) === true) {
+    $heading = get_string('add_city', 'local_apsolu');
+}
+
+echo $OUTPUT->heading($heading);
+$mform->display();

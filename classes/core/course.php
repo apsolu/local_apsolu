@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Classe gérant les cours Apsolu.
+ * Classe gérant les créneaux horaires APSOLU (cours Moodle).
  *
  * @package    local_apsolu
  * @copyright  2019 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
@@ -24,7 +24,206 @@
 
 namespace local_apsolu\core;
 
-class course {
+use coding_exception;
+use context_block;
+use context_course;
+use core_php_time_limit;
+use moodle_exception;
+use moodle_url;
+use stdClass;
+
+class course extends record {
+    /** @const Nom de la table en base de données. */
+    const TABLENAME = 'apsolu_courses';
+
+    /** @var int|string Identifiant numérique du créneau horaire. */
+    public $id = 0;
+
+    /** @var string $shortname Nom abrégé du créneau horaire. */
+    public $shortname = '';
+
+    /** @var string $fullname Nom complet du créneau horaire. */
+    public $fullname = '';
+
+    /** @var int|string $category Entier représentant l'identifiant de l'activité sportive. */
+    public $category = '';
+
+    /** @var string $event Précision sur la discipline ou la spécificité de ce créneau (ex: 100m, 110m haies, football en salle, etc). */
+    public $event = '';
+
+    /** @var int|string $numweekday Ordre du jour (ex: 1 = lundi, 2 = mardi, etc). Facilite le tri dans la requête SQL. */
+    public $numweekday = '';
+
+    /** @var string $weekday Jour de la semaine en anglais. Champ à utiliser avec la fonction Moodle get_string($weekday, 'calendar'). */
+    public $weekday = '';
+
+    /** @var string $starttime Heure de début du créneau au format HH:MM. */
+    public $starttime = '';
+
+    /** @var string $endtime Heure de fin du créneau au format HH:MM. */
+    public $endtime = '';
+
+    /** @var boolean $license Indique si le créneau nécessite l'adhésion à la FFSU. */
+    public $license = '';
+
+    /** @var boolean $on_homepage Indique si le créneau doit être affiché sur la homepage. */
+    public $on_homepage = '';
+
+    /** @var int|string $locationid Identifiant numérique du lieu de pratique. */
+    public $locationid = '';
+
+    /** @var int|string $periodid Identifiant numérique de la période de cours. */
+    public $periodid = '';
+
+    /** @var int|string $skillid Identifiant numérique du niveau de pratique. */
+    public $skillid = '';
+
+    /**
+     * Affiche une représentation textuelle de l'objet.
+     *
+     * @return string.
+     */
+    public function __tostring() {
+        return $this->fullname;
+    }
+
+    /**
+     * Supprime un objet en base de données.
+     *
+     * @throws moodle_exception A moodle exception is thrown when moodle course cannot be delete.
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     *
+     * @return bool true.
+     */
+    public function delete() {
+        global $DB;
+
+        // Démarre une transaction, si ce n'est pas déjà fait.
+        if ($DB->is_transaction_started() === false) {
+            $transaction = $DB->start_delegated_transaction();
+        }
+
+        // This might take a while. Raise the execution time limit.
+        core_php_time_limit::raise();
+
+        // We do this here because it spits out feedback as it goes.
+        $course = $DB->get_record('course', array('id' => $this->id), $fields = '*', MUST_EXIST);
+        $result = delete_course($course, $showfeedback = false);
+
+        if ($result === false) {
+            $link = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'courses'));
+
+            throw new moodle_exception('cannotdeletecategorycourse', $module = '', $link, $parameter = $this->fullname);
+        }
+
+        // Supprime l'objet en base de données.
+        $DB->delete_records('apsolu_courses', array('id' => $this->id));
+
+        // Update course count in categories.
+        fix_course_sortorder();
+
+        // Valide la transaction en cours.
+        if (isset($transaction) === true) {
+            $transaction->allow_commit();
+        }
+
+        return true;
+    }
+
+    /**
+     * Retourne l'index du jour de la semaine donné en paramètre.
+     * ex: monday=1, tuesday=2, etc.
+     *
+     * @throws coding_exception A coding exception is thrown when $data parameter is null.
+     *
+     * @param string $day Jour de la semaine en anglais ou dans la langue locale de Moodle.
+     *
+     * @return int Numéro du jour de la semaine.
+     */
+    public static function get_numweekdays($day) {
+        switch ($day) {
+            case 'monday':
+                return 1;
+            case 'tuesday':
+                return 2;
+            case 'wednesday':
+                return 3;
+            case 'thursday':
+                return 4;
+            case 'friday':
+                return 5;
+            case 'saturday':
+                return 6;
+            case 'sunday':
+                return 7;
+        }
+
+        switch ($day) {
+            case get_string('monday', 'calendar'):
+                return 1;
+            case get_string('tuesday', 'calendar'):
+                return 2;
+            case get_string('wednesday', 'calendar'):
+                return 3;
+            case get_string('thursday', 'calendar'):
+                return 4;
+            case get_string('friday', 'calendar'):
+                return 5;
+            case get_string('saturday', 'calendar'):
+                return 6;
+            case get_string('sunday', 'calendar'):
+                return 7;
+        }
+
+        throw new coding_exception('Invalid value ('.json_encode(array('day' => $day)).' for '.__METHOD__.'.');
+    }
+
+    /**
+     * Recherche et instancie des objets depuis la base de données.
+     *
+     * @see Se référer à la documentation de la méthode get_records() de la variable globale $DB.
+     * @param array|null $conditions Critères de sélection des objets.
+     * @param string     $sort       Champs par lesquels s'effectue le tri.
+     * @param string     $fields     Liste des champs retournés.
+     * @param int        $limitfrom  Retourne les enregistrements à partir de n+$limitfrom.
+     * @param int        $limitnum   Nombre total d'enregistrements retournés.
+     *
+     * @return array Un tableau d'objets instanciés.
+     */
+    public static function get_records(array $conditions = null, string $sort = '', string $fields = '*', int $limitfrom = 0, int $limitnum = 0) {
+        global $DB;
+
+        $classname = __CLASS__;
+
+        $records = array();
+
+        foreach ($DB->get_records(get_called_class()::TABLENAME, $conditions, $sort, $fields, $limitfrom, $limitnum) as $data) {
+            $record = new $classname();
+            $record->set_vars($data);
+            $records[$record->id] = $record;
+        }
+
+        return $records;
+    }
+
+    /**
+     * Retourne un tableau trié par jour de la semaine et indéxé par le nom du jour en anglais.
+     *
+     * @return array Tableau trié et indéxé par le jour de la semaine en anglais.
+     */
+    public static function get_weekdays() {
+        $weekdays = array();
+        $weekdays['monday'] = get_string('monday', 'calendar');
+        $weekdays['tuesday'] = get_string('tuesday', 'calendar');
+        $weekdays['wednesday'] = get_string('wednesday', 'calendar');
+        $weekdays['thursday'] = get_string('thursday', 'calendar');
+        $weekdays['friday'] = get_string('friday', 'calendar');
+        $weekdays['saturday'] = get_string('saturday', 'calendar');
+        $weekdays['sunday'] = get_string('sunday', 'calendar');
+
+        return $weekdays;
+    }
+
     /**
      * Retourne la durée d'un cours en secondes à partir de son heure de début et son heure de fin.
      *
@@ -63,5 +262,143 @@ class course {
         }
 
         return $duration;
+    }
+
+    /**
+     * Charge un objet à partir de son identifiant.
+     *
+     * @param int|string $recordid Identifiant de l'objet à charger.
+     * @param bool       $required Si true, lève une exception lorsque l'objet n'existe pas. Valeur par défaut: false (pas d'exception levée).
+     *
+     * @return void
+     */
+    public function load($recordid, bool $required = false) {
+        global $DB;
+
+        $strictness = IGNORE_MISSING;
+        if ($required) {
+            $strictness = MUST_EXIST;
+        }
+
+        $sql = "SELECT c.id, c.shortname, c.fullname, c.category, ac.event, ac.skillid, ac.locationid,".
+            " ac.numweekday, ac.weekday, ac.starttime, ac.endtime, ac.periodid, ac.license, ac.on_homepage".
+            " FROM {course} c".
+            " JOIN {apsolu_courses} ac ON ac.id=c.id".
+            " WHERE c.id = :id";
+        $record = $DB->get_record_sql($sql, array('id' => $recordid), $strictness);
+
+        if ($record === false) {
+            return;
+        }
+
+        $this->set_vars($record);
+    }
+
+    /**
+     * Enregistre un objet en base de données.
+     *
+     * @throws coding_exception A coding exception is thrown when $data parameter is null.
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     *
+     * @param object|null $data  StdClass représentant l'objet à enregistrer.
+     * @param object|null $mform Mform représentant un formulaire Moodle nécessaire à la gestion d'un champ de type editor.
+     *
+     * @return void
+     */
+    public function save(object $data = null, object $mform = null) {
+        global $DB;
+
+        if ($data === null) {
+            throw new coding_exception('$data parameter cannot be null for '.__METHOD__.'.');
+        }
+
+        $this->set_vars($data);
+        $this->numweekday = self::get_numweekdays($this->weekday);
+
+        // Set fullname.
+        $str_category = $data->str_category;
+        $str_skill = $data->str_skill;
+        $str_time = get_string($this->weekday, 'calendar').' '.$this->starttime.' '.$this->endtime;
+
+        if (empty($this->event) === false) {
+            $this->fullname = sprintf('%s %s %s %s', $str_category, $this->event, $str_time, $str_skill);
+        } else {
+            $this->fullname = sprintf('%s %s %s', $str_category, $str_time, $str_skill);
+        }
+
+        // Set shortname.
+        $this->shortname = $this->fullname;
+
+        // Démarre une transaction, si ce n'est pas déjà fait.
+        if ($DB->is_transaction_started() === false) {
+            $transaction = $DB->start_delegated_transaction();
+        }
+
+        if (empty($this->id) === true) {
+            // Créé le cours.
+            $newcourse = create_course((object)(array)$this);
+            $this->id = $newcourse->id;
+
+            // Créé l'instance apsolu_courses.
+            // Note: insert_record() exige l'absence d'un id.
+            $sql = "INSERT INTO {apsolu_courses} (id, event, skillid, locationid, weekday, numweekday, starttime, endtime, periodid, license, on_homepage)".
+                " VALUES(:id, :event, :skillid, :locationid, :weekday, :numweekday, :starttime, :endtime, :periodid, :license, :on_homepage)";
+            $params = array();
+            $params['id'] = $this->id;
+            $params['event'] = $this->event;
+            $params['skillid'] = $this->skillid;
+            $params['locationid'] = $this->locationid;
+            $params['weekday'] = $this->weekday;
+            $params['numweekday'] = $this->numweekday;
+            $params['starttime'] = $this->starttime;
+            $params['endtime'] = $this->endtime;
+            $params['periodid'] = $this->periodid;
+            $params['license'] = $this->license;
+            $params['on_homepage'] = $this->on_homepage;
+            $DB->execute($sql, $params);
+
+            // Ajoute une méthode d'inscription manuelle.
+            $instance = $DB->get_record('enrol', array('enrol' => 'manual', 'courseid' => $this->id));
+            if ($instance === false) {
+                $plugin = enrol_get_plugin('manual');
+
+                $fields = $plugin->get_instance_defaults();
+
+                $instance = new stdClass();
+                $instance->id = $plugin->add_instance($newcourse, $fields);
+            }
+
+            // Ajoute le bloc apsolu_course.
+            $blocktype = 'apsolu_course';
+            $context = context_course::instance($this->id, MUST_EXIST);
+
+            $blockinstance = new stdClass();
+            $blockinstance->blockname = $blocktype;
+            $blockinstance->parentcontextid = $context->id;
+            $blockinstance->showinsubcontexts = 0;
+            $blockinstance->pagetypepattern = 'course-view-*';
+            $blockinstance->subpagepattern = NULL;
+            $blockinstance->defaultregion = 'side-pre'; // Dans la colonne de gauche.
+            $blockinstance->defaultweight = -1; // Avant le bloc "Paramètres du cours".
+            $blockinstance->configdata = '';
+            $blockinstance->timecreated = time();
+            $blockinstance->timemodified = time();
+            $blockinstance->id = $DB->insert_record('block_instances', $blockinstance);
+
+            // Ensure the block context is created.
+            context_block::instance($blockinstance->id);
+
+            // If the new instance was created, allow it to do additional setup
+            $block = block_instance($blocktype, $blockinstance);
+            $block->instance_create();
+        } else {
+            $DB->update_record('course', $this);
+            $DB->update_record('apsolu_courses', $this);
+        }
+
+        // Valide la transaction en cours.
+        if (isset($transaction) === true) {
+            $transaction->allow_commit();
+        }
     }
 }

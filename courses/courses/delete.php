@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Gère la page de suppression d'un créneau horaire.
+ *
  * @package    local_apsolu
  * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -22,47 +24,38 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require(__DIR__.'/edit_form.php');
+use local_apsolu\core\course as Course;
 
 $courseid = required_param('courseid', PARAM_INT);
 $delete = optional_param('delete', '', PARAM_ALPHANUM); // Confirmation hash.
 
-$url = new moodle_url('local/apsolu/courses/courses/edit.php', array('tab' => $tab, 'action' => 'edit', 'courseid' => $courseid));
+$course = new Course();
+$course->load($courseid, $required = true);
 
-$sql = "SELECT c.*".
-    " FROM {course} c".
-    " JOIN {apsolu_courses} ac ON ac.id = c.id".
-    " WHERE c.id = ?";
-$course = $DB->get_record_sql($sql, array($courseid), MUST_EXIST);
-
-$coursecontext = context_course::instance($course->id);
-$coursefullname = format_string($course->fullname, true, array('context' => $coursecontext));
-$cancelurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'courses'));
-
-$deletehash = md5($course->timemodified);
+$deletehash = md5($course->id);
+$returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'courses'));
 
 if ($delete === $deletehash) {
-    // We do - time to delete the course.
+    // Effectue les actions de suppression.
     require_sesskey();
 
-    // This might take a while. Raise the execution time limit.
-    core_php_time_limit::raise();
+    $course->delete();
 
-    // We do this here because it spits out feedback as it goes.
-    delete_course($course);
-    $DB->delete_records('apsolu_courses', array('id' => $course->id));
-
-    // Update course count in categories.
-    fix_course_sortorder();
-
-    echo $OUTPUT->continue_button($cancelurl);
-} else {
-    $strdeletecoursecheck = get_string('deletecoursecheck');
-    $message = '<div class="alert alert-danger">'.$strdeletecoursecheck.'<br /><br />'.$coursefullname.'</div>';
-
-    $urlarguments = array('tab' => 'courses', 'action' => 'delete', 'courseid' => $course->id, 'delete' => $deletehash);
-    $confirmurl = new moodle_url('/local/apsolu/courses/index.php', $urlarguments);
-    $confirmbutton = new single_button($confirmurl, get_string('delete'), 'post');
-
-    echo $OUTPUT->confirm($message, $confirmbutton, $cancelurl);
+    $message = get_string('course_has_been_deleted', 'local_apsolu');
+    redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
+
+// Affiche un message de confirmation.
+$datatemplate = array();
+$datatemplate['message'] = get_string('do_you_want_to_delete_course', 'local_apsolu', $course->fullname);
+$message = $OUTPUT->render_from_template('local_apsolu/courses_form_delete_message', $datatemplate);
+
+// Bouton de validation.
+$urlarguments = array('tab' => 'courses', 'action' => 'delete', 'courseid' => $course->id, 'delete' => $deletehash);
+$confirmurl = new moodle_url('/local/apsolu/courses/index.php', $urlarguments);
+$confirmbutton = new single_button($confirmurl, get_string('delete'), 'post');
+
+// Bouton d'annulation.
+$cancelurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'courses'));
+
+echo $OUTPUT->confirm($message, $confirmbutton, $cancelurl);

@@ -32,7 +32,7 @@ class local_apsolu_courses_groupings_edit_form extends moodleform {
         global $CFG, $DB;
 
         $mform = $this->_form;
-        $grouping = $this->_customdata['grouping'];
+        list($grouping) = $this->_customdata;
 
         // Name field.
         $mform->addElement('text', 'name', get_string('name'), array('size' => '48'));

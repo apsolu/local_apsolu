@@ -40,9 +40,9 @@ class local_apsolu_courses_locations_edit_form extends moodleform {
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
 
         // Area field.
-        $mform->addElement('select', 'area', get_string('area', 'local_apsolu'), $areas);
-        $mform->setType('area', PARAM_INT);
-        $mform->addRule('area', get_string('required'), 'required', null, 'client');
+        $mform->addElement('select', 'areaid', get_string('area', 'local_apsolu'), $areas);
+        $mform->setType('areaid', PARAM_INT);
+        $mform->addRule('areaid', get_string('required'), 'required', null, 'client');
         // See MDL-53725.
         // Hope to use instead : $mform->addDatalist('area', $areas);.
 
@@ -83,9 +83,9 @@ class local_apsolu_courses_locations_edit_form extends moodleform {
         $mform->setType('restricted_access', PARAM_TEXT);
 
         // Manager field.
-        $mform->addElement('select', 'manager', get_string('manager', 'local_apsolu'), $managers);
-        $mform->setType('manager', PARAM_INT);
-        $mform->addRule('manager', get_string('required'), 'required', null, 'client');
+        $mform->addElement('select', 'managerid', get_string('manager', 'local_apsolu'), $managers);
+        $mform->setType('managerid', PARAM_INT);
+        $mform->addRule('managerid', get_string('required'), 'required', null, 'client');
         // See MDL-53725.
         // Hope to use instead : $mform->addDatalist('manager', $managers);.
 

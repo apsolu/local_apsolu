@@ -26,7 +26,12 @@
 	<tr>
 		<td>{{name}}</td>
 		<td>{{city}}</td>
-		<td><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=areas&action=edit&areaid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></td>
+		<td>
+			<ul class="list-inline">
+				<li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=areas&action=edit&areaid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></li>
+				<li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=areas&action=delete&areaid={{id}}">{{#pix}}t/delete,core,{{#str}}delete{{/str}}{{/pix}}</a></li>
+			</ul>
+		</td>
 	</tr>
 	{{/areas}}
 </tbody>

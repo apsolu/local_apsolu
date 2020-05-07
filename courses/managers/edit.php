@@ -20,6 +20,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\manager as Manager;
+
 defined('MOODLE_INTERNAL') || die;
 
 require(__DIR__.'/edit_form.php');
@@ -28,15 +30,9 @@ require(__DIR__.'/edit_form.php');
 $managerid = optional_param('managerid', 0, PARAM_INT);
 
 // Generate object.
-$manager = false;
-if ($managerid != 0) {
-    $manager = $DB->get_record('apsolu_managers', array('id' => $managerid));
-}
-
-if ($manager === false) {
-    $manager = new stdClass();
-    $manager->id = 0;
-    $manager->name = '';
+$manager = new Manager();
+if ($managerid !== 0) {
+    $manager->load($managerid);
 }
 
 // Build form.
@@ -44,24 +40,25 @@ $customdata = array('manager' => $manager);
 $mform = new local_apsolu_courses_managers_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
-    // Save data.
-    $manager = new stdClass();
-    $manager->id = $data->managerid;
-    $manager->name = $data->name;
-
-    if ($manager->id == 0) {
-        $manager->id = $DB->insert_record('apsolu_managers', $manager);
-    } else {
-        $DB->update_record('apsolu_managers', $manager);
+    // Message à afficher à la fin de l'enregistrement.
+    $message = get_string('manager_updated', 'local_apsolu');
+    if (empty($manager->id) === true) {
+        $message = get_string('manager_saved', 'local_apsolu');
     }
 
-    // Display notification and display elements list.
-    $notificationform = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
+    // Save data.
+    $manager->save($data);
 
-    require(__DIR__.'/view.php');
-} else {
-    // Display form.
-    echo '<h1>'.get_string('manager_add', 'local_apsolu').'</h1>';
-
-    $mform->display();
+    // Redirige vers la page générale.
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'managers'));
+    redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
+
+// Display form.
+$heading = get_string('edit_locations_manager', 'local_apsolu');
+if (empty($manager->id) === true) {
+    $heading = get_string('add_locations_manager', 'local_apsolu');
+}
+
+echo $OUTPUT->heading($heading);
+$mform->display();

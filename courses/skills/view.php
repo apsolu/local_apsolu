@@ -22,7 +22,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$skills = $DB->get_records('apsolu_skills', null, 'name');
+$skills = $DB->get_records('apsolu_skills', $conditions = null, $sort = 'name');
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;

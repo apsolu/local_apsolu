@@ -20,39 +20,27 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\category as Category;
+use local_apsolu\core\grouping as Grouping;
+use local_apsolu\core\manager as Manager;
+
 defined('MOODLE_INTERNAL') || die;
 
 require(__DIR__.'/edit_form.php');
-require_once($CFG->dirroot.'/lib/coursecatlib.php');
 
 // Get category id.
 $categoryid = optional_param('categoryid', 0, PARAM_INT);
 
 // Generate object.
-$category = false;
-if ($categoryid != 0) {
-    $sql = "SELECT *".
-        " FROM {apsolu_courses_categories} s, {course_categories} cc".
-        " WHERE s.id=cc.id".
-        " AND s.id=?";
-    $category = $DB->get_record_sql($sql, array($categoryid));
+$category = new Category();
+if ($categoryid !== 0) {
+    $category->load($categoryid);
 }
 
-if ($category === false) {
-    $category = new stdClass();
-    $category->id = 0;
-    $category->name = '';
-    $category->url = '';
-    $category->description = '';
-    $category->descriptionformat = 0;
-    $category->grouping = 0;
-    $category->parent = '';
-}
-
-// Categories.
-$sql = "SELECT *".
-    " FROM {apsolu_courses_groupings} s, {course_categories} cc".
-    " WHERE s.id=cc.id".
+// Groupements d'activités sportives.
+$sql = "SELECT cc.id, cc.name".
+    " FROM {course_categories} cc".
+    " JOIN {apsolu_courses_groupings} acg ON cc.id = acg.id".
     " ORDER BY cc.name";
 $groupings = array();
 foreach ($DB->get_records_sql($sql) as $grouping) {
@@ -68,52 +56,30 @@ $context = context_system::instance();
 $itemid = 0;
 $customdata = array('category' => $category, 'groupings' => $groupings, 'context' => $context, 'itemid' => $itemid);
 $mform = new local_apsolu_courses_categories_edit_form(null, $customdata);
-$mform->set_data(file_prepare_standard_editor(
-    $category,
-    'description',
-    $mform->get_description_editor_options(),
-    $context,
-    'coursecat',
-    'description',
-    $itemid
-));
+
+$editor = file_prepare_standard_editor($category, 'description', $mform->get_description_editor_options(), $context, 'coursecat', 'description', $itemid);
+$mform->set_data($editor);
 
 if ($data = $mform->get_data()) {
-    // Save data.
-    $category = new stdClass();
-    $category->id = $data->categoryid;
-    $category->url = $data->url;
-    $category->description_editor = $data->description_editor;
-    $category->federation = $data->federation;
-    $category->parent = $data->parent;
-
-    if ($category->id == 0) {
-        $category = new stdClass();
-        $category->name = trim($data->name);
-        $category->description_editor = $data->description_editor;
-        $category->parent = $data->parent;
-        $coursecat = coursecat::create($category, $mform->get_description_editor_options());
-
-        $category->id = $coursecat->id;
-        $category->url = $data->url;
-        $category->federation = $data->federation;
-
-        $sql = "INSERT INTO {apsolu_courses_categories} (id, url, federation) VALUES(?,?,?)";
-        $DB->execute($sql, array($category->id, $category->url, $category->federation));
-    } else {
-        $DB->update_record('apsolu_courses_categories', $category);
-
-        $coursecat = coursecat::get($category->id, MUST_EXIST, true);
-        $coursecat->update($data, $mform->get_description_editor_options());
+    // Message à afficher à la fin de l'enregistrement.
+    $message = get_string('category_updated', 'local_apsolu');
+    if (empty($category->id) === true) {
+        $message = get_string('category_saved', 'local_apsolu');
     }
 
-    // Display notification and display elements list.
-    $notificationform = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
+    // Save data.
+    $category->save($data, $mform);
 
-    require(__DIR__.'/view.php');
-} else {
-    // Display form.
-    echo '<h1>'.get_string('category_add', 'local_apsolu').'</h1>';
-
-    $mform->display();
+    // Redirige vers la page générale.
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'categories'));
+    redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
+
+// Display form.
+$heading = get_string('edit_category', 'local_apsolu');
+if (empty($category->id) === true) {
+    $heading = get_string('add_category', 'local_apsolu');
+}
+
+echo $OUTPUT->heading($heading);
+$mform->display();

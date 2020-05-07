@@ -20,6 +20,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\area as Area;
+
 defined('MOODLE_INTERNAL') || die;
 
 require(__DIR__.'/edit_form.php');
@@ -28,16 +30,9 @@ require(__DIR__.'/edit_form.php');
 $areaid = optional_param('areaid', 0, PARAM_INT);
 
 // Generate object.
-$area = false;
-if ($areaid != 0) {
-    $area = $DB->get_record('apsolu_areas', array('id' => $areaid));
-}
-
-if ($area === false) {
-    $area = new stdClass();
-    $area->id = 0;
-    $area->name = '';
-    $area->cityid = '';
+$area = new Area();
+if ($areaid !== 0) {
+    $area->load($areaid);
 }
 
 // Cities.
@@ -51,25 +46,25 @@ $customdata = array($area, $cities);
 $mform = new local_apsolu_courses_areas_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
-    // Save data.
-    $area = new stdClass();
-    $area->id = $data->areaid;
-    $area->name = $data->name;
-    $area->cityid = $data->city;
-
-    if ($area->id == 0) {
-        $area->id = $DB->insert_record('apsolu_areas', $area);
-    } else {
-        $DB->update_record('apsolu_areas', $area);
+    // Message à afficher à la fin de l'enregistrement.
+    $message = get_string('area_updated', 'local_apsolu');
+    if (empty($area->id) === true) {
+        $message = get_string('area_saved', 'local_apsolu');
     }
 
-    // Display notification and display elements list.
-    $notificationform = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
+    // Save data.
+    $area->save($data);
 
-    require(__DIR__.'/view.php');
-} else {
-    // Display form.
-    echo '<h1>'.get_string('area_add', 'local_apsolu').'</h1>';
-
-    $mform->display();
+    // Redirige vers la page générale.
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'areas'));
+    redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
+
+// Display form.
+$heading = get_string('edit_area', 'local_apsolu');
+if (empty($area->id) === true) {
+    $heading = get_string('add_area', 'local_apsolu');
+}
+
+echo $OUTPUT->heading($heading);
+$mform->display();

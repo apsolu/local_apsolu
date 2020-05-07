@@ -32,7 +32,7 @@ class local_apsolu_courses_courses_edit_form extends moodleform {
         global $CFG, $DB;
 
         $mform = $this->_form;
-        list($course, $categories, $skills, $locations, $periods, $weekdays, $centers) = $this->_customdata;
+        list($course, $categories, $skills, $locations, $periods, $weekdays) = $this->_customdata;
 
         // Category field (Sport).
         $mform->addElement('select', 'category', get_string('sport', 'local_apsolu'), $categories);
@@ -96,13 +96,6 @@ class local_apsolu_courses_courses_edit_form extends moodleform {
         $mform->addRule('periodid', get_string('required'), 'required', null, 'client');
         // See MDL-53725.
         // Hope to use instead : $mform->addDatalist('period', $periods);.
-
-        // Centers field.
-        $mform->addElement('select', 'paymentcenterid', get_string('center', 'local_apsolu'), $centers);
-        $mform->setType('paymentcenterid', PARAM_INT);
-        $mform->addRule('paymentcenterid', get_string('required'), 'required', null, 'client');
-        // See MDL-53725.
-        // Hope to use instead : $mform->addDatalist('paymentcenterid', $centers);.
 
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));

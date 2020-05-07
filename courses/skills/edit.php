@@ -20,6 +20,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\skill as Skill;
+
 defined('MOODLE_INTERNAL') || die;
 
 require(__DIR__.'/edit_form.php');
@@ -28,16 +30,9 @@ require(__DIR__.'/edit_form.php');
 $skillid = optional_param('skillid', 0, PARAM_INT);
 
 // Generate object.
-$skill = false;
-if ($skillid != 0) {
-    $skill = $DB->get_record('apsolu_skills', array('id' => $skillid));
-}
-
-if ($skill === false) {
-    $skill = new stdClass();
-    $skill->id = 0;
-    $skill->shortname = '';
-    $skill->name = '';
+$skill = new Skill();
+if ($skillid !== 0) {
+    $skill->load($skillid);
 }
 
 // Build form.
@@ -45,25 +40,25 @@ $customdata = array('skill' => $skill);
 $mform = new local_apsolu_courses_skills_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
-    // Save data.
-    $skill = new stdClass();
-    $skill->id = $data->skillid;
-    $skill->shortname = $data->shortname;
-    $skill->name = $data->name;
-
-    if ($skill->id == 0) {
-        $skill->id = $DB->insert_record('apsolu_skills', $skill);
-    } else {
-        $DB->update_record('apsolu_skills', $skill);
+    // Message à afficher à la fin de l'enregistrement.
+    $message = get_string('skill_updated', 'local_apsolu');
+    if (empty($skill->id) === true) {
+        $message = get_string('skill_saved', 'local_apsolu');
     }
 
-    // Display notification and display elements list.
-    $notificationform = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
+    // Save data.
+    $skill->save($data);
 
-    require(__DIR__.'/view.php');
-} else {
-    // Display form.
-    echo '<h1>'.get_string('skill_add', 'local_apsolu').'</h1>';
-
-    $mform->display();
+    // Redirige vers la page générale.
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'skills'));
+    redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
+
+// Display form.
+$heading = get_string('edit_skill', 'local_apsolu');
+if (empty($skill->id) === true) {
+    $heading = get_string('add_skill', 'local_apsolu');
+}
+
+echo $OUTPUT->heading($heading);
+$mform->display();

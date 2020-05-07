@@ -22,7 +22,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$cities = $DB->get_records('apsolu_cities', null, 'name');
+$cities = $DB->get_records('apsolu_cities', $conditions = null, $sort = 'name');
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;

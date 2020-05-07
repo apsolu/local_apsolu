@@ -22,7 +22,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$managers = $DB->get_records('apsolu_managers', null, 'name');
+$managers = $DB->get_records('apsolu_managers', $conditions = null, $sort = 'name');
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;

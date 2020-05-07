@@ -24,7 +24,13 @@
 	{{#groupings}}
 	<tr>
 		<td>{{name}}</td>
-		<td><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=groupings&action=edit&groupingid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></td>
+		<td>
+			<ul class="list-inline">
+				<li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=groupings&action=edit&groupingid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></li>
+				<li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=groupings&action=delete&groupingid={{id}}">{{#pix}}t/delete,core,{{#str}}delete{{/str}}{{/pix}}</a></li>
+			</ul>
+		</td>
+
 	</tr>
 	{{/groupings}}
 </tbody>
