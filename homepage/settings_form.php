@@ -52,6 +52,7 @@ class local_apsolu_homepage_form extends moodleform {
 
         // 2. Accueil.
         $mform->addElement('header', 'homepage_section1', get_string('named_section', 'local_apsolu', get_string('home', 'local_apsolu')));
+        $mform->setExpanded('homepage_section1', $expanded = true);
 
         // Message affiché sur la section 'accueil'.
         $mform->addElement('editor', 'homepage_section1_text', get_string('section_text', 'local_apsolu'));
@@ -66,6 +67,7 @@ class local_apsolu_homepage_form extends moodleform {
 
         // 3. Les activités.
         $mform->addElement('header', 'homepage_section2', get_string('named_section', 'local_apsolu', get_string('the_activities', 'local_apsolu')));
+        $mform->setExpanded('homepage_section2', $expanded = true);
 
         // Texte affiché.
         $mform->addElement('static', 'homepage_section2_text', get_string('section_text', 'local_apsolu'), get_string('section2_text', 'local_apsolu'));
@@ -79,6 +81,7 @@ class local_apsolu_homepage_form extends moodleform {
 
         // 4. S'inscrire.
         $mform->addElement('header', 'homepage_section3', get_string('named_section', 'local_apsolu', get_string('signup', 'local_apsolu')));
+        $mform->setExpanded('homepage_section3', $expanded = true);
 
         // Texte affiché.
         $mform->addElement('editor', 'homepage_section3_text', get_string('section_text', 'local_apsolu'), array('cols' => '48'));
@@ -93,6 +96,7 @@ class local_apsolu_homepage_form extends moodleform {
 
         // 5. Se connecter.
         $mform->addElement('header', 'homepage_section4', get_string('named_section', 'local_apsolu', get_string('login', 'local_apsolu')));
+        $mform->setExpanded('homepage_section4', $expanded = true);
 
         // URL pour s'authentifier avec le compte institutionnel.
         $mform->addElement('text', 'homepage_section4_institutional_account_url', get_string('institutional_account_authentification_url', 'local_apsolu'), array('size' => '100'));
