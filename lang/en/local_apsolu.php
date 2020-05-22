@@ -87,8 +87,8 @@ $string['grouping_has_been_deleted'] = 'Le groupement d\'activités a été supp
 $string['grouping_saved'] = 'Groupement d\'activités enregistré.';
 $string['grouping_updated'] = 'Groupement d\'activités modifié.';
 $string['home'] = 'Accueil';
-$string['i_have_an_institutional_account'] = 'J\'ai un compte Sésame';
-$string['i_have_not_an_institutional_account'] = 'Je n\'ai pas de compte Sésame';
+$string['i_have_an_institutional_account'] = 'J\'ai un compte université';
+$string['i_have_not_an_institutional_account'] = 'Je n\'ai pas de compte université';
 $string['institutional_account_authentification_url'] = 'URL d\'authentification des comptes institutionnels';
 $string['location_cannot_be_deleted'] = 'Le lieu "{$a}" ne peut pas être supprimé, car il est rattaché aux lieux suivants :';
 $string['location_has_been_deleted'] = 'Le lieu a été supprimé.';
@@ -483,8 +483,8 @@ $string['homepage_signupsummary'] = '<ul>'.
     '<li>À Rennes uniquement, deux <b>salles de musculation</b> sont mises à disposition pendant les heures d\'ouverture sur les campus de Beaulieu et de Villejean. L\'acquittement d\'une carte musculation de 42€ est nécessaire. Elle permet l\'accès illimité aux salles.</li>'.
     '<li>À Rennes et à St Brieuc, Des <b>compétitions</b> et des <b>rencontres universitaires</b> sont organisées au sein des associations sportives de Rennes&nbsp;1 ou de Rennes&nbsp;2. Les étudiants qui souhaitent y participer doivent s\'acquitter de la licence FFSU (15€ à Rennes, 20€ à St Brieuc), et fournir un certificat médical de non contre-indication à la pratique en compétition du sport choisi.</li>'.
     '</ul>';
-$string['homepage_sesame'] = 'J\'ai un compte Sésame';
-$string['homepage_nosesame'] = 'Je n\'ai pas de compte Sésame';
+$string['homepage_sesame'] = 'J\'ai un compte université';
+$string['homepage_nosesame'] = 'Je n\'ai pas de compte université';
 
 // Attendances.
 $string['attendance'] = 'Prise des présences';
@@ -526,7 +526,7 @@ $string['attendance_comment'] = 'Commentaire';
 $string['attendance_course_presences_count'] = '<abbr title="Nombre">Nb</abbr> de présences pour ce cours';
 $string['attendance_activity_presences_count'] = '<abbr title="Nombre">Nb</abbr> de présences pour cette activité';
 $string['attendance_valid_account'] = 'Compte valide';
-$string['attendance_invalid_account'] = 'Compte Sésame non valide';
+$string['attendance_invalid_account'] = 'Compte université non valide';
 $string['attendance_sport_card'] = 'Carte sport';
 $string['attendance_no_sport_card'] = 'Carte sport absente';
 $string['attendance_enrolment_type'] = 'Type d\'inscription';
@@ -584,12 +584,12 @@ $string['paymentsiuaps'] = 'Paiement auprès du SIUAPS';
 $string['paymentasso'] = 'Paiement auprès de l\'Association Sportive';
 $string['opened_period'] = 'L\'ouverture des paiements aura lieu le {$a->date}.';
 $string['closed_period'] = 'Le module des paiements est actuellement fermé.';
-$string['no_sesame'] = 'L\'utilisateur n\'a pas de compte Sésame valide ou n\'est plus présent dans le référentiel de son établissement.';
+$string['no_sesame'] = 'L\'utilisateur n\'a pas de compte université valide ou n\'est plus présent dans le référentiel de son établissement.';
 $string['invalid_user'] = '<p>Vous n\'êtes pas autorisé à payer.</p>';
-$string['invalid_user_no_sesame'] = '<p>Actuellement, vous n\'utilisez pas votre compte Sésame pour accéder cette plateforme.<br />'.
+$string['invalid_user_no_sesame'] = '<p>Actuellement, vous n\'utilisez pas votre compte université pour accéder cette plateforme.<br />'.
     ' Avant d\'accéder aux paiements, vous devez suivre <a href="{$a->url}">cette procédure pour transformer votre compte</a>.</p>';
 $string['invalid_user_invalid_sesame'] = '<p>Votre compte ne semble pas être présent dans le référentiel communiqué au SIUAPS.<br />'.
-    ' Si vous avez un compte Sésame en cours de validité dans votre établissement et une inscription pour l\'année universitaire en cours, merci d\'envoyer un courriel à <a href="mailto:{$a->email}">{$a->email}</a> en précisant que votre compte est bien valable actuellement.</p>';
+    ' Si vous avez un compte université en cours de validité dans votre établissement et une inscription pour l\'année universitaire en cours, merci d\'envoyer un courriel à <a href="mailto:{$a->email}">{$a->email}</a> en précisant que votre compte est bien valable actuellement.</p>';
 $string['no_courses'] = 'Vous ne pouvez pas payer car vous n\'avez aucune inscription validée ou valide pour le moment.';
 $string['no_courses_complements'] = 'Pour les cours du SIUAPS, si vous êtes inscrit en évaluation, vérifier avec votre enseignant que vous êtes autorisé à l\'être.<br />'.
 ' Pour l\'accès aux salles de musculation, vous devez avoir validé votre séance gratuite avant de pouvoir payer.';
@@ -689,7 +689,7 @@ $string['fields_apsolucycle'] = 'Cycle LMD';
 $string['fields_apsolucardpaid'] = 'Carte sport payée';
 $string['fields_apsolufederationpaid'] = 'Adhésion à l\'association payée';
 $string['fields_apsolumuscupaid'] = 'Musculation payée';
-$string['fields_apsolusesame'] = 'Compte Sésame validé';
+$string['fields_apsolusesame'] = 'Compte université validé';
 $string['fields_apsolumedicalcertificate'] = 'Certificat médical';
 $string['fields_apsolufederationnumber'] = 'Numéro de licence FFSU';
 $string['fields_apsoluhighlevelathlete'] = 'Sportif de haut niveau';
