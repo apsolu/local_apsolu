@@ -173,18 +173,15 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     $ADMIN->add('local_apsolu_payment', new admin_externalpage('local_apsolu_payment_prices', $label, $url, $capabilities));
 
     // Présentation.
-    $ADMIN->add('apsolu', new admin_category('local_apsolu_appearance', get_string('appearance', 'admin')));
+    if (empty($ADMIN->locate('local_apsolu_appearance')) === true) {
+        $ADMIN->add('apsolu', new admin_category('local_apsolu_appearance', get_string('appearance', 'admin')));
+    }
 
     // Présentation > Message d'entête.
     $str = get_string('settings_configuration_header', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'header'));
     $ADMIN->add('local_apsolu_appearance', new admin_externalpage('local_apsolu_configuration_header', $str, $url, $capabilities));
 
-    // Configuration > Page d'accueil.
-    $str = get_string('settings_configuration_homepage', 'local_apsolu');
-    $url = new moodle_url('/local/apsolu/homepage/settings.php', array('page' => 'homepage'));
-    $ADMIN->add('local_apsolu_appearance', new admin_externalpage('local_apsolu_appearance_homepage', $str, $url, $capabilities));
-    
     // Statistics
     $ADMIN->add('apsolu', new admin_category('local_apsolu_statistics', get_string('statistics', 'local_apsolu')));
     $ADMIN->add('local_apsolu_statistics', new admin_category('local_apsolu_statistics_population', get_string('statistics_population', 'local_apsolu')));
@@ -207,6 +204,5 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     $ADMIN->add('local_apsolu_statistics_programme', new admin_externalpage('local_apsolu_statistics_programme_reports', $label, $url, $capabilities));
     $label = get_string('statistics_custom', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/statistics/programme/index.php', array('page' => 'custom'));
-    $ADMIN->add('local_apsolu_statistics_programme', new admin_externalpage('local_apsolu_statistics_programme_custom', $label, $url, $capabilities));    
-    
+    $ADMIN->add('local_apsolu_statistics_programme', new admin_externalpage('local_apsolu_statistics_programme_custom', $label, $url, $capabilities));
 }

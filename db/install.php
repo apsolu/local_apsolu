@@ -29,11 +29,6 @@ function xmldb_local_apsolu_install() {
     global $DB;
 
     // Initialise les variables du plugin.
-    set_config('homepage_enable', 1, 'local_apsolu');
-    set_config('homepage_section1_text', get_string('default_homepage_section1_text', 'local_apsolu'), 'local_apsolu');
-    set_config('homepage_section3_text', '', 'local_apsolu');
-    set_config('homepage_section4_institutional_account_url', '', 'local_apsolu');
-    set_config('homepage_section4_non_institutional_account_url', '', 'local_apsolu');
     set_config('payments_startdate', '', 'local_apsolu');
     set_config('payments_enddate', '', 'local_apsolu');
     set_config('functional_contact', '', 'local_apsolu');
