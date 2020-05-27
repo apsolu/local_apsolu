@@ -72,8 +72,18 @@ class report extends \local_apsolu\local\statistics\report {
   					FROM mdl_role_assignments ra 
   					INNER JOIN mdl_context ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50
   				   INNER JOIN mdl_role R ON ra.roleid = R.id AND R.archetype = \'student\'
-  					WHERE ra.userid = U.id AND ctx.instanceid = C.id
-  					) as roleshortname
+  					WHERE ra.userid = U.id AND ctx.instanceid = C.id AND ra.itemid = UE.enrolid
+  					) as roleshortname,
+  					(SELECT GROUP_CONCAT(DISTINCT CONCAT(U.firstname,\' \', U.lastname) ORDER BY U.firstname,U.lastname SEPARATOR \', \') 
+  					FROM mdl_role_assignments ra 
+  					INNER JOIN mdl_user U ON U.id = ra.userid AND U.deleted = 0
+  					INNER JOIN mdl_context ctx ON ctx.id = ra.contextid  AND ctx.contextlevel = 50
+  					INNER JOIN mdl_role R ON ra.roleid = R.id AND R.archetype != \'student\'
+  					WHERE ctx.instanceid = E.courseid) as teachers,
+            AL.name as locationname,
+            APSOLU_S.id,APSOLU_S.name as skillsname,
+            CONCAT(APSOLU_C.starttime,\'-\',APSOLU_C.endtime) as slotstartend 
+                        
       		FROM {user_enrolments} UE
       		INNER JOIN {user} U ON U.id = UE.userid AND U.deleted = 0
           LEFT JOIN {user_info_data} Sexe ON Sexe.userid = U.id AND Sexe.fieldid = (select id from mdl_user_info_field where shortname = \'apsolusex\')
@@ -84,6 +94,7 @@ class report extends \local_apsolu\local\statistics\report {
       		INNER JOIN {enrol} E ON E.id = UE.enrolid AND E.enrol = \'select\'
       		INNER JOIN {course} C on C.id = E.courseid
       		INNER JOIN {apsolu_courses} APSOLU_C on APSOLU_C.id = C.id
+          INNER JOIN {apsolu_skills} APSOLU_S on APSOLU_S.id = APSOLU_C.skillid
       		INNER JOIN {apsolu_locations} AL ON AL.id = APSOLU_C.locationid
       		INNER JOIN {apsolu_areas} AA ON AA.id = AL.areaId
       		INNER JOIN {apsolu_cities} ACI ON ACI.id = AA.cityId
@@ -123,7 +134,7 @@ class report extends \local_apsolu\local\statistics\report {
   					FROM mdl_role_assignments ra 
   					INNER JOIN mdl_context ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50
   				   INNER JOIN mdl_role R ON ra.roleid = R.id AND R.archetype = \'student\'
-  					WHERE ra.userid = U.id AND ctx.instanceid = C.id
+  					WHERE ra.userid = U.id AND ctx.instanceid = C.id AND ra.itemid = UE.enrolid
   					) as roleshortname
       		FROM {user_enrolments} UE
       		INNER JOIN {user} U ON U.id = UE.userid AND U.deleted = 0
@@ -152,7 +163,7 @@ class report extends \local_apsolu\local\statistics\report {
       * @return array
       */
     public function getReportDisplay($datatype = null) {
-      $columns = [
+      $columns = [                                         
           [ 'data' => "userprofile", 'title' => "Type"],
           [ 'data' => "idnumber", 'title' => "Numéro étudiant"] ,
           [ 'data' => "firstname", 'title' => "Prénom"] ,
@@ -199,7 +210,7 @@ class report extends \local_apsolu\local\statistics\report {
                               
               break;                
             default: // 1 : Vue activités physiques par inscription
-              $columnsDatatype = [
+              $columnsDatatype = [  
                 [ 'data' => "calendarname", 'title' => "Calendrier"] ,
                 [ 'data' => "calendartypename", 'title' => "Type de calendrier"] ,
                 [ 'data' => "cityname", 'title' => "Site"] ,     
@@ -208,13 +219,16 @@ class report extends \local_apsolu\local\statistics\report {
                 [ 'data' => "apsolucardpaid", 'title' => "Carte sport"] ,
                 [ 'data' => "statusname", 'title' => "Liste (statut inscription)"],
                 [ 'data' => "groupname", 'title' => "Groupements d'activités"],
-                [ 'data' => "activityname", 'title' => "Créneaux horaires"],
-                [ 'data' => "slotnumweekday", 'title' => "Jour","render" => "function ( data, type, row ) {return moment.weekdays()[data];}"],
-                [ 'data' => "slotstart", 'title' => "Heure de début"],
-                [ 'data' => "slotend", 'title' => "Heure de fin"],
+                [ 'data' => "activityname", 'title' => "Activité sportive"],
+                [ 'data' => "skillsname", 'title' => "Niveaux"],
+                [ 'data' => "slotnumweekday", 'title' => "Jours","render" => "function ( data, type, row ) {return moment.weekdays()[data];}"],
+                [ 'data' => "slotstartend", 'title' => "Horaires"],
+                [ 'data' => "locationname", 'title' => "Lieu"],
+                [ 'data' => "teachers", 'title' => "Enseignants"],
+                [ 'data' => null, 'visible' => false, 'title' => "Activité détaillée","render" => "function ( data, type, row ) {return data.activityname.replace(/\s/g,'&nbsp;') + '&nbsp;/&nbsp;' + moment.weekdays()[data.slotnumweekday] +'&nbsp;/&nbsp;' + data.slotstart + '&nbsp;-&nbsp;' + data.slotend + '&nbsp;/&nbsp;' + data.skillsname.replace(/\s/g,'&nbsp;');}"],
               ];
               $orders = [2 => 'asc', 3 => 'asc'];
-              $filters = ['input' => [1,2,3,4,7,8,13],'select' => [0,5,6,9,10,11,12,14,15,16,17,18,19] ];
+              $filters = ['input' => [1,2,3,4,7,8,13],'select' => [0,5,6,9,10,11,12,14,15,16,17,18,19,20,21,22,23] ];
                               
               break;
           }
