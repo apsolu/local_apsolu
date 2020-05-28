@@ -133,6 +133,7 @@ $string['skill_saved'] = 'Niveau de pratique enregistré.';
 $string['skill_updated'] = 'Niveau de pratique modifié.';
 $string['strftimedatetimeshort'] = '%a %d %b %Y %H:%M';
 $string['the_activities'] = 'Les activités';
+$string['the_courses'] = 'Les créneaux';
 $string['this_calendar_is_not_used_by_courses'] = 'Ce calendrier n\'est utilisé dans aucun cours.';
 $string['this_calendar_is_used_by_courses'] = 'Ce calendrier est actuellement utilisé par {$a} cours.';
 $string['use_apsolu_homepage'] = 'Utiliser la page d\'accueil APSOLU';

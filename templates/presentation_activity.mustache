@@ -1,0 +1,108 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_apsolu/presentation_activity
+
+    Template Moodle pour afficher l'offre de formations pour une activité.
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * courses
+        * url
+        * description
+        * site
+        * sport
+        * generic_name
+        * weekday
+        * endtime
+        * area
+        * location
+        * event
+        * roles
+            * name
+            * shortname
+        * teachers
+            * firstname
+            * lastname
+
+    Example context (json):
+    {
+        "courses": []
+    }
+}}
+<div id="apsolu-enrol-select-presentation">
+
+  <!-- Boite de filtres générée avec javascript. -->
+
+  <!-- Liste des cours. -->
+  <div id="apsolu-enrol-select-presentation-courses-list2" class="table-unresponsive">
+  {{#courses}}
+    {{#url}}<p><a href="{{.}}">Modalités pédagogiques</a></p>{{/url}}
+    {{#description}}<div>{{{.}}}</div>{{/description}}
+
+    <table class="table table-bordered table-striped table-sorter2 table-sortable" id="apsolu-enrol-select">
+      <thead>
+        <tr>
+            <th class="col-md-1 hide" data-column="sites">{{#str}}city, local_apsolu{{/str}}</th>
+            <th class="col-md-1 hide" data-column="sports">{{#str}}category, local_apsolu{{/str}}</th>
+            <th class="col-md-1" data-column="periods">{{#str}}period, local_apsolu{{/str}}</th>
+            <th class="col-md-1" data-column="weekdays">{{#str}}weekday, local_apsolu{{/str}}</th>
+            <th class="col-md-1" data-column="times">{{#str}}times, local_apsolu{{/str}}</th>
+            <th class="col-md-2" data-column="areas">{{#str}}area, local_apsolu{{/str}}</th>
+            <th class="col-md-2" data-column="locations">{{#str}}location, local_apsolu{{/str}}</th>
+            <th class="col-md-1" data-column="skills">{{#str}}skill, local_apsolu{{/str}}</th>
+            <th class="col-md-1" data-column="roles">{{#str}}role, local_apsolu{{/str}}</th>
+            <th class="col-md-2" data-column="teachers">{{#str}}teachers{{/str}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#courses}}
+        <tr>
+          <td class="hide" data-column="sites" data-value="{{site}}">{{site}}</td>
+          <td class="hide" data-column="sports" data-value="{{sport}}">{{sport}}</td>
+          <td data-column="periods" data-value="{{generic_name}}">{{generic_name}}</td>
+          <td data-column="weekdays" data-value="{{weekday}}">{{weekday}}</td>
+          <td data-column="times" data-value="{{time}}">{{starttime}} - {{endtime}}</td>
+          <td data-column="areas" data-value="{{area}}">{{area}}</td>
+          <td data-column="locations" data-value="{{location}}">{{location}}</td>
+          <td data-column="skills" data-value="{{skill}}">{{skill}}{{#event}}<br />({{event}}){{/event}}</td>
+          <td data-column="roles">
+            <ul class="list-inline2 list-unstyled">
+              {{#roles}}
+              <li class="apsolu-roles-list-li"><span title="{{name}}" class="apsolu-roles apsolu-roles-{{shortname}}"></span><span class="sr-only2">{{name}}</span></li>
+              {{/roles}}
+            </ul>
+          </td>
+          <td data-column="teachers">
+            <ul class="list-unstyled">
+              {{#teachers}}
+              <li class="apsolu-teachers-list-li">{{firstname}} {{lastname}}</li>
+              {{/teachers}}
+            </ul>
+          </td>
+        </tr>
+        {{/courses}}
+      </tbody>
+    </table>
+  {{/courses}}
+  </div>
+</div>

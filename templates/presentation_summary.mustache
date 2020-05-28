@@ -1,0 +1,178 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_apsolu/presentation_summary
+
+    Template Moodle pour afficher l'offre de formations.
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * is_siuaps_rennes
+    * selected_site
+    * sites_single
+    * sites
+    * filters
+        * name
+        * label
+        * html
+    * courses
+        * id
+        * url
+        * description
+        * modal
+        * courses
+            * site
+            * sport
+            * generic_name
+            * weekday
+            * endtime
+            * area
+            * location
+            * event
+            * roles
+                * name
+                * shortname
+            * teachers
+                * firstname
+                * lastname
+
+    Example context (json):
+    {
+        "is_siuaps_rennes": 0,
+        "selected_site": 0,
+        "sites_single": 0,
+        "sites": [],
+        "filters": [],
+        "courses": []
+    }
+}}
+<div id="apsolu-enrol-select-presentation">
+
+  <div id="apsolu-enrol-select-presentation-courses-list2" class="table-unresponsive">
+    {{#is_siuaps_rennes}}
+    {{#selected_site}}
+    <p><strong>Réservés aux étudiants/personnels du site de {{.}}.</strong></p>
+    {{/selected_site}}
+    {{/is_siuaps_rennes}}
+
+    <!-- Sélecteur de site. -->
+    {{^sites_single}}
+    <ul class="list-inline">
+        <li class="list-inline-item">
+            <a class="btn {{^selected_site}}btn-success active{{/selected_site}}{{#selected_site}}btn-default{{/selected_site}}" href="{{wwwroot}}/local/apsolu/presentation/summary.php">{{#str}}all_cities, local_apsolu{{/str}}</a>
+        </li>
+
+        {{#sites}}
+        <li class="list-inline-item">
+            <a class="btn {{#active}}btn-success active{{/active}}{{^active}}btn-default{{/active}}" href="{{wwwroot}}/local/apsolu/presentation/summary.php?siteid={{id}}">{{name}}</a>
+        </li>
+        {{/sites}}
+    </ul>
+    {{/sites_single}}
+
+    <!-- Bloc pour filtrer le tableau. -->
+    <aside class="well">
+        <h3>Filtres</h3>
+        <div class="row mb-2">
+          {{#filters}}
+          <div class="col-md-2 mx-2">
+              <label class="font-weight-bold" for="{{name}}">{{label}}</label><br />
+              {{{html}}}
+          </div>
+          {{/filters}}
+        </div>
+    </aside>
+
+    <!-- Liste des cours. -->
+    <table class="table table-bordered table-sorter2 table-sortable" id="apsolu-enrol-select">
+      <thead>
+        <tr>
+            <th class="col-md-1{{#selected_site}} hide{{/selected_site}}" data-column="sites">{{#str}}city, local_apsolu{{/str}}</th>
+            <th class="col-md-1 hide" data-column="sports">{{#str}}category, local_apsolu{{/str}}</th>
+            <th class="col-md-1" data-column="periods">{{#str}}period, local_apsolu{{/str}}</th>
+            <th class="col-md-1" data-column="weekdays">{{#str}}weekday, local_apsolu{{/str}}</th>
+            <th class="col-md-1" data-column="times">{{#str}}times, local_apsolu{{/str}}</th>
+            <th class="col-md-2" data-column="areas">{{#str}}area, local_apsolu{{/str}}</th>
+            <th class="col-md-2" data-column="locations">{{#str}}location, local_apsolu{{/str}}</th>
+            <th class="col-md-1" data-column="skills">{{#str}}skill, local_apsolu{{/str}}</th>
+            <th class="col-md-1" data-column="roles">{{#str}}role, local_apsolu{{/str}}</th>
+            <th class="col-md-2" data-column="teachers">{{#str}}teachers{{/str}}</th>
+        </tr>
+      </thead>
+      <tbody>
+      {{#courses}}
+        <tr>
+          <th colspan="10">{{name}}
+            {{#modal}}<button type="button" class="apsolu-modal-sports-descriptions-button" data-toggle="modal" data-target="#apsolu-modal-sports-descriptions-{{id}}"><img height="16px" width="16px" src="{{wwwroot}}/local/apsolu/pix/i/more.svg" alt="{{#str}}detailedmore{{/str}}" /></button>
+
+            <div class="modal fade apsolu-modal-sports-descriptions" id="apsolu-modal-sports-descriptions-{{id}}" tabindex="-1" role="dialog" aria-labelledby="apsolu-modal-sports-descriptions-{{id}}-title">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="{{#str}}closewindow{{/str}}"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="apsolu-modal-sports-descriptions-{{id}}-title">{{name}}</h4>
+                  </div>
+                  <div class="modal-body">
+                    {{#url}}
+                    <p><a href="{{.}}">Modalités pédagogiques</a></p>
+                    {{/url}}
+                    {{#description}}
+                    <div>{{{.}}}</div>
+                    {{/description}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            {{/modal}}
+          </th>
+        </tr>
+        {{#courses}}
+        <tr>
+          <td{{#selected_site}} class="hide"{{/selected_site}} data-column="sites" data-value="{{site}}">{{site}}</td>
+          <td class="hide" data-column="sports" data-value="{{sport}}">{{sport}}</td>
+          <td data-column="periods" data-value="{{generic_name}}">{{generic_name}}</td>
+          <td data-column="weekdays" data-value="{{weekday}}">{{weekday}}</td>
+          <td data-column="times" data-value="{{time}}">{{starttime}} - {{endtime}}</td>
+          <td data-column="areas" data-value="{{area}}">{{area}}</td>
+          <td data-column="locations" data-value="{{location}}">{{location}}</td>
+          <td data-column="skills" data-value="{{skill}}">{{skill}}{{#event}}<br />({{event}}){{/event}}</td>
+          <td data-column="roles">
+            <ul class="list-inline2 list-unstyled">
+              {{#roles}}
+              <li class="apsolu-roles-list-li"><span title="{{name}}" class="apsolu-roles apsolu-roles-{{shortname}}"></span><span class="sr-only2">{{name}}</span></li>
+              {{/roles}}
+            </ul>
+          </td>
+          <td data-column="teachers">
+            <ul class="list-unstyled">
+              {{#teachers}}
+              <li class="apsolu-teachers-list-li">{{firstname}} {{lastname}}</li>
+              {{/teachers}}
+            </ul>
+          </td>
+        </tr>
+        {{/courses}}
+      {{/courses}}
+      </tbody>
+    </table>
+  </div>
+</div>
