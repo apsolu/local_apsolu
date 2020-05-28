@@ -108,6 +108,7 @@
         <tr>
             <th class="col-md-1{{#selected_site}} hide{{/selected_site}}" data-column="sites">{{#str}}city, local_apsolu{{/str}}</th>
             <th class="col-md-1 hide" data-column="sports">{{#str}}category, local_apsolu{{/str}}</th>
+            <th class="col-md-1 hide" data-column="groupings">{{#str}}grouping, local_apsolu{{/str}}</th>
             <th class="col-md-1" data-column="periods">{{#str}}period, local_apsolu{{/str}}</th>
             <th class="col-md-1" data-column="weekdays">{{#str}}weekday, local_apsolu{{/str}}</th>
             <th class="col-md-1" data-column="times">{{#str}}times, local_apsolu{{/str}}</th>
@@ -149,6 +150,7 @@
         <tr>
           <td{{#selected_site}} class="hide"{{/selected_site}} data-column="sites" data-value="{{site}}">{{site}}</td>
           <td class="hide" data-column="sports" data-value="{{sport}}">{{sport}}</td>
+          <td class="hide" data-column="groupings" data-value="{{domain}}">{{domain}}</td>
           <td data-column="periods" data-value="{{generic_name}}">{{generic_name}}</td>
           <td data-column="weekdays" data-value="{{weekday}}">{{weekday}}</td>
           <td data-column="times" data-value="{{time}}">{{starttime}} - {{endtime}}</td>

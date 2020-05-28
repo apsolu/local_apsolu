@@ -60,6 +60,10 @@ $filters['sites'] = new \stdClass();
 $filters['sites']->label = 'Site de pratique';
 $filters['sites']->values = array();
 
+$filters['groupings'] = new \stdClass();
+$filters['groupings']->label = get_string('grouping', 'local_apsolu');
+$filters['groupings']->values = array();
+
 $filters['sports'] = new \stdClass();
 $filters['sports']->label = 'Activité';
 $filters['sports']->values = array();
@@ -118,6 +122,8 @@ foreach (UniversiteRennes2\Apsolu\get_activities($siteid) as $activity) {
         $courses[$activity->sport]->description = $activity->description;
         $courses[$activity->sport]->modal = (empty($activity->url) === false || empty($activity->description) === false);
         $courses[$activity->sport]->courses = array();
+
+        $filters['groupings']->values[$activity->domainid] = $activity->domain;
     }
 
     $activity->weekday = get_string($activity->weekday, 'calendar');
