@@ -18,7 +18,7 @@
  * Teste la classe local_apsolu\core\course
  *
  * @package    local_apsolu
- * @category   phpunit
+ * @category   test
  * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -31,6 +31,11 @@ require_once($CFG->dirroot.'/course/lib.php');
 
 /**
  * Classe de tests pour local_apsolu\core\course
+ *
+ * @package    local_apsolu
+ * @category   test
+ * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class local_apsolu_core_course_testcase extends advanced_testcase {
     protected function setUp() {

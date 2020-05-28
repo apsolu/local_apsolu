@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Page pour exporter les notes.
+ *
  * @package    local_apsolu
  * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -86,13 +88,13 @@ $semesters = array(
 if (date('m') > 8) {
     $year = date('Y');
 } else {
-    $year = date('Y')-1;
+    $year = date('Y') - 1;
 }
 // TODO: améliorer le calcul des dates de début/fin de semestre. Proposer un champ date ?
 $timestart_semester1 = mktime(0, 0, 0, 8, 1, $year);
-$timeend_semester1 = mktime(0, 0, 0, 1, 1, $year+1);
-$timestart_semester2 = mktime(0, 0, 0, 1, 1, $year+1);
-$timeend_semester2 = mktime(0, 0, 0, 7, 1, $year+1);
+$timeend_semester1 = mktime(0, 0, 0, 1, 1, $year + 1);
+$timestart_semester2 = mktime(0, 0, 0, 1, 1, $year + 1);
+$timeend_semester2 = mktime(0, 0, 0, 7, 1, $year + 1);
 
 // Build form.
 $defaults = (object) ['courses' => '*', 'cities' => '', 'departments' => '', 'roles' => '*', 'semesters' => '*'];

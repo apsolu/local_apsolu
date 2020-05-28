@@ -15,10 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Tasks to synchronise students
+ * Classe représentant la tâche permettant d'alimenter le témoin sportif de haut niveau.
  *
- * @package    local
- * @subpackage apsolu
+ * @package    local_apsolu
  * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -27,12 +26,29 @@ namespace local_apsolu\task;
 
 use UniversiteRennes2\Apsolu as apsolu;
 
+/**
+ * Classe représentant la tâche permettant d'alimenter le témoin sportif de haut niveau.
+ *
+ * @package    local_apsolu
+ * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class set_high_level_athletes extends \core\task\scheduled_task {
+    /**
+     * Retourne le nom de la tâche.
+     *
+     * @return string
+     */
     public function get_name() {
         // Shown in admin screens.
         return get_string('set_high_level_athletes', 'local_apsolu');
     }
 
+    /**
+     * Execute la tâche.
+     *
+     * @return void
+     */
     public function execute() {
         global $CFG, $DB;
 

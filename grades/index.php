@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Page de notation des étudiants.
+ *
  * @package    local_apsolu
  * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -266,7 +268,7 @@ if ($courseid) {
 
         // Lorsqu'on ne peut plus saisir de notes, on place l'onglet par défaut sur semestre 2.
         if ($index === 1 && $current_semester_index === -1) {
-           $period->active = 'active';
+            $period->active = 'active';
         }
 
         $period->users = array();
@@ -312,7 +314,7 @@ if ($courseid) {
                     $grade3attr = '';
                     $grade4str = '';
                 }
-            } elseif ($current_semester_index === 1) {
+            } else if ($current_semester_index === 1) {
                 // Semestre 2.
                 if ($user->roleid == 9) {
                     // Évalué option.

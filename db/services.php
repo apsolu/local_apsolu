@@ -17,7 +17,7 @@
  * @package    local_apsolu
  * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
-*/
+ */
 
 // We defined the web service functions to install.
 $functions = array(
@@ -140,8 +140,8 @@ $functions = array(
         'type'        => 'read',
         'loginrequired' => true,
         'ajax' => true,
-    ),        
-  
+    ),
+
 );
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.

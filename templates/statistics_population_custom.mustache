@@ -1,10 +1,47 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_apsolu/statistics_population_custom
+
+    Template Moodle.
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * langcode
+    * Filters
+
+    Example context (json):
+    {
+        "langcode": "fr",
+        "Filters": "{}"
+    }
+}}
 Type de données : <select id="report-builder-select" class="custom-select">
   <option value="1" selected>{{# str }} statistics_population_datatype_1, local_apsolu {{/ str }}</option>
   <option value="2">{{# str }} statistics_population_datatype_2, local_apsolu {{/ str }}</option>
   <option value="3">{{# str }} statistics_population_datatype_3, local_apsolu {{/ str }}</option>
   <option value="4">{{# str }} statistics_population_datatype_4, local_apsolu {{/ str }}</option>
 </select>
-  
+
 <div id="querybuilder" style="display:block"></div>
 <div class="btn-group">
   <button class="btn btn-primary reset">{{# str }} statistics_clean, local_apsolu {{/ str }}</button>
@@ -12,15 +49,15 @@ Type de données : <select id="report-builder-select" class="custom-select">
 </div>
 
 <div class="report-builder-datatable" style="padding-top:20px;">
-  <table class="display compact report-builder-table" width="100%"></table>
+  <table class="display compact report-builder-table" style="width: 100%;"></table>
 </div>
 
 {{#js}}
 require([
   'jquery',
-  'core/notification',   
+  'core/notification',
   "core/ajax",
-  "local_apsolu/moment",  
+  "local_apsolu/moment",
   'local_apsolu/query-builder',
   'local_apsolu/query-builder.fr',
   "local_apsolu/datatables.net",
@@ -35,7 +72,7 @@ require([
   ], function($,notification,Ajax,moment) {
 
   moment.locale('{{{langcode}}}');
-  
+
   !function(a){a.fn.datepicker.dates.fr={
       days:["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"],
       daysShort:["dim.","lun.","mar.","mer.","jeu.","ven.","sam."],
@@ -44,26 +81,26 @@ require([
       monthsShort:["janv.","févr.","mars","avril","mai","juin","juil.","août","sept.","oct.","nov.","déc."],
       today:"Aujourd'hui",
       monthsTitle:"Mois",clear:"Effacer",weekStart:1,format:"dd/mm/yyyy"}}(jQuery);
-  
+
   var selector = '.report-builder-table';
 
   var builder = $('#querybuilder').queryBuilder({
     sort_filters: true,
     filters: {{{Filters}}},
-    lang_code: '{{{langcode}}}', 
+    lang_code: '{{{langcode}}}',
   });
-  
+
   $('.reset').on('click', function() {
     builder.queryBuilder('reset');
-    
-    // Destroy results table        
+
+    // Destroy results table
     if ( $.fn.dataTable.isDataTable( selector ) ) {
       table = $(selector).DataTable();
       table.destroy();
-      $(selector).empty(); 
-    }  
-  });                   
-  
+      $(selector).empty();
+    }
+  });
+
   // Datatype selection
   $("#report-builder-select").change(function() {
     builder.queryBuilder('destroy');
@@ -74,19 +111,19 @@ require([
     });
 
   });
-  
-        
+
+
   $('.parse-sql').on('click', function() {
     var requests = [];
     var customQuery = builder.queryBuilder('getSQL', 'question_mark');
-    
-    // Destroy results table        
+
+    // Destroy results table
     if ( $.fn.dataTable.isDataTable( selector ) ) {
       table = $(selector).DataTable();
       table.destroy();
-      $(selector).empty(); 
-    } 
-                           
+      $(selector).empty();
+    }
+
     if (customQuery !== null && customQuery.sql.length) {
         customQuery.datatype = $("#report-builder-select").val();
 
@@ -95,14 +132,14 @@ require([
                 methodname: 'local_apsolu_get_reportdataset',
                 args: {'classname':'population','querybuilder':JSON.stringify(customQuery)}
               }]);
-              
+
         requests[0].done(function(enrols) {
           // Get ordering
           var json_order = JSON.parse(enrols.orders);
           var order = [];
           for(var i in json_order)
               order.push([i, json_order[i]]);
-              
+
           // Build results table
           var options = {
             data : JSON.parse(enrols.data),
@@ -151,23 +188,23 @@ require([
                                   "_": "%d lignes sélectionnées",
                                   "0": "Aucune ligne sélectionnée",
                                   "1": "1 ligne sélectionnée"
-                              } 
-                      }              
-                    },            
+                              }
+                      }
+                    },
             initComplete: function(settings, json) {
-                      
+
               // Build columns filters
               if (enrols.filters) {
                 var filters = JSON.parse(enrols.filters);
-                
+
                 $(selector+' thead tr').clone(false).appendTo( selector+' thead' );
                 $(selector+' thead tr:eq(1) th').removeAttr('class').html('');
-                
+
                 if (filters.input) {
                   this.api().columns(filters.input).every( function () {
                     var column = this;
                     if (column.visible()) {
-                      
+
                       var title = $(column.header()).html();
                       var input = $('<input type="text" class="column_search" placeholder=" '+title+'" />')
                           .appendTo( $(selector+' thead tr:eq(1) th').eq(column.index()).empty() )
@@ -192,19 +229,19 @@ require([
                               var val = $.fn.dataTable.util.escapeRegex(
                                   $(this).val()
                               );
-       
+
                               column
                                   .search( val ? '^'+val+'$' : '', true, false )
                                   .draw();
                           } );
-       
+
                       column.data().unique().sort().each( function ( d, j ) {
                         var title = $(column.header()).html();
                         if (title != "Jour")
-                        {  
+                        {
                           if (d === null || d === '') {
                           	d = '(Vide)';
-                          }                
+                          }
                           var values = select.children('option').map(function(i, e){
                               return e.value || e.innerText;
                           }).get();
@@ -214,26 +251,26 @@ require([
                         } else {
                           select.append( '<option value="'+moment.weekdays()[d]+'">'+moment.weekdays()[d]+'</option>' )
                         }
-                      });                      
+                      });
                     }
                   });
                 }
               }
-              
+
             },
-            
-            
+
+
           };
-                  
+
           var table = $(selector).DataTable(options);
           table.unique(); // Remove doublons
-          
-          
-        }).fail(notification.exception);              
+
+
+        }).fail(notification.exception);
 
     }
-    
+
   });
-  
+
 });
 {{/js}}

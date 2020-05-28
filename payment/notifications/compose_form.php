@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Classe pour le formulaire permettant de créer un message de relance de paiement.
+ *
  * @package    local_apsolu
  * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,12 +27,19 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/formslib.php');
 
 /**
- * Classe pour créer le formulaire permettant de créer un message de relance de paiement.
+ * Classe pour le formulaire permettant de créer un message de relance de paiement.
+ *
+ * @package    local_apsolu
+ * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class local_apsolu_payment_notifications_compose_form extends moodleform {
+    /**
+     * Définit les champs du formulaire.
+     *
+     * @return void
+     */
     protected function definition() {
-        global $CFG, $DB;
-
         $mform = $this->_form;
         list($data, $cards) = $this->_customdata;
 
@@ -76,7 +85,8 @@ class local_apsolu_payment_notifications_compose_form extends moodleform {
      *
      * @param array $data
      * @param array $files
-     * @return array the errors that were found
+     *
+     * @return array The errors that were found.
      */
     public function validation($data, $files) {
         global $DB;

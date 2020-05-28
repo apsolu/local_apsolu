@@ -24,8 +24,17 @@
 
 namespace local_apsolu\core;
 
+/**
+ * Classe gérant les périodes.
+ *
+ * @package    local_apsolu
+ * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class period extends record {
-    /** @const Nom de la table en base de données. */
+    /**
+     * Nom de la table de référence en base de données.
+     */
     const TABLENAME = 'apsolu_periods';
 
     /** @var int|string Identifiant numérique de la période. */
@@ -40,6 +49,11 @@ class period extends record {
     /** @var string $weeks Liste des semaines séparées par des virgules. */
     public $weeks = '';
 
+    /**
+     * Affiche une représentation textuelle de l'objet.
+     *
+     * @return string.
+     */
     public function __tostring() {
         return $this->generic_name;
     }

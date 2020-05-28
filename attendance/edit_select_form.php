@@ -15,9 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Select session
+ * Classe pour le formulaire permettant de sélectionner les sessions.
  *
  * @package    local_apsolu
+ * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -25,10 +26,18 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir.'/formslib.php');
 
+/**
+ * Classe pour le formulaire permettant de sélectionner les sessions.
+ *
+ * @package    local_apsolu
+ * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class edit_select_form extends moodleform {
-
     /**
-     * Form definition.
+     * Définit les champs du formulaire.
+     *
+     * @return void
      */
     function definition() {
         $mform = $this->_form;

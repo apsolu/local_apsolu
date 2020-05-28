@@ -40,7 +40,7 @@ foreach ($pages as $pagename) {
 if (in_array($page, $pages, true) === false) {
     $page = $pages[0];
 }
-                                      
+
 // Setup admin access requirement.
 admin_externalpage_setup('local_apsolu_statistics_programme_'.$page);
 

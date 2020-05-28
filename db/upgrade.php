@@ -23,7 +23,11 @@
  */
 
 /**
- * Upgrade procedure.
+ * Procédure de mise à jour.
+ *
+ * @param int $oldversion Numéro de la version du module theme_apsolu actuellement installé.
+ *
+ * @return bool
  */
 function xmldb_local_apsolu_upgrade($oldversion = 0) {
     global $CFG, $DB;
@@ -353,7 +357,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         if ($dbman->table_exists($table) === false) {
             // Adding fields.
             $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
-            $table->add_field('description', XMLDB_TYPE_TEXT, $precision=null, $unsigned=null, $notnull=null, $sequence=null, $default=null, $previous=null);
+            $table->add_field('description', XMLDB_TYPE_TEXT, $precision = null, $unsigned = null, $notnull = null, $sequence = null, $default = null, $previous = null);
             $table->add_field('activityid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = 0, null);
             $table->add_field('skillid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = 0, null);
 
@@ -495,10 +499,10 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             // Adding fields.
             $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
             $table->add_field('subject', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
-            $table->add_field('message', XMLDB_TYPE_TEXT, $precision=null, $unsigned=null, $notnull=null, $sequence=null, $default=null, $previous=null);
+            $table->add_field('message', XMLDB_TYPE_TEXT, $precision = null, $unsigned = null, $notnull = null, $sequence = null, $default = null, $previous = null);
             $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
-            $table->add_field('timestarted', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $notnull=null, null, null, null);
-            $table->add_field('timeended', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $notnull=null, null, null, null);
+            $table->add_field('timestarted', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $notnull = null, null, null, null);
+            $table->add_field('timeended', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $notnull = null, null, null, null);
             $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
 
             // Adding key.
@@ -592,7 +596,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     if ($result && $oldversion < $version) {
         // Ajoute une colonne 'prefix' sur la table 'apsolu_payments_centers'.
         $table = new xmldb_table('apsolu_payments_centers');
-        $field = new xmldb_field('prefix', XMLDB_TYPE_TEXT, $precision=null, $unsigned=null, $notnull=null, $sequence=null, $default=null, $previous='name');
+        $field = new xmldb_field('prefix', XMLDB_TYPE_TEXT, $precision = null, $unsigned = null, $notnull = null, $sequence = null, $default = null, $previous = 'name');
 
         if ($dbman->field_exists($table, $field) === false) {
             $dbman->add_field($table, $field);

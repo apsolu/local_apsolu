@@ -15,26 +15,31 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Bulk user upload forms
+ * Classe pour le formulaire permettant d'importer les licences FFSU.
  *
- * @package    tool
- * @subpackage uploaduser
- * @copyright  2007 Dan Poltawski
+ * @package    local_apsolu
+ * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 require_once $CFG->libdir.'/formslib.php';
-require_once($CFG->dirroot . '/user/editlib.php');
+require_once($CFG->dirroot.'/user/editlib.php');
 
 /**
- * Upload a file CVS file with user information.
+ * Classe pour le formulaire permettant d'importer les licences FFSU.
  *
- * @copyright  2007 Petr Skoda  {@link http://skodak.org}
+ * @package    local_apsolu
+ * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class local_apsolu_federation_import_licences extends moodleform {
+    /**
+     * Définit les champs du formulaire.
+     *
+     * @return void
+     */
     function definition () {
         $mform = $this->_form;
 
@@ -60,7 +65,7 @@ class local_apsolu_federation_import_licences extends moodleform {
         $mform->addElement('select', 'encoding', get_string('encoding', 'tool_uploaduser'), $choices);
         $mform->setDefault('encoding', 'UTF-8');
 
-        $choices = array('5' => '5', '10'=>10, '20'=>20, '100'=>100, '1000'=>1000, '100000'=>100000);
+        $choices = array('5' => '5', '10' => 10, '20' => 20, '100' => 100, '1000' => 1000, '100000' => 100000);
         $mform->addElement('select', 'previewrows', get_string('rowpreviewnum', 'tool_uploaduser'), $choices);
         $mform->setType('previewrows', PARAM_INT);
 

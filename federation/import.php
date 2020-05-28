@@ -15,11 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Bulk user registration script from a comma separated file
+ * Script d'importation des licences FFSU.
  *
- * @package    tool
- * @subpackage uploaduser
- * @copyright  2004 onwards Martin Dougiamas (http://dougiamas.com)
+ * @package    local_apsolu
+ * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -29,7 +28,7 @@ require_once($CFG->libdir.'/csvlib.class.php');
 
 require_once('import_form.php');
 
-core_php_time_limit::raise(60*60); // 1 hour should be enough
+core_php_time_limit::raise(60 * 60); // 1 hour should be enough
 raise_memory_limit(MEMORY_HUGE);
 
 $returnurl = new moodle_url('/local/apsolu/federation/index.php?page=importation');
@@ -159,7 +158,7 @@ if (isset($formdata->previewbutton) === true) {
     $table->data = $data;
 
     echo '<h3>'.get_string('federation_preview', 'local_apsolu').'</h3>';
-    echo html_writer::tag('div', html_writer::table($table), array('class'=>'flexible-wrap'));
+    echo html_writer::tag('div', html_writer::table($table), array('class' => 'flexible-wrap'));
 } else if (isset($formdata->importbutton) === true) {
     echo '<h3>'.get_string('federation_result', 'local_apsolu').'</h3>';
     if (isset($result[0]) === false) {

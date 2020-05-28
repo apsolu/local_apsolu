@@ -13,7 +13,9 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
+ * Webservices pour APSOLU.
  *
  * @package    local_apsolu
  * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
@@ -28,6 +30,11 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir.'/externallib.php');
 
+/**
+ * Fonction vérifiant la validité d'un token passé en paramètre HTTP.
+ *
+ * @return bool
+ */
 function local_apsolu_is_valid_token() {
     global $DB;
 
@@ -49,8 +56,8 @@ function local_apsolu_is_valid_token() {
 /**
  * Fonction permettant d'écrire dans les logs si la variable $CFG->apsolu_enable_ws_logging est définie et correspond à un chemin accessible en écriture.
  *
- * @param $method string nom de la méthode utilisé (calculée automatiquement avec la constante __METHOD__)
- * @param $arguments array un tableau contenant les arguments utilisés pour appeler la méthode
+ * @param string $method    Nom de la méthode utilisé (calculée automatiquement avec la constante __METHOD__).
+ * @param array  $arguments Un tableau contenant les arguments utilisés pour appeler la méthode.
  *
  * @return bool retourne True lorsque le fichier a été écrit, False si le fichier n'a pas été écrit
  */
@@ -71,7 +78,7 @@ function local_apsolu_write_log($method, $arguments) {
     return false;
 }
 
-/*
+/**
  * Fonction qui génère ou retire les tokens d'accès aux webservices Apsolu pour les utilisateurs ayant un rôle enseignant au SIUAPS.
  *
  * @return void
@@ -151,9 +158,18 @@ function local_apsolu_grant_ws_access() {
     }
 }
 
+/**
+ * Classe décrivant les webservices APSOLU.
+ *
+ * @package    local_apsolu
+ * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class local_apsolu_webservices extends external_api {
     /**
      * Returns users list.
+     *
+     * @param int|string $since Timestamp unix indiquant la date du dernier appel du Famoco. Seuls les changements au-delà de cette date sont remontés.
      *
      * @return array
      */
@@ -233,6 +249,8 @@ class local_apsolu_webservices extends external_api {
     /**
      * Returns activities list.
      *
+     * @param int|string $since Timestamp unix indiquant la date du dernier appel du Famoco. Seuls les changements au-delà de cette date sont remontés.
+     *
      * @return array
      */
     public static function get_activities($since) {
@@ -294,6 +312,8 @@ class local_apsolu_webservices extends external_api {
 
     /**
      * Returns courses list.
+     *
+     * @param int|string $since Timestamp unix indiquant la date du dernier appel du Famoco. Seuls les changements au-delà de cette date sont remontés.
      *
      * @return array
      */
@@ -371,6 +391,8 @@ class local_apsolu_webservices extends external_api {
 
     /**
      * Returns registrations list.
+     *
+     * @param int|string $since Timestamp unix indiquant la date du dernier appel du Famoco. Seuls les changements au-delà de cette date sont remontés.
      *
      * @return array
      */
@@ -501,6 +523,8 @@ class local_apsolu_webservices extends external_api {
     /**
      * Returns unenrolment list.
      *
+     * @param int|string $since Timestamp unix indiquant la date du dernier appel du Famoco. Seuls les changements au-delà de cette date sont remontés.
+     *
      * @return array
      */
     public static function get_unenrolments($since) {
@@ -567,6 +591,8 @@ class local_apsolu_webservices extends external_api {
     /**
      * Returns teachers list.
      *
+     * @param int|string $since Timestamp unix indiquant la date du dernier appel du Famoco. Seuls les changements au-delà de cette date sont remontés.
+     *
      * @return array
      */
     public static function get_teachers($since) {
@@ -629,6 +655,9 @@ class local_apsolu_webservices extends external_api {
 
     /**
      * Returns attendances list.
+     *
+     * @param int|string $since Timestamp unix indiquant la date du dernier appel du Famoco. Seuls les changements au-delà de cette date sont remontés.
+     * @param int|string $from  Timestamp unix.
      *
      * @return array
      */
@@ -700,6 +729,9 @@ class local_apsolu_webservices extends external_api {
 
     /**
      * Set cardnumber to user profile.
+     *
+     * @param int|string $iduser     Identifiant de l'utilisateur.
+     * @param string     $cardnumber Identifiant de la carte RFID.
      *
      * @return array
      */
@@ -800,6 +832,10 @@ class local_apsolu_webservices extends external_api {
 
     /**
      * Set course presence for a user.
+     *
+     * @param int|string $iduser    Identifiant de l'utilisateur.
+     * @param int|string $idcourse  Identifiant du cours.
+     * @param int|string $timestamp
      *
      * @return array
      */
@@ -926,6 +962,11 @@ class local_apsolu_webservices extends external_api {
     /**
      * Get debug messages.
      *
+     * @param string     $serial    Numéro de série du Famoco.
+     * @param int|string $idteacher Identifiant de l'enseignant connecté.
+     * @param string     $message   Message de debug.
+     * @param int|string $timestamp Date de création du message de debug.
+     *
      * @return array
      */
     public static function debugging($serial, $idteacher, $message, $timestamp) {
@@ -979,13 +1020,15 @@ class local_apsolu_webservices extends external_api {
     /**
      * Describes the parameters for debugging.
      *
+     * @param array $options
+     *
      * @return array
-     */    
+     */
     public static function get_chartdataset($options) {
-      $class = 'local_apsolu\local\statistics\\'.$options['classname'].'\chart'; 
-      return call_user_func(array($class, $options['reportid']),$options);
+        $class = 'local_apsolu\local\statistics\\'.$options['classname'].'\chart';
+        return call_user_func(array($class, $options['reportid']),$options);
     }
-    
+
     /**
      * Describes the parameters for get_chartdataset.
      *
@@ -1001,7 +1044,7 @@ class local_apsolu_webservices extends external_api {
                 'criterias' => new external_single_structure(
                   array(
                     'cities' =>
-                      new external_multiple_structure( 
+                      new external_multiple_structure(
                       new external_single_structure(
                       array(
                           'active' => new external_value(PARAM_BOOL,'Site par défaut',VALUE_DEFAULT, null, NULL_ALLOWED),
@@ -1010,101 +1053,105 @@ class local_apsolu_webservices extends external_api {
                       ), 'Cities'), VALUE_DEFAULT, array()
                       ),
                     'calendarstypes' =>
-                      new external_multiple_structure( 
+                      new external_multiple_structure(
                       new external_single_structure(
                       array(
                           'active' => new external_value(PARAM_BOOL,'Site par défaut',VALUE_DEFAULT, null, NULL_ALLOWED),
                           'id' => new external_value(PARAM_INT,'Identifiant du type de calendrier',VALUE_DEFAULT, null, NULL_ALLOWED),
                           'name' => new external_value(PARAM_TEXT,'Nom du type de calendrier',VALUE_DEFAULT, null, NULL_ALLOWED),
                       ), 'CalendarsTypes'), VALUE_DEFAULT, array()
-                      ), 
+                      ),
                     'complementaries' =>
-                      new external_multiple_structure( 
+                      new external_multiple_structure(
                       new external_single_structure(
                       array(
                           'active' => new external_value(PARAM_BOOL,'Site par défaut',VALUE_DEFAULT, null, NULL_ALLOWED),
                           'id' => new external_value(PARAM_INT,'Identifiant de l\'activité complementaire',VALUE_DEFAULT, null, NULL_ALLOWED),
                           'name' => new external_value(PARAM_TEXT,'Nom de l\'activité complémentaire',VALUE_DEFAULT, null, NULL_ALLOWED),
                       ), 'Complementaries'), VALUE_DEFAULT, array()
-                      ),                                    
+                      ),
                   ), 'Criterias', VALUE_DEFAULT, array())
               ), 'Options', VALUE_DEFAULT, array())
-          ) 
-        );  
+          )
+        );
     }
-    
+
     /**
      * Describes the get_chartdataset return value.
      *
      * @return external_single_structure
      */
     public static function get_chartdataset_returns() {
-      return new external_single_structure(
+        return new external_single_structure(
         array(
           'success' => new external_value(PARAM_BOOL, get_string('ws_value_boolean', 'local_apsolu')),
           'chartdata' => new external_value(PARAM_RAW,'chart object'),
           )
         );
-    }    
-    
+    }
+
     /**
      * Describes the parameters for debugging.
      *
+     * @param string      $classname
+     * @param int|string  $reportid
+     * @param null|string $custom Données au format json.
+     * @param null|array  $criterias
+     *
      * @return array
-     */    
+     */
     public static function get_reportdataset($classname,$reportid, $custom = null, $criterias = null) {
-      
-      raise_memory_limit(MEMORY_EXTRA);
-      
-      $class = 'local_apsolu\local\statistics\\'.$classname.'\report'; 
-      $reportObj = new $class();
-      
 
-      // Check if report is defined as a rules
-      if (!is_null ($reportid)) {
-        $report = $reportObj->getReport($reportid);
-        if (!is_null ($report) && property_exists($report, "values")) {  
-          $custom = json_encode($report->values);
-        }
-      }  
+        raise_memory_limit(MEMORY_EXTRA);
 
-      $condition = json_decode($custom);
-              
-      if(!property_exists($condition, "datatype")) {
-        // custom report
-        if ($classname == 'population') {
-          $params = array("WithEnrolments" => $reportObj->WithEnrolments,"WithComplementary" => $reportObj->WithComplementary);
+        $class = 'local_apsolu\local\statistics\\'.$classname.'\report';
+        $reportObj = new $class();
+
+        // Check if report is defined as a rules
+        if (!is_null ($reportid)) {
+            $report = $reportObj->getReport($reportid);
+            if (!is_null ($report) && property_exists($report, "values")) {
+                $custom = json_encode($report->values);
+            }
         }
-        if ($classname == 'programme') {
-          $params = array("WithProgramme" => $reportObj->WithProgramme);
-        }        
-        if (!is_null($criterias)){
-          $params = array_merge($params,$criterias);
+
+        $condition = json_decode($custom);
+
+        if(!property_exists($condition, "datatype")) {
+            // custom report
+            if ($classname == 'population') {
+                $params = array("WithEnrolments" => $reportObj->WithEnrolments,"WithComplementary" => $reportObj->WithComplementary);
+            }
+            if ($classname == 'programme') {
+                $params = array("WithProgramme" => $reportObj->WithProgramme);
+            }
+            if (!is_null($criterias)){
+                $params = array_merge($params,$criterias);
+            }
+            $data = call_user_func(array($class, $condition->method),$params);
+
+            return array('success' => true,
+            'columns' => json_encode($condition->columns),
+            'data' => json_encode(array_values($data)),
+            'orders' => json_encode($condition->orders),
+            'filters' => json_encode($condition->filters),
+              );
+        } else {
+            // Report using querybuilder
+            $display = $reportObj->getReportDisplay($condition->datatype);
+            $data = $reportObj->getReportData($custom,$criterias);
+
+            return array('success' => true,
+            'data' => json_encode(array_values($data)),
+            'columns' => json_encode($display['columns']),
+            'orders' => json_encode($display['orders']),
+            'filters' => json_encode($display['filters']),
+            );
         }
-        $data = call_user_func(array($class, $condition->method),$params);
-                  
-        return array('success' => true,
-          'columns'=>json_encode($condition->columns),
-          'data'=>json_encode(array_values($data)),
-          'orders'=>json_encode($condition->orders),
-          'filters'=>json_encode($condition->filters),
-          );
-      } else {
-        // Report using querybuilder
-        $display = $reportObj->getReportDisplay($condition->datatype); 
-        $data = $reportObj->getReportData($custom,$criterias);
-        
-        return array('success' => true,
-          'data'=>json_encode(array_values($data)),
-          'columns'=>json_encode($display['columns']),
-          'orders'=>json_encode($display['orders']),
-          'filters'=>json_encode($display['filters']),
-        );        
-      }
-      
-      return array('success' => false,'columns'=> '','data'=>json_encode(get_string("statistics_noavailabledata","local_apsolu")));
+
+        return array('success' => false,'columns' => '','data' => json_encode(get_string("statistics_noavailabledata","local_apsolu")));
     }
-    
+
     /**
      * Describes the parameters for get_reportdataset.
      *
@@ -1117,17 +1164,17 @@ class local_apsolu_webservices extends external_api {
             'reportid' => new external_value(PARAM_TEXT,'Identifiant du rapport',VALUE_DEFAULT, null, NULL_ALLOWED),
             'querybuilder' => new external_value(PARAM_RAW,'Requête customisée',VALUE_DEFAULT, null, NULL_ALLOWED),
             'criterias' => new external_value(PARAM_RAW,'filtres de customisation',VALUE_DEFAULT, null, NULL_ALLOWED),
-          ) 
-        );  
+          )
+        );
     }
-    
+
     /**
      * Describes the get_reportdataset return value.
      *
      * @return external_single_structure
      */
     public static function get_reportdataset_returns() {
-      return new external_single_structure(
+        return new external_single_structure(
         array(
           'success' => new external_value(PARAM_BOOL, get_string('ws_value_boolean', 'local_apsolu'),VALUE_DEFAULT, null, NULL_ALLOWED),
           'columns' => new external_value(PARAM_RAW,'report column',VALUE_DEFAULT, null, NULL_ALLOWED),
@@ -1136,7 +1183,5 @@ class local_apsolu_webservices extends external_api {
           'filters' => new external_value(PARAM_RAW,'report columns filters type',VALUE_DEFAULT, null, NULL_ALLOWED),
           )
         );
-    }      
-    
-    
+    }
 }

@@ -16,6 +16,7 @@
 
 /**
  * Classe faisant le lien entre les classes PHP apsolu et la base de données Moodle.
+ *
  * Elle regroupe les méthodes de base communes à tous les objets apsolu.
  *
  * @package    local_apsolu
@@ -25,11 +26,20 @@
 
 namespace local_apsolu\core;
 
+/**
+ * Classe faisant le lien entre les classes PHP apsolu et la base de données Moodle.
+ *
+ * Elle regroupe les méthodes de base communes à tous les objets apsolu.
+ *
+ * @package    local_apsolu
+ * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 abstract class record {
     /**
      * Affiche une représentation textuelle de l'objet.
      *
-     * @return string.
+     * @return string
      */
     public function __tostring() {
         return $this->name;

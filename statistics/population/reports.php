@@ -36,14 +36,14 @@ $PAGE->requires->css('/local/apsolu/lib/jquery/Datatables/dataTables.min.css');
 // Data
 $data = new stdClass();
 if ($CFG->is_siuaps_rennes){
-  $data->is_siuaps_rennes = $CFG->is_siuaps_rennes; 
+    $data->is_siuaps_rennes = $CFG->is_siuaps_rennes;
 }
- 
+
 $report = new report();
 $reportid = optional_param('reportid', null, PARAM_TEXT);
 $reportdata = array($report->getReport(),$reportid);
 $mform = new local_apsolu_statistics_report_form(null, $reportdata);
- 
+
 echo $OUTPUT->header();
 echo $OUTPUT->tabtree($tabtree, $page);
 $mform->display();

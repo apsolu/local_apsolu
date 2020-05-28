@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Classe pour le formulaire permettant de configurer les sites de pratique.
+ *
  * @package    local_apsolu
  * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,11 +27,20 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/formslib.php');
 
 /**
- * Form class to create or to edit an city.
+ * Classe pour le formulaire permettant de configurer les sites de pratique.
+ *
+ * @package    local_apsolu
+ * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class local_apsolu_courses_cities_edit_form extends moodleform {
+    /**
+     * Définit les champs du formulaire.
+     *
+     * @return void
+     */
     protected function definition() {
-        global $CFG, $DB;
+        global $CFG;
 
         $mform = $this->_form;
         $city = $this->_customdata['city'];
@@ -68,7 +79,8 @@ class local_apsolu_courses_cities_edit_form extends moodleform {
      *
      * @param array $data
      * @param array $files
-     * @return array the errors that were found
+     *
+     * @return array The errors that were found.
      */
     public function validation($data, $files) {
         global $DB;

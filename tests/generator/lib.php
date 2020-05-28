@@ -41,9 +41,7 @@ class local_apsolu_generator extends testing_module_generator {
     /**
      * Function to create dummy data category.
      *
-     * @param string $event
-     *
-     * @return stdClass course object
+     * @return stdClass Course object.
      */
     public function get_category_data() {
         // Data.

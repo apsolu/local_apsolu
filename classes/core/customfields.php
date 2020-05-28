@@ -24,7 +24,19 @@
 
 namespace local_apsolu\core;
 
+/**
+ * Fonctions pour le module apsolu.
+ *
+ * @package    local_apsolu
+ * @copyright  2018 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class customfields {
+    /**
+     * Retourne la liste des champs personnalisés APSOLU indéxés par nom abrégé.
+     *
+     * @return array
+     */
     public static function getCustomFields() {
         global $DB;
 

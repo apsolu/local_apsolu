@@ -15,10 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Tasks to synchronise students
+ * Classe représentant la tâche pour notifier les utilisateurs d'un paiement dû.
  *
- * @package    local
- * @subpackage apsolu
+ * @package    local_apsolu
  * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,12 +27,29 @@ namespace local_apsolu\task;
 use stdClass;
 use UniversiteRennes2\Apsolu\Payment as Payment;
 
+/**
+ * Classe représentant la tâche pour notifier les utilisateurs d'un paiement dû.
+ *
+ * @package    local_apsolu
+ * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class send_dunnings extends \core\task\scheduled_task {
+    /**
+     * Retourne le nom de la tâche.
+     *
+     * @return string
+     */
     public function get_name() {
         // Shown in admin screens.
         return get_string('task_send_dunnings', 'local_apsolu');
     }
 
+    /**
+     * Execute la tâche.
+     *
+     * @return void
+     */
     public function execute() {
         global $CFG, $DB;
 

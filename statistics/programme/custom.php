@@ -41,10 +41,10 @@ $PAGE->requires->css( new moodle_url($CFG->wwwroot . '/local/apsolu/lib/jquery/b
 
 
 if ($CFG->is_siuaps_rennes){
-  $data->is_siuaps_rennes = $CFG->is_siuaps_rennes; 
+    $data->is_siuaps_rennes = $CFG->is_siuaps_rennes;
 }
-$data->Filters = $report->getFilters();           
-$data->langcode = ($USER->lang != '' ? $USER->lang : 'fr'); 
+$data->Filters = $report->getFilters();
+$data->langcode = ($USER->lang != '' ? $USER->lang : 'fr');
 
 echo $OUTPUT->header();
 echo $OUTPUT->tabtree($tabtree, $page);

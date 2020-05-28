@@ -32,8 +32,17 @@ use moodle_exception;
 use moodle_url;
 use stdClass;
 
+/**
+ * Classe gérant les créneaux horaires APSOLU (cours Moodle).
+ *
+ * @package    local_apsolu
+ * @copyright  2019 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class course extends record {
-    /** @const Nom de la table en base de données. */
+    /**
+     * Nom de la table de référence en base de données.
+     */
     const TABLENAME = 'apsolu_courses';
 
     /** @var int|string Identifiant numérique du créneau horaire. */
@@ -377,7 +386,7 @@ class course extends record {
             $blockinstance->parentcontextid = $context->id;
             $blockinstance->showinsubcontexts = 0;
             $blockinstance->pagetypepattern = 'course-view-*';
-            $blockinstance->subpagepattern = NULL;
+            $blockinstance->subpagepattern = null;
             $blockinstance->defaultregion = 'side-pre'; // Dans la colonne de gauche.
             $blockinstance->defaultweight = -1; // Avant le bloc "Paramètres du cours".
             $blockinstance->configdata = '';

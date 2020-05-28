@@ -1,3 +1,62 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_apsolu/grades
+
+    Template Moodle pour afficher la page de saisie des notes.
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * action
+    * periods
+        * active
+        * shortname
+        * label
+    * count_saved_students
+    * require_grades
+    * count_users
+    * users
+        * htmlpicture
+        * lastname
+        * firstname
+        * institution
+        * ufr
+        * lmd
+        * rolename
+        * grades
+    * count_overall_users
+        * courseid
+
+    Example context (json):
+    {
+        "action": "https://apsolu.fr/action",
+        "periods": [],
+        "count_saved_students": 0,
+        "require_grades": "",
+        "count_users": 0,
+        "users": [],
+        "count_overall_users": 0
+    }
+}}
 <ul class="nav nav-tabs" role="tablist">
 {{#periods}}
 	<li class="nav-item">

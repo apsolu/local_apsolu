@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Classe pour gérer un formulaire Moodle.
+ *
  * @package    local_apsolu
  * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -24,7 +26,19 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/formslib.php');
 
+/**
+ * Classe pour gérer un formulaire Moodle.
+ *
+ * @package    local_apsolu
+ * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class local_apsolu_statistics_report_form extends moodleform {
+    /**
+     * Définit les champs du formulaire.
+     *
+     * @return void
+     */
     protected function definition() {
         $mform = $this->_form;
 
@@ -35,11 +49,10 @@ class local_apsolu_statistics_report_form extends moodleform {
         foreach ($reports as $report) {
             $options[$report->id] = $report->label;
         }
-        
+
         $reportselect = $mform->addElement('select', 'reportid', get_string('statistics_select_reports', 'local_apsolu'), $options);
         if (!is_null ($reportid)) {
-          $reportselect->setSelected($reportid);
-        }        
-
+            $reportselect->setSelected($reportid);
+        }
     }
 }

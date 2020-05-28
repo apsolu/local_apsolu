@@ -26,10 +26,19 @@ namespace UniversiteRennes2\Apsolu;
 
 require_once($CFG->dirroot.'/user/selector/lib.php');
 
+/**
+ * Affiche le widget de recherche d'utilisateurs sur la page de paiement.
+ *
+ * @package    local_apsolu
+ * @copyright  2018 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class local_apsolu_payment_user_selector extends \user_selector_base {
     /**
      * Candidate users
+     *
      * @param string $search
+     *
      * @return array
      */
     public function find_users($search) {
@@ -86,6 +95,13 @@ class local_apsolu_payment_user_selector extends \user_selector_base {
     }
 }
 
+/**
+ * Retourne la liste des enseignants.
+ *
+ * @param int|string $courseid
+ *
+ * @return array
+ */
 function get_teachers($courseid) {
     global $DB;
 
@@ -99,10 +115,19 @@ function get_teachers($courseid) {
     return $DB->get_records_sql($sql, array('courseid' => $courseid));
 }
 
+/**
+ * Affiche le widget de recherche d'utilisateurs sur la page de la FFSU.
+ *
+ * @package    local_apsolu
+ * @copyright  2018 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class local_apsolu_courses_federation_user_selector extends \user_selector_base {
     /**
      * Candidate users
+     *
      * @param string $search
+     *
      * @return array
      */
     public function find_users($search) {

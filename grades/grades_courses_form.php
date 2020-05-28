@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Classe pour le formulaire permettant de sélectionner le cours à noter.
+ *
  * @package    local_apsolu
  * @copyright  2018 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,16 +27,23 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/formslib.php');
 
 /**
- * Form class to...
+ * Classe pour le formulaire permettant de sélectionner le cours à noter.
+ *
+ * @package    local_apsolu
+ * @copyright  2018 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class local_apsolu_grades_form extends moodleform {
+    /**
+     * Définit les champs du formulaire.
+     *
+     * @return void
+     */
     protected function definition() {
-        global $CFG, $DB;
-
         $mform = $this->_form;
         list($courses) = $this->_customdata;
 
-        $select = $mform->addElement('select', 'courseid', get_string('mycourses'), $courses);
+        $mform->addElement('select', 'courseid', get_string('mycourses'), $courses);
         $mform->setType('courseid', PARAM_TEXT);
         $mform->addRule('courseid', get_string('required'), 'required', null, 'client');
 

@@ -26,14 +26,21 @@ namespace local_apsolu\core;
 
 use stdClass;
 
+/**
+ * Classe gérant les présences dans Apsolu.
+ *
+ * @package    local_apsolu
+ * @copyright  2018 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class attendance {
     /**
      * Méthode permettant de récupérer le nombre de présences par étudiant et par semestre à partir d'un ID d'activité.
      *
-     * @param int $categorid ID de l'activité sportive.
-     * @param bool $active Si vrai, récupère uniquement les présences du semestre courant.
+     * @param int|string $categoryid ID de l'activité sportive.
+     * @param bool       $active     Si vrai, récupère uniquement les présences du semestre courant.
      *
-     * @return array[userid][] = '4'.
+     * @return array Tableau sous la forme array[userid][] = '4'.
      */
     public static function countActivityPresences($categoryid, $active = true) {
         global $DB;
@@ -83,7 +90,9 @@ class attendance {
     /**
      * Méthode permettant de récupérer les présences par étudiant et par semestre à partir d'un ID d'activité.
      *
-     * @return array[userid][] = 'Sem. 1 : 4'.
+     * @param int|string $categoryid ID de l'activité sportive.
+     *
+     * @return array Tableau sous la forme array[userid][] = 'Sem. 1 : 4'.
      */
     public static function getActivityPresences($categoryid) {
         global $DB;
@@ -115,7 +124,9 @@ class attendance {
     /**
      * Méthode permettant de récupérer les présences par étudiant et par semestre à partir d'un ID de cours.
      *
-     * @return array[userid][] = 'Sem. 1 : 4'.
+     * @param int|string $courseid ID du créneau.
+     *
+     * @return array Tableau sous la forme array[userid][] = 'Sem. 1 : 4'.
      */
     public static function getCoursePresences($courseid) {
         global $DB;
@@ -179,7 +190,7 @@ class attendance {
      *
      * @param int|string $userid Identifiant Moodle de l'utilisateur.
      *
-     * @return array[courseid] = (object) ['courseid' => courseid, 'fullname' => nom complet du cours, 'session' => nom de la session, 'status' => statut de la présence].
+     * @return array Tableau sous la forme array[courseid] = (object) ['courseid' => courseid, 'fullname' => nom complet du cours, 'session' => nom de la session, 'status' => statut de la présence].
      */
     public static function getUserPresencesPerCourses($userid) {
         global $DB;
@@ -217,7 +228,9 @@ class attendance {
     /**
      * Méthode permettant de récupérer toutes les présences par méthode d'inscription à partir d'un ID d'un étudiant.
      *
-     * @return array[enrolid] = (object) ['id' => enrolid, 'total' => total de présences].
+     * @param int|string $userid Identifiant Moodle de l'utilisateur.
+     *
+     * @return array Tableau sous la forme array[enrolid] = (object) ['id' => enrolid, 'total' => total de présences].
      */
     public static function getUserPresences($userid) {
         global $DB;

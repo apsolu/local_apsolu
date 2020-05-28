@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Classe pour le formulaire permettant de configurer les activités sportives.
+ *
  * @package    local_apsolu
  * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,17 +27,24 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/formslib.php');
 
 /**
- * Form class to create or to edit a category.
+ * Classe pour le formulaire permettant de configurer les activités sportives.
+ *
+ * @package    local_apsolu
+ * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class local_apsolu_courses_categories_edit_form extends moodleform {
+    /**
+     * Définit les champs du formulaire.
+     *
+     * @return void
+     */
     protected function definition() {
-        global $CFG, $DB;
+        global $CFG;
 
         $mform = $this->_form;
         $groupings = $this->_customdata['groupings'];
         $category = $this->_customdata['category'];
-        $categoryid = $category->id;
-        $parent = $category->parent;
 
         // Categories field.
         $mform->addElement('select', 'parent', get_string('grouping', 'local_apsolu'), $groupings);
@@ -112,8 +121,6 @@ class local_apsolu_courses_categories_edit_form extends moodleform {
      * @return array the errors that were found
      */
     public function validation($data, $files) {
-        global $DB;
-
         $errors = parent::validation($data, $files);
 
         // Is valid URL ?
