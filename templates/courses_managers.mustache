@@ -51,9 +51,9 @@
 	<a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=managers&action=edit">{{#str}}manager_add, local_apsolu{{/str}}</a>
 </p>
 
-{{^managers}}
+{{^count_managers}}
 <p class="alert alert-info">{{#str}}no_manager, local_apsolu{{/str}}</p>
-{{/managers}}
+{{/count_managers}}
 
 {{#count_managers}}
 <table class="table table-striped table-sortable">
