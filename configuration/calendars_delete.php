@@ -80,7 +80,7 @@ if ($confirm === $deletehash) {
     $confirmbutton = new single_button($confirmurl, get_string('delete'), 'post');
 
     echo $OUTPUT->header();
-    echo $OUTPUT->heading(get_string('settings_configuration_calendarstypes', 'local_apsolu'));
+    echo $OUTPUT->heading(get_string('calendars_types', 'local_apsolu'));
 
     echo $OUTPUT->confirm($message, $confirmbutton, $returnurl);
     echo $OUTPUT->footer();

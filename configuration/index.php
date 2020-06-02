@@ -28,20 +28,25 @@ require_once($CFG->libdir . '/adminlib.php');
 $page = optional_param('page', 'calendars', PARAM_ALPHA);
 
 // Set tabs.
-$pages = array('calendars', 'calendarstypes', 'contacts', 'dates', 'header');
+$pages = array();
+$pages['calendars'] = 'calendars';
+$pages['calendarstypes'] = 'calendars_types';
+$pages['contacts'] = 'contacts';
+$pages['dates'] = 'dates';
+$pages['headermessage'] = 'header_message';
 
 $tabtree = array();
-foreach ($pages as $pagename) {
+foreach ($pages as $pagename => $name) {
     $url = new moodle_url('/local/apsolu/index.php', array('page' => $pagename));
-    $tabtree[] = new tabobject($pagename, $url, get_string('settings_configuration_'.$pagename, 'local_apsolu'));
+    $tabtree[] = new tabobject($name, $url, get_string($name, 'local_apsolu'));
 }
 
 // Set default tabs.
-if (in_array($page, $pages, true) === false) {
-    $page = $pages[0];
+if (isset($pages[$page]) === false) {
+    $page = $pages['calendars'];
 }
 
 // Setup admin access requirement.
 admin_externalpage_setup('local_apsolu_configuration_'.$page);
 
-require(__DIR__.'/'.$page.'.php');
+require(__DIR__.'/'.$pages[$page].'.php');

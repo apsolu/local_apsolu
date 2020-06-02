@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot.'/local/apsolu/configuration/calendarstypes_form.php');
+require_once($CFG->dirroot.'/local/apsolu/configuration/calendars_types_form.php');
 
 $typeid = optional_param('typeid', 0, PARAM_INT);
 
@@ -42,7 +42,7 @@ if ($instance === false) {
 
 // Build form.
 $customdata = array($instance);
-$mform = new local_apsolu_calendarstypes_edit_form(null, $customdata);
+$mform = new local_apsolu_calendars_types_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
     // Save data.
@@ -59,11 +59,11 @@ if ($data = $mform->get_data()) {
     // Display notification and display elements list.
     $notificationform = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
 
-    require(__DIR__.'/calendarstypes_view.php');
+    require(__DIR__.'/calendars_types_view.php');
 } else {
     // Display form.
     echo $OUTPUT->header();
-    echo $OUTPUT->heading(get_string('settings_configuration_calendarstypes', 'local_apsolu'));
+    echo $OUTPUT->heading(get_string('calendars_types', 'local_apsolu'));
 
     $mform->display();
     echo $OUTPUT->footer();

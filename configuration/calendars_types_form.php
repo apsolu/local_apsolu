@@ -33,7 +33,7 @@ require_once($CFG->libdir . '/formslib.php');
  * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_apsolu_calendarstypes_edit_form extends moodleform {
+class local_apsolu_calendars_types_edit_form extends moodleform {
     /**
      * Définit les champs du formulaire.
      *

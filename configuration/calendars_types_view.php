@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Contrôleur pour les pages d'administration des types de calendriers.
+ * Page pour lister les types de calendriers.
  *
  * @package    local_apsolu
  * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
@@ -24,12 +24,25 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$action = optional_param('action', 'view', PARAM_ALPHA);
+echo $OUTPUT->header();
+echo $OUTPUT->heading(get_string('calendars_types', 'local_apsolu'));
 
-$actions = array('view', 'edit');
+$calendars_types = $DB->get_records('apsolu_calendars_types', $conditions = array(), $sort = 'name');
 
-if (in_array($action, $actions, $strict = true) === false) {
-    $action = 'view';
+$data = new stdClass();
+$data->wwwroot = $CFG->wwwroot;
+$data->calendars_types = array();
+$data->count_calendars_types = 0;
+
+foreach ($calendars_types as $calendar) {
+    $data->calendars_types[] = $calendar;
+    $data->count_calendars_types++;
 }
 
-require(__DIR__.'/calendarstypes_'.$action.'.php');
+if (isset($notificationform)) {
+    $data->notification = $notificationform;
+}
+
+echo $OUTPUT->render_from_template('local_apsolu/configuration_calendars_types', $data);
+
+echo $OUTPUT->footer();

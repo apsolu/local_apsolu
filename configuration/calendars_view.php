@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die;
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('settings_configuration_calendars', 'local_apsolu'));
+echo $OUTPUT->heading(get_string('calendars', 'local_apsolu'));
 
 $calendars = $DB->get_records('apsolu_calendars', $conditions = array(), $sort = 'name');
 $calendarstypes = $DB->get_records('apsolu_calendars_types', $conditions = array(), $sort = 'name');

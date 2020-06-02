@@ -55,7 +55,7 @@ if ($data = $mform->get_data()) {
 }
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('settings_configuration_header', 'local_apsolu'));
+echo $OUTPUT->heading(get_string('header_message', 'local_apsolu'));
 echo $notification;
 $mform->display();
 echo $OUTPUT->footer();

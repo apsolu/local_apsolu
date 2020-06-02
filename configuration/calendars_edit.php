@@ -104,7 +104,7 @@ if ($data = $mform->get_data()) {
 } else {
     // Display form.
     echo $OUTPUT->header();
-    echo $OUTPUT->heading(get_string('settings_configuration_calendarstypes', 'local_apsolu'));
+    echo $OUTPUT->heading(get_string('calendars_types', 'local_apsolu'));
 
     $mform->display();
     echo $OUTPUT->footer();

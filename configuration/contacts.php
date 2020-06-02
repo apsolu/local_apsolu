@@ -42,7 +42,7 @@ $customdata = array($defaults);
 $mform = new local_apsolu_contacts_form(null, $customdata);
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('settings_configuration_contacts', 'local_apsolu'));
+echo $OUTPUT->heading(get_string('contacts', 'local_apsolu'));
 
 if ($data = $mform->get_data()) {
     foreach ($attributes as $attribute) {

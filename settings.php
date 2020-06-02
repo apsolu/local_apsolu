@@ -92,17 +92,17 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     $ADMIN->add('apsolu', new admin_category('local_apsolu_configuration', get_string('settings_configuration', 'local_apsolu')));
 
     // Configuration > Adresse de contacts.
-    $str = get_string('settings_configuration_contacts', 'local_apsolu');
+    $str = get_string('contacts', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'contacts'));
     $ADMIN->add('local_apsolu_configuration', new admin_externalpage('local_apsolu_configuration_contacts', $str, $url, $capabilities));
 
     // Configuration > Calendriers.
-    $str = get_string('settings_configuration_calendars', 'local_apsolu');
+    $str = get_string('calendars', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'calendars'));
     $ADMIN->add('local_apsolu_configuration', new admin_externalpage('local_apsolu_configuration_calendars', $str, $url, $capabilities));
 
     // Configuration > Type de calendriers.
-    $str = get_string('settings_configuration_calendarstypes', 'local_apsolu');
+    $str = get_string('calendars_types', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'calendarstypes'));
     $ADMIN->add('local_apsolu_configuration', new admin_externalpage('local_apsolu_configuration_calendarstypes', $str, $url, $capabilities));
 
@@ -153,7 +153,7 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     }
 
     // Paiements > Dates.
-    $str = get_string('settings_configuration_dates', 'local_apsolu');
+    $str = get_string('dates', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'dates'));
     $ADMIN->add('local_apsolu_payment', new admin_externalpage('local_apsolu_configuration_dates', $str, $url, $capabilities));
 
@@ -178,7 +178,7 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     }
 
     // Présentation > Message d'entête.
-    $str = get_string('settings_configuration_header', 'local_apsolu');
+    $str = get_string('header_message', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'header'));
     $ADMIN->add('local_apsolu_appearance', new admin_externalpage('local_apsolu_configuration_header', $str, $url, $capabilities));
 
