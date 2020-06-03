@@ -24,21 +24,24 @@
 
 use UniversiteRennes2\Apsolu;
 
-require __DIR__.'/../../../config.php';
+require(__DIR__.'/../../../config.php');
 require_once($CFG->dirroot.'/enrol/select/locallib.php');
 
-$siteid = optional_param('siteid', 0, PARAM_INT);
+$cityid = optional_param('siteid', 0, PARAM_INT); // Garder pour rétro-compatibilité.
+if (empty($cityid) === true) {
+    $cityid = optional_param('cityid', 0, PARAM_INT);
+}
 
-$sites = $DB->get_records('apsolu_cities', $params = array(), $sort = 'name');
-if (isset($sites[$siteid]) === true) {
-    $sites[$siteid]->active = true;
+$cities = $DB->get_records('apsolu_cities', $params = array(), $sort = 'name');
+if (isset($cities[$cityid]) === true) {
+    $cities[$cityid]->active = true;
 } else {
-    $siteid = 0;
+    $cityid = 0;
 }
 
 $PAGE->set_url('/local/apsolu/presentation/summary.php');
 
-$title = get_string('courses', 'local_apsolu');
+$title = get_string('course_offerings', 'local_apsolu');
 
 $PAGE->set_context(context_system::instance());
 $PAGE->set_title($title);
@@ -56,74 +59,82 @@ $teachers = UniversiteRennes2\Apsolu\get_activities_teachers();
 
 $filters = array();
 
-$filters['sites'] = new \stdClass();
-$filters['sites']->label = 'Site de pratique';
-$filters['sites']->values = array();
+$filters['city'] = new \stdClass();
+$filters['city']->label = get_string('city', 'local_apsolu');
+$filters['city']->values = array();
 
-$filters['groupings'] = new \stdClass();
-$filters['groupings']->label = get_string('grouping', 'local_apsolu');
-$filters['groupings']->values = array();
+$filters['grouping'] = new \stdClass();
+$filters['grouping']->label = get_string('grouping', 'local_apsolu');
+$filters['grouping']->values = array();
 
-$filters['sports'] = new \stdClass();
-$filters['sports']->label = 'Activité';
-$filters['sports']->values = array();
+$filters['category'] = new \stdClass();
+$filters['category']->label = get_string('activity', 'local_apsolu');
+$filters['category']->values = array();
 
-$filters['areas'] = new \stdClass();
-$filters['areas']->label = 'Zone géographique';
-$filters['areas']->values = array();
+$filters['area'] = new \stdClass();
+$filters['area']->label = get_string('area', 'local_apsolu');
+$filters['area']->values = array();
 
-$filters['periods'] = new \stdClass();
-$filters['periods']->label = 'Période de l\'année';
-$filters['periods']->values = array('S1', 'S2');
+$filters['period'] = new \stdClass();
+$filters['period']->label = get_string('period', 'local_apsolu');
+$filters['period']->values = array('S1', 'S2'); // TODO: faire une requête en DB.
 
 $filters['times'] = new \stdClass();
-$filters['times']->label = 'Période de la journée';
+$filters['times']->label = get_string('time_of_day', 'local_apsolu');
 $filters['times']->values = array();
-$filters['times']->values[] = '7h00-12h00';
-$filters['times']->values[] = '12h00 - 13h30';
-$filters['times']->values[] = '13h30 - 17h00';
-$filters['times']->values[] = '17h00 - 22h00';
+$filters['times']->values[] = get_string('morning', 'local_apsolu');
+$filters['times']->values[] = get_string('midday', 'local_apsolu');
+$filters['times']->values[] = get_string('afternoon', 'local_apsolu');
+$filters['times']->values[] = get_string('evening', 'local_apsolu');
 
-$filters['weekdays'] = new \stdClass();
-$filters['weekdays']->label = 'Jour de la semaine';
-$filters['weekdays']->values = array();
-$filters['weekdays']->values[] = get_string('monday', 'calendar');
-$filters['weekdays']->values[] = get_string('tuesday', 'calendar');
-$filters['weekdays']->values[] = get_string('wednesday', 'calendar');
-$filters['weekdays']->values[] = get_string('thursday', 'calendar');
-$filters['weekdays']->values[] = get_string('friday', 'calendar');
-$filters['weekdays']->values[] = get_string('saturday', 'calendar');
-$filters['weekdays']->values[] = get_string('sunday', 'calendar');
+$filters['weekday'] = new \stdClass();
+$filters['weekday']->label = get_string('day_of_the_week', 'local_apsolu');
+$filters['weekday']->values = array();
+$filters['weekday']->values[] = get_string('monday', 'calendar');
+$filters['weekday']->values[] = get_string('tuesday', 'calendar');
+$filters['weekday']->values[] = get_string('wednesday', 'calendar');
+$filters['weekday']->values[] = get_string('thursday', 'calendar');
+$filters['weekday']->values[] = get_string('friday', 'calendar');
+$filters['weekday']->values[] = get_string('saturday', 'calendar');
+$filters['weekday']->values[] = get_string('sunday', 'calendar');
 
-$filters['locations'] = new \stdClass();
-$filters['locations']->label = 'Lieu';
-$filters['locations']->values = array();
+$filters['location'] = new \stdClass();
+$filters['location']->label = get_string('location', 'local_apsolu');
+$filters['location']->values = array();
 
-$filters['skills'] = new \stdClass();
-$filters['skills']->label = 'Niveau';
-$filters['skills']->values = array();
+$filters['skill'] = new \stdClass();
+$filters['skill']->label = get_string('skill', 'local_apsolu');
+$filters['skill']->values = array();
 
-$filters['roles'] = new \stdClass();
-$filters['roles']->label = 'Type d\'inscription';
-$filters['roles']->values = array();
+$filters['role'] = new \stdClass();
+$filters['role']->label = get_string('role', 'local_apsolu');
+$filters['role']->values = array();
 
 $filters['teachers'] = new \stdClass();
-$filters['teachers']->label = 'Enseignants';
+$filters['teachers']->label = get_string('teachers');
 $filters['teachers']->values = array();
+
+$jsondata = get_config('local_apsolu', 'json_course_offerings_ranges');
+$ranges = json_decode($jsondata);
 
 // category, site, activity, period, jour, start, end, level, zone geo, zone, enroltype, enseignant
 $courses = array();
-foreach (UniversiteRennes2\Apsolu\get_activities($siteid) as $activity) {
-    if (isset($courses[$activity->sport]) === false) {
-        $courses[$activity->sport] = new \stdClass();
-        $courses[$activity->sport]->id = $activity->sportid;
-        $courses[$activity->sport]->name = $activity->sport;
-        $courses[$activity->sport]->url = $activity->url;
-        $courses[$activity->sport]->description = $activity->description;
-        $courses[$activity->sport]->modal = (empty($activity->url) === false || empty($activity->description) === false);
-        $courses[$activity->sport]->courses = array();
+foreach (UniversiteRennes2\Apsolu\get_activities($cityid) as $activity) {
+    // TODO: la méthode get_activities() ne retourne pas le nom "officiel" de ces 3 champs.
+    $activity->category = $activity->sport;
+    $activity->categoryid = $activity->sportid;
+    $activity->city = $activity->site;
 
-        $filters['groupings']->values[$activity->domainid] = $activity->domain;
+    if (isset($courses[$activity->category]) === false) {
+        $courses[$activity->category] = new \stdClass();
+        $courses[$activity->category]->id = $activity->categoryid;
+        $courses[$activity->category]->name = $activity->category;
+        $courses[$activity->category]->url = $activity->url;
+        $courses[$activity->category]->description = $activity->description;
+        $courses[$activity->category]->modal = (empty($activity->url) === false || empty($activity->description) === false);
+        $courses[$activity->category]->courses = array();
+
+        $filters['grouping']->values[$activity->domainid] = $activity->domain;
     }
 
     $activity->weekday = get_string($activity->weekday, 'calendar');
@@ -140,45 +151,45 @@ foreach (UniversiteRennes2\Apsolu\get_activities($siteid) as $activity) {
 
     // Times.
     $time = array();
-    if ($activity->endtime < '12:00') {
+    if ($activity->endtime < $ranges->range1_end) {
         // Matin.
         $time[] = $filters['times']->values[0];
     }
 
-    if ($activity->starttime >= '12:00' && $activity->starttime < '13:30') {
+    if ($activity->starttime >= $ranges->range2_start && $activity->starttime < $ranges->range2_end) {
         // Midi.
         $time[] = $filters['times']->values[1];
     }
 
-    if ($activity->starttime >= '13:30' && $activity->starttime < '17:00') {
+    if ($activity->starttime >= $ranges->range3_start && $activity->starttime < $ranges->range3_end) {
         // Après-midi.
         $time[] = $filters['times']->values[2];
     }
 
-    if ($activity->starttime >= '17:00') {
+    if ($activity->starttime >= $ranges->range4_start) {
         // Soir.
         $time[] = $filters['times']->values[3];
     }
 
     $activity->time = implode(' ', $time);
 
-    if ($siteid === 0) {
+    if ($cityid === 0) {
         $activity->area = $activity->site.' - '.$activity->area;
     }
 
-    $courses[$activity->sport]->courses[] = $activity;
+    $courses[$activity->category]->courses[] = $activity;
 
 
     // Filtres.
-    foreach (array('area', 'location', 'skill', 'site', 'sport') as $type) {
-        if (in_array($activity->{$type}, $filters[$type.'s']->values, $strict = true) === false) {
-            $filters[$type.'s']->values[] = $activity->{$type};
+    foreach (array('area', 'category', 'city', 'location', 'skill') as $type) {
+        if (in_array($activity->{$type}, $filters[$type]->values, $strict = true) === false) {
+            $filters[$type]->values[] = $activity->{$type};
         }
     }
 
     foreach ($activity->roles as $role) {
-        if (isset($filters['roles']->values[$role->id]) === false) {
-            $filters['roles']->values[$role->id] = $role->name;
+        if (isset($filters['role']->values[$role->id]) === false) {
+            $filters['role']->values[$role->id] = $role->name;
         }
     }
 
@@ -192,29 +203,62 @@ foreach (UniversiteRennes2\Apsolu\get_activities($siteid) as $activity) {
 ksort($courses);
 $courses = array_values($courses);
 
-$filters['roles']->values = array_values($filters['roles']->values);
+$filters['role']->values = array_values($filters['role']->values);
+
 ksort($filters['teachers']->values);
 $filters['teachers']->values = array_values($filters['teachers']->values);
-unset($filters['teachers'], $filters['roles'], $filters['locations'], $filters['sites'], $filters['skills']);
+
 foreach ($filters as $name => $filter) {
-    if (in_array($name, array('periods', 'weekdays', 'teachers', 'times'), $strict = true) === false) {
-        sort($filter->values);
+    if (in_array($name, array('period', 'teachers', 'times', 'weekday'), $strict = true) === false) {
+        sort($filter->values, SORT_LOCALE_STRING);
     }
 
-    $filter->html = \html_writer::select($filter->values, $name, $selected = '', $nothing = false, $attributes = array('class' => 'apsolu-enrol-selects', 'multiple' => 'multiple'));
+    $attributes = array('class' => 'apsolu-enrol-selects', 'multiple' => 'multiple');
+    $filter->html = \html_writer::select($filter->values, $name, $selected = '', $nothing = false, $attributes);
 }
 
 $data = array();
 $data['wwwroot'] = $CFG->wwwroot;
 $data['courses'] = $courses;
-if (isset($sites[$siteid]->name) === true) {
-    $data['selected_site'] = $sites[$siteid]->name;
+if (isset($cities[$cityid]->name) === true) {
+    $data['selected_site'] = $cities[$cityid]->name;
 } else {
     $data['selected_site'] = '';
 }
-$data['sites'] = array_values($sites);
+$data['sites'] = array_values($cities);
 $data['sites_single'] = (count($data['sites']) < 2);
+
+$data['count_columns'] = 0;
+$jsondata = get_config('local_apsolu', 'json_course_offerings_columns');
+foreach (json_decode($jsondata) as $column => $value) {
+    if (empty($value) === false) {
+        $data['count_columns']++;
+    }
+    $data[$column] = $value;
+}
+
+$jsondata = get_config('local_apsolu', 'json_course_offerings_filters');
+foreach (json_decode($jsondata) as $filter => $value) {
+    if (empty($value) === false) {
+        continue;
+    }
+
+    // Pattern: show_grouping_filter.
+    $filtername = substr($filter, 5, -7);
+    if (isset($filters[$filtername]) === false) {
+        debugging('Invalid filter: '.$filtername.', valid filters: '.implode(', ', array_keys($filters)));
+    }
+    unset($filters[$filtername]);
+}
+
+if (empty($data['selected_site']) === false && empty($data['show_city_column']) === false) {
+    // Si un site est sélectionné, et qu'on affiche d'habitude la colonne site ; alors on masque la colonne site.
+    $data['show_city_column'] = 0;
+    unset($filters['show_city_filter']);
+}
+
 $data['filters'] = array_values($filters);
+$data['count_filters'] = count($filters);
 $data['is_siuaps_rennes'] = isset($CFG->is_siuaps_rennes);
 
 echo $OUTPUT->render_from_template('local_apsolu/presentation_summary', $data);

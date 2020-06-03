@@ -22,6 +22,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die;
+
+require_once($CFG->dirroot.'/local/apsolu/locallib.php');
+
 /**
  * Post installation procedure.
  */
@@ -31,10 +35,15 @@ function xmldb_local_apsolu_install() {
     // Initialise les variables du plugin.
     set_config('payments_startdate', '', 'local_apsolu');
     set_config('payments_enddate', '', 'local_apsolu');
+
     set_config('functional_contact', '', 'local_apsolu');
     set_config('technical_contact', '', 'local_apsolu');
+
     set_config('apsoluheaderactive', 0, 'local_apsolu');
     set_config('apsoluheadercontent', '', 'local_apsolu');
+
+    // Initialise les paramètres de l'offre de formations.
+    UniversiteRennes2\Apsolu\set_initial_course_offerings_settings();
 
     // Ajoute les différents types de présences.
     $statuses = array('present', 'late', 'excused', 'absent');

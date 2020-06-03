@@ -24,6 +24,8 @@
 
 namespace UniversiteRennes2\Apsolu;
 
+defined('MOODLE_INTERNAL') || die;
+
 require_once($CFG->dirroot.'/user/selector/lib.php');
 
 /**
@@ -186,4 +188,51 @@ class local_apsolu_courses_federation_user_selector extends \user_selector_base 
             'accesscontext' => $this->accesscontext,
         );
     }
+}
+
+/**
+ * Initialise les paramètres par défaut pour l'offre de formation.
+ *
+ * @return void
+ */
+function set_initial_course_offerings_settings() {
+    // Configure les colonnes à afficher sur la page de présentation de l'offre de formations.
+    $columns = new \stdClass();
+    $columns->show_city_column = 1;
+    $columns->show_grouping_column = 0;
+    $columns->show_category_column = 0;
+    $columns->show_area_column = 1;
+    $columns->show_period_column = 1;
+    $columns->show_times_column = 1;
+    $columns->show_weekday_column = 1;
+    $columns->show_location_column = 1;
+    $columns->show_skill_column = 1;
+    $columns->show_role_column = 1;
+    $columns->show_teachers_column = 1;
+    set_config('json_course_offerings_columns', json_encode($columns), 'local_apsolu');
+
+    // Configure les filtres à afficher sur la page de présentation de l'offre de formations.
+    $filters = new \stdClass();
+    $filters->show_city_filter = 0;
+    $filters->show_grouping_filter = 0;
+    $filters->show_category_filter = 1;
+    $filters->show_area_filter = 1;
+    $filters->show_period_filter = 1;
+    $filters->show_times_filter = 1;
+    $filters->show_weekday_filter = 1;
+    $filters->show_location_filter = 0;
+    $filters->show_skill_filter = 0;
+    $filters->show_role_filter = 0;
+    $filters->show_teachers_filter = 0;
+    set_config('json_course_offerings_filters', json_encode($filters), 'local_apsolu');
+
+    // Configure la définition des plages horaires pour les périodes de la journée.
+    $ranges = new \stdClass();
+    $ranges->range1_end = '12:30';
+    $ranges->range2_start = '11:30';
+    $ranges->range2_end = '14:00';
+    $ranges->range3_start = '13:30';
+    $ranges->range3_end = '18:30';
+    $ranges->range4_start = '18:30';
+    set_config('json_course_offerings_ranges', json_encode($ranges), 'local_apsolu');
 }

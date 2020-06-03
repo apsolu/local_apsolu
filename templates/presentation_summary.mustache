@@ -30,6 +30,17 @@
     * selected_site
     * sites_single
     * sites
+    * show_city_column
+    * show_grouping_column
+    * show_category_column
+    * show_area_column
+    * show_period_column
+    * show_times_column
+    * show_weekday_column
+    * show_location_column
+    * show_skill_column
+    * show_role_column
+    * show_teachers_column
     * filters
         * name
         * label
@@ -61,7 +72,20 @@
         "selected_site": 0,
         "sites_single": 0,
         "sites": [],
+        "show_city_column": 0,
+        "show_grouping_column": 0,
+        "show_category_column": 0,
+        "show_area_column": 0,
+        "show_period_column": 0,
+        "show_times_column": 0,
+        "show_weekday_column": 0,
+        "show_location_column": 0,
+        "show_skill_column": 0,
+        "show_role_column": 0,
+        "show_teachers_column": 0,
+        "count_filters": 0,
         "filters": [],
+        "count_columns": 0,
         "courses": []
     }
 }}
@@ -83,13 +107,14 @@
 
         {{#sites}}
         <li class="list-inline-item">
-            <a class="btn {{#active}}btn-success active{{/active}}{{^active}}btn-default{{/active}}" href="{{wwwroot}}/local/apsolu/presentation/summary.php?siteid={{id}}">{{name}}</a>
+            <a class="btn {{#active}}btn-success active{{/active}}{{^active}}btn-default{{/active}}" href="{{wwwroot}}/local/apsolu/presentation/summary.php?cityid={{id}}">{{name}}</a>
         </li>
         {{/sites}}
     </ul>
     {{/sites_single}}
 
     <!-- Bloc pour filtrer le tableau. -->
+    {{#count_filters}}
     <aside class="well">
         <h3>Filtres</h3>
         <div class="row mb-2">
@@ -101,28 +126,29 @@
           {{/filters}}
         </div>
     </aside>
+    {{/count_filters}}
 
     <!-- Liste des cours. -->
     <table class="table table-bordered table-sorter2 table-sortable" id="apsolu-enrol-select">
       <thead>
         <tr>
-            <th class="col-md-1{{#selected_site}} hide{{/selected_site}}" data-column="sites">{{#str}}city, local_apsolu{{/str}}</th>
-            <th class="col-md-1 hide" data-column="sports">{{#str}}category, local_apsolu{{/str}}</th>
-            <th class="col-md-1 hide" data-column="groupings">{{#str}}grouping, local_apsolu{{/str}}</th>
-            <th class="col-md-1" data-column="periods">{{#str}}period, local_apsolu{{/str}}</th>
-            <th class="col-md-1" data-column="weekdays">{{#str}}weekday, local_apsolu{{/str}}</th>
-            <th class="col-md-1" data-column="times">{{#str}}times, local_apsolu{{/str}}</th>
-            <th class="col-md-2" data-column="areas">{{#str}}area, local_apsolu{{/str}}</th>
-            <th class="col-md-2" data-column="locations">{{#str}}location, local_apsolu{{/str}}</th>
-            <th class="col-md-1" data-column="skills">{{#str}}skill, local_apsolu{{/str}}</th>
-            <th class="col-md-1" data-column="roles">{{#str}}role, local_apsolu{{/str}}</th>
-            <th class="col-md-2" data-column="teachers">{{#str}}teachers{{/str}}</th>
+            <th class="col-md-1{{^show_city_column}} hide{{/show_city_column}}" data-column="city">{{#str}}city, local_apsolu{{/str}}</th>
+            <th class="col-md-1{{^show_category_column}} hide{{/show_category_column}}" data-column="category">{{#str}}activity, local_apsolu{{/str}}</th>
+            <th class="col-md-1{{^show_grouping_column}} hide{{/show_grouping_column}}" data-column="grouping">{{#str}}grouping, local_apsolu{{/str}}</th>
+            <th class="col-md-1{{^show_period_column}} hide{{/show_period_column}}" data-column="period">{{#str}}period, local_apsolu{{/str}}</th>
+            <th class="col-md-1{{^show_weekday_column}} hide{{/show_weekday_column}}" data-column="weekday">{{#str}}weekday, local_apsolu{{/str}}</th>
+            <th class="col-md-1{{^show_times_column}} hide{{/show_times_column}}" data-column="times">{{#str}}times, local_apsolu{{/str}}</th>
+            <th class="col-md-2{{^show_area_column}} hide{{/show_area_column}}" data-column="area">{{#str}}area, local_apsolu{{/str}}</th>
+            <th class="col-md-2{{^show_location_column}} hide{{/show_location_column}}" data-column="location">{{#str}}location, local_apsolu{{/str}}</th>
+            <th class="col-md-1{{^show_skill_column}} hide{{/show_skill_column}}" data-column="skill">{{#str}}skill, local_apsolu{{/str}}</th>
+            <th class="col-md-1{{^show_role_column}} hide{{/show_role_column}}" data-column="role">{{#str}}role, local_apsolu{{/str}}</th>
+            <th class="col-md-2{{^show_teachers_column}} hide{{/show_teachers_column}}" data-column="teachers">{{#str}}teachers{{/str}}</th>
         </tr>
       </thead>
       <tbody>
       {{#courses}}
         <tr>
-          <th colspan="10">{{name}}
+          <th colspan="{{ count_columns }}">{{name}}
             {{#modal}}<button type="button" class="apsolu-modal-sports-descriptions-button" data-toggle="modal" data-target="#apsolu-modal-sports-descriptions-{{id}}"><img height="16px" width="16px" src="{{wwwroot}}/local/apsolu/pix/i/more.svg" alt="{{#str}}detailedmore{{/str}}" /></button>
 
             <div class="modal fade apsolu-modal-sports-descriptions" id="apsolu-modal-sports-descriptions-{{id}}" tabindex="-1" role="dialog" aria-labelledby="apsolu-modal-sports-descriptions-{{id}}-title">
@@ -148,23 +174,23 @@
         </tr>
         {{#courses}}
         <tr>
-          <td{{#selected_site}} class="hide"{{/selected_site}} data-column="sites" data-value="{{site}}">{{site}}</td>
-          <td class="hide" data-column="sports" data-value="{{sport}}">{{sport}}</td>
-          <td class="hide" data-column="groupings" data-value="{{domain}}">{{domain}}</td>
-          <td data-column="periods" data-value="{{generic_name}}">{{generic_name}}</td>
-          <td data-column="weekdays" data-value="{{weekday}}">{{weekday}}</td>
-          <td data-column="times" data-value="{{time}}">{{starttime}} - {{endtime}}</td>
-          <td data-column="areas" data-value="{{area}}">{{area}}</td>
-          <td data-column="locations" data-value="{{location}}">{{location}}</td>
-          <td data-column="skills" data-value="{{skill}}">{{skill}}{{#event}}<br />({{event}}){{/event}}</td>
-          <td data-column="roles">
+          <td{{^show_city_column}} class="hide"{{/show_city_column}} data-column="city" data-value="{{site}}">{{site}}</td>
+          <td{{^show_category_column}} class="hide"{{/show_category_column}} data-column="category" data-value="{{sport}}">{{sport}}</td>
+          <td{{^show_grouping_column}} class="hide"{{/show_grouping_column}} data-column="grouping" data-value="{{domain}}">{{domain}}</td>
+          <td{{^show_period_column}} class="hide"{{/show_period_column}} data-column="period" data-value="{{generic_name}}">{{generic_name}}</td>
+          <td{{^show_weekday_column}} class="hide"{{/show_weekday_column}} data-column="weekday" data-value="{{weekday}}">{{weekday}}</td>
+          <td{{^show_times_column}} class="hide"{{/show_times_column}} data-column="times" data-value="{{time}}">{{starttime}} - {{endtime}}</td>
+          <td{{^show_area_column}} class="hide"{{/show_area_column}} data-column="area" data-value="{{area}}">{{area}}</td>
+          <td{{^show_location_column}} class="hide"{{/show_location_column}} data-column="location" data-value="{{location}}">{{location}}</td>
+          <td{{^show_skill_column}} class="hide"{{/show_skill_column}} data-column="skill" data-value="{{skill}}">{{skill}}{{#event}}<br />({{event}}){{/event}}</td>
+          <td{{^show_role_column}} class="hide"{{/show_role_column}} data-column="role" data-value="{{#roles}}{{name}} {{/roles}}">
             <ul class="list-inline2 list-unstyled">
               {{#roles}}
               <li class="apsolu-roles-list-li"><span title="{{name}}" class="apsolu-roles apsolu-roles-{{shortname}}"></span><span class="sr-only2">{{name}}</span></li>
               {{/roles}}
             </ul>
           </td>
-          <td data-column="teachers">
+          <td{{^show_teachers_column}} class="hide"{{/show_teachers_column}} data-column="teachers" data-value="{{#teachers}}{{firstname}} {{lastname}} {{/teachers}}">
             <ul class="list-unstyled">
               {{#teachers}}
               <li class="apsolu-teachers-list-li">{{firstname}} {{lastname}}</li>

@@ -22,6 +22,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die;
+
+require_once($CFG->dirroot.'/local/apsolu/locallib.php');
+
 /**
  * Procédure de mise à jour.
  *
@@ -663,6 +667,15 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
                 $dbman->drop_field($table, $field);
             }
         }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
+    $version = 2020060300;
+    if ($result && $oldversion < $version) {
+        // Initialise les paramètres de l'offre de formations.
+        UniversiteRennes2\Apsolu\set_initial_course_offerings_settings();
 
         // Savepoint reached.
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');

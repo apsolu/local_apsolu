@@ -33,11 +33,11 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     // Ajoute un noeud Apsolu au menu d'administration.
     if (empty($ADMIN->locate('apsolu')) === true) {
         // Crée le noeud.
-        $apsolu_root = new admin_category('apsolu', get_string('settings_root', 'local_apsolu'));
+        $apsoluroot = new admin_category('apsolu', get_string('settings_root', 'local_apsolu'));
         // Tri les enfants par ordre alphabétique.
-        $apsolu_root->set_sorting($sort = true);
+        $apsoluroot->set_sorting($sort = true);
         // Place le noeud Apsolu avant le noeud Utilisateurs de Moodle.
-        $ADMIN->add('root', $apsolu_root, 'users');
+        $ADMIN->add('root', $apsoluroot, 'users');
     }
 
     // Activités physiques.
@@ -177,12 +177,17 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
         $ADMIN->add('apsolu', new admin_category('local_apsolu_appearance', get_string('appearance', 'admin')));
     }
 
+    // Présentation > Offre de formations.
+    $str = get_string('course_offerings', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'courseofferings'));
+    $ADMIN->add('local_apsolu_appearance', new admin_externalpage('local_apsolu_configuration_courseofferings', $str, $url, $capabilities));
+
     // Présentation > Message d'entête.
     $str = get_string('header_message', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'header'));
     $ADMIN->add('local_apsolu_appearance', new admin_externalpage('local_apsolu_configuration_header', $str, $url, $capabilities));
 
-    // Statistics
+    // Statistiques.
     $ADMIN->add('apsolu', new admin_category('local_apsolu_statistics', get_string('statistics', 'local_apsolu')));
     $ADMIN->add('local_apsolu_statistics', new admin_category('local_apsolu_statistics_population', get_string('statistics_population', 'local_apsolu')));
     $label = get_string('statistics_dashboard', 'local_apsolu');
