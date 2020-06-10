@@ -92,30 +92,33 @@ class report extends \local_apsolu\local\statistics\report {
   					WHERE ctx.instanceid = E.courseid) as teachers,
             AL.name as locationname,
             APSOLU_S.id,APSOLU_S.name as skillsname,
-            CONCAT(APSOLU_C.starttime,\'-\',APSOLU_C.endtime) as slotstartend
-
-      		FROM {user_enrolments} UE
-      		INNER JOIN {user} U ON U.id = UE.userid AND U.deleted = 0
+            CONCAT(APSOLU_C.starttime,\'-\',APSOLU_C.endtime) as slotstartend,
+            CASE WHEN MONTH(CAST(FROM_UNIXTIME(UE.timestart) as date)) > 8 THEN AG.grade1 ELSE AG.grade3 END AS practicegrade,
+            CASE WHEN MONTH(CAST(FROM_UNIXTIME(UE.timestart) as date)) > 8 THEN AG.grade2 ELSE AG.grade4 END AS theorygrade 
+                        
+          FROM {user_enrolments} UE
+          INNER JOIN {user} U ON U.id = UE.userid AND U.deleted = 0
           LEFT JOIN {user_info_data} Sexe ON Sexe.userid = U.id AND Sexe.fieldid = (select id from mdl_user_info_field where shortname = \'apsolusex\')
           LEFT JOIN {user_info_data} UFR ON UFR.userid = U.id AND UFR.fieldid = (select id from mdl_user_info_field where shortname = \'apsoluufr\')
           LEFT JOIN {user_info_data} LMD ON LMD.userid = U.id AND LMD.fieldid = (select id from mdl_user_info_field where shortname = \'apsolucycle\')
           LEFT JOIN {user_info_data} apsolucardpaid ON apsolucardpaid.userid = U.id AND apsolucardpaid.fieldid = (select id from mdl_user_info_field where shortname = \'apsolucardpaid\')
           LEFT JOIN {user_info_data} apsoluhighlevelathlete ON apsoluhighlevelathlete.userid = U.id AND apsoluhighlevelathlete.fieldid = (select id from mdl_user_info_field where shortname = \'apsoluhighlevelathlete\')
-      		INNER JOIN {enrol} E ON E.id = UE.enrolid AND E.enrol = \'select\'
-      		INNER JOIN {course} C on C.id = E.courseid
-      		INNER JOIN {apsolu_courses} APSOLU_C on APSOLU_C.id = C.id
+          INNER JOIN {enrol} E ON E.id = UE.enrolid AND E.enrol = \'select\'
+          INNER JOIN {course} C on C.id = E.courseid
+          INNER JOIN {apsolu_courses} APSOLU_C on APSOLU_C.id = C.id
           INNER JOIN {apsolu_skills} APSOLU_S on APSOLU_S.id = APSOLU_C.skillid
-      		INNER JOIN {apsolu_locations} AL ON AL.id = APSOLU_C.locationid
-      		INNER JOIN {apsolu_areas} AA ON AA.id = AL.areaId
-      		INNER JOIN {apsolu_cities} ACI ON ACI.id = AA.cityId
-      		INNER JOIN {course_categories} Activity ON Activity.id = C.category
-      		INNER JOIN {course_categories} Grouping on Grouping.id = Activity.parent
-      		LEFT JOIN {apsolu_calendars} AC ON AC.id = E.customchar1
-      		LEFT JOIN {apsolu_calendars_types} ACT ON ACT.id = AC.typeid
+          INNER JOIN {apsolu_locations} AL ON AL.id = APSOLU_C.locationid
+          INNER JOIN {apsolu_areas} AA ON AA.id = AL.areaId
+          INNER JOIN {apsolu_cities} ACI ON ACI.id = AA.cityId
+          INNER JOIN {course_categories} Activity ON Activity.id = C.category
+          INNER JOIN {course_categories} Grouping on Grouping.id = Activity.parent
+          LEFT JOIN {apsolu_calendars} AC ON AC.id = E.customchar1
+          LEFT JOIN {apsolu_calendars_types} ACT ON ACT.id = AC.typeid
           INNER JOIN {role_assignments} ra ON ra.userid = UE.userid
-		      INNER JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50 AND ctx.instanceid = C.id
-      		INNER JOIN {role} R ON ra.roleid = R.id AND R.archetype = \'student\'
-     		  ORDER BY ACT.id,U.institution, U.department, U.id, U.idnumber
+          INNER JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50 AND ctx.instanceid = C.id
+          INNER JOIN {role} R ON ra.roleid = R.id AND R.archetype = \'student\'
+          LEFT JOIN {apsolu_grades} AG ON AG.courseid = C.id AND AG.userid = U.id
+          ORDER BY ACT.id,U.institution, U.department, U.id, U.idnumber
       	) ';
 
         $this->WithComplementary = 'WITH enrolments AS (
@@ -237,6 +240,8 @@ class report extends \local_apsolu\local\statistics\report {
                 [ 'data' => "slotstartend", 'title' => "Horaires"],
                 [ 'data' => "locationname", 'title' => "Lieu"],
                 [ 'data' => "teachers", 'title' => "Enseignants"],
+                [ 'data' => "practicegrade", 'title' => get_string('practicegrade', 'local_apsolu')],
+                [ 'data' => "theorygrade", 'title' => get_string('theorygrade', 'local_apsolu')],
                 [ 'data' => null, 'visible' => false, 'title' => "Activité détaillée","render" => "function ( data, type, row ) {return data.activityname.replace(/\s/g,'&nbsp;') + '&nbsp;/&nbsp;' + moment.weekdays()[data.slotnumweekday] +'&nbsp;/&nbsp;' + data.slotstart + '&nbsp;-&nbsp;' + data.slotend + '&nbsp;/&nbsp;' + data.skillsname.replace(/\s/g,'&nbsp;');}"],
                 ];
                 $orders = [2 => 'asc', 3 => 'asc'];
