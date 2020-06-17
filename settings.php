@@ -104,7 +104,7 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     // Configuration > Type de calendriers.
     $str = get_string('calendars_types', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'calendarstypes'));
-    $ADMIN->add('local_apsolu_configuration', new admin_externalpage('local_apsolu_configuration_calendarstypes', $str, $url, $capabilities));
+    $ADMIN->add('local_apsolu_configuration', new admin_externalpage('local_apsolu_configuration_calendars_types', $str, $url, $capabilities));
 
     // Fédération FSU.
     if (isset($CFG->is_siuaps_rennes) === true) {
@@ -180,7 +180,7 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     // Présentation > Offre de formations.
     $str = get_string('course_offerings', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'courseofferings'));
-    $ADMIN->add('local_apsolu_appearance', new admin_externalpage('local_apsolu_configuration_courseofferings', $str, $url, $capabilities));
+    $ADMIN->add('local_apsolu_appearance', new admin_externalpage('local_apsolu_configuration_course_offerings', $str, $url, $capabilities));
 
     // Présentation > Message d'entête.
     $str = get_string('header_message', 'local_apsolu');

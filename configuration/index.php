@@ -48,6 +48,6 @@ if (isset($pages[$page]) === false) {
 }
 
 // Setup admin access requirement.
-admin_externalpage_setup('local_apsolu_configuration_'.$page);
+admin_externalpage_setup('local_apsolu_configuration_'.$pages[$page]);
 
 require(__DIR__.'/'.$pages[$page].'.php');
