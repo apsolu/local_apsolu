@@ -13,7 +13,21 @@ define(["jquery", "local_apsolu/jquery.tablefilter"], function($, TableFilter) {
                 no_results_message: true,
                 clear_filter_text: "-",
 
-                // columns data types
+                // Data types.
+                col_types: [
+                    "number", // Identifiants des cours.
+                    "string", // Groupements d'activités.
+                    "string", // Activités sportives.
+                    "string", // Niveaux.
+                    "string", // Jours.
+                    "string", // Horaires.
+                    "string", // Lieux.
+                    "string", // Périodes.
+                    "string", // FFSU.
+                    "string"  // Enseignants.
+                ],
+
+                // Columns data filter types.
                 col_1: "select",
                 col_2: "select",
                 col_3: "select",
