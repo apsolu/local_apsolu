@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot.'/local/apsolu/configuration/header_form.php');
+require_once($CFG->dirroot.'/local/apsolu/configuration/header_message_form.php');
 
 // Build form.
 $defaults = new stdClass();

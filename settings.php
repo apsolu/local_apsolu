@@ -184,8 +184,8 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
 
     // Présentation > Message d'entête.
     $str = get_string('header_message', 'local_apsolu');
-    $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'header'));
-    $ADMIN->add('local_apsolu_appearance', new admin_externalpage('local_apsolu_configuration_header', $str, $url, $capabilities));
+    $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'headermessage'));
+    $ADMIN->add('local_apsolu_appearance', new admin_externalpage('local_apsolu_configuration_header_message', $str, $url, $capabilities));
 
     // Statistiques.
     $ADMIN->add('apsolu', new admin_category('local_apsolu_statistics', get_string('statistics', 'local_apsolu')));

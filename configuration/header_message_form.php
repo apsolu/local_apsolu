@@ -59,7 +59,7 @@ class local_apsolu_header_form extends moodleform {
         $mform->closeHeaderBefore('buttonar');
 
         // Hidden fields.
-        $mform->addElement('hidden', 'page', 'header');
+        $mform->addElement('hidden', 'page', 'headermessage');
         $mform->setType('page', PARAM_ALPHANUM);
 
         // Set default values.
