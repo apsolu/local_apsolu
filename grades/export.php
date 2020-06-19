@@ -317,7 +317,15 @@ if ($data = $mform->get_data()) {
         // Adding the worksheet.
         $myxls = $workbook->add_worksheet();
 
-        $excelformat = new MoodleExcelFormat(array('border' => PHPExcel_Style_Border::BORDER_THIN));
+        if (class_exists('PHPExcel_Style_Border') === true) {
+            // Jusqu'à Moodle 3.7.x.
+            $properties = array('border' => PHPExcel_Style_Border::BORDER_THIN);
+        } else {
+            // Depuis Moodle 3.8.x.
+            $properties = array('border' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        }
+
+        $excelformat = new MoodleExcelFormat($properties);
 
         // Set headers.
         $headers = array();
