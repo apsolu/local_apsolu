@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Script de téléchargement des paiements.
+ * Page gérant l'extraction des paiements.
  *
  * @package    local_apsolu
  * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
@@ -24,17 +24,97 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$file = $CFG->dataroot.'/apsolu/local_apsolu_payment/extraction_paiement.csv';
-if (is_file($file)) {
-    header('Content-Description: File Transfer');
-    header('Content-Type: application/octet-stream');
-    header('Content-Disposition: attachment; filename="'.basename($file).'"');
-    header('Expires: 0');
-    header('Cache-Control: must-revalidate');
-    header('Pragma: public');
-    header('Content-Length: ' . filesize($file));
-    readfile($file);
-    exit(0);
+$centerid = required_param('centerid', PARAM_INT);
+
+require_once($CFG->dirroot.'/user/profile/lib.php');
+require_once($CFG->libdir.'/csvlib.class.php');
+
+$center = $DB->get_record('apsolu_payments_centers', array('id' => $centerid), $fields = '*', MUST_EXIST);
+$cards = $DB->get_records('apsolu_payments_cards', array('centerid' => $center->id), $sort = 'name, fullname');
+
+$filename = clean_filename($center->name);
+
+$headers = array(
+    get_string('lastname'),
+    get_string('firstname'),
+    get_string('idnumber'),
+    get_string('institution'),
+    get_string('department'),
+    get_string('fields_apsoluhighlevelathlete', 'local_apsolu'),
+    get_string('method', 'local_apsolu'),
+    get_string('date', 'local_apsolu'),
+    get_string('amount', 'local_apsolu'),
+    get_string('payment_number', 'local_apsolu')
+);
+
+foreach ($cards as $card) {
+    $headers[] = $card->fullname;
 }
 
-redirect($CFG->wwwroot.'/local/apsolu/payment/admin.php?tab=payments', get_string('filenotfound', 'error'), null, \core\output\notification::NOTIFY_ERROR);
+$csvexport = new \csv_export_writer();
+$csvexport->set_filename($filename);
+$csvexport->add_data($headers);
+
+$sql = "SELECT uid.userid".
+    " FROM {user_info_data} uid".
+    " JOIN {user_info_field} uif ON uif.id = uid.fieldid".
+    " WHERE uif.shortname = 'apsoluhighlevelathlete'".
+    " AND uid.data = 1";
+$highlevelathletes = $DB->get_records_sql($sql);
+
+$sql = "SELECT ap.*, u.lastname, u.firstname, u.idnumber, u.institution, u.department".
+    " FROM {apsolu_payments} ap".
+    " JOIN {user} u ON u.id = ap.userid".
+    " WHERE ap.status = 1".
+    " AND ap.paymentcenterid = :centerid".
+    " ORDER BY ap.timepaid DESC, u.lastname, u.firstname, u.institution";
+$payments = $DB->get_records_sql($sql, array('centerid' => $center->id));
+foreach ($payments as $payment) {
+    raise_memory_limit(MEMORY_EXTRA);
+
+    $usercards = $DB->get_records('apsolu_payments_items', array('paymentid' => $payment->id), $sort = null, $fields = 'cardid');
+
+    if (isset($highlevelathletes[$payment->userid]) === true) {
+        $payment->highlevelathlete = get_string('yes');
+    } else {
+        $payment->highlevelathlete = get_string('no');
+    }
+
+    try {
+        $timepaid = new DateTime($payment->timepaid);
+        $timepaid = $timepaid->format('d-m-Y H:i:s');
+    } catch(Exception $exception) {
+        $timepaid = '';
+    }
+
+    if ($payment->method !== 'paybox') {
+        $payment->id = '';
+    }
+
+    $data = array(
+        $payment->lastname,
+        $payment->firstname,
+        $payment->idnumber,
+        $payment->institution,
+        $payment->department,
+        $payment->highlevelathlete,
+        get_string('method_'.$payment->method, 'local_apsolu'),
+        $timepaid,
+        $payment->amount,
+        $payment->id,
+        );
+
+    foreach ($cards as $card) {
+        if (isset($usercards[$card->id]) === true) {
+            $data[] = get_string('yes');
+        } else {
+            $data[] = get_string('no');
+        }
+    }
+
+    $csvexport->add_data($data);
+}
+
+$csvexport->download_file();
+
+exit(0);

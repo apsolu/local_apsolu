@@ -110,4 +110,7 @@ if (isset($notification)) {
     echo $notification;
 }
 
+$data->payments_centers = array_values($DB->get_records('apsolu_payments_centers', $conditions = null, $sort = 'name'));
+$data->count_payments_centers = count($data->payments_centers);
+
 echo $OUTPUT->render_from_template('local_apsolu/payment_payments', $data);

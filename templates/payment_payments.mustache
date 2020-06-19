@@ -33,6 +33,8 @@
     * userid
     * count_payments
     * payments
+    * count_payments_centers
+    * payments_centers
 
     Example context (json):
     {
@@ -42,12 +44,26 @@
         "has_sesame": "",
         "userid": "",
         "count_payments": 0,
-        "payments": ""
+        "payments": "",
+        "count_payments_centers": 0,
+        "payments_centers": ""
     }
 }}
 {{#user_selector}}
 
-<p class="text-right"><a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=payments&action=extract">Extraction csv des paiements</a></p>
+{{#count_payments_centers}}
+<div class="dropdown show text-right">
+    <a aria-expanded="false" aria-haspopup="true" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#" id="dropdown-payments-centers" role="button">
+        {{#str}}payments_extraction, local_apsolu{{/str}}
+    </a>
+
+    <div aria-labelledby="dropdown-payments-centers" class="dropdown-menu">
+        {{#payments_centers}}
+        <a class="dropdown-item" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=payments&action=extract&centerid={{id}}">{{name}}</a>
+        {{/payments_centers}}
+    </div>
+</div>
+{{/count_payments_centers}}
 
 <form method="post" action="{{action}}">
     <div>
@@ -63,60 +79,60 @@
 
 {{^user_selector}}
 
-	<p class="text-right"><a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=payments&action=edit&userid={{userid}}" class="btn btn-primary">Ajouter un paiement</a></p>
+    <p class="text-right"><a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=payments&action=edit&userid={{userid}}" class="btn btn-primary">Ajouter un paiement</a></p>
 
-	<div class="apsolu-payment-user-profile">
-		<p>{{{useridentity}}}</p>
-		<p class="small">{{#str}}type_auth, plugin{{/str}} : {{user_auth}}</p>
-	</div>
+    <div class="apsolu-payment-user-profile">
+        <p>{{{useridentity}}}</p>
+        <p class="small">{{#str}}type_auth, plugin{{/str}} : {{user_auth}}</p>
+    </div>
 
-	{{^has_sesame}}
-	<p class="alert alert-danger">{{#str}}no_sesame, local_apsolu{{/str}}</p>
-	{{/has_sesame}}
+    {{^has_sesame}}
+    <p class="alert alert-danger">{{#str}}no_sesame, local_apsolu{{/str}}</p>
+    {{/has_sesame}}
 
-	{{^count_payments}}
-	<div class="alert alert-info">
-		<p>{{#str}}no_payments, local_apsolu{{/str}}</p>
-	</div>
-	{{/count_payments}}
+    {{^count_payments}}
+    <div class="alert alert-info">
+        <p>{{#str}}no_payments, local_apsolu{{/str}}</p>
+    </div>
+    {{/count_payments}}
 
-	{{#count_payments}}
-	<table class="table table-striped">
-		<thead>
-		<tr>
-			<th>{{#str}}payment_number, local_apsolu{{/str}}</th>
-			<th>{{#str}}date, local_apsolu{{/str}}</th>
-			<th>{{#str}}amount, local_apsolu{{/str}}</th>
-			<th>{{#str}}method, local_apsolu{{/str}}</th>
-			<th>{{#str}}source, local_apsolu{{/str}}</th>
-			<th>{{#str}}items, local_apsolu{{/str}}</th>
-			<th>{{#str}}status, local_apsolu{{/str}}</th>
-			<th>{{#str}}actions, local_apsolu{{/str}}</th>
-		</tr>
-		</thead>
-		<tbody>
-		{{#payments}}
-		<tr>
-			<td>{{id}}</td>
-			<td>{{timepaid}}</td>
-			<td>{{amount_string}}</td>
-			<td>{{method_string}}</td>
-			<td>{{source_string}}</td>
-			<td>{{#count_items}}<ul class="list">{{#items}}<li>{{.}}</li>{{/items}}</ul>{{/count_items}}</td>
-			<td class="{{status_style}} text-center">{{status_string}}</td>
+    {{#count_payments}}
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>{{#str}}payment_number, local_apsolu{{/str}}</th>
+            <th>{{#str}}date, local_apsolu{{/str}}</th>
+            <th>{{#str}}amount, local_apsolu{{/str}}</th>
+            <th>{{#str}}method, local_apsolu{{/str}}</th>
+            <th>{{#str}}source, local_apsolu{{/str}}</th>
+            <th>{{#str}}items, local_apsolu{{/str}}</th>
+            <th>{{#str}}status, local_apsolu{{/str}}</th>
+            <th>{{#str}}actions, local_apsolu{{/str}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#payments}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{timepaid}}</td>
+            <td>{{amount_string}}</td>
+            <td>{{method_string}}</td>
+            <td>{{source_string}}</td>
+            <td>{{#count_items}}<ul class="list">{{#items}}<li>{{.}}</li>{{/items}}</ul>{{/count_items}}</td>
+            <td class="{{status_style}} text-center">{{status_string}}</td>
 
-			{{^status}}
-			<td><a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=payments&action=edit&userid={{userid}}&&paymentid={{id}}">{{#pix}}i/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></td>
-			{{/status}}
+            {{^status}}
+            <td><a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=payments&action=edit&userid={{userid}}&&paymentid={{id}}">{{#pix}}i/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></td>
+            {{/status}}
 
-			{{#status}}
-			<td>-</td>
-			{{/status}}
-		</tr>
-		{{/payments}}
-		</tbody>
-	</table>
-	{{/count_payments}}
+            {{#status}}
+            <td>-</td>
+            {{/status}}
+        </tr>
+        {{/payments}}
+        </tbody>
+    </table>
+    {{/count_payments}}
 
-	<p class="text-right"><a class="btn btn-default" href="{{backurl}}">{{#str}}research_user, local_apsolu{{/str}}</a></p>
+    <p class="text-right"><a class="btn btn-default" href="{{backurl}}">{{#str}}research_user, local_apsolu{{/str}}</a></p>
 {{/user_selector}}

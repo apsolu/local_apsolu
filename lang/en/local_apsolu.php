@@ -140,6 +140,7 @@ $string['payment_center'] = 'Centre de paiement';
 $string['payment_center_help'] = 'Champ libre qui sera affiché sur la page de paiement des utilisateurs.';
 $string['payment_prefix'] = 'Préfixe de paiement';
 $string['payment_prefix_help'] = 'Préfixe affiché avant le numéro de commande dans le backoffice paybox. Cela peut être utile si votre abonnement Paybox est utilisé par plusieurs applications.';
+$string['payments_extraction'] = 'Extraction des paiements';
 $string['period'] = 'Période';
 $string['period_cannot_be_deleted'] = 'La période "{$a}" ne peut pas être supprimé, car il est rattaché aux lieux suivants :';
 $string['period_has_been_deleted'] = 'La période a été supprimée.';
