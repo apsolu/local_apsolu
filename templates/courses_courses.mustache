@@ -52,12 +52,12 @@
 <h1>{{#str}}courses_list, local_apsolu{{/str}}</h1>
 
 {{#notification}}
-	{{{notification}}}
+    {{{notification}}}
 {{/notification}}
 
 <ul class="list-inline text-right">
-	<li class="list-inline-item"><a class="btn btn-default" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=export">{{#str}}courses_csv_export, local_apsolu{{/str}}</a></li>
-	<li class="list-inline-item"><a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=edit">{{#str}}course_add, local_apsolu{{/str}}</a></li>
+    <li class="list-inline-item"><a class="btn btn-default" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=export">{{#str}}courses_csv_export, local_apsolu{{/str}}</a></li>
+    <li class="list-inline-item"><a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=edit">{{#str}}course_add, local_apsolu{{/str}}</a></li>
 </ul>
 
 {{^count_courses}}
@@ -67,43 +67,58 @@
 {{#count_courses}}
 <table class="table table-striped" id="table-courses-sortable">
 <thead>
-	<tr>
-		<th>{{#str}}idnumbercourse{{/str}}</th>
-		<th>{{#str}}groupings, local_apsolu{{/str}}</th>
-		<th>{{#str}}categories, local_apsolu{{/str}}</th>
-		<th>{{#str}}skills, local_apsolu{{/str}}</th>
-		<th>{{#str}}weekdays, local_apsolu{{/str}}</th>
-		<th>{{#str}}schedule, local_apsolu{{/str}}</th>
-		<th>{{#str}}locations, local_apsolu{{/str}}</th>
-		<th>{{#str}}periods, local_apsolu{{/str}}</th>
-		<th>{{#str}}federation, local_apsolu{{/str}}</th>
-		<th>{{#str}}teachers{{/str}}</th>
-		<th>{{#str}}actions{{/str}}</th>
-	</tr>
+    <tr>
+        <th>{{#str}}idnumbercourse{{/str}}</th>
+        <th>{{#str}}groupings, local_apsolu{{/str}}</th>
+        <th>{{#str}}categories, local_apsolu{{/str}}</th>
+        <th>{{#str}}skills, local_apsolu{{/str}}</th>
+        <th>{{#str}}weekdays, local_apsolu{{/str}}</th>
+        <th>{{#str}}schedule, local_apsolu{{/str}}</th>
+        <th>{{#str}}locations, local_apsolu{{/str}}</th>
+        <th>{{#str}}periods, local_apsolu{{/str}}</th>
+        <th>{{#str}}federation, local_apsolu{{/str}}</th>
+        <th>{{#str}}teachers{{/str}}</th>
+        <th>{{#str}}actions{{/str}}</th>
+    </tr>
 </thead>
 <tbody>
-	{{#courses}}
-	<tr class="apsolu-row-{{alt_class}}{{^visible}} apsolu-row-disabled{{/visible}}">
-		<td><a href="{{wwwroot}}/course/view.php?id={{id}}">{{id}}</a></td>
-		<td>{{grouping}}</td>
-		<td>{{fullname}}</td>
-		<td>{{skill}}</td>
-		<td>{{weekday}}</td>
-		<td>{{schedule}}</td>
-		<td>{{location}}</td>
-		<td>{{period}}</td>
-		<td>{{#license}}{{#str}}yes{{/str}}{{/license}}{{^license}}{{#str}}no{{/str}}{{/license}}</td>
-		<td>{{#teachers}}<div>{{firstname}} {{lastname}}</div>{{/teachers}}</td>
-		<td>
-			<ul class="list-inline">
-				<li class="list-inline-item"><a href="{{wwwroot}}/course/view.php?id={{id}}">{{#pix}}t/preview,core,{{#str}}go_to_course, local_apsolu{{/str}}{{/pix}}</a></li>
-				<li class="list-inline-item"><a href="{{wwwroot}}/user/index.php?id={{id}}">{{#pix}}t/enrolusers,core,{{#str}}enrol_teachers, local_apsolu{{/str}}{{/pix}}</a></li>
-				<li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=edit&courseid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></li>
-				<li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=delete&courseid={{id}}">{{#pix}}t/delete,core,{{#str}}delete{{/str}}{{/pix}}</a></li>
-			</ul>
-		</td>
-	</tr>
-	{{/courses}}
+    {{#courses}}
+    <tr class="apsolu-row-{{alt_class}}{{^visible}} apsolu-row-disabled{{/visible}}">
+        <td><a href="{{wwwroot}}/course/view.php?id={{id}}">{{id}}</a></td>
+        <td>{{grouping}}</td>
+        <td>{{fullname}}</td>
+        <td>{{skill}}</td>
+        <td>{{weekday}}</td>
+        <td>{{schedule}}</td>
+        <td>{{location}}</td>
+        <td>{{period}}</td>
+        <td>{{#license}}{{#str}}yes{{/str}}{{/license}}{{^license}}{{#str}}no{{/str}}{{/license}}</td>
+        <td>{{#teachers}}<div>{{firstname}} {{lastname}}</div>{{/teachers}}</td>
+        <td>
+            {{! Menu déroulant permettant de réaliser des actions sur les cours. }}
+            <div class="dropdown show">
+                <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle icon-no-margin" data-toggle="dropdown" href="#" id="dropdown-course-{{ id }}-actions" role="button">
+                    {{#str}}actions{{/str}}<b class="caret"></b>
+                </a>
+
+                <div aria-labelledby="dropdown-course-{{ id }}-actions" class="dropdown-menu">
+                    <a class="dropdown-item menu-action" href="{{wwwroot}}/course/view.php?id={{id}}">
+                        <i aria-hidden="true" class="fa fa-fw fa-graduation-cap icon"></i>{{#str}}go_to_course, local_apsolu{{/str}}
+                    </a>
+                    <a class="dropdown-item menu-action" href="{{wwwroot}}/user/index.php?id={{id}}">
+                        <i aria-hidden="true" class="fa fa-fw fa-user-circle icon"></i>{{#str}}enrol_teachers, local_apsolu{{/str}}
+                    </a>
+                    <a class="dropdown-item menu-action" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=edit&courseid={{id}}">
+                        <i aria-hidden="true" class="fa fa-cog fa-fw icon"></i>{{#str}}edit{{/str}}
+                    </a>
+                    <a class="dropdown-item menu-action" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=delete&courseid={{id}}">
+                        <i aria-hidden="true" class="fa fa-fw fa-trash icon"></i>{{#str}}delete{{/str}}
+                    </a>
+                </div>
+            </div>
+        </td>
+    </tr>
+    {{/courses}}
 </tbody>
 </table>
 {{/count_courses}}
