@@ -248,13 +248,13 @@ class course extends record {
 
         foreach ($times as $key => $values) {
             if (count($values) !== 2) {
-                debugging(__METHOD__.': 2 valeurs attendues pour la variable $'.$key);
+                debugging(__METHOD__.': 2 valeurs attendues pour la variable $'.$key, $level = DEBUG_DEVELOPER);
 
                 return false;
             }
 
             if (ctype_digit($values[0]) === false || ctype_digit($values[1]) === false) {
-                debugging(__METHOD__.': 2 entiers attendus pour la variable $'.$key);
+                debugging(__METHOD__.': 2 entiers attendus pour la variable $'.$key, $level = DEBUG_DEVELOPER);
 
                 return false;
             }
@@ -265,7 +265,7 @@ class course extends record {
         $duration = $times['endtime'] - $times['starttime'];
 
         if ($duration <= 0) {
-            debugging(__METHOD__.': valeur nulle ou négative pour la variable $duration');
+            debugging(__METHOD__.': valeur nulle ou négative pour la variable $duration', $level = DEBUG_DEVELOPER);
 
             return false;
         }

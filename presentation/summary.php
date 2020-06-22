@@ -246,7 +246,7 @@ foreach (json_decode($jsondata) as $filter => $value) {
     // Pattern: show_grouping_filter.
     $filtername = substr($filter, 5, -7);
     if (isset($filters[$filtername]) === false) {
-        debugging('Invalid filter: '.$filtername.', valid filters: '.implode(', ', array_keys($filters)));
+        debugging('Invalid filter: '.$filtername.', valid filters: '.implode(', ', array_keys($filters)), $level = DEBUG_DEVELOPER);
     }
     unset($filters[$filtername]);
 }
