@@ -410,4 +410,26 @@ class course extends record {
             $transaction->allow_commit();
         }
     }
+
+    /**
+     * Change la visibilité du cours.
+     *
+     * La valeur de retour 1 indique que le cours est visible à la fin de l'exécution de la fonction.
+     * La valeur de retour 0 indique que le cours est masqué.
+     *
+     * @param int|string $courseid Identifiant du cours.
+     *
+     * @return int Retourne un entier représentant la visibilité du cours
+     */
+    public static function toggle_visibility($courseid) {
+        $course = new \core_course_list_element(get_course($courseid));
+
+        if (empty($course->visible) === true) {
+            \core_course\management\helper::action_course_show($course);
+            return 1;
+        }
+
+        \core_course\management\helper::action_course_hide($course);
+        return 0;
+    }
 }

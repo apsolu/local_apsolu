@@ -43,7 +43,7 @@ $sql = "SELECT c.id, cc.name AS category, ccc.name AS grouping, ac.event, ac.wee
     " JOIN {apsolu_skills} ask ON ask.id = ac.skillid".
     " JOIN {apsolu_locations} al ON al.id = ac.locationid".
     " JOIN {apsolu_periods} ap ON ap.id = ac.periodid".
-    " ORDER BY c.visible DESC, category, ac.numweekday, ac.starttime, location, skill";
+    " ORDER BY category, ac.numweekday, ac.starttime, location, skill";
 $courses = array();
 foreach ($DB->get_records_sql($sql) as $course) {
     if ($currentactivity !== $course->category) {

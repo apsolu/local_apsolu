@@ -108,6 +108,10 @@
                     <a class="dropdown-item menu-action" href="{{wwwroot}}/user/index.php?id={{id}}">
                         <i aria-hidden="true" class="fa fa-fw fa-user-circle icon"></i>{{#str}}enrol_teachers, local_apsolu{{/str}}
                     </a>
+                    <a class="dropdown-item menu-action" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=show&courseid={{id}}">
+                        {{^visible}}<i aria-hidden="true" class="fa fa-eye fa-fw icon"></i>{{#str}}show{{/str}}{{/visible}}
+                        {{#visible}}<i aria-hidden="true" class="fa fa-eye-slash fa-fw icon"></i>{{#str}}hide{{/str}}{{/visible}}
+                    </a>
                     <a class="dropdown-item menu-action" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=edit&courseid={{id}}">
                         <i aria-hidden="true" class="fa fa-cog fa-fw icon"></i>{{#str}}edit{{/str}}
                     </a>

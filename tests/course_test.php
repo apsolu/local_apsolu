@@ -140,4 +140,26 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
         $this->assertSame(sprintf('%s %s %s', $data->str_category, $str_time, $data->str_skill), $course->fullname);
         $this->assertSame($count_records, $initial_count + 1);
     }
+
+    public function test_toggle_visibility() {
+        global $DB;
+
+        $this->setAdminUser();
+
+        // Génère un cours.
+        $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
+
+        $course = new local_apsolu\core\course();
+        $course->save($data);
+
+        // Récupère la visibilité du cours.
+        $visibility = $DB->get_record('course', array('id' => $course->id));
+        $visible = intval($visibility->visible);
+
+        // La visibilité du cours doit changer.
+        $this->assertNotSame($visible, $course::toggle_visibility($course->id));
+
+        // La visibilité du cours doit revenir à son état initial.
+        $this->assertSame($visible, $course::toggle_visibility($course->id));
+    }
 }

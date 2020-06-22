@@ -15,19 +15,27 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Contrôleur pour les pages d'administration des créneaux.
+ * Affiche ou masque un cours.
  *
  * @package    local_apsolu
- * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 
-$actions = array('edit', 'export', 'delete', 'show', 'view');
+use local_apsolu\core\course as Course;
 
-if (!in_array($action, $actions, true)) {
-    $action = 'view';
+$courseid = required_param('courseid', PARAM_INT);
+
+$returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'courses'));
+
+$visibility = Course::toggle_visibility($courseid);
+
+if (empty($visibility) === true) {
+    $message = get_string('course_is_now_hidden', 'local_apsolu');
+} else {
+    $message = get_string('course_is_now_visible', 'local_apsolu');
 }
 
-require(__DIR__.'/'.$action.'.php');
+redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
