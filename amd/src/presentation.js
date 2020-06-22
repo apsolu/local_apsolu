@@ -20,7 +20,7 @@
  * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-define(['jquery', 'enrol_select/select2'], function($) {
+define(['jquery', 'core/templates', 'enrol_select/select2'], function($, templates) {
     return {
         initialise: function() {
             /**
@@ -120,6 +120,37 @@ define(['jquery', 'enrol_select/select2'], function($) {
             if (toggleFiltersButton) {
                 // Positionne un évènement lors d'un clic sur le bouton d'affichage des filtres.
                 toggleFiltersButton.addEventListener('click', toggleFilterBlock);
+            }
+
+            // Ajoute une bulle d'aide pour ajouter les libellés complémentaires.
+            var complementaryrows = document.querySelectorAll('tr[data-category-event]');
+            if (complementaryrows.length > 0) {
+                var tdindex;
+
+                // On parcourt toutes les lignes du tableau des activités (tr).
+                for (var i = 0; i < complementaryrows.length; i++) {
+                    if (!tdindex) {
+                        // On détermine l'index de la première colonne visible.
+                        for (var j = 0; j < complementaryrows[i].children.length; j++) {
+                            if (complementaryrows[i].children[j].classList.contains('hide') === false) {
+                                tdindex = j;
+                                break;
+                            }
+                        }
+                    }
+
+                    var context = { event: complementaryrows[i].getAttribute('data-category-event') };
+                    var nodepath= '#'+complementaryrows[i].getAttribute('id')+' td:eq('+tdindex+')';
+
+                    // Appelle le template local_apsolu/presentation_event_popover.
+                    var updateTemplate = function(templates, context, nodepath) {
+                        templates.render('local_apsolu/presentation_event_popover', context)
+                            .then(function(html, js) {
+                                templates.prependNodeContents(nodepath, html, js);
+                            });
+                    };
+                    updateTemplate(templates, context, nodepath);
+                }
             }
         }
     };

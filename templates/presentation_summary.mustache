@@ -166,16 +166,16 @@
                         </th>
                     </tr>
                     {{#courses}}
-                    <tr>
+                    <tr{{^show_category_column}}{{#event}} data-category-event="{{event}}"{{/event}}{{/show_category_column}} id="apsolu-tr-course-{{id}}">
                         <td{{^show_city_column}} class="hide"{{/show_city_column}} data-column="city" data-value="{{site}}">{{site}}</td>
-                        <td{{^show_category_column}} class="hide"{{/show_category_column}} data-column="category" data-value="{{sport}}">{{sport}}</td>
+                        <td{{^show_category_column}} class="hide"{{/show_category_column}} data-column="category" data-value="{{sport}}">{{sport}}{{#event}}<br />(<em>{{event}}</em>){{/event}}</td>
                         <td{{^show_grouping_column}} class="hide"{{/show_grouping_column}} data-column="grouping" data-value="{{domain}}">{{domain}}</td>
                         <td{{^show_period_column}} class="hide"{{/show_period_column}} data-column="period" data-value="{{generic_name}}">{{generic_name}}</td>
                         <td{{^show_weekday_column}} class="hide"{{/show_weekday_column}} data-column="weekday" data-value="{{weekday}}">{{weekday}}</td>
                         <td{{^show_times_column}} class="hide"{{/show_times_column}} data-column="times" data-value="{{time}}">{{starttime}} - {{endtime}}</td>
                         <td{{^show_area_column}} class="hide"{{/show_area_column}} data-column="area" data-value="{{area}}">{{area}}</td>
                         <td{{^show_location_column}} class="hide"{{/show_location_column}} data-column="location" data-value="{{location}}">{{location}}</td>
-                        <td{{^show_skill_column}} class="hide"{{/show_skill_column}} data-column="skill" data-value="{{skill}}">{{skill}}{{#event}}<br />({{event}}){{/event}}</td>
+                        <td{{^show_skill_column}} class="hide"{{/show_skill_column}} data-column="skill" data-value="{{skill}}">{{skill}}</td>
                         <td{{^show_role_column}} class="hide"{{/show_role_column}} data-column="role" data-value="{{#roles}}{{name}} {{/roles}}">
                             <ul class="list-inline2 list-unstyled">
                                 {{#roles}}
