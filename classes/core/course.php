@@ -401,7 +401,7 @@ class course extends record {
             $block = block_instance($blocktype, $blockinstance);
             $block->instance_create();
         } else {
-            $DB->update_record('course', $this);
+            update_course((object)(array)$this);
             $DB->update_record('apsolu_courses', $this);
         }
 

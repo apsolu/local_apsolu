@@ -41,6 +41,8 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
     protected function setUp() {
         parent::setUp();
 
+        $this->setAdminUser();
+
         $this->resetAfterTest();
     }
 
@@ -118,6 +120,7 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
         global $DB;
 
         $course = new local_apsolu\core\course();
+        $category = new local_apsolu\core\category();
 
         $initial_count = $DB->count_records($course::TABLENAME);
 
@@ -139,6 +142,19 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
         // Vérifie l'objet mis à jour.
         $this->assertSame(sprintf('%s %s %s', $data->str_category, $str_time, $data->str_skill), $course->fullname);
         $this->assertSame($count_records, $initial_count + 1);
+
+        // Modifie la catégorie du créneau.
+        list($catdata, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
+        $category->save($catdata, $mform);
+
+        $oldcontext = $DB->get_record('context', array('instanceid' => $course->id, 'contextlevel' => CONTEXT_COURSE));
+
+        $data->category = $category->id;
+        $course->save($data);
+
+        $newcontext = $DB->get_record('context', array('instanceid' => $course->id, 'contextlevel' => CONTEXT_COURSE));
+
+        $this->assertNotEquals($oldcontext->path, $newcontext->path);
     }
 
     public function test_toggle_visibility() {
