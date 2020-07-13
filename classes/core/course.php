@@ -126,7 +126,7 @@ class course extends record {
         }
 
         // Supprime l'objet en base de données.
-        $DB->delete_records('apsolu_courses', array('id' => $this->id));
+        $DB->delete_records(self::TABLENAME, array('id' => $this->id));
 
         // Update course count in categories.
         fix_course_sortorder();
@@ -402,7 +402,7 @@ class course extends record {
             $block->instance_create();
         } else {
             update_course((object)(array)$this);
-            $DB->update_record('apsolu_courses', $this);
+            $DB->update_record(self::TABLENAME, $this);
         }
 
         // Valide la transaction en cours.

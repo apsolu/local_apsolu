@@ -67,7 +67,7 @@ class grouping extends record {
         }
 
         // Supprime l'objet en base de données.
-        $DB->delete_records('apsolu_courses_groupings', array('id' => $this->id));
+        $DB->delete_records(self::TABLENAME, array('id' => $this->id));
 
         $coursecat = core_course_category::get($this->id, MUST_EXIST, true);
         $coursecat->delete_full();
@@ -141,7 +141,7 @@ class grouping extends record {
             $sql = "INSERT INTO {apsolu_courses_groupings} (id, url) VALUES(:id, :url)";
             $DB->execute($sql, array('id' => $this->id, 'url' => $this->url));
         } else {
-            $DB->update_record('apsolu_courses_groupings', $this);
+            $DB->update_record(self::TABLENAME, $this);
 
             $category = $DB->get_record('course_categories', array('id' => $this->id));
             if ($category !== false) {

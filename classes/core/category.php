@@ -77,7 +77,7 @@ class category extends record {
         }
 
         // Supprime l'objet en base de données.
-        $DB->delete_records('apsolu_courses_categories', array('id' => $this->id));
+        $DB->delete_records(self::TABLENAME, array('id' => $this->id));
 
         $coursecat = core_course_category::get($this->id, MUST_EXIST, true);
         $coursecat->delete_full();
@@ -158,7 +158,7 @@ class category extends record {
             $sql = "INSERT INTO {apsolu_courses_categories} (id, url, federation) VALUES(:id, :url, :federation)";
             $DB->execute($sql, array('id' => $this->id, 'url' => $this->url, 'federation' => $this->federation));
         } else {
-            $DB->update_record('apsolu_courses_categories', $this);
+            $DB->update_record(self::TABLENAME, $this);
 
             $coursecat = core_course_category::get($this->id, MUST_EXIST, true);
             $coursecat->update($data, $mform->get_description_editor_options());
