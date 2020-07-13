@@ -31,7 +31,7 @@ $action = optional_param('action', 'view', PARAM_ALPHA);
 $PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise');
 
 // Set tabs.
-$coursestabs = array('courses', 'groupings', 'categories', 'skills', 'periods', 'overview');
+$coursestabs = array('courses', 'groupings', 'categories', 'skills', 'periods');
 $locationstabs = array('locations', 'areas', 'cities', 'managers');
 $skillstabs = array('skills', 'skills_descriptions');
 $periodstabs = array('periods');
