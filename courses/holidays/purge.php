@@ -15,25 +15,22 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Purge les jours fériés.
  *
- * @package    local_apsolu
- * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_apsolu
+ * @copyright 2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+defined('MOODLE_INTERNAL') || die;
 
-// The current plugin version (Date: YYYYMMDDXX).
-$plugin->version   = 2020071000;
+use local_apsolu\core\holiday as Holiday;
 
-// Requires this Moodle version.
-$plugin->requires  = 2012112900;
+$holidays = Holiday::get_records();
+foreach ($holidays as $holiday) {
+    $holiday->delete();
+}
 
-// Full name of the plugin (used for diagnostics).
-$plugin->component = 'local_apsolu';
-
-// Dependencies on another plugin.
-$plugin->dependencies = array(
-    'enrol_select' => '2016011220',
-);
+$returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'holidays'));
+$message = get_string('holidays_have_been_purged', 'local_apsolu');
+redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);

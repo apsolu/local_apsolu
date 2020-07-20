@@ -107,6 +107,20 @@
         </KEYS>
     </TABLE>
 
+    <!-- HOLIDAYS -->
+    <TABLE NAME="apsolu_holidays" COMMENT="holidays table">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" />
+            <FIELD NAME="day" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_holidays" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="unique_day" UNIQUE="true" FIELDS="day" />
+        </INDEXES>
+    </TABLE>
+
     <!-- SKILLS -->
     <TABLE NAME="apsolu_skills" COMMENT="Extend courses data">
         <FIELDS>

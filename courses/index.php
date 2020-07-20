@@ -34,7 +34,7 @@ $PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise');
 $coursestabs = array('courses', 'groupings', 'categories', 'skills', 'periods');
 $locationstabs = array('locations', 'areas', 'cities', 'managers');
 $skillstabs = array('skills', 'skills_descriptions');
-$periodstabs = array('periods');
+$periodstabs = array('periods', 'holidays');
 
 // Set default tabs.
 if (in_array($tab, $locationstabs, $strict = true) === true) {

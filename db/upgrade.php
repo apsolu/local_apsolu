@@ -693,5 +693,27 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 2020071000;
+    if ($result && $oldversion < $version) {
+        // Ajoute la table `apsolu_holidays`.
+        $table = new xmldb_table('apsolu_holidays');
+
+        if ($dbman->table_exists($table) === false) {
+            // Adding fields.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+            $table->add_field('day', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = 0, null);
+
+            // Adding key.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->add_key('unique_day', XMLDB_KEY_UNIQUE, array('day'));
+
+            // Create table.
+            $dbman->create_table($table);
+        }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
     return $result;
 }

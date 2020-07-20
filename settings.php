@@ -49,7 +49,7 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
 
     $items = array();
     $items['courses'] = array('groupings', 'categories', 'courses');
-    $items['periods'] = array('periods');
+    $items['periods'] = array('periods', 'holidays');
     if (isset($CFG->is_siuaps_rennes) === true) {
         $items['skills'] = array('skills', 'skills_descriptions');
         unset($items['skills'][1]); // Supprime temporairement l'entrée "skills_descriptions".

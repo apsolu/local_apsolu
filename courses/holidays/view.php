@@ -15,25 +15,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Liste les jours fériés.
  *
- * @package    local_apsolu
- * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_apsolu
+ * @copyright 2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+defined('MOODLE_INTERNAL') || die;
 
-// The current plugin version (Date: YYYYMMDDXX).
-$plugin->version   = 2020071000;
+$holidays = $DB->get_records('apsolu_holidays', null, 'day DESC');
 
-// Requires this Moodle version.
-$plugin->requires  = 2012112900;
+$data = new stdClass();
+$data->wwwroot = $CFG->wwwroot;
+$data->holidays = array_values($holidays);
+$data->count_holidays = count($holidays);
 
-// Full name of the plugin (used for diagnostics).
-$plugin->component = 'local_apsolu';
+if (isset($notificationform)) {
+    $data->notification = $notificationform;
+}
 
-// Dependencies on another plugin.
-$plugin->dependencies = array(
-    'enrol_select' => '2016011220',
-);
+echo $OUTPUT->render_from_template('local_apsolu/courses_holidays', $data);
