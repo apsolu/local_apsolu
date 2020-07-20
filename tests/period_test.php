@@ -107,9 +107,16 @@ class local_apsolu_core_period_testcase extends advanced_testcase {
     }
 
     public function test_get_sessions() {
+        // Génère les jours fériés.
+        foreach (local_apsolu\core\holiday::get_holidays(2020) as $holidaytimestamp) {
+            $holiday = new local_apsolu\core\holiday();
+            $holiday->day = $holidaytimestamp;
+            $holiday->save();
+        }
+
         $period = new local_apsolu\core\period();
         $period->name = 'period get_sessions';
-        $period->weeks = '2020-06-29,2020-07-13';
+        $period->weeks = '2020-06-29,2020-07-13,2020-07-20';
         $period->save();
 
         $offset = (1 * 24 * 60 * 60) + (15 * 60 * 60);
@@ -117,7 +124,10 @@ class local_apsolu_core_period_testcase extends advanced_testcase {
 
         $this->assertEquals(2, count($sessions));
         $this->assertArrayHasKey(mktime(15, 0, 0, 6, 30, 2020), $sessions);
-        $this->assertArrayHasKey(mktime(15, 0, 0, 7, 14, 2020), $sessions);
+        $this->assertArrayHasKey(mktime(15, 0, 0, 7, 21, 2020), $sessions);
+
+        // Teste que le 14 juillet a bien été ignoré.
+        $this->assertArrayNotHasKey(mktime(15, 0, 0, 7, 14, 2020), $sessions);
     }
 
     public function test_save() {

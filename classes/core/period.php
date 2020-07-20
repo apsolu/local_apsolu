@@ -71,18 +71,33 @@ class period extends record {
     public function get_sessions(int $offset) {
         $sessions = array();
 
+        $holidays = array();
+        foreach (holiday::get_records() as $holiday) {
+            $key = strftime('%F', $holiday->day);
+            $holidays[$key] = $holiday;
+        }
+
         $weeks = explode(',', $this->weeks);
         foreach ($weeks as $week) {
             if (preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/', $week) !== 1) {
                 continue;
             }
 
+            // Calcule le timestamp.
             list($year, $month, $day) = explode('-', $week);
+            $sessiontime = make_timestamp($year, $month, $day);
+            $sessiontime += $offset;
+
+            // Contrôle si il s'agit d'un jour férié.
+            $key = strftime('%F', $sessiontime);
+            if (isset($holidays[$key]) === true) {
+                // On ignore les jours fériés.
+                continue;
+            }
 
             $session = new attendancesession();
-            $session->sessiontime = make_timestamp($year, $month, $day);
-            $session->sessiontime += $offset;
-            $sessions[$session->sessiontime] = $session;
+            $session->sessiontime = $sessiontime;
+            $sessions[$sessiontime] = $session;
         }
 
         return $sessions;
