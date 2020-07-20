@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Teste la classe local_apsolu\core\period
+ * Teste la classe local_apsolu\core\attendancepresence
  *
  * @package    local_apsolu
  * @category   test
@@ -26,14 +26,14 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Classe de tests pour local_apsolu\core\period
+ * Classe de tests pour local_apsolu\core\attendancepresence
  *
  * @package    local_apsolu
  * @category   test
  * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_apsolu_core_period_testcase extends advanced_testcase {
+class local_apsolu_core_attendancepresence_testcase extends advanced_testcase {
     protected function setUp() {
         parent::setUp();
 
@@ -43,127 +43,111 @@ class local_apsolu_core_period_testcase extends advanced_testcase {
     public function test_delete() {
         global $DB;
 
-        $period = new local_apsolu\core\period();
+        $attendancepresence = new local_apsolu\core\attendancepresence();
 
         // Supprime un objet inexistant.
-        $result = $period->delete(1);
+        $result = $attendancepresence->delete(1);
         $this->assertTrue($result);
 
         // Supprime un objet existant.
-        $period->name = 'period 1';
-        $period->save();
+        $attendancepresence->name = 'attendancepresence 1';
+        $attendancepresence->save();
 
-        $count_records = $DB->count_records($period::TABLENAME);
+        $count_records = $DB->count_records($attendancepresence::TABLENAME);
         $this->assertSame(1, $count_records);
 
-        $result = $period->delete();
+        $result = $attendancepresence->delete();
         $this->assertTrue($result);
 
-        $count_records = $DB->count_records($period::TABLENAME);
+        $count_records = $DB->count_records($attendancepresence::TABLENAME);
         $this->assertSame(0, $count_records);
     }
 
     public function test_get_records() {
         global $DB;
 
-        $period = new local_apsolu\core\period();
+        $attendancepresence = new local_apsolu\core\attendancepresence();
 
-        $count_records = $DB->count_records($period::TABLENAME);
+        $count_records = $DB->count_records($attendancepresence::TABLENAME);
         $this->assertSame(0, $count_records);
 
         // Enregistre un nouvel objet.
-        $period->name = 'period 1';
-        $period->save();
+        $attendancepresence->studentid = 1;
+        $attendancepresence->sessionid = 1;
+        $attendancepresence->save();
 
-        $count_records = $DB->count_records($period::TABLENAME);
+        $count_records = $DB->count_records($attendancepresence::TABLENAME);
         $this->assertSame(1, $count_records);
 
         // Enregistre un nouvel objet.
-        $period->id = 0;
-        $period->name = 'period 2';
-        $period->save();
+        $attendancepresence->id = 0;
+        $attendancepresence->studentid = 1;
+        $attendancepresence->sessionid = 2;
+        $attendancepresence->save();
 
-        $count_records = $DB->count_records($period::TABLENAME);
+        $count_records = $DB->count_records($attendancepresence::TABLENAME);
         $this->assertSame(2, $count_records);
     }
 
     public function test_load() {
         // Charge un objet inexistant.
-        $period = new local_apsolu\core\period();
-        $period->load(1);
+        $attendancepresence = new local_apsolu\core\attendancepresence();
+        $attendancepresence->load(1);
 
-        $this->assertSame(0, $period->id);
-        $this->assertSame('', $period->name);
+        $this->assertSame(0, $attendancepresence->id);
 
         // Charge un objet existant.
-        $period->name = 'period';
-        $period->save();
+        $attendancepresence->name = 'attendancepresence';
+        $attendancepresence->save();
 
-        $test = new local_apsolu\core\period();
-        $test->load($period->id);
+        $test = new local_apsolu\core\attendancepresence();
+        $test->load($attendancepresence->id);
 
-        $this->assertEquals($period->id, $test->id);
-        $this->assertSame($period->name, $test->name);
-    }
-
-    public function test_get_sessions() {
-        $period = new local_apsolu\core\period();
-        $period->name = 'period get_sessions';
-        $period->weeks = '2020-06-29,2020-07-13';
-        $period->save();
-
-        $offset = (1 * 24 * 60 * 60) + (15 * 60 * 60);
-        $sessions = $period->get_sessions($offset);
-
-        $this->assertEquals(2, count($sessions));
-        $this->assertArrayHasKey(mktime(15, 0, 0, 6, 30, 2020), $sessions);
-        $this->assertArrayHasKey(mktime(15, 0, 0, 7, 14, 2020), $sessions);
+        $this->assertEquals($attendancepresence->id, $test->id);
     }
 
     public function test_save() {
         global $DB;
 
-        $period = new local_apsolu\core\period();
+        $attendancepresence = new local_apsolu\core\attendancepresence();
 
-        $initial_count = $DB->count_records($period::TABLENAME);
+        $initial_count = $DB->count_records($attendancepresence::TABLENAME);
 
         // Enregistre un objet.
         $data = new stdClass();
-        $data->name = 'period 1';
+        $data->studentid = 1;
+        $data->sessionid = 1;
 
-        $period->save($data);
-        $count_records = $DB->count_records($period::TABLENAME);
+        $attendancepresence->save($data);
+        $count_records = $DB->count_records($attendancepresence::TABLENAME);
 
         // Vérifie l'objet inséré.
-        $this->assertSame($data->name, $period->name);
         $this->assertSame($count_records, $initial_count + 1);
 
         // Mets à jour l'objet.
-        $data->name = 'period 1';
+        $data->studentid = 2;
 
-        $period->save($data);
-        $count_records = $DB->count_records($period::TABLENAME);
+        $attendancepresence->save($data);
+        $count_records = $DB->count_records($attendancepresence::TABLENAME);
 
         // Vérifie l'objet mis à jour.
-        $this->assertSame($data->name, $period->name);
         $this->assertSame($count_records, $initial_count + 1);
 
         // Ajoute un nouvel objet (sans argument).
-        $period->id = 0;
-        $period->name = 'period 2';
+        $attendancepresence->id = 0;
+        $attendancepresence->studentid = 3;
+        $attendancepresence->sessionid = 3;
 
-        $period->save();
-        $count_records = $DB->count_records($period::TABLENAME);
+        $attendancepresence->save();
+        $count_records = $DB->count_records($attendancepresence::TABLENAME);
 
         // Vérifie l'objet ajouté.
         $this->assertSame($count_records, $initial_count + 2);
 
         // Teste la contrainte d'unicité.
-        $data->id = 0;
-        $data->name = 'period 2';
-
         try {
-            $period->save($data);
+            $attendancepresence->id = 0;
+            $attendancepresence->save($data);
             $this->fail('dml_write_exception expected for unique constraint violation.');
         } catch (dml_write_exception $exception) {
             $this->assertInstanceOf('dml_write_exception', $exception);

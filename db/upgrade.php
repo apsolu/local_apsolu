@@ -681,5 +681,17 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 2020070900;
+    if ($result && $oldversion < $version) {
+        // Génère les sessions de cours.
+        $courses = local_apsolu\core\course::get_records();
+        foreach ($courses as $course) {
+            $course->set_sessions();
+        }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
     return $result;
 }

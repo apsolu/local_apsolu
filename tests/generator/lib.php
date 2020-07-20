@@ -92,4 +92,49 @@ class local_apsolu_generator extends testing_module_generator {
 
         return $data;
     }
+
+    /**
+     * Function to create dummy data period.
+     *
+     * @param string      $name
+     * @param null|string $type
+     *
+     * @return stdClass period object
+     */
+    public function get_period_data(string $name, string $type = null) {
+        $monday = strtotime('monday this week');
+
+        $weeks = array();
+
+        switch ($type) {
+            case 'past':
+                $weeks[] = strftime('%F', $monday - (4 * WEEKSECS));
+                $weeks[] = strftime('%F', $monday - (3 * WEEKSECS));
+                $weeks[] = strftime('%F', $monday - (2 * WEEKSECS));
+                $weeks[] = strftime('%F', $monday - WEEKSECS);
+                break;
+            case 'mixed':
+                $weeks[] = strftime('%F', $monday - (2 * WEEKSECS));
+                $weeks[] = strftime('%F', $monday - WEEKSECS);
+                $weeks[] = strftime('%F', $monday + WEEKSECS);
+                $weeks[] = strftime('%F', $monday + (2 * WEEKSECS));
+                break;
+            case 'future':
+                $weeks[] = strftime('%F', $monday + (3 * WEEKSECS));
+                $weeks[] = strftime('%F', $monday + (4 * WEEKSECS));
+                $weeks[] = strftime('%F', $monday + (5 * WEEKSECS));
+                $weeks[] = strftime('%F', $monday + (6 * WEEKSECS));
+                break;
+            default:
+                $weeks[] = strftime('%F', $monday + WEEKSECS);
+                $weeks[] = strftime('%F', $monday + (2 * WEEKSECS));
+        }
+
+        $data = new stdClass();
+        $data->name = $name;
+        $data->generic_name = $name;
+        $data->weeks = implode(',', $weeks);
+
+        return $data;
+    }
 }

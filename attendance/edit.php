@@ -86,50 +86,6 @@ echo $OUTPUT->heading($pagedesc);
 
 $sessions = $DB->get_records('apsolu_attendance_sessions', array('courseid' => $courseid));
 $count_sessions = count($sessions);
-if ($count_sessions === 0) {
-    // Create sessions.
-    $period = $DB->get_record('apsolu_periods', array('id' => $activity->periodid));
-    if ($period === false) {
-        // TODO: créer un message.
-        print_error('needcoursecategroyid');
-    }
-
-    $sessions = array();
-    foreach (explode(',', $period->weeks) as $week) {
-        $date = new DateTime($week.'T00:00:00');
-        if ($activity->numweekday !== '1') {
-            $date->add(new DateInterval('P'.($activity->numweekday - 1).'D'));
-        }
-
-        list($year, $month, $day) = explode(':',  $date->format('Y:m:d'));
-        list($hour, $minute) = explode(':', $activity->starttime);
-
-        $sessiontime = make_timestamp(
-            $year,
-            $month,
-            $day,
-            $hour,
-            $minute,
-            0,
-            $tz = 99,
-            true
-        );
-
-        $count_sessions++;
-
-        $session = new stdClass();
-        $session->name = 'Cours n°'.$count_sessions.' - '.strftime('%A %e %B %Y à %Hh%M', $sessiontime); // Cours n°1 - mercredi 12 septembre à 18h.
-        $session->sessiontime = $sessiontime;
-        $session->courseid = $courseid;
-        $session->activityid = $course->category;
-        $session->timecreated = time();
-        $session->timemodified = time();
-        $session->locationid = $activity->locationid;
-        $session->id = $DB->insert_record('apsolu_attendance_sessions', $session);
-
-        $sessions[$session->id] = $session;
-    }
-}
 
 if ($count_sessions === 0) {
     // TODO: créer un message.

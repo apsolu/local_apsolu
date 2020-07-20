@@ -57,4 +57,79 @@ class period extends record {
     public function __tostring() {
         return $this->generic_name;
     }
+
+    /**
+     * Retourne la liste des sessions correspondant à la période.
+     *
+     * @param int $offset Nombre de secondes à ajouter pour obtenir la session à partir de la première heure de la semaine.
+     * Exemples:
+     *    - (12 * 60 * 60) retournera toutes les sessions de la période pour le lundi à 12h00.
+     *    - ((3 * 24 * 60 * 60) + (16 * 60 * 60)) retournera toutes les sessions de la période pour le mercredi à 16h00.
+     *
+     * @return array Retourne un tableau d'objets attendancesession indéxé par le timestamp unix de la session.
+     */
+    public function get_sessions(int $offset) {
+        $sessions = array();
+
+        $weeks = explode(',', $this->weeks);
+        foreach ($weeks as $week) {
+            if (preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/', $week) !== 1) {
+                continue;
+            }
+
+            list($year, $month, $day) = explode('-', $week);
+
+            $session = new attendancesession();
+            $session->sessiontime = make_timestamp($year, $month, $day);
+            $session->sessiontime += $offset;
+            $sessions[$session->sessiontime] = $session;
+        }
+
+        return $sessions;
+    }
+
+    /**
+     * Enregistre un objet en base de données.
+     *
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     *
+     * @param object|null $data  StdClass représentant l'objet à enregistrer.
+     * @param object|null $mform Mform représentant un formulaire Moodle nécessaire à la gestion d'un champ de type editor.
+     *
+     * @return void
+     */
+    public function save(object $data = null, object $mform = null) {
+        global $DB;
+
+        // Démarre une transaction, si ce n'est pas déjà fait.
+        if ($DB->is_transaction_started() === false) {
+            $transaction = $DB->start_delegated_transaction();
+        }
+
+        if ($data !== null) {
+            $this->set_vars($data);
+        }
+
+        if (empty($this->id) === true) {
+            $this->id = $DB->insert_record(get_called_class()::TABLENAME, $this);
+        } else {
+            $oldperiod = new period();
+            $oldperiod->load($this->id, $required = true);
+
+            $DB->update_record(get_called_class()::TABLENAME, $this);
+
+            // On régénère les sessions.
+            if ($oldperiod->weeks !== $this->weeks) {
+                $courses = course::get_records(array('periodid' => $this->id));
+                foreach ($courses as $course) {
+                    $course->set_sessions();
+                }
+            }
+        }
+
+        // Valide la transaction en cours.
+        if (isset($transaction) === true) {
+            $transaction->allow_commit();
+        }
+    }
 }

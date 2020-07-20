@@ -115,6 +115,11 @@ class course extends record {
         // This might take a while. Raise the execution time limit.
         core_php_time_limit::raise();
 
+        // Supprime les sessions du cours.
+        foreach ($this->get_sessions() as $session) {
+            $session->delete();
+        }
+
         // We do this here because it spits out feedback as it goes.
         $course = $DB->get_record('course', array('id' => $this->id), $fields = '*', MUST_EXIST);
         $result = delete_course($course, $showfeedback = false);
@@ -213,6 +218,37 @@ class course extends record {
         }
 
         return $records;
+    }
+
+    /**
+     * Retourne le nombre de secondes écoulées entre le début de la semaine et le début du cours.
+     *
+     * @throws coding_exception Lève une exception lorsque la date de début du cours est mal formatée.
+     *
+     * @return int
+     */
+    public function get_session_offset() {
+        if (preg_match('/^[0-9][0-9]:[0-9][0-9]$/', $this->starttime) !== 1) {
+            throw new coding_exception('Unexpected value of starttime ('.$this->starttime.') for '.__METHOD__.'.');
+        }
+
+        list($hours, $minutes) = explode(':', $this->starttime);
+
+        $offset = 0;
+        $offset += (($this->numweekday - 1) * 24 * 60 * 60);
+        $offset += ($hours * 60 * 60);
+        $offset += ($minutes * 60);
+
+        return $offset;
+    }
+
+    /**
+     * Retourne les sessions du cours.
+     *
+     * @return array Retourne un tableau d'objets attendancesession.
+     */
+    public function get_sessions() {
+        return attendancesession::get_records(array('courseid' => $this->id));
     }
 
     /**
@@ -400,14 +436,121 @@ class course extends record {
             // If the new instance was created, allow it to do additional setup
             $block = block_instance($blocktype, $blockinstance);
             $block->instance_create();
+
+            // Génére les sessions de cours.
+            $this->set_sessions();
         } else {
+            $oldcourse = new course();
+            $oldcourse->load($this->id, $required = true);
+
             update_course((object)(array)$this);
+
             $DB->update_record(self::TABLENAME, $this);
+
+            // Vérifie que les informations liées aux sessions de cours n'ont pas été modifiées.
+            $sessionfields = array('locationid', 'weekday', 'numweekday', 'starttime', 'endtime', 'periodid');
+            foreach ($sessionfields as $field) {
+                if ($oldcourse->{$field} == $this->{$field}) {
+                    continue;
+                }
+
+                // Génère les sessions de cours.
+                $this->set_sessions();
+                break;
+            }
         }
 
         // Valide la transaction en cours.
         if (isset($transaction) === true) {
             $transaction->allow_commit();
+        }
+    }
+
+    /**
+     * Génère les sessions du cours.
+     *
+     * @return void
+     */
+    public function set_sessions() {
+        // Récupère le nombre de secondes entre le début de la semaine et la date de début du cours.
+        $offset = $this->get_session_offset();
+
+        $sessions = array();
+
+        // Récupère les sessions prévues pour cette période.
+        $period = new period();
+        $period->load($this->periodid);
+        foreach ($period->get_sessions($offset) as $sessiontime => $session) {
+            if ($session->is_expired() === true) {
+                // On retire de la sélection toutes les sessions déjà passées.
+                continue;
+            }
+
+            $sessions[$sessiontime] = $session;
+        }
+
+        // Récupère les sessions actuellement définies en base de données pour ce cours.
+        foreach ($this->get_sessions() as $sessionid => $session) {
+            $sessiontime = $session->sessiontime;
+
+            if (isset($sessions[$sessiontime]) === true) {
+                // La session existe déjà en base de données.
+                $sessions[$sessiontime] = $session;
+                continue;
+            }
+
+            if ($session->is_expired() === true) {
+                // On conserve toutes les sessions passées.
+                $sessions[$sessiontime] = $session;
+                continue;
+            }
+
+            // Toutes les autres sessions, on les supprime.
+            $session->delete();
+
+            // Enregistre un évènement dans les logs.
+            $event = \local_apsolu\event\session_deleted::create(array(
+                'objectid' => $session->id,
+                'context' => context_course::instance($this->id),
+                ));
+            $event->trigger();
+        }
+
+        // On procède à l'enregistrement des nouvelles sessions.
+        $count = 0;
+        ksort($sessions);
+        foreach ($sessions as $sessiontime => $session) {
+            $params = new stdClass();
+            $params->count = ++$count;
+            $params->strdatetime = userdate($session->sessiontime, get_string('strftimedaydatetime'));
+
+            $name = get_string('session_:count:_of_the_:strdatetime:', 'local_apsolu', $params); // Cours n°2 du mercredi 12 septembre à 18h30.
+            $sessionid = $session->id;
+
+            if ($sessionid !== 0 && $session->name === $name) {
+                // La session n'est pas nouvelle et son nom est identique.
+                continue;
+            }
+
+            $session->name = $name;
+            $session->courseid = $this->id;
+            $session->activityid = $this->category;
+            $session->timecreated = time();
+            $session->timemodified = time();
+            $session->save();
+
+            // Enregistre un évènement dans les logs.
+            if ($sessionid === 0) {
+                $eventclass = '\local_apsolu\event\session_created';
+            } else {
+                $eventclass = '\local_apsolu\event\session_updated';
+            }
+
+            $event = $eventclass::create(array(
+                'objectid' => $session->id,
+                'context' => context_course::instance($this->id),
+                ));
+            $event->trigger();
         }
     }
 
