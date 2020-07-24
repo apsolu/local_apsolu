@@ -106,4 +106,42 @@ class local_apsolu_calendar_edit_form extends moodleform {
         // Set default values.
         $this->set_data($defaults);
     }
+
+    /**
+     * Validation.
+     *
+     * @param array $data
+     * @param array $files
+     *
+     * @return array The errors that were found.
+     */
+    public function validation($data, $files) {
+        $errors = parent::validation($data, $files);
+
+        $datetimes = array();
+        $datetimes[] = array('enrolstartdate', 'enrolenddate');
+        $datetimes[] = array('coursestartdate', 'courseenddate');
+        $datetimes[] = array('reenrolstartdate', 'reenrolenddate');
+        $datetimes[] = array('gradestartdate', 'gradeenddate');
+
+        foreach ($datetimes as $dates) {
+            list($startdate, $enddate) = $dates;
+
+            if (empty($data[$startdate]) === true) {
+                continue;
+            }
+
+            if (empty($data[$enddate]) === true) {
+                continue;
+            }
+
+            if ($data[$startdate] < $data[$enddate]) {
+                continue;
+            }
+
+            $errors[$enddate] = get_string('enddatebeforestartdate', 'error');
+        }
+
+        return $errors;
+    }
 }
