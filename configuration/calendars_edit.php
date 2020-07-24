@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot.'/local/apsolu/configuration/calendars_form.php');
+require_once($CFG->dirroot.'/local/apsolu/configuration/calendars_edit_form.php');
 
 $calendarid = optional_param('calendarid', 0, PARAM_INT);
 
