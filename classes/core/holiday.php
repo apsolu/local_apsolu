@@ -84,4 +84,27 @@ class holiday extends record {
 
         return $holidays;
     }
+
+    /**
+     * Régénère les sessions des cours dont une session est planifiée sur ce jour férié.
+     *
+     * @return void
+     */
+    public function regenerate_sessions() {
+        global $DB;
+
+        $sql = "SELECT DISTINCT courseid FROM {".attendancesession::TABLENAME."} WHERE sessiontime BETWEEN :startdate AND :enddate";
+        $params = array('startdate' => $this->day, 'enddate' => $this->day + 24 * 60 * 60 - 1);
+        $sessions = $DB->get_records_sql($sql, $params);
+
+        foreach ($sessions as $session) {
+            $course = new course();
+            try {
+                $course->load($session->courseid, $required = true);
+                $course->set_sessions();
+            } catch (Exception $exception) {
+                debugging(__METHOD__.': le cours '.$session->courseid.' n\'existe pas.', $level = DEBUG_DEVELOPER);
+            }
+        }
+    }
 }

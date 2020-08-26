@@ -49,8 +49,15 @@ if ($data = $mform->get_data()) {
     }
 
     // Save data.
-    if ($DB->get_record(Holiday::TABLENAME, array('day' => $data->day)) === false) {
-        $holiday->save($data);
+    $record = $DB->get_record(Holiday::TABLENAME, array('day' => $data->day));
+    if ($record !== false) {
+        $holiday->load($record->id);
+    }
+    $holiday->save($data);
+
+    // Régénère les sessions.
+    if (isset($data->regensessions) === true) {
+        $holiday->regenerate_sessions();
     }
 
     // Redirige vers la page générale.

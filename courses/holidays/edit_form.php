@@ -50,6 +50,10 @@ class local_apsolu_courses_holidays_edit_form extends moodleform {
         $mform->setType('day', PARAM_INT);
         $mform->addRule('day', get_string('required'), 'required', null, 'client');
 
+        // Supprime les sessions positionnées sur ce jour férié.
+        $mform->addElement('checkbox', 'regensessions', 'Supprimer les sessions déjà planifiées pour cette journée');
+        $mform->setType('regensessions', PARAM_BOOL);
+
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 

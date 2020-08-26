@@ -133,6 +133,39 @@ class local_apsolu_core_holiday_testcase extends advanced_testcase {
         }
     }
 
+    public function test_regenerate_sessions() {
+        // Génère une période.
+        $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_period_data('p1');
+        $period1 = new local_apsolu\core\period();
+        $period1->save($data);
+
+        // Génère un cours.
+        $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
+        $course = new local_apsolu\core\course();
+        $data->periodid = $period1->id;
+        $course->save($data);
+
+        // Ajoute un jour férié sur la prochaine session de cours.
+        $holiday = new local_apsolu\core\holiday();
+        $data->day = strtotime('next '.$course->weekday) + WEEKSECS;
+        $holiday->save($data);
+
+        // Vérifie qu'il y a toujours 2 sessions.
+        $sessions = $course->get_sessions();
+        $this->assertSame(2, count($sessions));
+
+        // Vérifie que la session existe toujours.
+        $first_session = current($sessions);
+        $this->assertGreaterThanOrEqual($data->day, $first_session->sessiontime);
+        $this->assertLessThanOrEqual($data->day + DAYSECS, $first_session->sessiontime);
+
+        // Vérifie que la session sur le jour férié est supprimée.
+        $holiday->regenerate_sessions();
+        foreach ($course->get_sessions() as $session) {
+            $this->assertNotEquals($session->sessiontime, $first_session->sessiontime);
+        }
+    }
+
     public function test_save() {
         global $DB;
 
