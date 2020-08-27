@@ -81,6 +81,8 @@ $string['dates'] = 'Dates';
 $string['day_of_the_week'] = 'Jour de la semaine';
 $string['default_homepage_section1_text'] = '<p>Bienvenue sur le site de gestion des inscriptions au service des sports.</p>'.
     '<p>Ce service propose à l’ensemble des étudiants et des personnels une formation pour tous les niveaux à la pratique des activités physiques et sportives.</p>';
+$string['delete_sessions_already_scheduled_for_that_day'] = 'Supprimer les sessions déjà planifiées pour cette journée';
+$string['delete_sessions_already_scheduled_for_those_days'] = 'Supprimer les sessions déjà planifiées pour ces journées';
 $string['do_you_want_to_delete_area'] = 'Voulez-vous supprimer la zone géographique "{$a}" ?';
 $string['do_you_want_to_delete_category'] = 'Voulez-vous supprimer l\'activité physique "{$a}" ?';
 $string['do_you_want_to_delete_course'] = 'Voulez-vous supprimer le créneau horaire "{$a}" ?';
@@ -109,6 +111,7 @@ $string['end_time_for_range_3'] = 'Troisième période : horaire de fin';
 $string['end_time_for_range_3_help'] = 'Détermine jusqu\'à quel horaire une activité appartient au groupe de la troisième période.';
 $string['evening'] = 'Soirée';
 $string['expected_time_format'] = 'Format attendu : HH:MM.';
+$string['from'] = 'À partir de';
 $string['further_information'] = 'Informations complémentaires';
 $string['generate_holidays'] = 'Générer les jours fériés';
 $string['grouping_cannot_be_deleted'] = 'Le groupement d\'activités "{$a}" ne peut pas être supprimé, car il est rattaché aux activités physiques suivantes :';
@@ -240,6 +243,7 @@ $string['this_calendar_is_used_by_courses'] = 'Ce calendrier est actuellement ut
 $string['this_time_cannot_be_older_than_this_time'] = '{$a->start} ne peut pas être postérieur à {$a->end}.';
 $string['time_of_day'] = 'Période de la journée';
 $string['time_ranges'] = 'Horaires des périodes de la journée';
+$string['until'] = 'Jusqu\'au';
 $string['use_apsolu_homepage'] = 'Utiliser la page d\'accueil APSOLU';
 
 // Anciennes chaines dépréciées, qui utilisent de mauvaises clés de nommage.

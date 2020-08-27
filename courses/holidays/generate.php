@@ -26,25 +26,58 @@ defined('MOODLE_INTERNAL') || die;
 
 use local_apsolu\core\holiday as Holiday;
 
-$years = array();
-$years[] = strftime('%Y');
-$years[] = $years[0] + 1;
+require(__DIR__.'/generate_form.php');
 
-$holidays = $DB->get_records('apsolu_holidays', null, null, 'day');
+// Build form.
+$mform = new local_apsolu_courses_holidays_generate_form();
 
-foreach ($years as $year) {
-    foreach (Holiday::get_holidays($year) as $holidaytimestamp) {
-        if (isset($holidays[$holidaytimestamp]) === true) {
-            // Le jour férié est déjà enregistré.
-            continue;
+if ($data = $mform->get_data()) {
+    // Message à afficher à la fin de l'enregistrement.
+    $message = get_string('holidays_have_been_generated', 'local_apsolu');
+
+    // Récupère tous les jours fériés déjà enregistrés.
+    $holidays = $DB->get_records('apsolu_holidays', null, null, 'day');
+
+    // Parcourt chaque année dans l'intervalle donné.
+    $year = strftime('%Y', $data->from);
+    $endyear = strftime('%Y', $data->until);
+    for ($year ; $year <= $endyear ; $year++) {
+        // Parcourt les jours fériés de l'année.
+        foreach (Holiday::get_holidays($year) as $holidaytimestamp) {
+            if ($holidaytimestamp < $data->from) {
+                // Le jour férié est en deçà de l'intervalle donné.
+                continue;
+            }
+
+            if ($holidaytimestamp > $data->until) {
+                // Le jour férié est au deçà de l'intervalle donné.
+                continue;
+            }
+
+            if (isset($holidays[$holidaytimestamp]) === true) {
+                // Le jour férié est déjà enregistré.
+                continue;
+            }
+
+            // Save data.
+            $holiday = new Holiday();
+            $holiday->day = $holidaytimestamp;
+            $holiday->save();
+
+            // Régénère les sessions.
+            if (isset($data->regensessions) === true) {
+                $holiday->regenerate_sessions();
+            }
         }
-
-        $holiday = new Holiday();
-        $holiday->day = $holidaytimestamp;
-        $holiday->save();
     }
+
+    // Redirige vers la page générale.
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'holidays'));
+    redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
 
-$returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'holidays'));
-$message = get_string('holidays_have_been_generated', 'local_apsolu');
-redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
+// Display form.
+$heading = get_string('generate_holidays', 'local_apsolu');
+
+echo $OUTPUT->heading($heading);
+$mform->display();

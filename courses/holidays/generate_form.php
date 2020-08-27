@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Classe pour le formulaire permettant de configurer les jours fériés.
+ * Classe pour le formulaire permettant de générer une liste de jours fériés.
  *
  * @package   local_apsolu
  * @copyright 2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
@@ -27,13 +27,13 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/formslib.php');
 
 /**
- * Classe pour le formulaire permettant de configurer les jours fériés.
+ * Classe pour le formulaire permettant de générer une liste de jours fériés.
  *
  * @package   local_apsolu
  * @copyright 2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_apsolu_courses_holidays_edit_form extends moodleform {
+class local_apsolu_courses_holidays_generate_form extends moodleform {
     /**
      * Définit les champs du formulaire.
      *
@@ -45,13 +45,18 @@ class local_apsolu_courses_holidays_edit_form extends moodleform {
         $mform = $this->_form;
         $instance = $this->_customdata['holiday'];
 
-        // Day field.
-        $mform->addElement('date_selector', 'day', get_string('holiday', 'local_apsolu'));
-        $mform->setType('day', PARAM_INT);
-        $mform->addRule('day', get_string('required'), 'required', null, 'client');
+        // Champ "à partir de".
+        $mform->addElement('date_selector', 'from', get_string('from', 'local_apsolu'));
+        $mform->setType('from', PARAM_INT);
+        $mform->addRule('from', get_string('required'), 'required', null, 'client');
+
+        // Chmap "jusqu'au".
+        $mform->addElement('date_selector', 'until', get_string('until', 'local_apsolu'));
+        $mform->setType('until', PARAM_INT);
+        $mform->addRule('until', get_string('required'), 'required', null, 'client');
 
         // Supprime les sessions positionnées sur ce jour férié.
-        $mform->addElement('checkbox', 'regensessions', get_string('delete_sessions_already_scheduled_for_that_day', 'local_apsolu'));
+        $mform->addElement('checkbox', 'regensessions', get_string('delete_sessions_already_scheduled_for_those_days', 'local_apsolu'));
         $mform->setType('regensessions', PARAM_BOOL);
 
         // Submit buttons.
@@ -68,13 +73,28 @@ class local_apsolu_courses_holidays_edit_form extends moodleform {
         $mform->addElement('hidden', 'tab', 'holidays');
         $mform->setType('tab', PARAM_ALPHA);
 
-        $mform->addElement('hidden', 'action', 'edit');
+        $mform->addElement('hidden', 'action', 'generate');
         $mform->setType('action', PARAM_ALPHA);
-
-        $mform->addElement('hidden', 'holidayid', $instance->id);
-        $mform->setType('holidayid', PARAM_INT);
 
         // Set default values.
         $this->set_data($instance);
+    }
+
+    /**
+     * Validation.
+     *
+     * @param array $data
+     * @param array $files
+     *
+     * @return array The errors that were found.
+     */
+    public function validation($data, $files) {
+        $errors = parent::validation($data, $files);
+
+        if ($data['from'] >= $data['until']) {
+            $errors['until'] = get_string('enddatebeforestartdate', 'error');
+        }
+
+        return $errors;
     }
 }
