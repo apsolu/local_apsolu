@@ -351,7 +351,7 @@ foreach ($students as $student) {
         $enrolment_status_style = 'text-center';
     } else {
         $enrolment_status = get_string('inactive');
-        $enrolment_status_style = 'text-center warning';
+        $enrolment_status_style = 'text-center table-warning';
     }
 
     $picture = new user_picture($student);
@@ -370,7 +370,7 @@ foreach ($students as $student) {
 
     $status_style = '';
     if ($found === false) {
-        // $status_style = ' class="warning"';
+        // $status_style = ' class="table-warning"';
     }
 
     if (isset($presences[$student->id]->description) === false) {
@@ -392,20 +392,20 @@ foreach ($students as $student) {
     $informations_style = 'none';
     if (isset($student->apsolusesame) === false || $student->apsolusesame !== '1') {
         $informations[] = get_string('attendance_invalid_account', 'local_apsolu');
-        $informations_style = 'danger';
+        $informations_style = 'table-danger';
     }
 
     if (isset($payments[$student->id]) === true) {
         foreach ($payments[$student->id] as $card) {
             $informations[] = $paymentsimages[$card->status]->image.' '.$card->fullname;
             if ($card->status === Payment::DUE) {
-                $informations_style = 'danger';
+                $informations_style = 'table-danger';
             }
         }
     } else if ($hascoursecards === true) {
         // TODO: améliorer la gestion de cette erreur qui n'est pas forcement liée au paiement.
         $informations[] = get_string('attendance_forbidden_enrolment', 'local_apsolu');
-        $informations_style = 'danger';
+        $informations_style = 'table-danger';
     }
 
     if (isset($roles[$student->roleid]) === true) {
