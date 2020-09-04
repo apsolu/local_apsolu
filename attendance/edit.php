@@ -327,8 +327,14 @@ echo '<th>'.get_string('pictureofuser').'</th>'.
 
 $statuses = $DB->get_records('apsolu_attendance_statuses');
 
-$payments = Payment::get_users_cards_status_per_course($courseid);
-$paymentsimages = Payment::get_statuses_images();
+$hascoursecards = (empty(Payment::get_course_cards($courseid)) === false);
+
+$payments = array();
+$paymentsimages = array();
+if ($hascoursecards === true) {
+    $payments = Payment::get_users_cards_status_per_course($courseid);
+    $paymentsimages = Payment::get_statuses_images();
+}
 
 foreach ($students as $student) {
     $activestart = ($student->timestart == 0 || $student->timestart < time());
@@ -396,7 +402,8 @@ foreach ($students as $student) {
                 $informations_style = 'danger';
             }
         }
-    } else {
+    } else if ($hascoursecards === true) {
+        // TODO: améliorer la gestion de cette erreur qui n'est pas forcement liée au paiement.
         $informations[] = get_string('attendance_forbidden_enrolment', 'local_apsolu');
         $informations_style = 'danger';
     }
