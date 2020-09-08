@@ -78,6 +78,9 @@ class local_apsolu_payment_centers_edit_form extends moodleform {
         $mform->addElement('text', 'hmac', get_string('paybox_hmac', 'local_apsolu'));
         $mform->setType('hmac', PARAM_ALPHANUM);
         $mform->addHelpButton('hmac', 'paybox_hmac', 'local_apsolu');
+        if (empty($center->id) === true) {
+            $mform->addRule('hmac', get_string('required'), 'required', null, 'client');
+        }
 
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
