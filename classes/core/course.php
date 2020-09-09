@@ -535,6 +535,7 @@ class course extends record {
             $session->name = $name;
             $session->courseid = $this->id;
             $session->activityid = $this->category;
+            $session->locationid = $this->locationid;
             $session->timecreated = time();
             $session->timemodified = time();
             $session->save();
