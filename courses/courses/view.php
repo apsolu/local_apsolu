@@ -79,10 +79,10 @@ $data = new \stdClass();
 $data->wwwroot = $CFG->wwwroot;
 $data->courses = array_values($courses);
 $data->count_courses = count($courses);
+$data->is_siuaps_rennes = isset($CFG->is_siuaps_rennes);
 
 if (isset($notificationform)) {
     $data->notification = $notificationform;
 }
 
 echo $OUTPUT->render_from_template('local_apsolu/courses_courses', $data);
-

@@ -23,20 +23,18 @@ define(["jquery", "local_apsolu/jquery.tablefilter"], function($, TableFilter) {
                     "string", // Horaires.
                     "string", // Lieux.
                     "string", // Périodes.
-                    "string", // FFSU.
                     "string"  // Enseignants.
                 ],
 
                 // Columns data filter types.
-                col_1: "select",
-                col_2: "select",
-                col_3: "select",
-                col_4: "select",
-                col_5: "select",
-                col_6: "select",
-                col_7: "select",
-                col_8: "select",
-                col_10: "none",
+                col_1: "select", // Groupements d'activités.
+                col_2: "select", // Activités sportives.
+                col_3: "select", // Niveaux.
+                col_4: "select", // Jours.
+                col_5: "select", // Horaires.
+                col_6: "select", // Lieux.
+                col_7: "select", // Périodes.
+                col_9: "none", // Actions.
 
                 enable_default_theme: true,
                 help_instructions: false,
@@ -48,6 +46,15 @@ define(["jquery", "local_apsolu/jquery.tablefilter"], function($, TableFilter) {
                 // the "col_types" definitions.
                 extensions: [{ name: "sort" }]
             };
+
+            if (document.querySelectorAll("#table-courses-sortable thead tr th").length == 11) {
+                // Ajoute un filtre pour la colonne FFSU, présente uniquement sur l'instance de Rennes.
+                tfConfig.col_types.push("string");
+
+                tfConfig.col_8 = "select"; // Ajoute un filtre de type select sur la colonne FFSU.
+                delete tfConfig.col_9; // Le type de filtre sur la colonne devenue "enseignants".
+                tfConfig.col_10 = "none"; // Ajoute un filtre de type none sur la colonne "actions".
+            }
 
             var tf = new TableFilter.TableFilter(document.querySelector("#table-courses-sortable"), tfConfig);
             tf.init();
