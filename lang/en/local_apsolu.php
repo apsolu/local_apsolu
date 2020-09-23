@@ -871,7 +871,7 @@ $string['statistics_dashboard'] = 'Tableau de bord';
 $string['statistics_reports'] = 'Rapports';
 $string['statistics_select_reports'] = 'Sélectionnez un rapport existant';
 $string['statistics_custom'] = 'Recherche personnalisée';
-$string['statistics_clean'] = 'Éffacer';
+$string['statistics_clean'] = 'Effacer';
 $string['statistics_apply'] = 'Appliquer';
 // Statistics - Webservices
 $string['ws_local_apsolu_get_chartdataset_description'] = 'Retourne le jeu de données pour un graphique';
