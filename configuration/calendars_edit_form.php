@@ -57,6 +57,7 @@ class local_apsolu_calendar_edit_form extends moodleform {
         $mform->addElement('text', 'name', get_string('calendarname', 'local_apsolu'), $attributes);
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'server');
+        $mform->addRule('name', get_string('required'), 'required', null, 'client');
 
         $options = array();
         foreach ($calendarstypes as $type) {
@@ -140,6 +141,10 @@ class local_apsolu_calendar_edit_form extends moodleform {
             }
 
             $errors[$enddate] = get_string('enddatebeforestartdate', 'error');
+        }
+
+        if (empty(trim($data['name'])) === true) {
+            $errors['name'] = get_string('querystringcannotbeempty', 'error');
         }
 
         return $errors;
