@@ -57,6 +57,14 @@ class set_high_level_athletes extends \core\task\scheduled_task {
             return true;
         }
 
+        // TODO: sortir cette tâche qui n'a rien à voir avec les athlètes de haut-niveau.
+        // Positionne le flag "apsolumedicalcertificate" à 1 sur les étudiants dont le certificat FFSU est validé dans le cours 249.
+        $sql = "UPDATE {user_info_data} SET data = 1".
+            " WHERE fieldid = (SELECT uif.id FROM {user_info_field} uif WHERE uif.shortname = 'apsolumedicalcertificate')".
+            " AND userid IN (SELECT ag.userid from {assign} a JOIN {assign_grades} ag ON ag.assignment = a.id WHERE a.id = 1 AND a.course = 249 AND ag.grade > 0)".
+            " AND data != 1";
+        $DB->execute($sql);
+
         // TODO: carte muscu offerte.
 
         // TODO: faire une page pour configurer le groupe et le cours (menu déroulant + ids) à synchroniser.
