@@ -709,5 +709,60 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 2020092300;
+    if ($result && $oldversion < $version) {
+        $field = $DB->get_record('user_info_field', array('shortname' => 'apsoluusertype'));
+        if ($field === false) {
+            // Ajoute un champ de profil "type d'utilisateur".
+            $sql = "SELECT id, MAX(sortorder) AS sortorder".
+                " FROM {user_info_field}".
+                " WHERE categoryid IN (SELECT categoryid FROM {user_info_field} WHERE shortname = 'apsolupostalcode')";
+            $category = $DB->get_record_sql($sql);
+            if ($category !== false) {
+                $category->sortorder++;
+
+                $field = (object) [
+                    'shortname' => 'apsoluusertype',
+                    'name' => get_string('fields_apsoluusertype', 'local_apsolu'),
+                    'datatype' => 'text',
+                    'description' => '',
+                    'descriptionformat' => '',
+                    'categoryid' => $category->id,
+                    'sortorder' => $category->sortorder,
+                    'required' => '0',
+                    'locked' => '1',
+                    'visible' => '1',
+                    'forceunique' => '0',
+                    'signup' => '0',
+                    'defaultdata' => '',
+                    'defaultdataformat' => '0',
+                    'param1' => '30',
+                    'param2' => '2048',
+                    'param3' => '0',
+                    'param4' => '',
+                    'param5' => '',
+                   ];
+
+                $DB->insert_record('user_info_field', $field);
+            }
+        }
+
+        // Corrige la mauvaise initialisation du lieu d'une session lors de la génération des sessions d'un cours.
+        $courses = $DB->get_records('apsolu_courses');
+        $sessions = $DB->get_records('apsolu_attendance_sessions', array('locationid' => 0));
+        foreach ($sessions as $session) {
+            if (isset($courses[$session->courseid]) === false) {
+                continue;
+            }
+
+            $session->locationid = $courses[$session->courseid]->locationid;
+
+            $DB->update_record('apsolu_attendance_sessions', $session);
+        }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
     return $result;
 }

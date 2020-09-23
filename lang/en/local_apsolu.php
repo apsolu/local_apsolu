@@ -783,6 +783,7 @@ $string['mystudents'] = 'Liste de mes étudiants';
 $string['fields_complements_category'] = 'Informations complémentaires';
 $string['fields_apsolupostalcode'] = 'Code postal';
 $string['fields_apsolusex'] = 'Sexe';
+$string['fields_apsoluusertype'] = 'Type d\'utilisateur';
 $string['fields_apsolubirthday'] = 'Date de naissance';
 $string['fields_apsoluufr'] = 'UFR';
 $string['ufrs_help'] = 'Noms partiels d\'une ou plusieurs UFR séparées par des virgules.<br />Exemple: math,langue';
