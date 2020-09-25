@@ -679,12 +679,17 @@ class local_apsolu_webservices extends external_api {
             " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid".
             " JOIN {apsolu_courses} ac ON ac.id = aas.courseid".
             " WHERE aap.statusid IN (1,2)". // Present + late.
-            " AND aap.timecreated >= :from".
+            " AND aas.sessiontime BETWEEN :from1 AND :from2".
             " AND aap.timemodified >= :since".
             " ORDER BY aas.courseid";
 
-        // uhb_dump_sql($sql, array('since' => $since));
-        foreach ($DB->get_records_sql($sql, array('from' => $from, 'since' => $since)) as $record) {
+        $params = array();
+        $params['from1'] = $from;
+        $params['from2'] = $from + 7 * 24 * 60 * 60;
+        $params['since'] = $since;
+
+        // uhb_dump_sql($sql, $params);
+        foreach ($DB->get_records_sql($sql, $params) as $record) {
             $attendance = new stdClass();
             $attendance->iduser = $record->iduser;
             $attendance->idcourse = $record->courseid;
