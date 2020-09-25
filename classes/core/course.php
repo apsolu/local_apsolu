@@ -534,7 +534,7 @@ class course extends record {
 
             $session->name = $name;
             $session->courseid = $this->id;
-            $session->activityid = $this->category;
+            $session->activityid = $this->category; // TODO: supprimer ce champ. Note: category ne semble pas être défini, provoquant une initialisation à 0 en base de données.
             $session->locationid = $this->locationid;
             $session->timecreated = time();
             $session->timemodified = time();

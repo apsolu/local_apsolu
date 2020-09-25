@@ -103,7 +103,8 @@ class attendance {
             " JOIN {enrol} e ON e.courseid = aas.courseid".
             " JOIN {apsolu_calendars} ac ON e.customchar1 = ac.id".
             " JOIN {apsolu_calendars_types} act ON act.id = ac.typeid".
-            " WHERE aas.activityid = :categoryid".
+            " JOIN {course} c ON c.id = aas.courseid".
+            " WHERE c.category = :categoryid".
             " AND e.enrol = 'select'".
             " AND aas.sessiontime BETWEEN ac.coursestartdate AND ac.courseenddate".
             " AND aap.statusid != 4". // Exclus les absences.
