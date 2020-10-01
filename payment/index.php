@@ -78,19 +78,16 @@ if (isset($customfields->apsolusesame) === false || $customfields->apsolusesame 
     // Display page.
     echo $OUTPUT->header();
 
-    $data = new stdClass();
-    if ($USER->auth === 'shibboleth') {
-        if (empty($data->functional_contact) === false) {
-            $options = (object) ['email' => $data->functional_contact];
-        } else {
-            $admin = current(get_admins());
-            $options = (object) ['email' => $admin->email];
-        }
-        $data->alert = get_string('invalid_user_invalid_sesame', 'local_apsolu', $options);
+    $contact = get_config('local_apsolu', 'functional_contact');
+    if (empty($contact) === false) {
+        $options = (object) ['email' => $contact];
     } else {
-        $options = (object) ['url' => $CFG->wwwroot.'/local/apsolu_auth/edit.php'];
-        $data->alert = get_string('invalid_user_no_sesame', 'local_apsolu', $options);
+        $admin = current(get_admins());
+        $options = (object) ['email' => $admin->email];
     }
+
+    $data = new stdClass();
+    $data->alert = get_string('invalid_user_invalid_sesame', 'local_apsolu', $options);
 
     echo $OUTPUT->render_from_template('local_apsolu/payment_invalid_user', $data);
 
