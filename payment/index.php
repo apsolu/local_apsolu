@@ -82,7 +82,7 @@ if (isset($customfields->apsolusesame) === false || $customfields->apsolusesame 
     if (empty($contact) === false) {
         $options = (object) ['email' => $contact];
     } else {
-        $admin = current(get_admins());
+        $admin = get_admin();
         $options = (object) ['email' => $admin->email];
     }
 

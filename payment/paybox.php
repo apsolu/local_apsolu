@@ -147,11 +147,9 @@ try {
     $trace = $exception->getMessage().PHP_EOL.$outputsuccesscontent;
 
     if (empty($CFG->debug) === false) {
-        $users = get_admins();
+        $admin = get_admin();
         $from = $CFG->noreplyaddress;
-        foreach ($users as $user) {
-            email_to_user($user, $from, 'SIUAPS: anomalie paiement', $trace);
-        }
+        email_to_user($admin, $from, 'SIUAPS: anomalie paiement', $trace);
     }
 
     file_put_contents($outputerror, $trace.PHP_EOL, FILE_APPEND | LOCK_EX);
