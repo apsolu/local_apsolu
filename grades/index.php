@@ -25,6 +25,10 @@
 require_once(__DIR__.'/../../../config.php');
 require_once($CFG->dirroot.'/local/apsolu/grades/grades_courses_form.php');
 
+if (isset($CFG->is_siuaps_rennes) === false) {
+    print_error('accessdenied', 'admin');
+}
+
 $courseid = optional_param('courseid', null, PARAM_INT);
 
 $PAGE->set_context(context_system::instance());
@@ -44,7 +48,7 @@ $sql = "SELECT DISTINCT c.*".
     " FROM {course} c".
     " JOIN {course_categories} cc ON cc.id = c.category".
     " JOIN {enrol} e ON c.id = e.courseid".
-    " JOIN {enrol_select_roles} esr ON e.id = esr.enrolid AND esr.roleid IN (9, 10)".
+    " JOIN {enrol_select_roles} esr ON e.id = esr.enrolid AND esr.roleid IN (9, 10, 13)".
     " JOIN {apsolu_courses} ac ON ac.id = c.id".
     " JOIN {context} ctx ON c.id = ctx.instanceid AND ctx.contextlevel = 50".
     " JOIN {role_assignments} ra ON ctx.id = ra.contextid AND ra.roleid = 3".
@@ -141,7 +145,7 @@ if ($courseid) {
         " JOIN {course} c ON c.id = e.courseid AND c.id = :courseid".
         " JOIN {apsolu_courses} ac ON ac.id = c.id".
         " JOIN {context} ctx ON c.id = ctx.instanceid AND ctx.contextlevel = 50".
-        " JOIN {role_assignments} ra ON ctx.id = ra.contextid AND ra.itemid = e.id AND ra.userid = u.id AND ra.roleid IN (9, 10)".
+        " JOIN {role_assignments} ra ON ctx.id = ra.contextid AND ra.itemid = e.id AND ra.userid = u.id AND ra.roleid IN (9, 10, 13)".
         " JOIN {role} r ON r.id = ra.roleid".
         " LEFT JOIN {apsolu_grades} ag ON u.id = ag.userid AND c.id = ag.courseid".
         " WHERE u.deleted = 0".
@@ -307,7 +311,7 @@ if ($courseid) {
                         $grade3attr = '';
                         $grade4attr = '';
                     }
-                } else if ($user->roleid == 10) {
+                } else if ($user->roleid == 10 || $user->roleid == 13) {
                     // Évalué bonification.
                     $grade1attr = '';
                     $grade2str = '';
