@@ -30,4 +30,11 @@ $capabilities = array(
         'contextlevel' => CONTEXT_SYSTEM,
         'riskbitmask' => RISK_CONFIG,
     ),
+    'local/apsolu:gradable' => array(
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array(
+            'student' => CAP_ALLOW
+        ),
+    ),
 );

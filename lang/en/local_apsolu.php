@@ -24,6 +24,7 @@
 
 $string['pluginname'] = 'APSOLU';
 $string['apsolu:configpaybox'] = 'Configurer les comptes PayBox';
+$string['apsolu:gradable'] = 'Être évalué dans une activité';
 
 // Nouvelles chaines, triées par clé.
 $string['activities'] = 'Activités';
