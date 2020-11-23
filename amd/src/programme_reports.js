@@ -3,7 +3,8 @@ define(
     "jquery",
     'core/notification',    
     "core/ajax",
-    "local_apsolu/moment",    
+    "local_apsolu/moment", 
+    "local_apsolu/jszip",   
     "local_apsolu/datatables.net",
     "local_apsolu/datatables.net-buttons",
     "local_apsolu/datatables.net-bs4",
@@ -66,7 +67,7 @@ define(
                     return value;
                 }),
                 order: order,
-                buttons: ['csvHtml5'],
+                buttons: ['excelHtml5','csvHtml5'],
                 dom: '<"top"Bfi>rt<"bottom"lp><"clear">', //'dom': 'lfrtip',
                 pageLength:30,
                 language: {
