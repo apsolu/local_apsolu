@@ -31,7 +31,7 @@ use local_apsolu\local\statistics\programme\report;
 
 // Output
 $PAGE->requires->js_call_amd('local_apsolu/programme_reports', 'init', array(".report-enrolList-table"));
-$PAGE->requires->css('/local/apsolu/lib/jquery/Datatables/dataTables.min.css');
+$PAGE->requires->css('/local/apsolu/lib/jquery/DataTables/datatables.min.css');
 
 // Data
 $data = new stdClass();

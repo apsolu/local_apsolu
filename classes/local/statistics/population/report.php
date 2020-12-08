@@ -61,8 +61,9 @@ class report extends \local_apsolu\local\statistics\report {
       			ACT.id as calendartypeid,ACT.name as calendartypename,
             ACI.id as cityid,ACI.name as cityname,
       			U.institution, U.department, U.id as userid, U.idnumber, U.firstname, U.lastname, U.email,
-            Sexe.data as sexe, UFR.data as ufr, LMD.data as lmd, apsoluhighlevelathlete.data as shnu,
-            CASE WHEN apsolucardpaid.data THEN "Oui" ELSE "Non" END as apsolucardpaid,
+            Sexe.data as sexe, 
+            CASE WHEN UFR.data IS NULL THEN \'\' ELSE UFR.data END AS ufr, CASE WHEN LMD.data IS NULL THEN \'\' ELSE LMD.data END AS lmd, apsoluhighlevelathlete.data as shnu,
+            CASE WHEN apsolucardpaid.data IS NOT NULL THEN "Oui" ELSE "Non" END as apsolucardpaid,
       			E.id as enrolid, E.name as enrolname, UE.status,
             CASE WHEN (U.email LIKE \'%@etudiant.univ-%\' OR U.email LIKE \'%@etu.univ-%\' OR U.email LIKE \'%@eleves.%\' OR U.email LIKE \'%@etud.univ-%\' OR U.email LIKE \'%@etudiant.%\')
             	THEN \'Étudiant\'
@@ -842,4 +843,55 @@ class report extends \local_apsolu\local\statistics\report {
 
         return $DB->get_records_sql($sql);
     }
+
+    /**
+     * Nombre d'inscriptions acceptés par rôle 'évalué'
+     *
+     * @param array $params
+     *
+     * @return array
+     */
+    public function enrollment_accepted_evaluated($params) {
+      global $DB;
+
+      $sql = $params["WithEnrolments"] . ",gradable AS (
+        SELECT r.id,r.shortname,CONCAT('{\"id\": \"roleshortname\", \"operator\": \"contains\", \"value\": \"',shortname,'\"}') AS rules 
+        FROM mdl_role r 
+            JOIN mdl_role_capabilities rc ON rc.roleid = r.id
+            WHERE r.archetype = 'student'     
+            AND rc.capability LIKE 'local/apsolu:%'
+            AND rc.capability LIKE '%gradable'
+            AND rc.permission = 1
+        ) SELECT DISTINCT
+        ROW_NUMBER() OVER (ORDER BY e.institution,e.ufr,e.department,e.lmd DESC) AS row_num,
+        e.institution, SUM(COUNT(e.enrolid)) OVER (PARTITION BY e.institution) AS institution_total,
+        CONCAT('{\"condition\":\"AND\",\"rules\":[{\"id\":\"status\",\"operator\":\"equal\",\"value\": \"0\"}, 
+        {\"condition\": \"OR\",\"rules\": [',(SELECT GROUP_CONCAT(rules ORDER BY rules SEPARATOR ',') FROM gradable),']},
+        {\"id\": \"institution\", \"operator\": \"equal\", \"value\": \"',CASE WHEN (e.institution = '' OR e.institution IS NULL) THEN ' ' ELSE e.institution END,'\"}]}') AS institution_rules,
+        e.ufr, SUM(COUNT(e.enrolid)) OVER (PARTITION BY e.institution,e.ufr) AS ufr_total, 
+        CONCAT('{\"condition\":\"AND\",\"rules\":[{\"id\":\"status\",\"operator\":\"equal\",\"value\": \"0\"}, 
+        {\"condition\": \"OR\",\"rules\": [',(SELECT GROUP_CONCAT(rules ORDER BY rules SEPARATOR ',') FROM gradable),']},
+        {\"id\": \"institution\", \"operator\": \"equal\", \"value\": \"',CASE WHEN (e.institution = '' OR e.institution IS NULL) THEN ' ' ELSE e.institution END,'\"},
+        {\"id\": \"ufr\", \"operator\": \"equal\", \"value\": \"',CASE WHEN (e.ufr = '' OR e.ufr IS NULL) THEN ' ' ELSE e.ufr END,'\"}]}') AS ufr_rules,
+        e.department, SUM(COUNT(e.enrolid)) OVER (PARTITION BY e.institution,e.ufr,e.department) AS department_total,
+        CONCAT('{\"condition\":\"AND\",\"rules\":[{\"id\":\"status\",\"operator\":\"equal\",\"value\": \"0\"}, 
+        {\"condition\": \"OR\",\"rules\": [',(SELECT GROUP_CONCAT(rules ORDER BY rules SEPARATOR ',') FROM gradable),']},
+        {\"id\": \"institution\", \"operator\": \"equal\", \"value\": \"',CASE WHEN (e.institution = '' OR e.institution IS NULL) THEN ' ' ELSE e.institution END,'\"},
+        {\"id\": \"ufr\", \"operator\": \"equal\", \"value\": \"',CASE WHEN (e.ufr = '' OR e.ufr IS NULL) THEN ' ' ELSE e.ufr END,'\"},
+        {\"id\": \"department\", \"operator\": \"equal\", \"value\": \"',CASE WHEN (e.department = '' OR e.department IS NULL) THEN ' ' ELSE e.department END,'\"}]}') AS department_rules,
+        e.lmd, COUNT(e.enrolid) AS lmd_total,
+        CONCAT('{\"condition\":\"AND\",\"rules\":[{\"id\":\"status\",\"operator\":\"equal\",\"value\": \"0\"}, 
+        {\"condition\": \"OR\",\"rules\": [',(SELECT GROUP_CONCAT(rules ORDER BY rules SEPARATOR ',') FROM gradable),']},
+        {\"id\": \"institution\", \"operator\": \"equal\", \"value\": \"',CASE WHEN (e.institution = '' OR e.institution IS NULL) THEN ' ' ELSE e.institution END,'\"},
+        {\"id\": \"ufr\", \"operator\": \"equal\", \"value\": \"',CASE WHEN (e.ufr = '' OR e.ufr IS NULL) THEN ' ' ELSE e.ufr END,'\"},
+        {\"id\": \"department\", \"operator\": \"equal\", \"value\": \"',CASE WHEN (e.department = '' OR e.department IS NULL) THEN ' ' ELSE e.department END,'\"},
+        {\"id\": \"lmd\", \"operator\": \"equal\", \"value\": \"',CASE WHEN (e.lmd = '' OR e.lmd IS NULL) THEN ' ' ELSE e.lmd END,'\"}]}') AS lmd_rules
+      FROM enrolments e
+      JOIN gradable g ON g.shortname = e.roleshortname
+      WHERE STATUS = 0
+      GROUP BY institution,ufr,department,lmd
+      ORDER BY institution,ufr,department,lmd;";
+
+      return $DB->get_records_sql($sql);
+  }
 }

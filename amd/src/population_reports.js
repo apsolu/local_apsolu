@@ -182,7 +182,17 @@ define(
               var table = $(selector).DataTable(options);
               table.unique(); // Remove doublons
               
-              
+              // build link to rules
+              $(selector+' tbody').on('click', 'a', function (e) {
+                e.preventDefault();
+                var rulesid = $(this).data("rules");
+                if (rulesid) {
+                  var data = table.row( $(this).parents('tr') ).data();
+                  var rules = data[rulesid];
+                  window.open("/local/apsolu/statistics/population/index.php?page=custom&rules=" + btoa(rules), "_blank");
+                }
+                return false;
+              });                
             }).fail(notification.exception);     
             
             

@@ -33,7 +33,7 @@ $data = new stdClass();
 // Output.
 $PAGE->requires->jquery();
 $PAGE->requires->css( new moodle_url($CFG->wwwroot . '/local/apsolu/lib/jquery/jQuery-QueryBuilder/css/query-builder.default.min.css'));
-$PAGE->requires->css('/local/apsolu/lib/jquery/Datatables/dataTables.min.css');
+$PAGE->requires->css('/local/apsolu/lib/jquery/DataTables/datatables.min.css');
 
 if ($CFG->is_siuaps_rennes){
     $data->is_siuaps_rennes = $CFG->is_siuaps_rennes;

@@ -33,7 +33,7 @@ $data = new stdClass();
 // Output.
 $PAGE->requires->jquery();
 $PAGE->requires->css( new moodle_url($CFG->wwwroot . '/local/apsolu/lib/jquery/jQuery-QueryBuilder/css/query-builder.default.min.css'));
-$PAGE->requires->css('/local/apsolu/lib/jquery/Datatables/dataTables.min.css');
+$PAGE->requires->css('/local/apsolu/lib/jquery/DataTables/datatables.min.css');
 $PAGE->requires->css( new moodle_url($CFG->wwwroot . '/local/apsolu/lib/jquery/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'));
 $PAGE->requires->css( new moodle_url($CFG->wwwroot . '/local/apsolu/lib/jquery/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css'));
 $PAGE->requires->css( new moodle_url($CFG->wwwroot . '/local/apsolu/lib/jquery/bootstrap-datetimepicker/css/bootstrap-datetimepicker-standalone.css'));

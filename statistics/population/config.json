@@ -217,6 +217,36 @@
           }
         },
         {
+          "id": "enrollment_accepted_evaluated",
+          "label":"Nombre d'inscriptions acceptées par rôle 'évalué'",
+          "group" : "statistics_enrollments",
+          "values": {
+            "method" : "enrollment_accepted_evaluated",
+            "columns" : [
+              {"data":"institution", "title":"Institution"},
+              {"data":"institution_total", "title":"Total",
+                "render": "function(data, type, row, meta) {return \"<a target='_blank' class='parse-rules' data-rules='institution_rules' href='#'>\"+data+\"</a>\";}",
+                "className": "border-right"
+              },
+              {"data":"ufr", "title":"UFR"},
+              {"data":"ufr_total", "title":"Total",
+                "render": "function(data, type, row, meta) {return \"<a target='_blank' class='parse-rules' data-rules='ufr_rules' href='#'>\"+data+\"</a>\";}",
+                "className": "border-right"
+              },
+              {"data":"department", "title":"Département"},
+              {"data":"department_total", "title":"Total",
+                "render": "function(data, type, row, meta) {return \"<a target='_blank' class='parse-rules' data-rules='department_rules' href='#'>\"+data+\"</a>\";}",
+                "className": "border-right"
+              },
+              {"data":"lmd", "title":"LMD"},
+              { "data": "lmd_total", "title":"Total",
+                "render": "function(data, type, row, meta) {return \"<a target='_blank' class='parse-rules' data-rules='lmd_rules' href='#'>\"+data+\"</a>\";}"
+              }
+            ],
+            "filters":{"select":[0,2,4,6]}
+          }
+        },
+        {
           "id": "custom_nowishes",
           "label":"Nombre de visiteurs n'ayant pas fait de vœux",
           "group" : "statistics_enrollees",
