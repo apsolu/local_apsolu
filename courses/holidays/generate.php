@@ -29,7 +29,8 @@ use local_apsolu\core\holiday as Holiday;
 require(__DIR__.'/generate_form.php');
 
 // Build form.
-$mform = new local_apsolu_courses_holidays_generate_form();
+$customdata = array('holiday' => (object) ['from' => time(), 'until' => time() + 365 * 24 * 60 * 60]);
+$mform = new local_apsolu_courses_holidays_generate_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
     // Message à afficher à la fin de l'enregistrement.
