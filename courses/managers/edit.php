@@ -43,9 +43,9 @@ $mform = new local_apsolu_courses_managers_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
     // Message à afficher à la fin de l'enregistrement.
-    $message = get_string('manager_updated', 'local_apsolu');
+    $message = get_string('locations_manager_updated', 'local_apsolu');
     if (empty($manager->id) === true) {
-        $message = get_string('manager_saved', 'local_apsolu');
+        $message = get_string('locations_manager_saved', 'local_apsolu');
     }
 
     // Save data.
