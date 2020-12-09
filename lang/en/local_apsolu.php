@@ -105,6 +105,7 @@ $string['edit_location'] = 'Modifier un lieu';
 $string['edit_locations_manager'] = 'Modifier un gestionnaire de lieux';
 $string['edit_period'] = 'Modifier une période';
 $string['edit_skill'] = 'Modifier un niveau de pratique';
+$string['employee'] = 'Personnel';
 $string['end_time_for_range_1'] = 'Première période : horaire de fin';
 $string['end_time_for_range_1_help'] = 'Détermine jusqu\'à quel horaire une activité appartient au groupe de la première période.';
 $string['end_time_for_range_2'] = 'Deuxième période : horaire de fin';
