@@ -390,6 +390,162 @@ class local_apsolu_webservices extends external_api {
     }
 
     /**
+     * Retourne la liste des cours.
+     *
+     * @return array
+     */
+    public static function get_courses_list() {
+        global $DB;
+
+        $data = array();
+
+        $roles = UniversiteRennes2\Apsolu\get_activities_roles();
+        $teachers = UniversiteRennes2\Apsolu\get_activities_teachers();
+
+        $sql = "SELECT DISTINCT c.id, c.fullname AS coursename, ac.event, ac.numweekday, ac.weekday, ac.starttime, ac.endtime,".
+            " cc0.id AS domainid, cc0.name AS domain, acg.url AS domainurl,".
+            " cc.id AS sportid, cc.name AS sport, acc.url AS sporturl, cc.description,".
+            " ac.skillid, ask.name AS skill,".
+            " ac.locationid, al.name AS location, al.areaid, aa.name AS area,".
+            " aa.cityid, aci.name AS city,".
+            " ac.periodid, ap.generic_name AS period".
+            " FROM {course} c".
+            " JOIN {apsolu_courses} ac ON c.id = ac.id".
+            " JOIN {course_categories} cc ON cc.id = c.category".
+            " JOIN {apsolu_courses_categories} acc ON acc.id = cc.id".
+            " JOIN {course_categories} cc0 ON cc0.id = cc.parent".
+            " JOIN {apsolu_courses_groupings} acg ON acg.id = cc0.id".
+            " JOIN {apsolu_skills} ask ON ask.id = ac.skillid".
+            " JOIN {apsolu_locations} al ON al.id = ac.locationid".
+            " JOIN {apsolu_areas} aa ON aa.id = al.areaid".
+            " JOIN {apsolu_cities} aci ON aci.id = aa.cityid".
+            " JOIN {apsolu_periods} ap ON ap.id = ac.periodid".
+            " WHERE cc0.visible = 1".
+            " AND cc.visible = 1".
+            " AND c.visible = 1".
+            " ORDER BY domain, sport, numweekday, starttime, event";
+        foreach ($DB->get_records_sql($sql) as $course) {
+            $course->courseid = $course->id;
+            $course->weekday = get_string($course->weekday, 'calendar');
+
+            $course->roles = array();
+            if (isset($roles[$course->id]) === true) {
+                foreach ($roles[$course->id] as $role) {
+                    $course->roles[] = $role->localname;
+                }
+            }
+
+            $course->teachers = array();
+            if (isset($teachers[$course->id]) === true) {
+                foreach ($teachers[$course->id] as $teacher) {
+                    $course->teachers[] = fullname($teacher);
+                }
+            }
+
+            $data[] = $course;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Describes the parameters for get_courses_list.
+     *
+     * @return external_external_function_parameters
+     */
+    public static function get_courses_list_parameters() {
+        return new external_function_parameters(array());
+    }
+
+    /**
+     * Describes the get_courses_list return value.
+     *
+     * @return external_single_structure
+     */
+    public static function get_courses_list_returns() {
+        return new external_multiple_structure(
+            new external_single_structure(
+                array(
+                    'courseid' => new external_value(PARAM_INT, get_string('ws_value_courseid', 'local_apsolu')),
+                    'coursename' => new external_value(PARAM_TEXT, get_string('ws_value_course_name', 'local_apsolu')),
+                    'event' => new external_value(PARAM_TEXT, get_string('ws_value_event', 'local_apsolu')),
+                    'numweekday' => new external_value(PARAM_INT, get_string('ws_value_numweekday', 'local_apsolu')),
+                    'weekday' => new external_value(PARAM_TEXT, get_string('ws_value_weekday', 'local_apsolu')),
+                    'starttime' => new external_value(PARAM_TEXT, get_string('ws_value_starttime', 'local_apsolu')),
+                    'endtime' => new external_value(PARAM_TEXT, get_string('ws_value_endtime', 'local_apsolu')),
+                    'domainid' => new external_value(PARAM_INT, get_string('ws_value_domainid', 'local_apsolu')),
+                    'domain' => new external_value(PARAM_TEXT, get_string('ws_value_domain', 'local_apsolu')),
+                    'domainurl' => new external_value(PARAM_TEXT, get_string('ws_value_domain_url', 'local_apsolu')),
+                    'sportid' => new external_value(PARAM_INT, get_string('ws_value_activityid', 'local_apsolu')),
+                    'sport' => new external_value(PARAM_TEXT, get_string('ws_value_activity_name', 'local_apsolu')),
+                    'sporturl' => new external_value(PARAM_TEXT, get_string('ws_value_activity_url', 'local_apsolu')),
+                    'description' => new external_value(PARAM_RAW, get_string('ws_value_description', 'local_apsolu')),
+                    'skillid' => new external_value(PARAM_INT, get_string('ws_value_skillid', 'local_apsolu')),
+                    'skill' => new external_value(PARAM_TEXT, get_string('ws_value_skill', 'local_apsolu')),
+                    'locationid' => new external_value(PARAM_INT, get_string('ws_value_locationid', 'local_apsolu')),
+                    'location' => new external_value(PARAM_TEXT, get_string('ws_value_location', 'local_apsolu')),
+                    'areaid' => new external_value(PARAM_INT, get_string('ws_value_areaid', 'local_apsolu')),
+                    'area' => new external_value(PARAM_TEXT, get_string('ws_value_area', 'local_apsolu')),
+                    'cityid' => new external_value(PARAM_INT, get_string('ws_value_cityid', 'local_apsolu')),
+                    'city' => new external_value(PARAM_TEXT, get_string('ws_value_city', 'local_apsolu')),
+                    'periodid' => new external_value(PARAM_INT, get_string('ws_value_periodid', 'local_apsolu')),
+                    'period' => new external_value(PARAM_TEXT, get_string('ws_value_period', 'local_apsolu')),
+                    'roles' => new external_multiple_structure(
+                        new external_value(PARAM_TEXT, get_string('ws_value_role', 'local_apsolu'))
+                    ),
+                    'teachers' => new external_multiple_structure(
+                        new external_value(PARAM_TEXT, get_string('ws_value_teacher', 'local_apsolu'))
+                    ),
+                  )
+            )
+        );
+    }
+
+    /**
+     * Retourne la liste des groupements d'activités.
+     *
+     * @return array
+     */
+    public static function get_groupings() {
+        global $DB;
+
+        $data = array();
+
+        $sql = "SELECT DISTINCT cc.id, cc.name, acg.url".
+            " FROM {course_categories} cc".
+            " JOIN {apsolu_courses_groupings} acg ON acg.id = cc.id".
+            " ORDER BY name";
+
+        return array_values($DB->get_records_sql($sql));
+    }
+
+    /**
+     * Describes the parameters for get_groupings.
+     *
+     * @return external_external_function_parameters
+     */
+    public static function get_groupings_parameters() {
+        return new external_function_parameters(array());
+    }
+
+    /**
+     * Describes the get_groupings return value.
+     *
+     * @return external_single_structure
+     */
+    public static function get_groupings_returns() {
+        return new external_multiple_structure(
+            new external_single_structure(
+                array(
+                    'id' => new external_value(PARAM_INT, get_string('ws_value_domainid', 'local_apsolu')),
+                    'name' => new external_value(PARAM_TEXT, get_string('ws_value_domain', 'local_apsolu')),
+                    'url' => new external_value(PARAM_TEXT, get_string('ws_value_domain_url', 'local_apsolu')),
+                  )
+            )
+        );
+    }
+
+    /**
      * Returns registrations list.
      *
      * @param int|string $since Timestamp unix indiquant la date du dernier appel du Famoco. Seuls les changements au-delà de cette date sont remontés.

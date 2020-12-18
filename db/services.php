@@ -51,6 +51,26 @@ $functions = array(
         'loginrequired' => true,
         'ajax' => true,
     ),
+    // Function get_courses_list().
+    'local_apsolu_get_courses_list' => array(
+        'classname'   => 'local_apsolu_webservices',
+        'methodname'  => 'get_courses_list',
+        'classpath'   => 'local/apsolu/externallib.php',
+        'description' => get_string('ws_local_apsolu_get_courses_description', 'local_apsolu'),
+        'type'        => 'read',
+        'loginrequired' => false,
+        'ajax' => true,
+    ),
+    // Function get_groupings().
+    'local_apsolu_get_groupings' => array(
+        'classname'   => 'local_apsolu_webservices',
+        'methodname'  => 'get_groupings',
+        'classpath'   => 'local/apsolu/externallib.php',
+        'description' => get_string('ws_local_apsolu_get_groupings_description', 'local_apsolu'),
+        'type'        => 'read',
+        'loginrequired' => false,
+        'ajax' => true,
+    ),
     // Function get_registrations().
     'local_apsolu_get_registrations' => array(
         'classname'   => 'local_apsolu_webservices',
@@ -164,6 +184,17 @@ $services = array(
         'restrictedusers' => 1,
         'enabled' => 0,
         'shortname' => 'apsolu',
+        'downloadfiles' => 0,
+        'uploadfiles' => 0,
+    ),
+    'apsolu_public' => array(
+        'functions' => array(
+            'local_apsolu_get_courses_list',
+            'local_apsolu_get_groupings',
+            ),
+        'restrictedusers' => 1,
+        'enabled' => 0,
+        'shortname' => 'apsolu_public',
         'downloadfiles' => 0,
         'uploadfiles' => 0,
     ),
