@@ -19,12 +19,6 @@
 }
 
 /* Courses */
-input[list] {
-    background-image: url([[pix:core|t/expanded]]) !important;
-    background-position: center right !important;
-    background-repeat: no-repeat !important;
-}
-
 .apsolu-category-level1-div,
 .apsolu-category-level1-h2,
 .apsolu-category-level2-div,
@@ -126,6 +120,16 @@ input[list] {
 #table-courses-sortable .tot {
     font-size: .85em;
     padding: 0 1em;
+}
+
+/* Notations */
+#apsolu-grades-filters summary {
+    font-size: 1.5rem;
+}
+
+#apsolu-grades-filters legend a {
+    font-size: 1.2rem;
+    font-weight: normal;
 }
 
 /* Offre de formations. */

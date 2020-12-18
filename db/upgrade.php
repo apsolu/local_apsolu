@@ -764,5 +764,42 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 2020121800;
+    if ($result && $oldversion < $version) {
+        $table = new xmldb_table('apsolu_grade_items');
+        if ($dbman->table_exists($table) === false) {
+            // Adding fields.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+            $table->add_field('name', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('roleid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('calendarid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $notnull = null, null, null, null);
+
+            // Adding keys.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->add_key('unique_name', XMLDB_KEY_UNIQUE, array('name', 'calendarid', 'roleid'));
+
+            // Adding indexes.
+            $table->add_index($indexname = 'name', XMLDB_INDEX_NOTUNIQUE, $fields = array('name'));
+            $table->add_index($indexname = 'calendarid', XMLDB_INDEX_NOTUNIQUE, $fields = array('calendarid'));
+            $table->add_index($indexname = 'roleid', XMLDB_INDEX_NOTUNIQUE, $fields = array('roleid'));
+
+            // Create table.
+            $dbman->create_table($table);
+        }
+
+        $tables = array('apsolu_grades', 'apsolu_grades_history');
+        foreach ($tables as $tablename) {
+            $table = new xmldb_table($tablename);
+            if ($dbman->table_exists($table) === true) {
+                $dbman->drop_table($table);
+            }
+        }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
     return $result;
 }

@@ -1,0 +1,119 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_apsolu/grade_table
+
+    Template Moodle pour afficher le carnet de notes APSOLU.
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * wwwroot
+    * notification
+    * count_grades
+    * grades
+        * id
+        * name
+        * role
+        * calendar
+
+    Example context (json):
+    {
+        "wwwroot": "",
+        "notification": "",
+        "count_grades": 0,
+        "grades": []
+    }
+}}
+{{#notification}}
+	{{{notification}}}
+{{/notification}}
+
+<details class="alert alert-secondary" id="apsolu-grades-filters"{{^display_table}} open{{/display_table}}>
+    <summary>{{#str}}filters{{/str}}</summary>
+    <div class="mt-0">{{{filtersform}}}</div>
+</details>
+
+{{#display_table}}
+    {{^count_grades}}
+    <p class="alert alert-info">{{#str}}no_results_with_these_criteria, local_apsolu{{/str}}</p>
+    {{/count_grades}}
+
+    {{#count_grades}}
+    <form id="apsolu-form-grades" method="POST">
+        <div class="table-responsive">
+            <table class="table table-striped table-sortable">
+            <thead>
+                <tr>
+                    {{#headers}}
+                    <th>{{.}}</th>
+                    {{/headers}}
+                </tr>
+            </thead>
+            <tbody>
+                {{#users}}
+                <tr>
+                    {{#picture}}
+                    <td>{{{.}}}</td>
+                    {{/picture}}
+                    {{#profile}}
+                    <td>{{.}}</td>
+                    {{/profile}}
+                    {{#grades}}
+                    {{^.}}
+                    <td>{{#str}}not_applicable, local_apsolu{{/str}}</td>
+                    {{/.}}
+                    {{#.}}
+                    <td{{^value}} class="table-warning"{{/value}}{{#value}} class="table-success"{{/value}}>
+                        <p class="m-0">
+                            <input name="grades[{{inputname}}]" type="text"{{#locked}} readonly="1" disabled="1"{{/locked}} value="{{value}}" size="5" />
+                        </p>
+                        <p class="m-0">
+                            <label>
+                                <input{{#abj}} checked="1"{{/abj}} name="abj[{{inputname}}]"{{#locked}} readonly="1" disabled="1"{{/locked}} type="checkbox" value="ABJ" />
+                                {{#str}}justified_absence, local_apsolu{{/str}}
+                            </label>
+                        </p>
+                        <p class="m-0">
+                            <label>
+                                <input{{#abi}} checked="1"{{/abi}} name="abi[{{inputname}}]"{{#locked}} readonly="1" disabled="1"{{/locked}} type="checkbox" value="ABI" />
+                                {{#str}}unjustified_absence, local_apsolu{{/str}}
+                            </label>
+                        </p>
+                        {{#grader}}<p> {{#str}}grader, local_apsolu{{/str}} : {{grader}}</p>{{/grader}}
+                    </td>
+                    {{/.}}
+                    {{/grades}}
+                </tr>
+                {{/users}}
+            </tbody>
+            </table>
+        </div>
+        <div>
+            <input name="filtersdata" type="hidden" value="{{filtersdata}}" />
+        </div>
+        <ul class="list-inline text-right">
+            <li class="list-inline-item"><input class="btn btn-primary" name="savebutton" type="submit" value="{{#str}}save{{/str}}" /></li>
+            <li class="list-inline-item"><input class="btn btn-primary" name="exportbutton" type="submit" value="{{#str}}export, local_apsolu{{/str}}" /></li>
+        </ul>
+    </form>
+    {{/count_grades}}
+{{/display_table}}

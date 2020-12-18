@@ -304,48 +304,24 @@
         </KEYS>
     </TABLE>
 
-	<!-- GRADES -->
-    <TABLE NAME="apsolu_grades" COMMENT="Table to store grades">
+	<!-- GRADE ITEMS -->
+    <TABLE NAME="apsolu_grade_items" COMMENT="Table to store grade items">
         <FIELDS>
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" />
-            <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="teacherid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="grade1" TYPE="char" LENGTH="3" NOTNULL="true" SEQUENCE="false" />
-            <FIELD NAME="grade2" TYPE="char" LENGTH="3" NOTNULL="true" SEQUENCE="false" />
-            <FIELD NAME="grade3" TYPE="char" LENGTH="3" NOTNULL="true" SEQUENCE="false" />
-            <FIELD NAME="grade4" TYPE="char" LENGTH="3" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="roleid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="calendarid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
         </FIELDS>
         <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_grades" />
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_grade_items" />
         </KEYS>
         <INDEXES>
-            <INDEX NAME="courseid" UNIQUE="false" FIELDS="courseid"/>
-            <INDEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
-            <INDEX NAME="teacherid" UNIQUE="false" FIELDS="teacherid"/>
-        </INDEXES>
-    </TABLE>
-
-	<!-- GRADES HISTORY -->
-    <TABLE NAME="apsolu_grades_history" COMMENT="Table to store grades history">
-        <FIELDS>
-            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" />
-            <FIELD NAME="gradeid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="teacherid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="grade1" TYPE="char" LENGTH="3" NOTNULL="true" SEQUENCE="false" />
-            <FIELD NAME="grade2" TYPE="char" LENGTH="3" NOTNULL="true" SEQUENCE="false" />
-            <FIELD NAME="grade3" TYPE="char" LENGTH="3" NOTNULL="true" SEQUENCE="false" />
-            <FIELD NAME="grade4" TYPE="char" LENGTH="3" NOTNULL="true" SEQUENCE="false" />
-            <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-        </FIELDS>
-        <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_grades_history" />
-        </KEYS>
-        <INDEXES>
-            <INDEX NAME="gradeid" UNIQUE="false" FIELDS="gradeid"/>
-            <INDEX NAME="teacherid" UNIQUE="false" FIELDS="teacherid"/>
+            <INDEX NAME="unique_name" UNIQUE="true" FIELDS="name,calendarid,roleid" />
+            <INDEX NAME="name" UNIQUE="false" FIELDS="name" />
+            <INDEX NAME="calendarid" UNIQUE="false" FIELDS="calendarid" />
+            <INDEX NAME="roleid" UNIQUE="false" FIELDS="roleid" />
         </INDEXES>
     </TABLE>
 

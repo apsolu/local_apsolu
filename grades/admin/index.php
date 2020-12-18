@@ -15,31 +15,33 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Backoffice to extend moodle courses attributes.
+ * Contrôleur pour l'administration des notes.
  *
  * @package    local_apsolu
- * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../../config.php');
+require_once(__DIR__ . '/../../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
-$tab = optional_param('tab', 'extraction', PARAM_ALPHA);
+$tab = optional_param('tab', 'gradebooks', PARAM_ALPHA);
 $action = optional_param('action', 'view', PARAM_ALPHA);
 
 // Set tabs.
-$tabslist = array('export');
+$tabslist = array();
+$tabslist['gradeitems'] = get_string('gradeitemsettings', 'grades');
+$tabslist['gradebooks'] = get_string('gradebook', 'grades');
 
 $tabsbar = array();
-foreach ($tabslist as $tabname) {
-    $url = new moodle_url('/local/apsolu/courses/grades.php', array('tab' => $tabname));
-    $tabsbar[] = new tabobject($tabname, $url, get_string($tabname, 'local_apsolu'));
+foreach ($tabslist as $tabname => $tablabel) {
+    $url = new moodle_url('/local/apsolu/grades/admin/index.php', array('tab' => $tabname));
+    $tabsbar[] = new tabobject($tabname, $url, $tablabel);
 }
 
 // Set default tabs.
-if (!in_array($tab, $tabslist, true)) {
-    $tab = $tabslist[0];
+if (isset($tabslist[$tab]) === false) {
+    $tab = $tabslist['gradebooks'];
 }
 
 // Setup admin access requirement.
@@ -47,7 +49,7 @@ admin_externalpage_setup('local_apsolu_grades_'.$tab);
 
 // Display page.
 ob_start();
-require(__DIR__.'/'.$tab.'.php');
+require(__DIR__.'/'.$tab.'/index.php');
 $content = ob_get_contents();
 ob_end_clean();
 

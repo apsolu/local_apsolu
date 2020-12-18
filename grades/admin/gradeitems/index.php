@@ -15,17 +15,19 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Page de notation des étudiants.
+ * Contrôleur pour l'administration des éléments d'évaluation.
  *
  * @package    local_apsolu
- * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// Redirection vers le nouveau carnet de notes pour les enseignants. Supprimer cette redirection un jour.
-require __DIR__.'/../../../config.php';
+defined('MOODLE_INTERNAL') || die;
 
-$redirection = $CFG->wwwroot.'/local/apsolu/grades/grade/index.php';
+$actions = array('edit', 'delete', 'view');
 
-header('Location: '.$redirection, $repalce = true, $http_response_code = 301);
-exit();
+if (!in_array($action, $actions, true)) {
+    $action = 'view';
+}
+
+require(__DIR__.'/'.$action.'.php');

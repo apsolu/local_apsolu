@@ -1,0 +1,201 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Page générant les données d'affichage du carnet de notes (le formulaire de filtres, les données du carnet de notes, etc)
+ *
+ * @package    local_apsolu
+ * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+use local_apsolu\core\customfields;
+use local_apsolu\core\gradebook as Gradebook;
+
+defined('MOODLE_INTERNAL') || die;
+
+require_once($CFG->libdir.'/gradelib.php');
+require_once($CFG->dirroot.'/local/apsolu/grades/filters_form.php');
+
+$PAGE->requires->js_call_amd('local_apsolu/grades', 'initialise');
+
+$customfields = customfields::getCustomFields();
+
+// Calcul des filtres.
+$filters = null;
+$filtersdata = null;
+if ($data = data_submitted()) {
+    if (isset($data->filtersdata) === true) {
+        $filtersdata = base64_decode($data->filtersdata);
+        if ($filtersdata !== false) {
+            $filtersdata = json_decode($filtersdata);
+            if (is_object($filtersdata) === true) {
+                $filters = $filtersdata;
+            }
+        }
+    }
+}
+
+// Liste des activités.
+$categories = array();
+$categories_ = $DB->get_records('course_categories');
+
+// Liste des cours évaluables.
+if (defined('APSOLU_GRADES_COURSE_SCOPE') === false) {
+    define('APSOLU_GRADES_COURSE_SCOPE', CONTEXT_COURSE);
+}
+$courses = array();
+$courses[0] = get_string('allcourses', 'search');
+foreach (Gradebook::get_courses(APSOLU_GRADES_COURSE_SCOPE) as $course) {
+    $courses[$course->id] = $course->fullname;
+    $categories[$course->category] = $categories_[$course->category]->name;
+}
+asort($categories);
+
+if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_COURSE && $categories === array()) {
+    // Cet utilisateur n'est pas enseignant.
+    print_error('nopermissions', 'error', '', get_capability_string('local/apsolu:viewgrades'));
+} else if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_SYSTEM && has_capability('local/apsolu:viewallgrades', context_system::instance()) === false) {
+    // Cet utilisateur n'a pas les droits de gestionnaires.
+    print_error('nopermissions', 'error', '', get_capability_string('local/apsolu:viewallgrades'));
+}
+
+// Liste des rôles évaluables.
+$roles = array();
+foreach (Gradebook::get_gradable_roles() as $role) {
+    $roles[$role->id] = $role->localname;
+}
+
+// Liste des types de calendrier.
+$calendarstypes = array();
+foreach ($DB->get_records('apsolu_calendars_types', null, 'name') as $calendar) {
+    $calendarstypes[$calendar->id] = $calendar->name;
+}
+
+// Liste des sites géographiques.
+$cities = array();
+foreach ($DB->get_records('apsolu_cities', null, 'name') as $city) {
+    $cities[$city->id] = $city->name;
+}
+
+// Liste des établissements.
+$institutions = array();
+$sql = "SELECT DISTINCT institution FROM {user} ORDER BY institution";
+foreach ($DB->get_records_sql($sql) as $institution) {
+    $name = $institution->institution;
+    $institutions[$name] = $name;
+}
+
+// Liste des UFRS.
+$ufrs = array();
+$sql = "SELECT DISTINCT data FROM {user_info_data} WHERE fieldid = :fieldid ORDER BY data";
+foreach ($DB->get_records_sql($sql, array('fieldid' => $customfields['apsoluufr']->id)) as $ufr) {
+    $name = $ufr->data;
+    $ufrs[$name] = $name;
+}
+
+// Liste des départements.
+$departments = array();
+$sql = "SELECT DISTINCT department FROM {user} ORDER BY department";
+foreach ($DB->get_records_sql($sql) as $department) {
+    $name = $department->department;
+    $departments[$name] = $name;
+}
+
+// Liste des niveaux d'études.
+$cycles = array();
+$sql = "SELECT DISTINCT data FROM {user_info_data} WHERE fieldid = :fieldid ORDER BY data";
+foreach ($DB->get_records_sql($sql, array('fieldid' => $customfields['apsolucycle']->id)) as $cycle) {
+    $name = $cycle->data;
+    $cycles[$name] = $name;
+}
+
+// Liste des enseignants.
+$teachers = null;
+if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_SYSTEM && has_capability('local/apsolu:viewallgrades', context_system::instance()) === true) {
+    $teachers = array();
+    $sql = "SELECT DISTINCT u.*".
+        " FROM {user} u".
+        " JOIN {role_assignments} ra ON u.id = ra.userid".
+        " JOIN {context} ctx ON ctx.id = ra.contextid".
+        " JOIN {apsolu_courses} c ON ctx.instanceid = c.id".
+        " WHERE ra.roleid = 3". // Enseignant.
+        " ORDER BY u.lastname, u.firstname";
+    foreach ($DB->get_records_sql($sql) as $user) {
+        $teachers[$user->id] = fullname($user);
+    }
+}
+
+// Build form.
+if ($filters === null) {
+    $filters = new stdClass();
+    $filters->courses = '0';
+
+    if ($teachers !== null) {
+        $filters->fields = array('teachers');
+    }
+}
+$customdata = array($filters, $categories, $courses, $roles, $calendarstypes, $cities, $institutions, $ufrs, $departments, $cycles, $teachers);
+$mform = new local_apsolu_grades_gradebooks_filters_form(null, $customdata);
+
+if (($formdata = $mform->get_data()) || ($data = data_submitted())) {
+    if (empty($formdata) === false) {
+        $filtersdata = $formdata;
+    }
+
+    if (is_object($filtersdata) === true) {
+        // Filtre les options.
+        $acceptedoptions = array('categories', 'courses', 'roles', 'calendarstypes', 'cities', 'institutions', 'ufrs', 'departments', 'cycles', 'teachers', 'idnumber');
+        foreach ($acceptedoptions as $option) {
+            if (isset($filtersdata->$option) === true && empty($filtersdata->$option) === false) {
+                $options[$option] = $filtersdata->$option;
+            }
+        }
+    }
+
+    if (isset($data->savebutton, $data->grades) === true) {
+        // Enregistre les notes.
+        try {
+            Gradebook::set_grades($data->grades);
+            $notification = $OUTPUT->notification(get_string('grades_have_been_saved', 'local_apsolu'), 'notifysuccess');
+        } catch (Exception $exception) {
+            $notification = $OUTPUT->notification(get_string('grades_have_not_been_saved', 'local_apsolu'), 'notifyproblem');
+        }
+    }
+
+    if (isset($filtersdata->fields) === false) {
+        $filtersdata->fields = array();
+    }
+
+    if (isset($options['courses']) === false || count($options['courses']) > 1 || in_array('0', $options['courses'], $strict = true) === true) {
+        // Active par défaut le champ "cours" dès que la recherche ne porte pas sur un seul cours précis.
+        if (in_array('courses', $filtersdata->fields, $strict = true) === false) {
+            $filtersdata->fields[] = 'courses';
+        }
+    }
+
+    if (isset($filtersdata->exportbutton) === true || isset($data->exportbutton) === true) {
+        // Exporte le carnet de notes au format csv.
+        Gradebook::export($options, $filtersdata->fields);
+    }
+
+    $filtersdata->fields[] = 'pictures';
+    try {
+        $gradebook = Gradebook::get_gradebook($options, $filtersdata->fields);
+    } catch (Exception $exception) {
+        $notification = $OUTPUT->notification($exception->getMessage(), 'notifyproblem');
+    }
+}

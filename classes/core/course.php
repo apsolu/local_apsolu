@@ -28,6 +28,8 @@ use coding_exception;
 use context_block;
 use context_course;
 use core_php_time_limit;
+use grade_category;
+use grade_item;
 use moodle_exception;
 use moodle_url;
 use stdClass;
@@ -463,6 +465,77 @@ class course extends record {
         // Valide la transaction en cours.
         if (isset($transaction) === true) {
             $transaction->allow_commit();
+        }
+    }
+
+    /**
+     * Génère ou met à jour le carnet de notes.
+     *
+     * @return void
+     */
+    public function set_gradebook() {
+        global $DB;
+
+        $gradecategoryname = gradebook::NAME;
+
+        // Créer une catégorie de notes APSOLU.
+        $gradecategory = grade_category::fetch(array('courseid' => $this->id, 'fullname' => $gradecategoryname));
+        if ($gradecategory === false) {
+            $gradecategory = new grade_category(array('courseid' => $this->id), false);
+            $gradecategory->apply_default_settings();
+            $gradecategory->apply_forced_settings();
+
+            grade_category::set_properties($gradecategory, ['fullname' => $gradecategoryname, 'hidden' => 1]);
+            $gradecategory->id = $gradecategory->insert();
+        }
+
+        // Récupère tous les éléments de notation prévus pour ce cours.
+        $sql = "SELECT agi.*".
+            " FROM {apsolu_grade_items} agi".
+            " JOIN {enrol} e ON agi.calendarid = e.customchar1".
+            " WHERE e.enrol = 'select'".
+            " AND e.courseid = :courseid";
+        $gradeitems = $DB->get_records_sql($sql, array('courseid' => $this->id));
+
+        // Récupère tous les élements de notation actuels de ce cours.
+        $gradeitems_ = grade_item::fetch_all(array('courseid' => $this->id, 'categoryid' => $gradecategory->id));
+
+        if ($gradeitems_ === false) {
+            $gradeitems_ = array();
+        }
+
+        foreach ($gradeitems_ as $item) {
+            list($apsolugradeid, $itemname) = explode('-', $item->itemname, 2);
+
+            if (isset($gradeitems[$apsolugradeid]) === false) {
+                // Supprime un élément de notation obsolète.
+                $item->delete();
+                continue;
+            }
+
+            $gradeitem = $gradeitems[$apsolugradeid];
+            unset($gradeitems[$apsolugradeid]);
+
+            if ($gradeitem->name === $itemname) {
+                continue;
+            }
+
+            // Met à jour le nom de l'élément de notation.
+            $item->itemname = $gradeitem->id.'-'.$gradeitem->name;
+            $item->hidden = 1;
+            $item->grademax = 20.0;
+            $item->update();
+        }
+
+        // Enregistre les nouveaux éléments dans le carnet de notes.
+        foreach ($gradeitems as $item) {
+            $gradeitem = new grade_item(array('id' => 0, 'courseid' => $this->id));
+            $gradeitem->itemname = $item->id.'-'.$item->name;
+            $gradeitem->itemtype = 'manual';
+            $gradeitem->categoryid = $gradecategory->id;
+            $gradeitem->hidden = 1;
+            $gradeitem->grademax = 20.0;
+            $gradeitem->id = $gradeitem->insert();
         }
     }
 

@@ -115,13 +115,18 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     require_once($CFG->dirroot.'/enrol/select/settings.php');
 
     // Notations.
-    if (isset($CFG->is_siuaps_rennes) === true) {
-        $ADMIN->add('apsolu', new admin_category('local_apsolu_grades', get_string('grades', 'local_apsolu')));
+    $ADMIN->add('apsolu', new admin_category('local_apsolu_grades', get_string('grades', 'local_apsolu')));
 
-        // Notations > Exporter.
-        $label = get_string('export', 'local_apsolu');
-        $url = new moodle_url('/local/apsolu/grades/grades.php?tab=export');
-        $ADMIN->add('local_apsolu_grades', new admin_externalpage('local_apsolu_grades_export', $label, $url, $capabilities));
+    // Notations > Réglages des éléments d'évaluation.
+    $label = get_string('gradeitemsettings', 'grades');
+    $url = new moodle_url('/local/apsolu/grades/admin/index.php', array('tab' => 'gradeitems'));
+    $ADMIN->add('local_apsolu_grades', new admin_externalpage('local_apsolu_grades_gradeitems', $label, $url, $capabilities));
+
+    if (has_capability('local/apsolu:viewallgrades', context_system::instance()) === true) {
+        // Notations > Carnet de notes.
+        $label = get_string('gradebook', 'grades');
+        $url = new moodle_url('/local/apsolu/grades/admin/index.php', array('tab' => 'gradebooks'));
+        $ADMIN->add('local_apsolu_grades', new admin_externalpage('local_apsolu_grades_gradebooks', $label, $url, $capabilities));
     }
 
     // Paiements.

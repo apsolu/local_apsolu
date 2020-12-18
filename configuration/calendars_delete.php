@@ -24,6 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+use local_apsolu\core\gradeitem;
+
 $calendarid = required_param('calendarid', PARAM_INT);
 $confirm = optional_param('confirm', '', PARAM_ALPHANUM); // Confirmation hash.
 
@@ -46,6 +48,12 @@ if ($confirm === $deletehash) {
 
         $sql = "UPDATE {enrol} SET customchar1 = 0 WHERE enrol = 'select' AND customchar1 = :calendarid";
         $DB->execute($sql, array('calendarid' => $calendar->id));
+
+        // Supprime les éléments de notations.
+        $gradeitems = gradeitem::get_records(array('calendarid' => $calendar->id));
+        foreach ($gradeitems as $gradeitem) {
+            $gradeitem->delete();
+        }
 
         $DB->delete_records('apsolu_calendars', array('id' => $calendar->id));
 
