@@ -150,7 +150,7 @@ class gradebook {
 
         // Contrôle que les options obligatoires sont présentes.
         if (isset($options['courses']) === false && isset($options['categories']) === false) {
-            throw new Exception(get_string('fieldrequired', 'error', get_string('course_or_category_is_a_required_field', 'local_apsolu')));
+            throw new Exception(get_string('course_or_category_is_a_required_field', 'local_apsolu'));
         }
 
         if (isset($options['categories']) === true) {
