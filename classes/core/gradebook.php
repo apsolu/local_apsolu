@@ -24,6 +24,7 @@
 
 namespace local_apsolu\core;
 
+use context_course;
 use context_system;
 use csv_export_writer;
 use Exception;
@@ -44,6 +45,41 @@ class gradebook {
      */
     const NAME = 'APSOLU';
 
+    /** @var array $caneditgrades Contient un tableau indexé par identifiant de cours, indiquant si l'utilisateur pour éditer les notes du cours. */
+    public static $caneditgrades = array();
+
+    /**
+     * Indique si l'utilisateur est autorisé à éditer les notes pour un cours donné.
+     *
+     * @param int|string $courseid       Identifiant du cours.
+     * @param bool       $calendarlocked Indique si l'édition des notes n'est pas hors-délai par rapport au calendrier.
+     *
+     * @return bool True si l'utilisateur peut éditer la note de ce cours, false si il n'a pas les droits.
+     */
+    public static function can_edit_grades($courseid, bool $calendarlocked) {
+        if (isset(self::$caneditgrades[$courseid]) === true) {
+            return self::$caneditgrades[$courseid];
+        }
+
+        self::$caneditgrades[$courseid] = has_capability('local/apsolu:editgradesafterdeadline', context_system::instance());
+
+        if (self::$caneditgrades[$courseid] === true) {
+            // L'utilisateur peut éditer les notes n'importe quand.
+            return self::$caneditgrades[$courseid];
+        }
+
+        self::$caneditgrades[$courseid] = has_capability('local/apsolu:editgrades', context_course::instance($courseid));
+        if (self::$caneditgrades[$courseid] === false) {
+            // L'utilisateur n'a pas le droit de modifier la note dans ce contexte.
+            return self::$caneditgrades[$courseid];
+        }
+
+        // On vérifie que l'utilisateur est dans les temps pour noter l'étudiant.
+        self::$caneditgrades[$courseid] = ($calendarlocked === false);
+
+        return self::$caneditgrades[$courseid];
+    }
+
     /**
      * Retourne les cours où des évaluations sont en cours.
      *
@@ -57,10 +93,12 @@ class gradebook {
         $syscontext = context_system::instance();
 
         if ($contextlevel !== CONTEXT_SYSTEM) {
+            // Bascule par défaut sur le contexte de cours.
             $contextlevel = CONTEXT_COURSE;
         }
 
         if ($contextlevel === CONTEXT_SYSTEM && has_capability('local/apsolu:viewallgrades', $syscontext) === false) {
+            // Bascule par défaut sur le contexte de cours quand l'utilisateur n'a pas le droit de voir toutes les notes.
             $contextlevel = CONTEXT_COURSE;
         }
 
@@ -175,21 +213,11 @@ class gradebook {
                 continue;
             }
 
-            $options['calendars'][] = $calendar->id;
-
-            // Calcule le droit d'édition des notes.
-            if ($capability->editgrades === false) {
-                $calendar->locked = true;
-                continue;
-            }
-
-            if ($capability->editgradesafterdeadline === true) {
-                $calendar->locked = false;
-                continue;
-            }
-
+            // Vérifie que l'édition des notes n'est pas hors-délai.
             $canedit = ((empty($calendar->gradestartdate) || $now > $calendar->gradestartdate) && (empty($calendar->gradeenddate) || $now < $calendar->gradeenddate));
             $calendar->locked = ($canedit === false);
+
+            $options['calendars'][] = $calendar->id;
         }
 
         // On récupère la liste des notes attendues en fonction des options passées en paramètre.
@@ -215,7 +243,7 @@ class gradebook {
                 continue;
             }
 
-            $item->locked = $calendars[$item->calendarid]->locked;
+            $item->calendar_locked = $calendars[$item->calendarid]->locked;
             $gradeitems[$item->id] = $item;
         }
 
@@ -519,7 +547,7 @@ class gradebook {
                 $grade = null;
                 if ($user->roleid === $item->roleid && $user->calendarid === $item->calendarid) {
                     $grade = new stdClass();
-                    $grade->locked = $item->locked;
+                    $grade->locked = (self::can_edit_grades($user->courseid, $item->calendar_locked) === false);
                     $grade->abi = false;
                     $grade->abj = false;
                     $grade->value = null;
@@ -530,10 +558,10 @@ class gradebook {
                         if ($value === 'ABI') {
                             $grade->abi = true;
                             $grade->value = $value;
-                        } elseif ($value === 'ABJ') {
+                        } else if ($value === 'ABJ') {
                             $grade->abj = true;
                             $grade->value = $value;
-                        } elseif (empty($value) === false) {
+                        } else if (empty($value) === false) {
                             $grade->value = number_format($value, 2);
                         }
 
@@ -651,7 +679,7 @@ class gradebook {
                 }
             }
 
-            $currentgrade = $DB->get_record('grade_grades', array('itemid' => $item->id, 'userid'=> $userid));
+            $currentgrade = $DB->get_record('grade_grades', array('itemid' => $item->id, 'userid' => $userid));
             if ($currentgrade !== false && grade_floats_different($currentgrade->finalgrade, $grade->finalgrade) === false && $currentgrade->feedback === $grade->feedback) {
                 // La note n'a pas changé, on continue.
                 continue;
