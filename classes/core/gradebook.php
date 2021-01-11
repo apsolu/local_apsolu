@@ -341,6 +341,7 @@ class gradebook {
                 }
 
                 // L'utilsateur n'a pas le droit d'accéder à ce cours.
+                // Note: retire également la clé 0 qui correspond à l'option "tous les cours".
                 unset($options['courses'][$key]);
             }
 
@@ -350,6 +351,23 @@ class gradebook {
                 }
             }
         }
+
+        if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_SYSTEM) {
+            // Gère le cas où le gestionnaire demande tous les cours.
+            if (isset($options['courses']) === true) {
+                foreach ($options['courses'] as $key => $value) {
+                    if ($value === '0') {
+                        unset($options['courses'][$key]);
+                        break;
+                    }
+                }
+
+                if (count($options['courses']) === 0) {
+                    unset($options['courses']);
+                }
+            }
+        }
+
         $filters['courses'] = " AND c.id IN (%s)";
         $filters['categories'] = " AND cc.id IN (%s)";
         $filters['roles'] = " AND ra.roleid IN (%s)";
