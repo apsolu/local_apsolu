@@ -65,8 +65,8 @@ foreach (Gradebook::get_courses(APSOLU_GRADES_COURSE_SCOPE) as $course) {
 
 // Vérifie les autorisations d'accès à la page.
 if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_COURSE && $courses === array()) {
-    // Cet utilisateur n'est pas enseignant.
-    print_error('nopermissions', 'error', '', get_capability_string('local/apsolu:viewgrades'));
+    // Cet utilisateur n'a pas de cours à évaluer.
+    print_error('nopermissions', 'error', '', get_string('no_courses_to_grade', 'local_apsolu'));
 } else if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_SYSTEM && has_capability('local/apsolu:viewallgrades', context_system::instance()) === false) {
     // Cet utilisateur n'a pas les droits de gestionnaires.
     print_error('nopermissions', 'error', '', get_capability_string('local/apsolu:viewallgrades'));

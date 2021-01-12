@@ -180,6 +180,7 @@ $string['login'] = 'Se connecter';
 $string['midday'] = 'Midi';
 $string['morning'] = 'Matin';
 $string['named_section'] = 'Section "{$a}"';
+$string['no_courses_to_grade'] = 'Aucun créneau à évaluer';
 $string['no_gradeitems'] = 'Aucun élément d\'évaluation';
 $string['no_grades'] = 'Aucune note';
 $string['no_holidays'] = 'Aucun jour férié';
