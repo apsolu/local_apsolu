@@ -140,7 +140,23 @@ if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_SYSTEM && has_capability('local/apsol
 
 // Build form.
 if ($filters === null) {
+    // Définit les filtres par défaut.
     $filters = new stdClass();
+    $filters->roles = array_keys($roles);
+
+    $filters->calendarstypes = array();
+    foreach ($DB->get_records('apsolu_calendars') as $calendar) {
+        if ($calendar->gradestartdate > time()) {
+            continue;
+        }
+
+        if ($calendar->gradeenddate < time()) {
+            continue;
+        }
+
+        $filters->calendarstypes[$calendar->typeid] = 1;
+    }
+    $filters->calendarstypes = array_keys($filters->calendarstypes);
 
     if ($teachers !== null) {
         $filters->fields = array('teachers');
