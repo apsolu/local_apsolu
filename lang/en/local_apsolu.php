@@ -47,6 +47,8 @@ $string['add_locations_manager'] = 'Ajouter un gestionnaire de lieux';
 $string['add_period'] = 'Ajouter une période';
 $string['add_skill'] = 'Ajouter un niveau de pratique';
 $string['afternoon'] = 'Après-midi';
+$string['all_cities'] = 'Tous les sites';
+$string['all_courses'] = 'Tous les créneaux';
 $string['an_error_occurred_while_saving_your_grades'] = 'Une erreur est survenue lors de l\'enregistrement des notes.';
 $string['are_you_sure_you_want_to_delete_this_calendar'] = 'Voulez-vous vraiment supprimer le calendrier "{$a}" ?';
 $string['area'] = 'Zone géographique';
@@ -475,7 +477,6 @@ $string['no_area'] = 'Aucune zone géographique';
 $string['cities_list'] = 'Liste des sites';
 $string['city_add'] = 'Ajouter un site';
 $string['no_city'] = 'Aucun site';
-$string['all_cities'] = 'Tous les sites';
 
 // Managers.
 $string['managers'] = 'Gestionnaires de lieux';
