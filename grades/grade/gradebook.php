@@ -50,22 +50,21 @@ if ($data = data_submitted()) {
 }
 
 // Liste des activités.
-$categories = array();
-$categories_ = $DB->get_records('course_categories');
+$categories = $DB->get_records('course_categories');
 
 // Liste des cours évaluables.
 if (defined('APSOLU_GRADES_COURSE_SCOPE') === false) {
     define('APSOLU_GRADES_COURSE_SCOPE', CONTEXT_COURSE);
 }
-$courses = array();
-$courses[0] = get_string('allcourses', 'search');
-foreach (Gradebook::get_courses(APSOLU_GRADES_COURSE_SCOPE) as $course) {
-    $courses[$course->id] = $course->fullname;
-    $categories[$course->category] = $categories_[$course->category]->name;
-}
-asort($categories);
 
-if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_COURSE && $categories === array()) {
+$courses = array();
+foreach (Gradebook::get_courses(APSOLU_GRADES_COURSE_SCOPE) as $course) {
+    $courses[$course->category.'-0'] = $categories[$course->category]->name;
+    $courses[$course->category.'-'.$course->id] = $course->fullname;
+}
+
+// Vérifie les autorisations d'accès à la page.
+if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_COURSE && $courses === array()) {
     // Cet utilisateur n'est pas enseignant.
     print_error('nopermissions', 'error', '', get_capability_string('local/apsolu:viewgrades'));
 } else if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_SYSTEM && has_capability('local/apsolu:viewallgrades', context_system::instance()) === false) {
@@ -142,13 +141,12 @@ if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_SYSTEM && has_capability('local/apsol
 // Build form.
 if ($filters === null) {
     $filters = new stdClass();
-    $filters->courses = '0';
 
     if ($teachers !== null) {
         $filters->fields = array('teachers');
     }
 }
-$customdata = array($filters, $categories, $courses, $roles, $calendarstypes, $cities, $institutions, $ufrs, $departments, $cycles, $teachers);
+$customdata = array($filters, $courses, $roles, $calendarstypes, $cities, $institutions, $ufrs, $departments, $cycles, $teachers);
 $mform = new local_apsolu_grades_gradebooks_filters_form(null, $customdata);
 
 if (($formdata = $mform->get_data()) || ($data = data_submitted())) {
@@ -158,7 +156,7 @@ if (($formdata = $mform->get_data()) || ($data = data_submitted())) {
 
     if (is_object($filtersdata) === true) {
         // Filtre les options.
-        $acceptedoptions = array('categories', 'courses', 'roles', 'calendarstypes', 'cities', 'institutions', 'ufrs', 'departments', 'cycles', 'teachers', 'idnumber');
+        $acceptedoptions = array('courses', 'roles', 'calendarstypes', 'cities', 'institutions', 'ufrs', 'departments', 'cycles', 'teachers', 'idnumber');
         foreach ($acceptedoptions as $option) {
             if (isset($filtersdata->$option) === true && empty($filtersdata->$option) === false) {
                 $options[$option] = $filtersdata->$option;
@@ -180,8 +178,9 @@ if (($formdata = $mform->get_data()) || ($data = data_submitted())) {
         $filtersdata->fields = array();
     }
 
-    if (isset($options['courses']) === false || count($options['courses']) > 1 || in_array('0', $options['courses'], $strict = true) === true) {
+    if (isset($options['courses']) === false || count($options['courses']) > 1 || substr(current($options['courses']), -2) === '-0') {
         // Active par défaut le champ "cours" dès que la recherche ne porte pas sur un seul cours précis.
+        // Soit l'utilisateur n'a pas sélectionné de cours, soit il y a plus d'un cours, soit le seul cours sélectionné est une catégorie d'activités.
         if (in_array('courses', $filtersdata->fields, $strict = true) === false) {
             $filtersdata->fields[] = 'courses';
         }

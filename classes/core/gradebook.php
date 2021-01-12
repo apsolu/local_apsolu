@@ -187,12 +187,8 @@ class gradebook {
         $capability->viewallgrades = has_capability('local/apsolu:viewallgrades', context_system::instance());
 
         // Contrôle que les options obligatoires sont présentes.
-        if (isset($options['courses']) === false && isset($options['categories']) === false) {
-            throw new Exception(get_string('course_or_category_is_a_required_field', 'local_apsolu'));
-        }
-
-        if (isset($options['categories']) === true) {
-            unset($options['courses']);
+        if (isset($options['courses']) === false) {
+            $options['courses'] = array();
         }
 
         if (isset($options['calendarstypes']) === false) {
@@ -327,49 +323,71 @@ class gradebook {
             define('APSOLU_GRADES_COURSE_SCOPE', CONTEXT_COURSE);
         }
 
+        // Extraction des catégories de cours.
+        $options['categories'] = array();
+        foreach ($options['courses'] as $key => $value) {
+            list($categoryid, $courseid) = explode('-', $value);
+            if ($courseid === '0') {
+                // Traite une activité.
+                $options['categories'][$categoryid] = $categoryid;
+                unset($options['courses'][$key]);
+            } else {
+                // Traite un créneau.
+                $options['courses'][$key] = $courseid;
+            }
+        }
+
         if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_COURSE) {
             // L'utilisateur est seulement enseignant. On force à ne récupérer que ses cours.
             $courses = self::get_courses();
 
-            if (isset($options['courses']) === false) {
-                $options['courses'] = array();
+            // Contrôle les droits d'accès sur les activités.
+            if ($options['categories'] !== array()) {
+                // Pour chaque catégorie sélectionnée, ajoute tous les cours auxquels l'utilisateur peut accéder.
+                foreach ($courses as $course) {
+                    if (isset($options['categories'][$course->category]) === false) {
+                        continue;
+                    }
+
+                    $options['courses'][] = $course->id;
+                }
             }
 
-            foreach ($options['courses'] as $key => $value) {
-                if (isset($courses[$value]) === true) {
+            foreach ($options['courses'] as $key => $courseid) {
+                if (isset($courses[$courseid]) === true) {
+                    // L'utilisateur est autorisé à voir ce cours.
                     continue;
                 }
 
-                // L'utilsateur n'a pas le droit d'accéder à ce cours.
-                // Note: retire également la clé 0 qui correspond à l'option "tous les cours".
+                // L'utilisateur n'a pas le droit d'accéder à ce cours.
                 unset($options['courses'][$key]);
             }
 
             if ($options['courses'] === array()) {
-                foreach (self::get_courses() as $course) {
+                // L'utilisateur a sélectionné tous les cours.
+                foreach ($courses as $course) {
                     $options['courses'][] = $course->id;
                 }
             }
-        }
-
-        if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_SYSTEM) {
-            // Gère le cas où le gestionnaire demande tous les cours.
-            if (isset($options['courses']) === true) {
-                foreach ($options['courses'] as $key => $value) {
-                    if ($value === '0') {
-                        unset($options['courses'][$key]);
-                        break;
+        } else if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_SYSTEM) {
+            if ($options['categories'] !== array()) {
+                // Gère la sélection des catégories.
+                foreach ($DB->get_records('course') as $course) {
+                    if (isset($options['categories'][$course->category]) === false) {
+                        continue;
                     }
-                }
 
-                if (count($options['courses']) === 0) {
-                    unset($options['courses']);
+                    $options['courses'][] = $course->id;
                 }
+            }
+
+            if ($options['courses'] === array()) {
+                // Gère le cas où le gestionnaire demande tous les cours.
+                unset($options['courses']);
             }
         }
 
         $filters['courses'] = " AND c.id IN (%s)";
-        $filters['categories'] = " AND cc.id IN (%s)";
         $filters['roles'] = " AND ra.roleid IN (%s)";
         $filters['calendars'] = " AND aca.id IN (%s)";
         $filters['cities'] = " AND act.id IN (%s)";

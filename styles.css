@@ -132,6 +132,10 @@
     font-weight: normal;
 }
 
+#apsolu-grades-filters #fitem_id_courses li[data-value$="-0"] {
+    font-weight: bold;
+}
+
 /* Offre de formations. */
 #apsolu-offerings-filters-aside {
     display: none;

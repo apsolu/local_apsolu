@@ -74,7 +74,6 @@ $string['complement'] = 'Complément';
 $string['contacts'] = 'Adresses de contact';
 // $string['course_cannot_be_deleted'] = 'Le créneau horaire "{$a}" ne peut pas être supprimé, car il est rattaché aux lieux suivants :';
 $string['course'] = 'Créneau horaire';
-$string['course_or_category_is_a_required_field'] = 'Le champ « Activité » ou « Cours » est obligatoire';
 $string['course_has_been_deleted'] = 'Le créneau horaire a été supprimé.';
 $string['course_is_now_hidden'] = 'Le créneau est maintenant caché.';
 $string['course_is_now_visible'] = 'Le créneau est maintenant visible.';

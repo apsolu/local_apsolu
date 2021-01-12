@@ -42,11 +42,10 @@ class local_apsolu_grades_gradebooks_filters_form extends moodleform {
     protected function definition() {
         $mform = $this->_form;
 
-        list($defaults, $categories, $courses, $roles, $calendarstypes, $cities, $institutions, $ufrs, $departments, $cycles, $teachers) = $this->_customdata;
+        list($defaults, $courses, $roles, $calendarstypes, $cities, $institutions, $ufrs, $departments, $cycles, $teachers) = $this->_customdata;
 
         $fields = array();
         $fields['emails'] = get_string('email');
-        $fields['categories'] = get_string('activities', 'local_apsolu');
         $fields['calendarstypes'] = get_string('calendartype', 'local_apsolu');
         $fields['courses'] = get_string('course');
         $fields['roles'] = get_string('role');
@@ -55,14 +54,12 @@ class local_apsolu_grades_gradebooks_filters_form extends moodleform {
         $multiple = array('multiple' => true);
 
         $mform->addElement('header', 'required_fields', get_string('default_filters', 'local_apsolu'));
-        $mform->setExpanded('required_fields', false);
-
-        // Activités.
-        $select = $mform->addElement('autocomplete', 'categories', get_string('activities', 'local_apsolu'), $categories, $multiple);
-        $mform->setType('categories', PARAM_TEXT);
+        $mform->setExpanded('required_fields', true);
 
         // Cours.
-        $select = $mform->addElement('autocomplete', 'courses', get_string('courses'), $courses, $multiple);
+        $coursesoptions = $multiple;
+        $coursesoptions['noselectionstring'] = get_string('all_courses', 'local_apsolu');
+        $select = $mform->addElement('autocomplete', 'courses', get_string('courses'), $courses, $coursesoptions);
         $mform->setType('courses', PARAM_TEXT);
 
         // Rôles.
