@@ -172,7 +172,7 @@ if (($formdata = $mform->get_data()) || ($data = data_submitted())) {
 
     if (is_object($filtersdata) === true) {
         // Filtre les options.
-        $acceptedoptions = array('courses', 'roles', 'calendarstypes', 'cities', 'institutions', 'ufrs', 'departments', 'cycles', 'teachers', 'idnumber');
+        $acceptedoptions = array('courses', 'roles', 'calendarstypes', 'cities', 'institutions', 'ufrs', 'departments', 'cycles', 'teachers', 'fullnameuser', 'idnumber');
         foreach ($acceptedoptions as $option) {
             if (isset($filtersdata->$option) === true && empty($filtersdata->$option) === false) {
                 $options[$option] = $filtersdata->$option;

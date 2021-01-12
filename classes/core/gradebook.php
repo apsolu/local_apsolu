@@ -418,6 +418,11 @@ class gradebook {
             $conditions[] = sprintf($sql, substr(str_repeat('?,', $count), 0, -1));
         }
 
+        if (isset($options['fullnameuser']) === true && empty($options['fullnameuser']) === false) {
+            $params[] = '%'.$options['fullnameuser'].'%';
+            $conditions[] = sprintf(" AND %s LIKE ? ", $DB->sql_fullname('u.firstname', 'u.lastname'));
+        }
+
         $sql = "SELECT u.id, u.lastname, u.firstname, u.email, u.idnumber, act.name AS city, u.institution, uid1.data AS ufr, u.department,".
             " u.lastnamephonetic, u.firstnamephonetic, u.middlename, u.alternatename, u.picture, u.imagealt,".
             " uid2.data AS cycle, aca.id AS calendarid, aca.name AS calendar, c.id AS courseid, c.fullname AS course, cc.name AS category, ra.roleid".

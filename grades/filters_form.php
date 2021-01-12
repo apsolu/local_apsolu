@@ -123,6 +123,10 @@ class local_apsolu_grades_gradebooks_filters_form extends moodleform {
             $fields['teachers'] = get_string('teacher', 'local_apsolu');
         }
 
+        // Nom de l'étudiant.
+        $mform->addElement('text', 'fullnameuser', get_string('fullnameuser'));
+        $mform->setType('fullnameuser', PARAM_TEXT);
+
         // Numéro de l'étudiant.
         $mform->addElement('text', 'idnumber', get_string('idnumber'));
         $mform->setType('idnumber', PARAM_TEXT);
