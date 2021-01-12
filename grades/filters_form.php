@@ -72,8 +72,8 @@ class local_apsolu_grades_gradebooks_filters_form extends moodleform {
         $mform->setType('calendarstypes', PARAM_TEXT);
         $mform->addRule('calendarstypes', get_string('required'), 'required', null, 'client');
 
-        $mform->addElement('header', 'optional_fields', get_string('optional_fields', 'local_apsolu'));
-        $mform->setExpanded('optional_fields', false);
+        $mform->addElement('header', 'other_filters', get_string('other_filters', 'local_apsolu'));
+        $mform->setExpanded('other_filters', false);
 
         // Sites de pratique.
         if (count($cities) > 1) {
