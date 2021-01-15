@@ -6,8 +6,8 @@
           "values": {
             "method" : "groupslots",
             "columns" : [
-              {"data":"groupname", "title":"Groupe"},
-              {"data":"total", "title":"Total"}
+              {"data":"groupname", "title":"group,moodle"},
+              {"data":"total", "title":"total,local_apsolu"}
             ],
             "orders":{"0":"asc"},
             "filters":{"select":[0]}
@@ -19,9 +19,9 @@
           "values": {
             "method" : "activityslots",
             "columns" : [
-              {"data":"groupname", "title":"Groupe"},
-              {"data":"activityname", "title":"Activité"},
-              {"data":"total", "title":"Total"}
+              {"data":"groupname", "title":"group,moodle"},
+              {"data":"activityname", "title":"activity,local_apsolu"},
+              {"data":"total", "title":"total,local_apsolu"}
             ],
             "orders":{"0":"asc","1":"asc"},
             "filters":{"select":[0,1]}

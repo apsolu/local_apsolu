@@ -180,26 +180,26 @@ class report extends \local_apsolu\local\statistics\report {
      */
     public function getReportDisplay($datatype = null) {
         $columns = [
-          [ 'data' => "userprofile", 'title' => "Type"],
-          [ 'data' => "idnumber", 'title' => "Numéro étudiant"] ,
-          [ 'data' => "firstname", 'title' => "Prénom"] ,
-          [ 'data' => "lastname", 'title' => "Nom"] ,
-          [ 'data' => "email", 'title' => "Email"] ,
-          [ 'data' => "sexe", 'title' => "Sexe"] ,
-          [ 'data' => "institution", 'title' => "Institution"] ,
-          [ 'data' => "department", 'title' => "Département"] ,
-          [ 'data' => "ufr", 'title' => "UFR"] ,
-          [ 'data' => "lmd", 'title' => "Cycle LMD"]
+          [ 'data' => "userprofile", 'title' => get_string('type', 'local_apsolu')],
+          [ 'data' => "idnumber", 'title' => get_string('idnumber')] ,
+          [ 'data' => "firstname", 'title' => get_string('firstname')] ,
+          [ 'data' => "lastname", 'title' => get_string('lastname')] ,
+          [ 'data' => "email", 'title' => get_string('email')] ,
+          [ 'data' => "sexe", 'title' => get_string('sex', 'local_apsolu')] ,
+          [ 'data' => "institution", 'title' => get_string('institution')] ,
+          [ 'data' => "department", 'title' => get_string('department')] ,
+          [ 'data' => "ufr", 'title' => get_string('ufr', 'local_apsolu')] ,
+          [ 'data' => "lmd", 'title' => get_string('cycle', 'local_apsolu')]
         ];
 
         switch ($datatype) {
             case 2: // Vue activités physiques par candidats
                 $columnsDatatype = [
-                [ 'data' => "wish_list", 'title' => "Nombre de voeux"] ,
-                [ 'data' => "accepted_list", 'title' => "Nombre d'inscriptions acceptées"] ,
-                [ 'data' => "main_list", 'title' => "Nombre d'inscriptions sur liste principale"] ,
-                [ 'data' => "wait_list", 'title' => "Nombre d'inscriptions sur liste d'attente"] ,
-                [ 'data' => "deleted_list", 'title' => "Nombre de déinscriptions"]
+                [ 'data' => "wish_list", 'title' => get_string('number_of_wishes', 'enrol_select')] ,
+                [ 'data' => "accepted_list", 'title' => get_string('number_of_accepted_enrolments', 'enrol_select')] ,
+                [ 'data' => "main_list", 'title' => get_string('number_of_enrolments_on_main_list', 'enrol_select')] ,
+                [ 'data' => "wait_list", 'title' => get_string('number_of_enrolments_on_waiting_list', 'enrol_select')] ,
+                [ 'data' => "deleted_list", 'title' => get_string('number_of_deleted_enrolments', 'enrol_select')]
                 ];
 
                 $orders = [2 => 'asc', 3 => 'asc'];
@@ -207,9 +207,9 @@ class report extends \local_apsolu\local\statistics\report {
               break;
             case 4: // Vue activités complémentaires par candidats
                 $columnsDatatype = [
-                [ 'data' => "wish_list", 'title' => "Nombre de voeux"] ,
-                [ 'data' => "accepted_list", 'title' => "Nombre d'inscriptions acceptées"] ,
-                [ 'data' => "deleted_list", 'title' => "Nombre de déinscriptions"]
+                [ 'data' => "wish_list", 'title' => get_string('number_of_wishes', 'enrol_select')] ,
+                [ 'data' => "accepted_list", 'title' => get_string('number_of_accepted_enrolments', 'enrol_select')] ,
+                [ 'data' => "deleted_list", 'title' => get_string('number_of_deleted_enrolments', 'enrol_select')]
                 ];
 
                 $orders = [2 => 'asc', 3 => 'asc'];
@@ -217,9 +217,9 @@ class report extends \local_apsolu\local\statistics\report {
               break;
             case 3: // 1 : Vue activités compmlémentaires par inscription
                 $columnsDatatype = [
-                [ 'data' => "activityname", 'title' => "Activité complémentaire"],
-                [ 'data' => "apsolucardpaid", 'title' => "Carte sport"] ,
-                [ 'data' => "statusname", 'title' => "Liste (statut inscription)"],
+                [ 'data' => "activityname", 'title' => get_string('complements', 'local_apsolu')],
+                [ 'data' => "apsolucardpaid", 'title' => get_string('sportcard', 'local_apsolu')] ,
+                [ 'data' => "statusname", 'title' => get_string('enrolment_status', 'local_apsolu')],
                 ];
                 $orders = [2 => 'asc', 3 => 'asc'];
                 $filters = ['input' => [1,2,3,4,7,8],'select' => [0,5,6,9,10,11,12] ];
@@ -227,20 +227,20 @@ class report extends \local_apsolu\local\statistics\report {
               break;
             default: // 1 : Vue activités physiques par inscription
                 $columnsDatatype = [
-                [ 'data' => "calendarname", 'title' => "Calendrier"] ,
-                [ 'data' => "calendartypename", 'title' => "Type de calendrier"] ,
-                [ 'data' => "cityname", 'title' => "Site"] ,
-                [ 'data' => "roleshortname", 'title' => "Type d'inscription"] ,
-                [ 'data' => "enrolname", 'title' => "Inscriptions (semestre)"] ,
-                [ 'data' => "apsolucardpaid", 'title' => "Carte sport"] ,
-                [ 'data' => "statusname", 'title' => "Liste (statut inscription)"],
-                [ 'data' => "groupname", 'title' => "Groupements d'activités"],
-                [ 'data' => "activityname", 'title' => "Activité sportive"],
-                [ 'data' => "skillsname", 'title' => "Niveaux"],
-                [ 'data' => "slotnumweekday", 'title' => "Jours","render" => "function ( data, type, row ) {return moment.weekdays()[data];}"],
-                [ 'data' => "slotstartend", 'title' => "Horaires"],
-                [ 'data' => "locationname", 'title' => "Lieu"],
-                [ 'data' => "teachers", 'title' => "Enseignants"],
+                [ 'data' => "calendarname", 'title' => get_string('calendar', 'calendar')] ,
+                [ 'data' => "calendartypename", 'title' => get_string('calendartype', 'local_apsolu')] ,
+                [ 'data' => "cityname", 'title' => get_string('city', 'local_apsolu')] ,
+                [ 'data' => "roleshortname", 'title' => get_string('role', 'local_apsolu')] ,
+                [ 'data' => "enrolname", 'title' => get_string('enrolment_per_semester', 'local_apsolu')] ,
+                [ 'data' => "apsolucardpaid", 'title' => get_string('sportcard', 'local_apsolu')] ,
+                [ 'data' => "statusname", 'title' => get_string('enrolment_status', 'local_apsolu')],
+                [ 'data' => "groupname", 'title' => get_string('grouping', 'local_apsolu')],
+                [ 'data' => "activityname", 'title' => get_string('activity', 'local_apsolu')],
+                [ 'data' => "skillsname", 'title' => get_string('skill', 'local_apsolu')],
+                [ 'data' => "slotnumweekday", 'title' => get_string('weekday', 'local_apsolu'), "render" => "function ( data, type, row ) {return moment.weekdays()[data];}"],
+                [ 'data' => "slotstartend", 'title' => get_string('schedule', 'local_apsolu')],
+                [ 'data' => "locationname", 'title' => get_string('location', 'local_apsolu')],
+                [ 'data' => "teachers", 'title' => get_string('teacher', 'local_apsolu')],
                 [ 'data' => "practicegrade", 'title' => get_string('practicegrade', 'local_apsolu')],
                 [ 'data' => "theorygrade", 'title' => get_string('theorygrade', 'local_apsolu')],
                 [ 'data' => null, 'visible' => false, 'title' => "Activité détaillée","render" => "function ( data, type, row ) {return data.activityname.replace(/\s/g,'&nbsp;') + '&nbsp;/&nbsp;' + moment.weekdays()[data.slotnumweekday] +'&nbsp;/&nbsp;' + data.slotstart + '&nbsp;-&nbsp;' + data.slotend + '&nbsp;/&nbsp;' + data.skillsname.replace(/\s/g,'&nbsp;');}"],

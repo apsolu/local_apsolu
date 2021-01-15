@@ -114,9 +114,9 @@
           "values": {
             "method" : "accepted_refused",
             "columns" : [
-              {"data":"institution", "title":"Institution"},
-              {"data":"accepted", "title":"Accepté au moins 1 fois"},
-              {"data":"refused", "title":"Refusé partout"}
+              {"data":"institution", "title":"institution,moodle"},
+              {"data":"accepted", "title":"accepted_at_least_once,local_apsolu"},
+              {"data":"refused", "title":"refused_everywhere,local_apsolu"}
             ],
             "orders":{"0":"asc","1":"asc"},
             "filters":{"select":[0]}
@@ -129,9 +129,9 @@
           "values": {
             "method" : "distribution_userprofile",
             "columns" : [
-              {"data":"institution", "title":"Intitution"},
-              {"data":"userprofile", "title":"Type"},
-              {"data":"total", "title":"Total"}
+              {"data":"institution", "title":"institution,moodle"},
+              {"data":"userprofile", "title":"type,local_apsolu"},
+              {"data":"total", "title":"total,local_apsolu"}
             ],
             "orders":{"0":"asc","1":"asc"},
             "filters":{"select":[0,1]}
@@ -144,9 +144,9 @@
           "values": {
             "method" : "distribution_genders",
             "columns" : [
-              {"data":"institution", "title":"Intitution"},
-              {"data":"gender", "title":"Genre"},
-              {"data":"total", "title":"Total"}
+              {"data":"institution", "title":"institution,moodle"},
+              {"data":"gender", "title":"gender,local_apsolu"},
+              {"data":"total", "title":"total,local_apsolu"}
             ],
             "orders":{"0":"asc","1":"asc"},
             "filters":{"select":[0,1]}
@@ -159,9 +159,9 @@
           "values": {
             "method" : "enrol_userprofile",
             "columns" : [
-              {"data":"institution", "title":"Intitution"},
-              {"data":"userprofile", "title":"Type"},
-              {"data":"total", "title":"Total"}
+              {"data":"institution", "title":"institution,moodle"},
+              {"data":"userprofile", "title":"type,local_apsolu"},
+              {"data":"total", "title":"total,local_apsolu"}
             ],
             "orders":{"0":"asc","1":"asc"},
             "filters":{"select":[0,1]}
@@ -174,9 +174,9 @@
           "values": {
             "method" : "enrol_genders",
             "columns" : [
-              {"data":"institution", "title":"Intitution"},
-              {"data":"gender", "title":"Genre"},
-              {"data":"total", "title":"Total"}
+              {"data":"institution", "title":"institution,moodle"},
+              {"data":"gender", "title":"gender,local_apsolu"},
+              {"data":"total", "title":"total,local_apsolu"}
             ],
             "orders":{"0":"asc","1":"asc"},
             "filters":{"select":[0,1]}
@@ -208,9 +208,9 @@
           "values": {
             "method" : "enrol_roles",
             "columns" : [
-              {"data":"institution", "title":"Institution"},
-              {"data":"roleshortname", "title":"Role"},
-              {"data":"total", "title":"Total"}
+              {"data":"institution", "title":"institution,moodle"},
+              {"data":"roleshortname", "title":"role,moodle"},
+              {"data":"total", "title":"total,local_apsolu"}
             ],
             "orders":{"0":"asc","1":"asc"},
             "filters":{"select":[0,1]}
@@ -223,23 +223,23 @@
           "values": {
             "method" : "enrollment_accepted_evaluated",
             "columns" : [
-              {"data":"institution", "title":"Institution"},
-              {"data":"institution_total", "title":"Total",
+              {"data":"institution", "title":"institution,moodle"},
+              {"data":"institution_total", "title":"total,local_apsolu",
                 "render": "function(data, type, row, meta) {return \"<a target='_blank' class='parse-rules' data-rules='institution_rules' href='#'>\"+data+\"</a>\";}",
                 "className": "border-right"
               },
-              {"data":"ufr", "title":"UFR"},
-              {"data":"ufr_total", "title":"Total",
+              {"data":"ufr", "title":"ufr,local_apsolu"},
+              {"data":"ufr_total", "title":"total,local_apsolu",
                 "render": "function(data, type, row, meta) {return \"<a target='_blank' class='parse-rules' data-rules='ufr_rules' href='#'>\"+data+\"</a>\";}",
                 "className": "border-right"
               },
-              {"data":"department", "title":"Département"},
-              {"data":"department_total", "title":"Total",
+              {"data":"department", "title":"department,moodle"},
+              {"data":"department_total", "title":"total,local_apsolu",
                 "render": "function(data, type, row, meta) {return \"<a target='_blank' class='parse-rules' data-rules='department_rules' href='#'>\"+data+\"</a>\";}",
                 "className": "border-right"
               },
-              {"data":"lmd", "title":"LMD"},
-              { "data": "lmd_total", "title":"Total",
+              {"data":"lmd", "title":"cycle,local_apsolu"},
+              { "data": "lmd_total", "title":"total,local_apsolu",
                 "render": "function(data, type, row, meta) {return \"<a target='_blank' class='parse-rules' data-rules='lmd_rules' href='#'>\"+data+\"</a>\";}"
               }
             ],
@@ -253,12 +253,12 @@
           "values": {
             "method" : "get_nowishes_list",
             "columns" : [
-              {"data":"idnumber", "title":"Numéro"},
-              {"data":"firstname", "title":"Prénom"},
-              {"data":"lastname", "title":"Nom"},
-              {"data":"email", "title":"Email"},
-              {"data":"institution", "title":"Institution"},
-              {"data":"department", "title":"Département"}
+              {"data":"idnumber", "title":"idnumber,moodle"},
+              {"data":"firstname", "title":"firstname,moodle"},
+              {"data":"lastname", "title":"lastname,moodle"},
+              {"data":"email", "title":"email,moodle"},
+              {"data":"institution", "title":"institution,moodle"},
+              {"data":"department", "title":"department,moodle"}
             ],
             "orders":{"2":"asc","3":"asc"},
             "filters":{"input":[1,2,3,4],"select":[5,6]}
@@ -271,16 +271,16 @@
           "values": {
             "method" : "dashboard",
             "columns" : [
-              {"data":"wish_list", "title":"Voeux"},
-              {"data":"accepted_list", "title":"Inscription"},
-              {"data":"main_list", "title":"Principale"},
-              {"data":"wait_list", "title":"Attente"},
-              {"data":"deleted_list", "title":"Refusé"},
-              {"data":"enrollee_wish_list", "title":"Candidat Voeux"},
-              {"data":"enrollee_accepted_list", "title":"Candidat Inscription"},
-              {"data":"enrollee_main_list", "title":"Candidat Principale"},
-              {"data":"enrollee_wait_list", "title":"Candidat Attente"},
-              {"data":"enrollee_deleted_list", "title":"Candidat Refusé"}
+              {"data":"wish_list", "title":"wishes,enrol_select"},
+              {"data":"accepted_list", "title":"enrolment,enrol_select"},
+              {"data":"main_list", "title":"main_list_short,enrol_select"},
+              {"data":"wait_list", "title":"wait_list_short,enrol_select"},
+              {"data":"deleted_list", "title":"deleted_list_short,enrol_select"},
+              {"data":"enrollee_wish_list", "title":"enrollee_wish_list,enrol_select"},
+              {"data":"enrollee_accepted_list", "title":"enrollee_accepted_list,enrol_select"},
+              {"data":"enrollee_main_list", "title":"enrollee_main_list,enrol_select"},
+              {"data":"enrollee_wait_list", "title":"enrollee_wait_list,enrol_select"},
+              {"data":"enrollee_deleted_list", "title":"enrollee_deleted_list,enrol_select"}
             ]
           }
         },
@@ -291,8 +291,8 @@
           "values": {
             "method" : "dashboard_complementaries",
             "columns" : [
-              {"data":"enrollment", "title":"Inscriptions"},
-              {"data":"enrollee", "title":"Inscrits"}
+              {"data":"enrollment", "title":"enrolments,enrol"},
+              {"data":"enrollee", "title":"enrollees,enrol_select"}
             ]
           }
         }        
@@ -304,10 +304,10 @@
           "values": {
             "method" : "custom_shnu",
             "columns" : [
-              {"data":"idnumber", "title":"Numéro étudiant"},
-              {"data":"firstname", "title":"Prénom"},
-              {"data":"lastname", "title":"Nom"},
-              {"data":"email", "title":"Email"}
+              {"data":"idnumber", "title":"idnumber,moodle"},
+              {"data":"firstname", "title":"firstname,moodle"},
+              {"data":"lastname", "title":"lastname,moodle"},
+              {"data":"email", "title":"email,moodle"}
             ],
             "orders":{"1":"asc","2":"asc"},
             "filters":{"input":[0,1,2,3]}
@@ -319,12 +319,12 @@
           "values": {
             "method" : "custom_apsoluhighlevelathlete",
             "columns" : [
-              {"data":"idnumber", "title":"Numéro étudiant"},
-              {"data":"firstname", "title":"Prénom"},
-              {"data":"lastname", "title":"Nom"},
-              {"data":"email", "title":"Email"},
-              {"data":"institution", "title":"Institution"},
-              {"data":"ufr", "title":"UFR"}
+              {"data":"idnumber", "title":"idnumber,moodle"},
+              {"data":"firstname", "title":"firstname,moodle"},
+              {"data":"lastname", "title":"lastname,moodle"},
+              {"data":"email", "title":"email,moodle"},
+              {"data":"institution", "title":"institution,moodle"},
+              {"data":"ufr", "title":"ufr,local_apsolu"}
             ],
             "orders":{"1":"asc","2":"asc"},
             "filters":{"input":[0,1,2,3],"select":[4,5]}
@@ -336,9 +336,9 @@
           "values": {
             "method" : "get_SHNU_list",
             "columns" : [
-              {"data":"institution", "title":"Institution"},
-              {"data":"ufr", "title":"UFR"},
-              {"data":"total", "title":"Total"}
+              {"data":"institution", "title":"institution,moodle"},
+              {"data":"ufr", "title":"ufr,local_apsolu"},
+              {"data":"total", "title":"total,local_apsolu"}
             ],
             "orders":{"0":"asc"},
             "filters":{"select":[0,1]}
@@ -348,7 +348,7 @@
     "filters": [
         {
           "id": "calendarid",
-          "label": "Calendrier",
+          "label": "calendar,calendar",
           "type": "integer",
           "input": "select",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"],
@@ -360,7 +360,7 @@
         },   
         {
           "id": "calendartypeid",
-          "label": "Type de calendrier",
+          "label": "calendartype,local_apsolu",
           "type": "integer",
           "input": "select",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"],
@@ -372,7 +372,7 @@
         },        
         {
           "id": "cityid",
-          "label": "Site",
+          "label": "city,local_apsolu",
           "type": "integer",
           "input": "select",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"],
@@ -384,37 +384,37 @@
         },
         {
           "id": "userid",
-          "label": "Identifiant APSOLU",
+          "label": "userid,local_apsolu",
           "type": "string",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"]
         },        
         {
           "id": "idnumber",
-          "label": "Numéro d'étudiant",
+          "label": "idnumber,moodle",
           "type": "string",
           "operators": ["equal", "not_equal"]
         },
         {
           "id": "firstname",
-          "label": "Prénom",
+          "label": "firstname,moodle",
           "type": "string",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"]
         },                
         {
           "id": "lastname",
-          "label": "nom",
+          "label": "lastname,moodle",
           "type": "string",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"]
         },
         {
           "id": "email",
-          "label": "Courriel",
+          "label": "email,moodle",
           "type": "string",
           "operators": ["equal", "not_equal"]
         },
         {
           "id": "sexe",
-          "label": "Sexe",
+          "label": "sex,local_apsolu",
           "type": "string",
           "input": "select",
           "operators": ["equal", "not_equal"],
@@ -427,7 +427,7 @@
         },
         {
           "id": "institution",
-          "label": "Institution",
+          "label": "institution,moodle",
           "type": "string",
           "input": "select",
           "values" : {
@@ -439,7 +439,7 @@
         },
         {
           "id": "department",
-          "label": "Département",
+          "label": "department,moodle",
           "type": "string",
           "input": "select",
           "operators": ["equal", "not_equal", "in", "not_in", "is_null", "is_not_null"],
@@ -451,7 +451,7 @@
         },
         {
           "id": "ufr",
-          "label": "UFR",
+          "label": "ufr,local_apsolu",
           "type": "string",
           "input": "select",
           "operators": ["equal", "not_equal"],
@@ -464,7 +464,7 @@
         },
         {
           "id": "lmd",
-          "label": "Cycle LMD",
+          "label": "cycle,local_apsolu",
           "type": "string",
           "input": "select",
           "operators": ["equal", "not_equal"],
@@ -477,7 +477,7 @@
         },
         {
           "id": "roleshortname",
-          "label": "Type d'inscription",
+          "label": "role,local_apsolu",
           "type": "string",
           "input": "select",
           "operators": ["contains","not_contains","equal", "not_equal"],
@@ -490,7 +490,7 @@
         },
         {
           "id": "enrolname",
-          "label": "Inscriptions (semestre)",
+          "label": "enrolment_per_semester,local_apsolu",
           "type": "string",
           "input": "select",
           "operators": ["equal", "not_equal"],
@@ -503,7 +503,7 @@
         },          
         {
           "id": "apsolucardpaid",
-          "label": "Carte sport",
+          "label": "sportcard,local_apsolu",
           "type": "string",
           "input": "select",
           "operators": ["equal", "not_equal"],
@@ -514,7 +514,7 @@
         },
         {
           "id": "status",
-          "label": "Liste (statut inscription)",
+          "label": "enrolment_status,local_apsolu",
           "type": "integer",
           "input": "select",
           "values" : {
@@ -526,7 +526,7 @@
         },        
         {
           "id": "groupid",
-          "label": "Groupements d'activités",
+          "label": "grouping,local_apsolu",
           "type": "integer",
           "input": "select",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"],
@@ -539,7 +539,7 @@
         },
         {
           "id": "activityid",
-          "label": "Activité",
+          "label": "activity,local_apsolu",
           "type": "integer",
           "input": "select",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"],
@@ -552,7 +552,7 @@
         },
         {
           "id": "userprofile",
-          "label": "Type",
+          "label": "type,local_apsolu",
           "type": "integer",
           "input": "select",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"],
@@ -568,7 +568,7 @@
     "filtersCustomRennes": [
         {
           "id": "shnu",
-          "label": "Sportif de haut niveau",
+          "label": "high_level_athlete,local_apsolu",
           "type": "boolean",
           "input": "select",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"],

@@ -24,6 +24,8 @@
 
 namespace local_apsolu\local\statistics;
 
+use stdClass;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -59,6 +61,8 @@ class report {
         if ($CFG->is_siuaps_rennes){
             $model->reports = array_merge($model->reports,$model->reportsCustomRennes);
         }
+
+        $model = self::localize_reports($model);
 
         if (!is_null ($reportid)) {
             for ($i = 0; $i < count($model->reports); $i++) {
@@ -96,6 +100,8 @@ class report {
         if ($CFG->is_siuaps_rennes){
             $model->filters = array_merge($model->filters,$model->filtersCustomRennes);
         }
+
+        $model = self::localize_filters($model);
 
         for ($i = 0; $i < count($model->filters); $i++) {
             $filter = $model->filters[$i];
@@ -160,5 +166,55 @@ class report {
         ORDER BY c.shortname";
 
         return $DB->get_records_sql($sql);
+    }
+
+    /**
+     * Traduit les libellés des filtres.
+     *
+     * @param stdClass $model Objet représentant la configuration json du rapport.
+     *
+     * @return stdClass
+     */
+    public static function localize_filters(stdClass $model) {
+        if (isset($model->filters) === true) {
+            foreach ($model->filters as $key1 => $filter) {
+                if (isset($filter->label) === false) {
+                    continue;
+                }
+
+                list($stringid, $component) = explode(',', $filter->label);
+                $model->filters[$key1]->label = get_string($stringid, $component);
+            }
+        }
+
+        return $model;
+    }
+
+    /**
+     * Traduit les libellés des entêtes de colonne des rapports.
+     *
+     * @param stdClass $model Objet représentant la configuration json du rapport.
+     *
+     * @return stdClass
+     */
+    public static function localize_reports(stdClass $model) {
+        if (isset($model->reports) === true) {
+            foreach ($model->reports as $key1 => $report) {
+                if (isset($report->values->columns) === false) {
+                    continue;
+                }
+
+                foreach ($report->values->columns as $key2 => $column) {
+                    if (isset($column->title) === false) {
+                        continue;
+                    }
+
+                    list($stringid, $component) = explode(',', $column->title);
+                    $model->reports[$key1]->values->columns[$key2]->title = get_string($stringid, $component);
+                }
+            }
+        }
+
+        return $model;
     }
 }
