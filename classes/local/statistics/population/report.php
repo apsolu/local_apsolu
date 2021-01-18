@@ -93,9 +93,7 @@ class report extends \local_apsolu\local\statistics\report {
   					WHERE ctx.instanceid = E.courseid) as teachers,
             AL.name as locationname,
             APSOLU_S.id,APSOLU_S.name as skillsname,
-            CONCAT(APSOLU_C.starttime,\'-\',APSOLU_C.endtime) as slotstartend,
-            CASE WHEN MONTH(CAST(FROM_UNIXTIME(UE.timestart) as date)) > 8 THEN AG.grade1 ELSE AG.grade3 END AS practicegrade,
-            CASE WHEN MONTH(CAST(FROM_UNIXTIME(UE.timestart) as date)) > 8 THEN AG.grade2 ELSE AG.grade4 END AS theorygrade 
+            CONCAT(APSOLU_C.starttime,\'-\',APSOLU_C.endtime) as slotstartend 
                         
           FROM {user_enrolments} UE
           INNER JOIN {user} U ON U.id = UE.userid AND U.deleted = 0
@@ -118,7 +116,6 @@ class report extends \local_apsolu\local\statistics\report {
           INNER JOIN {role_assignments} ra ON ra.userid = UE.userid
           INNER JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50 AND ctx.instanceid = C.id
           INNER JOIN {role} R ON ra.roleid = R.id AND R.archetype = \'student\'
-          LEFT JOIN {apsolu_grades} AG ON AG.courseid = C.id AND AG.userid = U.id
           ORDER BY ACT.id,U.institution, U.department, U.id, U.idnumber
       	) ';
 
@@ -241,8 +238,6 @@ class report extends \local_apsolu\local\statistics\report {
                 [ 'data' => "slotstartend", 'title' => get_string('schedule', 'local_apsolu')],
                 [ 'data' => "locationname", 'title' => get_string('location', 'local_apsolu')],
                 [ 'data' => "teachers", 'title' => get_string('teacher', 'local_apsolu')],
-                [ 'data' => "practicegrade", 'title' => get_string('practicegrade', 'local_apsolu')],
-                [ 'data' => "theorygrade", 'title' => get_string('theorygrade', 'local_apsolu')],
                 [ 'data' => null, 'visible' => false, 'title' => "Activité détaillée","render" => "function ( data, type, row ) {return data.activityname.replace(/\s/g,'&nbsp;') + '&nbsp;/&nbsp;' + moment.weekdays()[data.slotnumweekday] +'&nbsp;/&nbsp;' + data.slotstart + '&nbsp;-&nbsp;' + data.slotend + '&nbsp;/&nbsp;' + data.skillsname.replace(/\s/g,'&nbsp;');}"],
                 ];
                 $orders = [2 => 'asc', 3 => 'asc'];
