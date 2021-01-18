@@ -64,13 +64,15 @@ class report extends \local_apsolu\local\statistics\report {
             Sexe.data as sexe, 
             CASE WHEN UFR.data IS NULL THEN \'\' ELSE UFR.data END AS ufr, CASE WHEN LMD.data IS NULL THEN \'\' ELSE LMD.data END AS lmd, apsoluhighlevelathlete.data as shnu,
             CASE WHEN apsolucardpaid.data IS NOT NULL THEN "Oui" ELSE "Non" END as apsolucardpaid,
-      			E.id as enrolid, E.name as enrolname, UE.status,
-            CASE WHEN (U.email LIKE \'%@etudiant.univ-%\' OR U.email LIKE \'%@etu.univ-%\' OR U.email LIKE \'%@eleves.%\' OR U.email LIKE \'%@etud.univ-%\' OR U.email LIKE \'%@etudiant.%\')
+            E.id as enrolid, E.name as enrolname, UE.status,
+            CASE WHEN (apsoluusertype.data IS NOT NULL AND apsoluusertype.data <> \'\') 
+					    THEN apsoluusertype.data
+              ELSE CASE WHEN (U.email LIKE \'%@etudiant.univ-%\' OR U.email LIKE \'%@etu.univ-%\' OR U.email LIKE \'%@eleves.%\' OR U.email LIKE \'%@etud.univ-%\' OR U.email LIKE \'%@etudiant.%\')
             	THEN \'Étudiant\'
               ELSE CASE WHEN (U.institution IS NOT NULL AND U.institution <> \'\') OR U.email LIKE \'%@univ-%\'
             		THEN \'Personnel\'
             		ELSE \'Inconnu\'
-            END END AS userprofile,
+            END END END AS userprofile,
             CASE WHEN UE.status = 0 THEN "Liste des étudiants acceptés"
       				ELSE CASE WHEN UE.status = 2 THEN "Liste principale"
       				ELSE CASE WHEN UE.status = 3 THEN "Liste complémentaire"
@@ -102,6 +104,8 @@ class report extends \local_apsolu\local\statistics\report {
           LEFT JOIN {user_info_data} LMD ON LMD.userid = U.id AND LMD.fieldid = (select id from mdl_user_info_field where shortname = \'apsolucycle\')
           LEFT JOIN {user_info_data} apsolucardpaid ON apsolucardpaid.userid = U.id AND apsolucardpaid.fieldid = (select id from mdl_user_info_field where shortname = \'apsolucardpaid\')
           LEFT JOIN {user_info_data} apsoluhighlevelathlete ON apsoluhighlevelathlete.userid = U.id AND apsoluhighlevelathlete.fieldid = (select id from mdl_user_info_field where shortname = \'apsoluhighlevelathlete\')
+          LEFT JOIN {user_info_data} apsoluusertype ON apsoluusertype.userid = U.id AND apsoluusertype.fieldid = (select id from mdl_user_info_field where shortname = \'apsoluusertype\')
+          
           INNER JOIN {enrol} E ON E.id = UE.enrolid AND E.enrol = \'select\'
           INNER JOIN {course} C on C.id = E.courseid
           INNER JOIN {apsolu_courses} APSOLU_C on APSOLU_C.id = C.id
@@ -127,12 +131,14 @@ class report extends \local_apsolu\local\statistics\report {
             Sexe.data as sexe, UFR.data as ufr, LMD.data as lmd, apsoluhighlevelathlete.data as shnu,
             CASE WHEN apsolucardpaid.data THEN "Oui" ELSE "Non" END as apsolucardpaid,
       			E.id as enrolid, E.name as enrolname, UE.status,
-            CASE WHEN (U.email LIKE \'%@etudiant.univ-%\' OR U.email LIKE \'%@etu.univ-%\' OR U.email LIKE \'%@eleves.%\' OR U.email LIKE \'%@etud.univ-%\' OR U.email LIKE \'%@etudiant.%\')
+            CASE WHEN (apsoluusertype.data IS NOT NULL AND apsoluusertype.data <> \'\') 
+					    THEN apsoluusertype.data
+              ELSE CASE WHEN (U.email LIKE \'%@etudiant.univ-%\' OR U.email LIKE \'%@etu.univ-%\' OR U.email LIKE \'%@eleves.%\' OR U.email LIKE \'%@etud.univ-%\' OR U.email LIKE \'%@etudiant.%\')
             	THEN \'Étudiant\'
               ELSE CASE WHEN (U.institution IS NOT NULL AND U.institution <> \'\') OR U.email LIKE \'%@univ-%\'
             		THEN \'Personnel\'
             		ELSE \'Inconnu\'
-            END END AS userprofile,
+            END END END AS userprofile,
             CASE WHEN UE.status = 0 THEN "Liste des étudiants acceptés"
       				ELSE CASE WHEN UE.status = 2 THEN "Liste principale"
       				ELSE CASE WHEN UE.status = 3 THEN "Liste complémentaire"
@@ -154,7 +160,9 @@ class report extends \local_apsolu\local\statistics\report {
           LEFT JOIN {user_info_data} LMD ON LMD.userid = U.id AND LMD.fieldid = (select id from mdl_user_info_field where shortname = \'apsolucycle\')
           LEFT JOIN {user_info_data} apsolucardpaid ON apsolucardpaid.userid = U.id AND apsolucardpaid.fieldid = (select id from mdl_user_info_field where shortname = \'apsolucardpaid\')
           LEFT JOIN {user_info_data} apsoluhighlevelathlete ON apsoluhighlevelathlete.userid = U.id AND apsoluhighlevelathlete.fieldid = (select id from mdl_user_info_field where shortname = \'apsoluhighlevelathlete\')
-      		INNER JOIN {enrol} E ON E.id = UE.enrolid AND E.enrol = \'select\'
+          LEFT JOIN {user_info_data} apsoluusertype ON apsoluusertype.userid = U.id AND apsoluusertype.fieldid = (select id from mdl_user_info_field where shortname = \'apsoluusertype\')
+          
+          INNER JOIN {enrol} E ON E.id = UE.enrolid AND E.enrol = \'select\'
       		INNER JOIN {course} C on C.id = E.courseid
       		INNER JOIN {apsolu_complements} APSOLU_C on APSOLU_C.id = C.id
       		INNER JOIN {course_categories} Grouping ON Grouping.id = C.category
