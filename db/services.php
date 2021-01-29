@@ -81,6 +81,16 @@ $functions = array(
         'loginrequired' => true,
         'ajax' => true,
     ),
+    // Function get_sports().
+    'local_apsolu_get_sports' => array(
+        'classname'     => 'local_apsolu_webservices',
+        'methodname'    => 'get_sports',
+        'classpath'     => 'local/apsolu/externallib.php',
+        'description'   => get_string('ws_local_apsolu_get_sports_description', 'local_apsolu'),
+        'type'          => 'read',
+        'loginrequired' => false,
+        'ajax'          => true,
+    ),
     // Function get_unenrolments().
     'local_apsolu_get_unenrolments' => array(
         'classname'   => 'local_apsolu_webservices',
@@ -191,6 +201,7 @@ $services = array(
         'functions' => array(
             'local_apsolu_get_courses_list',
             'local_apsolu_get_groupings',
+            'local_apsolu_get_sports',
             ),
         'restrictedusers' => 1,
         'enabled' => 0,

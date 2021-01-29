@@ -1345,4 +1345,55 @@ class local_apsolu_webservices extends external_api {
           )
         );
     }
+
+    /**
+     * Retourne la liste des activités sportives.
+     *
+     * @return array
+     */
+    public static function get_sports() {
+        global $DB;
+
+        $data = array();
+
+        $sql = "SELECT DISTINCT cc.id AS sportid, cc.name AS sport, acc.url AS sporturl, cc.description,".
+            " cc0.id AS domainid, cc0.name AS domain, acg.url AS domainurl".
+            " FROM {apsolu_courses_categories} acc".
+            " JOIN {course_categories} cc ON cc.id = acc.id".
+            " JOIN {apsolu_courses_groupings} acg ON acg.id = cc.parent".
+            " JOIN {course_categories} cc0 ON cc0.id = acg.id".
+            " ORDER BY sport, domain";
+
+        return array_values($DB->get_records_sql($sql));
+    }
+
+    /**
+     * Describes the parameters for get_sports.
+     *
+     * @return external_external_function_parameters
+     */
+    public static function get_sports_parameters() {
+        return new external_function_parameters(array());
+    }
+
+    /**
+     * Describes the get_sports return value.
+     *
+     * @return external_single_structure
+     */
+    public static function get_sports_returns() {
+        return new external_multiple_structure(
+            new external_single_structure(
+                array(
+                    'sportid' => new external_value(PARAM_INT, get_string('ws_value_activityid', 'local_apsolu')),
+                    'sport' => new external_value(PARAM_TEXT, get_string('ws_value_activity_name', 'local_apsolu')),
+                    'sporturl' => new external_value(PARAM_TEXT, get_string('ws_value_activity_url', 'local_apsolu')),
+                    'description' => new external_value(PARAM_RAW, get_string('ws_value_description', 'local_apsolu')),
+                    'domainid' => new external_value(PARAM_INT, get_string('ws_value_domainid', 'local_apsolu')),
+                    'domain' => new external_value(PARAM_TEXT, get_string('ws_value_domain', 'local_apsolu')),
+                    'domainurl' => new external_value(PARAM_TEXT, get_string('ws_value_domain_url', 'local_apsolu')),
+                  )
+            )
+        );
+    }
 }

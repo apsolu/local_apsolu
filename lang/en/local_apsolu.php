@@ -873,6 +873,7 @@ $string['ws_local_apsolu_get_activities_description'] = 'Retourne toutes les act
 $string['ws_local_apsolu_get_courses_description'] = 'Retourne tous les cours';
 $string['ws_local_apsolu_get_groupings_description'] = 'Retourne tous les groupements d\'activités';
 $string['ws_local_apsolu_get_registrations_description'] = 'Retourne toutes les inscriptions';
+$string['ws_local_apsolu_get_sports_description'] = 'Retourne toutes les activités sportives et leur groupement';
 $string['ws_local_apsolu_get_unenrolments_description'] = 'Retourne toutes les désinscriptions';
 $string['ws_local_apsolu_get_teachers_description'] = 'Retourne tous les enseignants';
 $string['ws_local_apsolu_get_attendances_description'] = 'Retourne toutes les prises de présences';
