@@ -29,6 +29,7 @@ define(['jquery', 'core/templates', 'enrol_select/select2'], function($, templat
              */
             function filter() {
                 // Filtre le tableau de l'offre de formations.
+                var filters = {};
 
                 // Réaffiche toutes les lignes pour mieux les masquer ensuite.
                 $('#apsolu-enrol-select tbody tr').css('display', 'table-row');
@@ -39,6 +40,11 @@ define(['jquery', 'core/templates', 'enrol_select/select2'], function($, templat
                     if (values.length === 0) {
                         // Ne pas parcourir le tableau entier, si il n'y a aucun filtre pour cette colonne.
                         return;
+                    }
+
+                    filters[target] = [];
+                    for (var i = 0; i < values.length; i++) {
+                        filters[target].push(values[i].id);
                     }
 
                     var header;
@@ -80,6 +86,16 @@ define(['jquery', 'core/templates', 'enrol_select/select2'], function($, templat
                         header.css('display', 'none');
                     }
                 });
+
+                // Calcule le permalink.
+                if (Object.keys(filters).length !== 0) {
+                    var permalink = document.getElementById('apsolu-offerings-permalink-a');
+                    if (permalink) {
+                        var anchor = window.btoa(unescape(encodeURIComponent(JSON.stringify(filters))));
+
+                        permalink.setAttribute('href', '#' + anchor);
+                    }
+                }
             }
 
             // Initialise les entrées HTML du formulaire contenant les filtres.
@@ -88,10 +104,34 @@ define(['jquery', 'core/templates', 'enrol_select/select2'], function($, templat
                 width: '18em'
                 });
 
-            // Appelle la focntion filter() à chaque changement de valeurs dans les entrées du formulaire.
+            // Appelle la fonction filter() à chaque changement de valeurs dans les entrées du formulaire.
             $('.apsolu-enrol-selects').on('change.select2', function() {
                 filter();
             });
+
+            // Lit le permalink dans l'ancre de l'URL.
+            var anchor = window.location.hash;
+
+            if (anchor.charAt(0) === '#') {
+                anchor = anchor.slice(1);
+            }
+
+            if (anchor != '') {
+                var selections = decodeURIComponent(escape(window.atob(anchor)));
+                try {
+                    selections = JSON.parse(selections);
+
+                    for (selection in selections) {
+                        var select = $('.apsolu-enrol-selects[name='+selection+']');
+                        if (select) {
+                            select.val(selections[selection]);
+                            select.trigger('change');
+                        }
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            }
 
             // Initialise les filtres.
             filter();

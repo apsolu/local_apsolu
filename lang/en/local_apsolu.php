@@ -216,6 +216,7 @@ $string['period_has_been_deleted'] = 'La période a été supprimée.';
 $string['period_saved'] = 'Période enregistrée.';
 $string['period_updated'] = 'Période modifiée.';
 $string['periods'] = 'Périodes';
+$string['permanent_link'] = 'Lien permanent';
 $string['purge_holidays'] = 'Vider la liste des jours fériés';
 $string['refused_everywhere'] = 'Refusé partout';
 $string['required_fields'] = 'Champs obligatoires';
