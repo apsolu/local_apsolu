@@ -70,8 +70,18 @@ define(['jquery', 'core/templates', 'enrol_select/select2'], function($, templat
 
                         // Pour chaque valeur sélectionnée dans le widget select2...
                         for (var i = 0; i < values.length; i++) {
+                            var match = false;
                             var value = $.trim($(this).children('[data-column="' + target + '"]').attr('data-value'));
-                            if (value.indexOf(values[i].text) !== -1) {
+
+                            if (target === "period" || target === "role" || target === "teachers") {
+                                // On fait une recherche partielle sur les champs périodes, roles et enseignants.
+                                match = (value.indexOf(values[i].text) !== -1);
+                            } else {
+                                // On fait une recherche strict sur les autres champs.
+                                match = (values[i].text === value);
+                            }
+
+                            if (match === true) {
                                 // Si la valeur correspond au filtre, on continue...
                                 headerChildren++;
                                 return;
