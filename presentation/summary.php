@@ -77,7 +77,7 @@ $filters['area']->values = array();
 
 $filters['period'] = new \stdClass();
 $filters['period']->label = get_string('period', 'local_apsolu');
-$filters['period']->values = array('S1', 'S2'); // TODO: faire une requête en DB.
+$filters['period']->values = array();
 
 $filters['times'] = new \stdClass();
 $filters['times']->label = get_string('time_of_day', 'local_apsolu');
@@ -179,9 +179,10 @@ foreach (UniversiteRennes2\Apsolu\get_activities($cityid) as $activity) {
 
     $courses[$activity->category]->courses[] = $activity;
 
+    $activity->period = $activity->generic_name;
 
     // Filtres.
-    foreach (array('area', 'category', 'city', 'location', 'skill') as $type) {
+    foreach (array('area', 'category', 'city', 'location', 'period', 'skill') as $type) {
         if (in_array($activity->{$type}, $filters[$type]->values, $strict = true) === false) {
             $filters[$type]->values[] = $activity->{$type};
         }
@@ -209,7 +210,7 @@ ksort($filters['teachers']->values);
 $filters['teachers']->values = array_values($filters['teachers']->values);
 
 foreach ($filters as $name => $filter) {
-    if (in_array($name, array('period', 'teachers', 'times', 'weekday'), $strict = true) === false) {
+    if (in_array($name, array('teachers', 'times', 'weekday'), $strict = true) === false) {
         sort($filter->values, SORT_LOCALE_STRING);
     }
 
