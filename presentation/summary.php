@@ -261,6 +261,7 @@ if (empty($data['selected_site']) === false && empty($data['show_city_column']) 
 $data['filters'] = array_values($filters);
 $data['count_filters'] = count($filters);
 $data['is_siuaps_rennes'] = isset($CFG->is_siuaps_rennes);
+$data['permalink'] = has_capability('moodle/category:manage', context_system::instance());
 
 echo $OUTPUT->render_from_template('local_apsolu/presentation_summary', $data);
 
