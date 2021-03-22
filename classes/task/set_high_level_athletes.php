@@ -57,7 +57,7 @@ class set_high_level_athletes extends \core\task\scheduled_task {
             return true;
         }
 
-        // TODO: sortir cette tâche qui n'a rien à voir avec les athlètes de haut-niveau.
+        // TODO: sortir ces 3 tâches qui n'ont rien à voir avec les athlètes de haut-niveau.
         // Positionne le flag "apsolumedicalcertificate" à 1 sur les étudiants dont le certificat FFSU est validé dans le cours 249.
         $sql = "UPDATE {user_info_data} SET data = 1".
             " WHERE fieldid = (SELECT uif.id FROM {user_info_field} uif WHERE uif.shortname = 'apsolumedicalcertificate')".
@@ -65,7 +65,19 @@ class set_high_level_athletes extends \core\task\scheduled_task {
             " AND data != 1";
         $DB->execute($sql);
 
-        // TODO: carte muscu offerte.
+        // Positionne le flag "apsolufederationpaid" à 1 sur les étudiants dont le paiement de la carte FFSU (id 4) est payé (status 1) ou offert (status 3).
+        $sql = "UPDATE {user_info_data} SET data = 1".
+            " WHERE fieldid = (SELECT uif.id FROM {user_info_field} uif WHERE uif.shortname = 'apsolufederationpaid')".
+            " AND userid IN (SELECT ap.userid FROM {apsolu_payments} ap JOIN {apsolu_payments_items} api ON ap.id = api.paymentid WHERE ap.status IN (1, 3) AND api.cardid = 4)".
+            " AND data != 1";
+        $DB->execute($sql);
+
+        // Positionne le flag "apsolumuscupaid" à 1 sur les étudiants dont le paiment de la carte muscu (id 3) est payé (status 1) ou offert (status 3).
+        $sql = "UPDATE {user_info_data} SET data = 1".
+            " WHERE fieldid = (SELECT uif.id FROM {user_info_field} uif WHERE uif.shortname = 'apsolumuscupaid')".
+            " AND userid IN (SELECT ap.userid FROM {apsolu_payments} ap JOIN {apsolu_payments_items} api ON ap.id = api.paymentid WHERE ap.status IN (1, 3) AND api.cardid = 3)".
+            " AND data != 1";
+        $DB->execute($sql);
 
         // TODO: faire une page pour configurer le groupe et le cours (menu déroulant + ids) à synchroniser.
         $groupingid = 4;
