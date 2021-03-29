@@ -561,9 +561,19 @@
             "Étudiant":"Étudiant",
             "Personnel":"Personnel"
           }
-        }
-                        
-        
+        },
+        {
+          "id": "cohortnames",
+          "label": "cohort,cohort",
+          "type": "integer",
+          "input": "select",
+          "operators": ["contains","not_contains"],
+          "values" : {
+              "table" : "cohort",
+              "fields" : "name,name",
+              "sort" : "name"
+          }
+        }  
     ],
     "filtersCustomRennes": [
         {
