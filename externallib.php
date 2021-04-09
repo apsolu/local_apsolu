@@ -614,8 +614,7 @@ class local_apsolu_webservices extends external_api {
             }
 
             if (isset($activities[$record->idactivity][$record->userid]) === false) {
-                $activities[$record->idactivity][$record->userid] = new stdClass();
-                $activities[$record->idactivity][$record->userid]->total = 0;
+                $activities[$record->idactivity][$record->userid] = 0;
             }
 
             $registration = new stdClass();
@@ -623,7 +622,7 @@ class local_apsolu_webservices extends external_api {
             $registration->iduser = $record->userid;
             $registration->idcourse = $record->idcourse;
             $registration->nbpresencecourse = $record->nbpresence;
-            $registration->nbpresence = $activities[$record->idactivity][$record->userid]->total;
+            $registration->nbpresence = (string) $activities[$record->idactivity][$record->userid];
             if (isset($courses[$record->idcourse][$record->userid]) === true) {
                 $registration->validity = true;
                 $registration->sportcard = null;
