@@ -135,6 +135,8 @@ class course extends record {
         // Supprime l'objet en base de données.
         $DB->delete_records(self::TABLENAME, array('id' => $this->id));
 
+        // TODO: supprimer les notes.
+
         // Update course count in categories.
         fix_course_sortorder();
 
@@ -375,6 +377,8 @@ class course extends record {
 
         // Set shortname.
         $this->shortname = $this->fullname;
+
+        // TODO: controler que endtime n'est pas inférieur à startime.
 
         // Démarre une transaction, si ce n'est pas déjà fait.
         if ($DB->is_transaction_started() === false) {
