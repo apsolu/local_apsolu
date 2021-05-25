@@ -111,13 +111,15 @@ class attendance {
             " GROUP BY act.id, aap.studentid".
             " ORDER BY act.name";
         $presences = array();
-        foreach ($DB->get_recordset_sql($sql, $params) as $recordset) {
-            if (isset($presences[$recordset->studentid]) === false) {
-                $presences[$recordset->studentid] = array();
+        $recordset = $DB->get_recordset_sql($sql, $params);
+        foreach ($recordset as $record) {
+            if (isset($presences[$record->studentid]) === false) {
+                $presences[$record->studentid] = array();
             }
 
-            $presences[$recordset->studentid][] = $recordset;
+            $presences[$record->studentid][] = $record;
         }
+        $recordset->close();
 
         return $presences;
     }
@@ -156,13 +158,15 @@ class attendance {
             " GROUP BY act.id, aap.studentid".
             " ORDER BY act.name";
         $presences = array();
-        foreach ($DB->get_recordset_sql($sql, $params) as $recordset) {
-            if (isset($presences[$recordset->studentid]) === false) {
-                $presences[$recordset->studentid] = array();
+        $recordset = $DB->get_recordset_sql($sql, $params);
+        foreach ($recordset as $record) {
+            if (isset($presences[$record->studentid]) === false) {
+                $presences[$record->studentid] = array();
             }
 
-            $presences[$recordset->studentid][] = $recordset;
+            $presences[$record->studentid][] = $record;
         }
+        $recordset->close();
 
         return $presences;
     }
@@ -217,7 +221,8 @@ class attendance {
             " JOIN {apsolu_attendance_statuses} aass ON aass.id = aap.statusid".
             " WHERE aap.studentid = :userid".
             " ORDER BY c.fullname, aas.sessiontime";
-        foreach ($DB->get_recordset_sql($sql, array('userid' => $userid)) as $record) {
+        $recordset = $DB->get_recordset_sql($sql, array('userid' => $userid));
+        foreach ($recordset as $record) {
             if (isset($courses[$record->id]) === false) {
                 $course = new stdClass();
                 $course->id = $record->id;
@@ -233,6 +238,7 @@ class attendance {
 
             $courses[$record->id]->sessions[] = $record;
         }
+        $recordset->close();
 
         return $courses;
     }

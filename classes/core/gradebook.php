@@ -253,7 +253,8 @@ class gradebook {
                 " JOIN {apsolu_courses} c ON ctx.instanceid = c.id".
                 " WHERE ra.roleid = 3". // Enseignant.
                 " ORDER BY u.lastname, u.firstname";
-            foreach ($DB->get_recordset_sql($sql) as $record) {
+            $recordset = $DB->get_recordset_sql($sql);
+            foreach ($recordset as $record) {
                 $courseid = $record->courseid;
                 unset($record->courseid);
 
@@ -263,6 +264,7 @@ class gradebook {
 
                 $teachers[$courseid][$record->id] = fullname($record);
             }
+            $recordset->close();
         }
 
         // Récupération des notes.
@@ -273,7 +275,8 @@ class gradebook {
             " JOIN {grade_categories} gc ON gc.id = gi.categoryid".
             " JOIN {grade_grades} gg ON gi.id = gg.itemid".
             " LEFT JOIN {user} u ON u.id = gg.usermodified";
-        foreach ($DB->get_recordset_sql($sql) as $grade) {
+        $recordset = $DB->get_recordset_sql($sql);
+        foreach ($recordset as $grade) {
             if ($grade->fullname !== self::NAME) {
                 // On garde uniquement les éléments de notation de la catégorie APSOLU.
                 // Note: il n'y a pas d'index sur le champ grade_categories.fullname. On traite cette info côté PHP.
@@ -304,6 +307,7 @@ class gradebook {
             $value->grader = fullname($grade);
             $grades[$grade->userid][$grade->courseid][$apsolugradeitemid] = $value;
         }
+        $recordset->close();
 
         // Récupération des utilisateurs.
         $customfields = customfields::getCustomFields();
@@ -442,7 +446,7 @@ class gradebook {
             " JOIN {role_assignments} ra ON ctx.id = ra.contextid AND ra.itemid = e.id AND ra.userid = u.id".
             " WHERE u.deleted = 0".implode(' ', $conditions).
             " ORDER BY u.lastname, u.firstname, u.institution, u.department";
-        $users = $DB->get_recordset_sql($sql, $params);
+        $recordset = $DB->get_recordset_sql($sql, $params);
 
         // Construction du carnet de notes.
         $gradebooks = new stdClass();
@@ -491,7 +495,7 @@ class gradebook {
         }
 
         $gradebooks->users = array();
-        foreach ($users as $user) {
+        foreach ($recordset as $user) {
             if (isset($options['institutions']) === true && in_array($user->institution, $options['institutions'], $strict = true) === false) {
                 continue;
             }
@@ -617,6 +621,7 @@ class gradebook {
 
             $gradebooks->users[] = $gradebook;
         }
+        $recordset->close();
 
         return $gradebooks;
     }
