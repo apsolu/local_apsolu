@@ -73,12 +73,12 @@ class local_apsolu_federation_import_licences extends moodleform {
         if (optional_param('previewbutton', null, PARAM_ALPHA) === null) {
             $buttonarray[] = &$mform->createElement('submit', 'previewbutton', get_string('federation_preview', 'local_apsolu'));
 
-            $attributes = array('class' => 'btn btn-default', 'disabled' => 'disabled');
+            $attributes = array('class' => 'btn btn-default btn-secondary', 'disabled' => 'disabled');
             $buttonarray[] = &$mform->createElement('submit', 'importbutton', get_string('federation_import', 'local_apsolu'), $attributes);
         } else {
             $buttonarray[] = &$mform->createElement('submit', 'importbutton', get_string('federation_import', 'local_apsolu'));
 
-            $attributes = array('class' => 'btn btn-default');
+            $attributes = array('class' => 'btn btn-default btn-secondary');
             $buttonarray[] = &$mform->createElement('submit', 'previewbutton', get_string('federation_preview', 'local_apsolu'), $attributes);
         }
 

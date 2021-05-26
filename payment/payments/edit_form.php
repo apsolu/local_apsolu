@@ -88,7 +88,7 @@ class local_apsolu_payment_payments_edit_form extends moodleform {
 
         $attributes = new stdClass();
         $attributes->href = $CFG->wwwroot.'/local/apsolu/payment/admin.php?tab=payments&userid='.$payment->userid;
-        $attributes->class = 'btn btn-default';
+        $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
         $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
