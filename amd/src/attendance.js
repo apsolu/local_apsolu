@@ -3,8 +3,8 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
         initialise : function() {
             // Créé un bouton pour cocher toutes les présences non définies.
             $('#apsolu-attendance-table').before('<div id="apsolu-attendance-check-javascript-helper" class="text-right"><p>Pour les présences <u>non saisies</u> :<ul class="list-inline">'+
-                '<li class="list-inline-item"><span class="btn btn-xs btn-primary" id="apsolu-check-radio-present">Cocher "présent" pour tous</span></li>'+
-                '<li class="list-inline-item"><span class="btn btn-xs btn-primary" id="apsolu-check-radio-absent">Cocher "absent" pour tous</span></li>'+
+                '<li class="list-inline-item"><span class="btn btn-sm btn-primary" id="apsolu-check-radio-present">Cocher "présent" pour tous</span></li>'+
+                '<li class="list-inline-item"><span class="btn btn-sm btn-primary" id="apsolu-check-radio-absent">Cocher "absent" pour tous</span></li>'+
                 '</ul></div>');
 
             // Ajoute un évènement sur le bouton "présent" créé précédemment.
