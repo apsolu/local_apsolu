@@ -170,6 +170,11 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
         $this->assertSame(sprintf('%s %s %s', $data->str_category, $str_time, $data->str_skill), $course->fullname);
         $this->assertSame($count_records, $initial_count + 1);
 
+        // Vérifie qu'un nom abrégé est regénéré en cas de doublon.
+        $course = new local_apsolu\core\course();
+        $course->save($data);
+        $this->assertSame(sprintf('%s %s %s.', $data->str_category, $str_time, $data->str_skill), $course->shortname);
+
         // Modifie la catégorie du créneau.
         list($catdata, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
         $category->save($catdata, $mform);

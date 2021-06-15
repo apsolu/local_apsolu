@@ -377,6 +377,14 @@ class course extends record {
 
         // Set shortname.
         $this->shortname = $this->fullname;
+        while (true) {
+            // Contrôle que le nom abrégé est bien unique.
+            if (!$DB->get_record('course', array('shortname' => $this->shortname))) {
+                break;
+            }
+
+            $this->shortname .= '.';
+        }
 
         // TODO: controler que endtime n'est pas inférieur à startime.
 
