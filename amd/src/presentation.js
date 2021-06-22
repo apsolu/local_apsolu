@@ -20,7 +20,7 @@
  * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-define(['jquery', 'core/templates', 'enrol_select/select2'], function($, templates) {
+define(['jquery', 'core/modal_events', 'core/modal_factory', 'core/templates', 'enrol_select/select2'], function($, ModalEvents, ModalFactory, templates) {
     return {
         initialise: function() {
             /**
@@ -98,12 +98,15 @@ define(['jquery', 'core/templates', 'enrol_select/select2'], function($, templat
                 });
 
                 // Calcule le permalink.
-                if (Object.keys(filters).length !== 0) {
-                    var permalink = document.getElementById('apsolu-offerings-permalink-a');
-                    if (permalink) {
+                var permalink = document.getElementById('apsolu-offerings-permalink-button');
+                if (permalink) {
+                    if (Object.keys(filters).length === 0) {
+                        permalink.setAttribute('disabled', 'disabled');
+                    } else {
                         var anchor = window.btoa(unescape(encodeURIComponent(JSON.stringify(filters))));
 
-                        permalink.setAttribute('href', '#' + anchor);
+                        permalink.removeAttribute('disabled');
+                        permalink.setAttribute('data-href', '#' + anchor);
                     }
                 }
             }
@@ -201,6 +204,24 @@ define(['jquery', 'core/templates', 'enrol_select/select2'], function($, templat
                     };
                     updateTemplate(templates, context, nodepath);
                 }
+            }
+
+            // Gère la fenêtre pour les liens permanents.
+            var permalink = $('#apsolu-offerings-permalink-button');
+            if (permalink) {
+                ModalFactory.create({
+                    large: true,
+                }, permalink)
+                .done(function(modal) {
+                    // Do what you want with your new modal.
+                    modal.getRoot().on(ModalEvents.shown, function(){
+                        var href = window.location.href.split('#')[0];
+                        var permalink = document.getElementById('apsolu-offerings-permalink-button');
+                        var value = href + permalink.getAttribute('data-href');
+
+                        modal.setBody('<p><input id="apsolu-offerings-permalink-input" size="75" type="text" value="'+value+'" /></p>');
+                    });
+                });
             }
         }
     };

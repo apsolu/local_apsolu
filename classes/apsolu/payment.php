@@ -374,7 +374,8 @@ class Payment {
             " AND c.id = :courseid".
             " AND e.status = 0". // Méthode d'inscription active.
             " AND ue.status = 0"; // Inscription validée.
-        foreach ($DB->get_recordset_sql($sql, array('courseid' => $courseid)) as $record) {
+        $recordset = $DB->get_recordset_sql($sql, array('courseid' => $courseid));
+        foreach ($recordset as $record) {
             if (isset($users[$record->userid]) === false) {
                 $users[$record->userid] = array();
             }
@@ -386,6 +387,7 @@ class Payment {
 
             $users[$userid][$record->id] = $record;
         }
+        $recordset->close();
 
         return $users;
     }

@@ -70,7 +70,7 @@ class edit_enrolment_form extends moodleform {
         $url = new moodle_url('/local/apsolu/attendance/edit.php', array('courseid' => $data->courseid));
         $attributes = new stdClass();
         $attributes->href = $url->out(true);
-        $attributes->class = 'btn btn-default cancel';
+        $attributes->class = 'btn btn-default btn-secondary cancel';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('close_link', 'local_apsolu', $attributes));
 
         $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);

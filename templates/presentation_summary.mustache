@@ -102,12 +102,12 @@
             {{^sites_single}}
             <ul class="list-inline">
                 <li class="list-inline-item">
-                    <a class="btn {{^selected_site}}btn-success active{{/selected_site}}{{#selected_site}}btn-default{{/selected_site}}" href="{{wwwroot}}/local/apsolu/presentation/summary.php">{{#str}}all_cities, local_apsolu{{/str}}</a>
+                    <a class="btn {{^selected_site}}btn-success active{{/selected_site}}{{#selected_site}}btn-default btn-secondary{{/selected_site}}" href="{{wwwroot}}/local/apsolu/presentation/summary.php">{{#str}}all_cities, local_apsolu{{/str}}</a>
                 </li>
 
                 {{#sites}}
                 <li class="list-inline-item">
-                    <a class="btn {{#active}}btn-success active{{/active}}{{^active}}btn-default{{/active}}" href="{{wwwroot}}/local/apsolu/presentation/summary.php?cityid={{id}}">{{name}}</a>
+                    <a class="btn {{#active}}btn-success active{{/active}}{{^active}}btn-default btn-secondary{{/active}}" href="{{wwwroot}}/local/apsolu/presentation/summary.php?cityid={{id}}">{{name}}</a>
                 </li>
                 {{/sites}}
             </ul>
@@ -135,7 +135,7 @@
                 </div>
                 {{/filters}}
                 {{#permalink}}
-                <p class="text-right"><a class="btn btn-default" href="#" id="apsolu-offerings-permalink-a">{{#str}}permanent_link, local_apsolu{{/str}}</a></p>
+                <p class="text-right"><button class="btn btn-default btn-secondary" id="apsolu-offerings-permalink-button">{{#str}}permanent_link, local_apsolu{{/str}}</button></p>
                 {{/permalink}}
             </dl>
         </aside>

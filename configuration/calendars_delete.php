@@ -31,7 +31,7 @@ $confirm = optional_param('confirm', '', PARAM_ALPHANUM); // Confirmation hash.
 
 $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'calendars', 'action' => 'delete', 'calendarid' => $calendarid));
 
-$calendar = $DB->get_record('apsolu_calendars', array('id' => $calendarid), $field = '*', $sort = null, MUST_EXIST);
+$calendar = $DB->get_record('apsolu_calendars', array('id' => $calendarid), $fields = '*', MUST_EXIST);
 
 $returnurl = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'calendars'));
 $deletehash = md5($calendar->id);

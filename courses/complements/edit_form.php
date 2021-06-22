@@ -78,7 +78,7 @@ class local_apsolu_courses_complements_edit_form extends moodleform {
 
         $attributes = new stdClass();
         $attributes->href = $CFG->wwwroot.'/local/apsolu/courses/complements.php';
-        $attributes->class = 'btn btn-default';
+        $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
         $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);

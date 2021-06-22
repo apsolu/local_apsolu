@@ -49,7 +49,8 @@ $sql = "SELECT ctx.instanceid, u.firstname, u.lastname, u.email".
     " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50".
     " WHERE ra.roleid = 3".
     " ORDER BY u.lastname, u.firstname";
-foreach ($DB->get_recordset_sql($sql) as $teacher) {
+$recordset = $DB->get_recordset_sql($sql);
+foreach ($recordset as $teacher) {
     if (!isset($courses[$teacher->instanceid])) {
         continue;
     }
@@ -61,32 +62,37 @@ foreach ($DB->get_recordset_sql($sql) as $teacher) {
         $courses[$teacher->instanceid]->teachers .= ', '.$user;
     }
 }
+$recordset->close();
 
 // Liste des rôles.
 $roles = role_fix_names($DB->get_records('role'));
 
 // Liste des rôles par méthodes d'inscription.
 $enrol_roles = array();
-foreach ($DB->get_recordset('enrol_select_roles') as $enrol) {
+$recordset = $DB->get_recordset('enrol_select_roles');
+foreach ($recordset as $enrol) {
     if (isset($enrol_roles[$enrol->enrolid]) === false) {
         $enrol_roles[$enrol->enrolid] = array();
     }
 
     $enrol_roles[$enrol->enrolid][] = $roles[$enrol->roleid]->name;
 }
+$recordset->close();
 
 // Liste des tarifs.
 $cards = $DB->get_records('apsolu_payments_cards');
 
 // Liste des tarifs par méthodes d'inscription.
 $enrol_cards = array();
-foreach ($DB->get_recordset('enrol_select_cards') as $enrol) {
+$recordset = $DB->get_recordset('enrol_select_cards');
+foreach ($recordset as $enrol) {
     if (isset($enrol_cards[$enrol->enrolid]) === false) {
         $enrol_cards[$enrol->enrolid] = array();
     }
 
     $enrol_cards[$enrol->enrolid][] = $cards[$enrol->cardid]->fullname;
 }
+$recordset->close();
 
 // Liste des méthodes d'inscription.
 foreach ($DB->get_records('enrol', array('enrol' => 'select'), $sort = 'enrolstartdate') as $enrol) {

@@ -374,12 +374,32 @@ foreach ($students as $student) {
         $presences[$student->id]->description = '';
     }
 
+    // Calcul le nombre de présences au cours.
     if (isset($course_presences[$student->id]) === false) {
-        $course_presences[$student->id] = array('Présences: 0');
+        $presence = new stdClass();
+        $presence->name = get_string('attendances', 'local_apsolu');
+        $presence->total = 0;
+
+        $course_presences[$student->id] = array($presence);
     }
 
+    $coursepresences[$student->id] = array();
+    foreach ($course_presences[$student->id] as $presence) {
+        $coursepresences[$student->id][] = get_string('attendances_total', 'local_apsolu', $presence);
+    }
+
+    // Calcul le nombre de présences à l'activité.
     if (isset($activity_presences[$student->id]) === false) {
-        $activity_presences[$student->id] = array('Présences: 0');
+        $presence = new stdClass();
+        $presence->name = get_string('attendances', 'local_apsolu');
+        $presence->total = 0;
+
+        $activity_presences[$student->id] = array($presence);
+    }
+
+    $activitypresences[$student->id] = array();
+    foreach ($activity_presences[$student->id] as $presence) {
+        $activitypresences[$student->id][] = get_string('attendances_total', 'local_apsolu', $presence);
     }
 
     // Information.
@@ -412,7 +432,7 @@ foreach ($students as $student) {
     }
 
     if (isset($student->enrolid) === true) {
-        $enrolment_link = '<a class="btn btn-default apsolu-attendance-edit-enrolments" data-userid="'.$student->id.'" data-courseid="'.$courseid.'" data-enrolid="'.$student->enrolid.'" data-statusid="'.$student->status.'" data-roleid="'.$student->roleid.'" href="'.$CFG->wwwroot.'/enrol/'.$student->enrol.'/manage.php?enrolid='.$student->enrolid.'">'.get_string('attendance_edit_enrolment', 'local_apsolu').'</a>';
+        $enrolment_link = '<a class="btn btn-default btn-secondary apsolu-attendance-edit-enrolments" data-userid="'.$student->id.'" data-courseid="'.$courseid.'" data-enrolid="'.$student->enrolid.'" data-statusid="'.$student->status.'" data-roleid="'.$student->roleid.'" href="'.$CFG->wwwroot.'/enrol/'.$student->enrol.'/manage.php?enrolid='.$student->enrolid.'">'.get_string('attendance_edit_enrolment', 'local_apsolu').'</a>';
     } else {
         $enrolment_link = get_string('attendance_ontime_enrolment', 'local_apsolu');
     }
@@ -426,8 +446,8 @@ foreach ($students as $student) {
         '<td>'.$student->firstname.'</td>'.
         '<td'.$status_style.'>'.$radios.'</td>'.
         '<td><textarea name="comment['.$student->id.']">'.htmlentities($presences[$student->id]->description, ENT_COMPAT, 'UTF-8').'</textarea></td>'.
-        '<td><ul><li>'.implode('</li><li>', $course_presences[$student->id]).'</li></ul></td>'.
-        '<td><ul><li>'.implode('</li><li>', $activity_presences[$student->id]).'</li></ul></td>'.
+        '<td><ul><li>'.implode('</li><li>', $coursepresences[$student->id]).'</li></ul></td>'.
+        '<td><ul><li>'.implode('</li><li>', $activitypresences[$student->id]).'</li></ul></td>'.
         '<td class="apsolu-attendance-role" data-userid="'.$student->id.'">'.$rolename.'</td>';
 
     if ($student->status === null) {

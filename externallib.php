@@ -622,7 +622,7 @@ class local_apsolu_webservices extends external_api {
             $registration->iduser = $record->userid;
             $registration->idcourse = $record->idcourse;
             $registration->nbpresencecourse = $record->nbpresence;
-            $registration->nbpresence = $activities[$record->idactivity][$record->userid];
+            $registration->nbpresence = (string) $activities[$record->idactivity][$record->userid];
             if (isset($courses[$record->idcourse][$record->userid]) === true) {
                 $registration->validity = true;
                 $registration->sportcard = null;

@@ -81,7 +81,7 @@ class local_apsolu_courses_periods_edit_form extends moodleform {
 
         $attributes = new stdClass();
         $attributes->href = $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=periods';
-        $attributes->class = 'btn btn-default';
+        $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
         $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
