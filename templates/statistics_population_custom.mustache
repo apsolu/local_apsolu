@@ -113,13 +113,27 @@ require([
 
   // Datatype selection
   $("#report-builder-select").change(function() {
-    builder.queryBuilder('destroy');
+    var datatype = parseInt($("#report-builder-select").val());
 
-    builder = $('#querybuilder').queryBuilder({
-      filters: {{{Filters}}},
-      lang_code: '{{{langcode}}}',
+    var requests = Ajax.call([{
+      methodname: 'local_apsolu_get_reportfilters',
+      args: {'classname':'population','datatype':datatype}
+    }]);
+    
+    requests[0].done(function(data) {
+      if (data.success === true) {
+        filters = JSON.parse(data.filters);
+      } else {
+        filters = {{{Filters}}};
+      }
+      
+      builder.queryBuilder('destroy');
+
+      builder = $('#querybuilder').queryBuilder({
+        filters: filters,
+        lang_code: '{{{langcode}}}',
+      });
     });
-
   });
 
 

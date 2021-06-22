@@ -954,6 +954,7 @@ $string['statistics_apply'] = 'Appliquer';
 // Statistics - Webservices
 $string['ws_local_apsolu_get_chartdataset_description'] = 'Retourne le jeu de données pour un graphique';
 $string['ws_local_apsolu_get_reportdataset_description'] = 'Retourne le jeu de données pour un rapport';
+$string['ws_local_apsolu_get_reportfilters_description'] = 'Retourne le jeu de filtres pour un type de population';
 // Statistics - charts
 $string['statistics_chart_criteria_cities'] = 'Sites';
 $string['statistics_chart_criteria_calendarstypes'] = 'Types de calendriers';

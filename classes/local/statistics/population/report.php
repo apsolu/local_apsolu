@@ -95,12 +95,7 @@ class report extends \local_apsolu\local\statistics\report {
   					WHERE ctx.instanceid = E.courseid) as teachers,
             AL.name as locationname,
             APSOLU_S.id,APSOLU_S.name as skillsname,
-            CONCAT(APSOLU_C.starttime,\'-\',APSOLU_C.endtime) as slotstartend,
-            (SELECT GROUP_CONCAT(DISTINCT co.name ORDER BY co.name SEPARATOR \'\r\')
-  					FROM {cohort} co
-  					INNER JOIN {cohort_members} com ON co.id = com.cohortid
-  					WHERE com.userid = U.id
-  					) as cohortnames 
+            CONCAT(APSOLU_C.starttime,\'-\',APSOLU_C.endtime) as slotstartend 
                         
           FROM {user_enrolments} UE
           INNER JOIN {user} U ON U.id = UE.userid AND U.deleted = 0
@@ -157,12 +152,7 @@ class report extends \local_apsolu\local\statistics\report {
   					INNER JOIN mdl_context ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50
   				   INNER JOIN mdl_role R ON ra.roleid = R.id AND R.archetype = \'student\'
   					WHERE ra.userid = U.id AND ctx.instanceid = C.id AND ra.itemid = UE.enrolid
-  					) as roleshortname,
-            (SELECT GROUP_CONCAT(DISTINCT co.name ORDER BY co.name SEPARATOR \'\r\')
-  					FROM {cohort} co
-  					INNER JOIN {cohort_members} com ON co.id = com.cohortid
-  					WHERE com.userid = U.id
-  					) as cohortnames 
+  					) as roleshortname
       		FROM {user_enrolments} UE
       		INNER JOIN {user} U ON U.id = UE.userid AND U.deleted = 0
           LEFT JOIN {user_info_data} Sexe ON Sexe.userid = U.id AND Sexe.fieldid = (select id from mdl_user_info_field where shortname = \'apsolusex\')
@@ -256,11 +246,10 @@ class report extends \local_apsolu\local\statistics\report {
                 [ 'data' => "slotstartend", 'title' => get_string('schedule', 'local_apsolu')],
                 [ 'data' => "locationname", 'title' => get_string('location', 'local_apsolu')],
                 [ 'data' => "teachers", 'title' => get_string('teacher', 'local_apsolu')],
-                [ 'data' => "cohortnames", 'visible' => false, 'title' => get_string('cohort', 'cohort')],
                 [ 'data' => null, 'visible' => false, 'title' => "Activité détaillée","render" => "function ( data, type, row ) {return data.activityname.replace(/\s/g,'&nbsp;') + '&nbsp;/&nbsp;' + moment.weekdays()[data.slotnumweekday] +'&nbsp;/&nbsp;' + data.slotstart + '&nbsp;-&nbsp;' + data.slotend + '&nbsp;/&nbsp;' + data.skillsname.replace(/\s/g,'&nbsp;');}"],
                 ];
                 $orders = [2 => 'asc', 3 => 'asc'];
-                $filters = ['input' => [1,2,3,4,7,8,13],'select' => [0,5,6,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24] ];
+                $filters = ['input' => [1,2,3,4,7,8,13],'select' => [0,5,6,9,10,11,12,14,15,16,17,18,19,20,21,22,23] ];
 
               break;
         }
