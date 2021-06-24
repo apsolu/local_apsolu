@@ -393,7 +393,7 @@
       },
       {
         "id": "cohortnames",
-        "datatype": [1],
+        "datatype": [1,2],
         "label": "cohort,cohort",
         "type": "integer",
         "input": "select",
