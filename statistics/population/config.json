@@ -392,6 +392,19 @@
         }          
       },
       {
+        "id": "cohortnames",
+        "datatype": [1],
+        "label": "cohort,cohort",
+        "type": "integer",
+        "input": "select",
+        "operators": ["contains","not_contains"],
+        "values" : {
+            "table" : "cohort",
+            "fields" : "name,name",
+            "sort" : "name"
+        }
+      },
+      {
         "id": "lmd",
         "label": "cycle,local_apsolu",
         "type": "string",
@@ -570,7 +583,7 @@
             "conditions" : "fieldid=4",
             "sort" : "data"
         }          
-      } 
+      }
     ],
     "filtersCustomRennes": [
         {
