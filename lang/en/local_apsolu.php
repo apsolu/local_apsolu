@@ -199,6 +199,7 @@ $string['no_holidays'] = 'Aucun jour férié';
 $string['no_recorded_attendances'] = 'Aucune présence enregistrée';
 $string['no_results_with_these_criteria'] = 'Aucun résultat avec ces critères de recherche';
 $string['no_sessions'] = 'Aucune séance';
+$string['no_users'] = 'Aucun utilisateur';
 $string['non_institutional_account_authentification_url'] = 'URL d\'authentification des comptes non institutionnels';
 $string['not_applicable'] = 'N/A';
 $string['other_filters'] = 'Autres filtres';
