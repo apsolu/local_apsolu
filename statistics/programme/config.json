@@ -44,7 +44,7 @@
     "filters": [
         {
           "id": "groupid",
-          "label": "Groupe",
+          "label": "statistics_groupe,local_apsolu",
           "type": "integer",
           "input": "select",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"],
@@ -57,7 +57,7 @@
         },
         {
           "id": "activityid",
-          "label": "Activité",
+          "label": "activity,local_apsolu",
           "type": "integer",
           "input": "select",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"],
@@ -70,7 +70,7 @@
         },
         {
           "id": "calendarid",
-          "label": "Calendrier",
+          "label": "calendar,local_apsolu",
           "type": "integer",
           "input": "select",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"],
@@ -82,7 +82,7 @@
         },   
         {
           "id": "calendartypeid",
-          "label": "Type de calendrier",
+          "label": "calendartype,local_apsolu",
           "type": "integer",
           "input": "select",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"],
@@ -94,7 +94,7 @@
         },        
         {
           "id": "cityid",
-          "label": "Site",
+          "label": "city,local_apsolu",
           "type": "integer",
           "input": "select",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"],
@@ -106,13 +106,13 @@
         },
         {
           "id": "slotid",
-          "label": "Identifiant du créneau",
+          "label": "statistics_id,local_apsolu",
           "type": "string",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"]
         },        
         {
           "id": "slotnumweekday",
-          "label": "Jour",
+          "label": "weekday,local_apsolu",
           "type": "integer",
           "input": "select",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"],
@@ -128,7 +128,7 @@
         },
         {
           "id": "slotstart",
-          "label": "Horaire de début",
+          "label": "coursestartdate,local_apsolu",
           "type": "string",
           "input": "select",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"],
@@ -140,7 +140,7 @@
         },
         {
           "id": "slotend",
-          "label": "Horaire de fin",
+          "label": "courseenddate,local_apsolu",
           "type": "string",
           "input": "select",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"],
@@ -152,7 +152,7 @@
         },
         {
           "id": "actifQuota",
-          "label": "Quota activé",
+          "label": "statistics_active_quota,local_apsolu",
           "type": "integer",
           "input": "select",
           "operators": ["equal", "not_equal"],
@@ -163,7 +163,7 @@
         },
         {
           "id": "coursestartdate",
-          "label": "Débute le",
+          "label": "statistics_start_the,local_apsolu",
           "type": "date",
           "plugin": "datepicker",
           "plugin_config": {
@@ -176,7 +176,7 @@
         },
         {
           "id": "courseenddate",
-          "label": "Termine le",
+          "label": "statistics_end_the,local_apsolu",
           "type": "date",
           "plugin": "datepicker",
           "plugin_config": {
@@ -189,7 +189,7 @@
         },
         {
           "id": "reenrolstartdate",
-          "label": "Début des réinscriptions",
+          "label": "reenrolstartdate,local_apsolu",
           "type": "datetime",
           "plugin": "datetimepicker",
           "plugin_config": {
@@ -198,7 +198,7 @@
         },
         {
           "id": "reenrolenddate",
-          "label": "Fin des réinscriptions",
+          "label": "reenrolenddate,local_apsolu",
           "type": "datetime",
           "plugin": "datetimepicker",
           "plugin_config": {
@@ -207,7 +207,7 @@
         },
         {
           "id": "placeid",
-          "label": "Lieux",
+          "label": "locations,local_apsolu",
           "type": "string",
           "input": "select",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"],

@@ -88,22 +88,22 @@ class report extends \local_apsolu\local\statistics\report {
      */
     public function getReportDisplay() {
         $columns = [
-          [ 'data' => "groupname", 'title' => "Groupe"],
-          [ 'data' => "activityname", 'title' => "Activité"],
-          [ 'data' => "calendartypename", 'title' => "Type de calendrier"] ,
-          [ 'data' => "cityname", 'title' => "Site"] ,
-          [ 'data' => "placename", 'title' => "Lieux"] ,
-          [ 'data' => "placeaddress", 'title' => "Adresse"] ,
-          [ 'data' => "slotnumweekday", 'title' => "Jour","render" => "function ( data, type, row ) {return moment.weekdays()[data];}"],
-          [ 'data' => "slotstart", 'title' => "Début"] ,
-          [ 'data' => "slotend", 'title' => "Fin"] ,
-          [ 'data' => "actifquota", 'title' => "Quota activé"] ,
-          [ 'data' => "mainquota", 'title' => "Quota liste principale"] ,
-          [ 'data' => "waitquota", 'title' => "Quota liste d'attente"],
-          [ 'data' => "coursestartdate", 'title' => "Débute le"] ,
-          [ 'data' => "courseenddate", 'title' => "Termine le"],
-          [ 'data' => "reenrolstartdate", 'title' => "Début des réinscriptions"] ,
-          [ 'data' => "reenrolenddate", 'title' => "Fin des réinscriptions"]
+          [ 'data' => "groupname", 'title' => get_string("statistics_groupe", 'local_apsolu')],
+          [ 'data' => "activityname", 'title' => get_string("activity", 'local_apsolu')],
+          [ 'data' => "calendartypename", 'title' => get_string("calendartype", 'local_apsolu')] ,
+          [ 'data' => "cityname", 'title' => get_string("city", 'local_apsolu')] ,
+          [ 'data' => "placename", 'title' => get_string("locations", 'local_apsolu')] ,
+          [ 'data' => "placeaddress", 'title' => get_string("address", 'local_apsolu')] ,
+          [ 'data' => "slotnumweekday", 'title' => get_string("weekday", 'local_apsolu'),"render" => "function ( data, type, row ) {return moment.weekdays()[data];}"],
+          [ 'data' => "slotstart", 'title' => get_string("coursestartdate", 'local_apsolu')] ,
+          [ 'data' => "slotend", 'title' => get_string("courseenddate", 'local_apsolu')] ,
+          [ 'data' => "actifquota", 'title' => get_string("statistics_active_quota", 'local_apsolu')] ,
+          [ 'data' => "mainquota", 'title' => get_string("statistics_main_quota", 'local_apsolu')] ,
+          [ 'data' => "waitquota", 'title' => get_string("statistics_wait_quota", 'local_apsolu')],
+          [ 'data' => "coursestartdate", 'title' => get_string("statistics_start_the", 'local_apsolu')] ,
+          [ 'data' => "courseenddate", 'title' => get_string("statistics_end_the", 'local_apsolu')],
+          [ 'data' => "reenrolstartdate", 'title' => get_string("reenrolstartdate", 'local_apsolu')] ,
+          [ 'data' => "reenrolenddate", 'title' => get_string("reenrolenddate", 'local_apsolu')]
         ];
         $orders = [0 => 'asc', 1 => 'asc'];
         $filters = ['input' => [8,9,10,11,12,13,14,15],'select' => [0,1,2,3,4,5,6,7,8,9] ];
