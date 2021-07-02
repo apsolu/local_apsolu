@@ -214,7 +214,8 @@ class report extends \local_apsolu\local\statistics\report {
                 [ 'data' => "accepted_list", 'title' => get_string('number_of_accepted_enrolments', 'enrol_select')] ,
                 [ 'data' => "main_list", 'title' => get_string('number_of_enrolments_on_main_list', 'enrol_select')] ,
                 [ 'data' => "wait_list", 'title' => get_string('number_of_enrolments_on_waiting_list', 'enrol_select')] ,
-                [ 'data' => "deleted_list", 'title' => get_string('number_of_deleted_enrolments', 'enrol_select')]
+                [ 'data' => "deleted_list", 'title' => get_string('number_of_deleted_enrolments', 'enrol_select')] ,
+                [ 'data' => "cohortnames", 'visible' => false, 'title' => get_string('cohort', 'cohort')] ,
                 ];
 
                 $orders = [2 => 'asc', 3 => 'asc'];
@@ -306,7 +307,8 @@ class report extends \local_apsolu\local\statistics\report {
           		COUNT(CASE WHEN status=0 THEN 1 ELSE NULL END) AS accepted_list,
           		COUNT(CASE WHEN status=2 THEN 1 ELSE NULL END) AS main_list,
           		COUNT(CASE WHEN status=3 THEN 1 ELSE NULL END) AS wait_list,
-          		COUNT(CASE WHEN status=4 THEN 1 ELSE NULL END) AS deleted_list ';
+          		COUNT(CASE WHEN status=4 THEN 1 ELSE NULL END) AS deleted_list,
+              e.cohortnames ';
                 $groupby = " GROUP BY e.userid ";
               break;
             default: // 1 : Vue activités physiques par inscription
