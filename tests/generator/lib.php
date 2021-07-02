@@ -39,23 +39,102 @@ require_once($CFG->dirroot.'/local/apsolu/courses/categories/edit_form.php');
  */
 class local_apsolu_generator extends testing_module_generator {
     /**
+     * Fonction pour générer :
+     * - des groupements d'activités sportives
+     * - des activités sportives
+     * - des niveaux de pratique
+     * - des créneaux
+     *
+     * @return void
+     */
+    public function create_courses() {
+        // Données pour générer les niveaux de pratiques.
+        $records = array();
+        $records[] = 'débutant';
+        $records[] = 'intermédiaire';
+        $records[] = 'expert';
+
+        $skills = array();
+        foreach ($records as $skillname) {
+            $skill = new local_apsolu\core\skill();
+            $skill->name = $skillname;
+            $skill->shortname = $skillname;
+            $skill->save();
+
+            $skills[] = $skill;
+        }
+
+        // Données pour générer les groupements d'activités sportives, les activités sportives et les créneaux.
+        $records = array();
+        $records[] = array('Pratiques artistiques', 'Arts du cirque');
+        $records[] = array('Pratiques artistiques', 'Danse salsa');
+        $records[] = array('Pratiques artistiques', 'Danse swing');
+        $records[] = array('Pratiques gymniques', 'Trampoline');
+        $records[] = array('Pratiques gymniques', 'Freestyle');
+        $records[] = array('Sports aquatiques', 'Apnée');
+        $records[] = array('Sports aquatiques', 'Aquagym');
+        $records[] = array('Sports aquatiques', 'Natation');
+        $records[] = array('Sports de plein air', 'Aviron');
+        $records[] = array('Sports de plein air', 'Cyclisme sur route');
+        $records[] = array('Sports de plein air', 'Escalade');
+
+        $groupings = array();
+        foreach ($records as $record) {
+            list($groupingname, $categoryname) = $record;
+
+            if (isset($groupings[$groupingname]) === false) {
+                $grouping = new local_apsolu\core\grouping();
+                $grouping->name = $groupingname;
+                $grouping->save();
+
+                $groupings[$groupingname] = $grouping;
+            }
+
+            list($catdata, $mform) = $this->get_category_data();
+            $catdata->name = $categoryname;
+            $catdata->parent = $groupings[$groupingname]->id;
+
+            $category = new local_apsolu\core\category();
+            $category->save($catdata, $mform);
+
+            for ($i = 0 ; $i < 3 ; $i++) {
+                $data = $this->get_course_data();
+                $data->category = $category->id;
+                $data->str_category = $categoryname;
+                $data->skillid = $skills[$i]->id;
+                $data->str_skill = $skills[$i]->name;
+
+                $course = new local_apsolu\core\course();
+                $course->save($data);
+            }
+        }
+    }
+
+    /**
      * Function to create dummy data category.
      *
      * @return stdClass Course object.
      */
     public function get_category_data() {
+        // Crée un groupement d'activités.
+        $data = new stdClass();
+        $data->name = 'grouping';
+
+        $grouping = new local_apsolu\core\grouping();
+        $grouping->save($data);
+
         // Data.
         $category = new stdClass();
         $category->id = 0;
         $category->name = 'category';
-        $category->parent = 0;
+        $category->parent = $grouping->id;
         $category->description = '';
         $category->descriptionformat = 0;
         $category->url = '';
         $category->federation = 0;
 
         // Form.
-        $groupings = array(1 => 'grouping');
+        $groupings = array($grouping->id => $grouping->name);
         $context = context_system::instance();
         $itemid = 0;
 
