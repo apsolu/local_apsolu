@@ -171,6 +171,16 @@ $functions = array(
         'loginrequired' => true,
         'ajax' => true,
     ),
+    // Function get_reportfilters().
+    'local_apsolu_get_reportfilters' => array(
+        'classname'   => 'local_apsolu_webservices',
+        'methodname'  => 'get_reportfilters',
+        'classpath'   => 'local/apsolu/externallib.php',
+        'description' => get_string('ws_local_apsolu_get_reportfilters_description', 'local_apsolu'),
+        'type'        => 'read',
+        'loginrequired' => true,
+        'ajax' => true,
+    ),    
 
 );
 
@@ -190,6 +200,7 @@ $services = array(
             'local_apsolu_debugging',
             'local_apsolu_get_chartdataset',
             'local_apsolu_get_reportdataset',
+            'local_apsolu_get_reportfilters',
             ),
         'restrictedusers' => 1,
         'enabled' => 0,

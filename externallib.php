@@ -1396,4 +1396,56 @@ class local_apsolu_webservices extends external_api {
             )
         );
     }
+
+    /**
+     * Describes the parameters for debugging.
+     *
+     * @param string      $classname
+     * @param int      $datatype
+     *
+     * @return array
+     */
+    public static function get_reportfilters(string $classname, int $datatype = 1) {
+
+        raise_memory_limit(MEMORY_EXTRA);
+
+        $class = 'local_apsolu\local\statistics\\'.$classname.'\report';
+        $reportObj = new $class();
+
+        $filters = $reportObj->getfilters($datatype);
+        $result = array_values(json_decode($filters, true));
+      
+        
+        //echo "<pre>";print_r(json_encode($result));echo "</pre>";
+        
+        return array('success' => true,'filters' => json_encode($result));
+    }
+
+    /**
+     * Describes the parameters for get_reportfilters.
+     *
+     * @return external_external_function_parameters
+     */
+    public static function get_reportfilters_parameters() {
+        return new external_function_parameters(
+          array(
+            'classname' => new external_value(PARAM_TEXT,'Nom de la classe',VALUE_DEFAULT, null, NULL_ALLOWED),
+            'datatype' => new external_value(PARAM_TEXT,'type de rapport',VALUE_DEFAULT, null, NULL_ALLOWED),
+          )
+        );
+    }
+
+    /**
+     * Describes the get_reportfilters return value.
+     *
+     * @return external_single_structure
+     */
+    public static function get_reportfilters_returns() {
+        return new external_single_structure(
+        array(
+          'success' => new external_value(PARAM_BOOL, get_string('ws_value_boolean', 'local_apsolu'),VALUE_DEFAULT, null, NULL_ALLOWED),
+          'filters' => new external_value(PARAM_RAW,'report columns filters type',VALUE_DEFAULT, null, NULL_ALLOWED),
+          )
+        );
+    }   
 }

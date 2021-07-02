@@ -346,238 +346,236 @@
         }
     ],              
     "filters": [
-        {
-          "id": "calendarid",
-          "label": "calendar,calendar",
-          "type": "integer",
-          "input": "select",
-          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
-          "values" : {
-              "table" : "apsolu_calendars",
-              "fields" : "id,name",
-              "sort" : "name"
-          }
-        },   
-        {
-          "id": "calendartypeid",
-          "label": "calendartype,local_apsolu",
-          "type": "integer",
-          "input": "select",
-          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
-          "values" : {
-              "table" : "apsolu_calendars_types",
-              "fields" : "id,name",
-              "sort" : "name"
-          }
-        },        
-        {
-          "id": "cityid",
-          "label": "city,local_apsolu",
-          "type": "integer",
-          "input": "select",
-          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
-          "values" : {
-              "table" : "apsolu_cities",
-              "fields" : "id,name",
-              "sort" : "name"
-          }
-        },
-        {
-          "id": "userid",
-          "label": "userid,local_apsolu",
-          "type": "string",
-          "operators": ["equal", "not_equal", "is_null", "is_not_null"]
-        },        
-        {
-          "id": "idnumber",
-          "label": "idnumber,moodle",
-          "type": "string",
-          "operators": ["equal", "not_equal"]
-        },
-        {
-          "id": "firstname",
-          "label": "firstname,moodle",
-          "type": "string",
-          "operators": ["equal", "not_equal", "is_null", "is_not_null"]
-        },                
-        {
-          "id": "lastname",
-          "label": "lastname,moodle",
-          "type": "string",
-          "operators": ["equal", "not_equal", "is_null", "is_not_null"]
-        },
-        {
-          "id": "email",
-          "label": "email,moodle",
-          "type": "string",
-          "operators": ["equal", "not_equal"]
-        },
-        {
-          "id": "sexe",
-          "label": "sex,local_apsolu",
-          "type": "string",
-          "input": "select",
-          "operators": ["equal", "not_equal"],
-          "values" : {
-              "table" : "user_info_data",
-              "fields" : "data",
-              "conditions" : "fieldid=2",
-              "sort" : "data"
-          }
-        },
-        {
-          "id": "institution",
-          "label": "institution,moodle",
-          "type": "string",
-          "input": "select",
-          "values" : {
-              "table" : "user",
-              "fields" : "institution",
-              "conditions" : "institution<>''",
-              "sort" : "institution"
-          }
-        },
-        {
-          "id": "department",
-          "label": "department,moodle",
-          "type": "string",
-          "input": "select",
-          "operators": ["equal", "not_equal", "in", "not_in", "is_null", "is_not_null"],
-          "values" : {
-              "table" : "user",
-              "fields" : "department",
-              "sort" : "department"
-          }
-        },
-        {
-          "id": "ufr",
-          "label": "ufr,local_apsolu",
-          "type": "string",
-          "input": "select",
-          "operators": ["equal", "not_equal"],
-          "values" : {
-              "table" : "user_info_data",
-              "fields" : "data",
-              "conditions" : "fieldid=4",
-              "sort" : "data"
-          }          
-        },
-        {
-          "id": "lmd",
-          "label": "cycle,local_apsolu",
-          "type": "string",
-          "input": "select",
-          "operators": ["equal", "not_equal"],
-          "values" : {
-              "table" : "user_info_data",
-              "fields" : "data",
-              "conditions" : "fieldid=5",
-              "sort" : "data"
-          }          
-        },
-        {
-          "id": "roleshortname",
-          "label": "role,local_apsolu",
-          "type": "string",
-          "input": "select",
-          "operators": ["contains","not_contains","equal", "not_equal"],
-          "values" : {
-              "table" : "role",
-              "fields" : "shortname",
-              "conditions" : "archetype = 'student' and shortname <> 'student'",
-              "sort" : "shortname"
-          }          
-        },
-        {
-          "id": "enrolname",
-          "label": "enrolment_per_semester,local_apsolu",
-          "type": "string",
-          "input": "select",
-          "operators": ["equal", "not_equal"],
-          "values" : {
-              "table" : "enrol",
-              "fields" : "name",
-              "conditions" : "enrol = 'select'",
-              "sort" : "name"
-          }          
-        },          
-        {
-          "id": "apsolucardpaid",
-          "label": "sportcard,local_apsolu",
-          "type": "string",
-          "input": "select",
-          "operators": ["equal", "not_equal"],
-          "values" : {
-              "Oui":"Oui",
-              "Non":"Non"
-          }          
-        },
-        {
-          "id": "status",
-          "label": "enrolment_status,local_apsolu",
-          "type": "integer",
-          "input": "select",
-          "values" : {
-              "0" : "Liste des étudiants acceptés",
-              "2" : "Liste principale",
-              "3" : "Liste complémentaire",
-              "4" : "Liste des étudiants désinscrits"
-          }          
-        },        
-        {
-          "id": "groupid",
-          "label": "grouping,local_apsolu",
-          "type": "integer",
-          "input": "select",
-          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
-          "values" : {
-              "table" : "course_categories",
-              "fields" : "id,name",
-              "conditions" : "parent = 0",
-              "sort" : "name"
-          }
-        },
-        {
-          "id": "activityid",
-          "label": "activity,local_apsolu",
-          "type": "integer",
-          "input": "select",
-          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
-          "values" : {
-              "table" : "course_categories",
-              "fields" : "id,name",
-              "conditions" : "parent > 0",
-              "sort" : "name"
-          }
-        },
-        {
-          "id": "userprofile",
-          "label": "type,local_apsolu",
-          "type": "integer",
-          "input": "select",
-          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
-          "values" : {
-            "Inconnu":"Inconnu",
-            "Étudiant":"Étudiant",
-            "Personnel":"Personnel"
-          }
-        },
-        {
-          "id": "cohortnames",
-          "label": "cohort,cohort",
-          "type": "integer",
-          "input": "select",
-          "operators": ["contains","not_contains"],
-          "values" : {
-              "table" : "cohort",
-              "fields" : "name,name",
-              "sort" : "name"
-          }
-        }  
+      {
+        "id": "activityid",
+        "datatype": [1],
+        "label": "activity,local_apsolu",
+        "type": "integer",
+        "input": "select",
+        "operators": ["equal", "not_equal", "is_null", "is_not_null"],
+        "values" : {
+            "table" : "course_categories",
+            "fields" : "id,name",
+            "conditions" : "parent > 0",
+            "sort" : "name"
+        }
+      }, 
+      {
+        "id": "email",
+        "label": "email,moodle",
+        "type": "string",
+        "operators": ["equal", "not_equal"]
+      },           
+      {
+        "id": "calendarid",
+        "datatype": [1],
+        "label": "calendar,calendar",
+        "type": "integer",
+        "input": "select",
+        "operators": ["equal", "not_equal", "is_null", "is_not_null"],
+        "values" : {
+            "table" : "apsolu_calendars",
+            "fields" : "id,name",
+            "sort" : "name"
+        }
+      },
+      {
+        "id": "apsolucardpaid",
+        "datatype": [1,3],
+        "label": "sportcard,local_apsolu",
+        "type": "string",
+        "input": "select",
+        "operators": ["equal", "not_equal"],
+        "values" : {
+            "Oui":"Oui",
+            "Non":"Non"
+        }          
+      },
+      {
+        "id": "lmd",
+        "label": "cycle,local_apsolu",
+        "type": "string",
+        "input": "select",
+        "operators": ["equal", "not_equal"],
+        "values" : {
+            "table" : "user_info_data",
+            "fields" : "data",
+            "conditions" : "fieldid=5",
+            "sort" : "data"
+        }          
+      },
+      {
+        "id": "department",
+        "label": "department,moodle",
+        "type": "string",
+        "input": "select",
+        "operators": ["equal", "not_equal", "in", "not_in", "is_null", "is_not_null"],
+        "values" : {
+            "table" : "user",
+            "fields" : "department",
+            "sort" : "department"
+        }
+      },
+      {
+        "id": "groupid",
+        "datatype": [1],
+        "label": "grouping,local_apsolu",
+        "type": "integer",
+        "input": "select",
+        "operators": ["equal", "not_equal", "is_null", "is_not_null"],
+        "values" : {
+            "table" : "course_categories",
+            "fields" : "id,name",
+            "conditions" : "parent = 0",
+            "sort" : "name"
+        }
+      },   
+      {
+        "id": "userid",
+        "label": "userid,local_apsolu",
+        "type": "string",
+        "operators": ["equal", "not_equal", "is_null", "is_not_null"]
+      },
+      {
+        "id": "enrolname",
+        "datatype": [1],
+        "label": "enrolment_per_semester,local_apsolu",
+        "type": "string",
+        "input": "select",
+        "operators": ["equal", "not_equal"],
+        "values" : {
+            "table" : "enrol",
+            "fields" : "name",
+            "conditions" : "enrol = 'select'",
+            "sort" : "name"
+        }          
+      },
+      {
+        "id": "institution",
+        "label": "institution,moodle",
+        "type": "string",
+        "input": "select",
+        "values" : {
+            "table" : "user",
+            "fields" : "institution",
+            "conditions" : "institution<>''",
+            "sort" : "institution"
+        }
+      },
+      {
+        "id": "status",
+        "datatype": [1,3],
+        "label": "enrolment_status,local_apsolu",
+        "type": "integer",
+        "input": "select",
+        "values" : {
+            "0" : "Liste des étudiants acceptés",
+            "2" : "Liste principale",
+            "3" : "Liste complémentaire",
+            "4" : "Liste des étudiants désinscrits"
+        }          
+      }, 
+      {
+        "id": "lastname",
+        "label": "lastname,moodle",
+        "type": "string",
+        "operators": ["equal", "not_equal", "is_null", "is_not_null"]
+      }, 
+      {
+        "id": "idnumber",
+        "label": "idnumber,moodle",
+        "type": "string",
+        "operators": ["equal", "not_equal"]
+      },
+      {
+        "id": "firstname",
+        "label": "firstname,moodle",
+        "type": "string",
+        "operators": ["equal", "not_equal", "is_null", "is_not_null"]
+      },
+      {
+        "id": "sexe",
+        "label": "sex,local_apsolu",
+        "type": "string",
+        "input": "select",
+        "operators": ["equal", "not_equal"],
+        "values" : {
+            "table" : "user_info_data",
+            "fields" : "data",
+            "conditions" : "fieldid=2",
+            "sort" : "data"
+        }
+      },
+      {
+        "id": "cityid",
+        "datatype": [1],
+        "label": "city,local_apsolu",
+        "type": "integer",
+        "input": "select",
+        "operators": ["equal", "not_equal", "is_null", "is_not_null"],
+        "values" : {
+            "table" : "apsolu_cities",
+            "fields" : "id,name",
+            "sort" : "name"
+        }
+      },
+      {
+        "id": "userprofile",
+        "label": "type,local_apsolu",
+        "type": "integer",
+        "input": "select",
+        "operators": ["equal", "not_equal", "is_null", "is_not_null"],
+        "values" : {
+          "Inconnu":"Inconnu",
+          "Étudiant":"Étudiant",
+          "Personnel":"Personnel"
+        }
+      },
+      {
+        "id": "roleshortname",
+        "datatype": [1],
+        "label": "role,local_apsolu",
+        "type": "string",
+        "input": "select",
+        "operators": ["contains","not_contains","equal", "not_equal"],
+        "values" : {
+            "table" : "role",
+            "fields" : "shortname",
+            "conditions" : "archetype = 'student' and shortname <> 'student'",
+            "sort" : "shortname"
+        }          
+      },  
+      {
+        "id": "calendartypeid",
+        "datatype": [1],
+        "label": "calendartype,local_apsolu",
+        "type": "integer",
+        "input": "select",
+        "operators": ["equal", "not_equal", "is_null", "is_not_null"],
+        "values" : {
+            "table" : "apsolu_calendars_types",
+            "fields" : "id,name",
+            "sort" : "name"
+        }
+      },
+      {
+        "id": "ufr",
+        "label": "ufr,local_apsolu",
+        "type": "string",
+        "input": "select",
+        "operators": ["equal", "not_equal"],
+        "values" : {
+            "table" : "user_info_data",
+            "fields" : "data",
+            "conditions" : "fieldid=4",
+            "sort" : "data"
+        }          
+      } 
     ],
     "filtersCustomRennes": [
         {
           "id": "shnu",
+          "datatype": [0],
           "label": "high_level_athlete,local_apsolu",
           "type": "boolean",
           "input": "select",
