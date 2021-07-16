@@ -801,5 +801,17 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 2021071600;
+    if ($oldversion < $version) {
+        // Change le type du champ "rank" de la table "apsolu_payments_centers" de bigint à varchar.
+        $table = new xmldb_table('apsolu_payments_centers');
+        $field = new xmldb_field('rank', XMLDB_TYPE_CHAR, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+
+        $dbman->change_field_type($table, $field);
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
     return $result;
 }
