@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die;
 
 $configurations = array();
 
-$requiredvariables = array('paybox_servers_incoming', 'paybox_servers_outgoing');
+$requiredvariables = array('paybox_servers_incoming', 'paybox_servers_outgoing', 'paybox_log_success_path', 'paybox_log_error_path');
 foreach ($requiredvariables as $variable) {
     $configuration = $DB->get_record('config_plugins', array('name' => $variable, 'plugin' => 'local_apsolu'));
 
