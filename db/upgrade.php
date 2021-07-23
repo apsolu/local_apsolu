@@ -813,5 +813,23 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 2021072300;
+    if ($result && $oldversion < $version) {
+        // Vérifie et corrige les valeurs des adresses de contact.
+        $settings = array();
+        $settings[] = 'functional_contact';
+        $settings[] = 'technical_contact';
+
+        foreach ($settings as $setting) {
+            $value = get_config('local_apsolu', $setting);
+
+            if (filter_var($value, FILTER_VALIDATE_EMAIL) !== false) {
+                continue;
+            }
+
+            set_config($setting, '', 'local_apsolu');
+        }
+    }
+
     return $result;
 }
