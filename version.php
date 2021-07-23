@@ -27,13 +27,8 @@ defined('MOODLE_INTERNAL') || die();
 // The current plugin version (Date: YYYYMMDDXX).
 $plugin->version   = 2021072300;
 
-// Requires this Moodle version.
-$plugin->requires  = 2012112900;
+// Requires Moodle 3.11.0.
+$plugin->requires  = 2021051700;
 
 // Full name of the plugin (used for diagnostics).
 $plugin->component = 'local_apsolu';
-
-// Dependencies on another plugin.
-$plugin->dependencies = array(
-    'enrol_select' => '2016011220',
-);
