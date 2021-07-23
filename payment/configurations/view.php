@@ -46,6 +46,7 @@ foreach ($requiredvariables as $variable) {
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
 $data->configurations = $configurations;
+$data->information = markdown_to_html(get_string('paybox_administration_description', 'local_apsolu', $CFG->wwwroot));
 
 if (isset($notificationform) === true) {
     $data->notification = $notificationform;

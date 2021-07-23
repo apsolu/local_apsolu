@@ -209,6 +209,19 @@ $string['no_users'] = 'Aucun utilisateur';
 $string['non_institutional_account_authentification_url'] = 'URL d\'authentification des comptes non institutionnels';
 $string['not_applicable'] = 'N/A';
 $string['other_filters'] = 'Autres filtres';
+$string['paybox_administration_description'] = 'Quelques informations concernant le paramétrage PayBox :
+
+* la variable **paybox_servers_incoming** correspond à la liste des serveurs de Paybox appelant la page APSOLU de confirmation de paiements
+* la variable **paybox_servers_outgoing** correspond à la liste des serveurs de Paybox vers lesquels seront redirigés les utilisateurs pour effectuer leur paiement
+
+Les valeurs sont rappelées dans [la documentation Paybox](https://www.paybox.com/espace-integrateur-documentation/la-solution-paybox-system/urls-dappels-et-adresses-ip/).
+
+Il n\'est pas nécessaire de définir les URL de retours dans l\'interface Paybox. À chaque transaction, APSOLU communique les adresses de retours à Paybox. Il s\'agit des URL suivantes :
+
+* [{$a}/local/apsolu/payment/index.php?status=accepted]({$a}/local/apsolu/payment/index.php?status=accepted)
+* [{$a}/local/apsolu/payment/index.php?status=refused]({$a}/local/apsolu/payment/index.php?status=refused)
+* [{$a}/local/apsolu/payment/index.php?status=cancel]({$a}/local/apsolu/payment/index.php?status=cancel)
+* [{$a}/local/apsolu/payment/index.php?status=wait]({$a}/local/apsolu/payment/index.php?status=wait)';
 $string['paybox_idnumber'] = 'Identifiant PayBox';
 $string['paybox_idnumber_help'] = 'Ce champ correspond à l\'élément PBX_IDENTIFIANT fourni par Paybox.';
 $string['paybox_hmac'] = 'Clé HMAC';
