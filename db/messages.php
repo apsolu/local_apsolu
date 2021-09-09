@@ -23,5 +23,6 @@
  */
 
 $messageproviders = array (
+    'notification' => array(),
     'payment_notification' => array(),
 );

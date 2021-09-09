@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die;
 
 $configurations = array();
 
-$requiredvariables = array('paybox_servers_incoming', 'paybox_servers_outgoing');
+$requiredvariables = array('paybox_servers_incoming', 'paybox_servers_outgoing', 'paybox_log_success_path', 'paybox_log_error_path');
 foreach ($requiredvariables as $variable) {
     $configuration = $DB->get_record('config_plugins', array('name' => $variable, 'plugin' => 'local_apsolu'));
 
@@ -46,6 +46,7 @@ foreach ($requiredvariables as $variable) {
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
 $data->configurations = $configurations;
+$data->information = markdown_to_html(get_string('paybox_administration_description', 'local_apsolu', $CFG->wwwroot));
 
 if (isset($notificationform) === true) {
     $data->notification = $notificationform;

@@ -75,14 +75,21 @@ $string['card_fullname_help'] = 'Libellé affiché aux gestionnaires.';
 $string['card_shortname'] = 'Nom abrégé';
 $string['card_shortname_help'] = 'Libellé affiché aux étudiants.';
 $string['category_cannot_be_deleted'] = 'L\'activité physique "{$a}" ne peut pas être supprimée, car elle est rattachée aux créneaux horaires suivants :';
+$string['category_cannot_be_moved'] = 'La catégorie « {$a} » ne peut pas être déplacée.';
 $string['category_has_been_deleted'] = 'L\'activité physique a été supprimée.';
+$string['category_has_been_moved_into'] = 'La catégorie « {$a->name} » a été déplacée dans la catégorie « {$a->parentname} ».';
+$string['category_must_be_parent_of_a_grouping_of_sports_activities'] = 'La catégorie « {$a} » doit être placée dans un groupement d\'activités sportives.';
 $string['category_saved'] = 'Activité physique enregistrée.';
 $string['category_updated'] = 'Activité physique modifiée.';
 $string['complement'] = 'Complément';
 $string['contacts'] = 'Adresses de contact';
+$string['carboncopy'] = 'Copie carbone';
+$string['carboncopy_help'] = 'Envoyer une copie de ce message sur votre adresse';
 // $string['course_cannot_be_deleted'] = 'Le créneau horaire "{$a}" ne peut pas être supprimé, car il est rattaché aux lieux suivants :';
 $string['course'] = 'Créneau horaire';
 $string['course_has_been_deleted'] = 'Le créneau horaire a été supprimé.';
+$string['course_has_been_moved_to_because_selected_category_did_not_match_to_grouping_of_sports_activities'] = 'Le cours « {$a->fullname} » a été déplacé dans la catégorie « {$a->category} », car la catégorie sélectionnée ne correspondait pas à une catégorie d\'activité sportive.';
+$string['course_has_been_renamed_to'] = 'Le cours « {$a->oldname} » a été renommé « {$a->newname} ».';
 $string['course_is_now_hidden'] = 'Le créneau est maintenant caché.';
 $string['course_is_now_visible'] = 'Le créneau est maintenant visible.';
 $string['course_offerings'] = 'Offre de formations';
@@ -189,8 +196,10 @@ $string['locations_manager_saved'] = 'Gestionnaire de lieux enregistré.';
 $string['locations_manager_updated'] = 'Gestionnaire de lieux modifié.';
 $string['locations'] = 'Lieux';
 $string['login'] = 'Se connecter';
+$string['message'] = 'Message';
 $string['midday'] = 'Midi';
 $string['morning'] = 'Matin';
+$string['must_be_an_interger'] = 'Doit être un entier';
 $string['named_section'] = 'Section "{$a}"';
 $string['no_courses_to_grade'] = 'Aucun créneau à évaluer';
 $string['no_gradeitems'] = 'Aucun élément d\'évaluation';
@@ -199,9 +208,31 @@ $string['no_holidays'] = 'Aucun jour férié';
 $string['no_recorded_attendances'] = 'Aucune présence enregistrée';
 $string['no_results_with_these_criteria'] = 'Aucun résultat avec ces critères de recherche';
 $string['no_sessions'] = 'Aucune séance';
+$string['no_users'] = 'Aucun utilisateur';
 $string['non_institutional_account_authentification_url'] = 'URL d\'authentification des comptes non institutionnels';
 $string['not_applicable'] = 'N/A';
+$string['notification'] = 'Notification';
+$string['notification_event_description'] = 'L\'utilisateur {$a->sender} a envoyé un message <em>{$a->subject}</em> à {$a->receiver}.';
+$string['notifications_have_been_sent'] = 'Les notifications ont été envoyées.';
+$string['notifications_not_sent'] = 'Notifications non envoyées';
+$string['notifications_notsent'] = 'Notifications non envoyées';
+$string['notifications_sent'] = 'Notifications envoyées';
+$string['notify'] = 'Notifier';
+$string['notify_functional_contact'] = 'Notifier le contact fonctionnel';
 $string['other_filters'] = 'Autres filtres';
+$string['paybox_administration_description'] = 'Quelques informations concernant le paramétrage PayBox :
+
+* la variable **paybox_servers_incoming** correspond à la liste des serveurs de Paybox appelant la page APSOLU de confirmation de paiements
+* la variable **paybox_servers_outgoing** correspond à la liste des serveurs de Paybox vers lesquels seront redirigés les utilisateurs pour effectuer leur paiement
+
+Les valeurs sont rappelées dans [la documentation Paybox](https://www.paybox.com/espace-integrateur-documentation/la-solution-paybox-system/urls-dappels-et-adresses-ip/).
+
+Il n\'est pas nécessaire de définir les URL de retours dans l\'interface Paybox. À chaque transaction, APSOLU communique les adresses de retours à Paybox. Il s\'agit des URL suivantes :
+
+* [{$a}/local/apsolu/payment/index.php?status=accepted]({$a}/local/apsolu/payment/index.php?status=accepted)
+* [{$a}/local/apsolu/payment/index.php?status=refused]({$a}/local/apsolu/payment/index.php?status=refused)
+* [{$a}/local/apsolu/payment/index.php?status=cancel]({$a}/local/apsolu/payment/index.php?status=cancel)
+* [{$a}/local/apsolu/payment/index.php?status=wait]({$a}/local/apsolu/payment/index.php?status=wait)';
 $string['paybox_idnumber'] = 'Identifiant PayBox';
 $string['paybox_idnumber_help'] = 'Ce champ correspond à l\'élément PBX_IDENTIFIANT fourni par Paybox.';
 $string['paybox_hmac'] = 'Clé HMAC';
@@ -223,6 +254,7 @@ $string['period_updated'] = 'Période modifiée.';
 $string['periods'] = 'Périodes';
 $string['permanent_link'] = 'Lien permanent';
 $string['purge_holidays'] = 'Vider la liste des jours fériés';
+$string['recipients'] = 'Destinataires';
 $string['refused_everywhere'] = 'Refusé partout';
 $string['required_fields'] = 'Champs obligatoires';
 $string['return'] = 'Revenir';
@@ -236,6 +268,7 @@ $string['start_time_for_range_4_help'] = 'Détermine à partir de quel horaire u
 $string['section_text'] = 'Texte de la section';
 $string['section2_text'] = '<div class="alert alert-info">Le tableau des activités est généré automatiquement.</div>';
 $string['session_:count:_of_the_:strdatetime:'] = 'Cours n°{$a->count} du {$a->strdatetime}';
+$string['send_a_copy_of_this_message_to'] = 'Envoyer une copie de ce message à {$a}';
 $string['show_area_column'] = 'Afficher la zone géographique';
 $string['show_area_column_help'] = 'Affiche la colonne "zone géographique" sur l\'offre de formation.';
 $string['show_area_filter'] = 'Afficher le filtre zone géographique';
@@ -293,6 +326,7 @@ $string['skill_saved'] = 'Niveau de pratique enregistré.';
 $string['skill_updated'] = 'Niveau de pratique modifié.';
 $string['skills'] = 'Niveaux';
 $string['strftimedatetimeshort'] = '%a %d %b %Y %H:%M';
+$string['subject'] = 'Sujet';
 $string['teacher'] = 'Enseignant';
 $string['teachers'] = 'Enseignants';
 $string['the_activities'] = 'Les activités';
@@ -399,11 +433,6 @@ $string['settings_activities'] = 'Activités physiques';
 $string['settings_complements'] = 'Activités complémentaires';
 $string['settings_federations'] = 'FFSU';
 $string['federations'] = 'FFSU';
-$string['notify'] = 'Notifier';
-$string['subject'] = 'Sujet';
-$string['message'] = 'Message';
-$string['notifications_sent'] = 'Notifications envoyées';
-$string['notifications_notsent'] = 'Notifications non envoyées';
 $string['receivers_list'] = 'Liste des {$a->count} destinataires';
 $string['nobody_to_notify'] = 'Aucune personne à notifier';
 $string['nodata'] = 'Aucune donnée à afficher';

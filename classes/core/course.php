@@ -149,6 +149,72 @@ class course extends record {
     }
 
     /**
+     * Calcule le nom complet du cours à partir des paramètres passés à la méthode.
+     *
+     * @param int|string $categoryid Identifiant ou nom de la catégorie d'activité sportive.
+     * @param string     $event      Libellé complémentaire / spécialité.
+     * @param string     $weekday    Jour de la semaine en anglais.
+     * @param string     $starttime  Heure de début du cours.
+     * @param string     $endtime    Heure de fin du cours.
+     * @param int|string $skill      Identifiant ou libellé du niveau de pratique.
+     *
+     * @return string Nom abrégé unique.
+     */
+    public static function get_fullname($category, $event = '', $weekday, $starttime, $endtime, $skill) {
+        global $DB;
+
+        if (ctype_digit($category) === true) {
+            // Récupère le nom de la catégorie en base de données, si c'est un identifiant qui a été entré en paramètre.
+            $record = $DB->get_record('course_categories', array('id' => $category), $fields = '*', MUST_EXIST);
+            $category = $record->name;
+        }
+
+        if (ctype_digit($skill) === true) {
+            // Récupère le nom du niveau de pratique en base de données, si c'est un identifiant qui a été entré en paramètre.
+            $record = $DB->get_record('apsolu_skills', array('id' => $skill), $fields = '*', MUST_EXIST);
+            $skill = $record->name;
+        }
+
+        $str_time = get_string($weekday, 'calendar').' '.$starttime.' '.$endtime;
+
+        if (empty($event) === false) {
+            return sprintf('%s %s %s %s', $category, $event, $str_time, $skill);
+        }
+
+        return sprintf('%s %s %s', $category, $str_time, $skill);
+    }
+
+    /**
+     * Vérifie le nom abrégé du cours.
+     *
+     * Si le nom abrégé passé en paramètre est déjà utilisé, un nouveau nom abrégé est généré.
+     *
+     * @param int|string $courseid  Identifiant du cours.
+     * @param string     $shortname Nom abrégé du cours à contrôler.
+     *
+     * @return string Nom abrégé unique.
+     */
+    public static function get_shortname($courseid, $shortname) {
+        global $DB;
+
+        // Contrôle que le nom abrégé est bien unique.
+        while (true) {
+            $course = $DB->get_record('course', array('shortname' => $shortname));
+            if ($course === false) {
+                break;
+            }
+
+            if ($courseid === $course->id) {
+                break;
+            }
+
+            $shortname .= '.';
+        }
+
+        return $shortname;
+    }
+
+    /**
      * Retourne l'index du jour de la semaine donné en paramètre.
      * ex: monday=1, tuesday=2, etc.
      *
@@ -365,26 +431,10 @@ class course extends record {
         $this->numweekday = self::get_numweekdays($this->weekday);
 
         // Set fullname.
-        $str_category = $data->str_category;
-        $str_skill = $data->str_skill;
-        $str_time = get_string($this->weekday, 'calendar').' '.$this->starttime.' '.$this->endtime;
-
-        if (empty($this->event) === false) {
-            $this->fullname = sprintf('%s %s %s %s', $str_category, $this->event, $str_time, $str_skill);
-        } else {
-            $this->fullname = sprintf('%s %s %s', $str_category, $str_time, $str_skill);
-        }
+        $this->fullname = self::get_fullname($data->str_category, $this->event, $this->weekday, $this->starttime, $this->endtime, $data->str_skill);
 
         // Set shortname.
-        $this->shortname = $this->fullname;
-        while (true) {
-            // Contrôle que le nom abrégé est bien unique.
-            if (!$DB->get_record('course', array('shortname' => $this->shortname))) {
-                break;
-            }
-
-            $this->shortname .= '.';
-        }
+        $this->shortname = self::get_shortname($this->id, $this->fullname);
 
         // TODO: controler que endtime n'est pas inférieur à startime.
 

@@ -70,7 +70,7 @@ class local_apsolu_payment_centers_edit_form extends moodleform {
 
         // Rank field.
         $mform->addElement('text', 'rank', get_string('paybox_rank', 'local_apsolu'), array('size' => '48'));
-        $mform->setType('rank', PARAM_INT);
+        $mform->setType('rank', PARAM_ALPHANUM);
         $mform->addHelpButton('rank', 'paybox_rank', 'local_apsolu');
         $mform->addRule('rank', get_string('required'), 'required', null, 'client');
 
@@ -104,5 +104,23 @@ class local_apsolu_payment_centers_edit_form extends moodleform {
 
         // Set default values.
         $this->set_data($center);
+    }
+
+    /**
+     * Valide les données envoyées dans le formulaire.
+     *
+     * @param array $data
+     * @param array $files
+     *
+     * @return array The errors that were found.
+     */
+    public function validation($data, $files) {
+        $errors = parent::validation($data, $files);
+
+        if (ctype_digit($data['rank']) === false) {
+            $errors['rank'] = get_string('must_be_an_interger', 'local_apsolu');
+        }
+
+        return $errors;
     }
 }

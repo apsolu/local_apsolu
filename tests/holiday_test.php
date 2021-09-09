@@ -147,7 +147,7 @@ class local_apsolu_core_holiday_testcase extends advanced_testcase {
 
         // Ajoute un jour férié sur la prochaine session de cours.
         $holiday = new local_apsolu\core\holiday();
-        $data->day = strtotime('next '.$course->weekday) + WEEKSECS;
+        $data->day = strtotime('next '.$course->weekday.' this week') + WEEKSECS;
         $holiday->save($data);
 
         // Vérifie qu'il y a toujours 2 sessions.

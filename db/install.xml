@@ -198,7 +198,7 @@
             <FIELD NAME="prefix" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
             <FIELD NAME="idnumber" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="sitenumber" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="rank" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="rank" TYPE="char" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="hmac" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
         </FIELDS>
         <KEYS>

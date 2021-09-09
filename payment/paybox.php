@@ -22,40 +22,29 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// intégrer les contraintes demander par Agnes
-
-// Avant tout, loguer la réponse de paybox !
-$outputsuccess = '/var/log/applis/paybox.log';
-$outputinfo = '/var/log/applis/info.paybox.log';
-$outputerror = '/var/log/applis/error.paybox.log';
-
-$outputsuccesscontent = '';
-$outputinfocontent = '';
-
-if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-    // Check ip from share internet.
-    $ip = $_SERVER['HTTP_CLIENT_IP'];
-} else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-    // To check ip is pass from proxy.
-    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-} else {
-    $ip = $_SERVER['REMOTE_ADDR'];
-}
-
-$response = str_replace("\n", '', var_export($_GET, true));
-$outputinfocontent = strftime('%c').' '.$ip.' :: '.$response.PHP_EOL;
-
-file_put_contents($outputinfo, $outputinfocontent, FILE_APPEND | LOCK_EX);
-
 require(__DIR__.'/../../../config.php');
 require_once($CFG->dirroot.'/local/apsolu/locallib.php');
 require_once($CFG->dirroot.'/user/profile/lib.php');
 
+$PAGE->set_context(context_system::instance());
+
 $ip = getremoteaddr();
+$response = json_encode($_GET);
+
 $outputsuccesscontent = strftime('%c').' '.$ip.' :: '.$response.PHP_EOL;
 $payboxaddresses = explode(',', get_config('local_apsolu', 'paybox_servers_incoming'));
 
 try {
+    $outputerror = get_config('local_apsolu', 'paybox_log_error_path');
+    if (empty($outputerror) === true) {
+        throw new Exception('La variable "paybox_log_error_path" n\'est pas configurée.');
+    }
+
+    $outputsuccess = get_config('local_apsolu', 'paybox_log_success_path');
+    if (empty($outputsuccess) === true) {
+        throw new Exception('La variable "paybox_log_success_path" n\'est pas configurée.');
+    }
+
     if (in_array($ip, $payboxaddresses, true) === false) {
         throw new Exception('Bad ip: '.$ip);
     }
@@ -149,8 +138,10 @@ try {
     if (empty($CFG->debug) === false) {
         $admin = get_admin();
         $from = $CFG->noreplyaddress;
-        email_to_user($admin, $from, 'SIUAPS: anomalie paiement', $trace);
+        email_to_user($admin, $from, 'APSOLU: anomalie de paiement Paybox', $trace);
     }
 
-    file_put_contents($outputerror, $trace.PHP_EOL, FILE_APPEND | LOCK_EX);
+    if (empty($outputerror) === false) {
+        file_put_contents($outputerror, $trace.PHP_EOL, FILE_APPEND | LOCK_EX);
+    }
 }

@@ -47,12 +47,10 @@ class local_apsolu_contacts_form extends moodleform {
         // Functional contact.
         $mform->addElement('text', 'functional_contact', get_string('functional_contact', 'local_apsolu'), array('size' => '48'));
         $mform->setType('functional_contact', PARAM_TEXT);
-        $mform->addRule('functional_contact', get_string('required'), 'required', null, 'client');
 
         // Technical contact.
         $mform->addElement('text', 'technical_contact', get_string('technical_contact', 'local_apsolu'), array('size' => '48'));
         $mform->setType('technical_contact', PARAM_TEXT);
-        $mform->addRule('technical_contact', get_string('required'), 'required', null, 'client');
 
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
@@ -65,5 +63,35 @@ class local_apsolu_contacts_form extends moodleform {
 
         // Set default values.
         $this->set_data($defaults);
+    }
+
+    /**
+     * Validation.
+     *
+     * @param array $data
+     * @param array $files
+     *
+     * @return array The errors that were found.
+     */
+    public function validation($data, $files) {
+        $errors = parent::validation($data, $files);
+
+        $addresses = array();
+        $addresses[] = 'functional_contact';
+        $addresses[] = 'technical_contact';
+
+        foreach ($addresses as $fieldname) {
+            if ($data[$fieldname] === '') {
+                continue;
+            }
+
+            if (filter_var($data[$fieldname], FILTER_VALIDATE_EMAIL) !== false) {
+                continue;
+            }
+
+            $errors[$fieldname] = get_string('invalidemail');
+        }
+
+        return $errors;
     }
 }
