@@ -94,7 +94,7 @@ class report extends \local_apsolu\local\statistics\report {
           [ 'data' => "cityname", 'title' => get_string("city", 'local_apsolu')] ,
           [ 'data' => "placename", 'title' => get_string("locations", 'local_apsolu')] ,
           [ 'data' => "placeaddress", 'title' => get_string("address", 'local_apsolu')] ,
-          [ 'data' => "slotnumweekday", 'title' => get_string("weekday", 'local_apsolu'),"render" => "function ( data, type, row ) {return moment.weekdays()[data];}"],
+          [ 'data' => "slotnumweekday", 'title' => get_string("weekday", 'local_apsolu'),"render" => "function ( data, type, row ) {return moment.weekdays()[(data==7) ? 0 : data];}"],
           [ 'data' => "slotstart", 'title' => get_string("coursestartdate", 'local_apsolu')] ,
           [ 'data' => "slotend", 'title' => get_string("courseenddate", 'local_apsolu')] ,
           [ 'data' => "actifquota", 'title' => get_string("statistics_active_quota", 'local_apsolu')] ,

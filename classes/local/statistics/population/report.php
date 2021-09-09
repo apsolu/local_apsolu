@@ -253,12 +253,12 @@ class report extends \local_apsolu\local\statistics\report {
                 [ 'data' => "groupname", 'title' => get_string('grouping', 'local_apsolu')],
                 [ 'data' => "activityname", 'title' => get_string('activity', 'local_apsolu')],
                 [ 'data' => "skillsname", 'title' => get_string('skill', 'local_apsolu')],
-                [ 'data' => "slotnumweekday", 'title' => get_string('weekday', 'local_apsolu'), "render" => "function ( data, type, row ) {return moment.weekdays()[data];}"],
+                [ 'data' => "slotnumweekday", 'title' => get_string('weekday', 'local_apsolu'), "render" => "function ( data, type, row ) {return moment.weekdays()[(data==7) ? 0 : data];}"],
                 [ 'data' => "slotstartend", 'title' => get_string('schedule', 'local_apsolu')],
                 [ 'data' => "locationname", 'title' => get_string('location', 'local_apsolu')],
                 [ 'data' => "teachers", 'title' => get_string('teacher', 'local_apsolu')],
                 [ 'data' => "cohortnames", 'visible' => false, 'title' => get_string('cohort', 'cohort')],
-                [ 'data' => null, 'visible' => false, 'title' => "Activité détaillée","render" => "function ( data, type, row ) {return data.activityname.replace(/\s/g,'&nbsp;') + '&nbsp;/&nbsp;' + moment.weekdays()[data.slotnumweekday] +'&nbsp;/&nbsp;' + data.slotstart + '&nbsp;-&nbsp;' + data.slotend + '&nbsp;/&nbsp;' + data.skillsname.replace(/\s/g,'&nbsp;');}"],
+                [ 'data' => null, 'visible' => false, 'title' => "Activité détaillée","render" => "function ( data, type, row ) {return data.activityname.replace(/\s/g,'&nbsp;') + '&nbsp;/&nbsp;' + moment.weekdays()[(data.slotnumweekday==7) ? 0 : data.slotnumweekday] +'&nbsp;/&nbsp;' + data.slotstart + '&nbsp;-&nbsp;' + data.slotend + '&nbsp;/&nbsp;' + data.skillsname.replace(/\s/g,'&nbsp;');}"],
                 ];
                 $orders = [2 => 'asc', 3 => 'asc'];
                 $filters = ['input' => [1,2,3,4,7,8,13],'select' => [0,5,6,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24] ];
