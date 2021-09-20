@@ -158,6 +158,8 @@ class Payment {
             " JOIN {cohort_members} cm ON cm.cohortid = ewc.cohortid".
             " JOIN {user_enrolments} ue ON e.id = ue.enrolid AND ue.userid = cm.userid".
             " JOIN {role_assignments} ra ON ra.userid = ue.userid AND ra.userid = cm.userid AND ra.itemid = e.id".
+            " JOIN {apsolu_payments_cards_cohort} apcc ON esc.cardid = apcc.cardid AND apcc.cohortid = cm.cohortid".
+            " JOIN {apsolu_payments_cards_roles} apcr ON apcr.roleid = ra.roleid AND apcr.cardid = esc.cardid".
             " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50 AND ctx.instanceid = c.id".
             // Check colleges.
             // " JOIN {apsolu_colleges} acol ON acol.roleid = ra.roleid".
