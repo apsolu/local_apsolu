@@ -46,10 +46,12 @@ class local_apsolu_contacts_form extends moodleform {
 
         // Functional contact.
         $mform->addElement('text', 'functional_contact', get_string('functional_contact', 'local_apsolu'), array('size' => '48'));
+        $mform->addHelpButton('functional_contact', 'functional_contact', 'local_apsolu');
         $mform->setType('functional_contact', PARAM_TEXT);
 
         // Technical contact.
         $mform->addElement('text', 'technical_contact', get_string('technical_contact', 'local_apsolu'), array('size' => '48'));
+        $mform->addHelpButton('technical_contact', 'technical_contact', 'local_apsolu');
         $mform->setType('technical_contact', PARAM_TEXT);
 
         // Submit buttons.

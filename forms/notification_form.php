@@ -86,7 +86,7 @@ class local_apsolu_notification_form extends moodleform {
         // Notifier le contact fonctionnel.
         $functional_contact = get_config('local_apsolu', 'functional_contact');
         if (empty($functional_contact) === false) {
-            $label = get_string('notify_functional_contact', 'local_apsolu');
+            $label = get_string('notify_functional_contact', 'local_apsolu', $functional_contact);
             $mform->addElement('checkbox', 'notify_functional_contact', $label);
             $mform->setType('notify_functional_contact', PARAM_INT);
         }

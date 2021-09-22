@@ -218,7 +218,7 @@ $string['notifications_not_sent'] = 'Notifications non envoyées';
 $string['notifications_notsent'] = 'Notifications non envoyées';
 $string['notifications_sent'] = 'Notifications envoyées';
 $string['notify'] = 'Notifier';
-$string['notify_functional_contact'] = 'Notifier le contact fonctionnel';
+$string['notify_functional_contact'] = 'Mettre en copie l\'adresse <em>{$a}</em>';
 $string['other_filters'] = 'Autres filtres';
 $string['paybox_administration_description'] = 'Quelques informations concernant le paramétrage PayBox :
 
@@ -425,7 +425,9 @@ $string['payments_enddate'] = 'Date de fin des paiements';
 $string['semester1_grading_deadline'] = 'Date limite pour rendre les notes du S1';
 $string['semester2_grading_deadline'] = 'Date limite pour rendre les notes du S2';
 $string['functional_contact'] = 'Contact fonctionnel';
+$string['functional_contact_help'] = 'Cette adresse sera notifiée à chaque modification ou suppression de sessions. Un enseignant aura également la possibilité de mettre en copie cette adresse lors de l\'envoi d\'une notification à ses étudiants. Enfin, la page de paiement proposera de contacter cette adresse en cas de difficulté.';
 $string['technical_contact'] = 'Contact technique';
+$string['technical_contact_help'] = 'Adresse non utilisée pour l\'instant.';
 
 // Courses (ex: local/apsolu_course).
 $string['settings_root'] = 'Gestion du SIUAPS';
@@ -779,8 +781,7 @@ $string['no_courses_complements'] = 'Pour les cours du SIUAPS, si vous êtes ins
 $string['no_paybox'] = 'Notre prestataire de paiement semble rencontrer des difficultés techniques. Merci de réessayer ultérieurement.';
 $string['warning_payment'] = '<p><strong>Attention</strong> : vérifiez les cours qui vous sont facturés. Si vous ne souhaitez plus suivre une activité, merci de contacter votre enseignant.</p>'.
     '<p>Aucun remboursement ne sera procédé.'.
-    ' Si vous constatez une erreur dans le montant à payer, merci d\'envoyer un mail à l\'adresse <a href="mailto:{$a}">{$a}</a>.</p>'.
-    '<p>Enfin, si vous rencontrez le problème "<em>Demande de paiement dupliquée. Accès refusé !</em>", merci de réessayer votre paiement le lendemain.</p>';
+    ' Si vous constatez une erreur dans le montant à payer, merci d\'envoyer un mail à l\'adresse <a href="mailto:{$a}">{$a}</a>.</p>';
 $string['status_accepted'] = 'Paiement accepté.';
 $string['status_refused'] = 'Paiement refusé.';
 $string['status_wait'] = 'Paiement en attente.';
