@@ -177,18 +177,8 @@ if (isset($invalid_enrolments) === false) {
 
 $sql .= " ORDER BY u.lastname, u.firstname";
 
-if (isset($CFG->is_siuaps_rennes) === true && in_array($courseid, array(210, 218, 6, 330), true) === true) {
-    // Hack pour les cours de football.
-    if (in_array($courseid, array(210, 218), true) === true) {
-        $sql = str_replace(' AND e.courseid = :courseid', ' AND e.courseid IN(210, 218)', $sql);
-    } else {
-        $sql = str_replace(' AND e.courseid = :courseid', ' AND e.courseid IN(6, 330)', $sql);
-    }
-    $students = $DB->get_records_sql($sql, $params);
-} else {
-    $params['courseid'] = $courseid;
-    $students = $DB->get_records_sql($sql, $params);
-}
+$params['courseid'] = $courseid;
+$students = $DB->get_records_sql($sql, $params);
 
 // TODO: récupérer les gens inscrits ponctuellement.
 $sql = "SELECT DISTINCT u.*, uid1.data AS apsolusesame, uid2.data AS apsolucardpaid".
