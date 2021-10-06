@@ -137,12 +137,6 @@ try {
 } catch (Exception $exception) {
     $trace = $exception->getMessage().PHP_EOL.$outputsuccesscontent;
 
-    if (empty($CFG->debug) === false) {
-        $admin = get_admin();
-        $from = $CFG->noreplyaddress;
-        email_to_user($admin, $from, 'APSOLU: anomalie de paiement Paybox', $trace);
-    }
-
     if (empty($outputerror) === false) {
         file_put_contents($outputerror, $trace.PHP_EOL, FILE_APPEND | LOCK_EX);
     }
