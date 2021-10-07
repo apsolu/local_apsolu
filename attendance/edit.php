@@ -80,6 +80,9 @@ $tabsbar[] = new tabobject('overview', $url, get_string('attendance_overview', '
 $url = new moodle_url('/local/apsolu/attendance/sessions/index.php', array('courseid' => $courseid));
 $tabsbar[] = new tabobject('sessions_edit', $url, get_string('attendance_sessions_edit', 'local_apsolu'));
 
+$url = new moodle_url('/local/apsolu/attendance/export/export.php', array('courseid' => $courseid));
+$tabsbar[] = new tabobject('export', $url, get_string('export', 'local_apsolu'));
+
 echo $OUTPUT->header();
 echo $OUTPUT->tabtree($tabsbar, 'sessions');
 echo $OUTPUT->heading($pagedesc);
