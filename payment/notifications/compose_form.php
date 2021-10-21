@@ -67,7 +67,7 @@ class local_apsolu_payment_notifications_compose_form extends moodleform {
         }
 
         // Submit buttons.
-        $mform->addElement('submit', 'submitbutton', get_string('save', 'admin'));
+        $mform->addElement('submit', 'submitbutton', get_string('submit'));
 
         // Hidden fields.
         $mform->addElement('hidden', 'tab', 'notifications');
