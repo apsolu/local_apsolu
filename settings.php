@@ -149,13 +149,13 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'dates'));
     $ADMIN->add('local_apsolu_payment', new admin_externalpage('local_apsolu_configuration_dates', $str, $url, $capabilities));
 
-    // Paiements > Paiements.
+    // Paiements > Liste des paiements.
     $label = get_string('settings_payments_list', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/payment/admin.php', array('tab' => 'payments'));
     $ADMIN->add('local_apsolu_payment', new admin_externalpage('local_apsolu_payment_payments', $label, $url, $capabilities));
 
-    // Paiements > Notification.
-    $label = get_string('notifications');
+    // Paiements > Relance de paiement.
+    $label = get_string('dunning', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/payment/admin.php', array('tab' => 'notifications'));
     $ADMIN->add('local_apsolu_payment', new admin_externalpage('local_apsolu_payment_notifications', $label, $url, $capabilities));
 

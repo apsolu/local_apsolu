@@ -29,20 +29,26 @@ $tab = optional_param('tab', 'payments', PARAM_ALPHA);
 $action = optional_param('action', 'view', PARAM_ALPHA);
 
 // Set tabs.
-$tabslist = array('payments', 'notifications', 'prices');
+$tabslist = array();
+$tabslist['settings_payments_list'] = 'payments';
+$tabslist['dunning'] = 'notifications';
+$tabslist['payment_cards'] = 'prices';
 if (has_capability('local/apsolu:configpaybox', context_system::instance()) === true) {
-    $tabslist = array_merge(array('configurations', 'centers'), $tabslist);
+    $advanced = array();
+    $advanced['settings_payments_servers'] = 'configurations';
+    $advanced['centers'] = 'centers';
+    $tabslist = array_merge($advanced, $tabslist);
 }
 
 $tabsbar = array();
-foreach ($tabslist as $tabname) {
+foreach ($tabslist as $stringid => $tabname) {
     $url = new moodle_url('/local/apsolu/payment/admin.php', array('tab' => $tabname));
-    $tabsbar[] = new tabobject($tabname, $url, get_string($tabname, 'local_apsolu'));
+    $tabsbar[] = new tabobject($tabname, $url, get_string($stringid, 'local_apsolu'));
 }
 
 // Set default tabs.
 if (in_array($tab, $tabslist, $strict = true) === false) {
-    $tab = $tabslist[0];
+    $tab = 'payments';
 }
 
 // Setup admin access requirement.
