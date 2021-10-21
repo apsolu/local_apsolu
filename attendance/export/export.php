@@ -77,22 +77,7 @@ $tabsbar[] = new tabobject('export', $url, get_string('export', 'local_apsolu'))
 $mform = new local_apsolu_attendance_export_form(null, array('courseid' => $courseid));
 
 if ($data = $mform->get_data()) {
-    // Récupère toutes les sessions du cours.
-    $sql = "SELECT session.id, session.name".
-        " FROM {apsolu_attendance_sessions} session".
-        " WHERE courseid = :courseid";
-    $params = array('courseid' => $courseid);
-
-    if (empty($data->startdate) === false) {
-        $sql .= " AND session.sessiontime >= :startdate";
-        $params['startdate'] = $data->startdate;
-    }
-
-    if (empty($data->enddate) === false) {
-        $sql .= " AND session.sessiontime <= :enddate";
-        $params['enddate'] = $data->enddate;
-    }
-
+    // Définit les entêtes du fichier csv.
     $headers = array();
     $headers[] = get_string('firstname');
     $headers[] = get_string('lastname');
@@ -100,8 +85,31 @@ if ($data = $mform->get_data()) {
     $headers[] = get_string('email');
     $headers[] = get_string('roles');
 
-    $sessions = array();
+    // Prépare les paramètres conditionnels des requêtes SQL.
+    $conditions_enrolments = array();
+    $conditions_sessions = array();
+
+    $params = array('courseid' => $courseid);
+    if (empty($data->startdate) === false) {
+        $conditions_sessions[] = "AND session.sessiontime >= :startdate";
+        $conditions_enrolments[] = "AND (ue.timestart = 0 OR ue.timestart <= :startdate)";
+        $params['startdate'] = $data->startdate;
+    }
+
+    if (empty($data->enddate) === false) {
+        $conditions_sessions[] = "AND session.sessiontime <= :enddate";
+        $conditions_enrolments[] = "AND (ue.timeend = 0 OR ue.timeend >= :enddate)";
+        $params['enddate'] = $data->enddate;
+    }
+
+    // Récupère toutes les sessions du cours.
+    $sql = "SELECT session.id, session.name".
+        " FROM {apsolu_attendance_sessions} session".
+        " WHERE courseid = :courseid".
+        implode(' ', $conditions_sessions).
+        " ORDER BY session.sessiontime";
     $recordset = $DB->get_recordset_sql($sql, $params);
+    $sessions = array();
     foreach ($recordset as $session) {
         $headers[] = $session->name;
         $headers[] = get_string('attendance_comment', 'local_apsolu');
@@ -118,11 +126,12 @@ if ($data = $mform->get_data()) {
         " JOIN {role} r ON r.id = ra.roleid".
         " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50 AND ctx.instanceid = e.courseid".
         " WHERE e.courseid = :courseid".
+        implode(' ', $conditions_enrolments).
         " AND e.enrol = 'select'".
         " AND e.status = 0". // Méthode d'inscription activée.
         " AND ue.status = 0". // Inscription acceptée.
         " ORDER BY u.lastname, u.firstname";
-    $recordset = $DB->get_recordset_sql($sql, array('courseid' => $courseid));
+    $recordset = $DB->get_recordset_sql($sql, $params);
 
     $users = array();
     foreach ($recordset as $user) {
