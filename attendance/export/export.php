@@ -162,6 +162,17 @@ if ($data = $mform->get_data()) {
     }
     $recordset->close();
 
+    // Trie les étudiants par nom, prénom.
+    usort($users, function($a, $b) {
+        $compare = strcasecmp($a->lastname, $b->lastname);
+        if ($compare === 0) {
+            $compare = strcasecmp($a->firstname, $b->firstname);
+        }
+
+        return $compare;
+    });
+
+    // Prépare les données pour l'exportation csv.
     $filename = 'presences_de_cours';
 
     $csvexport = new csv_export_writer();
