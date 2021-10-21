@@ -147,7 +147,7 @@ foreach ($users as $user) {
                 $comment = '';
             } else {
                 $comment = '<details class="apsolu-comments-details">'.
-                    '<summary class="apsolu-comments-summary"><img alt="'.get_string('comments').'" class="iconsmall" src="'.$OUTPUT->pix_url('t/message').'" /></summary>'.
+                    '<summary class="apsolu-comments-summary"><img alt="'.get_string('comments').'" class="iconsmall" src="'.$OUTPUT->image_url('t/message').'" /></summary>'.
                     '<div class="apsolu-comments-div">'.$presence->description.'</div>'.
                     '</details>';
             }
