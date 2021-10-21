@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$actions = array('compose', 'history', 'posts');
+$actions = array('compose', 'history', 'posts', 'export');
 
 if (in_array($action, $actions, $strict = true) === false) {
     $action = 'compose';
@@ -42,7 +42,11 @@ foreach ($actions as $action_) {
 }
 
 // Affichage du sous-menu.
-echo $OUTPUT->heading(get_string('dunning', 'local_apsolu'));
-echo $OUTPUT->tabtree($tabsbar2, $action);
+$submenu = $OUTPUT->heading(get_string('dunning', 'local_apsolu'));
+$submenu .= $OUTPUT->tabtree($tabsbar2, $action);
+
+if ($action !== 'export') {
+    echo $submenu;
+}
 
 require(__DIR__.'/'.$action.'.php');
