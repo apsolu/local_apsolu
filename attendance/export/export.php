@@ -98,6 +98,7 @@ if ($data = $mform->get_data()) {
     $headers[] = get_string('lastname');
     $headers[] = get_string('idnumber');
     $headers[] = get_string('email');
+    $headers[] = get_string('roles');
 
     $sessions = array();
     $recordset = $DB->get_recordset_sql($sql, $params);
@@ -109,19 +110,31 @@ if ($data = $mform->get_data()) {
     $recordset->close();
 
     // Récupère tous les inscrits dans le cours.
-    $sql = "SELECT DISTINCT u.id, u.firstname, u.lastname, u.idnumber, u.email".
+    $sql = "SELECT DISTINCT u.id, u.firstname, u.lastname, u.idnumber, u.email, ra.roleid, r.name AS role".
         " FROM {user} u".
         " JOIN {user_enrolments} ue ON u.id = ue.userid".
         " JOIN {enrol} e ON e.id = ue.enrolid".
+        " JOIN {role_assignments} ra ON ra.userid = ue.userid AND ra.itemid = e.id".
+        " JOIN {role} r ON r.id = ra.roleid".
+        " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50 AND ctx.instanceid = e.courseid".
         " WHERE e.courseid = :courseid".
         " AND e.enrol = 'select'".
         " AND e.status = 0". // Méthode d'inscription activée.
         " AND ue.status = 0". // Inscription acceptée.
         " ORDER BY u.lastname, u.firstname";
-    $users = $DB->get_records_sql($sql, array('courseid' => $courseid));
-    foreach ($users as $userid => $user) {
-        $users[$userid]->presences = $sessions;
+    $recordset = $DB->get_recordset_sql($sql, array('courseid' => $courseid));
+
+    $users = array();
+    foreach ($recordset as $user) {
+        if (isset($users[$user->id]) === false) {
+            $users[$user->id] = $user;
+            $users[$user->id]->roles = array();
+            $users[$user->id]->presences = $sessions;
+        }
+
+        $users[$user->id]->roles[$user->roleid] = $user->role;
     }
+    $recordset->close();
 
     // Récupère toutes les présences.
     $sql = "SELECT aap.studentid, aap.statusid, aap.description, aas.name As status, aap.sessionid".
@@ -132,7 +145,8 @@ if ($data = $mform->get_data()) {
     $recordset = $DB->get_recordset_sql($sql, array('courseid' => $courseid));
     foreach ($recordset as $presence) {
         if (isset($users[$presence->studentid]) === false) {
-            $users[$presence->studentid] = $DB->get_record('user', array('id' => $presence->studentid));
+            $users[$presence->studentid] = $DB->get_record('user', array('id' => $presence->studentid), $fields = '*', MUST_EXIST);
+            $users[$presence->studentid]->roles = array();
         }
 
         if (isset($users[$presence->studentid]->presences) === false) {
@@ -161,6 +175,7 @@ if ($data = $mform->get_data()) {
         $data[] = $user->lastname;
         $data[] = $user->idnumber;
         $data[] = $user->email;
+        $data[] = implode(', ', $user->roles);
 
         foreach ($user->presences as $presence) {
             $data[] = $presence['status'];
