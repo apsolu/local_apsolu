@@ -64,28 +64,24 @@ class notification_sent extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        global $CFG, $DB, $USER;
-
-        if ($this->contextlevel == CONTEXT_COURSE) {
-            $urlpattern = sprintf('%s/user/view.php?course=%s&', $CFG->wwwroot, $this->contextinstanceid);
-        } else {
-            $urlpattern = sprintf('%s/user/view.php?', $CFG->wwwroot);
-        }
-
-        $sender = sprintf('<a href="%sid=%s">%s</a>', $urlpattern, $USER->id, fullname($USER));
+        global $CFG, $DB;
 
         $other = json_decode($this->other);
         if (ctype_digit($other->receiver) === true) {
             // Si on a l'identifiant du destinaire, on va chercher son nom dans la table des utilisateurs.
             $user = $DB->get_record('user', array('id' => $other->receiver));
-            $receiver = sprintf('<a href="%sid=%s">%s</a>', $urlpattern, $user->id, fullname($user));
+            if ($this->contextlevel == CONTEXT_COURSE) {
+                $receiver = sprintf('<a href="%s/user/view.php?course=%s&id=%s">%s</a>', $CFG->wwwroot, $this->contextinstanceid, $user->id, fullname($user));
+            } else {
+                $receiver = sprintf('<a href="%s/user/view.php?id=%s">%s</a>', $CFG->wwwroot, $user->id, fullname($user));
+            }
         } else {
             // On affiche juste l'adresse mail du contact fonctionnel.
             $receiver = $other->receiver;
         }
 
         $params = new stdClass();
-        $params->sender = $sender;
+        $params->sender = sprintf("'%s'", $this->userid);
         $params->receiver = $receiver;
         $params->subject = $other->subject;
 
