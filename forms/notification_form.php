@@ -162,7 +162,9 @@ class local_apsolu_notification_form extends moodleform {
 
             // Solution de contournement pour pouvoir envoyer un message à une adresse mail n'appartenant pas à un utilisateur Moodle.
             $admin = get_admin();
+            $admin->auth = 'manual'; // Force l'authentification en manual, car la fonction email_to_user() ignore les comptes en nologin.
             $admin->email = $functional_contact;
+
             email_to_user($admin, $USER, $data->subject, $messagetext, $messagehtml);
 
             $event = \local_apsolu\event\notification_sent::create(array(
