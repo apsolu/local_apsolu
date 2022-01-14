@@ -35,6 +35,7 @@ $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
 $data->categories = array_values($categories);
 $data->count_categories = count($categories);
+$data->is_siuaps_rennes = isset($CFG->is_siuaps_rennes);
 
 if (isset($notificationform)) {
     $data->notification = $notificationform;
