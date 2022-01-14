@@ -5,6 +5,7 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
             $('#apsolu-attendance-table').before('<div id="apsolu-attendance-check-javascript-helper" class="text-right"><p>Pour les présences <u>non saisies</u> :<ul class="list-inline">'+
                 '<li class="list-inline-item"><span class="btn btn-sm btn-primary" id="apsolu-check-radio-present">Cocher "présent" pour tous</span></li>'+
                 '<li class="list-inline-item"><span class="btn btn-sm btn-primary" id="apsolu-check-radio-absent">Cocher "absent" pour tous</span></li>'+
+                '<li class="list-inline-item"><span class="btn btn-sm btn-dark" id="apsolu-check-radio-uncheck">Décocher toutes les cases</span></li>'+
                 '</ul></div>');
 
             // Ajoute un évènement sur le bouton "présent" créé précédemment.
@@ -25,6 +26,17 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
                     if ($(this).find('input[type=radio]:checked').length == 0) {
                         // Coche le dernier bouton radio de la liste.
                         $(this).find('input[type=radio]').last().prop('checked', true);
+                    }
+                });
+            });
+
+            // Ajoute un évènement sur le bouton "décocher" créé précédemment.
+            $('#apsolu-check-radio-uncheck').click(function(){
+                $('#apsolu-attendance-table tbody tr').each(function() {
+                    // Recherche si un des 4 boutons radio est coché.
+                    if ($(this).find('input[type=radio]:checked').length != 0) {
+                        // Décoche toutes les boutons.
+                        $(this).find('input[type=radio]').prop('checked', false);
                     }
                 });
             });
