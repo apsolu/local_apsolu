@@ -28,7 +28,7 @@ use local_apsolu\core\gradebook as Gradebook;
 require_once(__DIR__.'/../../../../config.php');
 
 $PAGE->set_context(context_system::instance());
-$PAGE->set_pagelayout('admin');
+$PAGE->set_pagelayout('base');
 $PAGE->set_url('/local/apsolu/grades/index.php');
 $PAGE->set_title(get_string('gradebook', 'grades'));
 
