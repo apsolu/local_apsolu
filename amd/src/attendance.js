@@ -41,6 +41,22 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
                 });
             });
 
+            // Ajoute un évènement pour permettre de désélectionner un bouton radio.
+            $('#apsolu-attendance-table tbody tr input[type=radio]').click(function() {
+                // Supprime la propriété hasbeenpreviouslychecked sur tous les éléments radio, sauf l'élément courant.
+                var name = $(this).attr('name');
+                $('#apsolu-attendance-table tbody tr input[name="'+name+'"]').not(this).removeProp('hasbeenpreviouslychecked');
+
+                if (this.hasbeenpreviouslychecked) {
+                    // Décoche le bouton radio qui était déjà coché avant.
+                    this.checked = false;
+                    $(this).removeProp('hasbeenpreviouslychecked');
+                } else {
+                    // Place une propriété indiquant que le bouton radio est déjà coché.
+                    this.hasbeenpreviouslychecked = true;
+                }
+            });
+
             // Ajoute un évènement sur le bouton "modifier l'inscription".
             $('.apsolu-attendance-edit-enrolments').click(function(event) {
                 event.preventDefault();
