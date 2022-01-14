@@ -250,6 +250,10 @@ $roles = role_fix_names($DB->get_records('role'));
 
 $notification = false;
 if (isset($_POST['apsolu']) === true) {
+    if (isset($_POST['presences']) === false) {
+        $_POST['presences'] = array();
+    }
+
     foreach ($_POST['presences'] as $userid => $status) {
         if (isset($presences[$userid]) === false) {
             $presence = new stdClass();
@@ -286,6 +290,18 @@ if (isset($_POST['apsolu']) === true) {
                 $notification = true;
             }
         }
+
+        $modified[$userid] = $userid;
+    }
+
+    // Traite les suppressions de présences.
+    foreach ($presences as $userid => $presence) {
+        if (isset($modified[$userid]) === true) {
+            continue;
+        }
+
+        $DB->delete_records('apsolu_attendance_presences', array('id' => $presence->id));
+        unset($presences[$userid]);
     }
 }
 
