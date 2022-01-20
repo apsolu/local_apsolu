@@ -829,6 +829,41 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
             set_config($setting, '', 'local_apsolu');
         }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
+    $version = 2022011200;
+    if ($result && $oldversion < $version) {
+        // Ajoute la table apsolu_payments_addresses.
+        $table = new xmldb_table('apsolu_payments_addresses');
+        if ($dbman->table_exists($table) === false) {
+            // Adding fields.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+            $table->add_field('firstname', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('lastname', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('address1', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('address2', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('zipcode', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('city', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('countrycode', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $notnull = null, null, null, null);
+            $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+
+            // Adding keys.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+            // Adding indexes.
+            $table->add_index($indexname = 'userid', XMLDB_INDEX_UNIQUE, $fields = array('userid'));
+
+            // Create table.
+            $dbman->create_table($table);
+        }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
     return $result;

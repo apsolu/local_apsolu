@@ -48,24 +48,15 @@
 	{{/payment_centers}}
 
 	{{#count_payment_centers}}
-		{{#can_paid}}
 		<div class="alert alert-info">
 			{{#str}}warning_payment, local_apsolu, {{functional_contact}}{{/str}}
 		</div>
-		{{/can_paid}}
 	{{/count_payment_centers}}
 
 	{{#payment_centers}}
-	{{^can_paid}}
-	<div class="alert alert-warning">
-		<p>{{#str}}no_paybox, local_apsolu{{/str}}</p>
-	</div>
-	{{/can_paid}}
-
-	{{#can_paid}}
 	<div class="col-lg-6 col-md-12">
 		<h1 class="apsolu-payment-h1 text-center">{{name}}</h1>
-		<form method="post" action="{{action_url}}" class="apsolu-payment-forms">
+		<form method="post" action="{{ action_url }}" class="apsolu-payment-forms">
 			<dl>
 				{{#count_cards}}
 				<div class="apsolu-payment-section-div">
@@ -114,6 +105,8 @@
 				<input type="hidden" name="PBX_REPONDRE_A" value="{{paybox.PBX_REPONDRE_A}}" />
 				<input type="hidden" name="PBX_TYPEPAIEMENT" value="{{paybox.PBX_TYPEPAIEMENT}}" />
 				<input type="hidden" name="PBX_TYPECARTE" value="{{paybox.PBX_TYPECARTE}}" />
+				<input type="hidden" name="PBX_SHOPPINGCART" value="{{paybox.PBX_SHOPPINGCART}}" />
+				<input type="hidden" name="PBX_BILLING" value="{{{paybox.PBX_BILLING}}}" />
 				<input type="hidden" name="PBX_HMAC" value="{{paybox.PBX_HMAC}}" />
 
 				<!-- submit -->
@@ -121,6 +114,5 @@
 			</p>
 		</form>
 	</div>
-	{{/can_paid}}
 	{{/payment_centers}}
 </div>

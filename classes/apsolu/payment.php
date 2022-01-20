@@ -24,6 +24,7 @@
 
 namespace UniversiteRennes2\Apsolu;
 
+use SimpleXMLElement;
 use stdClass;
 
 /**
@@ -307,6 +308,22 @@ class Payment {
         $paybox->PBX_TYPEPAIEMENT = 'CARTE';
         $paybox->PBX_TYPECARTE = 'CB';
 
+        // Nombre d'éléments dans le panier.
+        $paybox->PBX_SHOPPINGCART = '<?xml version="1.0" encoding="utf-8"?><shoppingcart><total><totalQuantity>'.$payment->quantity.'</totalQuantity></total></shoppingcart>';
+
+        // Adresse postale.
+        $address = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><Billing><Address></Address></Billing>');
+        $address->Address[0]->addChild('FirstName', $payment->address->firstname);
+        $address->Address[0]->addChild('LastName', $payment->address->lastname);
+        $address->Address[0]->addChild('Address1', $payment->address->address1);
+        $address->Address[0]->addChild('Address2', $payment->address->address2);
+        $address->Address[0]->addChild('ZipCode', $payment->address->zipcode);
+        $address->Address[0]->addChild('City', $payment->address->city);
+        $address->Address[0]->addChild('CountryCode', $payment->address->countrycode);
+
+        // Convertit l'objet XML en chaîne, et supprime les retours à la ligne.
+        $paybox->PBX_BILLING = str_replace(PHP_EOL, '', $address->asXML());
+
         // Signature calculée avec la clé secrète.
         $message = '';
         foreach ((array) $paybox as $key => $value) {
@@ -316,6 +333,9 @@ class Payment {
 
         $binkey = pack('H*', $center->hmac);
         $paybox->PBX_HMAC = strtoupper(hash_hmac($paybox->PBX_HASH, $message, $binkey));
+
+        // Réencode les caractères.
+        $paybox->PBX_BILLING = htmlentities($paybox->PBX_BILLING);
 
         return $paybox;
     }
@@ -428,5 +448,28 @@ class Payment {
         }
 
         return $images;
+    }
+
+    /**
+     * Retourne true lorsque les paiements sont ouverts.
+     *
+     * @return boolean
+     */
+    public static function is_open() {
+        $time = time();
+
+        $payments_startdate = get_config('local_apsolu', 'payments_startdate');
+        if ($time < $payments_startdate) {
+            // Les paiements n'ont pas démarré.
+            return false;
+        }
+
+        $payments_enddate = get_config('local_apsolu', 'payments_enddate');
+        if ($time > $payments_enddate) {
+            // Les paiements sont terminés.
+            return false;
+        }
+
+        return true;
     }
 }
