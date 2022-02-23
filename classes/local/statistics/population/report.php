@@ -63,7 +63,16 @@ class report extends \local_apsolu\local\statistics\report {
       			U.institution, U.department, U.id as userid, U.idnumber, U.firstname, U.lastname, U.email,
             Sexe.data as sexe, 
             CASE WHEN UFR.data IS NULL THEN \'\' ELSE UFR.data END AS ufr, CASE WHEN LMD.data IS NULL THEN \'\' ELSE LMD.data END AS lmd, apsoluhighlevelathlete.data as shnu,
-            CASE WHEN apsolucardpaid.data IS NOT NULL THEN "Oui" ELSE "Non" END as apsolucardpaid,
+            CASE WHEN apsolucardpaid.data = \'1\' 
+              THEN "Oui"
+              ELSE CASE WHEN apsolucardpaid.data = \'0\' 
+                THEN "Non"
+                ELSE CASE WHEN apsolucardpaid.data IS NOT NULL 
+                  THEN "Oui" 
+                  ELSE "Non" 
+                END
+              END
+            END as apsolucardpaid,
             E.id as enrolid, E.name as enrolname, UE.status,
             CASE WHEN (apsoluusertype.data IS NOT NULL AND apsoluusertype.data <> \'\') 
 					    THEN apsoluusertype.data
@@ -134,7 +143,16 @@ class report extends \local_apsolu\local\statistics\report {
       			ACT.id as calendartypeid,ACT.name as calendartypename,
       			U.institution, U.department, U.id as userid, U.idnumber, U.firstname, U.lastname, U.email,
             Sexe.data as sexe, UFR.data as ufr, LMD.data as lmd, apsoluhighlevelathlete.data as shnu,
-            CASE WHEN apsolucardpaid.data THEN "Oui" ELSE "Non" END as apsolucardpaid,
+            CASE WHEN apsolucardpaid.data = \'1\' 
+              THEN "Oui"
+              ELSE CASE WHEN apsolucardpaid.data = \'0\' 
+                THEN "Non"
+                ELSE CASE WHEN apsolucardpaid.data IS NOT NULL 
+                  THEN "Oui" 
+                  ELSE "Non" 
+                END
+              END
+            END as apsolucardpaid,
       			E.id as enrolid, E.name as enrolname, UE.status,
             CASE WHEN (apsoluusertype.data IS NOT NULL AND apsoluusertype.data <> \'\') 
 					    THEN apsoluusertype.data
