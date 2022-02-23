@@ -261,7 +261,7 @@
               {"data":"department", "title":"department,moodle"}
             ],
             "orders":{"2":"asc","3":"asc"},
-            "filters":{"input":[1,2,3,4],"select":[5,6]}
+            "filters":{"input":[0,1,2,3],"select":[4,5]}
           }
         },
         {
@@ -281,7 +281,9 @@
               {"data":"enrollee_main_list", "title":"enrollee_main_list,enrol_select"},
               {"data":"enrollee_wait_list", "title":"enrollee_wait_list,enrol_select"},
               {"data":"enrollee_deleted_list", "title":"enrollee_deleted_list,enrol_select"}
-            ]
+            ],
+            "orders":{},
+            "filters":{}
           }
         },
         {
@@ -293,7 +295,9 @@
             "columns" : [
               {"data":"enrollment", "title":"enrolments,enrol"},
               {"data":"enrollee", "title":"enrollees,enrol_select"}
-            ]
+            ],
+            "orders":{},
+            "filters":{}
           }
         }        
     ],

@@ -33,7 +33,7 @@
           "values": {
             "method" : "countslotsmainlist",
             "columns" : [
-              {"data":"total", "title":"total"}
+              {"data":"total", "title":"total,local_apsolu"}
             ],
             "orders":{},
             "filters":{}
