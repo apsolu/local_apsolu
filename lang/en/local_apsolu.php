@@ -340,6 +340,7 @@ $string['skill_saved'] = 'Niveau de pratique enregistré.';
 $string['skill_updated'] = 'Niveau de pratique modifié.';
 $string['skills'] = 'Niveaux';
 $string['strftimedatetimeshort'] = '%a %d %b %Y %H:%M';
+$string['students_found'] = '{$a} étudiant(s) trouvé(s)';
 $string['subject'] = 'Sujet';
 $string['teacher'] = 'Enseignant';
 $string['teachers'] = 'Enseignants';
