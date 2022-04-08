@@ -89,6 +89,12 @@ class course extends record {
     /** @var int|string $skillid Identifiant numérique du niveau de pratique. */
     public $skillid = '';
 
+    /** @var string $information Informations additionnelles affichées après l'inscription à un créneau. */
+    public $information = '';
+
+    /** @var int|string $informationformat Identifiant numérique du format du texte. */
+    public $informationformat = FORMAT_HTML;
+
     /**
      * Affiche une représentation textuelle de l'objet.
      *
@@ -396,7 +402,7 @@ class course extends record {
         }
 
         $sql = "SELECT c.id, c.shortname, c.fullname, c.category, ac.event, ac.skillid, ac.locationid,".
-            " ac.numweekday, ac.weekday, ac.starttime, ac.endtime, ac.periodid, ac.license, ac.on_homepage".
+            " ac.numweekday, ac.weekday, ac.starttime, ac.endtime, ac.periodid, ac.license, ac.on_homepage, ac.information, ac.informationformat".
             " FROM {course} c".
             " JOIN {apsolu_courses} ac ON ac.id=c.id".
             " WHERE c.id = :id";
@@ -450,8 +456,8 @@ class course extends record {
 
             // Créé l'instance apsolu_courses.
             // Note: insert_record() exige l'absence d'un id.
-            $sql = "INSERT INTO {apsolu_courses} (id, event, skillid, locationid, weekday, numweekday, starttime, endtime, periodid, license, on_homepage)".
-                " VALUES(:id, :event, :skillid, :locationid, :weekday, :numweekday, :starttime, :endtime, :periodid, :license, :on_homepage)";
+            $sql = "INSERT INTO {apsolu_courses} (id, event, skillid, locationid, weekday, numweekday, starttime, endtime, periodid, license, on_homepage, information, informationformat)".
+                " VALUES(:id, :event, :skillid, :locationid, :weekday, :numweekday, :starttime, :endtime, :periodid, :license, :on_homepage, :information, :informationformat)";
             $params = array();
             $params['id'] = $this->id;
             $params['event'] = $this->event;
@@ -464,6 +470,8 @@ class course extends record {
             $params['periodid'] = $this->periodid;
             $params['license'] = $this->license;
             $params['on_homepage'] = $this->on_homepage;
+            $params['information'] = $this->information;
+            $params['informationformat'] = $this->informationformat;
             $DB->execute($sql, $params);
 
             // Ajoute une méthode d'inscription manuelle.

@@ -48,6 +48,7 @@ $string['add_locations_manager'] = 'Ajouter un gestionnaire de lieux';
 $string['add_period'] = 'Ajouter une période';
 $string['add_skill'] = 'Ajouter un niveau de pratique';
 $string['additional_information'] = 'Informations additionnelles';
+$string['additional_information_help'] = 'Informations additionnelles qui seront affichées aux étudiants au moment de l\'inscription à ce cours.';
 $string['afternoon'] = 'Après-midi';
 $string['all_cities'] = 'Tous les sites';
 $string['all_courses'] = 'Tous les créneaux';

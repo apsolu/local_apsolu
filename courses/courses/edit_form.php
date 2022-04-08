@@ -108,6 +108,14 @@ class local_apsolu_courses_courses_edit_form extends moodleform {
         // See MDL-53725.
         // Hope to use instead : $mform->addDatalist('period', $periods);.
 
+        // Champ informations additionnelles.
+        $attributes = null;
+        $editoroptions = self::get_editor_options();
+        $label = get_string('additional_information', 'local_apsolu');
+        $mform->addElement('editor', 'information_editor', $label, $attributes, $editoroptions);
+        $mform->setType('information_editor', PARAM_RAW);
+        $mform->addHelpButton('information_editor', 'additional_information', 'local_apsolu');
+
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 
@@ -130,5 +138,28 @@ class local_apsolu_courses_courses_edit_form extends moodleform {
 
         // Set default values.
         $this->set_data($course);
+    }
+
+    /**
+     * Retourne les options passées aux éléments du formulaire de type editor.
+     *
+     * @return array
+     */
+    public static function get_editor_options($courseid = null) {
+        if ($courseid === null) {
+            $context = context_system::instance();
+        } else {
+            $context = context_course::instance($courseid);
+        }
+
+        $options = array();
+        $options['subdirs'] = false;
+        $options['maxbytes'] = 0; // Taille limite par défaut.
+        $options['maxfiles'] = -1; // Nombre de fichiers attachés illimités.
+        $options['context'] = $context;
+        $options['noclean'] = true;
+        $options['trusttext'] = false;
+
+        return $options;
     }
 }

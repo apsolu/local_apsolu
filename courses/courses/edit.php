@@ -86,6 +86,21 @@ if ($periods === array()) {
 // Load weekdays.
 $weekdays = Course::get_weekdays();
 
+// Charge le contenu de l'éditeur de texte pour le champ "informations additionnelles".
+$component = 'local_apsolu';
+$filearea = 'information';
+$editoroptions = local_apsolu_courses_courses_edit_form::get_editor_options();
+$context = context_system::instance();
+
+$itemid = null;
+if (empty($course->id) === false) {
+    $itemid = $course->id;
+    $context = context_course::instance($course->id);
+    $editoroptions = local_apsolu_courses_courses_edit_form::get_editor_options($course->id);
+}
+$course = file_prepare_standard_editor($course, $field = 'information', $editoroptions,
+    $context, $component, $filearea, $itemid);
+
 // Build form.
 $customdata = array($course, $categories, $skills, $locations, $periods, $weekdays);
 $mform = new local_apsolu_courses_courses_edit_form(null, $customdata);
@@ -97,10 +112,27 @@ if ($data = $mform->get_data()) {
         $message = get_string('course_saved', 'local_apsolu');
     }
 
+    // Enregistre les images de la zone de texte.
+    $data = file_postupdate_standard_editor($data, $field = 'information', $editoroptions,
+        $context, $component, $filearea, $itemid);
+
     // Save data.
     $data->str_category = $categories[$data->category];
     $data->str_skill = $skills[$data->skillid];
     $course->save($data);
+
+    if ($context->contextlevel === CONTEXT_SYSTEM) {
+        // Une fois le cours créé, on réécrit le message afin de passer les images dans un contexte de cours, et non plus système.
+        $itemid = $course->id;
+        $context = context_course::instance($course->id);
+        $editoroptions = local_apsolu_courses_courses_edit_form::get_editor_options($course->id);
+
+        $data = file_postupdate_standard_editor($data, $field = 'information', $editoroptions,
+            $context, $component, $filearea, $itemid);
+
+        $DB->set_field('apsolu_courses', 'information', $data->information, array('id' => $course->id));
+        $DB->set_field('apsolu_courses', 'informationformat', $data->informationformat, array('id' => $course->id));
+    }
 
     // Redirige vers la page générale.
     $returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'courses'));
