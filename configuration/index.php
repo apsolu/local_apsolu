@@ -35,6 +35,7 @@ $pages['contacts'] = 'contacts';
 $pages['courseofferings'] = 'course_offerings';
 $pages['dates'] = 'dates';
 $pages['headermessage'] = 'header_message';
+$pages['specialcourses'] = 'special_courses';
 
 $tabtree = array();
 foreach ($pages as $pagename => $name) {
