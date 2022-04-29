@@ -682,6 +682,11 @@ class gradebook {
 
             if (isset($gradeitems[$courseid]) === false) {
                 $gradecategory = grade_category::fetch(array('courseid' => $courseid, 'fullname' => self::NAME));
+
+                if ($gradecategory === false) {
+                    continue;
+                }
+
                 $gradecategories[$courseid] = $gradecategory->id;
 
                 $gradeitems[$courseid] = array();
