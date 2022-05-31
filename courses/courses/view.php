@@ -34,7 +34,7 @@ $currentactivity = null;
 $currentaltclass = 'odd';
 
 $sql = "SELECT c.id, cc.name AS category, ccc.name AS grouping, ac.event, ac.weekday, ac.starttime, ac.endtime,".
-    " ask.name AS skill, al.name AS location, ap.name AS period, ac.license, c.visible".
+    " ask.name AS skill, al.name AS location, city.name AS city, ap.name AS period, ac.license, c.visible".
     " FROM {course} c".
     " JOIN {course_categories} cc ON cc.id = c.category".
     " JOIN {course_categories} ccc ON ccc.id = cc.parent".
@@ -42,8 +42,11 @@ $sql = "SELECT c.id, cc.name AS category, ccc.name AS grouping, ac.event, ac.wee
     " JOIN {apsolu_courses_categories} acc ON acc.id = c.category".
     " JOIN {apsolu_skills} ask ON ask.id = ac.skillid".
     " JOIN {apsolu_locations} al ON al.id = ac.locationid".
+    " JOIN {apsolu_areas} aa ON aa.id = al.areaid".
+    " JOIN {apsolu_cities} city ON city.id = aa.cityid".
     " JOIN {apsolu_periods} ap ON ap.id = ac.periodid".
-    " ORDER BY category, ac.numweekday, ac.starttime, location, skill";
+    " ORDER BY category, ac.numweekday, ac.starttime, city, location, skill";
+$cities = array();
 $courses = array();
 foreach ($DB->get_records_sql($sql) as $course) {
     if ($currentactivity !== $course->category) {
@@ -72,6 +75,7 @@ foreach ($DB->get_records_sql($sql) as $course) {
 
     $course->teachers = $teachers;
 
+    $cities[$course->city] = 1;
     $courses[] = $course;
 }
 
@@ -79,6 +83,7 @@ $data = new \stdClass();
 $data->wwwroot = $CFG->wwwroot;
 $data->courses = array_values($courses);
 $data->count_courses = count($courses);
+$data->unique_city = (count($cities) === 1);
 $data->is_siuaps_rennes = isset($CFG->is_siuaps_rennes);
 
 if (isset($notificationform)) {

@@ -90,7 +90,12 @@
         <td>{{skill}}</td>
         <td>{{weekday}}</td>
         <td>{{schedule}}</td>
+        {{#unique_city}}
         <td>{{location}}</td>
+        {{/unique_city}}
+        {{^unique_city}}
+        <td><b>{{city}}</b> - {{location}}</td>
+        {{/unique_city}}
         <td>{{period}}</td>
         {{#is_siuaps_rennes}}<td>{{#license}}{{#str}}yes{{/str}}{{/license}}{{^license}}{{#str}}no{{/str}}{{/license}}</td>{{/is_siuaps_rennes}}
         <td>{{#teachers}}<div>{{firstname}} {{lastname}}</div>{{/teachers}}</td>
