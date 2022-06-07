@@ -46,12 +46,12 @@ class local_apsolu_courses_periods_edit_form extends moodleform {
         $instance = $this->_customdata['period'];
 
         // Name field.
-        $mform->addElement('text', 'name', get_string('name'), array('size' => '48'));
+        $mform->addElement('text', 'name', get_string('name'), array('style' => 'width: 40em;'));
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
 
         // Generic name field.
-        $mform->addElement('text', 'generic_name', get_string('generic_name', 'local_apsolu'), array('size' => '48'));
+        $mform->addElement('text', 'generic_name', get_string('generic_name', 'local_apsolu'), array('style' => 'width: 40em;'));
         $mform->setType('generic_name', PARAM_TEXT);
         $mform->addRule('generic_name', get_string('required'), 'required', null, 'client');
 
@@ -71,7 +71,7 @@ class local_apsolu_courses_periods_edit_form extends moodleform {
             $weeks[$start->format('Y-m-d')] = 'Sem. '.$start->format('W').' ('.$range.')';
             $start = $start->add(new DateInterval('P7D'));
         }
-        $select = $mform->addElement('select', 'weeks', get_string('week'), $weeks, array('size' => 20, 'width' => 30));
+        $select = $mform->addElement('select', 'weeks', get_string('week'), $weeks, array('size' => 50, 'style' => 'width: 40em;'));
         $mform->setType('weeks', PARAM_TEXT);
         $mform->addRule('weeks', get_string('required'), 'required', null, 'client');
         $select->setMultiple(true);
