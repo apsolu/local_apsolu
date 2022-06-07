@@ -108,7 +108,7 @@ if (count($presences) > 0) {
                 $mailer = new moodle_phpmailer();
                 $mailer->AddAddress($functional_contact_mail);
                 $mailer->Subject = $subject.' ('.$course->fullname.')';
-                $mailer->Body = $message.'<p><a href="'.$CFG->wwwroot.'/mod/forum/view.php?id='.$cm->id.'">Voir le message</a></p>';
+                $mailer->Body = $message.'<p><a href="'.$CFG->wwwroot.'/mod/forum/view.php?id='.$cm->id.'">'.get_string('postincontext', 'forum').'</a></p>';
                 $mailer->From = $CFG->noreplyaddress;
                 $mailer->FromName = '';
                 $mailer->CharSet = 'UTF-8';

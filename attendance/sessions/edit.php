@@ -156,7 +156,7 @@ if ($mdata = $mform->get_data()) {
             $mailer->Subject = $subject.' ('.$course->fullname.')';
             $mailer->Body = $message;
             if (isset($cm->id) === true) {
-                $mailer->Body .= '<p><a href="'.$CFG->wwwroot.'/mod/forum/view.php?id='.$cm->id.'">Voir le message</a></p>';
+                $mailer->Body .= '<p><a href="'.$CFG->wwwroot.'/mod/forum/view.php?id='.$cm->id.'">'.get_string('postincontext', 'forum').'</a></p>';
             } else {
                 $mailer->Body .= '<p><strong>'.get_string('no_messages_sent_to_forum', 'local_apsolu').'</strong></p>';
             }
