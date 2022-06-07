@@ -225,6 +225,7 @@ $string['no_courses_to_grade'] = 'Aucun créneau à évaluer';
 $string['no_gradeitems'] = 'Aucun élément d\'évaluation';
 $string['no_grades'] = 'Aucune note';
 $string['no_holidays'] = 'Aucun jour férié';
+$string['no_messages_sent_to_forum'] = 'Aucun message publié dans le forum du cours.';
 $string['no_pending_payments_found'] = 'Aucun paiement en attente n\'a été trouvé';
 $string['no_recorded_attendances'] = 'Aucune présence enregistrée';
 $string['no_results_with_these_criteria'] = 'Aucun résultat avec ces critères de recherche';
@@ -450,7 +451,7 @@ $string['payments_enddate'] = 'Date de fin des paiements';
 $string['semester1_grading_deadline'] = 'Date limite pour rendre les notes du S1';
 $string['semester2_grading_deadline'] = 'Date limite pour rendre les notes du S2';
 $string['functional_contact'] = 'Contact fonctionnel';
-$string['functional_contact_help'] = 'Cette adresse sera notifiée à chaque modification ou suppression de sessions. Un enseignant aura également la possibilité de mettre en copie cette adresse lors de l\'envoi d\'une notification à ses étudiants. Enfin, la page de paiement proposera de contacter cette adresse en cas de difficulté.';
+$string['functional_contact_help'] = 'Cette adresse sera notifiée à chaque création, modification ou suppression de sessions. Un enseignant aura également la possibilité de mettre en copie cette adresse lors de l\'envoi d\'une notification à ses étudiants. Enfin, la page de paiement proposera de contacter cette adresse en cas de difficulté.';
 $string['technical_contact'] = 'Contact technique';
 $string['technical_contact_help'] = 'Adresse non utilisée pour l\'instant.';
 
