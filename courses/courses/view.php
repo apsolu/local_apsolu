@@ -85,9 +85,25 @@ $data->courses = array_values($courses);
 $data->count_courses = count($courses);
 $data->unique_city = (count($cities) === 1);
 $data->is_siuaps_rennes = isset($CFG->is_siuaps_rennes);
+$data->notification = '';
 
 if (isset($notificationform)) {
     $data->notification = $notificationform;
+}
+
+// Ajoute des avertissements aux gestionnaires pour indiquer que des paramètres n'ont pas été renseignés.
+$attributes = array('functional_contact', 'technical_contact');
+foreach ($attributes as $attribute) {
+    $email = get_config('local_apsolu', $attribute);
+    if (empty($email) === false && filter_var($email, FILTER_VALIDATE_EMAIL) !== false) {
+        continue;
+    }
+
+    $parameters = new \stdClass();
+    $parameters->url = $CFG->wwwroot.'/local/apsolu/configuration/index.php?page=contacts';
+    $parameters->page = get_string('contacts', 'local_apsolu');
+    $data->notification = '<div class="alert alert-danger">'.get_string('the_fields_of_X_page_have_to_be_completed', 'local_apsolu', $parameters).'</div>';
+    break;
 }
 
 echo $OUTPUT->render_from_template('local_apsolu/courses_courses', $data);

@@ -356,6 +356,7 @@ $string['teacher'] = 'Enseignant';
 $string['teachers'] = 'Enseignants';
 $string['the_activities'] = 'Les activités';
 $string['the_courses'] = 'Les créneaux';
+$string['the_fields_of_X_page_have_to_be_completed'] = '<p>Les informations de la <a href="{$a->url}">page « {$a->page} » </a> doivent être renseignées.</p>';
 $string['this_calendar_is_not_used_by_courses'] = 'Ce calendrier n\'est utilisé dans aucun cours.';
 $string['this_calendar_is_used_by_courses'] = 'Ce calendrier est actuellement utilisé par {$a} cours.';
 $string['this_form_allows_you_to_export_list_of_pending_payments'] = 'Ce formulaire permet d\'exporter la liste des paiements en attente.';
