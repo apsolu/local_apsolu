@@ -136,7 +136,7 @@ if ($mdata = $mform->get_data()) {
                 // Notifie le secrétariat.
                 $functional_contact_mail = get_config('local_apsolu', 'functional_contact');
                 if (filter_var($functional_contact_mail, FILTER_VALIDATE_EMAIL) !== false) {
-                    if (isset($CFG->divertallemailsto) === true) {
+                    if (isset($CFG->divertallemailsto) === true && filter_var($CFG->divertallemailsto, FILTER_VALIDATE_EMAIL) !== false) {
                         $functional_contact_mail = $CFG->divertallemailsto;
                     }
 
