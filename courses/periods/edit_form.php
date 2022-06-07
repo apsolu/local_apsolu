@@ -45,6 +45,33 @@ class local_apsolu_courses_periods_edit_form extends moodleform {
         $mform = $this->_form;
         $instance = $this->_customdata['period'];
 
+        // Year field.
+        $year = optional_param('year', null, PARAM_INT);
+        if ($year === null) {
+            if (empty($instance->id) === false) {
+                // On récupère l'année universitaire à partir des semaines déjà saisies.
+                list($y, $month, $day) = explode('-', $instance->weeks[0]);
+                if ($month > 6) {
+                    $year = $y;
+                } else {
+                    $year = $y - 1;
+                }
+            } else {
+                // On calcule l'année universitaire en cours (à partir de juin, on propose la nouvelle année universitaire).
+                if (date('n') >= 6) {
+                   $year = date('Y');
+                } else {
+                   $year = date('Y') - 1;
+                }
+            }
+        }
+
+        $lastyearurl = new moodle_url('/local/apsolu/courses/index.php', array('action' => 'edit', 'periodid' => $instance->id, 'tab' => 'periods', 'year' => $year - 1));
+        $nextyearurl = new moodle_url('/local/apsolu/courses/index.php', array('action' => 'edit', 'periodid' => $instance->id, 'tab' => 'periods', 'year' => $year + 1));
+
+        $label = sprintf('<a class="mr-3" href="%s">&#129092;</a> %s-%s <a class="ml-3" href="%s">&#129094;</a>', $lastyearurl, $year, $year + 1, $nextyearurl);
+        $mform->addElement('static', 'yearselector', get_string('year', 'form'), $label);
+
         // Name field.
         $mform->addElement('text', 'name', get_string('name'), array('style' => 'width: 40em;'));
         $mform->setType('name', PARAM_TEXT);
@@ -56,11 +83,6 @@ class local_apsolu_courses_periods_edit_form extends moodleform {
         $mform->addRule('generic_name', get_string('required'), 'required', null, 'client');
 
         // Weeks field.
-        if (date('n') >= 5) {
-               $year = date('Y');
-        } else {
-               $year = date('Y') - 1;
-        }
         $start = new DateTime($year.'-08-15T00:00:00');
         $start->sub(new DateInterval('P'.($start->format('N') - 1).'D'));
         $end = new DateTime(($year + 1).'-06-30T00:00:00');
@@ -92,6 +114,9 @@ class local_apsolu_courses_periods_edit_form extends moodleform {
 
         $mform->addElement('hidden', 'action', 'edit');
         $mform->setType('action', PARAM_ALPHA);
+
+        $mform->addElement('hidden', 'year', $year);
+        $mform->setType('year', PARAM_INT);
 
         $mform->addElement('hidden', 'periodid', $instance->id);
         $mform->setType('periodid', PARAM_INT);
