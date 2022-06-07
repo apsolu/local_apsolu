@@ -54,6 +54,7 @@ class local_apsolu_payment_configurations_edit_form extends moodleform {
         $mform->addElement('text', 'value', get_string('value', 'local_apsolu'), array('size' => '48'));
         $mform->setType('value', PARAM_TEXT);
         $mform->addRule('value', get_string('required'), 'required', null, 'client');
+        $mform->addHelpButton('value', $configuration->name, 'local_apsolu');
 
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
@@ -77,5 +78,60 @@ class local_apsolu_payment_configurations_edit_form extends moodleform {
 
         // Set default values.
         $this->set_data($configuration);
+    }
+
+    /**
+     * Validation.
+     *
+     * @param array $data
+     * @param array $files
+     *
+     * @return array The errors that were found.
+     */
+    public function validation($data, $files) {
+        global $DB;
+
+        $errors = array();
+        $errors = parent::validation($data, $files);
+
+        if (empty($data['value']) === true) {
+            return $errors;
+        }
+
+        switch ($data['name']) {
+            case 'paybox_servers_incoming':
+                foreach (explode(',', $data['value']) as $ip) {
+                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false) {
+                        continue;
+                    }
+
+                    $errors['value'] = get_string('this_ip_address_X_is_invalid', 'local_apsolu', $ip);
+                    break;
+                }
+                break;
+            case 'paybox_servers_outgoing':
+                foreach (explode(',', $data['value']) as $domain) {
+                    if (filter_var($domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) !== false) {
+                        continue;
+                    }
+
+                    $errors['value'] = get_string('this_domain_name_X_is_invalid', 'local_apsolu', $domain);
+                    break;
+                }
+                break;
+            case 'paybox_log_success_path':
+            case 'paybox_log_error_path':
+                if (is_dir($data['value']) === true) {
+                    $errors['value'] = get_string('the_path_X_is_a_directory', 'local_apsolu', $data['value']);
+                } else {
+                    $dir = dirname($data['value']);
+                    if (is_writable($dir) === false) {
+                        $errors['value'] = get_string('the_directory_X_is_not_writable', 'local_apsolu', $dir);
+                    }
+                }
+                break;
+        }
+
+        return $errors;
     }
 }

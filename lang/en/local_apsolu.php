@@ -244,8 +244,10 @@ $string['notify_functional_contact'] = 'Mettre en copie l\'adresse <em>{$a}</em>
 $string['other_filters'] = 'Autres filtres';
 $string['paybox_administration_description'] = 'Quelques informations concernant le paramétrage PayBox :
 
-* la variable **paybox_servers_incoming** correspond à la liste des serveurs de Paybox appelant la page APSOLU de confirmation de paiements
-* la variable **paybox_servers_outgoing** correspond à la liste des serveurs de Paybox vers lesquels seront redirigés les utilisateurs pour effectuer leur paiement
+* la variable **paybox_servers_incoming** correspond à la liste des adresses IP des serveurs de Paybox appelant la page APSOLU de confirmation de paiements
+  * Exemples : *195.101.99.76* ou *194.2.122.190,195.25.67.22*
+* la variable **paybox_servers_outgoing** correspond à la liste des noms de domaine de Paybox vers lesquels seront redirigés les utilisateurs pour effectuer leur paiement
+  * Exemples : *preprod-tpeweb.paybox.com* ou *tpeweb.paybox.com,tpeweb1.paybox.com*
 
 Les valeurs sont rappelées dans [la documentation Paybox](https://www.paybox.com/espace-integrateur-documentation/la-solution-paybox-system/urls-dappels-et-adresses-ip/).
 
@@ -259,8 +261,16 @@ $string['paybox_idnumber'] = 'Identifiant PayBox';
 $string['paybox_idnumber_help'] = 'Ce champ correspond à l\'élément PBX_IDENTIFIANT fourni par Paybox.';
 $string['paybox_hmac'] = 'Clé HMAC';
 $string['paybox_hmac_help'] = 'Ce champ correspond à la clé HMAC fournie par Paybox.';
+$string['paybox_log_error_path'] = 'paybox_log_error_path';
+$string['paybox_log_error_path_help'] = 'Ce paramètre doit contenir un chemin absolu vers lequel écrire les traces d\'erreurs des paiements.';
+$string['paybox_log_success_path'] = 'paybox_log_success_path';
+$string['paybox_log_success_path_help'] = 'Ce paramètre doit contenir un chemin absolu vers lequel écrire les traces des paiements.';
 $string['paybox_rank'] = 'Rang';
 $string['paybox_rank_help'] = 'Ce champ correspond à l\'élément PBX_RANG fourni par Paybox.';
+$string['paybox_servers_incoming'] = 'paybox_servers_incoming';
+$string['paybox_servers_incoming_help'] = 'Ce paramètre doit contenir la liste des adresses IP (séparées par des virgules) des serveurs Paybox autorisés à valider et confirmer un paiement auprès d\'APSOLU.';
+$string['paybox_servers_outgoing'] = 'paybox_servers_outgoing';
+$string['paybox_servers_outgoing_help'] = 'Ce paramètre doit contenir la liste des noms de domaine (séparés par des virgules) des serveurs Paybox vers lesquels un utilisateur peut être redirigé pour effectuer son paiement.';
 $string['paybox_sitenumber'] = 'Numéro de site';
 $string['paybox_sitenumber_help'] = 'Ce champ correspond à l\'élément PBX_SITE fourni par Paybox.';
 $string['payment_center'] = 'Centre de paiement';
@@ -356,10 +366,14 @@ $string['teacher'] = 'Enseignant';
 $string['teachers'] = 'Enseignants';
 $string['the_activities'] = 'Les activités';
 $string['the_courses'] = 'Les créneaux';
+$string['the_directory_X_is_not_writable'] = 'Le répertoire « {$a} » n\'est pas accessible en écriture.';
 $string['the_fields_of_X_page_have_to_be_completed'] = '<p>Les informations de la <a href="{$a->url}">page « {$a->page} » </a> doivent être renseignées.</p>';
+$string['the_path_X_is_a_directory'] = 'Le chemin « {$a} » est un répertoire.';
 $string['this_calendar_is_not_used_by_courses'] = 'Ce calendrier n\'est utilisé dans aucun cours.';
 $string['this_calendar_is_used_by_courses'] = 'Ce calendrier est actuellement utilisé par {$a} cours.';
+$string['this_domain_name_X_is_invalid'] = 'Ce nom de domaine « {$a} » n\'est pas valide.';
 $string['this_form_allows_you_to_export_list_of_pending_payments'] = 'Ce formulaire permet d\'exporter la liste des paiements en attente.';
+$string['this_ip_address_X_is_invalid'] = 'Cette adresse IP « {$a} » n\'est pas valide.';
 $string['this_time_cannot_be_older_than_this_time'] = '{$a->start} ne peut pas être postérieur à {$a->end}.';
 $string['total'] = 'Total';
 $string['time_of_day'] = 'Période de la journée';
