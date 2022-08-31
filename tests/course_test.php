@@ -201,14 +201,20 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
     }
 
     public function test_set_sessions() {
+        // TODO: tester que les sessions crées à la main en dehors de la période ne sont pas supprimées lors d'un changement de période.
+        // TODO: tester avec un changement de lieu de pratique.
+
+        // Période incluant les 2 prochaines semaines à venir.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_period_data('p1');
         $period1 = new local_apsolu\core\period();
         $period1->save($data);
 
+        // Période incluant les 3, 4, 5 et 6 prochaines semaines à venir.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_period_data('p2', 'future');
         $period2 = new local_apsolu\core\period();
         $period2->save($data);
 
+        // Période incluant les 4 semaines passées.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_period_data('p3', 'past');
         $period3 = new local_apsolu\core\period();
         $period3->save($data);
@@ -218,20 +224,18 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
         $data->periodid = $period1->id;
         $course->save($data);
 
-        // Ajoute une nouvelle période.
+        // La période p1 a été associée au cours. Il devrait y avoir 2 sessions à venir.
         $sessions = $course->get_sessions();
         $session_keys = array_keys($sessions);
         $this->assertEquals(2, count($sessions));
 
-        // Modifie la période.
+        // Associe la période p2. Il devrait y avoir 4 sessions à venir.
         $data->periodid = $period2->id;
         $course->save($data);
         $sessions = $course->get_sessions();
         $this->assertEquals(4, count($sessions));
 
-        // TODO: tester que les sessions crées à la main en dehors de la période ne sont pas supprimées lors d'un changement de période.
-
-        // Vérifie les anciennes sessions ont été supprimées.
+        // Vérifie les anciennes sessions p1 ont été supprimées.
         foreach ($session_keys as $key) {
             $this->assertArrayNotHasKey($key, $sessions);
         }
@@ -244,8 +248,44 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
 
         // Vérifie qu'en modification, les sessions obsolètes/passées ne sont pas ajoutées.
         $course->periodid = $period3->id;
-        $course->set_sessions($period2->id);
+        $course->set_sessions();
         $this->assertEquals(0, count($course->get_sessions()));
+
+        // Ajoute une session non prévue à une date passée.
+        $past_session_time = '123456';
+        $session = new local_apsolu\core\attendancesession();
+        $session->name = 'Test past session';
+        $session->sessiontime = $past_session_time;
+        $session->courseid = $course->id;
+        $session->activityid = $course->category;
+        $session->locationid = $course->locationid;
+        $session->save();
+        $past_sessionid = $session->id;
+        $this->assertEquals(1, count($course->get_sessions()));
+
+        // Ajoute une session non prévue à une date future.
+        $future_session_time = time() + WEEKSECS;
+        $session = new local_apsolu\core\attendancesession();
+        $session->name = 'Test future session';
+        $session->sessiontime = $future_session_time;
+        $session->courseid = $course->id;
+        $session->activityid = $course->category;
+        $session->locationid = $course->locationid;
+        $session->save();
+        $future_sessionid = $session->id;
+        $this->assertEquals(2, count($course->get_sessions()));
+
+        // Associe la période p2. Il devrait y avoir 4 sessions à venir et 1 session passée.
+        $course->periodid = $period2->id;
+        $course->locationid = 2;
+        $course->set_sessions();
+        $sessions = $course->get_sessions();
+        $this->assertEquals(5, count($sessions));
+        // La session passée non prévue doit être conservée et ne doit pas être renommée.
+        $this->assertArrayHasKey($past_sessionid, $sessions);
+        $this->assertEquals('Test past session', $sessions[$past_sessionid]->name);
+        // La session future non prévue doit être supprimée.
+        $this->assertArrayNotHasKey($future_sessionid, $sessions);
     }
 
     public function test_toggle_visibility() {

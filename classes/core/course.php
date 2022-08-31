@@ -663,8 +663,15 @@ class course extends record {
         $count = 0;
         ksort($sessions);
         foreach ($sessions as $sessiontime => $session) {
+            $count++;
+
+            if ($session->is_expired() === true) {
+                // On ne modifie jamais les sessions passées.
+                continue;
+            }
+
             $params = new stdClass();
-            $params->count = ++$count;
+            $params->count = $count;
             $params->strdatetime = userdate($session->sessiontime, get_string('strftimedaydatetime'));
 
             $name = get_string('session_:count:_of_the_:strdatetime:', 'local_apsolu', $params); // Cours n°2 du mercredi 12 septembre à 18h30.
