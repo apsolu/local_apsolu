@@ -650,13 +650,6 @@ class course extends record {
 
             // Toutes les autres sessions, on les supprime.
             $session->delete();
-
-            // Enregistre un évènement dans les logs.
-            $event = \local_apsolu\event\session_deleted::create(array(
-                'objectid' => $session->id,
-                'context' => context_course::instance($this->id),
-                ));
-            $event->trigger();
         }
 
         // On procède à l'enregistrement des nouvelles sessions.
@@ -688,19 +681,6 @@ class course extends record {
             }
             $session->timemodified = time();
             $session->save();
-
-            // Enregistre un évènement dans les logs.
-            if ($sessionid === 0) {
-                $eventclass = '\local_apsolu\event\session_created';
-            } else {
-                $eventclass = '\local_apsolu\event\session_updated';
-            }
-
-            $event = $eventclass::create(array(
-                'objectid' => $session->id,
-                'context' => context_course::instance($this->id),
-                ));
-            $event->trigger();
         }
     }
 

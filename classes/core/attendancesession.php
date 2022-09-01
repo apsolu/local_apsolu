@@ -24,6 +24,7 @@
 
 namespace local_apsolu\core;
 
+use context_course;
 use stdClass;
 
 /**
@@ -87,6 +88,13 @@ class attendancesession extends record {
         // Supprime l'objet en base de données.
         $DB->delete_records(self::TABLENAME, array('id' => $this->id));
 
+        // Enregistre un évènement dans les logs.
+        $event = \local_apsolu\event\session_deleted::create(array(
+            'objectid' => $this->id,
+            'context' => context_course::instance($this->courseid),
+            ));
+        $event->trigger();
+
         // Valide la transaction en cours.
         if (isset($transaction) === true) {
             $transaction->allow_commit();
@@ -105,6 +113,49 @@ class attendancesession extends record {
         $today = make_timestamp($now['year'], $now['mon'], $now['mday'], $now['hours'], $now['minutes'], $now['seconds']);
 
         return $today > $this->sessiontime;
+    }
+
+    /**
+     * Enregistre un objet en base de données.
+     *
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     *
+     * @param object|null $data  StdClass représentant l'objet à enregistrer.
+     * @param object|null $mform Mform représentant un formulaire Moodle nécessaire à la gestion d'un champ de type editor.
+     *
+     * @return void
+     */
+    public function save(object $data = null, object $mform = null) {
+        global $DB;
+
+        if ($data !== null) {
+            $this->set_vars($data);
+        }
+
+        // Démarre une transaction, si ce n'est pas déjà fait.
+        if ($DB->is_transaction_started() === false) {
+            $transaction = $DB->start_delegated_transaction();
+        }
+
+        if (empty($this->id) === true) {
+            $eventclass = '\local_apsolu\event\session_created';
+            $this->id = $DB->insert_record(get_called_class()::TABLENAME, $this);
+        } else {
+            $eventclass = '\local_apsolu\event\session_updated';
+            $DB->update_record(get_called_class()::TABLENAME, $this);
+        }
+
+        // Enregistre un évènement dans les logs.
+        $event = $eventclass::create(array(
+            'objectid' => $this->id,
+            'context' => context_course::instance($this->courseid),
+            ));
+        $event->trigger();
+
+        // Valide la transaction en cours.
+        if (isset($transaction) === true) {
+            $transaction->allow_commit();
+        }
     }
 
     /**
