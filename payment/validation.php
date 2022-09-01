@@ -70,31 +70,6 @@ if (Payment::is_open() === false) {
     exit(0);
 }
 
-// TODO: ce n'est peut-être plus nécessaire, puisqu'il faut être dans une cohorte pour pouvoir payer.
-// Gère les utilisateurs non autorisés à payer.
-$customfields = profile_user_record($USER->id);
-if (isset($customfields->apsolusesame) === false || $customfields->apsolusesame !== '1') {
-    // Display page.
-    echo $OUTPUT->header();
-
-    $contact = get_config('local_apsolu', 'functional_contact');
-    if (empty($contact) === false) {
-        $options = (object) ['email' => $contact];
-    } else {
-        $admin = get_admin();
-        $options = (object) ['email' => $admin->email];
-    }
-
-    $data = new stdClass();
-    $data->alert = get_string('invalid_user_invalid_sesame', 'local_apsolu', $options);
-
-    echo $OUTPUT->render_from_template('local_apsolu/payment_invalid_user', $data);
-
-    echo $OUTPUT->footer();
-
-    exit(0);
-}
-
 // Javascript.
 $PAGE->requires->js_call_amd('local_apsolu/payment', 'initialise');
 

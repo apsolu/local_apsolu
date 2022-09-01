@@ -817,8 +817,6 @@ $string['opened_period'] = 'L\'ouverture des paiements aura lieu le {$a->date}.'
 $string['closed_period'] = 'Le module des paiements est actuellement fermé.';
 $string['no_sesame'] = 'L\'utilisateur n\'a pas de compte université valide ou n\'est plus présent dans le référentiel de son établissement.';
 $string['invalid_user'] = '<p>Vous n\'êtes pas autorisé à payer.</p>';
-$string['invalid_user_invalid_sesame'] = '<p>Votre compte ne semble pas être présent dans le référentiel communiqué au SIUAPS.<br />'.
-    ' Si vous avez un compte université en cours de validité dans votre établissement et une inscription pour l\'année universitaire en cours, merci d\'envoyer un courriel à <a href="mailto:{$a->email}">{$a->email}</a> en précisant que votre compte est bien valable actuellement.</p>';
 $string['no_courses'] = 'Vous ne pouvez pas payer car vous n\'avez aucune inscription validée ou valide pour le moment.';
 $string['no_courses_complements'] = 'Pour les cours du SIUAPS, si vous êtes inscrit en évaluation, vérifier avec votre enseignant que vous êtes autorisé à l\'être.<br />'.
 ' Pour l\'accès aux salles de musculation, vous devez avoir validé votre séance gratuite avant de pouvoir payer.';
