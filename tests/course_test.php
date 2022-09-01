@@ -202,7 +202,6 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
 
     public function test_set_sessions() {
         // TODO: tester que les sessions crées à la main en dehors de la période ne sont pas supprimées lors d'un changement de période.
-        // TODO: tester avec un changement de lieu de pratique.
 
         // Période incluant les 2 prochaines semaines à venir.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_period_data('p1');
@@ -253,12 +252,13 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
 
         // Ajoute une session non prévue à une date passée.
         $past_session_time = '123456';
+        $past_session_location = $course->locationid;
         $session = new local_apsolu\core\attendancesession();
         $session->name = 'Test past session';
         $session->sessiontime = $past_session_time;
         $session->courseid = $course->id;
         $session->activityid = $course->category;
-        $session->locationid = $course->locationid;
+        $session->locationid = $past_session_location;
         $session->save();
         $past_sessionid = $session->id;
         $this->assertEquals(1, count($course->get_sessions()));
@@ -277,7 +277,6 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
 
         // Associe la période p2. Il devrait y avoir 4 sessions à venir et 1 session passée.
         $course->periodid = $period2->id;
-        $course->locationid = 2;
         $course->set_sessions();
         $sessions = $course->get_sessions();
         $this->assertEquals(5, count($sessions));
@@ -286,6 +285,19 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
         $this->assertEquals('Test past session', $sessions[$past_sessionid]->name);
         // La session future non prévue doit être supprimée.
         $this->assertArrayNotHasKey($future_sessionid, $sessions);
+
+        // Change le lieu de pratique du cours.
+        $course->locationid = (string) ($past_session_location + 1);
+        $course->set_sessions();
+        $sessions = $course->get_sessions();
+        // La session passée non prévue doit conserver son lieu de pratique.
+        $this->assertEquals($past_session_location, $sessions[$past_sessionid]->locationid);
+        unset($sessions[$past_sessionid]);
+
+        // Les futures sessions doivent être associées au nouveau lieu de pratique.
+        foreach ($sessions as $session) {
+            $this->assertEquals($course->locationid, $session->locationid);
+        }
     }
 
     public function test_toggle_visibility() {

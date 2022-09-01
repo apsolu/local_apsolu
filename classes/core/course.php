@@ -670,19 +670,16 @@ class course extends record {
                 continue;
             }
 
-            $params = new stdClass();
-            $params->count = $count;
-            $params->strdatetime = userdate($session->sessiontime, get_string('strftimedaydatetime'));
-
-            $name = get_string('session_:count:_of_the_:strdatetime:', 'local_apsolu', $params); // Cours n°2 du mercredi 12 septembre à 18h30.
             $sessionid = $session->id;
+            $sessionname = $session->name;
 
-            if ($sessionid !== 0 && $session->name === $name) {
-                // La session n'est pas nouvelle et son nom est identique.
+            $session->set_name($count);
+
+            if ($sessionid !== 0 && $sessionname === $session->name && $session->locationid === $this->locationid) {
+                // La session n'est pas nouvelle, le nom et le lieu sont identiques.
                 continue;
             }
 
-            $session->name = $name;
             $session->courseid = $this->id;
             $session->activityid = $this->category; // TODO: supprimer ce champ. Note: category ne semble pas être défini, provoquant une initialisation à 0 en base de données.
             $session->locationid = $this->locationid;

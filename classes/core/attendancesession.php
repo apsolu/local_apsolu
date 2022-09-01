@@ -24,6 +24,8 @@
 
 namespace local_apsolu\core;
 
+use stdClass;
+
 /**
  * Classe gérant les sessions/séances de cours.
  *
@@ -103,5 +105,20 @@ class attendancesession extends record {
         $today = make_timestamp($now['year'], $now['mon'], $now['mday'], $now['hours'], $now['minutes'], $now['seconds']);
 
         return $today > $this->sessiontime;
+    }
+
+    /**
+     * Définit le nom de la session.
+     *
+     * @param int $count Numéro de la session de cours.
+     *
+     * @return void
+     */
+    public function set_name(int $count) {
+        $params = new stdClass();
+        $params->count = $count;
+        $params->strdatetime = userdate($this->sessiontime, get_string('strftimedaydatetime'));
+
+        $this->name = get_string('session_:count:_of_the_:strdatetime:', 'local_apsolu', $params); // Exemple: Cours n°2 du mercredi 12 septembre à 18h30.
     }
 }
