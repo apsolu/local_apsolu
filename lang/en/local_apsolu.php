@@ -497,7 +497,7 @@ $string['courses_list'] = 'Liste des créneaux';
 $string['course_add'] = 'Ajouter un créneau';
 $string['no_course'] = 'Aucun créneau';
 $string['license'] = 'Inscription FFSU obligatoire';
-$string['on_homepage'] = 'Affiché sur la page d\'accueil';
+$string['on_homepage'] = 'Afficher sur la page d\'accueil';
 
 // Groupings.
 $string['grouping'] = 'Groupement d\'activités';
