@@ -885,5 +885,23 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 2022091600;
+    if ($result && $oldversion < $version) {
+        // Ajoute 1 champ `showpolicy` dans la table `apsolu_courses`.
+        $table = new xmldb_table('apsolu_courses');
+
+        $fields = array();
+        $fields[] = new xmldb_field('showpolicy', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $nullable = null, $sequence = null, null, null);
+
+        foreach ($fields as $field) {
+            if ($dbman->field_exists($table, $field) === false) {
+                $dbman->add_field($table, $field);
+            }
+        }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
     return $result;
 }

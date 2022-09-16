@@ -331,6 +331,7 @@ $string['show_period_column'] = 'Afficher la période';
 $string['show_period_column_help'] = 'Affiche la colonne "période" sur l\'offre de formation.';
 $string['show_period_filter'] = 'Afficher le filtre période';
 $string['show_period_filter_help'] = 'Affiche le filtre de la colonne "période" sur l\'offre de formation.';
+$string['show_policy_on_enrolment'] = 'Faire accepter les recommandations médicales lors des inscriptions';
 $string['show_role_column'] = 'Afficher le type d\'inscription';
 $string['show_role_column_help'] = 'Affiche la colonne "type d\'inscription" sur l\'offre de formation.';
 $string['show_role_filter'] = 'Afficher le filtre type d\'inscription';

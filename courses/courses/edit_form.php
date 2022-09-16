@@ -101,6 +101,11 @@ class local_apsolu_courses_courses_edit_form extends moodleform {
         $mform->setType('on_homepage', PARAM_INT);
         $mform->addRule('on_homepage', get_string('required'), 'required', null, 'client');
 
+        // Faire accepter les recommandations médicales.
+        $mform->addElement('selectyesno', 'showpolicy', get_string('show_policy_on_enrolment', 'local_apsolu'));
+        $mform->setType('showpolicy', PARAM_INT);
+        $mform->addRule('showpolicy', get_string('required'), 'required', null, 'client');
+
         // Periods field.
         $mform->addElement('select', 'periodid', get_string('period', 'local_apsolu'), $periods);
         $mform->setType('periodid', PARAM_INT);

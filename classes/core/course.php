@@ -80,6 +80,9 @@ class course extends record {
     /** @var boolean $on_homepage Indique si le créneau doit être affiché sur la homepage. */
     public $on_homepage = '';
 
+    /** @var boolean $showpolicy Indique si les recommandations médicales doivent être acceptées lors de l'inscription. */
+    public $showpolicy = '';
+
     /** @var int|string $locationid Identifiant numérique du lieu de pratique. */
     public $locationid = '';
 
@@ -402,7 +405,7 @@ class course extends record {
         }
 
         $sql = "SELECT c.id, c.shortname, c.fullname, c.category, ac.event, ac.skillid, ac.locationid,".
-            " ac.numweekday, ac.weekday, ac.starttime, ac.endtime, ac.periodid, ac.license, ac.on_homepage, ac.information, ac.informationformat".
+            " ac.numweekday, ac.weekday, ac.starttime, ac.endtime, ac.periodid, ac.license, ac.on_homepage, ac.showpolicy, ac.information, ac.informationformat".
             " FROM {course} c".
             " JOIN {apsolu_courses} ac ON ac.id=c.id".
             " WHERE c.id = :id";
@@ -456,8 +459,8 @@ class course extends record {
 
             // Créé l'instance apsolu_courses.
             // Note: insert_record() exige l'absence d'un id.
-            $sql = "INSERT INTO {apsolu_courses} (id, event, skillid, locationid, weekday, numweekday, starttime, endtime, periodid, license, on_homepage, information, informationformat)".
-                " VALUES(:id, :event, :skillid, :locationid, :weekday, :numweekday, :starttime, :endtime, :periodid, :license, :on_homepage, :information, :informationformat)";
+            $sql = "INSERT INTO {apsolu_courses} (id, event, skillid, locationid, weekday, numweekday, starttime, endtime, periodid, license, on_homepage, showpolicy, information, informationformat)".
+                " VALUES(:id, :event, :skillid, :locationid, :weekday, :numweekday, :starttime, :endtime, :periodid, :license, :on_homepage, :showpolicy, :information, :informationformat)";
             $params = array();
             $params['id'] = $this->id;
             $params['event'] = $this->event;
@@ -470,6 +473,7 @@ class course extends record {
             $params['periodid'] = $this->periodid;
             $params['license'] = $this->license;
             $params['on_homepage'] = $this->on_homepage;
+            $params['showpolicy'] = $this->showpolicy;
             $params['information'] = $this->information;
             $params['informationformat'] = $this->informationformat;
             $DB->execute($sql, $params);

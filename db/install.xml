@@ -72,6 +72,7 @@
             <FIELD NAME="endtime" TYPE="char" LENGTH="5" NOTNULL="true" SEQUENCE="false" />
             <FIELD NAME="license" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="on_homepage" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="showpolicy" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="periodid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="information" TYPE="text" NOTNULL="false" SEQUENCE="false" />
             <FIELD NAME="informationformat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
