@@ -79,6 +79,7 @@ $methods = array(
     'check' => get_string('method_check', 'local_apsolu'),
     'coins' => get_string('method_coins', 'local_apsolu'),
     'paybox' => get_string('method_paybox', 'local_apsolu'),
+    'card' => get_string('method_card', 'local_apsolu'),
     );
 
 $sources = array(
