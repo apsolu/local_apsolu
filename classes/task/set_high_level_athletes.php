@@ -65,6 +65,13 @@ class set_high_level_athletes extends \core\task\scheduled_task {
             " AND data != '1'";
         $DB->execute($sql);
 
+        // Positionne le flag "apsolumedicalcertificate" à 1 sur les étudiants dont la note au questionnaire FFSU est 1 dans le cours 249.
+        $sql = "UPDATE {user_info_data} SET data = 1".
+            " WHERE fieldid = (SELECT uif.id FROM {user_info_field} uif WHERE uif.shortname = 'apsolumedicalcertificate')".
+            " AND userid IN (SELECT userid FROM {quiz_attempts} WHERE quiz = 14 AND state = 'finished' AND sumgrades = '1')".
+            " AND data != '1'";
+        $DB->execute($sql);
+
         // Positionne le flag "apsolufederationpaid" à 1 sur les étudiants dont le paiement de la carte FFSU (id 4) est payé (status 1) ou offert (status 3).
         $sql = "UPDATE {user_info_data} SET data = 1".
             " WHERE fieldid = (SELECT uif.id FROM {user_info_field} uif WHERE uif.shortname = 'apsolufederationpaid')".
