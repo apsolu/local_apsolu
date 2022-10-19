@@ -23,7 +23,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_apsolu\core;
+
+use coding_exception;
+use moodle_exception;
 
 global $CFG;
 
@@ -37,7 +40,7 @@ require_once($CFG->dirroot.'/course/lib.php');
  * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_apsolu_core_course_testcase extends advanced_testcase {
+class course_test extends \advanced_testcase {
     protected function setUp() : void {
         parent::setUp();
 
@@ -49,7 +52,7 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
     public function test_delete() {
         global $DB;
 
-        $course = new local_apsolu\core\course();
+        $course = new course();
 
         // Supprime un objet inexistant.
         try {
@@ -74,7 +77,7 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
     }
 
     public function test_get_session_offset() {
-        $course = new local_apsolu\core\course();
+        $course = new course();
         $course->numweekday = 3; // Mercredi.
         $course->starttime = '16:35';
 
@@ -96,7 +99,7 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
     public function test_get_records() {
         global $DB;
 
-        $course = new local_apsolu\core\course();
+        $course = new course();
 
         $count_records = $DB->count_records($course::TABLENAME);
         $this->assertSame(0, $count_records);
@@ -119,7 +122,7 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
 
     public function test_load() {
         // Charge un objet inexistant.
-        $course = new local_apsolu\core\course();
+        $course = new course();
         $course->load(1);
 
         $this->assertSame(0, $course->id);
@@ -129,7 +132,7 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
         $course->save($data);
 
-        $test = new local_apsolu\core\course();
+        $test = new course();
         $test->load($course->id);
 
         $this->assertEquals($course->id, $test->id);
@@ -139,8 +142,8 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
     public function test_save() {
         global $DB;
 
-        $course = new local_apsolu\core\course();
-        $category = new local_apsolu\core\category();
+        $course = new course();
+        $category = new category();
 
         $initial_count = $DB->count_records($course::TABLENAME);
 
@@ -171,7 +174,7 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
         $this->assertSame($count_records, $initial_count + 1);
 
         // Vérifie qu'un nom abrégé est regénéré en cas de doublon.
-        $course = new local_apsolu\core\course();
+        $course = new course();
         $course->save($data);
         $this->assertSame(sprintf('%s %s %s.', $data->str_category, $str_time, $data->str_skill), $course->shortname);
 
@@ -205,21 +208,21 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
 
         // Période incluant les 2 prochaines semaines à venir.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_period_data('p1');
-        $period1 = new local_apsolu\core\period();
+        $period1 = new period();
         $period1->save($data);
 
         // Période incluant les 3, 4, 5 et 6 prochaines semaines à venir.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_period_data('p2', 'future');
-        $period2 = new local_apsolu\core\period();
+        $period2 = new period();
         $period2->save($data);
 
         // Période incluant les 4 semaines passées.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_period_data('p3', 'past');
-        $period3 = new local_apsolu\core\period();
+        $period3 = new period();
         $period3->save($data);
 
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
-        $course = new local_apsolu\core\course();
+        $course = new course();
         $data->periodid = $period1->id;
         $course->save($data);
 
@@ -253,7 +256,7 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
         // Ajoute une session non prévue à une date passée.
         $past_session_time = '123456';
         $past_session_location = $course->locationid;
-        $session = new local_apsolu\core\attendancesession();
+        $session = new attendancesession();
         $session->name = 'Test past session';
         $session->sessiontime = $past_session_time;
         $session->courseid = $course->id;
@@ -265,7 +268,7 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
 
         // Ajoute une session non prévue à une date future.
         $future_session_time = time() + WEEKSECS;
-        $session = new local_apsolu\core\attendancesession();
+        $session = new attendancesession();
         $session->name = 'Test future session';
         $session->sessiontime = $future_session_time;
         $session->courseid = $course->id;
@@ -308,7 +311,7 @@ class local_apsolu_core_course_testcase extends advanced_testcase {
         // Génère un cours.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
 
-        $course = new local_apsolu\core\course();
+        $course = new course();
         $course->save($data);
 
         // Récupère la visibilité du cours.

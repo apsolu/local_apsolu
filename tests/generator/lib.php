@@ -23,7 +23,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+use local_apsolu\core\category;
+use local_apsolu\core\course;
+use local_apsolu\core\grouping;
+use local_apsolu\core\skill;
 
 global $CFG;
 
@@ -56,7 +59,7 @@ class local_apsolu_generator extends testing_module_generator {
 
         $skills = array();
         foreach ($records as $skillname) {
-            $skill = new local_apsolu\core\skill();
+            $skill = new skill();
             $skill->name = $skillname;
             $skill->shortname = $skillname;
             $skill->save();
@@ -83,7 +86,7 @@ class local_apsolu_generator extends testing_module_generator {
             list($groupingname, $categoryname) = $record;
 
             if (isset($groupings[$groupingname]) === false) {
-                $grouping = new local_apsolu\core\grouping();
+                $grouping = new grouping();
                 $grouping->name = $groupingname;
                 $grouping->save();
 
@@ -94,7 +97,7 @@ class local_apsolu_generator extends testing_module_generator {
             $catdata->name = $categoryname;
             $catdata->parent = $groupings[$groupingname]->id;
 
-            $category = new local_apsolu\core\category();
+            $category = new category();
             $category->save($catdata, $mform);
 
             for ($i = 0 ; $i < 3 ; $i++) {
@@ -104,7 +107,7 @@ class local_apsolu_generator extends testing_module_generator {
                 $data->skillid = $skills[$i]->id;
                 $data->str_skill = $skills[$i]->name;
 
-                $course = new local_apsolu\core\course();
+                $course = new course();
                 $course->save($data);
             }
         }
@@ -120,7 +123,7 @@ class local_apsolu_generator extends testing_module_generator {
         $data = new stdClass();
         $data->name = 'grouping';
 
-        $grouping = new local_apsolu\core\grouping();
+        $grouping = new grouping();
         $grouping->save($data);
 
         // Data.

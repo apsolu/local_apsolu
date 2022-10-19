@@ -23,8 +23,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_apsolu\core;
 
+use stdClass;
 use UniversiteRennes2\Apsolu\Payment;
 
 require_once __DIR__.'/../classes/apsolu/payment.php';
@@ -37,7 +38,7 @@ require_once __DIR__.'/../classes/apsolu/payment.php';
  * @copyright  2022 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_apsolu_apsolu_payment_testcase extends advanced_testcase {
+class payment_test extends \advanced_testcase {
     private $data;
 
     protected function setUp() : void {

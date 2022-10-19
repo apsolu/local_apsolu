@@ -23,7 +23,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_apsolu\core;
+
+use moodle_exception;
+use stdClass;
 
 /**
  * Classe de tests pour local_apsolu\core\grouping
@@ -33,7 +36,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_apsolu_core_grouping_testcase extends advanced_testcase {
+class grouping_test extends \advanced_testcase {
     protected function setUp() : void {
         parent::setUp();
 
@@ -43,7 +46,7 @@ class local_apsolu_core_grouping_testcase extends advanced_testcase {
     public function test_delete() {
         global $DB;
 
-        $grouping = new local_apsolu\core\grouping();
+        $grouping = new grouping();
 
         // Supprime un objet inexistant.
         try {
@@ -71,7 +74,7 @@ class local_apsolu_core_grouping_testcase extends advanced_testcase {
     public function test_get_records() {
         global $DB;
 
-        $grouping = new local_apsolu\core\grouping();
+        $grouping = new grouping();
 
         $count_records = $DB->count_records($grouping::TABLENAME);
         $this->assertSame(0, $count_records);
@@ -94,7 +97,7 @@ class local_apsolu_core_grouping_testcase extends advanced_testcase {
 
     public function test_load() {
         // Charge un objet inexistant.
-        $grouping = new local_apsolu\core\grouping();
+        $grouping = new grouping();
         $grouping->load(1);
 
         $this->assertSame(0, $grouping->id);
@@ -104,7 +107,7 @@ class local_apsolu_core_grouping_testcase extends advanced_testcase {
         $grouping->name = 'grouping';
         $grouping->save();
 
-        $test = new local_apsolu\core\grouping();
+        $test = new grouping();
         $test->load($grouping->id);
 
         $this->assertEquals($grouping->id, $test->id);
@@ -114,7 +117,7 @@ class local_apsolu_core_grouping_testcase extends advanced_testcase {
     public function test_save() {
         global $DB;
 
-        $grouping = new local_apsolu\core\grouping();
+        $grouping = new grouping();
 
         $initial_count = $DB->count_records($grouping::TABLENAME);
 

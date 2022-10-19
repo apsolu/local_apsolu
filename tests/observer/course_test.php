@@ -23,7 +23,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_apsolu\observer;
+
+use local_apsolu\core\course;
 
 global $CFG;
 
@@ -37,7 +39,7 @@ require_once($CFG->dirroot.'/course/lib.php');
  * @copyright  2021 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_apsolu_observer_course_testcase extends advanced_testcase {
+class course_test extends \advanced_testcase {
     protected function setUp() : void {
         parent::setUp();
 
@@ -51,10 +53,10 @@ class local_apsolu_observer_course_testcase extends advanced_testcase {
         global $DB;
 
         // Teste le bon fonctionnement lors de la suppression d'un cours non APSOLU.
-        $count_apsolu_courses = $DB->count_records(\local_apsolu\core\course::TABLENAME);
+        $count_apsolu_courses = $DB->count_records(course::TABLENAME);
         $course = $this->getDataGenerator()->create_course();
         delete_course($course, $showfeedback = false);
-        $this->assertSame($count_apsolu_courses, $DB->count_records(\local_apsolu\core\course::TABLENAME));
+        $this->assertSame($count_apsolu_courses, $DB->count_records(course::TABLENAME));
 
         // Teste la suppression d'un cours via l'API de Moodle.
         $sql = "SELECT c.* FROM {course} c JOIN {apsolu_courses} ac ON c.id = ac.id";

@@ -23,7 +23,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_apsolu\core;
+
+use dml_write_exception;
+use stdClass;
 
 /**
  * Classe de tests pour local_apsolu\core\area
@@ -33,7 +36,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_apsolu_core_area_testcase extends advanced_testcase {
+class area_test extends \advanced_testcase {
     protected function setUp() : void {
         parent::setUp();
 
@@ -43,7 +46,7 @@ class local_apsolu_core_area_testcase extends advanced_testcase {
     public function test_delete() {
         global $DB;
 
-        $area = new local_apsolu\core\area();
+        $area = new area();
 
         // Supprime un objet inexistant.
         $result = $area->delete(1);
@@ -67,7 +70,7 @@ class local_apsolu_core_area_testcase extends advanced_testcase {
     public function test_get_records() {
         global $DB;
 
-        $area = new local_apsolu\core\area();
+        $area = new area();
 
         $count_records = $DB->count_records($area::TABLENAME);
         $this->assertSame(0, $count_records);
@@ -92,7 +95,7 @@ class local_apsolu_core_area_testcase extends advanced_testcase {
 
     public function test_load() {
         // Charge un objet inexistant.
-        $area = new local_apsolu\core\area();
+        $area = new area();
         $area->load(1);
 
         $this->assertSame(0, $area->id);
@@ -104,7 +107,7 @@ class local_apsolu_core_area_testcase extends advanced_testcase {
         $area->cityid = '1';
         $area->save();
 
-        $test = new local_apsolu\core\area();
+        $test = new area();
         $test->load($area->id);
 
         $this->assertEquals($area->id, $test->id);
@@ -115,7 +118,7 @@ class local_apsolu_core_area_testcase extends advanced_testcase {
     public function test_save() {
         global $DB;
 
-        $area = new local_apsolu\core\area();
+        $area = new area();
 
         $initial_count = $DB->count_records($area::TABLENAME);
 

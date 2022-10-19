@@ -23,7 +23,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_apsolu\observer;
+
+use core_course_category;
+use local_apsolu\core\category;
+use local_apsolu\core\grouping;
 
 global $CFG;
 
@@ -37,7 +41,7 @@ require_once($CFG->dirroot.'/course/lib.php');
  * @copyright  2021 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_apsolu_observer_course_category_testcase extends advanced_testcase {
+class course_category_test extends \advanced_testcase {
     protected function setUp() : void {
         parent::setUp();
 
@@ -53,24 +57,24 @@ class local_apsolu_observer_course_category_testcase extends advanced_testcase {
         // Prépare les données.
         $category1 = $this->getDataGenerator()->create_category();
 
-        $category2 = new \local_apsolu\core\grouping();
+        $category2 = new grouping();
         $category2->save((object) array('name' => 'grouping'));
 
         list($data, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
-        $category3 = new \local_apsolu\core\category();
+        $category3 = new category();
         $category3->save($data, $mform);
 
         list($data, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
-        $category4 = new \local_apsolu\core\category();
+        $category4 = new category();
         $category4->save($data, $mform);
 
         list($data, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
-        $category5 = new \local_apsolu\core\category();
+        $category5 = new category();
         $category5->save($data, $mform);
 
         // Enregistre l'état initial.
-        $count_apsolu_categories = $DB->count_records(\local_apsolu\core\category::TABLENAME);
-        $count_apsolu_groupings = $DB->count_records(\local_apsolu\core\grouping::TABLENAME);
+        $count_apsolu_categories = $DB->count_records(category::TABLENAME);
+        $count_apsolu_groupings = $DB->count_records(grouping::TABLENAME);
         $count_categories = $DB->count_records('course_categories');
 
         // Teste la suppression du catégorie non APSOLU.
@@ -78,24 +82,24 @@ class local_apsolu_observer_course_category_testcase extends advanced_testcase {
         $coursecat->delete_full($showfeedback = false);
 
         $this->assertSame(--$count_categories, $DB->count_records('course_categories'));
-        $this->assertSame($count_apsolu_groupings, $DB->count_records(\local_apsolu\core\grouping::TABLENAME));
-        $this->assertSame($count_apsolu_categories, $DB->count_records(\local_apsolu\core\category::TABLENAME));
+        $this->assertSame($count_apsolu_groupings, $DB->count_records(grouping::TABLENAME));
+        $this->assertSame($count_apsolu_categories, $DB->count_records(category::TABLENAME));
 
         // Teste la suppression du catégorie de groupement d'activités APSOLU.
         $coursecat = core_course_category::get($category2->id);
         $coursecat->delete_full($showfeedback = false);
 
         $this->assertSame(--$count_categories, $DB->count_records('course_categories'));
-        $this->assertSame(--$count_apsolu_groupings, $DB->count_records(\local_apsolu\core\grouping::TABLENAME));
-        $this->assertSame($count_apsolu_categories, $DB->count_records(\local_apsolu\core\category::TABLENAME));
+        $this->assertSame(--$count_apsolu_groupings, $DB->count_records(grouping::TABLENAME));
+        $this->assertSame($count_apsolu_categories, $DB->count_records(category::TABLENAME));
 
         // Teste la suppression du catégorie d'activité APSOLU.
         $coursecat = core_course_category::get($category3->id);
         $coursecat->delete_full($showfeedback = false);
 
         $this->assertSame(--$count_categories, $DB->count_records('course_categories'));
-        $this->assertSame($count_apsolu_groupings, $DB->count_records(\local_apsolu\core\grouping::TABLENAME));
-        $this->assertSame(--$count_apsolu_categories, $DB->count_records(\local_apsolu\core\category::TABLENAME));
+        $this->assertSame($count_apsolu_groupings, $DB->count_records(grouping::TABLENAME));
+        $this->assertSame(--$count_apsolu_categories, $DB->count_records(category::TABLENAME));
 
         // Teste la suppression du catégorie de groupement d'activités APSOLU contenant une catégorie d'activité.
         $coursecat = core_course_category::get($category4->parent);
@@ -103,16 +107,16 @@ class local_apsolu_observer_course_category_testcase extends advanced_testcase {
 
         $count_categories = $count_categories - 2;
         $this->assertSame($count_categories, $DB->count_records('course_categories'));
-        $this->assertSame(--$count_apsolu_groupings, $DB->count_records(\local_apsolu\core\grouping::TABLENAME));
-        $this->assertSame(--$count_apsolu_categories, $DB->count_records(\local_apsolu\core\category::TABLENAME));
+        $this->assertSame(--$count_apsolu_groupings, $DB->count_records(grouping::TABLENAME));
+        $this->assertSame(--$count_apsolu_categories, $DB->count_records(category::TABLENAME));
 
         // Teste la suppression du catégorie de groupement d'activités APSOLU contenant une catégorie d'activité, en déplaçant la catégorie d'activité.
         $coursecat = core_course_category::get($category5->parent);
         $coursecat->delete_move($newparentid = 1, $showfeedback = false);
 
         $this->assertSame(--$count_categories, $DB->count_records('course_categories'));
-        $this->assertSame(--$count_apsolu_groupings, $DB->count_records(\local_apsolu\core\grouping::TABLENAME));
-        $this->assertSame($count_apsolu_categories, $DB->count_records(\local_apsolu\core\category::TABLENAME));
+        $this->assertSame(--$count_apsolu_groupings, $DB->count_records(grouping::TABLENAME));
+        $this->assertSame($count_apsolu_categories, $DB->count_records(category::TABLENAME));
     }
 
     public function test_updated() {
@@ -130,7 +134,7 @@ class local_apsolu_observer_course_category_testcase extends advanced_testcase {
         $this->assertSame($parent->id, $category->parent);
 
         // Teste la mise à jour d'une catégorie de groupement d'activités APSOLU.
-        $category = new \local_apsolu\core\grouping();
+        $category = new grouping();
         $category->save((object) array('name' => 'grouping'));
         $grouping = clone $category;
 
@@ -142,7 +146,7 @@ class local_apsolu_observer_course_category_testcase extends advanced_testcase {
 
         // Teste la mise à jour d'une catégorie d'activité APSOLU dans une catégorie Moodle.
         list($data, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
-        $category = new \local_apsolu\core\category();
+        $category = new category();
         $category->save($data, $mform);
 
         $coursecat = core_course_category::get($category->id);

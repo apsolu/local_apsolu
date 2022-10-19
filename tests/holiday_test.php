@@ -23,7 +23,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_apsolu\core;
+
+use dml_write_exception;
+use stdClass;
 
 /**
  * Classe de tests pour local_apsolu\core\holiday
@@ -33,7 +36,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_apsolu_core_holiday_testcase extends advanced_testcase {
+class holiday_test extends \advanced_testcase {
     protected function setUp() : void {
         parent::setUp();
 
@@ -43,7 +46,7 @@ class local_apsolu_core_holiday_testcase extends advanced_testcase {
     public function test_delete() {
         global $DB;
 
-        $holiday = new local_apsolu\core\holiday();
+        $holiday = new holiday();
 
         // Supprime un objet inexistant.
         $result = $holiday->delete(1);
@@ -66,7 +69,7 @@ class local_apsolu_core_holiday_testcase extends advanced_testcase {
     public function test_get_records() {
         global $DB;
 
-        $holiday = new local_apsolu\core\holiday();
+        $holiday = new holiday();
 
         $count_records = $DB->count_records($holiday::TABLENAME);
         $this->assertSame(0, $count_records);
@@ -103,7 +106,7 @@ class local_apsolu_core_holiday_testcase extends advanced_testcase {
             '2019-12-25',
             );
 
-        $holidays = local_apsolu\core\holiday::get_holidays(2019);
+        $holidays = holiday::get_holidays(2019);
 
         $this->assertEquals(11, count($holidays));
         foreach ($holidays as $holiday) {
@@ -125,7 +128,7 @@ class local_apsolu_core_holiday_testcase extends advanced_testcase {
             '2020-12-25',
             );
 
-        $holidays = local_apsolu\core\holiday::get_holidays(2020);
+        $holidays = holiday::get_holidays(2020);
 
         $this->assertEquals(11, count($holidays));
         foreach ($holidays as $holiday) {
@@ -136,17 +139,17 @@ class local_apsolu_core_holiday_testcase extends advanced_testcase {
     public function test_regenerate_sessions() {
         // Génère une période.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_period_data('p1');
-        $period1 = new local_apsolu\core\period();
+        $period1 = new period();
         $period1->save($data);
 
         // Génère un cours.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
-        $course = new local_apsolu\core\course();
+        $course = new course();
         $data->periodid = $period1->id;
         $course->save($data);
 
         // Ajoute un jour férié sur la prochaine session de cours.
-        $holiday = new local_apsolu\core\holiday();
+        $holiday = new holiday();
         $data->day = strtotime('next '.$course->weekday.' this week') + WEEKSECS;
         $holiday->save($data);
 
@@ -169,7 +172,7 @@ class local_apsolu_core_holiday_testcase extends advanced_testcase {
     public function test_save() {
         global $DB;
 
-        $holiday = new local_apsolu\core\holiday();
+        $holiday = new holiday();
 
         $initial_count = $DB->count_records($holiday::TABLENAME);
 

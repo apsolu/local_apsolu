@@ -23,7 +23,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_apsolu\core;
+
+use dml_write_exception;
+use stdClass;
 
 /**
  * Classe de tests pour local_apsolu\core\manager
@@ -33,7 +36,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_apsolu_core_manager_testcase extends advanced_testcase {
+class manager_test extends \advanced_testcase {
     protected function setUp() : void {
         parent::setUp();
 
@@ -43,7 +46,7 @@ class local_apsolu_core_manager_testcase extends advanced_testcase {
     public function test_delete() {
         global $DB;
 
-        $manager = new local_apsolu\core\manager();
+        $manager = new manager();
 
         // Supprime un objet inexistant.
         $result = $manager->delete(1);
@@ -66,7 +69,7 @@ class local_apsolu_core_manager_testcase extends advanced_testcase {
     public function test_get_records() {
         global $DB;
 
-        $manager = new local_apsolu\core\manager();
+        $manager = new manager();
 
         $count_records = $DB->count_records($manager::TABLENAME);
         $this->assertSame(0, $count_records);
@@ -89,7 +92,7 @@ class local_apsolu_core_manager_testcase extends advanced_testcase {
 
     public function test_load() {
         // Charge un objet inexistant.
-        $manager = new local_apsolu\core\manager();
+        $manager = new manager();
         $manager->load(1);
 
         $this->assertSame(0, $manager->id);
@@ -99,7 +102,7 @@ class local_apsolu_core_manager_testcase extends advanced_testcase {
         $manager->name = 'manager';
         $manager->save();
 
-        $test = new local_apsolu\core\manager();
+        $test = new manager();
         $test->load($manager->id);
 
         $this->assertEquals($manager->id, $test->id);
@@ -109,7 +112,7 @@ class local_apsolu_core_manager_testcase extends advanced_testcase {
     public function test_save() {
         global $DB;
 
-        $manager = new local_apsolu\core\manager();
+        $manager = new manager();
 
         $initial_count = $DB->count_records($manager::TABLENAME);
 

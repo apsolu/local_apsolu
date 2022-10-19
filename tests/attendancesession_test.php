@@ -23,7 +23,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_apsolu\core;
+
+use stdClass;
 
 /**
  * Classe de tests pour local_apsolu\core\attendancesession
@@ -33,7 +35,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_apsolu_core_attendancesession_testcase extends advanced_testcase {
+class attendancesession_test extends \advanced_testcase {
     protected function setUp() : void {
         parent::setUp();
 
@@ -45,11 +47,11 @@ class local_apsolu_core_attendancesession_testcase extends advanced_testcase {
 
         // Génère un nouveau cours.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
-        $course = new local_apsolu\core\course();
+        $course = new course();
         $course->save($data);
 
         // Génère une session de cours.
-        $attendancesession = new local_apsolu\core\attendancesession();
+        $attendancesession = new attendancesession();
         $attendancesession->courseid = $course->id;
 
         // Supprime un objet inexistant.
@@ -75,11 +77,11 @@ class local_apsolu_core_attendancesession_testcase extends advanced_testcase {
 
         // Génère un nouveau cours.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
-        $course = new local_apsolu\core\course();
+        $course = new course();
         $course->save($data);
 
         // Génère une session de cours.
-        $attendancesession = new local_apsolu\core\attendancesession();
+        $attendancesession = new attendancesession();
         $attendancesession->courseid = $course->id;
 
         $count_records = $DB->count_records($attendancesession::TABLENAME);
@@ -104,11 +106,11 @@ class local_apsolu_core_attendancesession_testcase extends advanced_testcase {
     public function test_load() {
         // Génère un nouveau cours.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
-        $course = new local_apsolu\core\course();
+        $course = new course();
         $course->save($data);
 
         // Charge un objet inexistant.
-        $attendancesession = new local_apsolu\core\attendancesession();
+        $attendancesession = new attendancesession();
         $attendancesession->load(1);
 
         $this->assertSame(0, $attendancesession->id);
@@ -119,7 +121,7 @@ class local_apsolu_core_attendancesession_testcase extends advanced_testcase {
         $attendancesession->courseid = $course->id;
         $attendancesession->save();
 
-        $test = new local_apsolu\core\attendancesession();
+        $test = new attendancesession();
         $test->load($attendancesession->id);
 
         $this->assertEquals($attendancesession->id, $test->id);
@@ -131,11 +133,11 @@ class local_apsolu_core_attendancesession_testcase extends advanced_testcase {
 
         // Génère un nouveau cours.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
-        $course = new local_apsolu\core\course();
+        $course = new course();
         $course->save($data);
 
         // Génère une session de cours.
-        $attendancesession = new local_apsolu\core\attendancesession();
+        $attendancesession = new attendancesession();
         $attendancesession->courseid = $course->id;
 
         $initial_count = $DB->count_records($attendancesession::TABLENAME);

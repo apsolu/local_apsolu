@@ -23,7 +23,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_apsolu\core;
+
+use dml_write_exception;
+use stdClass;
 
 /**
  * Classe de tests pour local_apsolu\core\location
@@ -33,7 +36,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_apsolu_core_location_testcase extends advanced_testcase {
+class location_test extends \advanced_testcase {
     protected function setUp() : void {
         parent::setUp();
 
@@ -43,7 +46,7 @@ class local_apsolu_core_location_testcase extends advanced_testcase {
     public function test_delete() {
         global $DB;
 
-        $location = new local_apsolu\core\location();
+        $location = new location();
 
         // Supprime un objet inexistant.
         $result = $location->delete(1);
@@ -66,7 +69,7 @@ class local_apsolu_core_location_testcase extends advanced_testcase {
     public function test_get_records() {
         global $DB;
 
-        $location = new local_apsolu\core\location();
+        $location = new location();
 
         $count_records = $DB->count_records($location::TABLENAME);
         $this->assertSame(0, $count_records);
@@ -89,7 +92,7 @@ class local_apsolu_core_location_testcase extends advanced_testcase {
 
     public function test_load() {
         // Charge un objet inexistant.
-        $location = new local_apsolu\core\location();
+        $location = new location();
         $location->load(1);
 
         $this->assertSame(0, $location->id);
@@ -99,7 +102,7 @@ class local_apsolu_core_location_testcase extends advanced_testcase {
         $location->name = 'location';
         $location->save();
 
-        $test = new local_apsolu\core\location();
+        $test = new location();
         $test->load($location->id);
 
         $this->assertEquals($location->id, $test->id);
@@ -109,7 +112,7 @@ class local_apsolu_core_location_testcase extends advanced_testcase {
     public function test_save() {
         global $DB;
 
-        $location = new local_apsolu\core\location();
+        $location = new location();
 
         $initial_count = $DB->count_records($location::TABLENAME);
 

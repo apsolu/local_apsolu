@@ -23,7 +23,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_apsolu\core;
+
+use dml_write_exception;
+use stdClass;
 
 /**
  * Classe de tests pour local_apsolu\core\skill
@@ -33,7 +36,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_apsolu_core_skill_testcase extends advanced_testcase {
+class skill_test extends \advanced_testcase {
     protected function setUp() : void {
         parent::setUp();
 
@@ -43,7 +46,7 @@ class local_apsolu_core_skill_testcase extends advanced_testcase {
     public function test_delete() {
         global $DB;
 
-        $skill = new local_apsolu\core\skill();
+        $skill = new skill();
 
         // Supprime un objet inexistant.
         $result = $skill->delete(1);
@@ -66,7 +69,7 @@ class local_apsolu_core_skill_testcase extends advanced_testcase {
     public function test_get_records() {
         global $DB;
 
-        $skill = new local_apsolu\core\skill();
+        $skill = new skill();
 
         $count_records = $DB->count_records($skill::TABLENAME);
         $this->assertSame(0, $count_records);
@@ -89,7 +92,7 @@ class local_apsolu_core_skill_testcase extends advanced_testcase {
 
     public function test_load() {
         // Charge un objet inexistant.
-        $skill = new local_apsolu\core\skill();
+        $skill = new skill();
         $skill->load(1);
 
         $this->assertSame(0, $skill->id);
@@ -99,7 +102,7 @@ class local_apsolu_core_skill_testcase extends advanced_testcase {
         $skill->name = 'skill';
         $skill->save();
 
-        $test = new local_apsolu\core\skill();
+        $test = new skill();
         $test->load($skill->id);
 
         $this->assertEquals($skill->id, $test->id);
@@ -109,7 +112,7 @@ class local_apsolu_core_skill_testcase extends advanced_testcase {
     public function test_save() {
         global $DB;
 
-        $skill = new local_apsolu\core\skill();
+        $skill = new skill();
 
         $initial_count = $DB->count_records($skill::TABLENAME);
 

@@ -23,7 +23,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_apsolu\core;
+
+use dml_write_exception;
+use stdClass;
 
 /**
  * Classe de tests pour local_apsolu\core\period
@@ -33,7 +36,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_apsolu_core_period_testcase extends advanced_testcase {
+class period_test extends \advanced_testcase {
     protected function setUp() : void {
         parent::setUp();
 
@@ -43,7 +46,7 @@ class local_apsolu_core_period_testcase extends advanced_testcase {
     public function test_delete() {
         global $DB;
 
-        $period = new local_apsolu\core\period();
+        $period = new period();
 
         // Supprime un objet inexistant.
         $result = $period->delete(1);
@@ -66,7 +69,7 @@ class local_apsolu_core_period_testcase extends advanced_testcase {
     public function test_get_records() {
         global $DB;
 
-        $period = new local_apsolu\core\period();
+        $period = new period();
 
         $count_records = $DB->count_records($period::TABLENAME);
         $this->assertSame(0, $count_records);
@@ -89,7 +92,7 @@ class local_apsolu_core_period_testcase extends advanced_testcase {
 
     public function test_load() {
         // Charge un objet inexistant.
-        $period = new local_apsolu\core\period();
+        $period = new period();
         $period->load(1);
 
         $this->assertSame(0, $period->id);
@@ -99,7 +102,7 @@ class local_apsolu_core_period_testcase extends advanced_testcase {
         $period->name = 'period';
         $period->save();
 
-        $test = new local_apsolu\core\period();
+        $test = new period();
         $test->load($period->id);
 
         $this->assertEquals($period->id, $test->id);
@@ -108,13 +111,13 @@ class local_apsolu_core_period_testcase extends advanced_testcase {
 
     public function test_get_sessions() {
         // Génère les jours fériés.
-        foreach (local_apsolu\core\holiday::get_holidays(2020) as $holidaytimestamp) {
-            $holiday = new local_apsolu\core\holiday();
+        foreach (holiday::get_holidays(2020) as $holidaytimestamp) {
+            $holiday = new holiday();
             $holiday->day = $holidaytimestamp;
             $holiday->save();
         }
 
-        $period = new local_apsolu\core\period();
+        $period = new period();
         $period->name = 'period get_sessions';
         $period->weeks = '2020-06-29,2020-07-13,2020-07-20';
         $period->save();
@@ -133,7 +136,7 @@ class local_apsolu_core_period_testcase extends advanced_testcase {
     public function test_save() {
         global $DB;
 
-        $period = new local_apsolu\core\period();
+        $period = new period();
 
         $initial_count = $DB->count_records($period::TABLENAME);
 

@@ -23,7 +23,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_apsolu\core;
+
+use moodle_exception;
 
 /**
  * Classe de tests pour local_apsolu\core\category
@@ -33,7 +35,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_apsolu_core_category_testcase extends advanced_testcase {
+class category_test extends \advanced_testcase {
     protected function setUp() : void {
         parent::setUp();
 
@@ -45,7 +47,7 @@ class local_apsolu_core_category_testcase extends advanced_testcase {
     public function test_delete() {
         global $DB;
 
-        $category = new local_apsolu\core\category();
+        $category = new category();
 
         // Supprime un objet inexistant.
         try {
@@ -74,7 +76,7 @@ class local_apsolu_core_category_testcase extends advanced_testcase {
     public function test_get_records() {
         global $DB;
 
-        $category = new local_apsolu\core\category();
+        $category = new category();
 
         $count_records = $DB->count_records($category::TABLENAME);
         $this->assertSame(0, $count_records);
@@ -97,7 +99,7 @@ class local_apsolu_core_category_testcase extends advanced_testcase {
 
     public function test_load() {
         // Charge un objet inexistant.
-        $category = new local_apsolu\core\category();
+        $category = new category();
         $category->load(1);
 
         $this->assertSame(0, $category->id);
@@ -107,7 +109,7 @@ class local_apsolu_core_category_testcase extends advanced_testcase {
         list($data, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
         $category->save($data, $mform);
 
-        $test = new local_apsolu\core\category();
+        $test = new category();
         $test->load($category->id);
 
         $this->assertEquals($category->id, $test->id);
@@ -117,7 +119,7 @@ class local_apsolu_core_category_testcase extends advanced_testcase {
     public function test_save() {
         global $DB;
 
-        $category = new local_apsolu\core\category();
+        $category = new category();
 
         $initial_count = $DB->count_records($category::TABLENAME);
 

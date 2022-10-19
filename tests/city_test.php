@@ -23,7 +23,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_apsolu\core;
+
+use dml_write_exception;
+use stdClass;
 
 /**
  * Classe de tests pour local_apsolu\core\city
@@ -33,7 +36,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_apsolu_core_city_testcase extends advanced_testcase {
+class city_test extends \advanced_testcase {
     protected function setUp() : void {
         parent::setUp();
 
@@ -43,7 +46,7 @@ class local_apsolu_core_city_testcase extends advanced_testcase {
     public function test_delete() {
         global $DB;
 
-        $city = new local_apsolu\core\city();
+        $city = new city();
 
         // Supprime un objet inexistant.
         $result = $city->delete(1);
@@ -66,7 +69,7 @@ class local_apsolu_core_city_testcase extends advanced_testcase {
     public function test_get_records() {
         global $DB;
 
-        $city = new local_apsolu\core\city();
+        $city = new city();
 
         $count_records = $DB->count_records($city::TABLENAME);
         $this->assertSame(0, $count_records);
@@ -89,7 +92,7 @@ class local_apsolu_core_city_testcase extends advanced_testcase {
 
     public function test_load() {
         // Charge un objet inexistant.
-        $city = new local_apsolu\core\city();
+        $city = new city();
         $city->load(1);
 
         $this->assertSame(0, $city->id);
@@ -99,7 +102,7 @@ class local_apsolu_core_city_testcase extends advanced_testcase {
         $city->name = 'city';
         $city->save();
 
-        $test = new local_apsolu\core\city();
+        $test = new city();
         $test->load($city->id);
 
         $this->assertEquals($city->id, $test->id);
@@ -109,7 +112,7 @@ class local_apsolu_core_city_testcase extends advanced_testcase {
     public function test_save() {
         global $DB;
 
-        $city = new local_apsolu\core\city();
+        $city = new city();
 
         $initial_count = $DB->count_records($city::TABLENAME);
 
