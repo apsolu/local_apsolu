@@ -162,6 +162,7 @@ class local_apsolu_generator extends testing_module_generator {
         $data->endtime = '13:00';
         $data->license = 1;
         $data->on_homepage = 1;
+        $data->showpolicy = 0;
         $data->category = 1;
         $data->str_category = 'category';
         $data->periodid = 1;
