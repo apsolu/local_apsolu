@@ -61,7 +61,7 @@ class set_high_level_athletes extends \core\task\scheduled_task {
         // Positionne le flag "apsolumedicalcertificate" à 1 sur les étudiants dont le certificat FFSU est validé dans le cours 249.
         $sql = "UPDATE {user_info_data} SET data = 1".
             " WHERE fieldid = (SELECT uif.id FROM {user_info_field} uif WHERE uif.shortname = 'apsolumedicalcertificate')".
-            " AND userid IN (SELECT ag.userid from {assign} a JOIN {assign_grades} ag ON ag.assignment = a.id WHERE a.id = 1 AND a.course = 249 AND ag.grade > 0)".
+            " AND userid IN (SELECT ag.userid from {assign} a JOIN {assign_grades} ag ON ag.assignment = a.id WHERE a.id = 75 AND a.course = 249 AND ag.grade > 0)".
             " AND data != '1'";
         $DB->execute($sql);
 
