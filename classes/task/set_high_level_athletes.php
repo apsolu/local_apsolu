@@ -57,7 +57,37 @@ class set_high_level_athletes extends \core\task\scheduled_task {
             return true;
         }
 
-        // TODO: sortir ces 3 tâches qui n'ont rien à voir avec les athlètes de haut-niveau.
+        // TODO: sortir ces tâches qui n'ont rien à voir avec les athlètes de haut-niveau.
+        $fields = \local_apsolu\core\customfields::getCustomFields();
+
+        $courses = array();
+        $courses[249] = 'apsolumedicalcertificate';
+        $courses[250] = 'apsolufederationpaid';
+
+        // Ajoute les champs de profil manquants pour les inscrits à la FFSU et à la muscu.
+        foreach ($courses as $courseid => $customfield) {
+            if (isset($fields[$customfield]) === false) {
+                continue;
+            }
+
+            $sql = "SELECT u.id".
+                " FROM {user} u".
+                " JOIN {user_enrolments} ue ON u.id = ue.userid".
+                " JOIN {enrol} e ON e.id = ue.enrolid".
+                " WHERE e.enrol = 'select'".
+                " AND e.courseid = :courseid".
+                " AND u.id NOT IN (SELECT userid FROM {user_info_data} WHERE fieldid = :fieldid)";
+            $params = array('courseid' => $courseid, 'fieldid' => $fields[$customfield]->id);
+            foreach ($DB->get_records_sql($sql, $params) as $record) {
+                $data = new \stdClass();
+                $data->userid = $record->id;
+                $data->fieldid = $fields[$customfield]->id;
+                $data->data = '';
+                $data->dataformat = '0';
+                $DB->insert_record('user_info_data', $data);
+            }
+        }
+
         // Positionne le flag "apsolumedicalcertificate" à 1 sur les étudiants dont le certificat FFSU est validé dans le cours 249.
         $sql = "UPDATE {user_info_data} SET data = 1".
             " WHERE fieldid = (SELECT uif.id FROM {user_info_field} uif WHERE uif.shortname = 'apsolumedicalcertificate')".
@@ -85,6 +115,7 @@ class set_high_level_athletes extends \core\task\scheduled_task {
             " AND userid IN (SELECT ap.userid FROM {apsolu_payments} ap JOIN {apsolu_payments_items} api ON ap.id = api.paymentid WHERE ap.status IN (1, 3) AND api.cardid = 3)".
             " AND data != '1'";
         $DB->execute($sql);
+        // TODO: FIN sortir ces tâches qui n'ont rien à voir avec les athlètes de haut-niveau.
 
         // TODO: faire une page pour configurer le groupe et le cours (menu déroulant + ids) à synchroniser.
         $groupingid = 4;
