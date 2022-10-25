@@ -61,30 +61,32 @@ class set_high_level_athletes extends \core\task\scheduled_task {
         $fields = \local_apsolu\core\customfields::getCustomFields();
 
         $courses = array();
-        $courses[249] = 'apsolumedicalcertificate';
-        $courses[250] = 'apsolufederationpaid';
+        $courses[249] = array('apsolufederationpaid', 'apsolumedicalcertificate');
+        $courses[250] = array('apsolumuscupaid');
 
         // Ajoute les champs de profil manquants pour les inscrits à la FFSU et à la muscu.
-        foreach ($courses as $courseid => $customfield) {
-            if (isset($fields[$customfield]) === false) {
-                continue;
-            }
+        foreach ($courses as $courseid => $customfields) {
+            foreach ($customfields as $customfield) {
+                if (isset($fields[$customfield]) === false) {
+                    continue;
+                }
 
-            $sql = "SELECT u.id".
-                " FROM {user} u".
-                " JOIN {user_enrolments} ue ON u.id = ue.userid".
-                " JOIN {enrol} e ON e.id = ue.enrolid".
-                " WHERE e.enrol = 'select'".
-                " AND e.courseid = :courseid".
-                " AND u.id NOT IN (SELECT userid FROM {user_info_data} WHERE fieldid = :fieldid)";
-            $params = array('courseid' => $courseid, 'fieldid' => $fields[$customfield]->id);
-            foreach ($DB->get_records_sql($sql, $params) as $record) {
-                $data = new \stdClass();
-                $data->userid = $record->id;
-                $data->fieldid = $fields[$customfield]->id;
-                $data->data = '';
-                $data->dataformat = '0';
-                $DB->insert_record('user_info_data', $data);
+                $sql = "SELECT u.id".
+                    " FROM {user} u".
+                    " JOIN {user_enrolments} ue ON u.id = ue.userid".
+                    " JOIN {enrol} e ON e.id = ue.enrolid".
+                    " WHERE e.enrol = 'select'".
+                    " AND e.courseid = :courseid".
+                    " AND u.id NOT IN (SELECT userid FROM {user_info_data} WHERE fieldid = :fieldid)";
+                $params = array('courseid' => $courseid, 'fieldid' => $fields[$customfield]->id);
+                foreach ($DB->get_records_sql($sql, $params) as $record) {
+                    $data = new \stdClass();
+                    $data->userid = $record->id;
+                    $data->fieldid = $fields[$customfield]->id;
+                    $data->data = '';
+                    $data->dataformat = '0';
+                    $DB->insert_record('user_info_data', $data);
+                }
             }
         }
 
