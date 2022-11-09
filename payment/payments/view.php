@@ -55,7 +55,9 @@ if (isset($userid)) {
 
             }
         }
-        $payment->amount_string = money_format('%i', $payment->amount).' €';
+
+        $format = new NumberFormatter('fr_FR', NumberFormatter::CURRENCY);
+        $payment->amount_string = $format->formatCurrency($payment->amount, 'EUR');
         $payment->method_string = get_string('method_'.$payment->method, 'local_apsolu');
         $payment->source_string = get_string('source_'.$payment->source, 'local_apsolu');
 
