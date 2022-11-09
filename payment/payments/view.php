@@ -67,6 +67,8 @@ if (isset($userid)) {
                 $payment->status_string = get_string('paymentpaid', 'local_apsolu');
                 break;
             case Payment::GIFT:
+                $payment->amount_string = '-';
+                $payment->method_string = '-';
                 $payment->status_style = 'table-info';
                 $payment->status_string = get_string('paymentgift', 'local_apsolu');
                 break;
