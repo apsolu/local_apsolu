@@ -63,16 +63,16 @@ if (isset($userid)) {
 
         switch ($payment->status) {
             case Payment::PAID:
-                $payment->status_style = 'success';
+                $payment->status_style = 'table-success';
                 $payment->status_string = get_string('paymentpaid', 'local_apsolu');
                 break;
             case Payment::GIFT:
-                $payment->status_style = 'success';
+                $payment->status_style = 'table-info';
                 $payment->status_string = get_string('paymentgift', 'local_apsolu');
                 break;
             case Payment::DUE:
             default:
-                $payment->status_style = 'danger';
+                $payment->status_style = 'table-danger';
                 $payment->status_string = get_string('paymentdue', 'local_apsolu');
         }
 
