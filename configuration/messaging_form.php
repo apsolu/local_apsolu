@@ -46,6 +46,18 @@ class local_apsolu_messaging_form extends moodleform {
 
         list($defaults) = $this->_customdata;
 
+        // Functional contact.
+        $mform->addElement('text', 'functional_contact', get_string('functional_contact', 'local_apsolu'), array('size' => '48'));
+        $mform->addHelpButton('functional_contact', 'functional_contact', 'local_apsolu');
+        $mform->setType('functional_contact', PARAM_TEXT);
+        $mform->addRule('functional_contact', get_string('required'), 'required', null, 'client');
+
+        // Technical contact.
+        $mform->addElement('text', 'technical_contact', get_string('technical_contact', 'local_apsolu'), array('size' => '48'));
+        $mform->addHelpButton('technical_contact', 'technical_contact', 'local_apsolu');
+        $mform->setType('technical_contact', PARAM_TEXT);
+        $mform->addRule('technical_contact', get_string('required'), 'required', null, 'client');
+
         // Préférence pour l'adresse de réponse.
         $mform->addElement('select', 'replytoaddresspreference', get_string('replyto_address_preference', 'local_apsolu'), messaging::get_replyto_options());
         $mform->addHelpButton('replytoaddresspreference', 'replyto_address_preference', 'local_apsolu');
@@ -67,5 +79,35 @@ class local_apsolu_messaging_form extends moodleform {
 
         // Set default values.
         $this->set_data($defaults);
+    }
+
+    /**
+     * Validation.
+     *
+     * @param array $data
+     * @param array $files
+     *
+     * @return array The errors that were found.
+     */
+    public function validation($data, $files) {
+        $errors = parent::validation($data, $files);
+
+        $addresses = array();
+        $addresses[] = 'functional_contact';
+        $addresses[] = 'technical_contact';
+
+        foreach ($addresses as $fieldname) {
+            if ($data[$fieldname] === '') {
+                continue;
+            }
+
+            if (filter_var($data[$fieldname], FILTER_VALIDATE_EMAIL) !== false) {
+                continue;
+            }
+
+            $errors[$fieldname] = get_string('invalidemail');
+        }
+
+        return $errors;
     }
 }

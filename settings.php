@@ -86,11 +86,6 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     // Configuration.
     $ADMIN->add('apsolu', new admin_category('local_apsolu_configuration', get_string('settings_configuration', 'local_apsolu')));
 
-    // Configuration > Adresse de contacts.
-    $str = get_string('contacts', 'local_apsolu');
-    $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'contacts'));
-    $ADMIN->add('local_apsolu_configuration', new admin_externalpage('local_apsolu_configuration_contacts', $str, $url, $capabilities));
-
     // Configuration > Calendriers.
     $str = get_string('calendars', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'calendars'));

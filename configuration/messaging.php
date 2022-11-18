@@ -30,6 +30,8 @@ require_once($CFG->dirroot.'/local/apsolu/configuration/messaging_form.php');
 
 // Chargement des préférences.
 $attributes = array(
+    'functional_contact',
+    'technical_contact',
     'replytoaddresspreference',
     'defaultreplytoaddresspreference',
     );

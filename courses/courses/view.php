@@ -100,8 +100,8 @@ foreach ($attributes as $attribute) {
     }
 
     $parameters = new \stdClass();
-    $parameters->url = $CFG->wwwroot.'/local/apsolu/configuration/index.php?page=contacts';
-    $parameters->page = get_string('contacts', 'local_apsolu');
+    $parameters->url = $CFG->wwwroot.'/local/apsolu/configuration/index.php?page=messaging';
+    $parameters->page = get_string('messaging', 'local_apsolu');
     $data->notification = '<div class="alert alert-danger">'.get_string('the_fields_of_X_page_have_to_be_completed', 'local_apsolu', $parameters).'</div>';
     break;
 }

@@ -31,7 +31,6 @@ $page = optional_param('page', 'calendars', PARAM_ALPHA);
 $pages = array();
 $pages['calendars'] = 'calendars';
 $pages['calendarstypes'] = 'calendars_types';
-$pages['contacts'] = 'contacts';
 $pages['courseofferings'] = 'course_offerings';
 $pages['dates'] = 'dates';
 $pages['headermessage'] = 'header_message';
