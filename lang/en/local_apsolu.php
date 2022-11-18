@@ -30,6 +30,8 @@ $string['apsolu:gradable'] = 'Être évalué dans une activité';
 $string['apsolu:viewgrades'] = 'Voir les notes';
 $string['apsolu:viewallgrades'] = 'Voir toutes les notes';
 $string['apsolu:viewallownstudentsgrades'] = 'Voir toutes les notes de ses propres étudiants';
+$string['messageprovider:notification'] = 'Notification des enseignants';
+$string['messageprovider:payment_notification'] = 'Notification de paiements';
 
 // Nouvelles chaines, triées par clé.
 $string['accepted_at_least_once'] = 'Accepté au moins 1 fois';

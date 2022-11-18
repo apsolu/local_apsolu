@@ -24,5 +24,5 @@
 
 $messageproviders = array (
     'notification' => array(),
-    'payment_notification' => array(),
+    'payment_notification' => array(), // TODO: est-ce que ce provider est utilisé ?
 );
