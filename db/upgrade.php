@@ -903,5 +903,15 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 2022111800;
+    if ($result && $oldversion < $version) {
+        // Nettoie la table `apsolu_payments_cards_cohort`.
+        $sql = "DELETE FROM {apsolu_payments_cards_cohort} WHERE cohortid NOT IN (SELECT id FROM {cohort})";
+        $DB->execute($sql);
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
     return $result;
 }

@@ -53,4 +53,12 @@ $observers = array(
         'internal'    => true,
         'priority'    => 9999,
     ),
+    // Gère la suppression des cohortes depuis l'interface Administration du site > Utilisateurs > Comptes > Cohortes.
+    array(
+        'eventname'   => '\core\event\cohort_deleted',
+        'callback'    => '\local_apsolu\observer\cohort::deleted',
+        'includefile' => null,
+        'internal'    => true,
+        'priority'    => 9999,
+    ),
 );
