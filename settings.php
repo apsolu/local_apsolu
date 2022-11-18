@@ -101,6 +101,11 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'specialcourses'));
     $ADMIN->add('local_apsolu_configuration', new admin_externalpage('local_apsolu_configuration_special_courses', $str, $url, $capabilities));
 
+    // Configuration > Messagerie.
+    $str = get_string('messaging', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'messaging'));
+    $ADMIN->add('local_apsolu_configuration', new admin_externalpage('local_apsolu_configuration_messaging', $str, $url, $capabilities));
+
     // Configuration > Type de calendriers.
     $str = get_string('calendars_types', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'calendarstypes'));

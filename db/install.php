@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\messaging;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot.'/local/apsolu/locallib.php');
@@ -41,6 +43,9 @@ function xmldb_local_apsolu_install() {
 
     set_config('apsoluheaderactive', 0, 'local_apsolu');
     set_config('apsoluheadercontent', '', 'local_apsolu');
+
+    set_config('replytoaddresspreference', messaging::DISABLE_REPLYTO_ADDRESS, 'local_apsolu');
+    set_config('defaultreplytoaddresspreference', messaging::USE_REPLYTO_ADDRESS, 'local_apsolu');
 
     // Initialise les paramètres de l'offre de formations.
     UniversiteRennes2\Apsolu\set_initial_course_offerings_settings();

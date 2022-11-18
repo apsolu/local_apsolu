@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\messaging;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot.'/local/apsolu/locallib.php');
@@ -911,6 +913,12 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
         // Savepoint reached.
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
+    $version = 2022111801;
+    if ($result && $oldversion < $version) {
+        set_config('replytoaddresspreference', messaging::DISABLE_REPLYTO_ADDRESS, 'local_apsolu');
+        set_config('defaultreplytoaddresspreference', messaging::USE_REPLYTO_ADDRESS, 'local_apsolu');
     }
 
     return $result;

@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\messaging;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/formslib.php');
@@ -45,6 +47,34 @@ class local_apsolu_notification_form extends moodleform {
         $mform = $this->_form;
 
         list($defaultdata, $recipients, $redirecturl) = $this->_customdata;
+
+        // Expéditeur.
+        $noreplyuser = core_user::get_noreply_user();
+        $label = get_string('sender', 'local_apsolu');
+        $value = sprintf('%s <%s>', fullname($noreplyuser), $noreplyuser->email);
+        $mform->addElement('static', 'sender', $label, s($value));
+
+        // Répondre à.
+        $replytoaddresspreference = get_config('local_apsolu', 'replytoaddresspreference');
+        if ($replytoaddresspreference === messaging::FORCE_REPLYTO_ADDRESS) {
+            // On force à utiliser l'adresse de l'utilisateur en "réponse à".
+            $label = get_string('replyto', 'local_apsolu');
+            $mform->addElement('static', 'replytolabel', $label, $USER->email);
+            $mform->addElement('hidden', 'replyto', messaging::USE_REPLYTO_ADDRESS);
+            $mform->setType('replyto', PARAM_TEXT);
+        } else if ($replytoaddresspreference === messaging::ALLOW_REPLYTO_ADDRESS_CHOICE) {
+            // On propose le choix d'utiliser en "réponse à".
+            $options = messaging::get_default_replyto_options();
+            $options[messaging::USE_REPLYTO_ADDRESS] = $USER->email;
+
+            $label = get_string('replyto', 'local_apsolu');
+            $mform->addElement('select', 'replyto', $label, $options);
+            $mform->addRule('replyto', get_string('required'), 'required', null, 'client');
+            if (isset($defaultdata->replyto) === false) {
+                $mform->setDefault('replyto', get_config('local_apsolu', 'defaultreplytoaddresspreference'));
+            }
+            $mform->setType('replyto', PARAM_TEXT);
+        }
 
         // Destinataires.
         $users = array();
@@ -120,12 +150,21 @@ class local_apsolu_notification_form extends moodleform {
             $users[$USER->id] = $USER->id;
         }
 
+        if (isset($data->replyto) === true && $data->replyto === messaging::USE_REPLYTO_ADDRESS) {
+            $replyto = $USER->email;
+            $replytoname = fullname($USER);
+        }
+
         foreach ($users as $user) {
             $eventdata = new \core\message\message();
             $eventdata->name = 'notification';
             $eventdata->component = 'local_apsolu';
             $eventdata->userfrom = $USER;
             $eventdata->userto = $user;
+            if (isset($replyto) === true) {
+                $eventdata->replyto = $replyto;
+                $eventdata->replytoname = $replytoname;
+            }
             $eventdata->subject = $data->subject;
             $eventdata->fullmessage = $data->message['text'];
             $eventdata->fullmessageformat = $data->message['format'];
@@ -165,7 +204,12 @@ class local_apsolu_notification_form extends moodleform {
             $admin->auth = 'manual'; // Force l'authentification en manual, car la fonction email_to_user() ignore les comptes en nologin.
             $admin->email = $functional_contact;
 
-            email_to_user($admin, $USER, $data->subject, $messagetext, $messagehtml);
+            if (isset($replyto) === true) {
+                email_to_user($admin, $USER, $data->subject, $messagetext, $messagehtml, $attachment = '', $attachname = '',
+                    $usetrueaddress = true, $replyto, $replytoname);
+            } else {
+                email_to_user($admin, $USER, $data->subject, $messagetext, $messagehtml);
+            }
 
             $event = \local_apsolu\event\notification_sent::create(array(
                 'relateduserid' => $admin->id,

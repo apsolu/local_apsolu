@@ -1,0 +1,71 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Classe pour le formulaire permettant de configurer les paramètres de messagerie.
+ *
+ * @package    local_apsolu
+ * @copyright  2022 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+use local_apsolu\core\messaging;
+
+defined('MOODLE_INTERNAL') || die;
+
+require_once($CFG->libdir . '/formslib.php');
+
+/**
+ * Classe pour le formulaire permettant de configurer les paramètres de messagerie.
+ *
+ * @package    local_apsolu
+ * @copyright  2022 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class local_apsolu_messaging_form extends moodleform {
+    /**
+     * Définit les champs du formulaire.
+     *
+     * @return void
+     */
+    protected function definition() {
+        $mform = $this->_form;
+
+        list($defaults) = $this->_customdata;
+
+        // Préférence pour l'adresse de réponse.
+        $mform->addElement('select', 'replytoaddresspreference', get_string('replyto_address_preference', 'local_apsolu'), messaging::get_replyto_options());
+        $mform->addHelpButton('replytoaddresspreference', 'replyto_address_preference', 'local_apsolu');
+        $mform->setType('replytoaddresspreference', PARAM_INT);
+
+        // Choix par défaut pour la préférence de l'adresse d'expédition.
+        $mform->addElement('select', 'defaultreplytoaddresspreference', get_string('default_replyto_address', 'local_apsolu'), messaging::get_default_replyto_options());
+        $mform->setType('defaultreplytoaddresspreference', PARAM_INT);
+        $mform->hideIf('defaultreplytoaddresspreference', 'replytoaddresspreference', 'neq', messaging::ALLOW_REPLYTO_ADDRESS_CHOICE);
+
+        // Submit buttons.
+        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
+
+        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+
+        // Hidden fields.
+        $mform->addElement('hidden', 'page', 'messaging');
+        $mform->setType('page', PARAM_ALPHANUM);
+
+        // Set default values.
+        $this->set_data($defaults);
+    }
+}
