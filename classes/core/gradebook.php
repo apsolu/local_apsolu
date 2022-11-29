@@ -219,7 +219,7 @@ class gradebook {
 
         // On récupère la liste des notes attendues en fonction des options passées en paramètre.
         $gradeitems = array();
-        foreach (gradeitem::get_records() as $item) {
+        foreach (gradeitem::get_records($conditions = null, $sort = 'name') as $item) {
             if (isset($options['gradeitems']) === true && in_array($item->id, $options['gradeitems'], $strict = true) === false) {
                 // Ignore les éléments de notation non sélectionnés par le filtre.
                 continue;
