@@ -34,6 +34,8 @@ require_once($CFG->dirroot.'/local/apsolu/grades/grade/gradebook.php');
 echo $OUTPUT->heading(get_string('gradebook', 'grades'));
 
 $data = new stdClass();
+$data->wwwroot = $CFG->wwwroot;
+$data->returnadminurl = CONTEXT_SYSTEM;
 
 $data->display_table = isset($gradebook);
 if ($data->display_table === true) {

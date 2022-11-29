@@ -85,6 +85,9 @@
                     <td{{^value}} class="table-warning"{{/value}}{{#value}} class="table-success"{{/value}}>
                         <p class="m-0">
                             <input name="grades[{{inputname}}]" type="text"{{#locked}} readonly="1" disabled="1"{{/locked}} value="{{value}}" size="5" />
+                            {{^locked}}{{#value}}
+                            <a class="ml-2" href="{{wwwroot}}/local/apsolu/grades/grade/delete.php?inputname={{inputname}}&rt={{returnadminurl}}">{{#pix}}t/delete, core, {{#str}}delete{{/str}}{{/pix}}</a>
+                            {{/value}}{{/locked}}
                         </p>
                         <p class="m-0">
                             <label>
