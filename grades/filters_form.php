@@ -64,12 +64,12 @@ class local_apsolu_grades_gradebooks_filters_form extends moodleform {
 
         // Rôles.
         $mform->addElement('autocomplete', 'roles', get_string('roles'), $roles, $multiple);
-        $mform->setType('roles', PARAM_TEXT);
+        $mform->setType('roles', PARAM_INT);
         $mform->addRule('roles', get_string('required'), 'required', null, 'client');
 
         // Calendriers.
         $mform->addElement('autocomplete', 'calendarstypes', get_string('calendars_types', 'local_apsolu'), $calendarstypes, $multiple);
-        $mform->setType('calendarstypes', PARAM_TEXT);
+        $mform->setType('calendarstypes', PARAM_INT);
         $mform->addRule('calendarstypes', get_string('required'), 'required', null, 'client');
 
         // Élements de notations.
