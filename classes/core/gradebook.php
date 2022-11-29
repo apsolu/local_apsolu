@@ -29,6 +29,7 @@ use context_system;
 use csv_export_writer;
 use Exception;
 use grade_category;
+use grade_grade;
 use grade_item;
 use stdClass;
 
@@ -725,7 +726,7 @@ class gradebook {
                 }
             }
 
-            $currentgrade = $DB->get_record('grade_grades', array('itemid' => $item->id, 'userid' => $userid));
+            $currentgrade = grade_grade::fetch(array('itemid' => $item->id, 'userid' => $userid));
             if ($currentgrade !== false && grade_floats_different($currentgrade->finalgrade, $grade->finalgrade) === false && $currentgrade->feedback === $grade->feedback) {
                 // La note n'a pas changé, on continue.
                 continue;
