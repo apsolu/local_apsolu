@@ -42,7 +42,7 @@ class local_apsolu_grades_gradebooks_filters_form extends moodleform {
     protected function definition() {
         $mform = $this->_form;
 
-        list($defaults, $courses, $roles, $calendarstypes, $cities, $institutions, $ufrs, $departments, $cycles, $teachers) = $this->_customdata;
+        list($defaults, $courses, $roles, $calendarstypes, $gradeitems, $cities, $institutions, $ufrs, $departments, $cycles, $teachers) = $this->_customdata;
 
         $fields = array();
         $fields['emails'] = get_string('email');
@@ -71,6 +71,10 @@ class local_apsolu_grades_gradebooks_filters_form extends moodleform {
         $mform->addElement('autocomplete', 'calendarstypes', get_string('calendars_types', 'local_apsolu'), $calendarstypes, $multiple);
         $mform->setType('calendarstypes', PARAM_TEXT);
         $mform->addRule('calendarstypes', get_string('required'), 'required', null, 'client');
+
+        // Élements de notations.
+        $mform->addElement('autocomplete', 'gradeitems', get_string('gradeitems', 'local_apsolu'), $gradeitems, $multiple);
+        $mform->setType('gradeitems', PARAM_INT);
 
         $mform->addElement('header', 'other_filters', get_string('other_filters', 'local_apsolu'));
         $mform->setExpanded('other_filters', false);

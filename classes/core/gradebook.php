@@ -220,6 +220,11 @@ class gradebook {
         // On récupère la liste des notes attendues en fonction des options passées en paramètre.
         $gradeitems = array();
         foreach (gradeitem::get_records() as $item) {
+            if (isset($options['gradeitems']) === true && in_array($item->id, $options['gradeitems'], $strict = true) === false) {
+                // Ignore les éléments de notation non sélectionnés par le filtre.
+                continue;
+            }
+
             if (is_array($options['roles']) === false) {
                 $options['roles'] = array($options['roles']);
             }
@@ -589,9 +594,12 @@ class gradebook {
                 }
             }
             $gradebook->grades = array();
+            $needagrade = false;
             foreach ($gradeitems as $apsolugradeitemid => $item) {
                 $grade = null;
                 if ($user->roleid === $item->roleid && $user->calendarid === $item->calendarid) {
+                    $needagrade = true;
+
                     $grade = new stdClass();
                     $grade->locked = (self::can_edit_grades($user->courseid, $item->calendar_locked) === false);
                     $grade->abi = false;
@@ -620,7 +628,10 @@ class gradebook {
                 $gradebook->grades[] = $grade;
             }
 
-            $gradebooks->users[] = $gradebook;
+            if ($needagrade === true) {
+                // Ajoute seulement les utilisateurs ayant une note attendue.
+                $gradebooks->users[] = $gradebook;
+            }
         }
         $recordset->close();
 
