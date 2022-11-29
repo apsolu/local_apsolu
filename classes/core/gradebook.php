@@ -704,13 +704,8 @@ class gradebook {
                 }
             }
 
-            if (empty($value) === true) {
-                // Si il n'y a pas de notes, on n'efface rien, et on continue.
-                continue;
-            }
-
             if (isset($gradeitems[$courseid][$apsolugradeitemid]) === false) {
-                // Hmm, y'a un souci là...
+                // Hmm, y'a un souci... visiblement, l'élément de notation n'existe pas pour ce cours.
                 continue;
             }
 
