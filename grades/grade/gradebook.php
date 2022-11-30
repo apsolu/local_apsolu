@@ -213,10 +213,15 @@ if (($formdata = $mform->get_data()) || ($data = data_submitted())) {
         Gradebook::export($options, $filtersdata->fields);
     }
 
+    // Ajoute le champ "pictures" pour l'affichage.
     $filtersdata->fields[] = 'pictures';
+
     try {
         $gradebook = Gradebook::get_gradebook($options, $filtersdata->fields);
     } catch (Exception $exception) {
         $notification = $OUTPUT->notification($exception->getMessage(), 'notifyproblem');
     }
+
+    // Supprime le champ "pictures" pour ne pas l'intégrer si la prochaine action est un export.
+    array_pop($filtersdata->fields);
 }
