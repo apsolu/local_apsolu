@@ -30,12 +30,37 @@ echo $OUTPUT->heading(get_string('calendars', 'local_apsolu'));
 $calendars = $DB->get_records('apsolu_calendars', $conditions = array(), $sort = 'name');
 $calendarstypes = $DB->get_records('apsolu_calendars_types', $conditions = array(), $sort = 'name');
 
+$fields = array();
+$fields[] = 'enrolstartdate';
+$fields[] = 'enrolenddate';
+$fields[] = 'coursestartdate';
+$fields[] = 'courseenddate';
+$fields[] = 'reenrolstartdate';
+$fields[] = 'reenrolenddate';
+$fields[] = 'gradestartdate';
+$fields[] = 'gradeenddate';
+
+$now = time();
+
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
 $data->calendars = array();
 $data->count_calendars = 0;
 
 foreach ($calendars as $calendar) {
+    foreach ($fields as $field) {
+        if (empty($calendar->{$field}) === true) {
+            continue;
+        }
+
+        if ($calendar->{$field} > $now) {
+            continue;
+        }
+
+        $attribute = 'style_'.$field;
+        $calendar->{$attribute} = 'class="text-danger"';
+    }
+
     $calendar->type = $calendarstypes[$calendar->typeid]->name;
 
     $data->calendars[] = $calendar;

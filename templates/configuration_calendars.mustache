@@ -81,14 +81,14 @@
     {{#calendars}}
     <tr>
         <td>{{name}}</td>
-        <td>{{#enrolstartdate}}{{#userdate}} {{enrolstartdate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/enrolstartdate}}</td>
-        <td>{{#enrolenddate}}{{#userdate}} {{enrolenddate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/enrolenddate}}</td>
-        <td>{{#coursestartdate}}{{#userdate}} {{coursestartdate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/coursestartdate}}</td>
-        <td>{{#courseenddate}}{{#userdate}} {{courseenddate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/courseenddate}}</td>
-        <td>{{#reenrolstartdate}}{{#userdate}} {{reenrolstartdate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/reenrolstartdate}}</td>
-        <td>{{#reenrolenddate}}{{#userdate}} {{reenrolenddate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/reenrolenddate}}</td>
-        <td>{{#gradestartdate}}{{#userdate}} {{gradestartdate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/gradestartdate}}</td>
-        <td>{{#gradeenddate}}{{#userdate}} {{gradeenddate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/gradeenddate}}</td>
+        <td{{#style_enrolstartdate}} {{{.}}}{{/style_enrolstartdate}}>{{#enrolstartdate}}{{#userdate}} {{enrolstartdate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/enrolstartdate}}</td>
+        <td{{#style_enrolenddate}} {{{.}}}{{/style_enrolenddate}}>{{#enrolenddate}}{{#userdate}} {{enrolenddate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/enrolenddate}}</td>
+        <td{{#style_coursestartdate}} {{{.}}}{{/style_coursestartdate}}>{{#coursestartdate}}{{#userdate}} {{coursestartdate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/coursestartdate}}</td>
+        <td{{#style_courseenddate}} {{{.}}}{{/style_courseenddate}}>{{#courseenddate}}{{#userdate}} {{courseenddate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/courseenddate}}</td>
+        <td{{#style_reenrolstartdate}} {{{.}}}{{/style_reenrolstartdate}}>{{#reenrolstartdate}}{{#userdate}} {{reenrolstartdate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/reenrolstartdate}}</td>
+        <td{{#style_reenrolenddate}} {{{.}}}{{/style_reenrolenddate}}>{{#reenrolenddate}}{{#userdate}} {{reenrolenddate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/reenrolenddate}}</td>
+        <td{{#style_gradestartdate}} {{{.}}}{{/style_gradestartdate}}>{{#gradestartdate}}{{#userdate}} {{gradestartdate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/gradestartdate}}</td>
+        <td{{#style_gradeenddate}} {{{.}}}{{/style_gradeenddate}}>{{#gradeenddate}}{{#userdate}} {{gradeenddate}}, {{#str}} strftimedatetimeshort, local_apsolu {{/str}} {{/userdate}}{{/gradeenddate}}</td>
         <td>{{type}}</td>
         <td>
             <ul class="list-inline">
