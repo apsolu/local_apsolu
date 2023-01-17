@@ -169,8 +169,8 @@ $params['apsolucardpaid'] = $customfields['apsolucardpaid']->id;
 if (isset($invalid_enrolments) === false) {
     // Récupération des inscriptions courantes.
     $sql .= "AND ue.status = 0".
-        " AND (ue.timestart < :timestart OR ue.timestart = 0)".
-        " AND (ue.timeend > :timeend OR ue.timeend = 0)";
+        " AND (ue.timestart <= :timestart OR ue.timestart = 0)".
+        " AND (ue.timeend >= :timeend OR ue.timeend = 0)";
     $params['timestart'] = $session->sessiontime;
     $params['timeend'] = $session->sessiontime;
 } else {
