@@ -125,7 +125,7 @@ if (isset($invalid_enrolments) === true) {
     $lists_style = '';
     $args['invalid_enrolments'] = 1;
 } else {
-    $lists_style = ' style="display: none;"';
+    $lists_style = 'display: none;';
 }
 
 if (isset($inactive_enrolments) === true) {
@@ -311,28 +311,33 @@ if ($notification === true) {
     echo $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
 }
 
-echo '<form method="post" action="'.$CFG->wwwroot.'/local/apsolu/attendance/edit.php?courseid='.$courseid.'&amp;sessionid='.$sessionid.'" />';
-echo '<table class="table table-striped" id="apsolu-attendance-table">'.
-    '<caption class="text-left">'.get_string('attendance_table_caption', 'local_apsolu', (object) ['count_students' => count($students)]).'</caption>'.
-    '<thead>'.
-        '<tr>';
+// Construit le tableau HTML.
+$table = new html_table();
+$table->id = 'apsolu-attendance-table';
+$table->attributes = array('class' => 'table table-striped');
+
+// Définit les entêtes du tableau.
+$table->head = array();
 if (isset($inactive_enrolments) === true) {
-    echo '<th>'.get_string('attendance_enrolment_state', 'local_apsolu').'</th>';
+    $table->head[] = get_string('attendance_enrolment_state', 'local_apsolu');
 }
-echo '<th>'.get_string('pictureofuser').'</th>'.
-            '<th>'.get_string('lastname').'</th>'.
-            '<th>'.get_string('firstname').'</th>'.
-            '<th>'.get_string('attendance_presence', 'local_apsolu').'</th>'.
-            '<th>'.get_string('attendance_comment', 'local_apsolu').'</th>'.
-            '<th>'.get_string('attendance_course_presences_count', 'local_apsolu').'</th>'.
-            '<th>'.get_string('attendance_activity_presences_count', 'local_apsolu').'</th>'.
-            '<th>'.get_string('attendance_enrolment_type', 'local_apsolu').'</th>'.
-            '<th'.$lists_style.'>'.get_string('attendance_enrolment_list', 'local_apsolu').'</th>'.
-            '<th>'.get_string('attendance_complement', 'local_apsolu').'</th>'.
-            '<th>'.get_string('attendance_enrolments_management', 'local_apsolu').'</th>'.
-        '</tr>'.
-    '</thead>'.
-    '<tbody>';
+$table->head[] = get_string('pictureofuser');
+$table->head[] = get_string('lastname');
+$table->head[] = get_string('firstname');
+$table->head[] = get_string('attendance_presence', 'local_apsolu');
+$table->head[] = get_string('attendance_comment', 'local_apsolu');
+$table->head[] = get_string('attendance_course_presences_count', 'local_apsolu');
+$table->head[] = get_string('attendance_activity_presences_count', 'local_apsolu');
+$table->head[] = get_string('attendance_enrolment_type', 'local_apsolu');
+$cell = new html_table_cell();
+$cell->text = get_string('attendance_enrolment_list', 'local_apsolu');
+$cell->style = $lists_style;
+$table->head[] = $cell;
+$table->head[] = get_string('attendance_complement', 'local_apsolu');
+$table->head[] = get_string('attendance_enrolments_management', 'local_apsolu');
+
+// Initialise les données du tableau.
+$table->data = array();
 
 $statuses = $DB->get_records('apsolu_attendance_statuses');
 
@@ -446,32 +451,56 @@ foreach ($students as $student) {
         $enrolment_link = get_string('attendance_ontime_enrolment', 'local_apsolu');
     }
 
-    echo '<tr>';
+    $cols = array();
     if (isset($inactive_enrolments) === true) {
-        echo '<td class="'.$enrolment_status_style.'">'.$enrolment_status.'</td>';
+        $cell = new html_table_cell();
+        $cell->text = $enrolment_status;
+        $cell->attributes = array('class' => $enrolment_status_style);
+        $cols[] = $cell;
     }
-    echo '<td>'.$OUTPUT->render($picture).'</td>'.
-        '<td>'.$student->lastname.'</td>'.
-        '<td>'.$student->firstname.'</td>'.
-        '<td'.$status_style.'>'.$radios.'</td>'.
-        '<td><textarea name="comment['.$student->id.']">'.htmlentities($presences[$student->id]->description, ENT_COMPAT, 'UTF-8').'</textarea></td>'.
-        '<td><ul><li>'.implode('</li><li>', $coursepresences[$student->id]).'</li></ul></td>'.
-        '<td><ul><li>'.implode('</li><li>', $activitypresences[$student->id]).'</li></ul></td>'.
-        '<td class="apsolu-attendance-role" data-userid="'.$student->id.'">'.$rolename.'</td>';
+    $cols[] = $OUTPUT->render($picture);
+    $cols[] = $student->lastname;
+    $cols[] = $student->firstname;
+    $cell = new html_table_cell();
+    $cell->text = $radios;
+    if (empty($status_style) === false) {
+        $cell->style = 'table-warning';
+    }
+    $cols[] = $cell;
+    $cols[] = '<textarea name="comment['.$student->id.']">'.htmlentities($presences[$student->id]->description, ENT_COMPAT, 'UTF-8').'</textarea>';
+    $cols[] = '<ul><li>'.implode('</li><li>', $coursepresences[$student->id]).'</li></ul>';
+    $cols[] = '<ul><li>'.implode('</li><li>', $activitypresences[$student->id]).'</li></ul>';
+    $cell = new html_table_cell();
+    $cell->text = $rolename;
+    $cell->attributes = array('class' => 'apsolu-attendance-role', 'data-userid' => $student->id);
+    $cols[] = $cell;
 
     if ($student->status === null) {
-        echo '<td'.$lists_style.'>-</td>';
+        $cell  = new html_table_cell();
+        $cell->text = '-';
+        $cell->style = $lists_style;
+        $cols[] = $cell;
     } else {
-        echo '<td class="apsolu-attendance-status" data-userid="'.$student->id.'"'.$lists_style.'>'.enrol_select_plugin::get_enrolment_list_name($student->status, 'short').'</td>';
+        $cell  = new html_table_cell();
+        $cell->text = enrol_select_plugin::get_enrolment_list_name($student->status, 'short');
+        $cell->attributes = array('class' => 'apsolu-attendance-status', 'data-userid' => $student->id);
+        $cell->style = $lists_style;
+        $cols[] = $cell;
     }
 
-    echo '<td class="'.$informations_style.'">'.implode('<br />', $informations).'</td>'.
-            '<td>'.$enrolment_link.'</td>'.
-        '</tr>';
-}
-echo '</tbody>'.
-    '</table>';
+    $cell  = new html_table_cell();
+    $cell->text = implode('<br />', $informations);
+    $cell->attributes = array('class' => $informations_style);
+    $cols[] = $cell;
+    $cols[] = $enrolment_link;
 
+    $table->data[] = $cols;
+}
+
+$table->caption = get_string('attendance_table_caption', 'local_apsolu', (object) ['count_students' => count($table->data)]);
+
+echo '<form method="post" action="'.$CFG->wwwroot.'/local/apsolu/attendance/edit.php?courseid='.$courseid.'&amp;sessionid='.$sessionid.'" />';
+echo html_writer::table($table);
 echo '<p class="text-right">'.
     '<input class="btn btn-primary" type="submit" name="apsolu" value="'.get_string('savechanges').'" />';
 
