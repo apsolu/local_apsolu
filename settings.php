@@ -174,8 +174,8 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
         $ADMIN->add('apsolu', new admin_category('local_apsolu_appearance', get_string('appearance', 'admin')));
     }
 
-    // Présentation > Offre de formations.
-    $str = get_string('course_offerings', 'local_apsolu');
+    // Présentation > Affichage de l'offre de formations.
+    $str = get_string('settings_course_offerings', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'courseofferings'));
     $ADMIN->add('local_apsolu_appearance', new admin_externalpage('local_apsolu_configuration_course_offerings', $str, $url, $capabilities));
 

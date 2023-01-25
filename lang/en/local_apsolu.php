@@ -945,6 +945,7 @@ $string['fields_apsoludoublecursus'] = 'Double cursus';
 $string['settings_root'] = 'APSOLU';
 $string['settings_configuration'] = 'Configuration';
 $string['settings_configuration_homepage'] = 'Page d\'accueil';
+$string['settings_course_offerings'] = 'Affichage de l\'offre de formations';
 $string['settings_activities'] = 'Activités physiques';
 $string['settings_complements'] = 'Activités complémentaires';
 $string['settings_federations'] = 'FFSU';

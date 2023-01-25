@@ -101,6 +101,6 @@ if ($data = $mform->get_data()) {
 }
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('course_offerings', 'local_apsolu'));
+echo $OUTPUT->heading(get_string('settings_course_offerings', 'local_apsolu'));
 $mform->display();
 echo $OUTPUT->footer();
