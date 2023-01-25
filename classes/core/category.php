@@ -26,6 +26,7 @@ namespace local_apsolu\core;
 
 use coding_exception;
 use core_course_category;
+use local_apsolu\core\federation\activity as Activity;
 
 /**
  * Classe gérant les activités sportives (catégories de cours Moodle).
@@ -58,9 +59,6 @@ class category extends record {
     /** @var string $url Page web décrivant l'activité sportive. */
     public $url = '';
 
-    /** @var boolean $federation Indique si cette activité sportive est représentée à la FFSU. */
-    public $federation = '';
-
     /**
      * Supprime un objet en base de données.
      *
@@ -74,6 +72,13 @@ class category extends record {
         // Démarre une transaction, si ce n'est pas déjà fait.
         if ($DB->is_transaction_started() === false) {
             $transaction = $DB->start_delegated_transaction();
+        }
+
+        // Supprime une éventuelle association dans la table des activités FFSU.
+        $records = Activity::get_records(array('categoryid' => $this->id));
+        foreach ($records as $record) {
+            $record->categoryid = 0;
+            $record->save();
         }
 
         // Supprime l'objet en base de données.
@@ -106,7 +111,7 @@ class category extends record {
             $strictness = MUST_EXIST;
         }
 
-        $sql = "SELECT cc.id, cc.name, cc.description, cc.descriptionformat, cc.parent, acc.url, acc.federation".
+        $sql = "SELECT cc.id, cc.name, cc.description, cc.descriptionformat, cc.parent, acc.url".
             " FROM {course_categories} cc".
             " JOIN {apsolu_courses_categories} acc ON acc.id = cc.id".
             " WHERE acc.id = :recordid";
@@ -155,8 +160,8 @@ class category extends record {
             $this->id = $coursecat->id;
 
             // Note: insert_record() exige l'absence d'un id.
-            $sql = "INSERT INTO {apsolu_courses_categories} (id, url, federation) VALUES(:id, :url, :federation)";
-            $DB->execute($sql, array('id' => $this->id, 'url' => $this->url, 'federation' => $this->federation));
+            $sql = "INSERT INTO {apsolu_courses_categories} (id, url) VALUES(:id, :url)";
+            $DB->execute($sql, array('id' => $this->id, 'url' => $this->url));
         } else {
             $DB->update_record(self::TABLENAME, $this);
 

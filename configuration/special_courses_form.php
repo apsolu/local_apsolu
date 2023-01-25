@@ -44,18 +44,24 @@ class local_apsolu_special_courses_form extends moodleform {
 
         $mform = $this->_form;
 
-        list($defaults, $courses) = $this->_customdata;
+        list($defaults, $collaborative_courses, $federation_courses) = $this->_customdata;
 
         // Cours collaboratif pour les enseignants du SUAPS.
-        $mform->addElement('autocomplete', 'collaborative_course', get_string('internal_collaborative_course', 'local_apsolu'), $courses);
+        $mform->addElement('autocomplete', 'collaborative_course', get_string('internal_collaborative_course', 'local_apsolu'), $collaborative_courses);
         $mform->addHelpButton('collaborative_course', 'internal_collaborative_course', 'local_apsolu');
         $mform->setType('collaborative_course', PARAM_TEXT);
 
         // Cours de la fédération sportive de sports universitaires.
-        if (isset($CFG->is_siuaps_rennes) === true) {
-            $mform->addElement('autocomplete', 'federation_course', get_string('federation_course', 'local_apsolu'), $courses);
-            $mform->addHelpButton('federation_course', 'federation_course', 'local_apsolu');
-            $mform->setType('federation_course', PARAM_TEXT);
+        $mform->addElement('autocomplete', 'federation_course', get_string('federation_course', 'local_apsolu'), $federation_courses);
+        $mform->addHelpButton('federation_course', 'federation_course', 'local_apsolu');
+        $mform->setType('federation_course', PARAM_TEXT);
+
+        if (empty($defaults->federation_course) === false) {
+            $params = new stdClass();
+            $params->courselink = (string) new moodle_url('/course/view.php', array('id' => $defaults->federation_course));
+            $params->formlink = (string) new moodle_url('/local/apsolu/federation/adhesion/index.php');
+            $string = get_string('federation_course_link_to_medical_form_description', 'local_apsolu', $params);
+            $mform->addElement('html', sprintf('<div class="alert alert-info col-8 offset-md-3">%s</div>', $string));
         }
 
         // Submit buttons.

@@ -25,11 +25,13 @@
 defined('MOODLE_INTERNAL') || die();
 
 $capabilities = array(
+    // Droits autour de Paybox.
     'local/apsolu:configpaybox' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'riskbitmask' => RISK_CONFIG,
     ),
+    // Droits autour de la notation.
     'local/apsolu:gradable' => array(
         'captype' => 'read',
         'contextlevel' => CONTEXT_COURSE,
@@ -83,6 +85,15 @@ $capabilities = array(
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
             'manager' => CAP_ALLOW
+        ),
+    ),
+    // Droits autour de la gestion FFSU.
+    'local/apsolu:viewallmedicalcertificates' => array(
+        'riskbitmask' => RISK_PERSONAL,
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW,
         ),
     ),
 );

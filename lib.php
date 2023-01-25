@@ -40,13 +40,14 @@ defined('MOODLE_INTERNAL') || die();
  * @return void|bool Retourne False en cas d'erreur.
  */
 function local_apsolu_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+    global $USER;
 
     if ($context->contextlevel != CONTEXT_COURSE) {
         debugging('Wrong contextlevel: '.$context->contextlevel, DEBUG_DEVELOPER);
         return false;
     }
 
-    if ($filearea !== 'information') {
+    if (in_array($filearea, array('information', 'medicalcertificate'), $strict = true) === false) {
         debugging('Wrong filearea: '.$filearea, DEBUG_DEVELOPER);
         return false;
     }
@@ -66,6 +67,17 @@ function local_apsolu_pluginfile($course, $cm, $context, $filearea, $args, $forc
     if ($file === false) {
         debugging(get_string('filenotfound', 'error'), DEBUG_DEVELOPER);
         return false;
+    }
+
+    switch ($filearea) {
+        case 'information':
+            // Fichier public, visible sans droit particulier.
+            break;
+        case 'medicalcertificate':
+            // Fichier visible uniquement par le propriétaire du fichier ou un gestionnaire.
+            if ($file->userid !== $USER->id && has_capability('local/apsolu:viewallmedicalcertificates', context_system::instance()) === false) {
+                return false;
+            }
     }
 
     // Finally send the file.

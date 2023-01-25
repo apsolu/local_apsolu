@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\federation\activity as Activity;
+use local_apsolu\core\federation\adhesion as Adhesion;
 use local_apsolu\core\messaging;
 
 defined('MOODLE_INTERNAL') || die;
@@ -46,6 +48,25 @@ function xmldb_local_apsolu_install() {
 
     set_config('replytoaddresspreference', messaging::DISABLE_REPLYTO_ADDRESS, 'local_apsolu');
     set_config('defaultreplytoaddresspreference', messaging::USE_REPLYTO_ADDRESS, 'local_apsolu');
+
+    set_config('ffsu_acceptedfiles', '.pdf .odt .doc .docx .jpe .jpeg .jpg .png', 'local_apsolu');
+    set_config('ffsu_maxfiles', 1, 'local_apsolu');
+
+    set_config('insurance_field_default', '0', 'local_apsolu');
+    set_config('managerlicense_field_default', '0', 'local_apsolu');
+    set_config('managerlicensetype_field_default', '', 'local_apsolu');
+    set_config('refereelicense_field_default', '0', 'local_apsolu');
+    set_config('sportlicense_field_default', '1', 'local_apsolu');
+    set_config('starlicense_field_default', '0', 'local_apsolu');
+
+    set_config('instagram_field_visibility', Adhesion::FIELD_HIDDEN, 'local_apsolu');
+    set_config('insurance_field_visibility', Adhesion::FIELD_HIDDEN, 'local_apsolu');
+    set_config('managerlicense_field_visibility', Adhesion::FIELD_HIDDEN, 'local_apsolu');
+    set_config('managerlicensetype_field_visibility', Adhesion::FIELD_HIDDEN, 'local_apsolu');
+    set_config('otherfederation_field_visibility', Adhesion::FIELD_VISIBLE, 'local_apsolu');
+    set_config('refereelicense_field_visibility', Adhesion::FIELD_HIDDEN, 'local_apsolu');
+    set_config('sportlicense_field_visibility', Adhesion::FIELD_VISIBLE, 'local_apsolu');
+    set_config('starlicense_field_visibility', Adhesion::FIELD_HIDDEN, 'local_apsolu');
 
     // Initialise les paramètres de l'offre de formations.
     UniversiteRennes2\Apsolu\set_initial_course_offerings_settings();
@@ -124,6 +145,13 @@ function xmldb_local_apsolu_install() {
         $field->sortorder++;
 
         $DB->insert_record('user_info_field', $field);
+    }
+
+    // Ajoute les données dans la table des activités de la FFSU.
+    foreach (Activity::get_activity_data() as $data) {
+        $sql = "INSERT INTO {apsolu_federation_activities} (id, name, mainsport, restriction, categoryid)".
+            " VALUES(:id, :name, :mainsport, :restriction, NULL)";
+        $DB->execute($sql, $data);
     }
 
     return true;

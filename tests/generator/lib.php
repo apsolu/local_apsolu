@@ -134,7 +134,6 @@ class local_apsolu_generator extends testing_module_generator {
         $category->description = '';
         $category->descriptionformat = 0;
         $category->url = '';
-        $category->federation = 0;
 
         // Form.
         $groupings = array($grouping->id => $grouping->name);

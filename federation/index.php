@@ -22,26 +22,41 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\course AS Course;
+
 require(__DIR__.'/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
-$page = optional_param('page', 'importation', PARAM_ALPHA);
+$page = optional_param('page', 'activities', PARAM_ALPHAEXT);
+
+// Récupère l'id du cours FFSU.
+$courseid = Course::get_federation_courseid();
+
+if ($courseid === false) {
+    throw new moodle_exception('undefined_federation_course', 'local_apsolu');
+}
 
 // Set tabs.
-$pages = array('import');
+$pages = array();
+$pages['settings'] = get_string('settings');
+$pages['activities'] = get_string('activity_list', 'local_apsolu');
+$pages['numbers'] = get_string('association_numbers', 'local_apsolu');
+$pages['export'] = get_string('exporting_license', 'local_apsolu');
+$pages['import'] = get_string('importing_license', 'local_apsolu');
+$pages['certificates_validation'] = get_string('certificates_validation', 'local_apsolu');
 
 $tabtree = array();
-foreach ($pages as $pagename) {
+foreach ($pages as $pagename => $label) {
     $url = new moodle_url('/local/apsolu/index.php', array('page' => $pagename));
-    $tabtree[] = new tabobject($pagename, $url, get_string('settings_federation_'.$pagename, 'local_apsolu'));
+    $tabtree[] = new tabobject($pagename, $url, $label);
 }
 
 // Set default tabs.
-if (in_array($page, $pages, true) === false) {
-    $page = $pages[0];
+if (isset($pages[$page]) === false) {
+    $page = 'activities';
 }
 
 // Setup admin access requirement.
 admin_externalpage_setup('local_apsolu_federation_'.$page);
 
-require(__DIR__.'/import.php');
+require(__DIR__.'/'.$page.'/index.php');

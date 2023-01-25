@@ -15,19 +15,27 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Contrôleur pour les pages d'administration des activités FFSU.
+ * Page listant les activités FFSU.
  *
  * @package    local_apsolu
- * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2022 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+defined('MOODLE_INTERNAL') || die();
 
-$actions = array('view', 'export');
+$sql = "SELECT afa.id, afa.name, cc.name AS apsoluname".
+    " FROM {apsolu_federation_activities} afa".
+    " LEFT JOIN {course_categories} cc ON cc.id = afa.categoryid".
+    " ORDER BY afa.name, cc.name";
+$activities = $DB->get_records_sql($sql);
 
-if (!in_array($action, $actions, true)) {
-    $action = 'view';
-}
+echo $OUTPUT->header();
+echo $OUTPUT->heading_with_help(get_string('activity_list', 'local_apsolu'), 'activity_list', 'local_apsolu');
 
-require(__DIR__.'/'.$action.'.php');
+$data = new stdClass();
+$data->activities = array_values($activities);
+$data->wwwroot = $CFG->wwwroot;
+echo $OUTPUT->render_from_template('local_apsolu/federation_activities', $data);
+
+echo $OUTPUT->footer();

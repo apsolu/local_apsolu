@@ -84,7 +84,7 @@ $data->wwwroot = $CFG->wwwroot;
 $data->courses = array_values($courses);
 $data->count_courses = count($courses);
 $data->unique_city = (count($cities) === 1);
-$data->is_siuaps_rennes = isset($CFG->is_siuaps_rennes);
+$data->federation_course = \local_apsolu\core\course::get_federation_courseid();
 $data->notification = '';
 
 if (isset($notificationform)) {

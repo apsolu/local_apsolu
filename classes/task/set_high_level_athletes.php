@@ -61,7 +61,6 @@ class set_high_level_athletes extends \core\task\scheduled_task {
         $fields = \local_apsolu\core\customfields::getCustomFields();
 
         $courses = array();
-        $courses[249] = array('apsolufederationpaid', 'apsolumedicalcertificate');
         $courses[250] = array('apsolumuscupaid');
 
         // Ajoute les champs de profil manquants pour les inscrits à la FFSU et à la muscu.
@@ -89,27 +88,6 @@ class set_high_level_athletes extends \core\task\scheduled_task {
                 }
             }
         }
-
-        // Positionne le flag "apsolumedicalcertificate" à 1 sur les étudiants dont le certificat FFSU est validé dans le cours 249.
-        $sql = "UPDATE {user_info_data} SET data = 1".
-            " WHERE fieldid = (SELECT uif.id FROM {user_info_field} uif WHERE uif.shortname = 'apsolumedicalcertificate')".
-            " AND userid IN (SELECT ag.userid from {assign} a JOIN {assign_grades} ag ON ag.assignment = a.id WHERE a.id = 75 AND a.course = 249 AND ag.grade > 0)".
-            " AND data != '1'";
-        $DB->execute($sql);
-
-        // Positionne le flag "apsolumedicalcertificate" à 1 sur les étudiants dont la note au questionnaire FFSU est 1 dans le cours 249.
-        $sql = "UPDATE {user_info_data} SET data = 1".
-            " WHERE fieldid = (SELECT uif.id FROM {user_info_field} uif WHERE uif.shortname = 'apsolumedicalcertificate')".
-            " AND userid IN (SELECT userid FROM {quiz_attempts} WHERE quiz = 14 AND state = 'finished' AND sumgrades = '1')".
-            " AND data != '1'";
-        $DB->execute($sql);
-
-        // Positionne le flag "apsolufederationpaid" à 1 sur les étudiants dont le paiement de la carte FFSU (id 4) est payé (status 1) ou offert (status 3).
-        $sql = "UPDATE {user_info_data} SET data = 1".
-            " WHERE fieldid = (SELECT uif.id FROM {user_info_field} uif WHERE uif.shortname = 'apsolufederationpaid')".
-            " AND userid IN (SELECT ap.userid FROM {apsolu_payments} ap JOIN {apsolu_payments_items} api ON ap.id = api.paymentid WHERE ap.status IN (1, 3) AND api.cardid = 4)".
-            " AND data != '1'";
-        $DB->execute($sql);
 
         // Positionne le flag "apsolumuscupaid" à 1 sur les étudiants dont le paiment de la carte muscu (id 3) est payé (status 1) ou offert (status 3).
         $sql = "UPDATE {user_info_data} SET data = 1".

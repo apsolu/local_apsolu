@@ -22,32 +22,19 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\federation\adhesion as Adhesion;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir.'/csvlib.class.php');
 
-require_once('import_form.php');
-
-core_php_time_limit::raise(60 * 60); // 1 hour should be enough
-raise_memory_limit(MEMORY_HUGE);
+require_once(__DIR__.'/import_form.php');
 
 $returnurl = new moodle_url('/local/apsolu/federation/index.php?page=importation');
 
 $mform = new local_apsolu_federation_import_licences();
 
 if ($formdata = $mform->get_data()) {
-    if (isset($formdata->importbutton) === true) {
-        $result = array();
-
-        $sql = "SELECT u.email, u.id, u.firstname, u.lastname, uid3.data AS licenseid".
-            " FROM {user} u".
-            " JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = 13 AND uid1.data = 1". // TODO: certificat médical.
-            " JOIN {user_info_data} uid2 ON u.id = uid2.userid AND uid2.fieldid = 9 AND uid2.data = 1". // TODO: fédération paid
-            " LEFT JOIN {user_info_data} uid3 ON u.id = uid3.userid AND uid3.fieldid = 14". // TODO: federationumber.
-            " WHERE u.auth = 'shibboleth'";
-        $users = $DB->get_records_sql($sql);
-    }
-
     $iid = csv_import_reader::get_new_iid('local_apsolu_federation_import');
     $cir = new csv_import_reader($iid, 'local_apsolu_federation_import');
 
@@ -76,60 +63,48 @@ if ($formdata = $mform->get_data()) {
                 break;
             }
         } else if (isset($formdata->importbutton) === true) {
-            // Import.
-            if (isset($line[1]) === false) {
-                continue;
-            }
+            $result = array();
 
-            $email = trim($line[1]);
-            $email1 = str_replace(array('@etudiant.uhb.fr', '@uhb.fr'), array('@etudiant.univ-rennes2.fr', '@univ-rennes2.fr'), $email);
-            $email2 = str_replace(array('@etudiant.univ-rennes2.fr', '@univ-rennes2.fr'), array('@etudiant.uhb.fr', '@uhb.fr'), $email);
-            if (isset($users[$email1]) === true) {
-                $email = $email1;
-            } else if (isset($users[$email2]) === true) {
-                $email = $email2;
-            } else {
+            $sql = "SELECT u.email, u.firstname, u.lastname, adh.*".
+                " FROM {user} u".
+                " JOIN {apsolu_federation_adhesions} adh ON u.id = adh.userid";
+            $users = $DB->get_records_sql($sql);
+
+            // Import.
+            $email = trim($line[10]);
+            if (isset($users[$email]) === false) {
                 continue;
             }
 
             $licenseid = trim($line[0]);
-            if ($users[$email]->licenseid === $licenseid) {
+            if (empty($licenseid) === true) {
                 continue;
             }
 
-            $license = $DB->get_record('user_info_data', array('userid' => $users[$email]->id, 'fieldid' => 14));
-            if ($license === false) {
-                $license = new stdClass();
-                $license->fieldid = 14;
-                $license->userid = $users[$email]->id;
-                $license->data = $licenseid;
+            $adhesion = $users[$email];
+            if ($adhesion->federationnumber === $licenseid) {
+                continue;
+            }
 
-                $DB->insert_record('user_info_data', $license);
+            $oldlicenseid = $adhesion->federationnumber;
 
-                $params = new stdClass();
-                $params->licenseid = $licenseid;
-                $params->profile = html_writer::link('/user/profile.php?id='.$license->userid, $users[$email]->firstname.' '.$users[$email]->lastname);
+            $sql = "UPDATE {apsolu_federation_adhesions} SET federationnumber = :federationnumber WHERE id = :id AND userid = :userid";
+            $DB->execute($sql, array('federationnumber' => $licenseid, 'id' => $adhesion->id, 'userid' => $adhesion->userid));
+
+            $params = new stdClass();
+            $params->licenseid = $licenseid;
+            $params->profile = html_writer::link('/user/profile.php?id='.$adhesion->userid, $adhesion->firstname.' '.$adhesion->lastname);
+            if (empty($oldlicenseid) === true) {
+                // Création d'un numéro AS.
                 $result[] = get_string('federation_insert_license', 'local_apsolu', $params);
-
             } else {
-                $oldlicenseid = $license->data;
-
-                $license->data = $licenseid;
-                $DB->update_record('user_info_data', $license);
-
-                $params = new stdClass();
-                $params->licenseid = $licenseid;
-                $params->profile = html_writer::link('/user/profile.php?id='.$license->userid, $users[$email]->firstname.' '.$users[$email]->lastname);
-                if (empty($oldlicenseid) === true) {
-                    $result[] = get_string('federation_insert_license', 'local_apsolu', $params);
-                } else {
-                    $params->oldlicenseid = $oldlicenseid;
-                    $result[] = get_string('federation_update_license', 'local_apsolu', $params);
-                }
+                // Mise à jour du numéro AS.
+                $params->oldlicenseid = $oldlicenseid;
+                $result[] = get_string('federation_update_license', 'local_apsolu', $params);
             }
 
             // Add event.
-            \core\event\user_updated::create_from_userid($license->userid)->trigger();
+            \core\event\user_updated::create_from_userid($adhesion->userid)->trigger();
         } else {
             break;
         }
@@ -144,7 +119,7 @@ if ($formdata = $mform->get_data()) {
 
 echo $OUTPUT->header();
 
-echo $OUTPUT->heading_with_help(get_string('federation_importation', 'local_apsolu'), 'federation_importation', 'local_apsolu');
+echo $OUTPUT->heading_with_help(get_string('importing_license', 'local_apsolu'), 'importing_license', 'local_apsolu');
 
 $mform->display();
 
@@ -154,7 +129,7 @@ if (isset($formdata->previewbutton) === true) {
     $table->attributes['class'] = 'generaltable';
     $table->tablealign = 'center';
     $table->summary = get_string('federation_preview', 'local_apsolu');
-    $table->head = array(get_string('federation_licenseid', 'local_apsolu'), get_string('email'));
+    $table->head = Adhesion::get_exportation_headers();
     $table->data = $data;
 
     echo '<h3>'.get_string('federation_preview', 'local_apsolu').'</h3>';

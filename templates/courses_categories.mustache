@@ -63,9 +63,9 @@
 	<tr>
 		<th>{{#str}}categories, local_apsolu{{/str}}</th>
 		<th>{{#str}}groupings, local_apsolu{{/str}}</th>
-		{{#is_siuaps_rennes}}
+		{{#federation_course}}
 		<th>{{#str}}federation, local_apsolu{{/str}}</th>
-		{{/is_siuaps_rennes}}
+		{{/federation_course}}
 		<th>{{#str}}actions{{/str}}</th>
 	</tr>
 </thead>
@@ -74,9 +74,9 @@
 	<tr>
 		<td>{{name}}</td>
 		<td>{{grouping}}</td>
-		{{#is_siuaps_rennes}}
+		{{#federation_course}}
 		<td>{{#federation}}{{#str}}yes{{/str}}{{/federation}}{{^federation}}{{#str}}no{{/str}}{{/federation}}</td>
-		{{/is_siuaps_rennes}}
+		{{/federation_course}}
 		<td>
 			<ul class="list-inline">
 				<li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=categories&action=edit&categoryid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></li>

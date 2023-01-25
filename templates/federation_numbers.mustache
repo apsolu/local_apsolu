@@ -1,0 +1,66 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_apsolu/federation_numbers
+
+    Template Moodle pour afficher la liste des numéros d'association.
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * activities
+
+    Example context (json):
+    {
+        "wwwroot": "",
+        "numbers": []
+    }
+}}
+
+<p class="text-right">
+	<a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/federation/index.php?page=numbers&action=edit">{{#str}}add_association_number, local_apsolu{{/str}}</a>
+</p>
+
+<table class="table table-striped">
+<thead>
+    <tr>
+        <th>{{#str}}association_numbers, local_apsolu{{/str}}</th>
+        <th>{{#str}}fields, local_apsolu{{/str}}</th>
+        <th>{{#str}}values, local_apsolu{{/str}}</th>
+        <th>{{#str}}actions{{/str}}</th>
+    </tr>
+</thead>
+<tbody>
+    {{#numbers}}
+    <tr>
+        <td>{{number}}</td>
+        <td>{{field}}</td>
+        <td>{{value}}</td>
+        <td>
+			<ul class="list-inline">
+                <li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/federation/index.php?page=numbers&action=edit&numberid={{id}}">{{#pix}}t/edit, core, {{#str}}edit{{/str}}{{/pix}}</a></li>
+				<li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/federation/index.php?page=numbers&action=delete&numberid={{id}}">{{#pix}}t/delete,core,{{#str}}delete{{/str}}{{/pix}}</a></li>
+			</ul>
+        </td>
+    </tr>
+    {{/numbers}}
+</tbody>
+</table>

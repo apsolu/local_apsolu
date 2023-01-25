@@ -22,20 +22,35 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\federation\activity as Activity;
+
 defined('MOODLE_INTERNAL') || die;
 
-$sql = "SELECT acc.id, cc.name, acc.federation, ccc.name AS grouping".
+// Génère la liste des activités FFSU.
+$federation_activities = array();
+foreach (Activity::get_records() as $activity) {
+    $federation_activities[$activity->categoryid] = $activity->categoryid;
+}
+
+// Génère la liste des activités APSOLU.
+$sql = "SELECT acc.id, cc.name, ccc.name AS grouping".
     " FROM {apsolu_courses_categories} acc".
     " JOIN {course_categories} cc ON cc.id = acc.id".
     " JOIN {course_categories} ccc ON ccc.id = cc.parent".
     " ORDER BY cc.name, cc.sortorder";
-$categories = $DB->get_records_sql($sql);
+$categories = array();
+foreach ($DB->get_records_sql($sql) as $categoryid => $category) {
+    // Positionne le témoin FFSU.
+    $category->federation = isset($federation_activities[$categoryid]);
+
+    $categories[$categoryid] = $category;
+}
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
 $data->categories = array_values($categories);
 $data->count_categories = count($categories);
-$data->is_siuaps_rennes = isset($CFG->is_siuaps_rennes);
+$data->federation_course = local_apsolu\core\course::get_federation_courseid();
 
 if (isset($notificationform)) {
     $data->notification = $notificationform;

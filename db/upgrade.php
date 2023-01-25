@@ -22,9 +22,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\core\federation\activity as Activity;
 use local_apsolu\core\messaging;
 
 defined('MOODLE_INTERNAL') || die;
+
 
 require_once($CFG->dirroot.'/local/apsolu/locallib.php');
 
@@ -919,6 +922,148 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     if ($result && $oldversion < $version) {
         set_config('replytoaddresspreference', messaging::DISABLE_REPLYTO_ADDRESS, 'local_apsolu');
         set_config('defaultreplytoaddresspreference', messaging::USE_REPLYTO_ADDRESS, 'local_apsolu');
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
+    $version = 2023012400;
+    if ($result && $oldversion < $version) {
+        // Ajoute la table apsolu_federation_activities.
+        $table = new xmldb_table('apsolu_federation_activities');
+        if ($dbman->table_exists($table) === false) {
+            // Ajoute les champs.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+            $table->add_field('name', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('mainsport', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = 0, null);
+            $table->add_field('restriction', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = 0, null);
+            $table->add_field('categoryid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $nullable = null, $sequence = null, $default = null, null);
+
+            // Ajoute la clé primaire.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+            // Ajoute les index.
+            $table->add_index($indexname = 'idx_mainsport', XMLDB_INDEX_NOTUNIQUE, $fields = array('mainsport'));
+            $table->add_index($indexname = 'idx_restriction', XMLDB_INDEX_NOTUNIQUE, $fields = array('restriction'));
+            $table->add_index($indexname = 'idx_categoryid', XMLDB_INDEX_NOTUNIQUE, $fields = array('categoryid'));
+
+            // Crée la table.
+            $dbman->create_table($table);
+
+            // Ajoute les données à la table.
+            foreach (Activity::get_activity_data() as $data) {
+                $sql = "INSERT INTO {apsolu_federation_activities} (id, name, mainsport, restriction, categoryid)".
+                    " VALUES(:id, :name, :mainsport, :restriction, NULL)";
+                $DB->execute($sql, $data);
+            }
+        }
+
+        // Ajoute la table apsolu_federation_numbers.
+        $table = new xmldb_table('apsolu_federation_numbers');
+        if ($dbman->table_exists($table) === false) {
+            // Ajoute les champs.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+            $table->add_field('number', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('field', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('value', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('sortorder', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+
+            // Ajoute la clé primaire.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+            // Ajoute les index.
+            $table->add_index($indexname = 'unique_number', XMLDB_INDEX_UNIQUE, $fields = array('number'));
+            $table->add_index($indexname = 'unique_sortorder', XMLDB_INDEX_UNIQUE, $fields = array('sortorder'));
+
+            // Crée la table.
+            $dbman->create_table($table);
+        }
+
+        // Ajoute la table apsolu_federation_memberships.
+        $table = new xmldb_table('apsolu_federation_adhesions');
+        if ($dbman->table_exists($table) === false) {
+            // Ajoute les champs.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+            $table->add_field('sex', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('insurance', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('birthday', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('address1', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('address2', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, $nullable = null, null, null, null);
+            $table->add_field('postalcode', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('city', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('phone', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, $nullable = null, null, null, null);
+            $table->add_field('instagram', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, $nullable = null, null, null, null);
+            $table->add_field('disciplineid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('otherfederation', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, $nullable = null, null, null, null);
+            $table->add_field('mainsport', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('complementaryconstraintsport', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('sportlicense', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('managerlicense', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('managerlicensetype', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('refereelicense', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('starlicense', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('usepersonaldata', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $nullable = null, $sequence = null, $default = null, null);
+            $table->add_field('sport1', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('sport2', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('sport3', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('sport4', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('sport5', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('constraintsport1', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('constraintsport2', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('constraintsport3', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('constraintsport4', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('constraintsport5', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+            $table->add_field('questionnairestatus', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $nullable = null, $sequence = null, $default = null, null);
+            $table->add_field('medicalcertificatedate', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $nullable = null, null, null, null);
+            $table->add_field('medicalcertificatestatus', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $nullable = null, $sequence = null, $default = null, null);
+            $table->add_field('federationnumberprefix', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, $nullable = null, $sequence = null, $default = null, null);
+            $table->add_field('federationnumber', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, $nullable = null, $sequence = null, $default = null, null);
+            $table->add_field('federationnumberrequestdate', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, $nullable = null, $sequence = null, $default = null, null);
+            $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = 0, null);
+            $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = 0, null);
+            $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
+
+            // Ajoute la clé primaire.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+            // Ajoute les index.
+            $table->add_index($indexname = 'unique_userid', XMLDB_INDEX_UNIQUE, $fields = array('userid'));
+            $table->add_index($indexname = 'idx_mainsport', XMLDB_INDEX_NOTUNIQUE, $fields = array('mainsport'));
+
+            // Crée la table.
+            $dbman->create_table($table);
+        }
+
+        // Supprime la colonne federation sur la table apsolu_courses_categories.
+        $table = new xmldb_table('apsolu_courses_categories');
+        $field = new xmldb_field('federation', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $nullable = null, $sequence = null, null, null);
+
+        if ($dbman->field_exists($table, $field) === true) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Ajoute les nouveaux paramètres pour le module FFSU.
+        set_config('ffsu_acceptedfiles', '.pdf .odt .doc .docx .jpe .jpeg .jpg .png', 'local_apsolu');
+        set_config('ffsu_maxfiles', 1, 'local_apsolu');
+
+        set_config('insurance_field_default', '0', 'local_apsolu');
+        set_config('managerlicense_field_default', '0', 'local_apsolu');
+        set_config('managerlicensetype_field_default', '', 'local_apsolu');
+        set_config('refereelicense_field_default', '0', 'local_apsolu');
+        set_config('sportlicense_field_default', '1', 'local_apsolu');
+        set_config('starlicense_field_default', '0', 'local_apsolu');
+
+        set_config('instagram_field_visibility', Adhesion::FIELD_HIDDEN, 'local_apsolu');
+        set_config('insurance_field_visibility', Adhesion::FIELD_HIDDEN, 'local_apsolu');
+        set_config('managerlicense_field_visibility', Adhesion::FIELD_HIDDEN, 'local_apsolu');
+        set_config('managerlicensetype_field_visibility', Adhesion::FIELD_HIDDEN, 'local_apsolu');
+        set_config('otherfederation_field_visibility', Adhesion::FIELD_VISIBLE, 'local_apsolu');
+        set_config('refereelicense_field_visibility', Adhesion::FIELD_HIDDEN, 'local_apsolu');
+        set_config('sportlicense_field_visibility', Adhesion::FIELD_VISIBLE, 'local_apsolu');
+        set_config('starlicense_field_visibility', Adhesion::FIELD_HIDDEN, 'local_apsolu');
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
     return $result;

@@ -180,8 +180,15 @@ $functions = array(
         'type'        => 'read',
         'loginrequired' => true,
         'ajax' => true,
-    ),    
-
+    ),
+    'core_message_send_instant_emails' => array(
+        'classname' => 'local_apsolu\external\email',
+        'methodname' => 'send_instant_emails',
+        'description' => 'Send instant emails',
+        'type' => 'write',
+        'capabilities' => 'moodle/site:sendmessage',
+        'ajax' => true,
+    ),
 );
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.

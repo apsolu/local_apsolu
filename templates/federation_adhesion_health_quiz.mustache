@@ -1,0 +1,55 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_apsolu/federation_adhesion_health_quiz
+
+    Template Moodle pour afficher la liste des activités FFSU.
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * activities
+
+    Example context (json):
+    {
+        "wwwroot": "",
+        "activities": []
+    }
+}}
+
+<div id="healthquizquestionsform">
+    <div class="alert alert-info">{{#str}}the_details_of_the_responses_are_neither_saved_nor_sent_back_to_the_server, local_apsolu{{/str}}</div>
+    {{#categories}}
+        <h2>{{name}}</h2>
+        {{#questions}}
+        <fieldset class="form-row">
+            <label class="col-1"><input name="{{id}}" type="radio" value="1"> {{#str}}yes{{/str}}</label>
+            <label class="col-1"><input name="{{id}}" type="radio" value="0"> {{#str}}no{{/str}}</label>
+            <div class="col-10">{{label}}</div>
+        </fieldset>
+        {{/questions}}
+    {{/categories}}
+</div>
+
+<form method="post" action="{{wwwroot}}/local/apsolu/federation/adhesion/index.php?step=0">
+    <input id="healthquizvalue" name="quizstatus" type="hidden" value="0" />
+    <input class="btn btn-primary" disabled="1" id="healthquizsubmit" type="submit" value="{{#str}}save{{/str}}" />
+</form>

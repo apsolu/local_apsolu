@@ -146,6 +146,12 @@
     margin: 1em 0 0 0;
 }
 
+/* Module FFSU. */
+/* Corrige un bug sur le dropdown modifier quand le tableau contient 3 lignes. */
+#local-apsolu-certificates-validation-table {
+    min-height: 600px;
+}
+
 /* Résolutions supérieures ou égales à 1200px de large. */
 @media (min-width: 1200px) {
     #apsolu-offerings-toolbar {

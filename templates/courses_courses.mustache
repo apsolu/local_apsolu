@@ -76,7 +76,7 @@
         <th>{{#str}}schedule, local_apsolu{{/str}}</th>
         <th>{{#str}}locations, local_apsolu{{/str}}</th>
         <th>{{#str}}periods, local_apsolu{{/str}}</th>
-        {{#is_siuaps_rennes}}<th>{{#str}}federation, local_apsolu{{/str}}</th>{{/is_siuaps_rennes}}
+        {{#federation_course}}<th>{{#str}}federation, local_apsolu{{/str}}</th>{{/federation_course}}
         <th>{{#str}}teachers{{/str}}</th>
         <th>{{#str}}actions{{/str}}</th>
     </tr>
@@ -97,7 +97,7 @@
         <td><b>{{city}}</b> - {{location}}</td>
         {{/unique_city}}
         <td>{{period}}</td>
-        {{#is_siuaps_rennes}}<td>{{#license}}{{#str}}yes{{/str}}{{/license}}{{^license}}{{#str}}no{{/str}}{{/license}}</td>{{/is_siuaps_rennes}}
+        {{#federation_course}}<td>{{#license}}{{#str}}yes{{/str}}{{/license}}{{^license}}{{#str}}no{{/str}}{{/license}}</td>{{/federation_course}}
         <td>{{#teachers}}<div>{{firstname}} {{lastname}}</div>{{/teachers}}</td>
         <td>
             {{! Menu déroulant permettant de réaliser des actions sur les cours. }}

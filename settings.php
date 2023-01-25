@@ -107,13 +107,38 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     $ADMIN->add('local_apsolu_configuration', new admin_externalpage('local_apsolu_configuration_calendars_types', $str, $url, $capabilities));
 
     // Fédération FSU.
-    if (isset($CFG->is_siuaps_rennes) === true) {
+    if (local_apsolu\core\course::get_federation_courseid() !== false) {
         $ADMIN->add('apsolu', new admin_category('local_apsolu_federation', get_string('settings_federation', 'local_apsolu')));
 
+        // Paramétrages.
+        $str = get_string('settings');
+        $url = new moodle_url('/local/apsolu/federation/index.php', array('page' => 'settings'));
+        $ADMIN->add('local_apsolu_federation', new admin_externalpage('local_apsolu_federation_settings', $str, $url, $capabilities));
+
+        // Liste des activités.
+        $str = get_string('activity_list', 'local_apsolu');
+        $url = new moodle_url('/local/apsolu/federation/index.php', array('page' => 'activities'));
+        $ADMIN->add('local_apsolu_federation', new admin_externalpage('local_apsolu_federation_activities', $str, $url, $capabilities));
+
+        // Numéros d'association.
+        $str = get_string('association_numbers', 'local_apsolu');
+        $url = new moodle_url('/local/apsolu/federation/index.php', array('page' => 'numbers'));
+        $ADMIN->add('local_apsolu_federation', new admin_externalpage('local_apsolu_federation_numbers', $str, $url, $capabilities));
+
+        // Exporter les licences.
+        $str = get_string('exporting_license', 'local_apsolu');
+        $url = new moodle_url('/local/apsolu/federation/index.php', array('page' => 'export'));
+        $ADMIN->add('local_apsolu_federation', new admin_externalpage('local_apsolu_federation_export', $str, $url, $capabilities));
+
         // Importer les licences.
-        $str = get_string('settings_federation_import', 'local_apsolu');
+        $str = get_string('importing_license', 'local_apsolu');
         $url = new moodle_url('/local/apsolu/federation/index.php', array('page' => 'import'));
         $ADMIN->add('local_apsolu_federation', new admin_externalpage('local_apsolu_federation_import', $str, $url, $capabilities));
+
+        // Validation des certificats.
+        $str = get_string('certificates_validation', 'local_apsolu');
+        $url = new moodle_url('/local/apsolu/federation/index.php', array('page' => 'certificates_validation'));
+        $ADMIN->add('local_apsolu_federation', new admin_externalpage('local_apsolu_federation_certificates_validation', $str, $url, $capabilities));
     }
 
     // Inscriptions.

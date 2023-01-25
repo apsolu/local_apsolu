@@ -49,7 +49,7 @@ class local_apsolu_federation_import_licences extends moodleform {
         $mform->addRule('userfile', null, 'required');
 
         $mform->addElement('header', 'settings', get_string('settings'));
-        $mform->setExpanded('settings', $expanded = false);
+        $mform->setExpanded('settings', $expanded = true);
 
         $choices = csv_import_reader::get_delimiter_list();
         $mform->addElement('select', 'delimiter_name', get_string('csvdelimiter', 'tool_uploaduser'), $choices);
@@ -73,16 +73,20 @@ class local_apsolu_federation_import_licences extends moodleform {
         if (optional_param('previewbutton', null, PARAM_ALPHA) === null) {
             $buttonarray[] = &$mform->createElement('submit', 'previewbutton', get_string('federation_preview', 'local_apsolu'));
 
-            $attributes = array('class' => 'btn btn-default btn-secondary', 'disabled' => 'disabled');
+            $attributes = array('class' => 'btn btn-default', 'disabled' => 'disabled');
             $buttonarray[] = &$mform->createElement('submit', 'importbutton', get_string('federation_import', 'local_apsolu'), $attributes);
         } else {
             $buttonarray[] = &$mform->createElement('submit', 'importbutton', get_string('federation_import', 'local_apsolu'));
 
-            $attributes = array('class' => 'btn btn-default btn-secondary');
+            $attributes = array('class' => 'btn btn-default');
             $buttonarray[] = &$mform->createElement('submit', 'previewbutton', get_string('federation_preview', 'local_apsolu'), $attributes);
         }
 
         $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
         $mform->closeHeaderBefore('buttonar');
+
+        // Hidden fields.
+        $mform->addElement('hidden', 'page', 'import');
+        $mform->setType('page', PARAM_ALPHA);
     }
 }

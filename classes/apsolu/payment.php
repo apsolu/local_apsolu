@@ -363,13 +363,38 @@ class Payment {
     }
 
     /**
+     * Retourne pour un cours donné le statut du paiement d'un utilisateur donné.
+     *
+     * @param int $courseid
+     * @param int $userid
+     *
+     * @return array of object
+     */
+    public static function get_user_cards_status_per_course($courseid, $userid = null) {
+        global $USER;
+
+        if ($userid === null) {
+            $userid = $USER->id;
+        }
+
+        $users = self::get_users_cards_status_per_course($courseid, $userid);
+
+        if (empty($users) === true) {
+            return array();
+        }
+
+        return current($users);
+    }
+
+    /**
      * Retourne pour un cours donné le statut du paiement des utilisateurs inscrits.
      *
      * @param int $courseid
+     * @param int $userid
      *
      * @return array
      */
-    public static function get_users_cards_status_per_course($courseid) {
+    public static function get_users_cards_status_per_course($courseid, $userid = null) {
         global $DB;
 
         $users = array();
@@ -396,7 +421,14 @@ class Payment {
             " AND c.id = :courseid".
             " AND e.status = 0". // Méthode d'inscription active.
             " AND ue.status = 0"; // Inscription validée.
-        $recordset = $DB->get_recordset_sql($sql, array('courseid' => $courseid));
+        $params = array('courseid' => $courseid);
+
+        if (empty($userid) === false) {
+            $sql .= " AND ue.userid = :userid";
+            $params['userid'] = $userid;
+        }
+
+        $recordset = $DB->get_recordset_sql($sql, $params);
         foreach ($recordset as $record) {
             if (isset($users[$record->userid]) === false) {
                 $users[$record->userid] = array();

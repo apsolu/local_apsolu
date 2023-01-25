@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\federation\activity as Activity;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/formslib.php');
@@ -88,9 +90,19 @@ class local_apsolu_courses_courses_edit_form extends moodleform {
         $mform->addRule('endtime', get_string('required'), 'required', null, 'client');
 
         // License field.
-        if (isset($CFG->is_siuaps_rennes) === true) {
+        if (local_apsolu\core\course::get_federation_courseid() !== false) {
             $mform->addElement('selectyesno', 'license', get_string('license', 'local_apsolu'));
-            $mform->addRule('license', get_string('required'), 'required', null, 'client');
+
+            // Désactive cette option si la valeur du champ activité n'est pas associée à une activité FFSU.
+            $notfederationactivities = $categories;
+            foreach (Activity::get_records() as $activity) {
+                if (empty($activity->categoryid) === true) {
+                    continue;
+                }
+
+                unset($notfederationactivities[$activity->categoryid]);
+            }
+            $mform->disabledIf('license', 'category', 'in', array_keys($notfederationactivities));
         } else {
             $mform->addElement('hidden', 'license', 0);
         }
@@ -147,6 +159,8 @@ class local_apsolu_courses_courses_edit_form extends moodleform {
 
     /**
      * Retourne les options passées aux éléments du formulaire de type editor.
+     *
+     * @param int $courseid Identifiant du cours.
      *
      * @return array
      */

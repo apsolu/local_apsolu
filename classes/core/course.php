@@ -158,6 +158,21 @@ class course extends record {
     }
 
     /**
+     * Retourne l'id du cours de FFSU.
+     *
+     * @return int|false Retourne l'id du cours de FFSU ou false si il n'est pas défini.
+     */
+    public static function get_federation_courseid() {
+        $federation_course = get_config('local_apsolu', 'federation_course');
+
+        if (empty($federation_course) === true) {
+            return false;
+        }
+
+        return $federation_course;
+    }
+
+    /**
      * Calcule le nom complet du cours à partir des paramètres passés à la méthode.
      *
      * @param int|string $categoryid Identifiant ou nom de la catégorie d'activité sportive.

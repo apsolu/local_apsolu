@@ -22,9 +22,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\federation\activity as Activity;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot.'/local/apsolu/configuration/special_courses_form.php');
+require_once($CFG->dirroot.'/group/lib.php');
 
 // Build form.
 $attributes = array(
@@ -37,13 +40,27 @@ foreach ($attributes as $attribute) {
     $defaults->{$attribute} = get_config('local_apsolu', $attribute);
 }
 
-$courses = array(0 => get_string('none'));
-$sql = "SELECT c.id, c.fullname FROM {course} c WHERE c.id NOT IN (SELECT ac.id FROM {apsolu_courses} ac) ORDER BY c.fullname";
+$collaborative_courses = array(0 => get_string('none'));
+$sql = "SELECT c.id, c.fullname".
+    " FROM {course} c".
+    " WHERE c.id NOT IN (SELECT ac.id FROM {apsolu_courses} ac)".
+    " ORDER BY c.fullname";
 foreach ($DB->get_records_sql($sql) as $course) {
-    $courses[$course->id] = $course->fullname;
+    $collaborative_courses[$course->id] = $course->fullname;
 }
 
-$customdata = array($defaults, $courses);
+$federation_courses = array(0 => get_string('none'));
+$sql = "SELECT c.id, c.fullname".
+    " FROM {course} c".
+    " JOIN {enrol} e ON c.id = e.courseid".
+    " WHERE c.id NOT IN (SELECT ac.id FROM {apsolu_courses} ac)".
+    " AND e.enrol = 'select'".
+    " ORDER BY c.fullname";
+foreach ($DB->get_records_sql($sql) as $course) {
+    $federation_courses[$course->id] = $course->fullname;
+}
+
+$customdata = array($defaults, $collaborative_courses, $federation_courses);
 
 $mform = new local_apsolu_special_courses_form(null, $customdata);
 
@@ -57,6 +74,38 @@ if ($data = $mform->get_data()) {
         }
 
         set_config($attribute, $data->{$attribute}, 'local_apsolu');
+
+        if ($attribute === 'federation_course') {
+            if (empty($data->{$attribute}) === true) {
+                // Supprime la référence au cours FFSU.
+                $DB->delete_records('apsolu_complements', array('federation' => 1));
+            } else {
+                // Met à jour la référence au cours FFSU.
+                $complement = $DB->get_record('apsolu_complements', array('federation' => 1));
+                if ($complement === false) {
+                    $sql = "INSERT INTO {apsolu_complements} (id, price, federation) VALUES(:id, 0, 1)";
+                    $DB->execute($sql, array('id' => $data->{$attribute}));
+                } else {
+                    $sql = "UPDATE {apsolu_complements} SET id = :id WHERE federation = 1";
+                    $DB->execute($sql, array('id' => $data->{$attribute}));
+                }
+
+                // Génère les groupes correspondant aux activités FFSU.
+                $groups = $DB->get_records('groups', array('courseid' => $data->{$attribute}), $sort='', $fields='name');
+                foreach (Activity::get_records() as $activity) {
+                    if (isset($groups[$activity->name]) === true) {
+                        continue;
+                    }
+
+                    $group = new stdClass();
+                    $group->name = $activity->name;
+                    $group->courseid = $data->{$attribute};
+                    $group->timecreated = time();
+                    $group->timemodified = $group->timecreated;
+                    groups_create_group($group);
+                }
+            }
+        }
     }
 
     echo $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
