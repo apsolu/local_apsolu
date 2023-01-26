@@ -76,11 +76,6 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
         $label = get_string('settings_complements', 'local_apsolu');
         $url = new moodle_url('/local/apsolu/courses/complements.php?tab=complements');
         $ADMIN->add('local_apsolu_complements', new admin_externalpage('local_apsolu_complements_complements', $label, $url, $capabilities));
-
-        // Activités complémentaires > FFSU.
-        $label = get_string('settings_federations', 'local_apsolu');
-        $url = new moodle_url('/local/apsolu/courses/complements.php?tab=federations');
-        $ADMIN->add('local_apsolu_complements', new admin_externalpage('local_apsolu_complements_federations', $label, $url, $capabilities));
     }
 
     // Configuration.
