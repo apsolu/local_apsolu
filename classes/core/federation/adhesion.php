@@ -151,34 +151,34 @@ class adhesion extends record {
     public $usepersonaldata = null;
 
     /** @var int|string $sport1 Identifiant numérique de l'activité choisie sans contrainte médicale. */
-    public $sport1 = '';
+    public $sport1 = self::SPORT_NONE;
 
     /** @var int|string $sport2 Identifiant numérique de l'activité choisie sans contrainte médicale. */
-    public $sport2 = '';
+    public $sport2 = self::SPORT_NONE;
 
     /** @var int|string $sport3 Identifiant numérique de l'activité choisie sans contrainte médicale. */
-    public $sport3 = '';
+    public $sport3 = self::SPORT_NONE;
 
     /** @var int|string $sport4 Identifiant numérique de l'activité choisie sans contrainte médicale. */
-    public $sport4 = '';
+    public $sport4 = self::SPORT_NONE;
 
     /** @var int|string $sport5 Identifiant numérique de l'activité choisie sans contrainte médicale. */
-    public $sport5 = '';
+    public $sport5 = self::SPORT_NONE;
 
     /** @var int|string $constraintsport1 Identifiant numérique de l'activité choisie avec contrainte médicale. */
-    public $constraintsport1 = '';
+    public $constraintsport1 = self::SPORT_NONE;
 
     /** @var int|string $constraintsport2 Identifiant numérique de l'activité choisie avec contrainte médicale. */
-    public $constraintsport2 = '';
+    public $constraintsport2 = self::SPORT_NONE;
 
     /** @var int|string $constraintsport3 Identifiant numérique de l'activité choisie avec contrainte médicale. */
-    public $constraintsport3 = '';
+    public $constraintsport3 = self::SPORT_NONE;
 
     /** @var int|string $constraintsport4 Identifiant numérique de l'activité choisie avec contrainte médicale. */
-    public $constraintsport4 = '';
+    public $constraintsport4 = self::SPORT_NONE;
 
     /** @var int|string $constraintsport5 Identifiant numérique de l'activité choisie avec contrainte médicale. */
-    public $constraintsport5 = '';
+    public $constraintsport5 = self::SPORT_NONE;
 
     /** @var string $medicalcertificatedate Date du certificat médical. */
     public $medicalcertificatedate = '';
