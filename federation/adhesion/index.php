@@ -155,6 +155,9 @@ $event = federation_adhesion_viewed::create(array(
 $event->trigger();
 
 // Display.
+$PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', array('id' => $course->id)));
+$PAGE->navbar->add(get_string('membership_of_the_sports_association', 'local_apsolu'));
+
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('membership_of_the_sports_association', 'local_apsolu'));
 echo $OUTPUT->tabtree($tabtree, $steps[$stepid]);
