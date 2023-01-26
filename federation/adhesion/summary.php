@@ -30,6 +30,9 @@ require_once($CFG->dirroot.'/user/profile/lib.php');
 require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
 require_once($CFG->dirroot.'/local/apsolu/federation/adhesion/request_federation_number_form.php');
 
+$canrequestfederationnumber = true;
+$hasrequestedfederationnumber = false;
+
 $items = array();
 
 // Répondre au questionnaire médical.
@@ -73,7 +76,6 @@ if ($item->status === false) {
 }
 
 // Obtenir un numéro de licence.
-$hasrequestedfederationnumber = false;
 if (empty($adhesion->federationnumberrequestdate) === false) {
     $canrequestfederationnumber = false;
     $hasrequestedfederationnumber = true;
