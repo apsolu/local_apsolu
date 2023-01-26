@@ -86,26 +86,4 @@ class local_apsolu_federation_activities_edit_form extends moodleform {
         // Set default values.
         $this->set_data($number);
     }
-
-    /**
-     * Validation.
-     *
-     * @param array $data
-     * @param array $files
-     * @return array the errors that were found
-     */
-    public function validation($data, $files) {
-        global $DB;
-
-        $errors = parent::validation($data, $files);
-
-        // Vérifie que le numéro d'association est unique.
-        $sql = "SELECT * FROM {apsolu_federation_numbers} WHERE number = :number AND id != :id";
-        $record = $DB->get_record_sql($sql, array('number' => $data['number'], 'id' => $data['numberid']));
-        if ($record !== false && $record->id !== $data['numberid']) {
-            $errors['number'] = get_string('this_association_number_is_already_used', 'local_apsolu');
-        }
-
-        return $errors;
-    }
 }
