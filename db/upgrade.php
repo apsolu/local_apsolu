@@ -972,8 +972,8 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
 
             // Ajoute les index.
-            $table->add_index($indexname = 'unique_number', XMLDB_INDEX_UNIQUE, $fields = array('number'));
-            $table->add_index($indexname = 'unique_sortorder', XMLDB_INDEX_UNIQUE, $fields = array('sortorder'));
+            $table->add_index($indexname = 'unique_number', XMLDB_INDEX_NOTUNIQUE, $fields = array('number'));
+            $table->add_index($indexname = 'unique_sortorder', XMLDB_INDEX_NOTUNIQUE, $fields = array('sortorder'));
 
             // Crée la table.
             $dbman->create_table($table);

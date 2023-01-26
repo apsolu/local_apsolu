@@ -193,8 +193,8 @@
             <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_federation_numbers" />
         </KEYS>
         <INDEXES>
-            <INDEX NAME="unique_number" UNIQUE="true" FIELDS="number" />
-            <INDEX NAME="unique_sortorder" UNIQUE="true" FIELDS="sortorder" />
+            <INDEX NAME="unique_number" UNIQUE="false" FIELDS="number" />
+            <INDEX NAME="unique_sortorder" UNIQUE="false" FIELDS="sortorder" />
         </INDEXES>
     </TABLE>
 
