@@ -93,9 +93,9 @@ $users = $DB->get_records_sql($sql, array('courseid' => $courseid));
 $sessions = $DB->get_records('apsolu_attendance_sessions', array('courseid' => $courseid));
 $statuses = $DB->get_records('apsolu_attendance_statuses');
 
-echo '<div class="table-no-responsive">'.
-'<table class="table table-bordered">'.
-    '<thead>'.
+echo '<div class="table-responsive">'.
+'<table class="table table-striped">'.
+    '<thead class="thead-light">'.
         '<tr>'.
             '<th rowspan="2">'.get_string('pictureofuser').'</th>'.
             '<th rowspan="2">'.get_string('lastname').'</th>'.
