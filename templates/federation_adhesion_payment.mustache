@@ -52,6 +52,10 @@
     {{#due}}
     <p><a class="btn btn-success" href="{{ payment_url }}">{{#str}}pay_for_license, local_apsolu{{/str}}</a><p>
     {{/due}}
+
+    {{^due}}
+    <p><a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/federation/adhesion/index.php?step=4">{{#str}}next, local_apsolu{{/str}}</a></p>
+    {{/due}}
 {{/count_cards}}
 
 {{^count_cards}}

@@ -353,6 +353,7 @@ $string['my_collaborative_course'] = 'Mon espace collaboratif';
 $string['named_section'] = 'Section "{$a}"';
 $string['name_used_by_apsolu'] = 'Nom utilisé dans APSOLU';
 $string['name_used_by_federation'] = 'Nom officiel utilisé par la FFSU';
+$string['next'] = 'Continuer';
 $string['no_club_medical_certificate_will_be_accepted'] = '<strong>Important :</strong> aucun certificat médical <u>de club</u> ne sera accepté.';
 $string['no_courses_to_grade'] = 'Aucun créneau à évaluer';
 $string['no_files'] = 'Aucun fichier';
