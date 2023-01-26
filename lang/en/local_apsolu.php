@@ -89,6 +89,7 @@ $string['association'] = 'Licence FFSU';
 $string['association_number_has_been_deleted'] = 'Le numéro d’association a été supprimé.';
 $string['association_number'] = 'N° A.S.';
 $string['association_number'] = 'Numéro d’association';
+$string['association_number_prefix'] = 'Préfixe de numéro d’association';
 $string['association_number_saved'] = 'Numéro d’association enregistré';
 $string['association_numbers_help'] = 'Critères permettant d’attribuer un préfixe de numéro d’association à un utilisateur.';
 $string['association_numbers'] = 'Numéros d’association';

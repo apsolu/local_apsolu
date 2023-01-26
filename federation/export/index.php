@@ -129,14 +129,9 @@ if ($data = $mform->get_data()) {
 
         // Numéro AS
         if (empty($data->numbers) === false) {
-            if (empty($record->federationnumber) === true) {
-                // L'utilisateur n'a pas de numéro.
-                continue;
-            }
-
             $found = false;
             foreach ($data->numbers as $number) {
-                if (preg_match('/^'.$numbers[$number].'/', $record->federationnumber) === 0) {
+                if ($record->federationnumberprefix !== $numbers[$number]) {
                     // Le numéro ne correspond pas au numéro recherché.
                     continue;
                 }
