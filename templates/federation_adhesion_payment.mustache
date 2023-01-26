@@ -48,6 +48,10 @@
         <li>{{{image}}} {{name}}</li>
     {{/cards}}
     </ul>
+
+    {{#due}}
+    <p><a class="btn btn-success" href="{{ payment_url }}">{{#str}}pay_for_license, local_apsolu{{/str}}</a><p>
+    {{/due}}
 {{/count_cards}}
 
 {{^count_cards}}
