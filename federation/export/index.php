@@ -41,8 +41,8 @@ define('APSOLU_SELECT_NO', '2');
 $returnurl = new moodle_url('/local/apsolu/federation/index.php?page=exportation');
 
 // Récupère la liste des numéros d'association.
-$numbers = array(0 => get_string('all'));
-foreach (FederationNumber::get_records() as $record) {
+$numbers = array();
+foreach (FederationNumber::get_records(null, $sort = 'number') as $record) {
     $numbers[$record->id] = $record->number;
 }
 
@@ -79,12 +79,6 @@ $content = '';
 if ($data = $mform->get_data()) {
     // Génère les entêtes d'exportation.
     $headers = FederationAdhesion::get_exportation_headers();
-
-    // Calcule la longueur du préfixe de l'association.
-    $number_length = 0;
-    if (empty($data->number) === false) {
-        $number_length = strlen($numbers[$data->number]);
-    }
 
     // Récupère la liste des cartes de paiement nécessaires pour la FFSU.
     if (empty($data->payment) === false) {
@@ -134,13 +128,24 @@ if ($data = $mform->get_data()) {
         }
 
         // Numéro AS
-        if (empty($data->number) === false) {
+        if (empty($data->numbers) === false) {
             if (empty($record->federationnumber) === true) {
                 // L'utilisateur n'a pas de numéro.
                 continue;
             }
 
-            if (substr($record->federationnumber, 0, $number_length) !== $numbers[$data->number]) {
+            $found = false;
+            foreach ($data->numbers as $number) {
+                if (preg_match('/^'.$numbers[$number].'/', $record->federationnumber) === 0) {
+                    // Le numéro ne correspond pas au numéro recherché.
+                    continue;
+                }
+
+                $found = true;
+                break;
+            }
+
+            if ($found === false) {
                 // Le numéro ne correspond pas au numéro recherché.
                 continue;
             }
