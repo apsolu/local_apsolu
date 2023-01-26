@@ -333,6 +333,8 @@ $string['medical_certificate_validation_message_body'] = '<p>Bonjour,</p>
 <p>Votre certificat médical pour la FFSU a été validé.</p>
 <p>Cordialement,</p>';
 $string['medical_certificate_validation_message_subject'] = '[FFSU] Validation de votre certificat médical';
+$string['medical_certificate_X_without_constraint'] = 'Certificat médical - activité {$a} sans contrainte particulière';
+$string['medical_certificate_X_with_specific_constraints'] = 'Certificat médical - activité {$a} à contraintes particulières';
 $string['membership'] = 'Adhésion';
 $string['membership_form'] = 'Formulaire d’adhésion';
 $string['membership_of_the_sports_association'] = 'Adhésion à l’Association Sportive / Licence FFSU';
