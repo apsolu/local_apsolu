@@ -105,7 +105,7 @@ if ($data = $mform->get_data()) {
         $conditions[] = " AND act.name = :mainsport";
     }
 
-    $sql = "SELECT u.id, u.lastname, u.firstname, u.email, act.name AS mainsportname, adh.*".
+    $sql = "SELECT u.id AS userid, u.lastname, u.firstname, u.email, act.name AS mainsportname, adh.*".
         " FROM {apsolu_federation_adhesions} adh".
         " JOIN {apsolu_federation_activities} act ON act.id = adh.mainsport".
         " JOIN {user} u ON u.id = adh.userid".
@@ -148,14 +148,14 @@ if ($data = $mform->get_data()) {
 
         // État du paiement de licence.
         if (empty($data->payment) === false) {
-            if (isset($payments[$record->id]) === false) {
-                $payments[$record->id] = array();
+            if (isset($payments[$record->userid]) === false) {
+                $payments[$record->userid] = array();
             }
 
             if ($data->payment === APSOLU_SELECT_YES) {
                 // On ne récupère que les licences payées.
                 $skip = false;
-                foreach ($payments[$record->id] as $payment) {
+                foreach ($payments[$record->userid] as $payment) {
                     if ($payment->status === Payment::DUE) {
                         $skip = true;
                         break;
@@ -164,7 +164,7 @@ if ($data = $mform->get_data()) {
             } elseif ($data->payment === APSOLU_SELECT_NO) {
                 // On ne récupère que les licences non payées.
                 $skip = true;
-                foreach ($payments[$record->id] as $payment) {
+                foreach ($payments[$record->userid] as $payment) {
                     if ($payment->status === Payment::DUE) {
                         $skip = false;
                         break;
