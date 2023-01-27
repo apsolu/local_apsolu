@@ -141,6 +141,42 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
                     popup.popup('hide');
                 });
             }
+        },
+        setupcourse : function() {
+            // Affiche les raccourcis de gestion de cours en haut de la page d'accueil du cours.
+
+            // Récupère le bouton "gérer mes étudiants".
+            var btn1 = document.getElementById('block-apsolu-course-edit-enrol-a');
+
+            // Récupère le bouton "prendre les présences".
+            var btn2 = document.getElementById('block-apsolu-course-edit-attendance-a');
+
+            if (!btn1 && !btn2) {
+                // Si aucun bouton n'est pas présent, ce que l'utilisateur n'est pas enseignant.
+                return;
+            }
+
+            var box = document.getElementById('page-content');
+            if (box) {
+                // Créer une liste avec les boutons et les places en haut de la page du cours.
+                var ul = document.createElement('ul');
+                ul.className = 'list-inline text-center';
+
+                var li;
+                var elements = [btn1, btn2];
+                for (var i = 0; i < elements.length; i++) {
+                    if (!elements[i]) {
+                        continue;
+                    }
+
+                    li = document.createElement('li');
+                    li.className = 'list-inline-item my-2';
+                    li.append(elements[i].cloneNode(true));
+                    ul.append(li);
+                }
+
+                box.prepend(ul);
+            }
         }
     };
 });

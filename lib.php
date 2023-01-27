@@ -27,6 +27,48 @@ defined('MOODLE_INTERNAL') || die();
 // MoodleQuickForm::registerElementType('time', __DIR__.'/classes/time_form_element.php', 'local_apsolu_time_form_element');
 
 /**
+ * Fonction spéciale gérée par Moodle, permettant d'étendre un menu dans un cours.
+ *
+ * @ref https://docs.moodle.org/dev/Local_plugins#Adding_an_element_to_the_settings_menu
+ *
+ * @param navigation_node $navigation The navigation node to extend
+ * @param stdClass $course The course to object for the tool
+ * @param context $context The context of the course
+ *
+ * @return void|null return null if we don't want to display the node.
+ */
+function local_apsolu_extend_navigation_course($navigation, $course, $context) {
+    global $PAGE;
+
+    // Only add this settings item on non-site course pages.
+    if (!$PAGE->course || $PAGE->course->id == SITEID) {
+        return null;
+    }
+
+    $url = new moodle_url('/course/view.php');
+    if ($PAGE->url->compare($url, URL_MATCH_BASE) === true) {
+        // Surcharge la page d'accueil d'un cours.
+        return local_apsolu_override_course_page($course);
+    }
+}
+
+/**
+ * Fonction spéciale permettant de surcharger la page d'accueil d'un cours avec du javascript.
+ *
+ * @param stdClass $course The course to object for the tool
+ *
+ * @return void
+ */
+function local_apsolu_override_course_page($course) {
+    global $PAGE;
+
+    if (has_capability('moodle/course:update', context_course::instance($course->id, MUST_EXIST)) === true) {
+        // Affiche les boutons de prise de présences et de gestion des étudiants en haut de la page.
+		$PAGE->requires->js_call_amd('local_apsolu/attendance', 'setupcourse');
+	}
+}
+
+/**
  * Gère les contrôles d'accès pour la diffusion des fichiers du module local_apsolu.
  *
  * @param stdClass $course        Course object.
