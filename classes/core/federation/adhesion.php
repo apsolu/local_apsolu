@@ -467,7 +467,7 @@ class adhesion extends record {
             return true;
         }
 
-        return ($this->questionnairestatus === self::HEALTH_QUESTIONNAIRE_ANSWERED_YES_ONCE);
+        return ($this->questionnairestatus == self::HEALTH_QUESTIONNAIRE_ANSWERED_YES_ONCE);
     }
 
     /**
