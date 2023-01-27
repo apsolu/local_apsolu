@@ -197,7 +197,7 @@ if ($data = $mform->get_data()) {
 
         $row = array();
         foreach (FederationAdhesion::get_exportation_fields() as $field) {
-            if (in_array($field, array('firstname', 'lastname'), $strict === true) && isset($data->exportbutton) === false) {
+            if (in_array($field, array('firstname', 'lastname'), $strict = true) && isset($data->exportbutton) === false) {
                 $profileurl = new moodle_url('/user/view.php', array('id' => $record->userid, 'course' => $courseid));
                 $record->{$field} = html_writer::link($profileurl, $record->{$field});
             }
@@ -245,7 +245,7 @@ if ($data = $mform->get_data()) {
         $table = new html_table();
         $table->head  = $headers;
         $table->caption = count($rows).' '.get_string('users');
-        $table->data  = $rows;
+        $table->data = $rows;
         $content = html_writer::table($table);
     }
 }
