@@ -121,7 +121,7 @@ if ($data = $mform->get_data()) {
         // Convertit les dates.
         $record->birthdayformat = userdate($record->birthday, '%F');
 
-        if (empty($record->medicalcertificatedateformat) === true) {
+        if (empty($record->medicalcertificatedate) === true) {
             $record->medicalcertificatedateformat = '';
         } else {
             $record->medicalcertificatedateformat = userdate($record->medicalcertificatedate, '%F');
