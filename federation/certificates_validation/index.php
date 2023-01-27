@@ -84,9 +84,11 @@ if ($data = $mform->get_data()) {
     $rows = array();
     $recordset = $DB->get_recordset_sql($sql, $parameters);
     foreach ($recordset as $record) {
+        $profileurl = new moodle_url('/user/view.php', array('id' => $record->id, 'course' => $courseid));
+
         $row = array();
-        $row[] = $record->lastname;
-        $row[] = $record->firstname;
+        $row[] = html_writer::link($profileurl, $record->lastname);
+        $row[] = html_writer::link($profileurl, $record->firstname);
         $row[] = $record->idnumber;
 
         if ($record->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_EXEMPTED) {
