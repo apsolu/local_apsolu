@@ -195,13 +195,24 @@ if ($data = $mform->get_data()) {
             }
         }
 
+        // Remplit toutes les lignes.
         $row = array();
         foreach (FederationAdhesion::get_exportation_fields() as $field) {
             if (in_array($field, array('firstname', 'lastname'), $strict = true) && isset($data->exportbutton) === false) {
                 $profileurl = new moodle_url('/user/view.php', array('id' => $record->userid, 'course' => $courseid));
                 $record->{$field} = html_writer::link($profileurl, $record->{$field});
             }
-            $row[] = $record->{$field};
+
+            switch ($field) {
+                case 'questionnairestatus':
+                    $row[] = intval(empty($record->{$field}));
+                    break;
+                case 'medicalcertificatestatus':
+                    $row[] = intval($record->{$field} === "1");
+                    break;
+                default:
+                    $row[] = $record->{$field};
+            }
         }
 
         // Détermine si l'étudiant pratique un sport à contrainte.
