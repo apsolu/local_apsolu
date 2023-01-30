@@ -213,7 +213,7 @@ class adhesion extends record {
      * @return boolean
      */
     public function can_edit() {
-        return $this->medicalcertificatestatus !== self::MEDICAL_CERTIFICATE_STATUS_VALIDATED;
+        return empty($this->federationnumberrequestdate) === true;
     }
 
     /**
