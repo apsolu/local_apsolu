@@ -56,6 +56,7 @@ if ($activity === false) {
 
 $streditcoursesettings = get_string('attendance', 'local_apsolu');
 
+$PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', array('id' => $course->id)));
 $PAGE->navbar->add($streditcoursesettings);
 
 $pagedesc = $streditcoursesettings;
