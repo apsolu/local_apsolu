@@ -75,7 +75,7 @@ class course extends record {
     public $endtime = '';
 
     /** @var boolean $license Indique si le créneau nécessite l'adhésion à la FFSU. */
-    public $license = '';
+    public $license = 0;
 
     /** @var boolean $on_homepage Indique si le créneau doit être affiché sur la homepage. */
     public $on_homepage = '';
