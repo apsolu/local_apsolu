@@ -51,7 +51,21 @@ $items[] = $item;
 if ($adhesion->have_to_upload_medical_certificate() === true) {
     $item = new stdClass();
     $item->label = get_string('upload_a_medical_certificate', 'local_apsolu');
-    $item->status = (empty($adhesion->medicalcertificatedate) === false);
+    $item->status = false;
+
+    // On récupère les certificats.
+    $fs = get_file_storage();
+    $context = context_course::instance($courseid, MUST_EXIST);
+    list($component, $filearea, $itemid) = array('local_apsolu', 'medicalcertificate', $USER->id);
+    $sort = 'itemid, filepath, filename';
+    $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
+
+    foreach ($files as $file) {
+        // Au moins un certificat a été déposé, cette partie est validée.
+        $item->status = true;
+        break;
+    }
+
     $items[] = $item;
 
     $canrequestfederationnumber = $item->status;
