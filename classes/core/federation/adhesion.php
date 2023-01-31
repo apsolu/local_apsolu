@@ -376,12 +376,12 @@ class adhesion extends record {
     }
 
     /**
-     * Retourne un objet représentant un groupe Moodle en fonction de l'identifiant d'une activité FFSU.
+     * Retourne l'identifiant du groupe Moodle en fonction de l'identifiant d'une activité FFSU.
      *
      * @param int $activityid Identifiant de l'activité FFSU.
      * @param int $courseid   Identifiant du cours FFSU.
      *
-     * @return stdClass|false Retourne false si aucun groupe n'a été trouvé.
+     * @return int|false Retourne false si aucun groupe n'a été trouvé.
      */
     public static function get_groupid_from_activityid($activityid, $courseid) {
         $activity = new Activity();
@@ -549,7 +549,9 @@ class adhesion extends record {
             // Recalcule le groupe.
             if ($this->mainsport !== self::get_mainsportid_from_user_group($courseid, $this->userid)) {
                 $groupid = self::get_groupid_from_activityid($this->mainsport, $courseid);
-                groups_add_member($groupid, $this->userid);
+                if ($groupid !== false) {
+                    groups_add_member($groupid, $this->userid);
+                }
             }
         }
 
