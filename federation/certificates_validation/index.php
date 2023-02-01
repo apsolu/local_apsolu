@@ -112,8 +112,18 @@ if ($data = $mform->get_data()) {
             $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
             if (count($files) === 0) {
                 $row[] = get_string('no_files', 'local_apsolu');
-                $cell = new html_table_cell(get_string('medical_certificate_not_validated', 'local_apsolu'));
-                $cell->attributes = array('class' => 'table-warning');
+                if ($record->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING) {
+                    $cell = new html_table_cell(get_string('medical_certificate_not_validated', 'local_apsolu'));
+                    $cell->attributes = array('class' => 'table-warning');
+                } else if ($record->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_VALIDATED) {
+                    // Probablement validé sans avoir été déposé sur APSOLU.
+                    $cell->text = get_string('medical_certificate_validated', 'local_apsolu');
+                    $cell->attributes = array('class' => 'table-success');
+                } else {
+                    // Ne devrait jamais arriver.
+                    $cell->text = get_string('error');
+                    $cell->attributes = array('class' => 'table-danger');
+                }
                 $row[] = $cell;
                 $row[] = ''; // Aucune action.
             } else {
