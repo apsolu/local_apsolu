@@ -75,7 +75,7 @@ if ($data = $mform->get_data()) {
         $url_options['medical_certificate_status'] = $parameters['status'];
     }
 
-    $sql = "SELECT u.id, u.lastname, u.firstname, u.idnumber, u.email, afa.medicalcertificatedate, afa.medicalcertificatestatus, afa.federationnumber".
+    $sql = "SELECT u.id, u.lastname, u.firstname, u.idnumber, u.email, afa.medicalcertificatedate, afa.medicalcertificatestatus, afa.federationnumber, afa.federationnumberrequestdate".
         " FROM {user} u".
         " JOIN {apsolu_federation_adhesions} afa ON u.id = afa.userid".
         " WHERE 1 = 1 ".implode(' ', $conditions).
@@ -87,6 +87,11 @@ if ($data = $mform->get_data()) {
         $profileurl = new moodle_url('/user/view.php', array('id' => $record->id, 'course' => $courseid));
 
         $row = array();
+        if (empty($record->federationnumberrequestdate) === true) {
+            $row[] = get_string('never');
+        } else {
+            $row[] = userdate($record->federationnumberrequestdate, get_string('strftimedatetimeshort'));
+        }
         $row[] = html_writer::link($profileurl, $record->lastname);
         $row[] = html_writer::link($profileurl, $record->firstname);
         $row[] = $record->idnumber;
@@ -215,6 +220,7 @@ if ($data = $mform->get_data()) {
         $content = $OUTPUT->notification(get_string('no_results_with_these_criteria', 'local_apsolu'), 'notifyerror');
     } else {
         $headers = array(
+            get_string('federation_number_request_date', 'local_apsolu'),
             get_string('lastname'),
             get_string('firstname'),
             get_string('idnumber'),
