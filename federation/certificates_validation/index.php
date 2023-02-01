@@ -117,11 +117,11 @@ if ($data = $mform->get_data()) {
                     $cell->attributes = array('class' => 'table-warning');
                 } else if ($record->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_VALIDATED) {
                     // Probablement validé sans avoir été déposé sur APSOLU.
-                    $cell->text = get_string('medical_certificate_validated', 'local_apsolu');
+                    $cell = new html_table_cell(get_string('medical_certificate_validated', 'local_apsolu'));
                     $cell->attributes = array('class' => 'table-success');
                 } else {
                     // Ne devrait jamais arriver.
-                    $cell->text = get_string('error');
+                    $cell = new html_table_cell(get_string('error'));
                     $cell->attributes = array('class' => 'table-danger');
                 }
                 $row[] = $cell;
