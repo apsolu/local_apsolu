@@ -53,7 +53,8 @@ class local_apsolu_federation_certificates_validation extends moodleform {
 
         // État du certificat médical.
         $mform->addElement('select', 'medical_certificate_status', get_string('medical_certificate_status', 'local_apsolu'), $certificates);
-        $mform->setType('medical', PARAM_INT);
+        $mform->setType('medical_certificate_status', PARAM_INT);
+        $mform->setDefault('medical_certificate_status', APSOLU_SELECT_NO);
 
         // Submit buttons.
         $attributes = array('class' => 'btn btn-default');
