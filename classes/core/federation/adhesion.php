@@ -520,29 +520,38 @@ class adhesion extends record {
                 $this->{$sport} = self::SPORT_NONE;
             }
 
-            // On liste tous les sports qu'on souhaite conserver (sauf les NONE).
-            $items = array();
-            foreach ($sportkeeped as $sport) {
-                if ($this->{$sport} == self::SPORT_NONE) {
-                    continue;
+            if ($constraint === 0 && $this->questionnairestatus != self::HEALTH_QUESTIONNAIRE_ANSWERED_YES_ONCE) {
+                // Si l'utilisateur ne pratique aucun sport à contraintes et n'a aucun problème de santé, on réinitialise tout.
+                foreach ($sportkeeped as $sport) {
+                    $this->{$sport} = self::SPORT_NONE;
+                }
+            } else {
+                // On liste tous les sports qu'on souhaite conserver (sauf les NONE).
+                $items = array();
+                foreach ($sportkeeped as $sport) {
+                    if ($this->{$sport} == self::SPORT_NONE) {
+                        continue;
+                    }
+
+                    $items[$this->{$sport}] = $this->{$sport};
+                }
+                $items = array_values($items);
+
+                // On place le sport principal au début de la liste des sports à conserver.
+                if ($constraint === 1 || $this->questionnairestatus == self::HEALTH_QUESTIONNAIRE_ANSWERED_YES_ONCE) {
+                    $sports = Activity::get_records(array('restriction' => $constraint));
+                    if (isset($sports[$this->mainsport]) === true && in_array($this->mainsport, $items, $strict = true) === false) {
+                        array_unshift($items, $this->mainsport);
+                    }
                 }
 
-                $items[$this->{$sport}] = $this->{$sport};
-            }
-            $items = array_values($items);
-
-            // On place le sport principal au début de la liste des sports à conserver.
-            $sports = Activity::get_records(array('restriction' => $constraint));
-            if (isset($sports[$this->mainsport]) === true && in_array($this->mainsport, $items, $strict = true) === false) {
-                array_unshift($items, $this->mainsport);
-            }
-
-            // On réécrit la liste des sports à conserver.
-            foreach ($sportkeeped as $i => $sport) {
-                if (isset($items[$i]) === true) {
-                    $this->{$sport} = $items[$i];
-                } else {
-                    $this->{$sport} = self::SPORT_NONE;
+                // On réécrit la liste des sports à conserver.
+                foreach ($sportkeeped as $i => $sport) {
+                    if (isset($items[$i]) === true) {
+                        $this->{$sport} = $items[$i];
+                    } else {
+                        $this->{$sport} = self::SPORT_NONE;
+                    }
                 }
             }
 
