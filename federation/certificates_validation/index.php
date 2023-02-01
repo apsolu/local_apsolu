@@ -93,7 +93,9 @@ if ($data = $mform->get_data()) {
 
         if ($record->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_EXEMPTED) {
             $row[] = ''; // Aucun fichier.
-            $row[] = get_string('medical_certificate_not_required', 'local_apsolu');
+            $cell = new html_table_cell(get_string('medical_certificate_not_required', 'local_apsolu'));
+            $cell->attributes = array('class' => 'table-info');
+            $row[] = $cell;
             $row[] = ''; // Aucune action.
         } else {
             // Récupère les fichiers déposés.
@@ -104,7 +106,9 @@ if ($data = $mform->get_data()) {
             $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
             if (count($files) === 0) {
                 $row[] = get_string('no_files', 'local_apsolu');
-                $row[] = get_string('medical_certificate_not_validated', 'local_apsolu');
+                $cell = new html_table_cell(get_string('medical_certificate_not_validated', 'local_apsolu'));
+                $cell->attributes = array('class' => 'table-warning');
+                $row[] = $cell;
                 $row[] = ''; // Aucune action.
             } else {
                 $items = array();
@@ -153,9 +157,8 @@ if ($data = $mform->get_data()) {
 
                 if ($record->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING) {
                     // Certificat en attente de validation.
-                    $cell = new html_table_cell();
-                    $cell->text = get_string('medical_certificate_not_validated', 'local_apsolu');
-                    $cell->attributes = array('class' => 'medical-certificate-status', 'data-userid' => $record->id);
+                    $cell = new html_table_cell(get_string('medical_certificate_not_validated', 'local_apsolu'));
+                    $cell->attributes = array('class' => 'medical-certificate-status table-warning', 'data-userid' => $record->id);
                     $row[] = $cell;
 
                     $menu = new action_menu();
@@ -176,7 +179,7 @@ if ($data = $mform->get_data()) {
                     // Certificat validé.
                     $cell = new html_table_cell();
                     $cell->text = get_string('medical_certificate_validated', 'local_apsolu');
-                    $cell->attributes = array('class' => 'medical-certificate-status', 'data-userid' => $record->id);
+                    $cell->attributes = array('class' => 'medical-certificate-status table-success', 'data-userid' => $record->id);
                     $row[] = $cell;
 
                     if (empty($record->federationnumber) === true) {
