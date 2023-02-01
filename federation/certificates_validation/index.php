@@ -75,7 +75,7 @@ if ($data = $mform->get_data()) {
         $url_options['medical_certificate_status'] = $parameters['status'];
     }
 
-    $sql = "SELECT u.id, u.lastname, u.firstname, u.idnumber, u.email, afa.medicalcertificatedate, afa.medicalcertificatestatus, afa.federationnumber, afa.federationnumberrequestdate".
+    $sql = "SELECT u.id, u.lastname, u.firstname, u.idnumber, u.email, u.institution, afa.medicalcertificatedate, afa.medicalcertificatestatus, afa.federationnumber, afa.federationnumberrequestdate".
         " FROM {user} u".
         " JOIN {apsolu_federation_adhesions} afa ON u.id = afa.userid".
         " WHERE 1 = 1 ".implode(' ', $conditions).
@@ -95,6 +95,7 @@ if ($data = $mform->get_data()) {
         $row[] = html_writer::link($profileurl, $record->lastname);
         $row[] = html_writer::link($profileurl, $record->firstname);
         $row[] = $record->idnumber;
+        $row[] = $record->institution;
 
         if ($record->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_EXEMPTED) {
             $row[] = ''; // Aucun fichier.
@@ -224,6 +225,7 @@ if ($data = $mform->get_data()) {
             get_string('lastname'),
             get_string('firstname'),
             get_string('idnumber'),
+            get_string('institution'),
             get_string('file'),
             get_string('medical_certificate_status', 'local_apsolu'),
             get_string('action'),
