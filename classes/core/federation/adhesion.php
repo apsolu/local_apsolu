@@ -504,28 +504,31 @@ class adhesion extends record {
                 }
             }
 
-            // Recalcule les valeurs sportN et constraintsportN.
-            if ($this->has_constraint_sports() === true) {
-                $sportkeeped = array('constraintsport1', 'constraintsport2', 'constraintsport3', 'constraintsport4', 'constraintsport5');
-                $sportremoved = array('sport1', 'sport2', 'sport3', 'sport4', 'sport5');
-                $constraint = 1;
-            } else {
-                $sportkeeped = array('sport1', 'sport2', 'sport3', 'sport4', 'sport5');
-                $sportremoved = array('constraintsport1', 'constraintsport2', 'constraintsport3', 'constraintsport4', 'constraintsport5');
-                $constraint = 0;
-            }
-
-            // On réinialise la catégorie de sports qu'on ne souhaite pas conserver.
-            foreach ($sportremoved as $sport) {
-                $this->{$sport} = self::SPORT_NONE;
-            }
-
-            if ($constraint === 0 && $this->questionnairestatus != self::HEALTH_QUESTIONNAIRE_ANSWERED_YES_ONCE) {
-                // Si l'utilisateur ne pratique aucun sport à contraintes et n'a aucun problème de santé, on réinitialise tout.
-                foreach ($sportkeeped as $sport) {
-                    $this->{$sport} = self::SPORT_NONE;
+            if ($this->have_to_upload_medical_certificate() === false) {
+                // Si l'utilisateur n'a pas de certificat à déposer, on réinitialise tout.
+                foreach (array('sport', 'constraintsport') as $sport) {
+                    for ($i = 1; $i <= 5; $i++) {
+                        $property = $sport.$i;
+                        $this->{$property} = self::SPORT_NONE;
+                    }
                 }
             } else {
+                // Recalcule les valeurs sportN et constraintsportN.
+                if ($this->has_constraint_sports() === true) {
+                    $sportkeeped = array('constraintsport1', 'constraintsport2', 'constraintsport3', 'constraintsport4', 'constraintsport5');
+                    $sportremoved = array('sport1', 'sport2', 'sport3', 'sport4', 'sport5');
+                    $constraint = 1;
+                } else {
+                    $sportkeeped = array('sport1', 'sport2', 'sport3', 'sport4', 'sport5');
+                    $sportremoved = array('constraintsport1', 'constraintsport2', 'constraintsport3', 'constraintsport4', 'constraintsport5');
+                    $constraint = 0;
+                }
+
+                // On réinialise la catégorie de sports qu'on ne souhaite pas conserver.
+                foreach ($sportremoved as $sport) {
+                    $this->{$sport} = self::SPORT_NONE;
+                }
+
                 // On liste tous les sports qu'on souhaite conserver (sauf les NONE).
                 $items = array();
                 foreach ($sportkeeped as $sport) {
