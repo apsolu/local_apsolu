@@ -40,16 +40,40 @@ class local_apsolu_federation_medical_certificate extends moodleform {
      * @return void
      */
     function definition () {
+        global $USER;
+
         $mform = $this->_form;
 
-        list($adhesion, $course, $context, $validityperiod, $sportswithoutconstraint, $sportswithconstraints) = $this->_customdata;
+        list($adhesion, $course, $context, $validityperiod, $sportswithoutconstraint, $sportswithconstraints, $freeze) = $this->_customdata;
 
         // Certificat médical.
-        $attributes = null;
         $label = get_string('medical_certificate', 'local_apsolu');
-        $options = self::get_filemanager_options($course, $context);
+        if ($freeze === true) {
+            $mform->freeze();
 
-        $mform->addElement('filemanager', 'medicalcertificate_filemanager', $label, $attributes, $options);
+            $fs = get_file_storage();
+            $context = context_course::instance($course->id, MUST_EXIST);
+            list($component, $filearea, $itemid) = array('local_apsolu', 'medicalcertificate', $USER->id);
+            $sort = 'itemid, filepath, filename';
+            $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
+            $items = array();
+            foreach ($files as $file) {
+                $url = moodle_url::make_pluginfile_url($context->id, $component, $filearea, $itemid, '/', $file->get_filename(), $forcedownload = false, $includetoken = false);
+                $items[] = html_writer::link($url, $file->get_filename());
+            }
+
+            if (empty($items) === true) {
+                $mform->addElement('static', 'medicalcertificate', $label, get_string('no_files', 'local_apsolu'));
+            } else {
+                $attributes = array('class' => 'list-unstyled');
+                $mform->addElement('static', 'medicalcertificate', $label, html_writer::alist($items, $attributes));
+            }
+        } else {
+            $attributes = null;
+            $options = self::get_filemanager_options($course, $context);
+
+            $mform->addElement('filemanager', 'medicalcertificate_filemanager', $label, $attributes, $options);
+        }
 
         // Date du certificat médical.
         $mform->addElement('date_selector', 'medicalcertificatedate', get_string('medical_certificate_date', 'local_apsolu'));

@@ -23,6 +23,7 @@
  */
 
 use local_apsolu\core\federation\activity as Activity;
+use local_apsolu\core\federation\adhesion as Adhesion;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -38,8 +39,31 @@ if ($adhesion->have_to_upload_medical_certificate() === false) {
     $data->notifications[] = $message;
 } else if ($adhesion->medicalcertificatestatus === $adhesion::MEDICAL_CERTIFICATE_STATUS_VALIDATED) {
     $messages = $adhesion::get_contacts();
-
     $data->notifications[] = implode(' ', $messages);
+
+    // Validité attendue en mois du certificat médical.
+    if ($adhesion->sport1 === Adhesion::SPORT_NONE) {
+        $validityperiod = 12;
+        $sportswithoutconstraint = array();
+
+        // Liste les activités avec contraintes.
+        $sportswithconstraints = array($adhesion::SPORT_NONE => get_string('none'));
+        foreach (Activity::get_records(array('restriction' => 1)) as $record) {
+            $sportswithconstraints[$record->id] = $record->name;
+        }
+    } else {
+        $validityperiod = 6;
+        $sportswithconstraints = array();
+
+        // Liste les activités sans contrainte.
+        $sportswithoutconstraint = array($adhesion::SPORT_NONE => get_string('none'));
+        foreach (Activity::get_records(array('restriction' => 0)) as $record) {
+            $sportswithoutconstraint[$record->id] = $record->name;
+        }
+    }
+    $customdata = array($adhesion, $course, $context, $validityperiod, $sportswithoutconstraint, $sportswithconstraints, $freeze = true);
+    $mform = new local_apsolu_federation_medical_certificate(null, $customdata);
+    $data->content = $mform->render();
 } else {
     // Liste les activités sans contrainte.
     $sportswithoutconstraint = array($adhesion::SPORT_NONE => get_string('none'));
@@ -78,7 +102,7 @@ if ($adhesion->have_to_upload_medical_certificate() === false) {
     }
 
     // Construit le formulaire.
-    $customdata = array($adhesion, $course, $context, $validityperiod, $sportswithoutconstraint, $sportswithconstraints);
+    $customdata = array($adhesion, $course, $context, $validityperiod, $sportswithoutconstraint, $sportswithconstraints, $freeze = false);
     $mform = new local_apsolu_federation_medical_certificate(null, $customdata);
 
     // Charge les fichiers éventuellement déposés précédemment.
