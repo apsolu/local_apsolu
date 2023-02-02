@@ -48,7 +48,7 @@ if ($adhesion->have_to_upload_medical_certificate() === false) {
 
         // Liste les activités avec contraintes.
         $sportswithconstraints = array($adhesion::SPORT_NONE => get_string('none'));
-        foreach (Activity::get_records(array('restriction' => 1)) as $record) {
+        foreach (Activity::get_records(array('restriction' => 1), $sort = 'name') as $record) {
             $sportswithconstraints[$record->id] = $record->name;
         }
     } else {
@@ -57,7 +57,7 @@ if ($adhesion->have_to_upload_medical_certificate() === false) {
 
         // Liste les activités sans contrainte.
         $sportswithoutconstraint = array($adhesion::SPORT_NONE => get_string('none'));
-        foreach (Activity::get_records(array('restriction' => 0)) as $record) {
+        foreach (Activity::get_records(array('restriction' => 0), $sort = 'name') as $record) {
             $sportswithoutconstraint[$record->id] = $record->name;
         }
     }
@@ -67,13 +67,13 @@ if ($adhesion->have_to_upload_medical_certificate() === false) {
 } else {
     // Liste les activités sans contrainte.
     $sportswithoutconstraint = array($adhesion::SPORT_NONE => get_string('none'));
-    foreach (Activity::get_records(array('restriction' => 0)) as $record) {
+    foreach (Activity::get_records(array('restriction' => 0), $sort = 'name') as $record) {
         $sportswithoutconstraint[$record->id] = $record->name;
     }
 
     // Liste les activités avec contraintes.
     $sportswithconstraints = array($adhesion::SPORT_NONE => get_string('none'));
-    foreach (Activity::get_records(array('restriction' => 1)) as $record) {
+    foreach (Activity::get_records(array('restriction' => 1), $sort = 'name') as $record) {
         $sportswithconstraints[$record->id] = $record->name;
     }
 

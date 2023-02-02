@@ -43,12 +43,12 @@ foreach (Adhesion::get_disciplines() as $id => $label) {
 $managertypes = Adhesion::get_manager_types();
 
 $mainsports = array();
-foreach (Activity::get_records(array('mainsport' => 1)) as $record) {
+foreach (Activity::get_records(array('mainsport' => 1), $sort = 'name') as $record) {
     $mainsports[$record->id] = $record->name;
 }
 
 $sportswithconstraints = array();
-foreach (Activity::get_records(array('restriction' => 1)) as $record) {
+foreach (Activity::get_records(array('restriction' => 1), $sort = 'name') as $record) {
     $sportswithconstraints[$record->id] = $record->name;
 }
 

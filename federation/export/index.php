@@ -66,11 +66,11 @@ $licenses = array(
 
 // Récupère la liste des activités FFSU.
 $activities = array(0 => get_string('all'));
-foreach (FederationActivity::get_records() as $record) {
+foreach (FederationActivity::get_records(null, $sort = 'name') as $record) {
     $activities[$record->id] = $record->name;
 }
 
-$constraintactivities = FederationActivity::get_records(array('restriction' => 1));
+$constraintactivities = FederationActivity::get_records(array('restriction' => 1), $sort = 'name');
 
 $customdata = array('numbers' => $numbers, 'payments' => $payments, 'certificates' => $certificates, 'licenses' => $licenses, 'activities' => $activities);
 $mform = new local_apsolu_federation_export_licenses(null, $customdata);
