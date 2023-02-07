@@ -544,6 +544,7 @@ $string['the_details_of_the_responses_are_neither_saved_nor_sent_back_to_the_ser
 $string['the_directory_X_is_not_writable'] = 'Le répertoire « {$a} » n\'est pas accessible en écriture.';
 $string['the_field_X_is_hidden_the_field_Y_must_be_hidden'] = 'Le champ « {$a->field1} » est caché. Le champ « {$a->field2} » doit être caché.';
 $string['the_fields_of_X_page_have_to_be_completed'] = '<p>Les informations de la <a href="{$a->url}">page « {$a->page} » </a> doivent être renseignées.</p>';
+$string['the_license_number_X_associated_to_Y_is_invalid'] = 'Le numéro de licence {$a->licenseid} associé à {$a->profile} est <strong>invalide</strong>.';
 $string['the_path_X_is_a_directory'] = 'Le chemin « {$a} » est un répertoire.';
 $string['the_student_X_has_requested_for_a_license_number'] = 'L’étudiant {$a} a fait une demande de numéro de licence.';
 $string['this_activity_is_already_associated_with_activity_X'] = 'Cette activité est déjà associée à l\'activité FFSU « {$a} »';

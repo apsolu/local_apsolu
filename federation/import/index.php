@@ -75,15 +75,27 @@ if ($formdata = $mform->get_data()) {
             // Import.
             $email = trim($line[10]);
             if (isset($users[$email]) === false) {
-                continue;
-            }
-
-            $licenseid = trim($line[0]);
-            if (empty($licenseid) === true) {
+                // Utilisateur non trouvé.
                 continue;
             }
 
             $adhesion = $users[$email];
+
+            $licenseid = trim($line[0]);
+            if (empty($licenseid) === true) {
+                // Numéro de license vide.
+                continue;
+            }
+
+            if (ctype_alnum($licenseid) === false || strlen($licenseid) !== 10) {
+                // Numéro de licence invalide.
+                $params = new stdClass();
+                $params->licenseid = $licenseid;
+                $params->profile = html_writer::link('/user/profile.php?id='.$adhesion->userid, $adhesion->firstname.' '.$adhesion->lastname);
+                $result[] = get_string('the_license_number_X_associated_to_Y_is_invalid', 'local_apsolu', $params);
+                continue;
+            }
+
             if ($adhesion->federationnumber === $licenseid) {
                 continue;
             }
