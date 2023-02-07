@@ -64,6 +64,8 @@ $licenses = array(
     APSOLU_SELECT_NO => get_string('license_number_not_assigned', 'local_apsolu'),
 );
 
+$disciplines = FederationAdhesion::get_disciplines();
+
 // Récupère la liste des activités FFSU.
 $activities = array(0 => get_string('all'));
 foreach (FederationActivity::get_records(null, $sort = 'name') as $record) {
@@ -198,9 +200,39 @@ if ($data = $mform->get_data()) {
         // Remplit toutes les lignes.
         $row = array();
         foreach (FederationAdhesion::get_exportation_fields() as $field) {
-            if (in_array($field, array('firstname', 'lastname'), $strict = true) && isset($data->exportbutton) === false) {
-                $profileurl = new moodle_url('/user/view.php', array('id' => $record->userid, 'course' => $courseid));
-                $record->{$field} = html_writer::link($profileurl, $record->{$field});
+            if (isset($data->exportbutton) === false) {
+                // En affichage, on améliore le rendu des champs.
+                switch ($field) {
+                    case 'firstname':
+                    case 'lastname':
+                        $profileurl = new moodle_url('/user/view.php', array('id' => $record->userid, 'course' => $courseid));
+                        $record->{$field} = html_writer::link($profileurl, $record->{$field});
+                        break;
+                    case 'federationnumberprefix':
+                        if (empty($record->federationnumber) === false) {
+                            $record->{$field} = $record->federationnumber;
+                        }
+                        break;
+                    case 'disciplineid':
+                        $record->{$field} = $disciplines[$record->disciplineid];
+                        break;
+                    case 'sport1':
+                    case 'sport2':
+                    case 'sport3':
+                    case 'sport4':
+                    case 'sport5':
+                    case 'constraintsport1':
+                    case 'constraintsport2':
+                    case 'constraintsport3':
+                    case 'constraintsport4':
+                    case 'constraintsport5':
+                        if (isset($activities[$record->{$field}]) === true) {
+                            $record->{$field} = $activities[$record->{$field}];
+                        } else {
+                            $record->{$field} = get_string('none');
+                        }
+                        break;
+                }
             }
 
             switch ($field) {
