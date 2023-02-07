@@ -152,6 +152,14 @@
     min-height: 600px;
 }
 
+#local-apsolu-federation-adhesion-summary .row:nth-child(odd) {
+    background-color: rgba(0,0,0,.05);
+}
+
+#local-apsolu-federation-adhesion-summary dd {
+    margin: 0;
+}
+
 /* Résolutions supérieures ou égales à 1200px de large. */
 @media (min-width: 1200px) {
     #apsolu-offerings-toolbar {
