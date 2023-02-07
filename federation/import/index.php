@@ -79,6 +79,7 @@ if ($formdata = $mform->get_data()) {
             $email = trim($line[10]);
             if (isset($users[$email]) === false) {
                 // Utilisateur non trouvé.
+                $result[] = get_string('the_user_with_email_X_was_not_found', 'local_apsolu', $email);
                 continue;
             }
 

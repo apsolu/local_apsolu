@@ -549,6 +549,7 @@ $string['the_fields_of_X_page_have_to_be_completed'] = '<p>Les informations de l
 $string['the_license_number_X_associated_to_Y_is_invalid'] = 'Le numéro de licence {$a->licenseid} associé à {$a->profile} est <strong>invalide</strong>.';
 $string['the_path_X_is_a_directory'] = 'Le chemin « {$a} » est un répertoire.';
 $string['the_student_X_has_requested_for_a_license_number'] = 'L’étudiant {$a} a fait une demande de numéro de licence.';
+$string['the_user_with_email_X_was_not_found'] = 'L’utilisateur avec l’adresse de courriel « {$a} » n’a pas été trouvé.';
 $string['this_activity_is_already_associated_with_activity_X'] = 'Cette activité est déjà associée à l\'activité FFSU « {$a} »';
 $string['this_association_number_is_already_used'] = 'Ce numéro d\'association est déjà utilisé';
 $string['this_calendar_is_not_used_by_courses'] = 'Ce calendrier n\'est utilisé dans aucun cours.';
