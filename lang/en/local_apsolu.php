@@ -216,8 +216,10 @@ $string['exporting_license_help'] = 'Exporte les licences au format attendu par 
 $string['federation_course'] = 'Cours FFSU';
 $string['federation_course_help'] = 'Espace-cours permettant de gérer les étudiants inscrits à la Fédération Française des Sports Universitaires.';
 $string['federation_course_link_to_medical_form_description'] = 'Pour permettre aux étudiants de déposer leur certificat médical, vous devez créer une étiquette dans le <a href="{$a->courselink}">cours FFSU</a> contenant ce lien : <a href="{$a->formlink}">{$a->formlink}</a>.';
+$string['federation_number_created'] = 'Numéro de licence créé';
 $string['federation_number_request_date'] = 'Date de la demande de numéro de licence';
 $string['federation_number_request_sent'] = 'Demande de numéro de licence envoyée.';
+$string['federation_number_updated'] = 'Numéro de licence modifié';
 $string['field'] = 'Champ';
 $string['fields'] = 'Champs';
 $string['fill_out_the_membership_form'] = 'Remplir le formulaire d\'adhésion';

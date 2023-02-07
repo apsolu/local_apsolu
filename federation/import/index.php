@@ -23,6 +23,8 @@
  */
 
 use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\event\federation_number_created;
+use local_apsolu\event\federation_number_updated;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -30,7 +32,8 @@ require_once($CFG->libdir.'/csvlib.class.php');
 
 require_once(__DIR__.'/import_form.php');
 
-$returnurl = new moodle_url('/local/apsolu/federation/index.php?page=importation');
+$context = context_course::instance($courseid, MUST_EXIST);
+$returnurl = new moodle_url('/local/apsolu/federation/index.php', array('page' => 'importation'));
 
 $mform = new local_apsolu_federation_import_licences();
 
@@ -80,6 +83,7 @@ if ($formdata = $mform->get_data()) {
             }
 
             $adhesion = $users[$email];
+            $profile_url = new moodle_url('/user/profile.php', array('id' => $adhesion->userid));
 
             $licenseid = trim($line[0]);
             if (empty($licenseid) === true) {
@@ -91,7 +95,7 @@ if ($formdata = $mform->get_data()) {
                 // Numéro de licence invalide.
                 $params = new stdClass();
                 $params->licenseid = $licenseid;
-                $params->profile = html_writer::link('/user/profile.php?id='.$adhesion->userid, $adhesion->firstname.' '.$adhesion->lastname);
+                $params->profile = html_writer::link($profile_url, $adhesion->firstname.' '.$adhesion->lastname);
                 $result[] = get_string('the_license_number_X_associated_to_Y_is_invalid', 'local_apsolu', $params);
                 continue;
             }
@@ -107,18 +111,34 @@ if ($formdata = $mform->get_data()) {
 
             $params = new stdClass();
             $params->licenseid = $licenseid;
-            $params->profile = html_writer::link('/user/profile.php?id='.$adhesion->userid, $adhesion->firstname.' '.$adhesion->lastname);
+            $params->profile = html_writer::link($profile_url, $adhesion->firstname.' '.$adhesion->lastname);
+
             if (empty($oldlicenseid) === true) {
                 // Création d'un numéro AS.
                 $result[] = get_string('federation_insert_license', 'local_apsolu', $params);
+
+                // Enregistre un événement dans les logs.
+                $event = federation_number_created::create(array(
+                    'objectid' => $adhesion->id,
+                    'context' => $context,
+                    'relateduserid' => $adhesion->userid,
+                    'other' => json_encode(array('federationnumber' => $licenseid)),
+                    ));
+                $event->trigger();
             } else {
                 // Mise à jour du numéro AS.
                 $params->oldlicenseid = $oldlicenseid;
                 $result[] = get_string('federation_update_license', 'local_apsolu', $params);
-            }
 
-            // Add event.
-            \core\event\user_updated::create_from_userid($adhesion->userid)->trigger();
+                // Enregistre un événement dans les logs.
+                $event = federation_number_updated::create(array(
+                    'objectid' => $adhesion->id,
+                    'context' => $context,
+                    'relateduserid' => $adhesion->userid,
+                    'other' => json_encode(array('federationnumber' => $licenseid, 'oldfederationnumber' => $oldlicenseid)),
+                    ));
+                $event->trigger();
+            }
         } else {
             break;
         }
