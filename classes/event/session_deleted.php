@@ -33,7 +33,7 @@ class session_deleted extends \core\event\base {
      */
     protected function init() {
         // Values: c(reate), r(ead), u(pdate) or d(elete).
-        $this->data['crud'] = 'c';
+        $this->data['crud'] = 'd';
 
         // Values: LEVEL_TEACHING, LEVEL_PARTICIPATING or LEVEL_OTHER.
         $this->data['edulevel'] = self::LEVEL_OTHER;
