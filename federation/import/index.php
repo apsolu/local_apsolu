@@ -48,6 +48,15 @@ if ($formdata = $mform->get_data()) {
         print_error('csvloaderror', '', $returnurl, $csvloaderror);
     }
 
+    if (isset($formdata->importbutton) === true) {
+        $sql = "SELECT u.email, u.firstname, u.lastname, adh.*".
+            " FROM {user} u".
+            " JOIN {apsolu_federation_adhesions} adh ON u.id = adh.userid";
+        $users = $DB->get_records_sql($sql);
+
+        $result = array();
+    }
+
     // init csv import helper
     $cir->init();
 
@@ -63,13 +72,6 @@ if ($formdata = $mform->get_data()) {
                 break;
             }
         } else if (isset($formdata->importbutton) === true) {
-            $result = array();
-
-            $sql = "SELECT u.email, u.firstname, u.lastname, adh.*".
-                " FROM {user} u".
-                " JOIN {apsolu_federation_adhesions} adh ON u.id = adh.userid";
-            $users = $DB->get_records_sql($sql);
-
             // Import.
             $email = trim($line[10]);
             if (isset($users[$email]) === false) {
