@@ -38,7 +38,7 @@ define('APSOLU_SELECT_ANY', '0');
 define('APSOLU_SELECT_YES', '1');
 define('APSOLU_SELECT_NO', '2');
 
-$returnurl = new moodle_url('/local/apsolu/federation/index.php?page=exportation');
+$returnurl = new moodle_url('/local/apsolu/federation/index.php', ['page' => 'exportation']);
 
 // Récupère la liste des numéros d'association.
 $numbers = array();

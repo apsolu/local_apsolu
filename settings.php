@@ -61,7 +61,7 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     foreach ($items as $subtype => $tabs) {
         foreach ($tabs as $tab) {
             $label = get_string($tab, 'local_apsolu');
-            $url = new moodle_url('/local/apsolu/courses/index.php?tab='.$tab);
+            $url = new moodle_url('/local/apsolu/courses/index.php', ['tab' => $tab]);
             $page = new admin_externalpage('local_apsolu_courses_'.$subtype.'_'.$tab, $label, $url, $capabilities);
 
             $ADMIN->add('local_apsolu_courses_'.$subtype, $page);
@@ -74,7 +74,7 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
 
         // Activités complémentaires > Activités complémentaires.
         $label = get_string('settings_complements', 'local_apsolu');
-        $url = new moodle_url('/local/apsolu/courses/complements.php?tab=complements');
+        $url = new moodle_url('/local/apsolu/courses/complements.php', ['tab' => 'complements']);
         $ADMIN->add('local_apsolu_complements', new admin_externalpage('local_apsolu_complements_complements', $label, $url, $capabilities));
     }
 

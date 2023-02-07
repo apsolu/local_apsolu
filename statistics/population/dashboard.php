@@ -57,34 +57,34 @@ $complementaries = $report->get_complementaries();
 $dashboard = $render->render_reportData(['classname' => 'population','reportid' => 'dashboard']);
 // INSCRIPTIONS : Nombre d'inscriptions
 $data->enrollment['counter'] = $dashboard[0]->wish_list;
-$data->enrollment['report'] = new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=enrollment');
+$data->enrollment['report'] = new moodle_url('/local/apsolu/statistics/population/index.php', ['page' => 'reports', 'reportid' => 'enrollment']);
 // INSCRIPTIONS : Nombre d'inscriptions acceptées
 $data->enrollment_acceptedlist['counter'] = $dashboard[0]->accepted_list;
-$data->enrollment_acceptedlist['report'] = new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=enrollment_acceptedlist');
+$data->enrollment_acceptedlist['report'] = new moodle_url('/local/apsolu/statistics/population/index.php', ['page' => 'reports', 'reportid' => 'enrollment_acceptedlist']);
 // INSCRIPTIONS : Nombre d'inscriptions sur liste principale
 $data->enrollment_mainlist['counter'] = $dashboard[0]->main_list;
-$data->enrollment_mainlist['report'] = new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=enrollment_mainlist');
+$data->enrollment_mainlist['report'] = new moodle_url('/local/apsolu/statistics/population/index.php', ['page' => 'reports', 'reportid' => 'enrollment_mainlist']);
 // INSCRIPTIONS : Nombre d'inscriptions sur liste d'attente
 $data->enrollment_waitinglist['counter'] = $dashboard[0]->wait_list;
-$data->enrollment_waitinglist['report'] = new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=enrollment_waitinglist');
+$data->enrollment_waitinglist['report'] = new moodle_url('/local/apsolu/statistics/population/index.php', ['page' => 'reports', 'reportid' => 'enrollment_waitinglist']);
 // INSCRIPTIONS : Nombre d'inscriptions refusé
 $data->enrollment_deletedlist['counter'] = $dashboard[0]->deleted_list;
-$data->enrollment_deletedlist['report'] = new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=enrollment_deletedlist');
+$data->enrollment_deletedlist['report'] = new moodle_url('/local/apsolu/statistics/population/index.php', ['page' => 'reports', 'reportid' => 'enrollment_deletedlist']);
 // INSCRITS : Nombre d'inscrits
 $data->enrollee['counter'] = $dashboard[0]->enrollee_wish_list;
-$data->enrollee['report'] = new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=enrollee');
+$data->enrollee['report'] = new moodle_url('/local/apsolu/statistics/population/index.php', ['page' => 'reports', 'reportid' => 'enrollee']);
 // INSCRITS : Nombre d'inscrits acceptés
 $data->enrollee_acceptedlist['counter'] = $dashboard[0]->enrollee_accepted_list;
-$data->enrollee_acceptedlist['report'] = new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=enrollee_acceptedlist');
+$data->enrollee_acceptedlist['report'] = new moodle_url('/local/apsolu/statistics/population/index.php', ['page' => 'reports', 'reportid' => 'enrollee_acceptedlist']);
 // INSCRITS : Nombre d'inscrits sur liste principale
 $data->enrollee_mainlist['counter'] = $dashboard[0]->enrollee_main_list;
-$data->enrollee_mainlist['report'] = new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=enrollee_mainlist');
+$data->enrollee_mainlist['report'] = new moodle_url('/local/apsolu/statistics/population/index.php', ['page' => 'reports', 'reportid' => 'enrollee_mainlist']);
 // INSCRITS : Nombre d'inscrits sur liste d'attente
 $data->enrollee_waitinglist['counter'] = $dashboard[0]->enrollee_wait_list;
-$data->enrollee_waitinglist['report'] = new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=enrollee_waitinglist');
+$data->enrollee_waitinglist['report'] = new moodle_url('/local/apsolu/statistics/population/index.php', ['page' => 'reports', 'reportid' => 'enrollee_waitinglist']);
 // INSCRITS : Nombre d'inscrits refusé
 $data->enrollee_deletedlist['counter'] = $dashboard[0]->enrollee_deleted_list;
-$data->enrollee_deletedlist['report'] = new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=enrollee_deletedlist');
+$data->enrollee_deletedlist['report'] = new moodle_url('/local/apsolu/statistics/population/index.php', ['page' => 'reports', 'reportid' => 'enrollee_deletedlist']);
 
 /**
 * ACTIVITÉS COMPLÉMENTAIRES
@@ -96,10 +96,10 @@ $dashboard_complementaries = $render->render_reportData(['classname' => 'populat
 if ($dashboard_complementaries[0]->enrollment > 0) {
     $data->has_complementaries_enrollment = true;
     $data->complementaries_enrollment['counter'] = $dashboard_complementaries[0]->enrollment;
-    $data->complementaries_enrollment['report'] = new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=complementaries_enrollment');
+    $data->complementaries_enrollment['report'] = new moodle_url('/local/apsolu/statistics/population/index.php', ['page' => 'reports', 'reportid' => 'complementaries_enrollment']);
     // INSCRITS : Nombre d'inscrits
     $data->complementaries_enrollee['counter'] = $dashboard_complementaries[0]->enrollee;
-    $data->complementaries_enrollee['report'] = new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=complementaries_enrollee');
+    $data->complementaries_enrollee['report'] = new moodle_url('/local/apsolu/statistics/population/index.php', ['page' => 'reports', 'reportid' => 'complementaries_enrollee']);
     $data->complementaries_enrollee['title'] = $report->getReport("complementaries_enrollee")->label;
     $data->complementaries_enrollee['chart'] = $render->render_chart(['classname' => 'population','reportid' => 'complementaries_enrollee','criterias' => ['complementaries' => array_values($complementaries)]]);
 
@@ -110,7 +110,7 @@ if ($dashboard_complementaries[0]->enrollment > 0) {
             $data->complementaries_enrollment_activity[] = array(
             'title' => $complementary->name,
             'counter' => $dashboard_complementaries[0]->$prop,
-            'report' => new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=complementaries_enrollment'),
+            'report' => new moodle_url('/local/apsolu/statistics/population/index.php', ['page' => 'reports', 'reportid' => 'complementaries_enrollment']),
             );
         }
     }
@@ -147,7 +147,7 @@ if ($CFG->is_siuaps_rennes){
 
     $data->shnu['title'] = $report->getReport("custom_shnu")->label;
     $data->shnu['counter'] = $render->render_reportCounter(['classname' => 'population','reportid' => 'custom_shnu']);
-    $data->shnu['report'] = new moodle_url('/local/apsolu/statistics/population/index.php?page=reports&reportid=custom_shnu');
+    $data->shnu['report'] = new moodle_url('/local/apsolu/statistics/population/index.php', ['page' => 'reports', 'reportid' => 'custom_shnu']);
 
 }
 
