@@ -88,7 +88,7 @@ echo $OUTPUT->header();
 echo $OUTPUT->tabtree($tabsbar, 'sessions');
 echo $OUTPUT->heading($pagedesc);
 
-$sessions = $DB->get_records('apsolu_attendance_sessions', array('courseid' => $courseid));
+$sessions = $DB->get_records('apsolu_attendance_sessions', array('courseid' => $courseid), $sort = 'sessiontime');
 $count_sessions = count($sessions);
 
 if ($count_sessions === 0) {
