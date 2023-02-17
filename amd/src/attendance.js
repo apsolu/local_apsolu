@@ -1,15 +1,50 @@
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Module javascript.
+ *
+ * @todo       Description à compléter.
+ *
+ * @module     local_apsolu/attendance
+ * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
     return {
-        initialise : function() {
+        initialise: function() {
             // Créé un bouton pour cocher toutes les présences non définies.
-            $('#apsolu-attendance-table').before('<div id="apsolu-attendance-check-javascript-helper" class="text-right"><p>Pour les présences <u>non saisies</u> :<ul class="list-inline">'+
-                '<li class="list-inline-item"><span class="btn btn-sm btn-primary" id="apsolu-check-radio-present">Cocher "présent" pour tous</span></li>'+
-                '<li class="list-inline-item"><span class="btn btn-sm btn-primary" id="apsolu-check-radio-absent">Cocher "absent" pour tous</span></li>'+
-                '<li class="list-inline-item"><span class="btn btn-sm btn-dark" id="apsolu-check-radio-uncheck">Décocher toutes les cases</span></li>'+
-                '</ul></div>');
+            // TODO: faire un template mustache.
+            $('#apsolu-attendance-table').before('<div id="apsolu-attendance-check-javascript-helper" class="text-right">' +
+                '<p>Pour les présences <u>non saisies</u> :</p>' +
+                '<ul class="list-inline">' +
+                '  <li class="list-inline-item">' +
+                '    <span class="btn btn-sm btn-primary" id="apsolu-check-radio-present">Cocher "présent" pour tous</span>' +
+                '  </li>' +
+                '  <li class="list-inline-item">' +
+                '    <span class="btn btn-sm btn-primary" id="apsolu-check-radio-absent">Cocher "absent" pour tous</span>' +
+                '  </li>' +
+                '  <li class="list-inline-item">' +
+                '    <span class="btn btn-sm btn-dark" id="apsolu-check-radio-uncheck">Décocher toutes les cases</span>' +
+                '  </li>' +
+                '</ul>' +
+                '</div>');
 
             // Ajoute un évènement sur le bouton "présent" créé précédemment.
-            $('#apsolu-check-radio-present').click(function(){
+            $('#apsolu-check-radio-present').click(function() {
                 $('#apsolu-attendance-table tbody tr').each(function() {
                     // Recherche si un des 4 boutons radio est coché.
                     if ($(this).find('input[type=radio]:checked').length == 0) {
@@ -20,7 +55,7 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
             });
 
             // Ajoute un évènement sur le bouton "absent" créé précédemment.
-            $('#apsolu-check-radio-absent').click(function(){
+            $('#apsolu-check-radio-absent').click(function() {
                 $('#apsolu-attendance-table tbody tr').each(function() {
                     // Recherche si un des 4 boutons radio est coché.
                     if ($(this).find('input[type=radio]:checked').length == 0) {
@@ -31,7 +66,7 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
             });
 
             // Ajoute un évènement sur le bouton "décocher" créé précédemment.
-            $('#apsolu-check-radio-uncheck').click(function(){
+            $('#apsolu-check-radio-uncheck').click(function() {
                 $('#apsolu-attendance-table tbody tr').each(function() {
                     // Recherche si un des 4 boutons radio est coché.
                     if ($(this).find('input[type=radio]:checked').length != 0) {
@@ -45,7 +80,7 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
             $('#apsolu-attendance-table tbody tr input[type=radio]').click(function() {
                 // Supprime la propriété hasbeenpreviouslychecked sur tous les éléments radio, sauf l'élément courant.
                 var name = $(this).attr('name');
-                $('#apsolu-attendance-table tbody tr input[name="'+name+'"]').not(this).removeProp('hasbeenpreviouslychecked');
+                $('#apsolu-attendance-table tbody tr input[name="' + name + '"]').not(this).removeProp('hasbeenpreviouslychecked');
 
                 if (this.hasbeenpreviouslychecked) {
                     // Décoche le bouton radio qui était déjà coché avant.
@@ -67,7 +102,7 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
                     popup = $('#apsolu-attendance-popup');
                 }
 
-                data = new Object();
+                var data = new Object();
                 data.userid = $(this).data('userid');
                 data.courseid = $(this).data('courseid');
                 data.enrolid = $(this).data('enrolid');
@@ -76,18 +111,17 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
 
                 // Build form.
                 $.ajax({
-                    url: M.cfg.wwwroot+"/local/apsolu/attendance/ajax/edit_enrolment.php",
+                    url: M.cfg.wwwroot + "/local/apsolu/attendance/ajax/edit_enrolment.php",
                     type: 'POST',
                     data: data,
                     dataType: 'json'
                 })
-                .done(function(result){
+                .done(function(result) {
                     try {
                         $('#apsolu-attendance-popup').html(result.form);
                         apsolu_attendance_handle_edit_enrolments_form();
-                    } catch(e) {
-                        console.log(e);
-                        // $('#apsolu-enrol-form').html(result);
+                    } catch (exception) {
+                        // TODO.
                     }
                 });
 
@@ -95,6 +129,9 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
                 popup.popup('show');
             });
 
+            /**
+             * Fonction appelée lors de la soumission du formulaire.
+             */
             function apsolu_attendance_handle_edit_enrolments_form() {
                 // Submit data.
                 $('#apsolu-attendance-ajax-edit-enrolment form').submit(function(event) {
@@ -107,26 +144,28 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
                     }
 
                     $.ajax({
-                        url: M.cfg.wwwroot+"/local/apsolu/attendance/ajax/edit_enrolment.php",
+                        url: M.cfg.wwwroot + "/local/apsolu/attendance/ajax/edit_enrolment.php",
                         type: 'POST',
                         data: $('#apsolu-attendance-ajax-edit-enrolment form').serialize(),
                         dataType: 'json'
                     })
-                    .done(function(result){
+                    .done(function(result) {
                         $('#apsolu-attendance-popup').html(result.form);
 
                         // Mets à jour la colonne "Liste d'inscription".
-                        var status = $('.apsolu-attendance-status[data-userid='+result.userid+']');
+                        var status = $('.apsolu-attendance-status[data-userid=' + result.userid + ']');
                         if (status.length == 1) {
                             status.html(result.status);
-                            $('.apsolu-attendance-edit-enrolments[data-userid='+result.userid+']').data('statusid', result.statusid);
+                            $('.apsolu-attendance-edit-enrolments[data-userid=' + result.userid + ']')
+                                .data('statusid', result.statusid);
                         }
 
                         // Mets à jour la colonne "Type d'inscription".
-                        var role = $('.apsolu-attendance-role[data-userid='+result.userid+']');
+                        var role = $('.apsolu-attendance-role[data-userid=' + result.userid + ']');
                         if (role.length == 1) {
                             role.html(result.role);
-                            $('.apsolu-attendance-edit-enrolments[data-userid='+result.userid+']').data('roleid', result.roleid);
+                            $('.apsolu-attendance-edit-enrolments[data-userid=' + result.userid + ']')
+                                .data('roleid', result.roleid);
                         }
 
                         apsolu_attendance_handle_edit_enrolments_form();
@@ -142,7 +181,7 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
                 });
             }
         },
-        setupcourse : function() {
+        setupcourse: function() {
             // Affiche les raccourcis de gestion de cours en haut de la page d'accueil du cours.
 
             // Récupère le bouton "gérer mes étudiants".

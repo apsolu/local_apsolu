@@ -42,7 +42,7 @@ define([], function() {
         initialise : function(inputSelector, targetSelector, closestSelector = '', displayStyle = 'block') {
             // Vérifie l'existence de l'élément inputSelector.
             var element = document.querySelector(inputSelector);
-            if (element == null) {
+            if (element === null) {
                 return;
             }
 
@@ -68,7 +68,7 @@ define([], function() {
                     // Remonte à l'élément parent pour masquer le bloc complet.
                     if (closestSelector != '') {
                         parentNode = elements[i].closest(closestSelector);
-                        if (parentNode == null) {
+                        if (parentNode === null) {
                             continue;
                         }
                     } else {

@@ -1,6 +1,33 @@
-define(['jquery', 'core_form/modalform', 'core/str', 'core/toast'], function($, ModalForm, Str, notifyUser) {
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Module javascript.
+ *
+ * @todo       Description à compléter.
+ *
+ * @module     local_apsolu/federation_medical_certificate_validation
+ * @copyright  2023 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+define(['jquery', 'core_form/modalform', 'core/str', 'core/toast', 'core/notification'],
+    function($, ModalForm, Str, notifyUser, Notification) {
+
     return {
-        initialise : function() {
+        initialise: function() {
             $('.local-apsolu-federation-medical-certificate-validation').click(function(event) {
                 event.preventDefault();
 
@@ -21,7 +48,7 @@ define(['jquery', 'core_form/modalform', 'core/str', 'core/toast'], function($, 
                     }
                 ];
 
-                Str.get_strings(strings).then(function (results) {
+                Str.get_strings(strings).then(function(results) {
                     var subject = results[0];
                     var body = results[1];
 
@@ -34,7 +61,13 @@ define(['jquery', 'core_form/modalform', 'core/str', 'core/toast'], function($, 
 
                     const modalForm = new ModalForm({
                         formClass: "local_apsolu\\form\\send_email_form",
-                        args: {users: users, contextid: contextid, targetvalidation: targetvalidation, subject: subject, body: body},
+                        args: {
+                            users: users,
+                            contextid: contextid,
+                            targetvalidation: targetvalidation,
+                            subject: subject,
+                            body: body
+                        },
                         modalConfig: {title: title, large: true, buttons: {save: Str.get_string('send', 'message')}},
                     });
 
@@ -59,14 +92,12 @@ define(['jquery', 'core_form/modalform', 'core/str', 'core/toast'], function($, 
                             if (countnotifications == 1) {
                                 Str.get_string('message_sent', 'local_apsolu')
                                     .then(message => {
-                                        console.log(message);
                                         return notifyUser.add(message);
                                     })
                                     .fail(Notification.exception);
                             } else {
                                 Str.get_string('messages_sent_to_X_users', 'local_apsolu', countnotifications)
                                     .then(message => {
-                                        console.log(message);
                                         return notifyUser.add(message);
                                     })
                                     .fail(Notification.exception);
@@ -75,7 +106,6 @@ define(['jquery', 'core_form/modalform', 'core/str', 'core/toast'], function($, 
 
                         if (errors.length > 0) {
                             for (i = 0; i < errors.length; i++) {
-                                console.log(message);
                                 notifyUser.add(errors[i]);
                             }
                         } else {
@@ -83,12 +113,10 @@ define(['jquery', 'core_form/modalform', 'core/str', 'core/toast'], function($, 
                             let items = users.split(',');
                             let element, menuitem;
                             for (let i = 0; i < items.length; i++) {
-                                element = document.querySelector('td.medical-certificate-status[data-userid="'+items[i]+'"]');
+                                element = document.querySelector('td.medical-certificate-status[data-userid="' + items[i] + '"]');
                                 if (element) {
                                     element.textContent = targetvalidationtext;
-                                    menuitem = document.querySelector('a.dropdown-item[data-users="'+items[i]+'"]');
-                                    console.log('a.dropdown-item[data-userid="'+items[i]+'"]');
-                                    console.log(menuitem);
+                                    menuitem = document.querySelector('a.dropdown-item[data-users="' + items[i] + '"]');
                                     if (menuitem) {
                                         menuitem.classList.toggle('d-none');
                                     }
@@ -98,8 +126,10 @@ define(['jquery', 'core_form/modalform', 'core/str', 'core/toast'], function($, 
                     });
 
                     modalForm.show();
-                });
+
+                    return true;
+                }).catch(Notification.exception);
             });
         }
-    }
+    };
 });

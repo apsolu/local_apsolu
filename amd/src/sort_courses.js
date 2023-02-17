@@ -1,6 +1,31 @@
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Module javascript.
+ *
+ * @todo       Description à compléter.
+ *
+ * @module     local_apsolu/sort_courses
+ * @copyright  2018 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 define(["jquery", "local_apsolu/jquery.tablefilter"], function($, TableFilter) {
     return {
-        initialise : function() {
+        initialise: function() {
             var tfConfig = {
                 base_path: "./../tablefilter/",
                 alternate_rows: true,
@@ -23,7 +48,7 @@ define(["jquery", "local_apsolu/jquery.tablefilter"], function($, TableFilter) {
                     "string", // Horaires.
                     "string", // Lieux.
                     "string", // Périodes.
-                    "string"  // Enseignants.
+                    "string" // Enseignants.
                 ],
 
                 // Columns data filter types.
@@ -44,7 +69,7 @@ define(["jquery", "local_apsolu/jquery.tablefilter"], function($, TableFilter) {
                 // defining the columns data type for column sorting. If the "types"
                 // property is not defined, the sorting extension will fallback to
                 // the "col_types" definitions.
-                extensions: [{ name: "sort" }]
+                extensions: [{name: "sort"}]
             };
 
             if (document.querySelectorAll("#table-courses-sortable thead tr th").length == 11) {
