@@ -56,14 +56,14 @@ class manager_test extends \advanced_testcase {
         $manager->name = 'manager 1';
         $manager->save();
 
-        $count_records = $DB->count_records($manager::TABLENAME);
-        $this->assertSame(1, $count_records);
+        $countrecords = $DB->count_records($manager::TABLENAME);
+        $this->assertSame(1, $countrecords);
 
         $result = $manager->delete();
         $this->assertTrue($result);
 
-        $count_records = $DB->count_records($manager::TABLENAME);
-        $this->assertSame(0, $count_records);
+        $countrecords = $DB->count_records($manager::TABLENAME);
+        $this->assertSame(0, $countrecords);
     }
 
     public function test_get_records() {
@@ -71,23 +71,23 @@ class manager_test extends \advanced_testcase {
 
         $manager = new manager();
 
-        $count_records = $DB->count_records($manager::TABLENAME);
-        $this->assertSame(0, $count_records);
+        $countrecords = $DB->count_records($manager::TABLENAME);
+        $this->assertSame(0, $countrecords);
 
         // Enregistre un nouvel objet.
         $manager->name = 'manager 1';
         $manager->save();
 
-        $count_records = $DB->count_records($manager::TABLENAME);
-        $this->assertSame(1, $count_records);
+        $countrecords = $DB->count_records($manager::TABLENAME);
+        $this->assertSame(1, $countrecords);
 
         // Enregistre un nouvel objet.
         $manager->id = 0;
         $manager->name = 'manager 2';
         $manager->save();
 
-        $count_records = $DB->count_records($manager::TABLENAME);
-        $this->assertSame(2, $count_records);
+        $countrecords = $DB->count_records($manager::TABLENAME);
+        $this->assertSame(2, $countrecords);
     }
 
     public function test_load() {
@@ -114,38 +114,38 @@ class manager_test extends \advanced_testcase {
 
         $manager = new manager();
 
-        $initial_count = $DB->count_records($manager::TABLENAME);
+        $initialcount = $DB->count_records($manager::TABLENAME);
 
         // Enregistre un objet.
         $data = new stdClass();
         $data->name = 'manager 1';
 
         $manager->save($data);
-        $count_records = $DB->count_records($manager::TABLENAME);
+        $countrecords = $DB->count_records($manager::TABLENAME);
 
         // Vérifie l'objet inséré.
         $this->assertSame($data->name, $manager->name);
-        $this->assertSame($count_records, $initial_count + 1);
+        $this->assertSame($countrecords, $initialcount + 1);
 
         // Mets à jour l'objet.
         $data->name = 'manager 1';
 
         $manager->save($data);
-        $count_records = $DB->count_records($manager::TABLENAME);
+        $countrecords = $DB->count_records($manager::TABLENAME);
 
         // Vérifie l'objet mis à jour.
         $this->assertSame($data->name, $manager->name);
-        $this->assertSame($count_records, $initial_count + 1);
+        $this->assertSame($countrecords, $initialcount + 1);
 
         // Ajoute un nouvel objet (sans argument).
         $manager->id = 0;
         $manager->name = 'manager 2';
 
         $manager->save();
-        $count_records = $DB->count_records($manager::TABLENAME);
+        $countrecords = $DB->count_records($manager::TABLENAME);
 
         // Vérifie l'objet ajouté.
-        $this->assertSame($count_records, $initial_count + 2);
+        $this->assertSame($countrecords, $initialcount + 2);
 
         // Teste la contrainte d'unicité.
         $data->id = 0;

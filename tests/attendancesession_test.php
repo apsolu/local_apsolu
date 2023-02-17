@@ -62,14 +62,14 @@ class attendancesession_test extends \advanced_testcase {
         $attendancesession->name = 'attendancesession 1';
         $attendancesession->save();
 
-        $count_records = $DB->count_records($attendancesession::TABLENAME);
-        $this->assertSame(1, $count_records);
+        $countrecords = $DB->count_records($attendancesession::TABLENAME);
+        $this->assertSame(1, $countrecords);
 
         $result = $attendancesession->delete();
         $this->assertTrue($result);
 
-        $count_records = $DB->count_records($attendancesession::TABLENAME);
-        $this->assertSame(0, $count_records);
+        $countrecords = $DB->count_records($attendancesession::TABLENAME);
+        $this->assertSame(0, $countrecords);
     }
 
     public function test_get_records() {
@@ -84,23 +84,23 @@ class attendancesession_test extends \advanced_testcase {
         $attendancesession = new attendancesession();
         $attendancesession->courseid = $course->id;
 
-        $count_records = $DB->count_records($attendancesession::TABLENAME);
-        $this->assertSame(0, $count_records);
+        $countrecords = $DB->count_records($attendancesession::TABLENAME);
+        $this->assertSame(0, $countrecords);
 
         // Enregistre un nouvel objet.
         $attendancesession->name = 'attendancesession 1';
         $attendancesession->save();
 
-        $count_records = $DB->count_records($attendancesession::TABLENAME);
-        $this->assertSame(1, $count_records);
+        $countrecords = $DB->count_records($attendancesession::TABLENAME);
+        $this->assertSame(1, $countrecords);
 
         // Enregistre un nouvel objet.
         $attendancesession->id = 0;
         $attendancesession->name = 'attendancesession 2';
         $attendancesession->save();
 
-        $count_records = $DB->count_records($attendancesession::TABLENAME);
-        $this->assertSame(2, $count_records);
+        $countrecords = $DB->count_records($attendancesession::TABLENAME);
+        $this->assertSame(2, $countrecords);
     }
 
     public function test_load() {
@@ -140,37 +140,37 @@ class attendancesession_test extends \advanced_testcase {
         $attendancesession = new attendancesession();
         $attendancesession->courseid = $course->id;
 
-        $initial_count = $DB->count_records($attendancesession::TABLENAME);
+        $initialcount = $DB->count_records($attendancesession::TABLENAME);
 
         // Enregistre un objet.
         $data = new stdClass();
         $data->name = 'attendancesession 1';
 
         $attendancesession->save($data);
-        $count_records = $DB->count_records($attendancesession::TABLENAME);
+        $countrecords = $DB->count_records($attendancesession::TABLENAME);
 
         // Vérifie l'objet inséré.
         $this->assertSame($data->name, $attendancesession->name);
-        $this->assertSame($count_records, $initial_count + 1);
+        $this->assertSame($countrecords, $initialcount + 1);
 
         // Mets à jour l'objet.
         $data->name = 'attendancesession 1';
 
         $attendancesession->save($data);
-        $count_records = $DB->count_records($attendancesession::TABLENAME);
+        $countrecords = $DB->count_records($attendancesession::TABLENAME);
 
         // Vérifie l'objet mis à jour.
         $this->assertSame($data->name, $attendancesession->name);
-        $this->assertSame($count_records, $initial_count + 1);
+        $this->assertSame($countrecords, $initialcount + 1);
 
         // Ajoute un nouvel objet (sans argument).
         $attendancesession->id = 0;
         $attendancesession->name = 'attendancesession 2';
 
         $attendancesession->save();
-        $count_records = $DB->count_records($attendancesession::TABLENAME);
+        $countrecords = $DB->count_records($attendancesession::TABLENAME);
 
         // Vérifie l'objet ajouté.
-        $this->assertSame($count_records, $initial_count + 2);
+        $this->assertSame($countrecords, $initialcount + 2);
     }
 }

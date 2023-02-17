@@ -56,14 +56,14 @@ class period_test extends \advanced_testcase {
         $period->name = 'period 1';
         $period->save();
 
-        $count_records = $DB->count_records($period::TABLENAME);
-        $this->assertSame(1, $count_records);
+        $countrecords = $DB->count_records($period::TABLENAME);
+        $this->assertSame(1, $countrecords);
 
         $result = $period->delete();
         $this->assertTrue($result);
 
-        $count_records = $DB->count_records($period::TABLENAME);
-        $this->assertSame(0, $count_records);
+        $countrecords = $DB->count_records($period::TABLENAME);
+        $this->assertSame(0, $countrecords);
     }
 
     public function test_get_records() {
@@ -71,23 +71,23 @@ class period_test extends \advanced_testcase {
 
         $period = new period();
 
-        $count_records = $DB->count_records($period::TABLENAME);
-        $this->assertSame(0, $count_records);
+        $countrecords = $DB->count_records($period::TABLENAME);
+        $this->assertSame(0, $countrecords);
 
         // Enregistre un nouvel objet.
         $period->name = 'period 1';
         $period->save();
 
-        $count_records = $DB->count_records($period::TABLENAME);
-        $this->assertSame(1, $count_records);
+        $countrecords = $DB->count_records($period::TABLENAME);
+        $this->assertSame(1, $countrecords);
 
         // Enregistre un nouvel objet.
         $period->id = 0;
         $period->name = 'period 2';
         $period->save();
 
-        $count_records = $DB->count_records($period::TABLENAME);
-        $this->assertSame(2, $count_records);
+        $countrecords = $DB->count_records($period::TABLENAME);
+        $this->assertSame(2, $countrecords);
     }
 
     public function test_load() {
@@ -138,38 +138,38 @@ class period_test extends \advanced_testcase {
 
         $period = new period();
 
-        $initial_count = $DB->count_records($period::TABLENAME);
+        $initialcount = $DB->count_records($period::TABLENAME);
 
         // Enregistre un objet.
         $data = new stdClass();
         $data->name = 'period 1';
 
         $period->save($data);
-        $count_records = $DB->count_records($period::TABLENAME);
+        $countrecords = $DB->count_records($period::TABLENAME);
 
         // Vérifie l'objet inséré.
         $this->assertSame($data->name, $period->name);
-        $this->assertSame($count_records, $initial_count + 1);
+        $this->assertSame($countrecords, $initialcount + 1);
 
         // Mets à jour l'objet.
         $data->name = 'period 1';
 
         $period->save($data);
-        $count_records = $DB->count_records($period::TABLENAME);
+        $countrecords = $DB->count_records($period::TABLENAME);
 
         // Vérifie l'objet mis à jour.
         $this->assertSame($data->name, $period->name);
-        $this->assertSame($count_records, $initial_count + 1);
+        $this->assertSame($countrecords, $initialcount + 1);
 
         // Ajoute un nouvel objet (sans argument).
         $period->id = 0;
         $period->name = 'period 2';
 
         $period->save();
-        $count_records = $DB->count_records($period::TABLENAME);
+        $countrecords = $DB->count_records($period::TABLENAME);
 
         // Vérifie l'objet ajouté.
-        $this->assertSame($count_records, $initial_count + 2);
+        $this->assertSame($countrecords, $initialcount + 2);
 
         // Teste la contrainte d'unicité.
         $data->id = 0;

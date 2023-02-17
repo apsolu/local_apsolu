@@ -53,10 +53,10 @@ class course_test extends \advanced_testcase {
         global $DB;
 
         // Teste le bon fonctionnement lors de la suppression d'un cours non APSOLU.
-        $count_apsolu_courses = $DB->count_records(course::TABLENAME);
+        $countapsolucourses = $DB->count_records(course::TABLENAME);
         $course = $this->getDataGenerator()->create_course();
         delete_course($course, $showfeedback = false);
-        $this->assertSame($count_apsolu_courses, $DB->count_records(course::TABLENAME));
+        $this->assertSame($countapsolucourses, $DB->count_records(course::TABLENAME));
 
         // Teste la suppression d'un cours via l'API de Moodle.
         $sql = "SELECT c.* FROM {course} c JOIN {apsolu_courses} ac ON c.id = ac.id";
@@ -71,92 +71,92 @@ class course_test extends \advanced_testcase {
         $this->assertEmpty($sessions);
 
         // Contrôle que la table apsolu_courses a été nettoyée.
-        $apsolu_course = $DB->get_record('apsolu_courses', array('id' => $course->id));
-        $this->assertFalse($apsolu_course);
+        $apsolucourse = $DB->get_record('apsolu_courses', array('id' => $course->id));
+        $this->assertFalse($apsolucourse);
     }
 
     public function test_updated() {
         global $DB;
 
-        $moodle_category1 = $this->getDataGenerator()->create_category();
-        $moodle_category2 = $this->getDataGenerator()->create_category();
-        $moodle_course = $this->getDataGenerator()->create_course(array(
-            'category' => $moodle_category1->id,
+        $moodlecategory1 = $this->getDataGenerator()->create_category();
+        $moodlecategory2 = $this->getDataGenerator()->create_category();
+        $moodlecourse = $this->getDataGenerator()->create_course(array(
+            'category' => $moodlecategory1->id,
             'shortname' => 'Anglais',
             'fullname' => 'Anglais',
         ));
 
         // Teste le bon fonctionnement lors de la suppression d'un cours non APSOLU.
-        $moodle_course->category = $moodle_category2->id;
-        update_course($moodle_course);
-        $moodle_course = $DB->get_record('course', array('id' => $moodle_course->id));
+        $moodlecourse->category = $moodlecategory2->id;
+        update_course($moodlecourse);
+        $moodlecourse = $DB->get_record('course', array('id' => $moodlecourse->id));
 
-        $this->assertSame($moodle_category2->id, $moodle_course->category);
-        $this->assertSame('Anglais', $moodle_course->shortname);
-        $this->assertSame('Anglais', $moodle_course->fullname);
+        $this->assertSame($moodlecategory2->id, $moodlecourse->category);
+        $this->assertSame('Anglais', $moodlecourse->shortname);
+        $this->assertSame('Anglais', $moodlecourse->fullname);
 
         // Teste la modification d'un cours via l'API de Moodle sans modifier la catégorie.
         $sql = "SELECT c.* FROM {course} c JOIN {apsolu_courses} ac ON c.id = ac.id";
-        $apsolu_courses = $DB->get_records_sql($sql);
-        $apsolu_course = current($apsolu_courses);
-        $this->assertNotSame(false, $apsolu_course);
+        $apsolucourses = $DB->get_records_sql($sql);
+        $apsolucourse = current($apsolucourses);
+        $this->assertNotSame(false, $apsolucourse);
 
-        $apsolu_shortname = $apsolu_course->shortname;
-        $apsolu_fullname = $apsolu_course->fullname;
-        $apsolu_category = $apsolu_course->category;
+        $apsolushortname = $apsolucourse->shortname;
+        $apsolufullname = $apsolucourse->fullname;
+        $apsolucategory = $apsolucourse->category;
 
-        $apsolu_course->visible = 0;
-        update_course($apsolu_course);
-        $apsolu_course = $DB->get_record('course', array('id' => $apsolu_course->id));
+        $apsolucourse->visible = 0;
+        update_course($apsolucourse);
+        $apsolucourse = $DB->get_record('course', array('id' => $apsolucourse->id));
 
-        $this->assertSame($apsolu_category, $apsolu_course->category);
-        $this->assertSame($apsolu_shortname, $apsolu_course->shortname);
-        $this->assertSame($apsolu_fullname, $apsolu_course->fullname);
+        $this->assertSame($apsolucategory, $apsolucourse->category);
+        $this->assertSame($apsolushortname, $apsolucourse->shortname);
+        $this->assertSame($apsolufullname, $apsolucourse->fullname);
 
         // Teste la modification d'un cours via l'API update_course de Moodle dans une catégorie non APSOLU.
-        $apsolu_course->category = $moodle_category1->id;
-        update_course($apsolu_course);
-        $apsolu_course = $DB->get_record('course', array('id' => $apsolu_course->id));
+        $apsolucourse->category = $moodlecategory1->id;
+        update_course($apsolucourse);
+        $apsolucourse = $DB->get_record('course', array('id' => $apsolucourse->id));
 
         // Le cours ne doit pas avoir été déplacé dans la catégorie Moodle.
-        $this->assertNotSame($moodle_category1->id, $apsolu_course->category);
+        $this->assertNotSame($moodlecategory1->id, $apsolucourse->category);
         // Le cours doit avoir été remis dans sa catégorie d'origine.
-        $this->assertSame($apsolu_category, $apsolu_course->category);
+        $this->assertSame($apsolucategory, $apsolucourse->category);
         // Les noms doivent être inchangés.
-        $this->assertSame($apsolu_shortname, $apsolu_course->shortname);
-        $this->assertSame($apsolu_fullname, $apsolu_course->fullname);
+        $this->assertSame($apsolushortname, $apsolucourse->shortname);
+        $this->assertSame($apsolufullname, $apsolucourse->fullname);
 
         // Teste la modification d'un cours via l'API move_courses de Moodle dans une catégorie non APSOLU.
-        move_courses(array($apsolu_course->id), $moodle_category1->id);
-        $apsolu_course = $DB->get_record('course', array('id' => $apsolu_course->id));
+        move_courses(array($apsolucourse->id), $moodlecategory1->id);
+        $apsolucourse = $DB->get_record('course', array('id' => $apsolucourse->id));
 
         // Le cours ne doit pas avoir été déplacé dans la catégorie Moodle.
-        $this->assertNotSame($moodle_category1->id, $apsolu_course->category);
+        $this->assertNotSame($moodlecategory1->id, $apsolucourse->category);
         // Le cours doit avoir été remis dans sa catégorie d'origine.
-        $this->assertSame($apsolu_category, $apsolu_course->category);
+        $this->assertSame($apsolucategory, $apsolucourse->category);
         // Les noms doivent être inchangés.
-        $this->assertSame($apsolu_shortname, $apsolu_course->shortname);
-        $this->assertSame($apsolu_fullname, $apsolu_course->fullname);
+        $this->assertSame($apsolushortname, $apsolucourse->shortname);
+        $this->assertSame($apsolufullname, $apsolucourse->fullname);
 
         // Teste le recalcule du nom complet et abrégé.
         $sql = "SELECT c.* FROM {course} c JOIN {apsolu_courses} ac ON c.id = ac.id";
-        $apsolu_courses = $DB->get_records_sql($sql);
-        $apsolu_course = current($apsolu_courses);
-        $this->assertNotSame(false, $apsolu_course);
+        $apsolucourses = $DB->get_records_sql($sql);
+        $apsolucourse = current($apsolucourses);
+        $this->assertNotSame(false, $apsolucourse);
 
         $sql = "SELECT acc.* FROM {apsolu_courses_categories} acc WHERE acc.id != :id";
-        $apsolu_categories = $DB->get_records_sql($sql, array('id' => $apsolu_course->category));
-        $apsolu_category = current($apsolu_categories);
-        $this->assertNotSame(false, $apsolu_categories);
+        $apsolucategories = $DB->get_records_sql($sql, array('id' => $apsolucourse->category));
+        $apsolucategory = current($apsolucategories);
+        $this->assertNotSame(false, $apsolucategories);
 
-        $shortname = $apsolu_course->shortname;
-        $fullname = $apsolu_course->fullname;
+        $shortname = $apsolucourse->shortname;
+        $fullname = $apsolucourse->fullname;
 
-        $apsolu_course->category = $apsolu_category->id;
-        update_course($apsolu_course);
+        $apsolucourse->category = $apsolucategory->id;
+        update_course($apsolucourse);
 
-        $apsolu_course = $DB->get_record('course', array('id' => $apsolu_course->id));
-        $this->assertNotSame($shortname, $apsolu_course->shortname);
-        $this->assertNotSame($fullname, $apsolu_course->fullname);
+        $apsolucourse = $DB->get_record('course', array('id' => $apsolucourse->id));
+        $this->assertNotSame($shortname, $apsolucourse->shortname);
+        $this->assertNotSame($fullname, $apsolucourse->fullname);
     }
 }

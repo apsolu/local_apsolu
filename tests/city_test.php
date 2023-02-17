@@ -56,14 +56,14 @@ class city_test extends \advanced_testcase {
         $city->name = 'city 1';
         $city->save();
 
-        $count_records = $DB->count_records($city::TABLENAME);
-        $this->assertSame(1, $count_records);
+        $countrecords = $DB->count_records($city::TABLENAME);
+        $this->assertSame(1, $countrecords);
 
         $result = $city->delete();
         $this->assertTrue($result);
 
-        $count_records = $DB->count_records($city::TABLENAME);
-        $this->assertSame(0, $count_records);
+        $countrecords = $DB->count_records($city::TABLENAME);
+        $this->assertSame(0, $countrecords);
     }
 
     public function test_get_records() {
@@ -71,23 +71,23 @@ class city_test extends \advanced_testcase {
 
         $city = new city();
 
-        $count_records = $DB->count_records($city::TABLENAME);
-        $this->assertSame(0, $count_records);
+        $countrecords = $DB->count_records($city::TABLENAME);
+        $this->assertSame(0, $countrecords);
 
         // Enregistre un nouvel objet.
         $city->name = 'city 1';
         $city->save();
 
-        $count_records = $DB->count_records($city::TABLENAME);
-        $this->assertSame(1, $count_records);
+        $countrecords = $DB->count_records($city::TABLENAME);
+        $this->assertSame(1, $countrecords);
 
         // Enregistre un nouvel objet.
         $city->id = 0;
         $city->name = 'city 2';
         $city->save();
 
-        $count_records = $DB->count_records($city::TABLENAME);
-        $this->assertSame(2, $count_records);
+        $countrecords = $DB->count_records($city::TABLENAME);
+        $this->assertSame(2, $countrecords);
     }
 
     public function test_load() {
@@ -114,38 +114,38 @@ class city_test extends \advanced_testcase {
 
         $city = new city();
 
-        $initial_count = $DB->count_records($city::TABLENAME);
+        $initialcount = $DB->count_records($city::TABLENAME);
 
         // Enregistre un objet.
         $data = new stdClass();
         $data->name = 'city 1';
 
         $city->save($data);
-        $count_records = $DB->count_records($city::TABLENAME);
+        $countrecords = $DB->count_records($city::TABLENAME);
 
         // Vérifie l'objet inséré.
         $this->assertSame($data->name, $city->name);
-        $this->assertSame($count_records, $initial_count + 1);
+        $this->assertSame($countrecords, $initialcount + 1);
 
         // Mets à jour l'objet.
         $data->name = 'city 1';
 
         $city->save($data);
-        $count_records = $DB->count_records($city::TABLENAME);
+        $countrecords = $DB->count_records($city::TABLENAME);
 
         // Vérifie l'objet mis à jour.
         $this->assertSame($data->name, $city->name);
-        $this->assertSame($count_records, $initial_count + 1);
+        $this->assertSame($countrecords, $initialcount + 1);
 
         // Ajoute un nouvel objet (sans argument).
         $city->id = 0;
         $city->name = 'city 2';
 
         $city->save();
-        $count_records = $DB->count_records($city::TABLENAME);
+        $countrecords = $DB->count_records($city::TABLENAME);
 
         // Vérifie l'objet ajouté.
-        $this->assertSame($count_records, $initial_count + 2);
+        $this->assertSame($countrecords, $initialcount + 2);
 
         // Teste la contrainte d'unicité.
         $data->id = 0;

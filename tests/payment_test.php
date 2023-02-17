@@ -39,7 +39,6 @@ require_once __DIR__.'/../classes/apsolu/payment.php';
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class payment_test extends \advanced_testcase {
-    private $data;
 
     protected function setUp() : void {
         global $DB;

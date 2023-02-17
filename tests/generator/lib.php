@@ -100,7 +100,7 @@ class local_apsolu_generator extends testing_module_generator {
             $category = new category();
             $category->save($catdata, $mform);
 
-            for ($i = 0 ; $i < 3 ; $i++) {
+            for ($i = 0; $i < 3; $i++) {
                 $data = $this->get_course_data();
                 $data->category = $category->id;
                 $data->str_category = $categoryname;

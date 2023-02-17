@@ -62,15 +62,15 @@ class category_test extends \advanced_testcase {
         $category->save($data, $mform);
 
         // Supprime un objet existant.
-        $count_records = $DB->count_records($category::TABLENAME);
-        $this->assertSame(1, $count_records);
+        $countrecords = $DB->count_records($category::TABLENAME);
+        $this->assertSame(1, $countrecords);
 
         set_config('defaultrequestcategory', 1);
         $result = $category->delete();
         $this->assertTrue($result);
 
-        $count_records = $DB->count_records($category::TABLENAME);
-        $this->assertSame(0, $count_records);
+        $countrecords = $DB->count_records($category::TABLENAME);
+        $this->assertSame(0, $countrecords);
     }
 
     public function test_get_records() {
@@ -78,23 +78,23 @@ class category_test extends \advanced_testcase {
 
         $category = new category();
 
-        $count_records = $DB->count_records($category::TABLENAME);
-        $this->assertSame(0, $count_records);
+        $countrecords = $DB->count_records($category::TABLENAME);
+        $this->assertSame(0, $countrecords);
 
         // Enregistre un nouvel objet.
         list($data, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
         $category->save($data, $mform);
 
-        $count_records = $DB->count_records($category::TABLENAME);
-        $this->assertSame(1, $count_records);
+        $countrecords = $DB->count_records($category::TABLENAME);
+        $this->assertSame(1, $countrecords);
 
         // Enregistre un nouvel objet.
         $category->id = 0;
         list($data, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
         $category->save($data, $mform);
 
-        $count_records = $DB->count_records($category::TABLENAME);
-        $this->assertSame(2, $count_records);
+        $countrecords = $DB->count_records($category::TABLENAME);
+        $this->assertSame(2, $countrecords);
     }
 
     public function test_load() {
@@ -121,24 +121,24 @@ class category_test extends \advanced_testcase {
 
         $category = new category();
 
-        $initial_count = $DB->count_records($category::TABLENAME);
+        $initialcount = $DB->count_records($category::TABLENAME);
 
         // Enregistre un objet.
         list($data, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
         $category->save($data, $mform);
-        $count_records = $DB->count_records($category::TABLENAME);
+        $countrecords = $DB->count_records($category::TABLENAME);
 
         // Vérifie l'objet inséré.
         $this->assertSame($data->name, $category->name);
-        $this->assertSame($count_records, $initial_count + 1);
+        $this->assertSame($countrecords, $initialcount + 1);
 
         // Mets à jour l'objet.
         $category->name = 'category';
         $category->save($category, $mform);
-        $count_records = $DB->count_records($category::TABLENAME);
+        $countrecords = $DB->count_records($category::TABLENAME);
 
         // Vérifie l'objet mis à jour.
         $this->assertSame($data->name, $category->name);
-        $this->assertSame($count_records, $initial_count + 1);
+        $this->assertSame($countrecords, $initialcount + 1);
     }
 }

@@ -65,18 +65,24 @@ require([
   "bootstrap-datepicker",
   "bootstrap-datetimepicker",
   "moment",
-  ], function($,notification,Ajax,moment) {
+  ], function($, notification, Ajax, moment) {
 
   moment.locale('{{{langcode}}}');
 
-  !function(a){a.fn.datepicker.dates.fr={
-      days:["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"],
-      daysShort:["dim.","lun.","mar.","mer.","jeu.","ven.","sam."],
-      daysMin:["d","l","ma","me","j","v","s"],
-      months:["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"],
-      monthsShort:["janv.","févr.","mars","avril","mai","juin","juil.","août","sept.","oct.","nov.","déc."],
-      today:"Aujourd'hui",
-      monthsTitle:"Mois",clear:"Effacer",weekStart:1,format:"dd/mm/yyyy"}}(jQuery);
+  !function(a) {
+    a.fn.datepicker.dates.fr={
+      days: ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"],
+      daysShort: ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."],
+      daysMin: ["d", "l", "ma", "me", "j", "v", "s"],
+      months: ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"],
+      monthsShort: ["janv.", "févr.", "mars", "avril", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."],
+      today: "Aujourd'hui",
+      monthsTitle: "Mois",
+      clear: "Effacer",
+      weekStart: 1,
+      format: "dd/mm/yyyy"
+    }
+  }(jQuery);
 
   var selector = '.report-builder-table';
 
@@ -114,7 +120,7 @@ require([
         // Get enrols data
         var requests = Ajax.call([{
                 methodname: 'local_apsolu_get_reportdataset',
-                args: {'classname':'programme','querybuilder':JSON.stringify(customQuery)}
+                args: {'classname':'programme', 'querybuilder': JSON.stringify(customQuery)}
               }]);
 
         requests[0].done(function(enrols) {
@@ -135,9 +141,9 @@ require([
                 return value;
             }),
             order: order,
-            buttons: ['excelHtml5','csvHtml5'],
-            dom: '<"top"Bfi>rt<"bottom"lp><"clear">', //'dom': 'lfrtip',
-            pageLength:30,
+            buttons: ['excelHtml5', 'csvHtml5'],
+            dom: '<"top"Bfi>rt<"bottom"lp><"clear">',
+            pageLength: 30,
             language: {
                       "sEmptyTable":     "Aucune donnée disponible dans le tableau",
                       "sInfo":           "Affichage de l'élément _START_ à _END_ sur _TOTAL_ éléments",
@@ -185,7 +191,7 @@ require([
                       var title = $(column.header()).html();
                       var input = $('<input type="text" class="column_search" placeholder=" '+title+'" />')
                           .appendTo( $(selector+' thead tr:eq(1) th').eq(column.index()).empty() )
-                          .on( 'keyup change', function () {
+                          .on('keyup change', function() {
                               var val = $.fn.dataTable.util.escapeRegex(
                                   $(this).val()
                               );
@@ -197,28 +203,28 @@ require([
                   });
                 }
                 if (filters.select) {
-                  this.api().columns(filters.select).every( function () {
+                  this.api().columns(filters.select).every(function() {
                     var column = this;
                     if (column.visible()) {
                       var select = $('<select><option value=""></option></select>')
-                          .appendTo( $(selector+' thead tr:eq(1) th').eq(column.index()).empty() )
-                          .on( 'change', function () {
+                          .appendTo($(selector + ' thead tr:eq(1) th').eq(column.index()).empty())
+                          .on('change', function() {
                               var val = $.fn.dataTable.util.escapeRegex(
                                   $(this).val()
                               );
 
                               column
-                                  .search( val ? '^'+val+'$' : '', true, false )
+                                  .search( val ? '^' + val + '$' : '', true, false )
                                   .draw();
                           } );
 
-                      column.data().unique().sort().each( function ( d, j ) {
+                      column.data().unique().sort().each(function(d, j) {
                         var title = $(column.header()).html();
                         if (title != "Jour")
                         {
-                          select.append( '<option value="'+d+'">'+d+'</option>' )
+                          select.append('<option value="' + d + '">' + d + '</option>');
                         } else {
-                          select.append( '<option value="'+moment.weekdays()[d]+'">'+moment.weekdays()[d]+'</option>' )
+                          select.append('<option value="' + moment.weekdays()[d] + '">' + moment.weekdays()[d] + '</option>');
                         }
                       });
                     }

@@ -56,14 +56,14 @@ class holiday_test extends \advanced_testcase {
         $holiday->day = time();
         $holiday->save();
 
-        $count_records = $DB->count_records($holiday::TABLENAME);
-        $this->assertSame(1, $count_records);
+        $countrecords = $DB->count_records($holiday::TABLENAME);
+        $this->assertSame(1, $countrecords);
 
         $result = $holiday->delete();
         $this->assertTrue($result);
 
-        $count_records = $DB->count_records($holiday::TABLENAME);
-        $this->assertSame(0, $count_records);
+        $countrecords = $DB->count_records($holiday::TABLENAME);
+        $this->assertSame(0, $countrecords);
     }
 
     public function test_get_records() {
@@ -71,23 +71,23 @@ class holiday_test extends \advanced_testcase {
 
         $holiday = new holiday();
 
-        $count_records = $DB->count_records($holiday::TABLENAME);
-        $this->assertSame(0, $count_records);
+        $countrecords = $DB->count_records($holiday::TABLENAME);
+        $this->assertSame(0, $countrecords);
 
         // Enregistre un nouvel objet.
         $holiday->day = time();
         $holiday->save();
 
-        $count_records = $DB->count_records($holiday::TABLENAME);
-        $this->assertSame(1, $count_records);
+        $countrecords = $DB->count_records($holiday::TABLENAME);
+        $this->assertSame(1, $countrecords);
 
         // Enregistre un nouvel objet.
         $holiday->id = 0;
         $holiday->day = time() + (24 * 60 * 60);
         $holiday->save();
 
-        $count_records = $DB->count_records($holiday::TABLENAME);
-        $this->assertSame(2, $count_records);
+        $countrecords = $DB->count_records($holiday::TABLENAME);
+        $this->assertSame(2, $countrecords);
     }
 
     public function test_get_holidays() {
@@ -158,14 +158,14 @@ class holiday_test extends \advanced_testcase {
         $this->assertSame(2, count($sessions));
 
         // Vérifie que la session existe toujours.
-        $first_session = current($sessions);
-        $this->assertGreaterThanOrEqual($data->day, $first_session->sessiontime);
-        $this->assertLessThanOrEqual($data->day + DAYSECS, $first_session->sessiontime);
+        $firstsession = current($sessions);
+        $this->assertGreaterThanOrEqual($data->day, $firstsession->sessiontime);
+        $this->assertLessThanOrEqual($data->day + DAYSECS, $firstsession->sessiontime);
 
         // Vérifie que la session sur le jour férié est supprimée.
         $holiday->regenerate_sessions();
         foreach ($course->get_sessions() as $session) {
-            $this->assertNotEquals($session->sessiontime, $first_session->sessiontime);
+            $this->assertNotEquals($session->sessiontime, $firstsession->sessiontime);
         }
     }
 
@@ -174,38 +174,38 @@ class holiday_test extends \advanced_testcase {
 
         $holiday = new holiday();
 
-        $initial_count = $DB->count_records($holiday::TABLENAME);
+        $initialcount = $DB->count_records($holiday::TABLENAME);
 
         // Enregistre un objet.
         $data = new stdClass();
         $data->day = time();
 
         $holiday->save($data);
-        $count_records = $DB->count_records($holiday::TABLENAME);
+        $countrecords = $DB->count_records($holiday::TABLENAME);
 
         // Vérifie l'objet inséré.
         $this->assertEquals($data->day, $holiday->day);
-        $this->assertSame($count_records, $initial_count + 1);
+        $this->assertSame($countrecords, $initialcount + 1);
 
         // Mets à jour l'objet.
         $data->day = time() + (24 * 60 * 60);
 
         $holiday->save($data);
-        $count_records = $DB->count_records($holiday::TABLENAME);
+        $countrecords = $DB->count_records($holiday::TABLENAME);
 
         // Vérifie l'objet mis à jour.
         $this->assertEquals($data->day, $holiday->day);
-        $this->assertSame($count_records, $initial_count + 1);
+        $this->assertSame($countrecords, $initialcount + 1);
 
         // Ajoute un nouvel objet (sans argument).
         $holiday->id = 0;
         $holiday->day = time() + (48 * 60 * 60);
 
         $holiday->save();
-        $count_records = $DB->count_records($holiday::TABLENAME);
+        $countrecords = $DB->count_records($holiday::TABLENAME);
 
         // Vérifie l'objet ajouté.
-        $this->assertSame($count_records, $initial_count + 2);
+        $this->assertSame($countrecords, $initialcount + 2);
 
         // Teste la contrainte d'unicité.
         $data->id = 0;

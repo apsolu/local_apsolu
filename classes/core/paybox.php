@@ -74,7 +74,7 @@ class paybox {
     /**
      * Retourne le nom de domaine du premier serveur PayBox disponible pour gérer la transaction.
      *
-     * @param int|null|string $user Identifiant de l'utilisateur.
+     * @param int|null|string $userid Identifiant de l'utilisateur.
      *
      * @return string|false Un nom de domaine ou false si aucun serveur n'est disponible.
      */
@@ -161,8 +161,8 @@ class paybox {
     /**
      * Enregistre les coordonnées d'un porteur de carte de paiement.
      *
-     * @param object          $data Données issues du formulaire de saisie des coordonnées d'un porteur de carte de paiement.
-     * @param int|null|string $user Identifiant de l'utilisateur.
+     * @param object          $data   Données issues du formulaire de saisie des coordonnées d'un porteur de carte de paiement.
+     * @param int|null|string $userid Identifiant de l'utilisateur.
      *
      * @return string|false Un nom de domaine ou false si aucun serveur n'est disponible.
      */

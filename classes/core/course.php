@@ -175,12 +175,12 @@ class course extends record {
     /**
      * Calcule le nom complet du cours à partir des paramètres passés à la méthode.
      *
-     * @param int|string $categoryid Identifiant ou nom de la catégorie d'activité sportive.
-     * @param string     $event      Libellé complémentaire / spécialité.
-     * @param string     $weekday    Jour de la semaine en anglais.
-     * @param string     $starttime  Heure de début du cours.
-     * @param string     $endtime    Heure de fin du cours.
-     * @param int|string $skill      Identifiant ou libellé du niveau de pratique.
+     * @param int|string $category  Identifiant ou nom de la catégorie d'activité sportive.
+     * @param string     $event     Libellé complémentaire / spécialité.
+     * @param string     $weekday   Jour de la semaine en anglais.
+     * @param string     $starttime Heure de début du cours.
+     * @param string     $endtime   Heure de fin du cours.
+     * @param int|string $skill     Identifiant ou libellé du niveau de pratique.
      *
      * @return string Nom abrégé unique.
      */

@@ -31,7 +31,7 @@ require_once($CFG->dirroot.'/message/externallib.php');
 /**
  * Modal form to send email.
  *
- * @TODO: refactoriser avec /local/apsolu/forms/notification_form.php
+ * @see TODO: refactoriser avec /local/apsolu/forms/notification_form.php
  *
  * @package   local_apsolu
  * @copyright 2023 Université Rennes 2 {@link https://www.univ-rennes2.fr}

@@ -56,14 +56,14 @@ class location_test extends \advanced_testcase {
         $location->name = 'location 1';
         $location->save();
 
-        $count_records = $DB->count_records($location::TABLENAME);
-        $this->assertSame(1, $count_records);
+        $countrecords = $DB->count_records($location::TABLENAME);
+        $this->assertSame(1, $countrecords);
 
         $result = $location->delete();
         $this->assertTrue($result);
 
-        $count_records = $DB->count_records($location::TABLENAME);
-        $this->assertSame(0, $count_records);
+        $countrecords = $DB->count_records($location::TABLENAME);
+        $this->assertSame(0, $countrecords);
     }
 
     public function test_get_records() {
@@ -71,23 +71,23 @@ class location_test extends \advanced_testcase {
 
         $location = new location();
 
-        $count_records = $DB->count_records($location::TABLENAME);
-        $this->assertSame(0, $count_records);
+        $countrecords = $DB->count_records($location::TABLENAME);
+        $this->assertSame(0, $countrecords);
 
         // Enregistre un nouvel objet.
         $location->name = 'location 1';
         $location->save();
 
-        $count_records = $DB->count_records($location::TABLENAME);
-        $this->assertSame(1, $count_records);
+        $countrecords = $DB->count_records($location::TABLENAME);
+        $this->assertSame(1, $countrecords);
 
         // Enregistre un nouvel objet.
         $location->id = 0;
         $location->name = 'location 2';
         $location->save();
 
-        $count_records = $DB->count_records($location::TABLENAME);
-        $this->assertSame(2, $count_records);
+        $countrecords = $DB->count_records($location::TABLENAME);
+        $this->assertSame(2, $countrecords);
     }
 
     public function test_load() {
@@ -114,38 +114,38 @@ class location_test extends \advanced_testcase {
 
         $location = new location();
 
-        $initial_count = $DB->count_records($location::TABLENAME);
+        $initialcount = $DB->count_records($location::TABLENAME);
 
         // Enregistre un objet.
         $data = new stdClass();
         $data->name = 'location 1';
 
         $location->save($data);
-        $count_records = $DB->count_records($location::TABLENAME);
+        $countrecords = $DB->count_records($location::TABLENAME);
 
         // Vérifie l'objet inséré.
         $this->assertSame($data->name, $location->name);
-        $this->assertSame($count_records, $initial_count + 1);
+        $this->assertSame($countrecords, $initialcount + 1);
 
         // Mets à jour l'objet.
         $data->name = 'location 1';
 
         $location->save($data);
-        $count_records = $DB->count_records($location::TABLENAME);
+        $countrecords = $DB->count_records($location::TABLENAME);
 
         // Vérifie l'objet mis à jour.
         $this->assertSame($data->name, $location->name);
-        $this->assertSame($count_records, $initial_count + 1);
+        $this->assertSame($countrecords, $initialcount + 1);
 
         // Ajoute un nouvel objet (sans argument).
         $location->id = 0;
         $location->name = 'location 2';
 
         $location->save();
-        $count_records = $DB->count_records($location::TABLENAME);
+        $countrecords = $DB->count_records($location::TABLENAME);
 
         // Vérifie l'objet ajouté.
-        $this->assertSame($count_records, $initial_count + 2);
+        $this->assertSame($countrecords, $initialcount + 2);
 
         // Teste la contrainte d'unicité.
         $data->id = 0;

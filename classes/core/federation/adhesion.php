@@ -477,7 +477,7 @@ class adhesion extends record {
      *
      * @param object|null $data  StdClass représentant l'objet à enregistrer.
      * @param object|null $mform Mform représentant un formulaire Moodle nécessaire à la gestion d'un champ de type editor.
-     * @param boolean     $check Témoin permettant de passer les vérifications avant l'enregistrement des données.
+     * @param bool        $check Témoin permettant de passer les vérifications avant l'enregistrement des données.
      *
      * @return void
      */

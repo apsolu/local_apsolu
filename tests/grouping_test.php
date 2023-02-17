@@ -60,15 +60,15 @@ class grouping_test extends \advanced_testcase {
         $grouping->name = 'grouping 1';
         $grouping->save();
 
-        $count_records = $DB->count_records($grouping::TABLENAME);
-        $this->assertSame(1, $count_records);
+        $countrecords = $DB->count_records($grouping::TABLENAME);
+        $this->assertSame(1, $countrecords);
 
         set_config('defaultrequestcategory', 1);
         $result = $grouping->delete();
         $this->assertTrue($result);
 
-        $count_records = $DB->count_records($grouping::TABLENAME);
-        $this->assertSame(0, $count_records);
+        $countrecords = $DB->count_records($grouping::TABLENAME);
+        $this->assertSame(0, $countrecords);
     }
 
     public function test_get_records() {
@@ -76,23 +76,23 @@ class grouping_test extends \advanced_testcase {
 
         $grouping = new grouping();
 
-        $count_records = $DB->count_records($grouping::TABLENAME);
-        $this->assertSame(0, $count_records);
+        $countrecords = $DB->count_records($grouping::TABLENAME);
+        $this->assertSame(0, $countrecords);
 
         // Enregistre un nouvel objet.
         $grouping->name = 'grouping 1';
         $grouping->save();
 
-        $count_records = $DB->count_records($grouping::TABLENAME);
-        $this->assertSame(1, $count_records);
+        $countrecords = $DB->count_records($grouping::TABLENAME);
+        $this->assertSame(1, $countrecords);
 
         // Enregistre un nouvel objet.
         $grouping->id = 0;
         $grouping->name = 'grouping 2';
         $grouping->save();
 
-        $count_records = $DB->count_records($grouping::TABLENAME);
-        $this->assertSame(2, $count_records);
+        $countrecords = $DB->count_records($grouping::TABLENAME);
+        $this->assertSame(2, $countrecords);
     }
 
     public function test_load() {
@@ -119,37 +119,37 @@ class grouping_test extends \advanced_testcase {
 
         $grouping = new grouping();
 
-        $initial_count = $DB->count_records($grouping::TABLENAME);
+        $initialcount = $DB->count_records($grouping::TABLENAME);
 
         // Enregistre un objet.
         $data = new stdClass();
         $data->name = 'grouping 1';
 
         $grouping->save($data);
-        $count_records = $DB->count_records($grouping::TABLENAME);
+        $countrecords = $DB->count_records($grouping::TABLENAME);
 
         // Vérifie l'objet inséré.
         $this->assertSame($data->name, $grouping->name);
-        $this->assertSame($count_records, $initial_count + 1);
+        $this->assertSame($countrecords, $initialcount + 1);
 
         // Mets à jour l'objet.
         $data->name = 'grouping 1';
 
         $grouping->save($data);
-        $count_records = $DB->count_records($grouping::TABLENAME);
+        $countrecords = $DB->count_records($grouping::TABLENAME);
 
         // Vérifie l'objet mis à jour.
         $this->assertSame($data->name, $grouping->name);
-        $this->assertSame($count_records, $initial_count + 1);
+        $this->assertSame($countrecords, $initialcount + 1);
 
         // Ajoute un nouvel objet (sans argument).
         $grouping->id = 0;
         $grouping->name = 'grouping 2';
 
         $grouping->save();
-        $count_records = $DB->count_records($grouping::TABLENAME);
+        $countrecords = $DB->count_records($grouping::TABLENAME);
 
         // Vérifie l'objet ajouté.
-        $this->assertSame($count_records, $initial_count + 2);
+        $this->assertSame($countrecords, $initialcount + 2);
     }
 }

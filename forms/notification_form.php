@@ -135,6 +135,15 @@ class local_apsolu_notification_form extends moodleform {
         $this->set_data($defaultdata);
     }
 
+    /**
+     * Envoie une notification aux utilisateurs.
+     *
+     * @param array    $users    Tableau contenant les identifiants numériques des utilisateurs à notifier.
+     * @param int|null $courseid Identifiant numérique du cours d'où est envoyé la notification. Si la valeur est null, ce sera un
+     *  message envoyé dans un contexte système.
+     *
+     * @return void
+     */
     public function local_apsolu_notify($users = array(), $courseid = null) {
         global $DB, $USER;
 

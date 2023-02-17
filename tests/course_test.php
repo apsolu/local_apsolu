@@ -66,14 +66,14 @@ class course_test extends \advanced_testcase {
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
         $course->save($data);
 
-        $count_records = $DB->count_records($course::TABLENAME);
-        $this->assertSame(1, $count_records);
+        $countrecords = $DB->count_records($course::TABLENAME);
+        $this->assertSame(1, $countrecords);
 
         $result = $course->delete();
         $this->assertTrue($result);
 
-        $count_records = $DB->count_records($course::TABLENAME);
-        $this->assertSame(0, $count_records);
+        $countrecords = $DB->count_records($course::TABLENAME);
+        $this->assertSame(0, $countrecords);
     }
 
     public function test_get_session_offset() {
@@ -101,23 +101,23 @@ class course_test extends \advanced_testcase {
 
         $course = new course();
 
-        $count_records = $DB->count_records($course::TABLENAME);
-        $this->assertSame(0, $count_records);
+        $countrecords = $DB->count_records($course::TABLENAME);
+        $this->assertSame(0, $countrecords);
 
         // Enregistre un nouvel objet.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
         $course->save($data);
 
-        $count_records = $DB->count_records($course::TABLENAME);
-        $this->assertSame(1, $count_records);
+        $countrecords = $DB->count_records($course::TABLENAME);
+        $this->assertSame(1, $countrecords);
 
         // Enregistre un nouvel objet.
         $course->id = 0;
         $data->event = 'event 2';
         $course->save($data);
 
-        $count_records = $DB->count_records($course::TABLENAME);
-        $this->assertSame(2, $count_records);
+        $countrecords = $DB->count_records($course::TABLENAME);
+        $this->assertSame(2, $countrecords);
     }
 
     public function test_load() {
@@ -145,38 +145,38 @@ class course_test extends \advanced_testcase {
         $course = new course();
         $category = new category();
 
-        $initial_count = $DB->count_records($course::TABLENAME);
+        $initialcount = $DB->count_records($course::TABLENAME);
 
         // Enregistre un objet.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
         $course->save($data);
-        $count_records = $DB->count_records($course::TABLENAME);
+        $countrecords = $DB->count_records($course::TABLENAME);
 
         $sessions = $course->get_sessions();
-        $count_sessions = count($sessions);
+        $countsessions = count($sessions);
 
         // Vérifie l'objet inséré.
-        $str_time = get_string($data->weekday, 'calendar').' '.$data->starttime.' '.$data->endtime;
-        $this->assertSame(sprintf('%s %s %s %s', $data->str_category, $data->event, $str_time, $data->str_skill), $course->fullname);
-        $this->assertSame($count_records, $initial_count + 1);
+        $strtime = get_string($data->weekday, 'calendar').' '.$data->starttime.' '.$data->endtime;
+        $this->assertSame(sprintf('%s %s %s %s', $data->str_category, $data->event, $strtime, $data->str_skill), $course->fullname);
+        $this->assertSame($countrecords, $initialcount + 1);
 
         // Mets à jour l'objet.
         $data->event = '';
         $course->save($data);
-        $count_records = $DB->count_records($course::TABLENAME);
+        $countrecords = $DB->count_records($course::TABLENAME);
 
         // Vérifie que les sessions n'ont pas été modifiées.
-        $this->assertSame($count_sessions, count($course->get_sessions()));
+        $this->assertSame($countsessions, count($course->get_sessions()));
         $this->assertSame($sessions, $course->get_sessions());
 
         // Vérifie l'objet mis à jour.
-        $this->assertSame(sprintf('%s %s %s', $data->str_category, $str_time, $data->str_skill), $course->fullname);
-        $this->assertSame($count_records, $initial_count + 1);
+        $this->assertSame(sprintf('%s %s %s', $data->str_category, $strtime, $data->str_skill), $course->fullname);
+        $this->assertSame($countrecords, $initialcount + 1);
 
         // Vérifie qu'un nom abrégé est regénéré en cas de doublon.
         $course = new course();
         $course->save($data);
-        $this->assertSame(sprintf('%s %s %s.', $data->str_category, $str_time, $data->str_skill), $course->shortname);
+        $this->assertSame(sprintf('%s %s %s.', $data->str_category, $strtime, $data->str_skill), $course->shortname);
 
         // Modifie la catégorie du créneau.
         list($catdata, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
@@ -200,7 +200,7 @@ class course_test extends \advanced_testcase {
 
         $course->save($data);
 
-        $this->assertSame($count_sessions, count($course->get_sessions()));
+        $this->assertSame($countsessions, count($course->get_sessions()));
     }
 
     public function test_set_sessions() {
@@ -228,7 +228,7 @@ class course_test extends \advanced_testcase {
 
         // La période p1 a été associée au cours. Il devrait y avoir 2 sessions à venir.
         $sessions = $course->get_sessions();
-        $session_keys = array_keys($sessions);
+        $sessionkeys = array_keys($sessions);
         $this->assertEquals(2, count($sessions));
 
         // Associe la période p2. Il devrait y avoir 4 sessions à venir.
@@ -238,15 +238,15 @@ class course_test extends \advanced_testcase {
         $this->assertEquals(4, count($sessions));
 
         // Vérifie les anciennes sessions p1 ont été supprimées.
-        foreach ($session_keys as $key) {
+        foreach ($sessionkeys as $key) {
             $this->assertArrayNotHasKey($key, $sessions);
         }
 
         // Vérifie que les sessions déjà existantes sont conservées.
-        $session_keys = array_keys($sessions);
+        $sessionkeys = array_keys($sessions);
         $course->set_sessions();
         $sessions = $course->get_sessions();
-        $this->assertEquals(array_keys($sessions), $session_keys);
+        $this->assertEquals(array_keys($sessions), $sessionkeys);
 
         // Vérifie qu'en modification, les sessions obsolètes/passées ne sont pas ajoutées.
         $course->periodid = $period3->id;
@@ -254,28 +254,28 @@ class course_test extends \advanced_testcase {
         $this->assertEquals(0, count($course->get_sessions()));
 
         // Ajoute une session non prévue à une date passée.
-        $past_session_time = '123456';
-        $past_session_location = $course->locationid;
+        $pastsessiontime = '123456';
+        $pastsessionlocation = $course->locationid;
         $session = new attendancesession();
         $session->name = 'Test past session';
-        $session->sessiontime = $past_session_time;
+        $session->sessiontime = $pastsessiontime;
         $session->courseid = $course->id;
         $session->activityid = $course->category;
-        $session->locationid = $past_session_location;
+        $session->locationid = $pastsessionlocation;
         $session->save();
-        $past_sessionid = $session->id;
+        $pastsessionid = $session->id;
         $this->assertEquals(1, count($course->get_sessions()));
 
         // Ajoute une session non prévue à une date future.
-        $future_session_time = time() + WEEKSECS;
+        $futuresessiontime = time() + WEEKSECS;
         $session = new attendancesession();
         $session->name = 'Test future session';
-        $session->sessiontime = $future_session_time;
+        $session->sessiontime = $futuresessiontime;
         $session->courseid = $course->id;
         $session->activityid = $course->category;
         $session->locationid = $course->locationid;
         $session->save();
-        $future_sessionid = $session->id;
+        $futuresessionid = $session->id;
         $this->assertEquals(2, count($course->get_sessions()));
 
         // Associe la période p2. Il devrait y avoir 4 sessions à venir et 1 session passée.
@@ -284,18 +284,18 @@ class course_test extends \advanced_testcase {
         $sessions = $course->get_sessions();
         $this->assertEquals(5, count($sessions));
         // La session passée non prévue doit être conservée et ne doit pas être renommée.
-        $this->assertArrayHasKey($past_sessionid, $sessions);
-        $this->assertEquals('Test past session', $sessions[$past_sessionid]->name);
+        $this->assertArrayHasKey($pastsessionid, $sessions);
+        $this->assertEquals('Test past session', $sessions[$pastsessionid]->name);
         // La session future non prévue doit être supprimée.
-        $this->assertArrayNotHasKey($future_sessionid, $sessions);
+        $this->assertArrayNotHasKey($futuresessionid, $sessions);
 
         // Change le lieu de pratique du cours.
-        $course->locationid = (string) ($past_session_location + 1);
+        $course->locationid = (string) ($pastsessionlocation + 1);
         $course->set_sessions();
         $sessions = $course->get_sessions();
         // La session passée non prévue doit conserver son lieu de pratique.
-        $this->assertEquals($past_session_location, $sessions[$past_sessionid]->locationid);
-        unset($sessions[$past_sessionid]);
+        $this->assertEquals($pastsessionlocation, $sessions[$pastsessionid]->locationid);
+        unset($sessions[$pastsessionid]);
 
         // Les futures sessions doivent être associées au nouveau lieu de pratique.
         foreach ($sessions as $session) {

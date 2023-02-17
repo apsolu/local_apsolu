@@ -16,6 +16,7 @@
 
 /**
  * Contrôleur pour l'administration des carnets de notes.
+ *
  * Page de notation des étudiants pour les gestionnaires.
  *
  * @package    local_apsolu

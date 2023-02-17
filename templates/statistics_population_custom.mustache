@@ -71,18 +71,24 @@ require([
   "bootstrap-datepicker",
   "bootstrap-datetimepicker",
   "moment",
-  ], function($,notification,Ajax,moment) {
+  ], function($, notification, Ajax, moment) {
 
   moment.locale('{{{langcode}}}');
 
-  !function(a){a.fn.datepicker.dates.fr={
-      days:["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"],
-      daysShort:["dim.","lun.","mar.","mer.","jeu.","ven.","sam."],
-      daysMin:["d","l","ma","me","j","v","s"],
-      months:["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"],
-      monthsShort:["janv.","févr.","mars","avril","mai","juin","juil.","août","sept.","oct.","nov.","déc."],
-      today:"Aujourd'hui",
-      monthsTitle:"Mois",clear:"Effacer",weekStart:1,format:"dd/mm/yyyy"}}(jQuery);
+  !function(a) {
+      a.fn.datepicker.dates.fr={
+          days: ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"],
+          daysShort: ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."],
+          daysMin: ["d", "l", "ma", "me", "j", "v", "s"],
+          months: ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"],
+          monthsShort: ["janv.", "févr.", "mars", "avril", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."],
+          today: "Aujourd'hui",
+          monthsTitle: "Mois",
+          clear: "Effacer",
+          weekStart: 1,
+          format: "dd/mm/yyyy"
+      }
+  }(jQuery);
 
   var selector = '.report-builder-table';
 
@@ -117,16 +123,17 @@ require([
 
     var requests = Ajax.call([{
       methodname: 'local_apsolu_get_reportfilters',
-      args: {'classname':'population','datatype':datatype}
+      args: {'classname': 'population', 'datatype': datatype}
     }]);
-    
+
     requests[0].done(function(data) {
+      var filters;
       if (data.success === true) {
         filters = JSON.parse(data.filters);
       } else {
         filters = {{{Filters}}};
       }
-      
+
       builder.queryBuilder('destroy');
 
       builder = $('#querybuilder').queryBuilder({
@@ -138,12 +145,12 @@ require([
 
 
   $('.parse-sql').on('click', function() {
-    
+
     var requests = [];
     var customQuery = builder.queryBuilder('getSQL', 'question_mark');
 
     // Destroy results table
-    if ( $.fn.dataTable.isDataTable( selector ) ) {
+    if ($.fn.dataTable.isDataTable(selector)) {
       table = $(selector).DataTable();
       table.destroy();
       $(selector).empty();
@@ -157,19 +164,20 @@ require([
         // Get enrols data
         var requests = Ajax.call([{
                 methodname: 'local_apsolu_get_reportdataset',
-                args: {'classname':'population','querybuilder':JSON.stringify(customQuery)}
+                args: {'classname': 'population', 'querybuilder': JSON.stringify(customQuery)}
               }]);
 
         requests[0].done(function(enrols) {
           // Get ordering
           var json_order = JSON.parse(enrols.orders);
           var order = [];
-          for(var i in json_order)
+          for (var i in json_order) {
               order.push([i, json_order[i]]);
+          }
 
           // Build results table
           var options = {
-            data : JSON.parse(enrols.data),
+            data: JSON.parse(enrols.data),
             columns: JSON.parse(enrols.columns, function (key, value) {
                 if (value && (typeof value === 'string') && value.indexOf("function") === 0) {
                     eval("var jsFunc = " + value);
@@ -178,16 +186,16 @@ require([
                 return value;
             }),
             columnDefs: [
-           		{
-              	"targets": '_all',
-                "render": function ( data, type, row, meta ) {
-      							         return type === 'filter' ? (data === null || data === '') ? '(Vide)' : data : data;
-                          }
+                {
+                "targets": '_all',
+                "render": function(data, type, row, meta) {
+                    return type === 'filter' ? (data === null || data === '') ? '(Vide)' : data : data;
+                }
             }],
             order: order,
-            buttons: ['excelHtml5','csvHtml5'],
-            dom: '<"top"Bfi>rt<"bottom"lp><"clear">', //'dom': 'lfrtip',
-            pageLength:30,
+            buttons: ['excelHtml5', 'csvHtml5'],
+            dom: '<"top"Bfi>rt<"bottom"lp><"clear">',
+            pageLength: 30,
             language: {
                       "sEmptyTable":     "Aucune donnée disponible dans le tableau",
                       "sInfo":           "Affichage de l'élément _START_ à _END_ sur _TOTAL_ éléments",
@@ -219,7 +227,7 @@ require([
                       }
                     },
             initComplete: function(settings, json) {
-              $("#spinner").css('visibility', 'hidden'); 
+              $("#spinner").css('visibility', 'hidden');
 
               // Build columns filters
               if (enrols.filters) {
@@ -268,7 +276,7 @@ require([
                         if (title != "Jour")
                         {
                           if (d === null || d === '') {
-                          	d = '(Vide)';
+                            d = '(Vide)';
                           }
                           var values = select.children('option').map(function(i, e){
                               return e.value || e.innerText;

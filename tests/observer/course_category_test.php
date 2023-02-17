@@ -73,50 +73,50 @@ class course_category_test extends \advanced_testcase {
         $category5->save($data, $mform);
 
         // Enregistre l'état initial.
-        $count_apsolu_categories = $DB->count_records(category::TABLENAME);
-        $count_apsolu_groupings = $DB->count_records(grouping::TABLENAME);
-        $count_categories = $DB->count_records('course_categories');
+        $countapsolucategories = $DB->count_records(category::TABLENAME);
+        $countapsolugroupings = $DB->count_records(grouping::TABLENAME);
+        $countcategories = $DB->count_records('course_categories');
 
         // Teste la suppression du catégorie non APSOLU.
         $coursecat = core_course_category::get($category1->id);
         $coursecat->delete_full($showfeedback = false);
 
-        $this->assertSame(--$count_categories, $DB->count_records('course_categories'));
-        $this->assertSame($count_apsolu_groupings, $DB->count_records(grouping::TABLENAME));
-        $this->assertSame($count_apsolu_categories, $DB->count_records(category::TABLENAME));
+        $this->assertSame(--$countcategories, $DB->count_records('course_categories'));
+        $this->assertSame($countapsolugroupings, $DB->count_records(grouping::TABLENAME));
+        $this->assertSame($countapsolucategories, $DB->count_records(category::TABLENAME));
 
         // Teste la suppression du catégorie de groupement d'activités APSOLU.
         $coursecat = core_course_category::get($category2->id);
         $coursecat->delete_full($showfeedback = false);
 
-        $this->assertSame(--$count_categories, $DB->count_records('course_categories'));
-        $this->assertSame(--$count_apsolu_groupings, $DB->count_records(grouping::TABLENAME));
-        $this->assertSame($count_apsolu_categories, $DB->count_records(category::TABLENAME));
+        $this->assertSame(--$countcategories, $DB->count_records('course_categories'));
+        $this->assertSame(--$countapsolugroupings, $DB->count_records(grouping::TABLENAME));
+        $this->assertSame($countapsolucategories, $DB->count_records(category::TABLENAME));
 
         // Teste la suppression du catégorie d'activité APSOLU.
         $coursecat = core_course_category::get($category3->id);
         $coursecat->delete_full($showfeedback = false);
 
-        $this->assertSame(--$count_categories, $DB->count_records('course_categories'));
-        $this->assertSame($count_apsolu_groupings, $DB->count_records(grouping::TABLENAME));
-        $this->assertSame(--$count_apsolu_categories, $DB->count_records(category::TABLENAME));
+        $this->assertSame(--$countcategories, $DB->count_records('course_categories'));
+        $this->assertSame($countapsolugroupings, $DB->count_records(grouping::TABLENAME));
+        $this->assertSame(--$countapsolucategories, $DB->count_records(category::TABLENAME));
 
         // Teste la suppression du catégorie de groupement d'activités APSOLU contenant une catégorie d'activité.
         $coursecat = core_course_category::get($category4->parent);
         $coursecat->delete_full($showfeedback = false);
 
-        $count_categories = $count_categories - 2;
-        $this->assertSame($count_categories, $DB->count_records('course_categories'));
-        $this->assertSame(--$count_apsolu_groupings, $DB->count_records(grouping::TABLENAME));
-        $this->assertSame(--$count_apsolu_categories, $DB->count_records(category::TABLENAME));
+        $countcategories = $countcategories - 2;
+        $this->assertSame($countcategories, $DB->count_records('course_categories'));
+        $this->assertSame(--$countapsolugroupings, $DB->count_records(grouping::TABLENAME));
+        $this->assertSame(--$countapsolucategories, $DB->count_records(category::TABLENAME));
 
         // Teste la suppression du catégorie de groupement d'activités APSOLU contenant une catégorie d'activité, en déplaçant la catégorie d'activité.
         $coursecat = core_course_category::get($category5->parent);
         $coursecat->delete_move($newparentid = 1, $showfeedback = false);
 
-        $this->assertSame(--$count_categories, $DB->count_records('course_categories'));
-        $this->assertSame(--$count_apsolu_groupings, $DB->count_records(grouping::TABLENAME));
-        $this->assertSame($count_apsolu_categories, $DB->count_records(category::TABLENAME));
+        $this->assertSame(--$countcategories, $DB->count_records('course_categories'));
+        $this->assertSame(--$countapsolugroupings, $DB->count_records(grouping::TABLENAME));
+        $this->assertSame($countapsolucategories, $DB->count_records(category::TABLENAME));
     }
 
     public function test_updated() {

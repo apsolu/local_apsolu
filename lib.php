@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Fonction spéciale gérée par Moodle, permettant d'étendre un menu dans un cours.
  *
- * @ref https://docs.moodle.org/dev/Local_plugins#Adding_an_element_to_the_settings_menu
+ * @see https://docs.moodle.org/dev/Local_plugins#Adding_an_element_to_the_settings_menu
  *
  * @param navigation_node $navigation The navigation node to extend
  * @param stdClass $course The course to object for the tool

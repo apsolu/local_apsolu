@@ -51,7 +51,7 @@ class cohort_test extends \advanced_testcase {
     public function test_deleted() {
         global $DB;
 
-        $count_records = $DB->count_records('apsolu_payments_cards_cohort');
+        $countrecords = $DB->count_records('apsolu_payments_cards_cohort');
 
         // Crée une cohorte.
         $cohort = new stdClass();
@@ -63,10 +63,10 @@ class cohort_test extends \advanced_testcase {
         $sql = "INSERT INTO {apsolu_payments_cards_cohort} (cardid, cohortid) VALUES(:cardid, :cohortid)";
         $DB->execute($sql, ['cardid' => 1, 'cohortid' => $cohort->id]);
 
-        $this->assertSame($count_records + 1, $DB->count_records('apsolu_payments_cards_cohort'));
+        $this->assertSame($countrecords + 1, $DB->count_records('apsolu_payments_cards_cohort'));
 
         // Teste le bon appel à la classe local_apsolu\observer\cohort.
         cohort_delete_cohort($cohort);
-        $this->assertSame($count_records, $DB->count_records('apsolu_payments_cards_cohort'));
+        $this->assertSame($countrecords, $DB->count_records('apsolu_payments_cards_cohort'));
     }
 }

@@ -87,6 +87,8 @@ class report {
     /**
      * Retourne La liste des critères de recherche.
      *
+     * @param int $datatype
+     *
      * @return array
      */
     public function getFilters(int $datatype = 1) {
@@ -96,27 +98,27 @@ class report {
         $jsonModeldata = file_get_contents($jsonConfigPath);
         $model = json_decode($jsonModeldata);
 
-        // custom filter
+        // Custom filter.
         if ($CFG->is_siuaps_rennes){
             $model->filters = array_merge($model->filters,$model->filtersCustomRennes);
         }
 
-        // remove filter not corresponding to the selected datatype
+        // Remove filter not corresponding to the selected datatype.
         foreach ($model->filters as $key => $value) {
-            if(property_exists($model->filters[$key], "datatype")) {
+            if (property_exists($model->filters[$key], "datatype")) {
                 if (!in_array($datatype,$model->filters[$key]->datatype)) {
                     unset($model->filters[$key]) ;
                 }
             }
-        }        
+        }
 
         $model->filters = array_values($model->filters);
 
         $model = self::localize_filters($model);
-        
+
         for ($i = 0; $i < count($model->filters); $i++) {
             $filter = $model->filters[$i];
-            if(property_exists($filter, "input")) {
+            if (property_exists($filter, "input")) {
 
                 if (property_exists($filter->values, "table")){
                     $where = "";
