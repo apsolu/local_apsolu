@@ -560,6 +560,10 @@ class adhesion extends record {
 
             // Recalcule le groupe.
             if ($this->mainsport !== self::get_mainsportid_from_user_group($courseid, $this->userid)) {
+                // Supprime tous les groupes de l'utilisateur.
+                groups_delete_group_members($courseid, $this->userid);
+
+                // Attribut le nouveau groupe.
                 $groupid = self::get_groupid_from_activityid($this->mainsport, $courseid);
                 if ($groupid !== false) {
                     groups_add_member($groupid, $this->userid);
