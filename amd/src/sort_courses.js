@@ -32,7 +32,6 @@ define(["jquery", "local_apsolu/jquery.tablefilter"], function($, TableFilter) {
                 col_3: "select", // Niveaux.
                 col_4: "select", // Jours.
                 col_5: "select", // Horaires.
-                col_6: "select", // Lieux.
                 col_7: "select", // Périodes.
                 col_9: "none", // Actions.
 
