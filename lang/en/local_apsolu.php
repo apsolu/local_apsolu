@@ -106,6 +106,7 @@ $string['calendar_modification_warning'] = '<p><strong>Attention : </strong> l\'
 $string['calendars'] = 'Calendriers';
 $string['calendars_types'] = 'Types de calendriers';
 $string['cannot_attribute_federation_number_prefix'] = 'Impossible de vous attribuer un numéro d’A.S. Merci de vous rapprocher de votre secrétariat.';
+$string['cannot_attribute_group'] = 'Impossible de vous attribuer le groupe correspondant à votre sport principal. Merci de vous rapprocher de votre secrétariat.';
 $string['card_fullname'] = 'Nom complet';
 $string['card_fullname_help'] = 'Libellé affiché aux gestionnaires.';
 $string['card_shortname'] = 'Nom abrégé';

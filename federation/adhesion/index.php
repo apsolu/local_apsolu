@@ -71,6 +71,22 @@ if ($count === 0) {
     // Définit le sport principal.
     $adhesion->mainsport = Adhesion::get_mainsportid_from_user_group($course->id, $USER->id);
 
+    if (empty($adhesion->mainsport) === true) {
+        // TODO: bidouille temporaire. Ça ne devrait jamais arriver à ce stade. L'étudiant doit appartenir à un groupe.
+        $adhesion->mainsport = null;
+        $groups = $DB->get_records('groups', array('courseid' => $course->id), $sort = 'name');
+        foreach ($groups as $group) {
+            foreach (Activity::get_records(array('name' => $group->name)) as $activity) {
+                $adhesion->mainsport = $activity->id;
+                break 2;
+            }
+        }
+
+        if (empty($adhesion->mainsport) === true) {
+            throw new moodle_exception('cannot_attribute_group', $module = 'local_apsolu');
+        }
+    }
+
     $adhesion->insurance = get_config('local_apsolu', 'insurance_field_default');
     $adhesion->managerlicense = get_config('local_apsolu', 'managerlicense_field_default');
     $adhesion->managerlicensetype = get_config('local_apsolu', 'managerlicensetype_field_default');
