@@ -90,7 +90,7 @@ $sql = "SELECT DISTINCT u.*".
     " ORDER BY u.lastname, u.firstname, u.institution";
 $users = $DB->get_records_sql($sql, array('courseid' => $courseid));
 
-$sessions = $DB->get_records('apsolu_attendance_sessions', array('courseid' => $courseid));
+$sessions = $DB->get_records('apsolu_attendance_sessions', array('courseid' => $courseid), $sort = 'sessiontime');
 $statuses = $DB->get_records('apsolu_attendance_statuses');
 
 echo '<div class="table-responsive">'.
