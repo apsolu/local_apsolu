@@ -25,6 +25,7 @@
 require_once(__DIR__.'/../../../config.php');
 
 $courseid = optional_param('courseid', 0, PARAM_INT); // Course id.
+$calendarid = optional_param('calendarid', null, PARAM_INT); // Calendar id.
 $sessionid = optional_param('sessionid', 0, PARAM_INT); // Session id.
 $invalid_enrolments = optional_param('invalid_enrolments', null, PARAM_INT);
 $inactive_enrolments = optional_param('inactive_enrolments', null, PARAM_INT);
@@ -90,7 +91,46 @@ $sql = "SELECT DISTINCT u.*".
     " ORDER BY u.lastname, u.firstname, u.institution";
 $users = $DB->get_records_sql($sql, array('courseid' => $courseid));
 
-$sessions = $DB->get_records('apsolu_attendance_sessions', array('courseid' => $courseid), $sort = 'sessiontime');
+// Affiche des onglets pour choisir son semestre.
+$sql = "SELECT DISTINCT ac.id, ac.coursestartdate, ac.courseenddate, ac.name
+          FROM {apsolu_calendars} ac
+          JOIN {enrol} e ON e.customchar1 = ac.id
+         WHERE e.enrol = 'select'
+           AND e.courseid = :courseid
+           AND e.status = 0";
+$calendars = $DB->get_records_sql($sql, array('courseid' => $courseid));
+if (count($calendars) > 0) {
+    $url = new moodle_url('/local/apsolu/attendance/overview.php', array('courseid' => $courseid));
+    echo '<div>'.
+        '<ul class="nav nav-tabs">'.
+        '<li class="nav-item"><a class="nav-link" href="'.(string) $url.'">'.get_string('fullview', 'local_apsolu').'</a></li>';
+    foreach ($calendars as $calendar) {
+        $params = array('courseid' => $courseid, 'calendarid' => $calendar->id);
+        $url = new moodle_url('/local/apsolu/attendance/overview.php', $params);
+
+        echo '<li class="nav-item"><a class="nav-link" href="'.(string) $url.'">'.$calendar->name.'</a></li>';
+        if ($calendarid === null && $calendar->coursestartdate > time() && $calendar->courseenddate < time()) {
+            $calendarid = $calendar->id;
+        }
+    }
+    echo '</ul></div>';
+}
+
+// Récupère toutes les sessions disponibles.
+if (isset($calendars[$calendarid]) === true) {
+    $starttime = $calendars[$calendarid]->coursestartdate;
+    $endtime = $calendars[$calendarid]->courseenddate;
+
+    $sql = "SELECT aas.*
+              FROM {apsolu_attendance_sessions} aas
+             WHERE aas.courseid = :courseid
+               AND aas.sessiontime BETWEEN :starttime AND :endtime
+             ORDER BY aas.sessiontime";
+    $params = array('courseid' => $courseid, 'starttime' => $starttime, 'endtime' => $endtime);
+    $sessions = $DB->get_records_sql($sql, $params);
+} else {
+    $sessions = $DB->get_records('apsolu_attendance_sessions', array('courseid' => $courseid), $sort = 'sessiontime');
+}
 $statuses = $DB->get_records('apsolu_attendance_statuses');
 
 echo '<div class="table-responsive">'.

@@ -227,6 +227,7 @@ $string['fill_out_the_membership_form'] = 'Remplir le formulaire d\'adhésion';
 $string['filter'] = 'Filtrer';
 $string['force_replyto'] = 'Utiliser l\'adresse de courriel de l\'utilisateur en adresse de « réponse à »';
 $string['from'] = 'À partir de';
+$string['fullview'] = 'Affichage complet';
 $string['further_information'] = 'Informations complémentaires';
 $string['gender'] = 'Genre';
 $string['generate_holidays'] = 'Générer les jours fériés';
