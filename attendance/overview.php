@@ -27,8 +27,6 @@ require_once(__DIR__.'/../../../config.php');
 $courseid = optional_param('courseid', 0, PARAM_INT); // Course id.
 $calendarid = optional_param('calendarid', null, PARAM_INT); // Calendar id.
 $sessionid = optional_param('sessionid', 0, PARAM_INT); // Session id.
-$invalid_enrolments = optional_param('invalid_enrolments', null, PARAM_INT);
-$inactive_enrolments = optional_param('inactive_enrolments', null, PARAM_INT);
 
 $PAGE->set_pagelayout('base'); // Désactive l'affichage des blocs.
 $PAGE->set_url('/local/apsolu/attendance/edit.php', array('courseid' => $courseid));
@@ -54,7 +52,6 @@ $streditcoursesettings = get_string('attendance_overview', 'local_apsolu');
 
 $PAGE->navbar->add($streditcoursesettings);
 
-$pagedesc = $streditcoursesettings;
 $title = $streditcoursesettings;
 $fullname = $course->fullname;
 
@@ -79,18 +76,6 @@ $tabsbar[] = new tabobject('sessions_edit', $url, get_string('attendance_session
 $url = new moodle_url('/local/apsolu/attendance/export/export.php', array('courseid' => $courseid));
 $tabsbar[] = new tabobject('export', $url, get_string('export', 'local_apsolu'));
 
-echo $OUTPUT->header();
-echo $OUTPUT->tabtree($tabsbar, 'overview');
-echo $OUTPUT->heading($pagedesc);
-
-$sql = "SELECT DISTINCT u.*".
-    " FROM {user} u".
-    " JOIN {apsolu_attendance_presences} aap ON u.id = aap.studentid".
-    " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid".
-    " WHERE aas.courseid = :courseid".
-    " ORDER BY u.lastname, u.firstname, u.institution";
-$users = $DB->get_records_sql($sql, array('courseid' => $courseid));
-
 // Affiche des onglets pour choisir son semestre.
 $sql = "SELECT DISTINCT ac.id, ac.coursestartdate, ac.courseenddate, ac.name
           FROM {apsolu_calendars} ac
@@ -98,26 +83,30 @@ $sql = "SELECT DISTINCT ac.id, ac.coursestartdate, ac.courseenddate, ac.name
          WHERE e.enrol = 'select'
            AND e.courseid = :courseid
            AND e.status = 0";
-$calendars = $DB->get_records_sql($sql, array('courseid' => $courseid));
-if (count($calendars) > 0) {
-    $url = new moodle_url('/local/apsolu/attendance/overview.php', array('courseid' => $courseid));
-    echo '<div>'.
-        '<ul class="nav nav-tabs">'.
-        '<li class="nav-item"><a class="nav-link" href="'.(string) $url.'">'.get_string('fullview', 'local_apsolu').'</a></li>';
-    foreach ($calendars as $calendar) {
-        $params = array('courseid' => $courseid, 'calendarid' => $calendar->id);
-        $url = new moodle_url('/local/apsolu/attendance/overview.php', $params);
-
-        echo '<li class="nav-item"><a class="nav-link" href="'.(string) $url.'">'.$calendar->name.'</a></li>';
-        if ($calendarid === null && $calendar->coursestartdate > time() && $calendar->courseenddate < time()) {
-            $calendarid = $calendar->id;
-        }
+$calendars = array();
+foreach ($DB->get_records_sql($sql, array('courseid' => $courseid)) as $calendar) {
+    if (isset($calendars[0]) === false) {
+        // Ajoute le lien pour afficher la vue complète.
+        $url = new moodle_url('/local/apsolu/attendance/overview.php', array('courseid' => $courseid));
+        $calendars[0] = (object) ['active' => false, 'name' => get_string('fullview', 'local_apsolu'), 'url' => $url];
     }
-    echo '</ul></div>';
+
+    $params = array('courseid' => $courseid, 'calendarid' => $calendar->id);
+    $url = new moodle_url('/local/apsolu/attendance/overview.php', $params);
+
+    $calendar->url = $url;
+    $calendar->active = ((int) $calendar->id === $calendarid);
+
+    if ($calendarid === null && $calendar->coursestartdate > time() && $calendar->courseenddate < time()) {
+        $calendarid = $calendar->id;
+        $calendar->active =  true;
+    }
+
+    $calendars[$calendar->id] = $calendar;
 }
 
-// Récupère toutes les sessions disponibles.
 if (isset($calendars[$calendarid]) === true) {
+    // Récupère toutes les sessions disponibles correspondant au semestre sélectionné.
     $starttime = $calendars[$calendarid]->coursestartdate;
     $endtime = $calendars[$calendarid]->courseenddate;
 
@@ -129,97 +118,101 @@ if (isset($calendars[$calendarid]) === true) {
     $params = array('courseid' => $courseid, 'starttime' => $starttime, 'endtime' => $endtime);
     $sessions = $DB->get_records_sql($sql, $params);
 } else {
+    // Rend l'onglet de vue d'ensemble de toutes les sessions actif.
+    $calendars[0]->active = true;
+
+    // Récupère toutes les sessions disponibles.
     $sessions = $DB->get_records('apsolu_attendance_sessions', array('courseid' => $courseid), $sort = 'sessiontime');
 }
 $statuses = $DB->get_records('apsolu_attendance_statuses');
 
-echo '<div class="table-responsive">'.
-'<table class="table table-striped">'.
-    '<thead class="thead-light">'.
-        '<tr>'.
-            '<th rowspan="2">'.get_string('pictureofuser').'</th>'.
-            '<th rowspan="2">'.get_string('lastname').'</th>'.
-            '<th rowspan="2">'.get_string('firstname').'</th>';
+// Initialise la variable globale pour la template.
+$data = new stdClass();
+$data->calendars = array_values($calendars);
+$data->count_calendars = count($data->calendars);
+
+// Récupère les sessions disponibles/sélectionnées.
+$data->sessions = array();
+$data->count_sessions = 0;
 foreach ($sessions as $session) {
-    echo '<th rowspan="2" class="text-center">'.userdate($session->sessiontime, get_string('strftimeabbrday', 'local_apsolu')).'</th>';
+    $data->sessions[] = userdate($session->sessiontime, get_string('strftimeabbrday', 'local_apsolu'));
+    $data->count_sessions++;
 }
-echo '<th colspan="'.count($statuses).'" class="text-center">'.get_string('attendance_presences_summary', 'local_apsolu').'</th></tr>';
 
-$total_presence = new stdClass();
-echo '<tr>';
+// Récupère les différents statuts de présence.
+$data->statuses = array();
+$data->count_statuses = count($statuses);
+$totalpresences = array();
 foreach ($statuses as $status) {
-    echo '<th>'.get_string($status->code, 'local_apsolu').'</th>';
-    $total_presence->{$status->code} = 0;
+    $data->statuses[] = get_string($status->code, 'local_apsolu');
+    $totalpresences[$status->code] = 0;
 }
-echo '</tr></thead><tbody>';
 
-$session_presences = array();
+$totalpresencespersessions = array();
 
-$statuses = $DB->get_records('apsolu_attendance_statuses');
-foreach ($users as $user) {
-    // Initialise le compteur de présence pour l'utilisateur.
-    $user_presences = clone $total_presence;
-
+// Récupère la liste des utilisateurs ayant une présence dans ce cours.
+$sql = "SELECT DISTINCT u.*".
+    " FROM {user} u".
+    " JOIN {apsolu_attendance_presences} aap ON u.id = aap.studentid".
+    " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid".
+    " WHERE aas.courseid = :courseid".
+    " ORDER BY u.lastname, u.firstname, u.institution";
+$data->users = array();
+foreach ($DB->get_records_sql($sql, array('courseid' => $courseid)) as $user) {
     $picture = new user_picture($user);
     $picture->size = 50;
 
-    echo '<tr>';
-    echo '<td>'.$OUTPUT->render($picture).'</td>';
-    echo '<td>'.$user->lastname.'</td>';
-    echo '<td>'.$user->firstname.'</td>';
+    $student = new stdClass();
+    $student->picture = $OUTPUT->render($picture);
+    $student->lastname = $user->lastname;
+    $student->firstname = $user->firstname;
+    $student->presences_per_sessions = array();
+    $student->total_presences_per_statuses = $totalpresences;
 
-    $presences = $DB->get_records('apsolu_attendance_presences', array('studentid' => $user->id), $sort = '', $field = 'sessionid, statusid, description');
+    // TODO: optimiser en sortant cette requête dans la boucle.
+    $fields = 'sessionid, statusid, description';
+    $presences = $DB->get_records('apsolu_attendance_presences', array('studentid' => $user->id), $sort = '', $fields);
     foreach ($sessions as $session) {
-        if (isset($session_presences[$session->id]) === false) {
+        if (isset($totalpresencespersessions[$session->id]) === false) {
             // Initialise le compteur de présence de cette session.
-            $session_presences[$session->id] = clone $total_presence;
+            $totalpresencespersessions[$session->id] = $totalpresences;
         }
 
+        $presence = new stdClass();
         if (isset($presences[$session->id]) === true) {
-            $presence = $presences[$session->id];
-            $code = $statuses[$presence->statusid]->code;
+            $code = $statuses[$presences[$session->id]->statusid]->code;
 
             // Incrémente le compteur de présences pour la session.
-            $session_presences[$session->id]->{$code}++;
-            $user_presences->{$code}++;
+            $totalpresencespersessions[$session->id][$code]++;
+            $student->total_presences_per_statuses[$code]++;
 
-            if (empty($presence->description) === true) {
-                $comment = '';
-            } else {
-                $comment = '<details class="apsolu-comments-details">'.
-                    '<summary class="apsolu-comments-summary"><img alt="'.get_string('comments').'" class="iconsmall" src="'.$OUTPUT->image_url('t/message').'" /></summary>'.
-                    '<div class="apsolu-comments-div">'.$presence->description.'</div>'.
-                    '</details>';
-            }
-
-            $abbr = get_string($code.'_short', 'local_apsolu');
-            $label = get_string($code, 'local_apsolu');
-            $style = get_string($code.'_style', 'local_apsolu');
-
-            echo '<td class="table-'.$style.' text-center"><abbr title="'.$label.'">'.$abbr.'</abbr>'.$comment.'</td>';
-        } else {
-            echo '<td class="text-center">-</td>';
+            // Récupère les informations à afficher sur le template.
+            $presence->description = $presences[$session->id]->description;
+            $presence->abbr = get_string($code.'_short', 'local_apsolu');
+            $presence->label = get_string($code, 'local_apsolu');
+            $presence->style = get_string($code.'_style', 'local_apsolu');
         }
+        $student->presences_per_sessions[] = $presence;
     }
 
-    foreach ($user_presences as $presence) {
-        echo '<th class="text-center">'.$presence.'</th>';
-    }
-
-    echo '</tr>';
+    $student->total_presences_per_statuses = array_values($student->total_presences_per_statuses);
+    $data->users[] = $student;
 }
 
-echo '</tbody>';
-echo '</tfoot>';
-foreach ((array) $total_presence as $code => $value) {
-    echo '<tr>';
-    echo '<th colspan="3">'.get_string($code.'_total', 'local_apsolu').'</th>';
-    foreach ($session_presences as $presence) {
-        echo '<th class="text-center">'.$presence->{$code}.'</th>';
+$data->total_per_statuses = array();
+foreach ($totalpresences as $code => $value) {
+    $status = new stdClass();
+    $status->label = get_string($code.'_total', 'local_apsolu');
+    $status->sessions = array();
+    foreach ($totalpresencespersessions as $presence) {
+        $status->sessions[] = $presence[$code];
     }
-    echo '</tr>';
-}
-echo '</tfoot>';
-echo '</table></div>';
 
+    $data->total_per_statuses[] = $status;
+}
+
+// Affichage de la page.
+echo $OUTPUT->header();
+echo $OUTPUT->tabtree($tabsbar, 'overview');
+echo $OUTPUT->render_from_template('local_apsolu/attendance_sessions_overview', $data);
 echo $OUTPUT->footer();
