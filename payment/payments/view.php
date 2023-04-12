@@ -31,6 +31,7 @@ require_once($CFG->dirroot.'/user/profile/lib.php');
 require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
 
 $userid = optional_param('userid', null, PARAM_INT);
+$showalltransactions = optional_param('showall', 0, PARAM_INT);
 
 if (isset($userid)) {
     $user = $DB->get_record('user', array('id' => $userid), '*', MUST_EXIST);
@@ -54,6 +55,9 @@ if (isset($userid)) {
             } catch (Exception $exception) {
 
             }
+        } else if ($showalltransactions === 0) {
+            // On ne traite pas ce paiement si la date de paiement n'est pas définie et qu'on n'affiche pas toutes les transactions.
+            continue;
         }
 
         $format = new NumberFormatter('fr_FR', NumberFormatter::CURRENCY);
@@ -114,6 +118,7 @@ if (isset($notification)) {
     echo $notification;
 }
 
+$data->show_all_transactions = ($showalltransactions === 1);
 $data->payments_centers = array_values($DB->get_records('apsolu_payments_centers', $conditions = null, $sort = 'name'));
 $data->count_payments_centers = count($data->payments_centers);
 

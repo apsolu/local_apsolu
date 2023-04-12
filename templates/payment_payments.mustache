@@ -35,6 +35,7 @@
     * payments
     * count_payments_centers
     * payments_centers
+    * show_all_transactions
 
     Example context (json):
     {
@@ -47,6 +48,7 @@
         "payments": "",
         "count_payments_centers": 0,
         "payments_centers": ""
+        "show_all_transactions": 1,
     }
 }}
 {{#user_selector}}
@@ -79,7 +81,23 @@
 
 {{^user_selector}}
 
-    <p class="text-right"><a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=payments&action=edit&userid={{userid}}" class="btn btn-primary">Ajouter un paiement</a></p>
+    <div class="d-flex">
+        {{#show_all_transactions}}
+        <p>
+            <a class="btn btn-outline-secondary btn-sm" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=payments&userid={{userid}}&showall=0">{{#str}}hide_uncommitted_transactions, local_apsolu{{/str}}</a>
+        </p>
+        {{/show_all_transactions}}
+
+        {{^show_all_transactions}}
+        <p>
+            <a class="btn btn-outline-primary btn-sm" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=payments&userid={{userid}}&showall=1">{{#str}}show_all_transactions, local_apsolu{{/str}}</a>
+        </p>
+        {{/show_all_transactions}}
+
+        <p class="ml-auto">
+            <a class="btn btn-primary btn-sm" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=payments&action=edit&userid={{userid}}">{{#str}}add_payment, local_apsolu{{/str}}</a>
+        </p>
+    </div>
 
     <div class="apsolu-payment-user-profile">
         <p>{{{useridentity}}}</p>
