@@ -216,7 +216,9 @@ $string['export'] = 'Exporter';
 $string['exporting_license'] = 'Exportation des licences FFSU';
 $string['exporting_license_help'] = 'Exporte les licences au format attendu par le site de la FFSU.';
 $string['federation_course'] = 'Cours FFSU';
-$string['federation_course_help'] = 'Espace-cours permettant de gérer les étudiants inscrits à la Fédération Française des Sports Universitaires.';
+$string['federation_course_help'] = 'Espace-cours permettant de gérer les étudiants inscrits à la Fédération Française des Sports Universitaires.
+
+Ce cours doit être un cours « normal » au sens Moodle. Il ne doit pas être créé via le menu « créneau horaire ». De plus, une méthode d’inscription par voeux doit y être configurée.';
 $string['federation_course_link_to_medical_form_description'] = 'Pour permettre aux étudiants de déposer leur certificat médical, vous devez créer une étiquette dans le <a href="{$a->courselink}">cours FFSU</a> contenant ce lien : <a href="{$a->formlink}">{$a->formlink}</a>.';
 $string['federation_number_created'] = 'Numéro de licence créé';
 $string['federation_number_request_date'] = 'Date de la demande de numéro de licence';
@@ -290,7 +292,9 @@ $string['institutions'] = 'Institutions';
 $string['insurance'] = 'Assurance';
 $string['insurance_help'] = 'Assurance IA FF Sport U';
 $string['internal_collaborative_course'] = 'Espace collaboratif interne';
-$string['internal_collaborative_course_help'] = 'Cours mis en avant dans un onglet dédié sur le tableau de bord pour toutes les personnes inscrites dans ce cours. Cette option est pensée pour positionner un espace collaboratif dédié aux échanges entre enseignants';
+$string['internal_collaborative_course_help'] = 'Cours mis en avant dans un onglet dédié sur le tableau de bord pour toutes les personnes inscrites dans ce cours. Cette option est pensée pour positionner un espace collaboratif dédié aux échanges entre enseignants.
+
+Ce cours doit être un cours « normal » au sens Moodle. Il ne doit pas être créé via le menu « créneau horaire ».';
 $string['invalidate'] = 'Invalider';
 $string['justified_absence'] = 'Absence justifiée';
 $string['license_not_paid'] = 'Licence non payée';
