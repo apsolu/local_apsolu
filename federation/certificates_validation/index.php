@@ -175,25 +175,32 @@ if ($data = $mform->get_data()) {
                 );
 
                 if ($record->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING) {
-                    // Certificat en attente de validation.
-                    $cell = new html_table_cell(get_string('medical_certificate_not_validated', 'local_apsolu'));
-                    $cell->attributes = array('class' => 'medical-certificate-status table-warning', 'data-userid' => $record->id);
-                    $row[] = $cell;
+                    if (empty($record->federationnumberrequestdate) === true) {
+                        // Certificat déposé, mais pas validé par l'étudiant.
+                        $cell = new html_table_cell(get_string('medical_certificate_not_validated', 'local_apsolu'));
+                        $cell->attributes = array('class' => 'medical-certificate-status table-warning', 'data-userid' => $record->id);
+                        $row[] = $cell;
+                    } else {
+                        // Certificat en attente de validation.
+                        $cell = new html_table_cell(get_string('medical_certificate_awaiting_validation', 'local_apsolu'));
+                        $cell->attributes = array('class' => 'medical-certificate-status table-danger', 'data-userid' => $record->id);
+                        $row[] = $cell;
 
-                    $menu = new action_menu();
-                    $menu->set_menu_trigger(get_string('edit'));
+                        $menu = new action_menu();
+                        $menu->set_menu_trigger(get_string('edit'));
 
-                    foreach ($menuoptions as $value) {
-                        $menulink = new action_menu_link_secondary(
-                            new moodle_url(''),
-                            new pix_icon($value['icon'], '', null, array('class' => 'smallicon')),
-                            $value['label'],
-                            $value['attributes'],
-                        );
-                        $menu->add($menulink);
+                        foreach ($menuoptions as $value) {
+                            $menulink = new action_menu_link_secondary(
+                                new moodle_url(''),
+                                new pix_icon($value['icon'], '', null, array('class' => 'smallicon')),
+                                $value['label'],
+                                $value['attributes'],
+                            );
+                            $menu->add($menulink);
+                        }
+
+                        $row[] = $OUTPUT->render($menu);
                     }
-
-                    $row[] = $OUTPUT->render($menu);
                 } else if ($record->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_VALIDATED) {
                     // Certificat validé.
                     $cell = new html_table_cell();

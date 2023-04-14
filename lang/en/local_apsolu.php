@@ -321,6 +321,7 @@ $string['manager_license'] = 'Licence dirigeante';
 $string['manager_license_type'] = 'Pour licence dirigeant : Non-étudiant / étudiant';
 $string['man'] = 'Homme';
 $string['maximum_number_of_uploaded_files'] = 'Nombre maximum de fichiers à déposer';
+$string['medical_certificate_awaiting_validation'] = 'Certificat médical en attente de validation';
 $string['medical_certificate_date'] = 'Date du certificat médical';
 $string['medical_certificate_not_required'] = 'Certificat médical non requis';
 $string['medical_certificate_not_validated'] = 'Certificat médical non validé';
