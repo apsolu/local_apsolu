@@ -45,7 +45,8 @@ class local_apsolu_federation_membership extends moodleform {
         global $USER;
 
         $mform = $this->_form;
-        list($adhesion, $sexes, $disciplines, $mainsports, $managertypes, $sportswithconstraints, $readonly) = $this->_customdata;
+        list($adhesion, $sexes, $disciplines, $mainsports, $managertypes, $starlicensevalues,
+            $sportswithconstraints, $readonly) = $this->_customdata;
 
         if ($readonly === true) {
             $messages = $adhesion::get_contacts();
@@ -130,8 +131,8 @@ class local_apsolu_federation_membership extends moodleform {
         // Licence étoile.
         $visibility = get_config('local_apsolu', 'starlicense_field_visibility');
         if ($visibility !== Adhesion::FIELD_HIDDEN) {
-            $mform->addElement('selectyesno', 'starlicense', get_string('star_license', 'local_apsolu'));
-            $mform->setType('starlicense', PARAM_INT);
+            $mform->addElement('select', 'starlicense', get_string('star_license', 'local_apsolu'), $starlicensevalues);
+            $mform->setType('starlicense', PARAM_TEXT);
 
             if ($visibility === Adhesion::FIELD_LOCKED) {
                 $mform->freeze('starlicense');

@@ -41,6 +41,7 @@ foreach (Adhesion::get_disciplines() as $id => $label) {
 }
 
 $managertypes = Adhesion::get_manager_types();
+$starlicensevalues = Adhesion::get_star_license_values();
 
 $mainsports = array();
 foreach (Activity::get_records(array('mainsport' => 1), $sort = 'name') as $record) {
@@ -59,7 +60,8 @@ if (empty($adhesion->birthday) === true) {
 
 // Initialise le formulaire.
 $readonly = ($adhesion->can_edit() === false);
-$customdata = array($adhesion, $sexes, $disciplines, $mainsports, $managertypes, $sportswithconstraints, $readonly);
+$customdata = array($adhesion, $sexes, $disciplines, $mainsports, $managertypes, $starlicensevalues,
+    $sportswithconstraints, $readonly);
 $mform = new local_apsolu_federation_membership(null, $customdata);
 
 // Traite les données renvoyées.

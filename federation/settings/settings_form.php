@@ -63,13 +63,21 @@ class local_apsolu_settings_form extends moodleform {
             $name = sprintf('%s_field_default', $field);
             $label = get_string('default_value_of_field_X', 'local_apsolu', $labelname);
 
-            if ($field === 'managerlicensetype') {
-                $managertypes = Adhesion::get_manager_types();
-                $mform->addElement('select', $name, $label, $managertypes);
-            } else {
-                $mform->addElement('selectyesno', $name, $label);
+            switch ($field) {
+                case 'managerlicensetype':
+                    $managertypes = Adhesion::get_manager_types();
+                    $mform->addElement('select', $name, $label, $managertypes);
+                    $mform->setType($name, PARAM_INT);
+                    break;
+                case 'starlicense':
+                    $starlicensevalues = Adhesion::get_star_license_values();
+                    $mform->addElement('select', $name, $label, $starlicensevalues);
+                    $mform->setType($name, PARAM_TEXT);
+                    break;
+                default:
+                    $mform->addElement('selectyesno', $name, $label);
+                    $mform->setType($name, PARAM_INT);
             }
-            $mform->setType($name, PARAM_INT);
         }
 
         // Positionnement de la visibilité par défaut.

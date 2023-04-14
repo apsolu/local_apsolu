@@ -439,6 +439,19 @@ class adhesion extends record {
     }
 
     /**
+     * Retourne la liste des valeurs possibles pour le champ starlicense.
+     *
+     * @return array
+     */
+    public static function get_star_license_values() {
+        $values = array();
+        $values['O'] = get_string('yes');
+        $values['N'] = get_string('no');
+
+        return $values;
+    }
+
+    /**
      * Retourne si l'adhesion contient au moins un sport à contrainte.
      *
      * @return boolean
