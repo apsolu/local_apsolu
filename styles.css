@@ -1,3 +1,8 @@
+/* Général */
+.apsolu-cursor-help {
+    cursor: help;
+}
+
 /* Attendance */
 #apsolu-attendance-check-javascript-helper {
     background-color: #e9e9e9;
@@ -147,11 +152,6 @@
 }
 
 /* Module FFSU. */
-/* Corrige un bug sur le dropdown modifier quand le tableau contient 3 lignes. */
-#local-apsolu-certificates-validation-table {
-    min-height: 600px;
-}
-
 #local-apsolu-federation-adhesion-summary .row:nth-child(odd) {
     background-color: rgba(0, 0, 0, .05);
 }

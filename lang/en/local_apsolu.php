@@ -542,6 +542,7 @@ $string['sport_license'] = 'Licence sportive';
 $string['sport'] = 'Sport';
 $string['star_license'] = 'Pass SPORT-U';
 $string['strftimedatetimeshort'] = '%a %d %b %Y %H:%M';
+$string['strftimedatetimesortable'] = '%F %T';
 $string['student'] = 'Étudiant';
 $string['students_found'] = '{$a} étudiant(s) trouvé(s)';
 $string['subject'] = 'Sujet';

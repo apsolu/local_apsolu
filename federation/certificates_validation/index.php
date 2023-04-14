@@ -75,11 +75,12 @@ if ($data = $mform->get_data()) {
         $url_options['medical_certificate_status'] = $parameters['status'];
     }
 
-    $sql = "SELECT u.id, u.lastname, u.firstname, u.idnumber, u.email, u.institution, afa.medicalcertificatedate, afa.medicalcertificatestatus, afa.federationnumber, afa.federationnumberrequestdate".
-        " FROM {user} u".
-        " JOIN {apsolu_federation_adhesions} afa ON u.id = afa.userid".
-        " WHERE 1 = 1 ".implode(' ', $conditions).
-        " ORDER BY u.lastname, u.firstname";
+    $sql = "SELECT u.id, u.lastname, u.firstname, u.idnumber, u.email, u.institution, afa.medicalcertificatedate,
+                   afa.medicalcertificatestatus, afa.federationnumber, afa.federationnumberrequestdate
+              FROM {user} u
+              JOIN {apsolu_federation_adhesions} afa ON u.id = afa.userid
+             WHERE 1 = 1 ".implode(' ', $conditions)."
+          ORDER BY afa.federationnumberrequestdate DESC, u.lastname, u.firstname";
 
     $rows = array();
     $recordset = $DB->get_recordset_sql($sql, $parameters);
@@ -90,7 +91,9 @@ if ($data = $mform->get_data()) {
         if (empty($record->federationnumberrequestdate) === true) {
             $row[] = get_string('never');
         } else {
-            $row[] = userdate($record->federationnumberrequestdate, get_string('strftimedatetimeshort'));
+            $title = userdate($record->federationnumberrequestdate, get_string('strftimedatetimeshort', 'local_apsolu'));
+            $text = userdate($record->federationnumberrequestdate, get_string('strftimedatetimesortable', 'local_apsolu'));
+            $row[] = '<span class="apsolu-cursor-help" title="'.s($title).'">'.s($text).'</span>';
         }
         $row[] = html_writer::link($profileurl, $record->lastname);
         $row[] = html_writer::link($profileurl, $record->firstname);
@@ -244,6 +247,7 @@ if ($data = $mform->get_data()) {
         $table = new html_table();
         $table->id = 'local-apsolu-certificates-validation-table';
         $table->head  = $headers;
+        $table->attributes['class'] = 'table table-sortable';
         $table->caption = count($rows).' '.get_string('users');
         $table->data  = $rows;
         $content = html_writer::table($table);
@@ -251,6 +255,7 @@ if ($data = $mform->get_data()) {
 }
 
 $PAGE->requires->js_call_amd('local_apsolu/federation_medical_certificate_validation', 'initialise');
+$PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise');
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('certificates_validation', 'local_apsolu'));
