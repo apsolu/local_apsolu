@@ -76,7 +76,7 @@ if ($formdata = $mform->get_data()) {
             }
         } else if (isset($formdata->importbutton) === true) {
             // Import.
-            $email = trim($line[10]);
+            $email = trim($line[1]);
             if (isset($users[$email]) === false) {
                 // Utilisateur non trouvé.
                 $result[] = get_string('the_user_with_email_X_was_not_found', 'local_apsolu', $email);

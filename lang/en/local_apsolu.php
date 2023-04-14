@@ -281,9 +281,11 @@ $string['i_wish_to_practice_this_activity_with_particular_constraints_and_certif
 $string['import'] = 'Importer';
 $string['important'] = 'Important';
 $string['importing_license'] = 'Importation des licences FFSU';
-$string['importing_license_help'] = 'Importe les licences FFSU dans APSOLU. Le format du fichier attendu est le format utilisé pour l’exportation.
+$string['importing_license_help'] = 'Importe les licences FFSU dans APSOLU.
 
-La première ligne du fichier ne sera pas traitée';
+Le fichier doit être au format csv. La première colonne doit contenir le numéro FFSU à attribuer à l’étudiant et la deuxième colonne doit contenir l’adresse de courriel utilisée pour l’inscription à la FFSU.
+
+La première ligne du fichier ne sera pas traitée. Toutes les autres colonnes seront ignorées.';
 $string['instagram'] = 'Compte Instagram';
 $string['institutional_account_authentification_url'] = 'URL d’authentification des comptes institutionnels';
 $string['institutional_address'] = 'Adresse institutionnelle';
@@ -558,7 +560,7 @@ $string['the_details_of_the_responses_are_neither_saved_nor_sent_back_to_the_ser
 $string['the_directory_X_is_not_writable'] = 'Le répertoire « {$a} » n’est pas accessible en écriture.';
 $string['the_field_X_is_hidden_the_field_Y_must_be_hidden'] = 'Le champ « {$a->field1} » est caché. Le champ « {$a->field2} » doit être caché.';
 $string['the_fields_of_X_page_have_to_be_completed'] = '<p>Les informations de la <a href="{$a->url}">page « {$a->page} » </a> doivent être renseignées.</p>';
-$string['the_license_number_X_associated_to_Y_is_invalid'] = 'Le numéro de licence {$a->licenseid} associé à {$a->profile} est <strong>invalide</strong>.';
+$string['the_license_number_X_associated_to_Y_is_invalid'] = 'Le numéro de licence « {$a->licenseid} » associé à {$a->profile} est <strong>invalide</strong>.';
 $string['the_path_X_is_a_directory'] = 'Le chemin « {$a} » est un répertoire.';
 $string['the_student_X_has_requested_for_a_license_number'] = 'L’étudiant {$a} a fait une demande de numéro de licence.';
 $string['the_user_with_email_X_was_not_found'] = 'L’utilisateur avec l’adresse de courriel « {$a} » n’a pas été trouvé.';
@@ -859,8 +861,8 @@ $string['federation_licenseid'] = 'Numéro de licence';
 $string['federation_import'] = 'Importer';
 $string['federation_preview'] = 'Aperçu';
 $string['federation_result'] = 'Résultat';
-$string['federation_insert_license'] = 'Le numéro de licence {$a->licenseid} a été ajouté au profil de {$a->profile}';
-$string['federation_update_license'] = 'Le numéro de licence {$a->licenseid} a été mis à jour dans le profile de {$a->profile} (ancien numéro: {$a->oldlicenseid})';
+$string['federation_insert_license'] = 'Le numéro de licence « {$a->licenseid} » a été ajouté au profil de {$a->profile}';
+$string['federation_update_license'] = 'Le numéro de licence « {$a->licenseid} » a été mis à jour dans le profil de {$a->profile} (ancien numéro: {$a->oldlicenseid})';
 $string['federation_no_import'] = 'Aucune donnée insérée ou modifiée.';
 
 // Grades.
