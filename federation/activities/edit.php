@@ -71,6 +71,7 @@ $heading = get_string('edit_matching', 'local_apsolu');
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading($heading);
+echo $OUTPUT->tabtree($tabtree, $page);
 
 $mform->display();
 

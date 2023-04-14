@@ -32,6 +32,7 @@ $activities = $DB->get_records_sql($sql);
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading_with_help(get_string('activity_list', 'local_apsolu'), 'activity_list', 'local_apsolu');
+echo $OUTPUT->tabtree($tabtree, $page);
 
 $data = new stdClass();
 $data->activities = array_values($activities);

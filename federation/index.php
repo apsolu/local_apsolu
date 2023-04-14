@@ -41,13 +41,13 @@ $pages = array();
 $pages['settings'] = get_string('settings');
 $pages['activities'] = get_string('activity_list', 'local_apsolu');
 $pages['numbers'] = get_string('association_numbers', 'local_apsolu');
-$pages['export'] = get_string('exporting_license', 'local_apsolu');
-$pages['import'] = get_string('importing_license', 'local_apsolu');
+$pages['export'] = get_string('export', 'local_apsolu');
+$pages['import'] = get_string('import', 'local_apsolu');
 $pages['certificates_validation'] = get_string('certificates_validation', 'local_apsolu');
 
 $tabtree = array();
 foreach ($pages as $pagename => $label) {
-    $url = new moodle_url('/local/apsolu/index.php', array('page' => $pagename));
+    $url = new moodle_url('/local/apsolu/federation/index.php', array('page' => $pagename));
     $tabtree[] = new tabobject($pagename, $url, $label);
 }
 

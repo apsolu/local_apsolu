@@ -34,6 +34,7 @@ foreach ($numbers as $id => $number) {
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading_with_help(get_string('association_numbers', 'local_apsolu'), 'association_numbers', 'local_apsolu');
+echo $OUTPUT->tabtree($tabtree, $page);
 
 $data = new stdClass();
 $data->numbers = array_values($numbers);

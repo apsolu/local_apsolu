@@ -153,8 +153,8 @@ if ($formdata = $mform->get_data()) {
 }
 
 echo $OUTPUT->header();
-
 echo $OUTPUT->heading_with_help(get_string('importing_license', 'local_apsolu'), 'importing_license', 'local_apsolu');
+echo $OUTPUT->tabtree($tabtree, $page);
 
 $mform->display();
 

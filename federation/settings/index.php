@@ -57,6 +57,7 @@ $mform = new local_apsolu_settings_form(null, $customdata);
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('settings'));
+echo $OUTPUT->tabtree($tabtree, $page);
 
 if ($data = $mform->get_data()) {
     foreach ($attributes as $attribute) {

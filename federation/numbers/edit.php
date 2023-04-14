@@ -69,6 +69,7 @@ if (empty($number->id) === true) {
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading($heading);
+echo $OUTPUT->tabtree($tabtree, $page);
 
 $mform->display();
 

@@ -60,8 +60,8 @@ $cancelurl = new moodle_url('/local/apsolu/federation/index.php', array('page' =
 
 // Display form.
 echo $OUTPUT->header();
+echo $OUTPUT->tabtree($tabtree, $page);
 
 echo $OUTPUT->confirm($message, $confirmbutton, $cancelurl);
 
 echo $OUTPUT->footer();
-

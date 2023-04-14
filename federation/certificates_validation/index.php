@@ -254,6 +254,7 @@ $PAGE->requires->js_call_amd('local_apsolu/federation_medical_certificate_valida
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('certificates_validation', 'local_apsolu'));
+echo $OUTPUT->tabtree($tabtree, $page);
 
 $mform->display();
 echo $content;
