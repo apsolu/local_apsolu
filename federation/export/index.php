@@ -82,6 +82,11 @@ if ($data = $mform->get_data()) {
     // Génère les entêtes d'exportation.
     $headers = FederationAdhesion::get_exportation_headers();
 
+    if (isset($data->exportbutton) === false) {
+        // En affichage web, on préfixe le tableau de la date de dernière modification.
+        array_unshift($headers, get_string('last_modification', 'local_apsolu'));
+    }
+
     // Récupère la liste des cartes de paiement nécessaires pour la FFSU.
     if (empty($data->payment) === false) {
         $payments = Payment::get_users_cards_status_per_course($courseid);
@@ -115,7 +120,7 @@ if ($data = $mform->get_data()) {
         " JOIN {enrol} e ON e.id = ue.enrolid AND e.enrol = 'select'".
         " WHERE e.courseid = :courseid".
         implode(' ', $conditions).
-        " ORDER BY u.lastname, u.firstname";
+        " ORDER BY adh.timemodified DESC, u.lastname, u.firstname";
 
     $rows = array();
     $recordset = $DB->get_recordset_sql($sql, $parameters);
@@ -199,9 +204,16 @@ if ($data = $mform->get_data()) {
 
         // Remplit toutes les lignes.
         $row = array();
+
+        if (isset($data->exportbutton) === false) {
+            $title = userdate($record->timemodified, get_string('strftimedatetimeshort', 'local_apsolu'));
+            $text = userdate($record->timemodified, get_string('strftimedatetimesortable', 'local_apsolu'));
+            $row[] = '<span class="apsolu-cursor-help" title="'.s($title).'">'.s($text).'</span>';
+        }
+
         foreach (FederationAdhesion::get_exportation_fields() as $field) {
             if (isset($data->exportbutton) === false) {
-                // En affichage, on améliore le rendu des champs.
+                // En affichage web, on améliore le rendu des champs.
                 switch ($field) {
                     case 'firstname':
                     case 'lastname':
@@ -287,11 +299,14 @@ if ($data = $mform->get_data()) {
     } else {
         $table = new html_table();
         $table->head  = $headers;
+        $table->attributes['class'] = 'table table-sortable';
         $table->caption = count($rows).' '.get_string('users');
         $table->data = $rows;
         $content = html_writer::table($table);
     }
 }
+
+$PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise');
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading_with_help(get_string('exporting_license', 'local_apsolu'), 'exporting_license', 'local_apsolu');

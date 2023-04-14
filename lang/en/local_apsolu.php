@@ -297,6 +297,7 @@ $string['internal_collaborative_course_help'] = 'Cours mis en avant dans un ongl
 Ce cours doit être un cours « normal » au sens Moodle. Il ne doit pas être créé via le menu « créneau horaire ».';
 $string['invalidate'] = 'Invalider';
 $string['justified_absence'] = 'Absence justifiée';
+$string['last_modification'] = 'Dernière modification';
 $string['license_not_paid'] = 'Licence non payée';
 $string['license_number_assigned'] = 'Numéro de licence attribué';
 $string['license_number_not_assigned'] = 'Numéro de licence non attribué';
