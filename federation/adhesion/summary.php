@@ -212,7 +212,11 @@ if (empty($adhesion->federationnumber) === true) {
             $value = get_string('no');
         }
 
-        if (empty($adhesion->{$field}) === false) {
+        if ($field === 'starlicense') {
+            if ($adhesion->starlicense === 'O') {
+                $value = get_string('yes');
+            }
+        } else if (empty($adhesion->{$field}) === false) {
             if ($field === 'managerlicensetype') {
                 $value = get_string('student');
             } else {
