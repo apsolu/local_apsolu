@@ -495,7 +495,7 @@ class adhesion extends record {
      * @return void
      */
     public function save(object $data = null, object $mform = null, bool $check = true) {
-        global $DB;
+        global $DB, $USER;
 
         $courseid = FederationCourse::get_federation_courseid();
 
@@ -585,8 +585,15 @@ class adhesion extends record {
         }
 
         if (empty($this->id) === true) {
+            $this->timecreated = time();
+            $this->timemodified = $this->timecreated;
+
             $this->id = $DB->insert_record(self::TABLENAME, $this);
         } else {
+            if ($USER->id == $this->userid) {
+                $this->timemodified = time();
+            }
+
             $DB->update_record(self::TABLENAME, $this);
         }
 
