@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core_form\filetypes_util;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once $CFG->libdir.'/formslib.php';
@@ -162,18 +164,9 @@ class local_apsolu_federation_medical_certificate extends moodleform {
         $options['maxfiles'] = get_config('local_apsolu', 'ffsu_maxfiles');;
         $options['subdirs'] = 0;
 
-        $options['accepted_types'] = array();
-        $acceptedfiles = get_config('local_apsolu', 'ffsu_acceptedfiles');
-        if (is_string($acceptedfiles) === true) {
-            foreach (explode(' ', $acceptedfiles) as $type) {
-                $type = trim($type);
-                if (empty($type) === true) {
-                    continue;
-                }
-
-                $options['accepted_types'][] = $type;
-            }
-        }
+        $acceptedfiles = (string) get_config('local_apsolu', 'ffsu_acceptedfiles');
+        $util = new filetypes_util();
+        $options['accepted_types'] = $util->normalize_file_types($acceptedfiles);
 
         return $options;
     }
