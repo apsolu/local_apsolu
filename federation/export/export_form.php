@@ -56,7 +56,7 @@ class local_apsolu_federation_export_licenses extends moodleform {
         $mform->setType('idnumber', PARAM_TEXT);
 
         // Numéro de l'association.
-        $attributes = array('size' => 10);
+        $attributes = array('size' => 10, 'style' => 'width:6em');
         $select = $mform->addElement('select', 'numbers', get_string('association_number_prefix', 'local_apsolu'), $numbers, $attributes);
         $select->setMultiple(true);
         $mform->setType('numbers', PARAM_INT);
