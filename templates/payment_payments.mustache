@@ -108,6 +108,16 @@
     <p class="alert alert-danger">{{#str}}no_sesame, local_apsolu{{/str}}</p>
     {{/has_sesame}}
 
+    {{#count_due_payments}}
+    <h3>{{#str}}list_of_due_payments, local_apsolu{{/str}}</h3>
+    <ul class="list-unstyled">
+    {{#due_payments}}
+        <li>{{#pix}}t/due, local_apsolu, {{#str}}alt_due, local_apsolu{{/str}}{{/pix}} {{ . }}</li>
+    {{/due_payments}}
+    </ul>
+    {{/count_due_payments}}
+
+    <h3>{{#str}}list_of_payments, local_apsolu{{/str}}</h3>
     {{^count_payments}}
     <div class="alert alert-info">
         <p>{{#str}}no_payments, local_apsolu{{/str}}</p>

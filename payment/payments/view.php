@@ -43,9 +43,25 @@ if (isset($userid)) {
     $data->useridentity = $OUTPUT->render(new user_picture($user)).' '.fullname($user);
     $data->payments = array();
     $data->count_payments = 0;
+    $data->due_payments = array();
+    $data->count_due_payments = 0;
     $data->has_sesame = (isset($customfields->apsolusesame) && $customfields->apsolusesame == 1);
     $data->user_auth = get_string('pluginname', 'auth_'.$user->auth);
 
+    // Liste les cartes dûes de l'utilisateur.
+    $cards = Payment::get_user_cards($userid);
+    if (count($cards) > 0) {
+        foreach ($cards as $card) {
+            if (Payment::get_user_card_status($card, $userid) !== Payment::DUE) {
+                continue;
+            }
+
+            $data->due_payments[] = $card->name;
+            $data->count_due_payments++;
+        }
+    }
+
+    // Liste toutes les transactions de l'utilisateur enregistrées dans la table apsolu_payments.
     $payments = $DB->get_records('apsolu_payments', array('userid' => $userid), $sort = 'timemodified');
     foreach ($payments as $payment) {
         if (!empty($payment->timepaid)) {
