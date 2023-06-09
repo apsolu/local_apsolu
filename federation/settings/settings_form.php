@@ -111,7 +111,6 @@ class local_apsolu_settings_form extends moodleform {
         $mform->addElement('filetypes', 'ffsu_acceptedfiles', $label);
         $mform->addHelpButton('ffsu_acceptedfiles', 'accepted_file_types', 'local_apsolu');
         $mform->setType('ffsu_acceptedfiles', PARAM_TEXT);
-        $mform->addRule('ffsu_acceptedfiles', get_string('required'), 'required', null, 'client');
 
         // Nombre maximum de fichiers à remettre pour le dépot de certificat médical.
         $options = array();
