@@ -291,8 +291,7 @@ $string['institutional_account_authentification_url'] = 'URL d’authentificatio
 $string['institutional_address'] = 'Adresse institutionnelle';
 $string['institution'] = 'Institution';
 $string['institutions'] = 'Institutions';
-$string['insurance'] = 'Assurance';
-$string['insurance_help'] = 'Assurance IA FF Sport U';
+$string['insurance'] = 'Assurance FFSU';
 $string['internal_collaborative_course'] = 'Espace collaboratif interne';
 $string['internal_collaborative_course_help'] = 'Cours mis en avant dans un onglet dédié sur le tableau de bord pour toutes les personnes inscrites dans ce cours. Cette option est pensée pour positionner un espace collaboratif dédié aux échanges entre enseignants.
 

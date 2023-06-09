@@ -143,7 +143,6 @@ class local_apsolu_federation_membership extends moodleform {
         $visibility = get_config('local_apsolu', 'insurance_field_visibility');
         if ($visibility !== Adhesion::FIELD_HIDDEN) {
             $mform->addElement('selectyesno', 'insurance', get_string('insurance', 'local_apsolu'));
-            $mform->addHelpButton('insurance', 'insurance', 'local_apsolu');
             $mform->setType('insurance', PARAM_INT);
 
             if ($visibility === Adhesion::FIELD_LOCKED) {
