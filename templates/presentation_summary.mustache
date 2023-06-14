@@ -182,7 +182,9 @@
                         <td{{^show_role_column}} class="hide"{{/show_role_column}} data-column="role" data-value="{{#roles}}{{name}} {{/roles}}">
                             <ul class="list-inline2 list-unstyled">
                                 {{#roles}}
-                                <li class="apsolu-roles-list-li"><span title="{{name}}" class="apsolu-roles apsolu-roles-{{shortname}}"></span><span class="sr-only2">{{name}}</span></li>
+                                <li class="apsolu-roles-list-li">
+                                    <i aria-hidden="true" class="fa fa-{{fontawesomeid}}{{^fontawesomeid}}check{{/fontawesomeid}} mr-1" style="color: {{color}}{{^color}}gray{{/color}};"></i><span class="sr-only2">{{name}}</span>
+                                </li>
                                 {{/roles}}
                             </ul>
                         </td>

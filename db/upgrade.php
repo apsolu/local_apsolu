@@ -1129,5 +1129,26 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 2023061401;
+    if ($result && $oldversion < $version) {
+        // Ajoute la table apsolu_roles.
+        $table = new xmldb_table('apsolu_roles');
+        if ($dbman->table_exists($table) === false) {
+            // Ajoute les champs.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+            $table->add_field('color', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('fontawesomeid', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+
+            // Ajoute la clé primaire.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+            // Crée la table.
+            $dbman->create_table($table);
+        }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
     return $result;
 }

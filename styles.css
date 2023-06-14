@@ -188,3 +188,9 @@
         grid-area: list;
     }
 }
+
+/* Administration des rôles */
+select[data-apsolu=fontawesome],
+select[data-apsolu=fontawesome] option {
+    font: normal normal normal 14px/1 FontAwesome;
+}

@@ -603,5 +603,17 @@
             <INDEX NAME="cardid" UNIQUE="false" FIELDS="cardid" />
         </INDEXES>
     </TABLE>
+
+    <!-- ROLES -->
+    <TABLE NAME="apsolu_roles" COMMENT="apsolu_roles table">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" />
+            <FIELD NAME="color" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="fontawesomeid" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_roles" />
+        </KEYS>
+    </TABLE>
 </TABLES>
 </XMLDB>

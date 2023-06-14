@@ -36,6 +36,7 @@ $pages['dates'] = 'dates';
 $pages['headermessage'] = 'header_message';
 $pages['messaging'] = 'messaging';
 $pages['attendancestatuses'] = 'attendance_statuses';
+$pages['roles'] = 'roles';
 $pages['specialcourses'] = 'special_courses';
 
 $tabtree = array();
