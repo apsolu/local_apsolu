@@ -119,6 +119,7 @@ class local_apsolu_calendar_edit_form extends moodleform {
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
 
+        // Contrôle que les dates de début soient antérieures aux dates de fin.
         $datetimes = array();
         $datetimes[] = array('enrolstartdate', 'enrolenddate');
         $datetimes[] = array('coursestartdate', 'courseenddate');
@@ -141,6 +142,28 @@ class local_apsolu_calendar_edit_form extends moodleform {
             }
 
             $errors[$enddate] = get_string('enddatebeforestartdate', 'error');
+        }
+
+        // Contrôle que le début des inscriptions démarrent avant le début des cours.
+        if (empty($data['enrolstartdate']) === false && empty($data['coursestartdate']) === false) {
+            if ($data['enrolstartdate'] > $data['coursestartdate']) {
+                $str = get_string('the_enrol_start_date_must_be_prior_to_the_course_start_date', 'local_apsolu');
+                $errors['enrolstartdate'] = $str;
+
+                $str = get_string('the_course_start_date_must_be_after_to_the_enrol_start_date', 'local_apsolu');
+                $errors['coursestartdate'] = $str;
+            }
+        }
+
+        // Contrôle que la fin des inscriptions se terminent avant la fin des cours.
+        if (empty($data['enrolenddate']) === false && empty($data['courseenddate']) === false) {
+            if ($data['enrolenddate'] > $data['courseenddate']) {
+                $str = get_string('the_enrol_end_date_must_be_prior_to_the_course_end_date', 'local_apsolu');
+                $errors['enrolenddate'] = $str;
+
+                $str = get_string('the_course_end_date_must_be_after_to_the_enrol_end_date', 'local_apsolu');
+                $errors['courseenddate'] = $str;
+            }
         }
 
         if (empty(trim($data['name'])) === true) {
