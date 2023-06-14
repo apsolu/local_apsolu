@@ -1066,5 +1066,68 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 2023061400;
+    if ($result && $oldversion < $version) {
+        // Ajoute les champs sur la table apsolu_attendance_statuses.
+        $statuses = $DB->get_records('apsolu_attendance_statuses');
+
+        $table = new xmldb_table('apsolu_attendance_statuses');
+
+        $fields = array();
+        $fields[] = new xmldb_field('shortlabel', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+        $fields[] = new xmldb_field('longlabel', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+        $fields[] = new xmldb_field('sumlabel', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+        $fields[] = new xmldb_field('color', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+        $fields[] = new xmldb_field('sortorder', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, $default = 0, null);
+        foreach ($fields as $field) {
+            if ($dbman->field_exists($table, $field) === true) {
+                continue;
+            }
+
+            $dbman->add_field($table, $field);
+        }
+
+        $fields = array();
+        $fields[] = new xmldb_field('name', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+        $fields[] = new xmldb_field('code', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+        foreach ($fields as $field) {
+            if ($dbman->field_exists($table, $field) === false) {
+                continue;
+            }
+
+            $dbman->drop_field($table, $field);
+        }
+
+        // Réintègre les données dans la table apsolu_attendance_statuses.
+        $sortorder = 1;
+        foreach ($statuses as $status) {
+            $data = array();
+            $data['id'] = $status->id;
+            $data['shortlabel'] = get_string(sprintf('%s_short', $status->code), 'local_apsolu');
+            $data['longlabel'] = get_string($status->code, 'local_apsolu');
+            $data['sumlabel'] = get_string(sprintf('%s_total', $status->code), 'local_apsolu');
+            $data['color'] = get_string(sprintf('%s_style', $status->code), 'local_apsolu');
+            $data['sortorder'] = $sortorder;
+
+            $sql = "UPDATE {apsolu_attendance_statuses} SET shortlabel = :shortlabel, longlabel = :longlabel,".
+                " sumlabel = :sumlabel, color = :color, sortorder = :sortorder WHERE id = :id";
+            $DB->execute($sql, $data);
+
+            $sortorder++;
+        }
+
+        $indexes = array('shortlabel', 'longlabel', 'sumlabel', 'sortorder');
+        foreach ($indexes as $field) {
+            $index = new xmldb_index(sprintf('unique_%s', $field), XMLDB_INDEX_UNIQUE, array($field));
+
+            if ($dbman->index_exists($table, $index) === false) {
+                $dbman->add_index($table, $index);
+            }
+        }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
     return $result;
 }

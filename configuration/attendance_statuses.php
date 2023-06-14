@@ -15,26 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Contrôleur pour les pages d'administration des types de présences.
  *
  * @package    local_apsolu
- * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2023 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+defined('MOODLE_INTERNAL') || die;
 
-// The current plugin version (Date: YYYYMMDDXX).
-$plugin->version   = 2023061400;
+$action = optional_param('action', 'view', PARAM_ALPHA);
 
-// Requires Moodle 4.0.0.
-$plugin->requires = 2022041900.00;
+$actions = array('view', 'edit', 'delete');
 
-// Full name of the plugin (used for diagnostics).
-$plugin->component = 'local_apsolu';
+if (in_array($action, $actions, $strict = true) === false) {
+    $action = 'view';
+}
 
-// The plugin is a stable version.
-$plugin->maturity = MATURITY_STABLE;
-
-// Support Moodle from 4.0.0 to 4.0.x.
-$plugin->supported = [400, 400];
+require(__DIR__.'/attendance_statuses_'.$action.'.php');

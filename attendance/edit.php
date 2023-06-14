@@ -376,7 +376,7 @@ foreach ($students as $student) {
             $found = true;
             $checked = 'checked="checked" ';
         }
-        $radios .= '<label><input type="radio" name="presences['.$student->id.']" value="'.$status->id.'" '.$checked.'/> '.get_string($status->code, 'local_apsolu').'</label>';
+        $radios .= '<label><input type="radio" name="presences['.$student->id.']" value="'.$status->id.'" '.$checked.'/> '.$status->longlabel.'</label>';
     }
 
     $status_style = '';

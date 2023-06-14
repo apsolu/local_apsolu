@@ -71,16 +71,6 @@ function xmldb_local_apsolu_install() {
     // Initialise les paramètres de l'offre de formations.
     UniversiteRennes2\Apsolu\set_initial_course_offerings_settings();
 
-    // Ajoute les différents types de présences.
-    $statuses = array('present', 'late', 'excused', 'absent');
-    foreach ($statuses as $status) {
-        $record = new stdClass();
-        $record->name = $status;
-        $record->code = 'attendance_'.$status;
-
-        $DB->insert_record('apsolu_attendance_statuses', $record);
-    }
-
     // Ajoute les différents champs de profil complémentaires.
     $fields = $DB->get_records('user_info_field', array(), $sort = 'sortorder DESC');
     if (count($fields) === 0) {
@@ -152,6 +142,29 @@ function xmldb_local_apsolu_install() {
         $sql = "INSERT INTO {apsolu_federation_activities} (id, name, mainsport, restriction, categoryid)".
             " VALUES(:id, :name, :mainsport, :restriction, NULL)";
         $DB->execute($sql, $data);
+    }
+
+    // Initialise les données dans la table apsolu_attendance_statuses.
+    $statuses = array();
+    $statuses['attendance_present'] = 'success';
+    $statuses['attendance_late'] = 'warning';
+    $statuses['attendance_excused'] = 'info';
+    $statuses['attendance_absent'] = 'danger';
+
+    $sortorder = 1;
+    foreach ($statuses as $code => $color) {
+        $data = array();
+        $data['shortlabel'] = get_string(sprintf('%s_short', $code), 'local_apsolu');
+        $data['longlabel'] = get_string($code, 'local_apsolu');
+        $data['sumlabel'] = get_string(sprintf('%s_total', $code), 'local_apsolu');
+        $data['color'] = $color;
+        $data['sortorder'] = $sortorder;
+
+        $sql = "INSERT INTO {apsolu_attendance_statuses} (shortlabel, longlabel, sumlabel, color, sortorder)".
+            " VALUES(:shortlabel, :longlabel, :sumlabel, :color, :sortorder)";
+        $DB->execute($sql, $data);
+
+        $sortorder++;
     }
 
     return true;

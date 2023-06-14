@@ -51,12 +51,21 @@
     <TABLE NAME="apsolu_attendance_statuses" COMMENT="apsolu_attendance_statuses table">
         <FIELDS>
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" />
-            <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
-            <FIELD NAME="code" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="shortlabel" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="longlabel" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="sumlabel" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="color" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
         </FIELDS>
         <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_courses_groupings" />
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_attendance_statuses" />
         </KEYS>
+        <INDEXES>
+            <INDEX NAME="unique_shortlabel" UNIQUE="true" FIELDS="shortlabel" />
+            <INDEX NAME="unique_longlabel" UNIQUE="true" FIELDS="longlabel" />
+            <INDEX NAME="unique_sumlabel" UNIQUE="true" FIELDS="sumlabel" />
+            <INDEX NAME="unique_sortorder" UNIQUE="true" FIELDS="sortorder" />
+        </INDEXES>
     </TABLE>
 
     <!-- COURSES (SLOTS) -->

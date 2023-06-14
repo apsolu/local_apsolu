@@ -146,7 +146,7 @@ if ($data = $mform->get_data()) {
     $recordset->close();
 
     // Récupère toutes les présences.
-    $sql = "SELECT aap.studentid, aap.statusid, aap.description, aas.name As status, aap.sessionid".
+    $sql = "SELECT aap.studentid, aap.statusid, aap.description, aas.longlabel AS status, aap.sessionid".
         " FROM {apsolu_attendance_presences} aap".
         " JOIN {apsolu_attendance_statuses} aas ON aas.id = aap.statusid".
         " JOIN {apsolu_attendance_sessions} session ON session.id = aap.sessionid".

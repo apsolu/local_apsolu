@@ -101,6 +101,11 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'calendarstypes'));
     $ADMIN->add('local_apsolu_configuration', new admin_externalpage('local_apsolu_configuration_calendars_types', $str, $url, $capabilities));
 
+    // Configuration > Type de présences.
+    $str = get_string('attendance_statuses', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'attendancestatuses'));
+    $ADMIN->add('local_apsolu_configuration', new admin_externalpage('local_apsolu_configuration_attendance_statuses', $str, $url, $capabilities));
+
     // Fédération FSU.
     if (local_apsolu\core\course::get_federation_courseid() !== false) {
         $ADMIN->add('apsolu', new admin_category('local_apsolu_federation', get_string('settings_federation', 'local_apsolu')));

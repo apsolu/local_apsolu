@@ -15,26 +15,29 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Page pour lister les types de présences.
  *
  * @package    local_apsolu
- * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2023 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+defined('MOODLE_INTERNAL') || die;
 
-// The current plugin version (Date: YYYYMMDDXX).
-$plugin->version   = 2023061400;
+echo $OUTPUT->header();
+echo $OUTPUT->heading(get_string('attendance_statuses', 'local_apsolu'));
 
-// Requires Moodle 4.0.0.
-$plugin->requires = 2022041900.00;
+$statuses = $DB->get_records('apsolu_attendance_statuses', $conditions = array(), $sort = 'sortorder');
 
-// Full name of the plugin (used for diagnostics).
-$plugin->component = 'local_apsolu';
+$data = new stdClass();
+$data->wwwroot = $CFG->wwwroot;
+$data->attendance_statuses = array_values($statuses);
+$data->count_attendance_statuses = count($statuses);
 
-// The plugin is a stable version.
-$plugin->maturity = MATURITY_STABLE;
+if (isset($notificationform)) {
+    $data->notification = $notificationform;
+}
 
-// Support Moodle from 4.0.0 to 4.0.x.
-$plugin->supported = [400, 400];
+echo $OUTPUT->render_from_template('local_apsolu/configuration_attendance_statuses', $data);
+
+echo $OUTPUT->footer();

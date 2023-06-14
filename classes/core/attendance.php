@@ -176,29 +176,12 @@ class attendance {
      *
      * Ex: présent en vert, en retard en orange, absence en rouge, etc.
      *
-     * @param string $status_code Code du statut de présence.
+     * @param string $color Nom de classe Bootstrap (success, warning, info ou danger).
      *
      * @return string Nom d'une classe CSS Bootstrap.
      */
-    public static function getStatusBootstrapStyle(string $status_code) {
-        switch ($status_code) {
-            case 'attendance_present':
-                $style = 'text-success';
-                break;
-            case 'attendance_late':
-                $style = 'text-warning';
-                break;
-            case 'attendance_excused':
-                $style = 'text-info';
-                break;
-            case 'attendance_absent':
-                $style = 'text-danger';
-                break;
-            default:
-                $style = 'text-left';
-        }
-
-        return $style;
+    public static function getStatusBootstrapStyle(string $color) {
+        return sprintf('text-%s', $color);
     }
 
     /**
@@ -213,7 +196,8 @@ class attendance {
 
         $courses = array();
 
-        $sql = "SELECT c.id, c.fullname, aas.name AS sessionname, aas.sessiontime, aass.code AS status, ac.starttime, ac.endtime".
+        $sql = "SELECT c.id, c.fullname, aas.name AS sessionname, aas.sessiontime,".
+            " aass.shortlabel, aass.longlabel, aass.sumlabel, aass.color, ac.starttime, ac.endtime".
             " FROM {course} c".
             " JOIN {apsolu_courses} ac ON c.id = ac.id".
             " JOIN {apsolu_attendance_sessions} aas ON c.id = aas.courseid".
@@ -233,8 +217,8 @@ class attendance {
             }
 
             $record->duration = course::getDuration($record->starttime, $record->endtime);
-            $record->style = self::getStatusBootstrapStyle($record->status);
-            $record->status = get_string($record->status, 'local_apsolu');
+            $record->style = self::getStatusBootstrapStyle($record->color);
+            $record->status = $record->longlabel;
 
             $courses[$record->id]->sessions[] = $record;
         }

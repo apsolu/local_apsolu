@@ -144,8 +144,8 @@ $data->statuses = array();
 $data->count_statuses = count($statuses);
 $totalpresences = array();
 foreach ($statuses as $status) {
-    $data->statuses[] = get_string($status->code, 'local_apsolu');
-    $totalpresences[$status->code] = 0;
+    $data->statuses[] = $status->longlabel;
+    $totalpresences[$status->id] = 0;
 }
 
 $totalpresencespersessions = array();
@@ -180,17 +180,17 @@ foreach ($DB->get_records_sql($sql, array('courseid' => $courseid)) as $user) {
 
         $presence = new stdClass();
         if (isset($presences[$session->id]) === true) {
-            $code = $statuses[$presences[$session->id]->statusid]->code;
+            $id = $presences[$session->id]->statusid;
 
             // Incrémente le compteur de présences pour la session.
-            $totalpresencespersessions[$session->id][$code]++;
-            $student->total_presences_per_statuses[$code]++;
+            $totalpresencespersessions[$session->id][$id]++;
+            $student->total_presences_per_statuses[$id]++;
 
             // Récupère les informations à afficher sur le template.
             $presence->description = $presences[$session->id]->description;
-            $presence->abbr = get_string($code.'_short', 'local_apsolu');
-            $presence->label = get_string($code, 'local_apsolu');
-            $presence->style = get_string($code.'_style', 'local_apsolu');
+            $presence->abbr = $statuses[$id]->shortlabel;
+            $presence->label = $statuses[$id]->longlabel;
+            $presence->style = $statuses[$id]->color;
         }
         $student->presences_per_sessions[] = $presence;
     }
@@ -200,12 +200,12 @@ foreach ($DB->get_records_sql($sql, array('courseid' => $courseid)) as $user) {
 }
 
 $data->total_per_statuses = array();
-foreach ($totalpresences as $code => $value) {
+foreach ($totalpresences as $id => $value) {
     $status = new stdClass();
-    $status->label = get_string($code.'_total', 'local_apsolu');
+    $status->label = $statuses[$id]->sumlabel;
     $status->sessions = array();
     foreach ($totalpresencespersessions as $presence) {
-        $status->sessions[] = $presence[$code];
+        $status->sessions[] = $presence[$id];
     }
 
     $data->total_per_statuses[] = $status;
