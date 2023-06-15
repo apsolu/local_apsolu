@@ -34,8 +34,8 @@ $stepid = optional_param('step', 1, PARAM_INT);
 
 $courseid = \local_apsolu\core\course::get_federation_courseid();
 if (empty($courseid) === true) {
-    // La cours FFSU n'est pas configuré.
-    print_error('cannotfindcourse');
+    // Le cours FFSU n'est pas configuré.
+    print_error('federation_module_is_not_configured', 'local_apsolu');
 }
 
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
