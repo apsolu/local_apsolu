@@ -45,8 +45,7 @@ if (empty($courseid) === true) {
     print_error('federation_module_is_not_configured', 'local_apsolu');
 }
 
-$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
-$coursecontext = context_course::instance($course->id);
+$coursecontext = context_course::instance($courseid, MUST_EXIST);
 
 // Contrôle les permissions d'accès.
 require_capability('moodle/course:update', $coursecontext);
