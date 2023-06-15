@@ -233,6 +233,7 @@ $string['federation_course_help'] = 'Espace-cours permettant de gérer les étud
 
 Ce cours doit être un cours « normal » au sens Moodle. Il ne doit pas être créé via le menu « créneau horaire ». De plus, une méthode d’inscription par voeux doit y être configurée.';
 $string['federation_course_link_to_medical_form_description'] = 'Pour permettre aux étudiants de déposer leur certificat médical, vous devez créer une étiquette dans le <a href="{$a->courselink}">cours FFSU</a> contenant ce lien : <a href="{$a->formlink}">{$a->formlink}</a>.';
+$string['federation_module_is_not_configured'] = 'Le module FFSU n’est pas configuré.';
 $string['federation_number_created'] = 'Numéro de licence créé';
 $string['federation_number_request_date'] = 'Date de la demande de numéro de licence';
 $string['federation_number_request_sent'] = 'Demande de numéro de licence envoyée.';
@@ -321,6 +322,7 @@ $string['license_number_status'] = 'État du numéro de licence';
 $string['license_paid'] = 'Licence payée';
 $string['license_payment_status'] = 'État du paiement de licence';
 $string['list_of_due_payments'] = 'Liste des paiements dûs';
+$string['list_of_my_students'] = 'Liste de mes étudiants';
 $string['list_of_payments'] = 'Liste des paiements';
 $string['location'] = 'Lieu';
 $string['location_cannot_be_deleted'] = 'Le lieu « {$a} » ne peut pas être supprimé, car il est rattaché aux lieux suivants :';
@@ -400,6 +402,7 @@ $string['no_recorded_attendances'] = 'Aucune présence enregistrée';
 $string['no_results_with_these_criteria'] = 'Aucun résultat avec ces critères de recherche';
 $string['no_roles'] = 'Aucun rôle';
 $string['no_sessions'] = 'Aucune séance';
+$string['no_students'] = 'Aucun étudiant';
 $string['no_users'] = 'Aucun utilisateur';
 $string['non_institutional_account_authentification_url'] = 'URL d’authentification des comptes non institutionnels';
 $string['noreply_address'] = 'Adresse « noreply »';
