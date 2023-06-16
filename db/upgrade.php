@@ -30,6 +30,7 @@ defined('MOODLE_INTERNAL') || die;
 
 
 require_once($CFG->dirroot.'/local/apsolu/locallib.php');
+require_once($CFG->dirroot.'/user/profile/definelib.php');
 
 /**
  * Procédure de mise à jour.
@@ -1171,6 +1172,28 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
         // Savepoint reached.
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
+    $version = 2023061600;
+    if ($result && $oldversion < $version) {
+        $fields = array();
+        $fields[] = 'apsolucardpaid';
+        $fields[] = 'apsolufederationnumber';
+        $fields[] = 'apsolufederationpaid';
+        $fields[] = 'apsolumedicalcertificate';
+        $fields[] = 'apsolumuscupaid';
+        $fields[] = 'bonificationpaid';
+        $fields[] = 'librepaid';
+        $fields[] = 'optionpaid';
+
+        foreach ($fields as $field) {
+            $record = $DB->get_record('user_info_field', array('shortname' => $field));
+            if ($record === false) {
+                continue;
+            }
+
+            profile_delete_field($record->id);
+        }
     }
 
     return $result;

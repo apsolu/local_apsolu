@@ -149,10 +149,9 @@ $customfields = customfields::getCustomFields();
 
 // Récupérer tous les inscrits.
 // TODO: jointure avec colleges
-$sql = "SELECT u.*, ue.id AS ueid, ue.status, ue.timestart, ue.timeend, ue.enrolid, e.enrol, ra.id AS raid, ra.roleid, uid1.data AS apsolusesame, uid2.data AS apsolucardpaid".
+$sql = "SELECT u.*, ue.id AS ueid, ue.status, ue.timestart, ue.timeend, ue.enrolid, e.enrol, ra.id AS raid, ra.roleid, uid1.data AS apsolusesame".
     " FROM {user} u".
     " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = :apsolusesame".
-    " LEFT JOIN {user_info_data} uid2 ON u.id = uid2.userid AND uid2.fieldid = :apsolucardpaid".
     " JOIN {user_enrolments} ue ON u.id = ue.userid".
     " JOIN {enrol} e ON e.id = ue.enrolid".
     " JOIN {role_assignments} ra ON u.id = ra.userid AND ((e.id = ra.itemid) OR (e.enrol = 'manual' AND ra.itemid = 0))".
@@ -165,7 +164,6 @@ $sql = "SELECT u.*, ue.id AS ueid, ue.status, ue.timestart, ue.timeend, ue.enrol
 
 $params = array();
 $params['apsolusesame'] = $customfields['apsolusesame']->id;
-$params['apsolucardpaid'] = $customfields['apsolucardpaid']->id;
 
 if (isset($invalid_enrolments) === false) {
     // Récupération des inscriptions courantes.
@@ -185,17 +183,15 @@ $params['courseid'] = $courseid;
 $students = $DB->get_records_sql($sql, $params);
 
 // TODO: récupérer les gens inscrits ponctuellement.
-$sql = "SELECT DISTINCT u.*, uid1.data AS apsolusesame, uid2.data AS apsolucardpaid".
+$sql = "SELECT DISTINCT u.*, uid1.data AS apsolusesame".
     " FROM {user} u".
     " JOIN {apsolu_attendance_presences} aap ON u.id = aap.studentid".
     " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid".
     " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = :apsolusesame".
-    " LEFT JOIN {user_info_data} uid2 ON u.id = uid2.userid AND uid2.fieldid = :apsolucardpaid".
     " WHERE aas.courseid = :courseid";
 
 $params = array();
 $params['apsolusesame'] = $customfields['apsolusesame']->id;
-$params['apsolucardpaid'] = $customfields['apsolucardpaid']->id;
 $params['courseid'] = $courseid;
 
 foreach ($DB->get_records_sql($sql, $params) as $student) {

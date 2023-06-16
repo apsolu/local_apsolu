@@ -63,16 +63,6 @@ class report extends \local_apsolu\local\statistics\report {
       			U.institution, U.department, U.id as userid, U.idnumber, U.firstname, U.lastname, U.email,
             Sexe.data as sexe, 
             CASE WHEN UFR.data IS NULL THEN \'\' ELSE UFR.data END AS ufr, CASE WHEN LMD.data IS NULL THEN \'\' ELSE LMD.data END AS lmd, apsoluhighlevelathlete.data as shnu,
-            CASE WHEN apsolucardpaid.data = \'1\' 
-              THEN "Oui"
-              ELSE CASE WHEN apsolucardpaid.data = \'0\' 
-                THEN "Non"
-                ELSE CASE WHEN apsolucardpaid.data IS NOT NULL 
-                  THEN "Oui" 
-                  ELSE "Non" 
-                END
-              END
-            END as apsolucardpaid,
             E.id as enrolid, E.name as enrolname, UE.status,
             CASE WHEN (apsoluusertype.data IS NOT NULL AND apsoluusertype.data <> \'\') 
 					    THEN apsoluusertype.data
@@ -116,7 +106,6 @@ class report extends \local_apsolu\local\statistics\report {
           LEFT JOIN {user_info_data} Sexe ON Sexe.userid = U.id AND Sexe.fieldid = (select id from mdl_user_info_field where shortname = \'apsolusex\')
           LEFT JOIN {user_info_data} UFR ON UFR.userid = U.id AND UFR.fieldid = (select id from mdl_user_info_field where shortname = \'apsoluufr\')
           LEFT JOIN {user_info_data} LMD ON LMD.userid = U.id AND LMD.fieldid = (select id from mdl_user_info_field where shortname = \'apsolucycle\')
-          LEFT JOIN {user_info_data} apsolucardpaid ON apsolucardpaid.userid = U.id AND apsolucardpaid.fieldid = (select id from mdl_user_info_field where shortname = \'apsolucardpaid\')
           LEFT JOIN {user_info_data} apsoluhighlevelathlete ON apsoluhighlevelathlete.userid = U.id AND apsoluhighlevelathlete.fieldid = (select id from mdl_user_info_field where shortname = \'apsoluhighlevelathlete\')
           LEFT JOIN {user_info_data} apsoluusertype ON apsoluusertype.userid = U.id AND apsoluusertype.fieldid = (select id from mdl_user_info_field where shortname = \'apsoluusertype\')
           
@@ -143,16 +132,6 @@ class report extends \local_apsolu\local\statistics\report {
       			ACT.id as calendartypeid,ACT.name as calendartypename,
       			U.institution, U.department, U.id as userid, U.idnumber, U.firstname, U.lastname, U.email,
             Sexe.data as sexe, UFR.data as ufr, LMD.data as lmd, apsoluhighlevelathlete.data as shnu,
-            CASE WHEN apsolucardpaid.data = \'1\' 
-              THEN "Oui"
-              ELSE CASE WHEN apsolucardpaid.data = \'0\' 
-                THEN "Non"
-                ELSE CASE WHEN apsolucardpaid.data IS NOT NULL 
-                  THEN "Oui" 
-                  ELSE "Non" 
-                END
-              END
-            END as apsolucardpaid,
       			E.id as enrolid, E.name as enrolname, UE.status,
             CASE WHEN (apsoluusertype.data IS NOT NULL AND apsoluusertype.data <> \'\') 
 					    THEN apsoluusertype.data
@@ -186,7 +165,6 @@ class report extends \local_apsolu\local\statistics\report {
           LEFT JOIN {user_info_data} Sexe ON Sexe.userid = U.id AND Sexe.fieldid = (select id from mdl_user_info_field where shortname = \'apsolusex\')
           LEFT JOIN {user_info_data} UFR ON UFR.userid = U.id AND UFR.fieldid = (select id from mdl_user_info_field where shortname = \'apsoluufr\')
           LEFT JOIN {user_info_data} LMD ON LMD.userid = U.id AND LMD.fieldid = (select id from mdl_user_info_field where shortname = \'apsolucycle\')
-          LEFT JOIN {user_info_data} apsolucardpaid ON apsolucardpaid.userid = U.id AND apsolucardpaid.fieldid = (select id from mdl_user_info_field where shortname = \'apsolucardpaid\')
           LEFT JOIN {user_info_data} apsoluhighlevelathlete ON apsoluhighlevelathlete.userid = U.id AND apsoluhighlevelathlete.fieldid = (select id from mdl_user_info_field where shortname = \'apsoluhighlevelathlete\')
           LEFT JOIN {user_info_data} apsoluusertype ON apsoluusertype.userid = U.id AND apsoluusertype.fieldid = (select id from mdl_user_info_field where shortname = \'apsoluusertype\')
           
@@ -252,7 +230,6 @@ class report extends \local_apsolu\local\statistics\report {
             case 3: // 1 : Vue activités compmlémentaires par inscription
                 $columnsDatatype = [
                 [ 'data' => "activityname", 'title' => get_string('complements', 'local_apsolu')],
-                [ 'data' => "apsolucardpaid", 'title' => get_string('sportcard', 'local_apsolu')] ,
                 [ 'data' => "statusname", 'title' => get_string('enrolment_status', 'local_apsolu')],
                 ];
                 $orders = [2 => 'asc', 3 => 'asc'];
@@ -266,7 +243,6 @@ class report extends \local_apsolu\local\statistics\report {
                 [ 'data' => "cityname", 'title' => get_string('city', 'local_apsolu')] ,
                 [ 'data' => "roleshortname", 'title' => get_string('role', 'local_apsolu')] ,
                 [ 'data' => "enrolname", 'title' => get_string('enrolment_per_semester', 'local_apsolu')] ,
-                [ 'data' => "apsolucardpaid", 'title' => get_string('sportcard', 'local_apsolu')] ,
                 [ 'data' => "statusname", 'title' => get_string('enrolment_status', 'local_apsolu')],
                 [ 'data' => "groupname", 'title' => get_string('grouping', 'local_apsolu')],
                 [ 'data' => "activityname", 'title' => get_string('activity', 'local_apsolu')],

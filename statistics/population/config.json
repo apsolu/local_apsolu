@@ -384,18 +384,6 @@
         }
       },
       {
-        "id": "apsolucardpaid",
-        "datatype": [1,3],
-        "label": "sportcard,local_apsolu",
-        "type": "string",
-        "input": "select",
-        "operators": ["equal", "not_equal"],
-        "values" : {
-            "Oui":"Oui",
-            "Non":"Non"
-        }          
-      },
-      {
         "id": "cohortnames",
         "datatype": [1,2],
         "label": "cohort,cohort",

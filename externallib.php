@@ -188,15 +188,14 @@ class local_apsolu_webservices extends external_api {
 
         $fields = $DB->get_records('user_info_field', $conditions = array(), $sort = '', $fields = 'shortname, id');
 
-        $sql = "SELECT DISTINCT u.id AS iduser, u.username, u.auth, u.firstname, u.lastname, IFNULL(uid1.data, '') AS cardnumber, 'category', u.institution, IFNULL(uid2.data, '') AS nosportcard".
+        $sql = "SELECT DISTINCT u.id AS iduser, u.username, u.auth, u.firstname, u.lastname, IFNULL(uid1.data, '') AS cardnumber, 'category', u.institution, '' AS nosportcard".
             " FROM {user} u".
             " JOIN {user_enrolments} ue ON u.id = ue.userid AND status = 0". // Restreint le téléchargement des utilisateurs à ceux qui ont ou ont eu au moins une inscription active dans une activité. TODO: à supprimer à la fin du test.
             " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = :apsoluidcardnumber". // Numéro de carte VU.
-            " LEFT JOIN {user_info_data} uid2 ON u.id = uid2.userid AND uid1.fieldid = :apsolucardpaid". // Carte sport.
             " WHERE u.timemodified >= :timemodified".
             " AND u.deleted = 0".
             " ORDER BY u.lastname, u.firstname";
-        foreach ($DB->get_records_sql($sql, array('timemodified' => $since, 'apsoluidcardnumber' => $fields['apsoluidcardnumber']->id, 'apsolucardpaid' => $fields['apsolucardpaid']->id)) as $record) {
+        foreach ($DB->get_records_sql($sql, array('timemodified' => $since, 'apsoluidcardnumber' => $fields['apsoluidcardnumber']->id)) as $record) {
             $user = new stdClass();
             $user->iduser = $record->iduser;
             $user->instuid = $record->auth.'|'.$record->username;

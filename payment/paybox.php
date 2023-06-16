@@ -99,38 +99,6 @@ try {
 
     $outputsuccesscontent .= strftime('%c').' '.$ip.' :: OK for user '.$userstr.PHP_EOL;
 
-    // Set user payment flag.
-    if (isset($CFG->is_siuaps_rennes) === true) {
-        $items = $DB->get_records('apsolu_payments_items', array('paymentid' => $_GET['Ref']));
-        foreach ($items as $itemid => $item) {
-            // TODO: à supprimer... on ne devrait plus avoir besoin des champs apsolufederationpaid, apsolumuscupaid et apsolucardpaid.
-            switch ($item->cardid) {
-                case 4:
-                    // FFSU.
-                    $userfield = (object) ['id' => $user->id, 'profile_field_apsolufederationpaid' => 1];
-                    profile_save_data($userfield);
-
-                    $outputsuccesscontent .= strftime('%c').' '.$ip.' :: set apsolufederationpaid attribute to value 1 for user '.$userstr.PHP_EOL;
-                    break;
-                case 3:
-                    // Musculation.
-                    $userfield = (object) ['id' => $user->id, 'profile_field_apsolumuscupaid' => 1];
-                    profile_save_data($userfield);
-
-                    $outputsuccesscontent .= strftime('%c').' '.$ip.' :: set apsolumuscupaid attribute to value 1 for user '.$userstr.PHP_EOL;
-                    break;
-                case 6:
-                case 2:
-                case 1:
-                    // Carte sport.
-                    $userfield = (object) ['id' => $user->id, 'profile_field_apsolucardpaid' => 1];
-                    profile_save_data($userfield);
-
-                    $outputsuccesscontent .= strftime('%c').' '.$ip.' :: set apsolucardpaid attribute to value 1 for user '.$userstr.PHP_EOL;
-            }
-        }
-    }
-
     if (!file_put_contents($outputsuccess, $outputsuccesscontent, FILE_APPEND | LOCK_EX)) {
         throw new Exception('Can\'t write in '.$outputsuccess);
     }
