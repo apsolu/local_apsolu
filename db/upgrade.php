@@ -1144,6 +1144,29 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
             // Crée la table.
             $dbman->create_table($table);
+
+            // Initialise le jeu de couleurs.
+            $roles = array();
+            $roles['bonification'] = '#ffb844';
+            $roles['libre'] = '#99cc33';
+            $roles['option'] = '#e60000';
+            $roles['decouverte'] = '#888888';
+            foreach ($roles as $shortname => $color) {
+                $role = $DB->get_record('role', array('shortname' => $shortname, 'archetype' => 'student'));
+
+                if ($role === false) {
+                    continue;
+                }
+
+                $params = array();
+                $params['id'] = $role->id;
+                $params['color'] = $color;
+                $params['fontawesomeid'] = 'check';
+
+                $sql = "INSERT INTO {apsolu_roles} (id, color, fontawesomeid)
+                             VALUES (:id, :color, :fontawesomeid)";
+                $DB->execute($sql, $params);
+            }
         }
 
         // Savepoint reached.
