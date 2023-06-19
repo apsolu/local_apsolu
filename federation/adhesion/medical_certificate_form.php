@@ -48,6 +48,10 @@ class local_apsolu_federation_medical_certificate extends moodleform {
 
         list($adhesion, $course, $context, $validityperiod, $sportswithoutconstraint, $sportswithconstraints, $freeze) = $this->_customdata;
 
+        if (empty($adhesion->medicalcertificatedate)) {
+            $adhesion->medicalcertificatedate = time() - YEARSECS * 2;
+        }
+
         // Certificat médical.
         $label = get_string('medical_certificate', 'local_apsolu');
         if ($freeze === true) {
