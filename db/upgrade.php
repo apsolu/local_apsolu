@@ -1194,6 +1194,9 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
             profile_delete_field($record->id);
         }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
     return $result;
