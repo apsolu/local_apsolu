@@ -203,7 +203,7 @@ class local_apsolu_federation_membership extends moodleform {
         $mform->setType('usepersonaldata', PARAM_INT);
 
         // Champs cachés.
-        $mform->addElement('hidden', 'step', 1);
+        $mform->addElement('hidden', 'step', APSOLU_PAGE_MEMBERSHIP);
         $mform->setType('step', PARAM_INT);
 
         // Submit buttons.

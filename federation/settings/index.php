@@ -51,6 +51,9 @@ foreach ($attributes as $attribute) {
     $defaults->{$attribute} = get_config('local_apsolu', $attribute);
 }
 
+$defaults->ffsu_agreement['text'] = get_config('local_apsolu', 'ffsu_agreement');
+$defaults->ffsu_agreement['format'] = FORMAT_HTML;
+
 // Build form.
 $customdata = array($defaults);
 $mform = new local_apsolu_settings_form(null, $customdata);
@@ -65,6 +68,10 @@ if ($data = $mform->get_data()) {
             continue;
         }
         set_config($attribute, $data->{$attribute}, 'local_apsolu');
+    }
+
+    if (isset($data->ffsu_agreement['text']) === true) {
+        set_config('ffsu_agreement', $data->ffsu_agreement['text'], 'local_apsolu');
     }
 
     echo $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');

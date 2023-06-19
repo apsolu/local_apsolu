@@ -189,6 +189,9 @@ class adhesion extends record {
     /** @var int|string $questionnairestatus État des réponses au questionnaire médical. */
     public $questionnairestatus = null;
 
+    /** @var int|string $agreementaccepted État d'acceptation de la charte. */
+    public $agreementaccepted = null;
+
     /** @var string $federationnumberprefix Préfixe utilisé pour le numéro FFSU (4 caractères). */
     public $federationnumberprefix = null;
 

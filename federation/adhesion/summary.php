@@ -43,6 +43,12 @@ $item->label = get_string('answer_the_medical_questionnaire', 'local_apsolu');
 $item->status = ($adhesion->questionnairestatus !== null);
 $items[] = $item;
 
+// Accepter la charte.
+$item = new stdClass();
+$item->label = get_string('accept_the_agreement', 'local_apsolu');
+$item->status = (empty($adhesion->agreementaccepted) === false);
+$items[] = $item;
+
 // Remplir le formulaire d'adhésion.
 $item = new stdClass();
 $item->label = get_string('fill_out_the_membership_form', 'local_apsolu');

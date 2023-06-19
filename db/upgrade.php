@@ -1199,5 +1199,22 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 2023061900;
+    if ($result && $oldversion < $version) {
+        // Ajoute 1 champ `agreementaccepted` dans la table `apsolu_federation_adhesions`.
+        $table = new xmldb_table('apsolu_federation_adhesions');
+        $field = new xmldb_field('agreementaccepted', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $nullable = null, $sequence = null, null, null);
+
+        if ($dbman->field_exists($table, $field) === false) {
+            $dbman->add_field($table, $field);
+        }
+
+        $text = get_string('default_federation_agreement', 'local_apsolu');
+        set_config('ffsu_agreement', $text, 'local_apsolu');
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
     return $result;
 }

@@ -51,6 +51,7 @@ function xmldb_local_apsolu_install() {
 
     set_config('ffsu_acceptedfiles', '.pdf .odt .doc .docx .jpe .jpeg .jpg .png', 'local_apsolu');
     set_config('ffsu_maxfiles', 1, 'local_apsolu');
+    set_config('ffsu_agreement', get_string('default_federation_agreement', 'local_apsolu'), 'local_apsolu');
 
     set_config('insurance_field_default', '0', 'local_apsolu');
     set_config('managerlicense_field_default', '0', 'local_apsolu');

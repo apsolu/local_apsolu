@@ -15,68 +15,64 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Classe pour le formulaire permettant de demander un numéro de licence.
+ * Classe pour le formulaire permettant de gérer la charte.
  *
  * @package    local_apsolu
  * @copyright  2023 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use local_apsolu\core\federation\adhesion as Adhesion;
 
 defined('MOODLE_INTERNAL') || die();
 
 require_once $CFG->libdir.'/formslib.php';
 
 /**
- * Classe pour le formulaire permettant de demander un numéro de licence.
+ * Classe pour le formulaire permettant de gérer la charte.
  *
  * @package    local_apsolu
  * @copyright  2023 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_apsolu_request_federation_number_form extends moodleform {
+class local_apsolu_federation_agreement extends moodleform {
     /**
      * Définit les champs du formulaire.
      *
      * @return void
      */
     function definition () {
-        global $OUTPUT;
+        global $USER;
 
         $mform = $this->_form;
+        list($adhesion, $readonly) = $this->_customdata;
 
-        list($items, $canrequestfederationnumber, $hasrequestedfederationnumber) = $this->_customdata;
-
-        $crossicon = $OUTPUT->render(new pix_icon('i/grade_incorrect', ''));
-        $checkicon = $OUTPUT->render(new pix_icon('i/grade_correct', ''));
-
-        $list = array();
-        foreach ($items as $i => $item) {
-            if ($item->status === true) {
-                $list[] = sprintf('%s %s', $checkicon, $item->label);
-            } else {
-                $list[] = sprintf('%s %s', $crossicon, $item->label);
-            }
+        if ($readonly === true) {
+            $messages = $adhesion::get_contacts();
+            $mform->addElement('html', sprintf('<div class="alert alert-info">%s</div>', implode(' ', $messages)));
+            $mform->hardFreeze();
         }
-        $mform->addElement('static', 'list', '', html_writer::alist($list, $attributes = array('class' => 'list-unstyled')));
+
+        // Charte.
+        $agreement = get_config('local_apsolu', 'ffsu_agreement');
+        $html = '<div class="bg-light card mx-auto my-3 w-75"><div class="card-body">%s</div></div>';
+        $mform->addElement('html', sprintf($html, $agreement));
+
+        // Validation.
+        $label = get_string('by_checking_the_box_i_declare_to_accept_the_agreement_above', 'local_apsolu');
+        $mform->addElement('checkbox', 'agreementaccepted', $label);
 
         // Champs cachés.
-        $mform->addElement('hidden', 'step', APSOLU_PAGE_SUMMARY);
+        $mform->addElement('hidden', 'step', APSOLU_PAGE_AGREEMENT);
         $mform->setType('step', PARAM_INT);
 
         // Submit buttons.
-        if ($hasrequestedfederationnumber === true) {
-            $label = get_string('your_request_is_being_processed', 'local_apsolu');
-        } else {
-            $label = get_string('request_a_federation_number', 'local_apsolu');
-        }
-
         $attributes = array('class' => 'btn btn-default');
-        if ($canrequestfederationnumber === false) {
-            $attributes['disabled'] = 1;
-        }
-
-        $buttonarray[] = &$mform->createElement('submit', 'save', $label, $attributes);
+        $buttonarray[] = &$mform->createElement('submit', 'save', get_string('save'), $attributes);
 
         $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+
+        // Set default values.
+        $this->set_data($adhesion);
     }
 }

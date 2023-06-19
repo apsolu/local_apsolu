@@ -27,10 +27,11 @@ use local_apsolu\core\federation\adhesion as Adhesion;
 use local_apsolu\event\federation_adhesion_viewed;
 
 require_once(__DIR__.'/../../../../config.php');
+require_once(__DIR__.'/lib.php');
 require_once($CFG->dirroot.'/group/lib.php');
 require_once($CFG->dirroot.'/user/profile/lib.php');
 
-$stepid = optional_param('step', 1, PARAM_INT);
+$stepid = optional_param('step', APSOLU_PAGE_MEMBERSHIP, PARAM_INT);
 
 $courseid = \local_apsolu\core\course::get_federation_courseid();
 if (empty($courseid) === true) {
@@ -121,35 +122,51 @@ if ($count === 0) {
 }
 
 // Set navigation.
+$baseurl = '/local/apsolu/federation/adhesion/index.php';
+
 $pages = array();
-$pages['health_quiz'] = new moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => 0));
-$pages['membership'] = new moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => 1));
-$pages['medical_certificate'] = new moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => 2));
-$pages['payment'] = new moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => 3));
-$pages['summary'] = new moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => 4));
+$pages['health_quiz'] = new moodle_url($baseurl, array('step' => APSOLU_PAGE_HEALTH_QUIZ));
+$pages['agreement'] = new moodle_url($baseurl, array('step' => APSOLU_PAGE_AGREEMENT));
+$pages['membership'] = new moodle_url($baseurl, array('step' => APSOLU_PAGE_MEMBERSHIP));
+$pages['medical_certificate'] = new moodle_url($baseurl, array('step' => APSOLU_PAGE_MEDICAL_CERTIFICATE));
+$pages['payment'] = new moodle_url($baseurl, array('step' => APSOLU_PAGE_PAYMENT));
+$pages['summary'] = new moodle_url($baseurl, array('step' => APSOLU_PAGE_SUMMARY));
 
 $steps = array_keys($pages);
 
 if ($adhesion->questionnairestatus === null) {
     // Le questionnaire de santé n'a pas été rempli.
+    $pages['agreement'] = null;
     $pages['membership'] = null;
     $pages['medical_certificate'] = null;
     $pages['payment'] = null;
     $pages['summary'] = null;
-    $stepid = 0;
+    $stepid = APSOLU_PAGE_HEALTH_QUIZ;
+} elseif (empty($adhesion->agreementaccepted) === true) {
+    $pages['membership'] = null;
+    $pages['medical_certificate'] = null;
+    $pages['payment'] = null;
+    $pages['summary'] = null;
+
+    if (in_array($stepid, array(APSOLU_PAGE_HEALTH_QUIZ, APSOLU_PAGE_AGREEMENT), $strict = true) === false) {
+        $stepid = APSOLU_PAGE_AGREEMENT;
+    }
 } elseif ($adhesion->usepersonaldata === null) {
     // Le formulaire d'adhésion n'a jamais été rempli.
     $pages['medical_certificate'] = null;
     $pages['payment'] = null;
     $pages['summary'] = null;
-    $stepid = 1;
+
+    if (in_array($stepid, array(APSOLU_PAGE_HEALTH_QUIZ, APSOLU_PAGE_AGREEMENT, APSOLU_PAGE_MEMBERSHIP), $strict = true) === false) {
+        $stepid = APSOLU_PAGE_MEMBERSHIP;
+    }
 } elseif (empty($adhesion->federationnumber) === false) {
     // Le numéro FFSU a été attribué.
-    $stepid = 4;
+    $stepid = APSOLU_PAGE_SUMMARY;
 }
 
 if (isset($steps[$stepid]) === false) {
-    $stepid = 0;
+    $stepid = APSOLU_PAGE_HEALTH_QUIZ;
 }
 
 $tabtree = array();

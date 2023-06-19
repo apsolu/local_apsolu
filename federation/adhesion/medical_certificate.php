@@ -37,6 +37,7 @@ if ($adhesion->have_to_upload_medical_certificate() === false) {
     // L'étudiant a répondu NON à toutes les questions du questionnaire médical ou ne pratique pas un sport à risque.
     $message = get_string('i_answered_no_to_all_the_questions_in_the_health_questionnaire', 'local_apsolu');
     $data->notifications[] = $message;
+    $data->nextstep = APSOLU_PAGE_PAYMENT;
 } else if ($adhesion->medicalcertificatestatus === $adhesion::MEDICAL_CERTIFICATE_STATUS_VALIDATED) {
     $messages = $adhesion::get_contacts();
     $data->notifications[] = implode(' ', $messages);
@@ -122,7 +123,7 @@ if ($adhesion->have_to_upload_medical_certificate() === false) {
         // Met à jour l'adhésion en base de données.
         $adhesion->save($mdata);
 
-        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => '3'));
+        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => APSOLU_PAGE_PAYMENT));
         redirect($returnurl);
     }
 

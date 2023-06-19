@@ -35,6 +35,7 @@ $string['messageprovider:notification'] = 'Notification des enseignants';
 $string['messageprovider:payment_notification'] = 'Notification de paiements';
 
 // Nouvelles chaines, triées par clé.
+$string['accept_the_agreement'] = 'Accepter la charte';
 $string['accepted_at_least_once'] = 'Accepté au moins 1 fois';
 $string['accepted_file_types'] = 'Types de fichiers acceptés';
 $string['accepted_file_types_help'] = 'Les types de fichier acceptés peuvent être restreints en saisissant une liste d’extensions de fichiers. Si le champ est laissé vide, tous les types de fichier seront acceptés.';
@@ -69,6 +70,7 @@ $string['add_skill'] = 'Ajouter un niveau de pratique';
 $string['adhesion_updated'] = 'Adhésion mise à jour';
 $string['adhesion_viewed'] = 'Adhésion affichée';
 $string['afternoon'] = 'Après-midi';
+$string['agreement'] = 'Charte';
 $string['a_license_number_has_been_assigned_to_you_by_the_federation'] = 'Un numéro de licence vous a été attribué auprès de la FFSU.';
 $string['all_cities'] = 'Tous les sites';
 $string['all_courses'] = 'Tous les créneaux';
@@ -111,6 +113,7 @@ $string['authorization'] = 'Autorisation';
 $string['background_image'] = 'Image de fond';
 $string['birthday'] = 'Date de naissance';
 $string['blue'] = 'Bleu';
+$string['by_checking_the_box_i_declare_to_accept_the_agreement_above'] = 'En cochant la case, je déclare accepter la charte ci-dessus.';
 $string['calendar_deleted'] = 'Calendrier supprimé';
 $string['calendar_modification_warning'] = '<p><strong>Attention : </strong> l’enregistrement de cette page entraînera la modification automatique des dates de toutes les méthodes d’inscription associées à ce calendrier.</p>';
 $string['calendars'] = 'Calendriers';
@@ -166,10 +169,12 @@ $string['data_saved'] = 'Données enregistrées.';
 $string['data_updated'] = 'Données modifiées.';
 $string['dates'] = 'Dates';
 $string['day_of_the_week'] = 'Jour de la semaine';
-$string['default_replyto_address'] = 'Adresse de « réponse à » proposée par défaut';
+$string['default_federation_agreement'] = '<p>Avant de procéder à votre adhésion, nous vous informons que la FFSU vous propose une souscription à un contrat d’assurance couvrant les dommages corporels auxquels la pratique sportive peut vous exposer.</p>
+<p>Cette assurance facultative vous sera facturée 1€60. Vous pouvez obtenir plus d’information <a href="https://sport-u.com/wp-content/uploads/2022/06/20220614_FICHE-INDIVIDUELLE-D-INSCRIPTION-INFO-ASSURANCE-AC_22-23.pdf" target="_blank">sur cette page (ouvre un nouvel onglet)</a>.';
 $string['default_filters'] = 'Filtres initiaux';
 $string['default_homepage_section1_text'] = '<p>Bienvenue sur le site de gestion des inscriptions au service des sports.</p>'.
     '<p>Ce service propose à l’ensemble des étudiants et des personnels une formation pour tous les niveaux à la pratique des activités physiques et sportives.</p>';
+$string['default_replyto_address'] = 'Adresse de « réponse à » proposée par défaut';
 $string['default_value_of_fields'] = 'Valeur par défaut des champs';
 $string['default_value_of_field_X'] = 'Valeur par défaut du champ « {$a} »';
 $string['delete_sessions_already_scheduled_for_that_day'] = 'Supprimer les sessions déjà planifiées pour cette journée';
@@ -509,6 +514,7 @@ $string['session_:count:_of_the_:strdatetime:'] = 'Cours n°{$a->count} du {$a->
 $string['session_created'] = 'Session créée.';
 $string['session_deleted'] = 'Session supprimée.';
 $string['session_updated'] = 'Session modifiée.';
+$string['setup_the_text_of_the_agreement'] = 'Configurer le texte de la charte';
 $string['sex'] = 'Sexe';
 $string['short_label'] = 'Libellé court';
 $string['show_all_transactions'] = 'Afficher toutes les transactions';

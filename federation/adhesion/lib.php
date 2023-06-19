@@ -15,26 +15,16 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Définit des constantes pour la navigation dans les onglets de la procédure d'adhésion.
  *
  * @package    local_apsolu
- * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2023 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-// The current plugin version (Date: YYYYMMDDXX).
-$plugin->version   = 2023061900;
-
-// Requires Moodle 4.0.0.
-$plugin->requires = 2022041900.00;
-
-// Full name of the plugin (used for diagnostics).
-$plugin->component = 'local_apsolu';
-
-// The plugin is a stable version.
-$plugin->maturity = MATURITY_STABLE;
-
-// Support Moodle from 4.0.0 to 4.0.x.
-$plugin->supported = [400, 400];
+define('APSOLU_PAGE_HEALTH_QUIZ', 0);
+define('APSOLU_PAGE_AGREEMENT', 1);
+define('APSOLU_PAGE_MEMBERSHIP', 2);
+define('APSOLU_PAGE_MEDICAL_CERTIFICATE', 3);
+define('APSOLU_PAGE_PAYMENT', 4);
+define('APSOLU_PAGE_SUMMARY', 5);

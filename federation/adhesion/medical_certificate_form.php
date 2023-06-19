@@ -127,7 +127,7 @@ class local_apsolu_federation_medical_certificate extends moodleform {
         }
 
         // Champs cachés.
-        $mform->addElement('hidden', 'step', 2);
+        $mform->addElement('hidden', 'step', APSOLU_PAGE_MEDICAL_CERTIFICATE);
         $mform->setType('step', PARAM_INT);
 
         // Période de validité du certificat médical (en mois).

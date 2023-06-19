@@ -33,6 +33,7 @@ $data->wwwroot = $CFG->wwwroot;
 $data->due = false;
 $data->count_cards = 0;
 $data->cards = array();
+$data->nextstep = APSOLU_PAGE_SUMMARY;
 $data->payment_url = (string) new moodle_url('/local/apsolu/payment/index.php');
 
 $images = Payment::get_statuses_images();
