@@ -47,7 +47,15 @@ class local_apsolu_settings_form extends moodleform {
         list($defaults) = $this->_customdata;
 
         // Partie formulaire d'adhésion.
+        $mform->addElement('header', 'agreement', get_string('setup_the_text_of_the_agreement', 'local_apsolu'));
+
+        // Configuration de la charte.
+        $mform->addElement('editor', 'ffsu_agreement', get_string('agreement', 'local_apsolu'));
+        $mform->setType('ffsu_agreement', PARAM_RAW);
+
+        // Partie formulaire d'adhésion.
         $mform->addElement('header', 'membership_form', get_string('membership_form', 'local_apsolu'));
+        $mform->setExpanded('membership_form', $expanded = true);
 
         // Positionnement des valeurs par défaut.
         $fields = array();
@@ -103,11 +111,6 @@ class local_apsolu_settings_form extends moodleform {
             $mform->addElement('select', $name, $label, $options);
         }
 
-        // Configuration de la charte.
-        $mform->addElement('html', sprintf('<h4>%s</h4>', get_string('setup_the_text_of_the_agreement', 'local_apsolu')));
-
-        $mform->addElement('editor', 'ffsu_agreement', get_string('agreement', 'local_apsolu'));
-        $mform->setType('ffsu_agreement', PARAM_RAW);
 
         // Partie certificat médical.
         $mform->addElement('header', 'medical_certificate', get_string('medical_certificate', 'local_apsolu'));
