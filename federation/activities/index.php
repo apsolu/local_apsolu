@@ -32,7 +32,4 @@ if (in_array($action, $actions, $strict = true) === false) {
     $action = $actions[0];
 }
 
-// Setup admin access requirement.
-admin_externalpage_setup('local_apsolu_federation_'.$page);
-
 require(__DIR__.'/'.$action.'.php');
