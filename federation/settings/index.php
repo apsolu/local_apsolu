@@ -31,6 +31,7 @@ $attributes = array(
     'ffsu_acceptedfiles',
     'ffsu_maxfiles',
     'instagram_field_visibility',
+    'insurance_cohort',
     'insurance_field_default',
     'insurance_field_visibility',
     'managerlicense_field_default',
@@ -51,11 +52,18 @@ foreach ($attributes as $attribute) {
     $defaults->{$attribute} = get_config('local_apsolu', $attribute);
 }
 
+
 $defaults->ffsu_agreement['text'] = get_config('local_apsolu', 'ffsu_agreement');
 $defaults->ffsu_agreement['format'] = FORMAT_HTML;
 
+// Chargement des cohortes.
+$cohorts = array('0' => '');
+foreach ($DB->get_records('cohort', $conditions = null, $sort = 'name') as $cohort) {
+    $cohorts[$cohort->id] = $cohort->name;
+}
+
 // Build form.
-$customdata = array($defaults);
+$customdata = array($defaults, $cohorts);
 $mform = new local_apsolu_settings_form(null, $customdata);
 
 echo $OUTPUT->header();

@@ -32,6 +32,8 @@ use local_apsolu\core\federation\number as Number;
 use local_apsolu\core\record;
 use local_apsolu\event\federation_adhesion_updated;
 
+require_once($CFG->dirroot.'/cohort/lib.php');
+
 /**
  * Classe gérant les adhésions.
  *
@@ -509,6 +511,16 @@ class adhesion extends record {
         if ($check === true) {
             if ($this->can_edit() === false) {
                 throw new Exception(get_string('your_medical_certificate_has_already_been_validated', 'local_apsolu'));
+            }
+
+            // Ajoute/retire l'étudiant de la cohorte assurance FFSU.
+            $insurancecohortid = get_config('local_apsolu', 'insurance_cohort');
+            if (empty($insurancecohortid) === false) {
+                if (empty($this->insurance) === false) {
+                    cohort_add_member($insurancecohortid, $this->userid);
+                } else {
+                    cohort_remove_member($insurancecohortid, $this->userid);
+                }
             }
 
             // Recalcule l'état attendu du certificat médical lorsqu'il n'a pas été validé.

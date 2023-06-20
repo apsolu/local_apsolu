@@ -44,7 +44,7 @@ class local_apsolu_settings_form extends moodleform {
     protected function definition() {
         $mform = $this->_form;
 
-        list($defaults) = $this->_customdata;
+        list($defaults, $cohorts) = $this->_customdata;
 
         // Partie formulaire d'adhésion.
         $mform->addElement('header', 'agreement', get_string('setup_the_text_of_the_agreement', 'local_apsolu'));
@@ -111,9 +111,9 @@ class local_apsolu_settings_form extends moodleform {
             $mform->addElement('select', $name, $label, $options);
         }
 
-
         // Partie certificat médical.
         $mform->addElement('header', 'medical_certificate', get_string('medical_certificate', 'local_apsolu'));
+        $mform->setExpanded('medical_certificate', $expanded = true);
 
         // Types de fichiers acceptés pour le dépot de certificat médical.
         $label = get_string('accepted_file_types', 'local_apsolu');
@@ -131,6 +131,16 @@ class local_apsolu_settings_form extends moodleform {
         $mform->addElement('select', 'ffsu_maxfiles', $label, $options);
         $mform->setType('ffsu_maxfiles', PARAM_INT);
         $mform->addRule('ffsu_maxfiles', get_string('required'), 'required', null, 'client');
+
+        // Partie paiement.
+        $mform->addElement('header', 'payment', get_string('setup_cohort_for_federation_insurance_payment', 'local_apsolu'));
+        $mform->setExpanded('payment', $expanded = true);
+
+        // Configuration de la cohorte pour le paiement de l'assurance FFSU.
+        $options = ['multiple' => false];
+        $label = get_string('cohort_for_federation_insurance_payment', 'local_apsolu');
+        $mform->addElement('autocomplete', 'insurance_cohort', $label, $cohorts);
+        $mform->addHelpButton('insurance_cohort', 'cohort_for_federation_insurance_payment', 'local_apsolu');
 
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));

@@ -147,6 +147,12 @@ $string['certificates_validation'] = 'Validation de certificats';
 // $string['course_cannot_be_deleted'] = 'Le créneau horaire « {$a} » ne peut pas être supprimé, car il est rattaché aux lieux suivants :';
 $string['collaborative_course'] = 'Cours collaboratif';
 $string['color'] = 'Couleur';
+$string['cohort_for_federation_insurance_payment'] = 'Cohorte pour le paiement de l’assurance de la FFSU';
+$string['cohort_for_federation_insurance_payment_help'] = 'La cohorte sélectionnée doit être associée à un tarif correspondant au coût de l’assurance FFSU.
+
+Ce tarif doit également être configuré au niveau de la méthode d’inscription du cours de FFSU.
+
+Si aucune cohorte n’est pas configurée, le coût de l’assurance FFSU devra être payé en présentiel.';
 $string['course'] = 'Créneau horaire';
 $string['course_has_been_deleted'] = 'Le créneau horaire a été supprimé.';
 $string['course_has_been_moved_to_because_selected_category_did_not_match_to_grouping_of_sports_activities'] = 'Le cours « {$a->fullname} » a été déplacé dans la catégorie « {$a->category} », car la catégorie sélectionnée ne correspondait pas à une catégorie d’activité sportive.';
@@ -514,6 +520,7 @@ $string['session_:count:_of_the_:strdatetime:'] = 'Cours n°{$a->count} du {$a->
 $string['session_created'] = 'Session créée.';
 $string['session_deleted'] = 'Session supprimée.';
 $string['session_updated'] = 'Session modifiée.';
+$string['setup_cohort_for_federation_insurance_payment'] = 'Configurer une cohorte pour le paiement de l’assurance FFSU';
 $string['setup_the_text_of_the_agreement'] = 'Configurer le texte de la charte';
 $string['sex'] = 'Sexe';
 $string['short_label'] = 'Libellé court';
