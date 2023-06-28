@@ -926,43 +926,6 @@ $string['secondsemester'] = '2nd semestre';
 $string['accessdenied'] = 'Vous n’avez pas le droit d’accéder à cette page.';
 $string['no_grading_student'] = 'Aucun étudiant à noter.';
 
-// Homepage.
-$string['homepage_home'] = 'Accueil';
-$string['homepage_activities'] = 'Les activités';
-$string['homepage_signup'] = 'S’inscrire';
-$string['homepage_login'] = 'Se connecter';
-$string['homepage_siuaps'] = 'Service interuniversitaire des activités physiques et sportives';
-$string['homepage_ur1'] = 'Université de Rennes 1';
-$string['homepage_ur2'] = 'Université Rennes 2';
-$string['homepage_summary'] = '<p>Bienvenue sur le site de gestion des inscriptions du <strong><a href="https://siuaps.univ-rennes.fr">Service Inter-Universitaire des Activités Physiques et Sportives</a></strong> (SIUAPS) de Rennes.</p>'.
-'<p>Le SIUAPS propose à l’ensemble des étudiants et des personnels des Universités de <strong><a href="https://www.univ-rennes1.fr">Rennes&nbsp;1</a></strong> et <strong><a href="https://www.univ-rennes2.fr">Rennes&nbsp;2</a></strong> une formation pour tous les niveaux à la pratique des activités physiques et sportives.</p>';
-$string['homepage_activitieslist'] = 'Liste des activités';
-$string['homepage_signupsummary'] = '<ul>'.
-    '<li>'.
-        '<p>Les <b>cours du SIUAPS</b> sont accessibles à tous les étudiants et tous les personnels des universités de Rennes&nbsp;1 et de Rennes&nbsp;2, au coût suivant selon le cas :</p>'.
-        '<dl>'.
-            '<dt>Tarif étudiants :</dt>'.
-            '<dd>'.
-                '<ul>'.
-                '<li>Cette année, la participation à un premier créneau hebdomadaire est <em>gratuite<sup>*</sup></em> ;</li>'.
-                '<li>30€ à partir d’un 2<sup>ème</sup> créneau dans le même semestre</li>'.
-                '</ul>'.
-            '</dd>'.
-            '<dt>Tarif personnels :</dt>'.
-            '<dd>'.
-                '<ul>'.
-                    '<li>40€</li>'.
-                '</ul>'.
-            '</dd>'.
-        '</dl>'.
-        '<p><em><sup>*</sup> Préalablement à votre inscription à l’Université, vous avez payé votre Contribution Vie Etudiante et Campus (Médecine, sport, culture, FSDIE…) au CROUS. Cette taxe comprend un premier niveau d’accès au sport dans votre établissement dans la limite des places disponibles.</em></p>'.
-    '</li>'.
-    '<li>À Rennes uniquement, deux <b>salles de musculation</b> sont mises à disposition pendant les heures d’ouverture sur les campus de Beaulieu et de Villejean. L’acquittement d’une carte musculation de 42€ est nécessaire. Elle permet l’accès illimité aux salles.</li>'.
-    '<li>À Rennes et à St Brieuc, Des <b>compétitions</b> et des <b>rencontres universitaires</b> sont organisées au sein des associations sportives de Rennes&nbsp;1 ou de Rennes&nbsp;2. Les étudiants qui souhaitent y participer doivent s’acquitter de la licence FFSU (15€ à Rennes, 20€ à St Brieuc), et fournir un certificat médical de non contre-indication à la pratique en compétition du sport choisi.</li>'.
-    '</ul>';
-$string['homepage_sesame'] = 'J’ai un compte université';
-$string['homepage_nosesame'] = 'Je n’ai pas de compte université';
-
 // Attendances.
 $string['attendance'] = 'Prise des présences';
 $string['attendance_sessionsview'] = 'Vue par sessions';
