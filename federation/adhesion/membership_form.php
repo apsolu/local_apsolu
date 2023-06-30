@@ -215,4 +215,24 @@ class local_apsolu_federation_membership extends moodleform {
         // Set default values.
         $this->set_data($adhesion);
     }
+
+    /**
+     * Valide les données envoyées dans le formulaire.
+     *
+     * @param array $data
+     * @param array $files
+     *
+     * @return array The errors that were found.
+     */
+    public function validation($data, $files) {
+        $errors = parent::validation($data, $files);
+
+        if ($data['birthday'] > (time() - DAYSECS)) {
+            $label = get_string('birthday', 'local_apsolu');
+
+            $errors['birthday'] = get_string('the_field_X_has_an_invalid_value', 'local_apsolu', $label);
+        }
+
+        return $errors;
+    }
 }

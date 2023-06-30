@@ -53,11 +53,6 @@ foreach (Activity::get_records(array('restriction' => 1), $sort = 'name') as $re
     $sportswithconstraints[$record->id] = $record->name;
 }
 
-if (empty($adhesion->birthday) === true) {
-    // Affiche une année proche de la date de naissance de l'étudiant, plutôt que la date du jour.
-    $adhesion->birthday = mktime(0, 0, 0, 1, 1, date('Y') - 18);
-}
-
 // Initialise le formulaire.
 $readonly = ($adhesion->can_edit() === false);
 $customdata = array($adhesion, $sexes, $disciplines, $mainsports, $managertypes, $starlicensevalues,

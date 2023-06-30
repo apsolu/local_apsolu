@@ -604,6 +604,7 @@ $string['the_enrol_end_date_must_be_prior_to_the_course_end_date'] = 'La date de
 $string['the_date_of_the_medical_certificate_cannot_be_later_than_today'] = 'La date de réalisation du certificat médical ne peut pas être postérieure à aujourd’hui.';
 $string['the_details_of_the_responses_are_neither_saved_nor_sent_back_to_the_server'] = 'Le détail des réponses n’est ni enregistré, ni renvoyé au serveur.';
 $string['the_directory_X_is_not_writable'] = 'Le répertoire « {$a} » n’est pas accessible en écriture.';
+$string['the_field_X_has_an_invalid_value'] = 'Le champ « {$a} » a une valeur incorrecte.';
 $string['the_field_X_is_hidden_the_field_Y_must_be_hidden'] = 'Le champ « {$a->field1} » est caché. Le champ « {$a->field2} » doit être caché.';
 $string['the_fields_of_X_page_have_to_be_completed'] = '<p>Les informations de la <a href="{$a->url}">page « {$a->page} » </a> doivent être renseignées.</p>';
 $string['the_license_number_X_associated_to_Y_is_invalid'] = 'Le numéro de licence « {$a->licenseid} » associé à {$a->profile} est <strong>invalide</strong>.';
