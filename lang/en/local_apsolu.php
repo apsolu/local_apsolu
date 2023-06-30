@@ -176,7 +176,8 @@ $string['data_updated'] = 'Données modifiées.';
 $string['dates'] = 'Dates';
 $string['day_of_the_week'] = 'Jour de la semaine';
 $string['default_federation_agreement'] = '<p>Avant de procéder à votre adhésion, nous vous informons que la FFSU vous propose une souscription à un contrat d’assurance couvrant les dommages corporels auxquels la pratique sportive peut vous exposer.</p>
-<p>Cette assurance facultative vous sera facturée 1€60. Vous pouvez obtenir plus d’information <a href="https://sport-u.com/wp-content/uploads/2022/06/20220614_FICHE-INDIVIDUELLE-D-INSCRIPTION-INFO-ASSURANCE-AC_22-23.pdf" target="_blank">sur cette page (ouvre un nouvel onglet)</a>.';
+<p>Cette assurance facultative vous sera facturée 1.60€. Vous pouvez obtenir plus d’information <a href="https://sport-u.com/wp-content/uploads/2022/06/20220614_FICHE-INDIVIDUELLE-D-INSCRIPTION-INFO-ASSURANCE-AC_22-23.pdf" target="_blank">sur cette page (ouvre un nouvel onglet)</a>.</p>
+<p>En procédant à votre adhésion, vous acceptez que toutes les données pré-remplies ou saisies par vous-même soient transmises à la Fédération Française du Sport Universitaire (FFSU). Conformément au règlement général de protection des données (RGPD), vous disposez des droits d’accès, d’opposition, d’effacement et de rectification de vos données. Pour toute question, vous pouvez contacter le délégué à la protection des données de la FFSU via <a href="https://sport-u.com" target="_blank">ce formulaire de contact (ouvre un nouvel onglet)</a>.</p>';
 $string['default_filters'] = 'Filtres initiaux';
 $string['default_homepage_section1_text'] = '<p>Bienvenue sur le site de gestion des inscriptions au service des sports.</p>'.
     '<p>Ce service propose à l’ensemble des étudiants et des personnels une formation pour tous les niveaux à la pratique des activités physiques et sportives.</p>';
