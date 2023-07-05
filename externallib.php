@@ -1413,10 +1413,10 @@ class local_apsolu_webservices extends external_api {
 
         $filters = $reportObj->getfilters($datatype);
         $result = array_values(json_decode($filters, true));
-      
-        
+
+
         //echo "<pre>";print_r(json_encode($result));echo "</pre>";
-        
+
         return array('success' => true,'filters' => json_encode($result));
     }
 
@@ -1446,5 +1446,5 @@ class local_apsolu_webservices extends external_api {
           'filters' => new external_value(PARAM_RAW,'report columns filters type',VALUE_DEFAULT, null, NULL_ALLOWED),
           )
         );
-    }   
+    }
 }
