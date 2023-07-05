@@ -34,7 +34,7 @@ if (empty($activityid) === true && empty($activityname) === true) {
     print_error('invalidrecordunknown');
 }
 
-$activities = UniversiteRennes2\Apsolu\get_activities($siteid = 0, $activityid, $activityname);
+$activities = enrol_select_get_activities($siteid = 0, $activityid, $activityname);
 
 if (count($activities) === 0) {
     print_error('invalidrecordunknown');
@@ -53,8 +53,8 @@ $PAGE->navbar->add($title);
 echo $OUTPUT->header();
 echo $OUTPUT->heading($title);
 
-$roles = UniversiteRennes2\Apsolu\get_activities_roles();
-$teachers = UniversiteRennes2\Apsolu\get_activities_teachers();
+$roles = enrol_select_get_activities_roles();
+$teachers = enrol_select_get_activities_teachers();
 
 // category, site, activity, period, jour, start, end, level, zone geo, zone, enroltype, enseignant
 $courses = array();

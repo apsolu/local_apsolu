@@ -22,8 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use UniversiteRennes2\Apsolu as apsolu;
-
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot.'/enrol/select/locallib.php');
@@ -31,7 +29,7 @@ require_once($CFG->dirroot.'/enrol/select/locallib.php');
 $cards = $DB->get_records('apsolu_payments_cards', $conditions = array(), $sort = 'name');
 
 $cohorts = $DB->get_records('cohort', $conditions = array(), $sort = 'name');
-$roles = apsolu\get_custom_student_roles();
+$roles = enrol_select_get_custom_student_roles();
 $centers = $DB->get_records('apsolu_payments_centers');
 $calendarstypes = $DB->get_records('apsolu_calendars_types', $conditions = array(), $sort = 'name');
 

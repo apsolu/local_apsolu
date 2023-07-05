@@ -22,8 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use UniversiteRennes2\Apsolu as apsolu;
-
 define('AJAX_SCRIPT', true);
 
 require_once(__DIR__.'/../../../../config.php');
@@ -54,7 +52,7 @@ foreach (enrol_select_plugin::$states as $stateid => $state) {
 }
 
 $roles = array();
-foreach (apsolu\get_custom_student_roles() as $role) {
+foreach (enrol_select_get_custom_student_roles() as $role) {
     $roles[$role->id] = $role->name;
 }
 

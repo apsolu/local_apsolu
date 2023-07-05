@@ -54,8 +54,8 @@ $PAGE->requires->js_call_amd('local_apsolu/presentation', 'initialise');
 echo $OUTPUT->header();
 echo $OUTPUT->heading($title);
 
-$roles = UniversiteRennes2\Apsolu\get_activities_roles();
-$teachers = UniversiteRennes2\Apsolu\get_activities_teachers();
+$roles = enrol_select_get_activities_roles();
+$teachers = enrol_select_get_activities_teachers();
 
 $filters = array();
 
@@ -119,8 +119,8 @@ $ranges = json_decode($jsondata);
 
 // category, site, activity, period, jour, start, end, level, zone geo, zone, enroltype, enseignant
 $courses = array();
-foreach (UniversiteRennes2\Apsolu\get_activities($cityid) as $activity) {
-    // TODO: la méthode get_activities() ne retourne pas le nom "officiel" de ces 3 champs.
+foreach (enrol_select_get_activities($cityid) as $activity) {
+    // TODO: la méthode enrol_select_get_activities() ne retourne pas le nom "officiel" de ces 3 champs.
     $activity->category = $activity->sport;
     $activity->categoryid = $activity->sportid;
     $activity->city = $activity->site;

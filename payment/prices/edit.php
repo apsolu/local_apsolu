@@ -22,8 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use UniversiteRennes2\Apsolu as apsolu;
-
 defined('MOODLE_INTERNAL') || die;
 
 require(__DIR__.'/edit_form.php');
@@ -73,7 +71,7 @@ foreach ($calendarstypes as $type) {
 
 // Build form.
 $cohorts = $DB->get_records('cohort', $conditions = array(), $sort = 'name');
-$roles = apsolu\get_custom_student_roles();
+$roles = enrol_select_get_custom_student_roles();
 $centers = $DB->get_records('apsolu_payments_centers');
 
 $customdata = array($instance, $cohorts, $roles, $centers, $calendarstypes);

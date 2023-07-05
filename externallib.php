@@ -398,8 +398,8 @@ class local_apsolu_webservices extends external_api {
 
         $data = array();
 
-        $roles = UniversiteRennes2\Apsolu\get_activities_roles();
-        $teachers = UniversiteRennes2\Apsolu\get_activities_teachers();
+        $roles = enrol_select_get_activities_roles();
+        $teachers = enrol_select_get_activities_teachers();
 
         $sql = "SELECT DISTINCT c.id, c.fullname AS coursename, ac.event, ac.numweekday, ac.weekday, ac.starttime, ac.endtime,".
             " cc0.id AS domainid, cc0.name AS domain, acg.url AS domainurl,".
