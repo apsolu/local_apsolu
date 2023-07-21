@@ -77,6 +77,12 @@
             <ul class="list-inline">
                 <li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/configuration/index.php?page=attendancestatuses&action=edit&statusid={{id}}">{{#pix}}t/edit, core, {{#str}}edit{{/str}}{{/pix}}</a></li>
                 <li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/configuration/index.php?page=attendancestatuses&action=delete&statusid={{id}}">{{#pix}}t/delete, core, {{#str}}delete{{/str}}{{/pix}}</a></li>
+                {{^last}}
+                <li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/configuration/index.php?page=attendancestatuses&action=movedown&statusid={{id}}">{{#pix}}t/down,core,{{#str}}down{{/str}}{{/pix}}</a></li>
+                {{/last}}
+                {{^first}}
+                <li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/configuration/index.php?page=attendancestatuses&action=moveup&statusid={{id}}">{{#pix}}t/up,core,{{#str}}up{{/str}}{{/pix}}</a></li>
+                {{/first}}
             </ul>
         </td>
     </tr>

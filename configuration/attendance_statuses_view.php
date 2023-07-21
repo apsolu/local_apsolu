@@ -28,6 +28,13 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('attendance_statuses', 'local_apsolu'));
 
 $statuses = $DB->get_records('apsolu_attendance_statuses', $conditions = array(), $sort = 'sortorder');
+$count = count($statuses);
+$sortorder = 1;
+foreach ($statuses as $id => $status) {
+    $statuses[$id]->first = ($sortorder === 1);
+    $statuses[$id]->last = ($sortorder === $count);
+    $sortorder++;
+}
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
