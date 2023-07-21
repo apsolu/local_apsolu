@@ -36,7 +36,7 @@
 }}
 
 <p class="text-right">
-	<a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/federation/index.php?page=numbers&action=edit">{{#str}}add_association_number, local_apsolu{{/str}}</a>
+    <a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/federation/index.php?page=numbers&action=edit">{{#str}}add_association_number, local_apsolu{{/str}}</a>
 </p>
 
 <table class="table table-striped">
@@ -55,10 +55,16 @@
         <td>{{field}}</td>
         <td>{{value}}</td>
         <td>
-			<ul class="list-inline">
+            <ul class="list-inline">
                 <li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/federation/index.php?page=numbers&action=edit&numberid={{id}}">{{#pix}}t/edit, core, {{#str}}edit{{/str}}{{/pix}}</a></li>
-				<li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/federation/index.php?page=numbers&action=delete&numberid={{id}}">{{#pix}}t/delete,core,{{#str}}delete{{/str}}{{/pix}}</a></li>
-			</ul>
+                <li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/federation/index.php?page=numbers&action=delete&numberid={{id}}">{{#pix}}t/delete,core,{{#str}}delete{{/str}}{{/pix}}</a></li>
+                {{^last}}
+                <li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/federation/index.php?page=numbers&action=movedown&numberid={{id}}">{{#pix}}t/down,core,{{#str}}down{{/str}}{{/pix}}</a></li>
+                {{/last}}
+                {{^first}}
+                <li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/federation/index.php?page=numbers&action=moveup&numberid={{id}}">{{#pix}}t/up,core,{{#str}}up{{/str}}{{/pix}}</a></li>
+                {{/first}}
+            </ul>
         </td>
     </tr>
     {{/numbers}}

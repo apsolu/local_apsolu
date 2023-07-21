@@ -96,7 +96,11 @@ $string['association_number'] = 'N° A.S.';
 $string['association_number'] = 'Numéro d’association';
 $string['association_number_prefix'] = 'Préfixe de numéro d’association';
 $string['association_number_saved'] = 'Numéro d’association enregistré';
-$string['association_numbers_help'] = 'Critères permettant d’attribuer un préfixe de numéro d’association à un utilisateur.';
+$string['association_numbers_help'] = 'Critères permettant d’attribuer un préfixe de numéro d’association à un utilisateur.
+
+Les critères sont testés dans l’ordre d’affichage.
+
+Dès qu’un critère correspond à un utilisateur, le préfixe est associé à l’utilisateur. ';
 $string['association_numbers'] = 'Numéros d’association';
 $string['association_number_updated'] = 'Numéro d’association modifié';
 $string['attendance'] = 'Présence';
@@ -599,6 +603,10 @@ $string['summary'] = 'Récapitulatif';
 $string['teacher'] = 'Enseignant';
 $string['teachers'] = 'Enseignants';
 $string['the_activities'] = 'Les activités';
+$string['the_association_number_X_has_been_moved_to_Y_position'] = 'Le numéro d’association « {$a->number} » a été déplacé en postion {$a->order}.';
+$string['the_association_number_X_is_already_the_first_element'] = 'Le numéro d’association « {$a} » est déjà le premier élément.';
+$string['the_association_number_X_is_already_the_last_element'] = 'Le numéro d’association « {$a} » est déjà le dernier élément.';
+$string['the_course_end_date_must_be_after_to_the_enrol_end_date'] = 'La date de fin des cours doit être postérieure à la date de fin des inscriptions.';
 $string['the_courses'] = 'Les créneaux';
 $string['the_enrol_start_date_must_be_prior_to_the_course_start_date'] = 'La date de début des inscriptions doit être antérieure à la date de début des cours.';
 $string['the_course_start_date_must_be_after_to_the_enrol_start_date'] = 'La date de début des cours doit être postérieure à la date de début des inscriptions.';
