@@ -336,7 +336,7 @@ $table->head[] = get_string('attendance_enrolments_management', 'local_apsolu');
 // Initialise les données du tableau.
 $table->data = array();
 
-$statuses = $DB->get_records('apsolu_attendance_statuses');
+$statuses = $DB->get_records('apsolu_attendance_statuses', $conditions = null, $sort = 'sortorder');
 
 $authorizedUsers = enrol_select_plugin::get_authorized_registred_users($courseid, $session->sessiontime, $session->sessiontime);
 

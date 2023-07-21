@@ -124,7 +124,7 @@ if (isset($calendars[$calendarid]) === true) {
     // Récupère toutes les sessions disponibles.
     $sessions = $DB->get_records('apsolu_attendance_sessions', array('courseid' => $courseid), $sort = 'sessiontime');
 }
-$statuses = $DB->get_records('apsolu_attendance_statuses');
+$statuses = $DB->get_records('apsolu_attendance_statuses', $conditions = null, $sort = 'sortorder');
 
 // Initialise la variable globale pour la template.
 $data = new stdClass();
