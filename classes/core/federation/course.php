@@ -50,14 +50,14 @@ class course {
     public function get_course($required = false) {
         global $DB;
 
-        if ($course !== null) {
-            if ($required === true && $course === false) {
+        if ($this->course !== null) {
+            if ($required === true && $this->course === false) {
                 // Lève une exception.
                 $courseid = $this->get_courseid();
                 $this->course = $DB->get_record('course', array('id' => $courseid), $fields = '*', MUST_EXIST);
             }
 
-            return $course;
+            return $this->course;
         }
 
         $strictness = IGNORE_MISSING;
@@ -76,8 +76,8 @@ class course {
      * @return string|false Retourne l'id du cours de FFSU ou false si il n'est pas défini.
      */
     public function get_courseid() {
-        if ($id !== null) {
-            return $id;
+        if ($this->id !== null) {
+            return $this->id;
         }
 
         $federation_course = get_config('local_apsolu', 'federation_course');
