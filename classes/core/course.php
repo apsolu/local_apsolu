@@ -163,6 +163,8 @@ class course extends record {
      * @return int|false Retourne l'id du cours de FFSU ou false si il n'est pas défini.
      */
     public static function get_federation_courseid() {
+        debugging('Use of '.__METHOD__.' is deprecated. Use local_apsolu\core\federation\course::get_courseid().', DEBUG_DEVELOPER);
+
         $federation_course = get_config('local_apsolu', 'federation_course');
 
         if (empty($federation_course) === true) {
