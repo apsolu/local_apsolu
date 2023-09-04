@@ -26,6 +26,7 @@ use core_user\fields;
 use local_apsolu\core\customfields;
 use local_apsolu\core\federation\activity;
 use local_apsolu\core\federation\adhesion;
+use local_apsolu\core\federation\course as FederationCourse;
 
 require_once(__DIR__.'/../../../../config.php');
 require_once($CFG->dirroot.'/user/profile/lib.php');
@@ -39,7 +40,8 @@ $PAGE->set_title(get_string('list_of_my_students', 'local_apsolu'));
 
 require_login();
 
-$courseid = \local_apsolu\core\course::get_federation_courseid();
+$federationcourse = new FederationCourse();
+$courseid = $federationcourse->get_courseid();
 if (empty($courseid) === true) {
     // La cours FFSU n'est pas configuré.
     print_error('federation_module_is_not_configured', 'local_apsolu');

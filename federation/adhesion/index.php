@@ -24,6 +24,7 @@
 
 use local_apsolu\core\federation\activity as Activity;
 use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\core\federation\course as FederationCourse;
 use local_apsolu\event\federation_adhesion_viewed;
 
 require_once(__DIR__.'/../../../../config.php');
@@ -33,21 +34,20 @@ require_once($CFG->dirroot.'/user/profile/lib.php');
 
 $stepid = optional_param('step', APSOLU_PAGE_MEMBERSHIP, PARAM_INT);
 
-$courseid = \local_apsolu\core\course::get_federation_courseid();
-if (empty($courseid) === true) {
+$federationcourse = new FederationCourse();
+$course = $federationcourse->get_course();
+if ($course === false) {
     // Le cours FFSU n'est pas configuré.
     print_error('federation_module_is_not_configured', 'local_apsolu');
 }
 
-$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
-
-$context = context_course::instance($courseid, MUST_EXIST);
+$context = context_course::instance($course->id, MUST_EXIST);
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('base');
 $PAGE->set_url('/local/apsolu/federation/form/index.php');
 $PAGE->set_title(get_string('membership_of_the_sports_association', 'local_apsolu'));
 
-require_login($courseid, $autologinguest = false);
+require_login($course->id, $autologinguest = false);
 
 // Vérifie que l'utilsateur est bien inscrit au cours.
 if (is_enrolled($context, $user = null, $withcapability = '', $onlyactive = true) === false) {

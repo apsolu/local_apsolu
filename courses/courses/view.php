@@ -26,6 +26,8 @@ namespace UniversiteRennes2\Apsolu;
 
 defined('MOODLE_INTERNAL') || die;
 
+use local_apsolu\core\federation\course as FederationCourse;
+
 require_once(__DIR__.'/../../locallib.php');
 
 $PAGE->requires->js_call_amd('local_apsolu/sort_courses', 'initialise');
@@ -79,12 +81,14 @@ foreach ($DB->get_records_sql($sql) as $course) {
     $courses[] = $course;
 }
 
+$federationcourse = new FederationCourse();
+
 $data = new \stdClass();
 $data->wwwroot = $CFG->wwwroot;
 $data->courses = array_values($courses);
 $data->count_courses = count($courses);
 $data->unique_city = (count($cities) === 1);
-$data->federation_course = \local_apsolu\core\course::get_federation_courseid();
+$data->federation_course = $federationcourse->get_courseid();
 $data->notification = '';
 
 if (isset($notificationform)) {

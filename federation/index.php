@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\course AS Course;
+use local_apsolu\core\federation\course as FederationCourse;
 
 require(__DIR__.'/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
@@ -30,7 +30,8 @@ require_once($CFG->libdir . '/adminlib.php');
 $page = optional_param('page', 'activities', PARAM_ALPHAEXT);
 
 // Récupère l'id du cours FFSU.
-$courseid = Course::get_federation_courseid();
+$federationcourse = new FederationCourse();
+$courseid = $federationcourse->get_courseid();
 
 if ($courseid === false) {
     throw new moodle_exception('undefined_federation_course', 'local_apsolu');

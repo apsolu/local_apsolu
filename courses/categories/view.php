@@ -23,6 +23,7 @@
  */
 
 use local_apsolu\core\federation\activity as Activity;
+use local_apsolu\core\federation\course as FederationCourse;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -46,11 +47,13 @@ foreach ($DB->get_records_sql($sql) as $categoryid => $category) {
     $categories[$categoryid] = $category;
 }
 
+$federationcourse = new FederationCourse();
+
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
 $data->categories = array_values($categories);
 $data->count_categories = count($categories);
-$data->federation_course = local_apsolu\core\course::get_federation_courseid();
+$data->federation_course = $federationcourse->get_courseid();
 
 if (isset($notificationform)) {
     $data->notification = $notificationform;

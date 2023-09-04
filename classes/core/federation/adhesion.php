@@ -26,7 +26,7 @@ namespace local_apsolu\core\federation;
 
 use context_course;
 use Exception;
-use local_apsolu\core\course as FederationCourse;
+use local_apsolu\core\federation\course as FederationCourse;
 use local_apsolu\core\federation\activity as Activity;
 use local_apsolu\core\federation\number as Number;
 use local_apsolu\core\record;
@@ -502,7 +502,8 @@ class adhesion extends record {
     public function save(object $data = null, object $mform = null, bool $check = true) {
         global $DB, $USER;
 
-        $courseid = FederationCourse::get_federation_courseid();
+        $federationcourse = new FederationCourse();
+        $courseid = $federationcourse->get_courseid();
 
         if ($data !== null) {
             $this->set_vars($data);

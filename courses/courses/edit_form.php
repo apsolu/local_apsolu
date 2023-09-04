@@ -23,6 +23,7 @@
  */
 
 use local_apsolu\core\federation\activity as Activity;
+use local_apsolu\core\federation\course as FederationCourse;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -90,7 +91,8 @@ class local_apsolu_courses_courses_edit_form extends moodleform {
         $mform->addRule('endtime', get_string('required'), 'required', null, 'client');
 
         // License field.
-        if (local_apsolu\core\course::get_federation_courseid() !== false) {
+        $federationcourse = new FederationCourse();
+        if ($federationcourse->get_courseid() !== false) {
             $mform->addElement('selectyesno', 'license', get_string('license', 'local_apsolu'));
 
             // Désactive cette option si la valeur du champ activité n'est pas associée à une activité FFSU.

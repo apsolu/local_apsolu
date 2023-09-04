@@ -24,6 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use local_apsolu\core\federation\course as FederationCourse;
+
 $capabilities = array(
     'moodle/category:manage',
     'moodle/course:create',
@@ -112,7 +114,8 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     $ADMIN->add('local_apsolu_configuration', new admin_externalpage('local_apsolu_configuration_attendance_statuses', $str, $url, $capabilities));
 
     // Fédération FSU.
-    if (local_apsolu\core\course::get_federation_courseid() !== false) {
+    $federationcourse = new FederationCourse();
+    if ($federationcourse->get_courseid() !== false) {
         $ADMIN->add('apsolu', new admin_category('local_apsolu_federation', get_string('settings_federation', 'local_apsolu')));
 
         // Paramétrages.
