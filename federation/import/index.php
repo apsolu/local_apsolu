@@ -57,11 +57,27 @@ if ($formdata = $mform->get_data()) {
             " JOIN {apsolu_federation_adhesions} adh ON u.id = adh.userid";
         $users = $DB->get_records_sql($sql);
 
+        $emailcolumnindex = $formdata->emailcolumn;
+        $federationnumbercolumnindex = $formdata->federationnumbercolumn;
+
+        if ($emailcolumnindex === $federationnumbercolumnindex) {
+            $params = new stdClass();
+            $params->field1 = get_string('federation_number', 'local_apsolu');
+            $params->field2 = get_string('email');
+            $errornotification = get_string('the_field_X_cannot_have_the_same_value_as_the_field_Y', 'local_apsolu', $params);
+
+            // Hack pour n'enregistrer aucun donnée. Ajouter une méthode validation() au formulaire ne fonctionne pas.
+            unset($formdata->importbutton);
+            $formdata->previewbutton = true;
+        }
+
         $result = array();
     }
 
     // init csv import helper
     $cir->init();
+
+    $columns = $cir->get_columns();
 
     $i = 0;
     while ($line = $cir->next()) {
@@ -71,12 +87,12 @@ if ($formdata = $mform->get_data()) {
 
             $i++;
 
-            if (isset($formdata->import) === false && $i > $formdata->previewrows) {
+            if (isset($formdata->import) === false && $i >= $formdata->previewrows) {
                 break;
             }
         } else if (isset($formdata->importbutton) === true) {
             // Import.
-            $email = trim($line[1]);
+            $email = trim($line[$emailcolumnindex]);
             if (isset($users[$email]) === false) {
                 // Utilisateur non trouvé.
                 $result[] = get_string('the_user_with_email_X_was_not_found', 'local_apsolu', $email);
@@ -86,7 +102,7 @@ if ($formdata = $mform->get_data()) {
             $adhesion = $users[$email];
             $profile_url = new moodle_url('/user/profile.php', array('id' => $adhesion->userid));
 
-            $licenseid = trim($line[0]);
+            $licenseid = trim($line[$federationnumbercolumnindex]);
             if (empty($licenseid) === true) {
                 // Numéro de license vide.
                 continue;
@@ -141,6 +157,7 @@ if ($formdata = $mform->get_data()) {
                 $event->trigger();
             }
         } else {
+            // Quitte la boucle si le boutton aperçu ou importer n'a pas été pressé.
             break;
         }
     }
@@ -156,7 +173,9 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading_with_help(get_string('importing_license', 'local_apsolu'), 'importing_license', 'local_apsolu');
 echo $OUTPUT->tabtree($tabtree, $page);
 
-$mform->display();
+if (isset($errornotification) === true) {
+    echo $OUTPUT->notification($errornotification, 'notifyproblem');
+}
 
 if (isset($formdata->previewbutton) === true) {
     $table = new html_table();
@@ -164,12 +183,18 @@ if (isset($formdata->previewbutton) === true) {
     $table->attributes['class'] = 'generaltable';
     $table->tablealign = 'center';
     $table->summary = get_string('federation_preview', 'local_apsolu');
-    $table->head = Adhesion::get_exportation_headers();
+    $table->head = $columns;
     $table->data = $data;
 
-    echo '<h3>'.get_string('federation_preview', 'local_apsolu').'</h3>';
-    echo html_writer::tag('div', html_writer::table($table), array('class' => 'flexible-wrap'));
-} else if (isset($formdata->importbutton) === true) {
+    $previewtable = html_writer::tag('div', html_writer::table($table), array('class' => 'flexible-wrap'));
+
+    // On régénère le formulaire pour afficher l'aperçu et permettre l'association des colonnes.
+    $mform = new local_apsolu_federation_import_licences(null, array($columns, $previewtable));
+}
+
+$mform->display();
+
+if (isset($formdata->importbutton) === true) {
     echo '<h3>'.get_string('federation_result', 'local_apsolu').'</h3>';
     if (isset($result[0]) === false) {
         $content = html_writer::tag('p', get_string('federation_no_import', 'local_apsolu'));

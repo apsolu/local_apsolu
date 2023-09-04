@@ -41,7 +41,12 @@ class local_apsolu_federation_import_licences extends moodleform {
      * @return void
      */
     function definition () {
+        $preview = optional_param('previewbutton', null, PARAM_ALPHA);
+        $federationnumbercolumn = optional_param('federationnumbercolumn', null, PARAM_INT);
+        $emailcolumn = optional_param('emailcolumn', null, PARAM_INT);
+
         $mform = $this->_form;
+        list($columns, $previewtable) = $this->_customdata;
 
         $mform->addElement('header', 'upload', get_string('upload'));
 
@@ -49,7 +54,7 @@ class local_apsolu_federation_import_licences extends moodleform {
         $mform->addRule('userfile', null, 'required');
 
         $mform->addElement('header', 'settings', get_string('settings'));
-        $mform->setExpanded('settings', $expanded = true);
+        $mform->setExpanded('settings', $expanded = ($preview === null));
 
         $choices = csv_import_reader::get_delimiter_list();
         $mform->addElement('select', 'delimiter_name', get_string('csvdelimiter', 'tool_uploaduser'), $choices);
@@ -69,15 +74,40 @@ class local_apsolu_federation_import_licences extends moodleform {
         $mform->addElement('select', 'previewrows', get_string('rowpreviewnum', 'tool_uploaduser'), $choices);
         $mform->setType('previewrows', PARAM_INT);
 
-        // Submit buttons.
-        if (optional_param('previewbutton', null, PARAM_ALPHA) === null) {
+        if ($preview === null) {
+            // Hack pour gérer la gestion l'association des colonnes.
+            $mform->addElement('hidden', 'federationnumbercolumn', $federationnumbercolumn);
+            $mform->setType('federationnumbercolumn', PARAM_INT);
+
+            $mform->addElement('hidden', 'emailcolumn', $emailcolumn);
+            $mform->setType('emailcolumn', PARAM_INT);
+
+            // Seul le bouton aperçu est disponible.
             $buttonarray[] = &$mform->createElement('submit', 'previewbutton', get_string('federation_preview', 'local_apsolu'));
 
             $attributes = array('class' => 'btn btn-default', 'disabled' => 'disabled');
-            $buttonarray[] = &$mform->createElement('submit', 'importbutton', get_string('federation_import', 'local_apsolu'), $attributes);
+            $buttonarray[] = &$mform->createElement('submit', 'importbutton',
+                get_string('federation_import', 'local_apsolu'), $attributes);
         } else {
+            // Aperçu du fichier csv.
+            $mform->addElement('header', 'preview', get_string('federation_preview', 'local_apsolu'));
+            $mform->setExpanded('preview', $expanded = true);
+            $mform->addElement('html', $previewtable);
+
+            // Association des colonnes.
+            $mform->addElement('header', 'mapping', get_string('mapping_of_columns', 'local_apsolu'));
+            $mform->setExpanded('mapping', $expanded = true);
+
+            $mform->addElement('select', 'federationnumbercolumn', get_string('federation_number', 'local_apsolu'), $columns);
+            $mform->setType('federationnumbercolumn', PARAM_INT);
+
+            $mform->addElement('select', 'emailcolumn', get_string('email', 'local_apsolu'), $columns);
+            $mform->setType('emailcolumn', PARAM_INT);
+
+            // Les boutons aperçu et importer sont disponibles.
             $attributes = array('class' => 'btn btn-default');
-            $buttonarray[] = &$mform->createElement('submit', 'previewbutton', get_string('federation_preview', 'local_apsolu'), $attributes);
+            $buttonarray[] = &$mform->createElement('submit', 'previewbutton',
+                get_string('federation_preview', 'local_apsolu'), $attributes);
 
             $buttonarray[] = &$mform->createElement('submit', 'importbutton', get_string('federation_import', 'local_apsolu'));
         }

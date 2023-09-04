@@ -318,9 +318,7 @@ $string['important'] = 'Important';
 $string['importing_license'] = 'Importation des licences FFSU';
 $string['importing_license_help'] = 'Importe les licences FFSU dans APSOLU.
 
-Le fichier doit être au format csv. La première colonne doit contenir le numéro FFSU à attribuer à l’étudiant et la deuxième colonne doit contenir l’adresse de courriel utilisée pour l’inscription à la FFSU.
-
-La première ligne du fichier ne sera pas traitée. Toutes les autres colonnes seront ignorées.';
+Le fichier doit être au format csv. La première ligne du fichier ne sera pas traitée.';
 $string['instagram'] = 'Compte Instagram';
 $string['institutional_account_authentification_url'] = 'URL d’authentification des comptes institutionnels';
 $string['institutional_address'] = 'Adresse institutionnelle';
@@ -361,6 +359,7 @@ $string['main_sport'] = 'Sport principal';
 $string['manager_license'] = 'Licence dirigeante';
 $string['manager_license_type'] = 'Pour licence dirigeant : Non-étudiant / étudiant';
 $string['man'] = 'Homme';
+$string['mapping_of_columns'] = 'Association des colonnes';
 $string['maximum_number_of_uploaded_files'] = 'Nombre maximum de fichiers à déposer';
 $string['medical_certificate_awaiting_validation'] = 'Certificat médical en attente de validation';
 $string['medical_certificate_date'] = 'Date du certificat médical';
@@ -618,6 +617,7 @@ $string['the_enrol_end_date_must_be_prior_to_the_course_end_date'] = 'La date de
 $string['the_date_of_the_medical_certificate_cannot_be_later_than_today'] = 'La date de réalisation du certificat médical ne peut pas être postérieure à aujourd’hui.';
 $string['the_details_of_the_responses_are_neither_saved_nor_sent_back_to_the_server'] = 'Le détail des réponses n’est ni enregistré, ni renvoyé au serveur.';
 $string['the_directory_X_is_not_writable'] = 'Le répertoire « {$a} » n’est pas accessible en écriture.';
+$string['the_field_X_cannot_have_the_same_value_as_the_field_Y'] = 'Le champ « {$a->field1} » ne peut pas avoir la même valeur que le champ « {$a->field2} ».';
 $string['the_field_X_has_an_invalid_value'] = 'Le champ « {$a} » a une valeur incorrecte.';
 $string['the_field_X_is_hidden_the_field_Y_must_be_hidden'] = 'Le champ « {$a->field1} » est caché. Le champ « {$a->field2} » doit être caché.';
 $string['the_fields_of_X_page_have_to_be_completed'] = '<p>Les informations de la <a href="{$a->url}">page « {$a->page} » </a> doivent être renseignées.</p>';
