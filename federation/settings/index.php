@@ -38,6 +38,7 @@ $attributes = array(
     'managerlicense_field_visibility',
     'managerlicensetype_field_default',
     'managerlicensetype_field_visibility',
+    'parental_authorization_enabled',
     'otherfederation_field_visibility',
     'refereelicense_field_default',
     'refereelicense_field_visibility',
@@ -52,9 +53,11 @@ foreach ($attributes as $attribute) {
     $defaults->{$attribute} = get_config('local_apsolu', $attribute);
 }
 
-
 $defaults->ffsu_agreement['text'] = get_config('local_apsolu', 'ffsu_agreement');
 $defaults->ffsu_agreement['format'] = FORMAT_HTML;
+
+$defaults->parental_authorization_description['text'] = get_config('local_apsolu', 'parental_authorization_description');
+$defaults->parental_authorization_description['format'] = FORMAT_HTML;
 
 // Chargement des cohortes.
 $cohorts = array('0' => '');
@@ -80,6 +83,10 @@ if ($data = $mform->get_data()) {
 
     if (isset($data->ffsu_agreement['text']) === true) {
         set_config('ffsu_agreement', $data->ffsu_agreement['text'], 'local_apsolu');
+    }
+
+    if (isset($data->parental_authorization_description['text']) === true) {
+        set_config('parental_authorization_description', $data->parental_authorization_description['text'], 'local_apsolu');
     }
 
     echo $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');

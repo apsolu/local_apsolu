@@ -228,6 +228,7 @@ $string['edit_period'] = 'Modifier une période';
 $string['edit_role'] = 'Modifier un type d’inscription';
 $string['edit_skill'] = 'Modifier un niveau de pratique';
 $string['employee'] = 'Personnel';
+$string['enable_parental_authorization_control'] = 'Activer le contrôle des autorisations parentales';
 $string['end_date'] = 'Date de fin';
 $string['end_time_for_range_1'] = 'Première période : horaire de fin';
 $string['end_time_for_range_1_help'] = 'Détermine jusqu’à quel horaire une activité appartient au groupe de la première période.';
@@ -439,6 +440,9 @@ $string['obtain_a_license_number'] = 'Obtenir un numéro de licence';
 $string['orange'] = 'Orange';
 $string['other_federation'] = 'Autre fédération';
 $string['other_filters'] = 'Autres filtres';
+$string['parental_authorization'] = 'Autorisation parentale';
+$string['parental_authorization_description'] = 'Texte de présentation pour les autorisations parentales';
+$string['parental_authorization_description_help'] = 'Texte de présentation afficher aux utilisateurs ayant besoin d’une autorisation parentale.';
 $string['paybox_administration_description'] = 'Quelques informations concernant le paramétrage PayBox :
 
 * la variable **paybox_servers_incoming** correspond à la liste des adresses IP des serveurs de Paybox appelant la page APSOLU de confirmation de paiements
@@ -645,6 +649,7 @@ $string['undefined_federation_course'] = 'Cours FFSU non défini';
 $string['unjustified_absence'] = 'Absence injustifiée';
 $string['until'] = 'Jusqu’au';
 $string['upload_a_medical_certificate'] = 'Déposer un certificat médical';
+$string['upload_a_parental_authorization'] = 'Déposer une autorisation parentale';
 $string['use_apsolu_homepage'] = 'Utiliser la page d’accueil APSOLU';
 $string['use_personal_data'] = 'Utilisation des données personnelles';
 $string['use_replyto_address'] = 'Utiliser une adresse de « réponse à »';

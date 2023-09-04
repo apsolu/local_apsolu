@@ -89,7 +89,7 @@ function local_apsolu_pluginfile($course, $cm, $context, $filearea, $args, $forc
         return false;
     }
 
-    if (in_array($filearea, array('information', 'medicalcertificate'), $strict = true) === false) {
+    if (in_array($filearea, array('information', 'medicalcertificate', 'parentalauthorization'), $strict = true) === false) {
         debugging('Wrong filearea: '.$filearea, DEBUG_DEVELOPER);
         return false;
     }
@@ -116,6 +116,7 @@ function local_apsolu_pluginfile($course, $cm, $context, $filearea, $args, $forc
             // Fichier public, visible sans droit particulier.
             break;
         case 'medicalcertificate':
+        case 'parentalauthorization':
             // Fichier visible uniquement par le propriétaire du fichier ou un gestionnaire.
             if ($file->userid !== $USER->id && has_capability('local/apsolu:viewallmedicalcertificates', context_system::instance()) === false) {
                 return false;

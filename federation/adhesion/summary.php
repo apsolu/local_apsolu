@@ -55,6 +55,30 @@ $item->label = get_string('fill_out_the_membership_form', 'local_apsolu');
 $item->status = (empty($adhesion->mainsport) === false);
 $items[] = $item;
 
+// Déposer une autorisation parentale.
+if ($adhesion->have_to_upload_parental_authorization() === true) {
+    $item = new stdClass();
+    $item->label = get_string('upload_a_parental_authorization', 'local_apsolu');
+    $item->status = false;
+
+    // On récupère les certificats.
+    $fs = get_file_storage();
+    $context = context_course::instance($federationcourse->id, MUST_EXIST);
+    list($component, $filearea, $itemid) = array('local_apsolu', 'parentalauthorization', $USER->id);
+    $sort = 'itemid, filepath, filename';
+    $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
+
+    foreach ($files as $file) {
+        // Au moins une autorisation parentale a été déposée, cette partie est validée.
+        $item->status = true;
+        break;
+    }
+
+    $items[] = $item;
+
+    $canrequestfederationnumber = $item->status;
+}
+
 // Déposer un certificat médical.
 if ($adhesion->have_to_upload_medical_certificate() === true) {
     $item = new stdClass();
@@ -63,7 +87,7 @@ if ($adhesion->have_to_upload_medical_certificate() === true) {
 
     // On récupère les certificats.
     $fs = get_file_storage();
-    $context = context_course::instance($courseid, MUST_EXIST);
+    $context = context_course::instance($federationcourse->id, MUST_EXIST);
     list($component, $filearea, $itemid) = array('local_apsolu', 'medicalcertificate', $USER->id);
     $sort = 'itemid, filepath, filename';
     $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
@@ -83,7 +107,7 @@ if ($adhesion->have_to_upload_medical_certificate() === true) {
 $item = new stdClass();
 $item->label = get_string('pay_for_license', 'local_apsolu');
 $item->status = true;
-foreach (Payment::get_user_cards_status_per_course($courseid, $USER->id) as $card) {
+foreach (Payment::get_user_cards_status_per_course($federationcourse->id, $USER->id) as $card) {
     if ($card->status !== Payment::DUE) {
         continue;
     }
@@ -104,6 +128,7 @@ if (empty($adhesion->federationnumberrequestdate) === false) {
 }
 
 if (empty($adhesion->federationnumber) === true) {
+    // Autorise l'utilisateur à faire une demande de numéro FFSU.
     $customdata = array($items, $canrequestfederationnumber, $hasrequestedfederationnumber);
     $mform = new local_apsolu_request_federation_number_form(null, $customdata);
 
@@ -155,6 +180,7 @@ if (empty($adhesion->federationnumber) === true) {
     // Affiche le formulaire.
     $mform->display();
 } else {
+    // Affiche le récapitulatif de l'adhésion FFSU.
     $getconfig = get_config('local_apsolu');
 
     $data = new stdClass();
@@ -262,7 +288,7 @@ if (empty($adhesion->federationnumber) === true) {
 
     // On récupère les certificats.
     $fs = get_file_storage();
-    $context = context_course::instance($courseid, MUST_EXIST);
+    $context = context_course::instance($federationcourse->id, MUST_EXIST);
     list($component, $filearea, $itemid) = array('local_apsolu', 'medicalcertificate', $USER->id);
     $sort = 'itemid, filepath, filename';
     $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);

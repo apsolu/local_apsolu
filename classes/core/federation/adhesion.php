@@ -25,6 +25,7 @@
 namespace local_apsolu\core\federation;
 
 use context_course;
+use DateTime;
 use Exception;
 use local_apsolu\core\federation\course as FederationCourse;
 use local_apsolu\core\federation\activity as Activity;
@@ -486,6 +487,38 @@ class adhesion extends record {
         }
 
         return ($this->questionnairestatus == self::HEALTH_QUESTIONNAIRE_ANSWERED_YES_ONCE);
+    }
+
+    /**
+     * Retourne si l'adhésion nécessite le dépôt d'une autorisation parentale.
+     *
+     * @return boolean|null Retourne null si la variable birthday n'a pas été initialisée.
+     */
+    public function have_to_upload_parental_authorization() {
+        $enablecontrol = get_config('local_apsolu', 'parental_authorization_enabled');
+        if (empty($enablecontrol) === true) {
+            return false;
+        }
+
+        return $this->is_minor();
+    }
+
+    /**
+     * Indique si l'adhésion a été rempli par un mineur.
+     *
+     * @return boolean|null Retourne null si la variable birthday n'a pas été initialisée.
+     */
+    public function is_minor() {
+        if (ctype_digit($this->birthday) === false) {
+            return null;
+        }
+
+        $datetime = new DateTime();
+        $datetime->setTimestamp($this->birthday);
+
+        $major = new DateTime('-18 years');
+
+        return $datetime >= $major;
     }
 
     /**

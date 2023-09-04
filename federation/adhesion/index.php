@@ -124,15 +124,25 @@ if ($count === 0) {
 // Set navigation.
 $baseurl = '/local/apsolu/federation/adhesion/index.php';
 
+$steps = array();
+$steps[APSOLU_PAGE_HEALTH_QUIZ] = 'health_quiz';
+$steps[APSOLU_PAGE_AGREEMENT] = 'agreement';
+$steps[APSOLU_PAGE_MEMBERSHIP] = 'membership';
+$steps[APSOLU_PAGE_PARENTAL_AUTHORIZATION] = 'parental_authorization';
+$steps[APSOLU_PAGE_MEDICAL_CERTIFICATE] = 'medical_certificate';
+$steps[APSOLU_PAGE_PAYMENT] = 'payment';
+$steps[APSOLU_PAGE_SUMMARY] = 'summary';
+
 $pages = array();
 $pages['health_quiz'] = new moodle_url($baseurl, array('step' => APSOLU_PAGE_HEALTH_QUIZ));
 $pages['agreement'] = new moodle_url($baseurl, array('step' => APSOLU_PAGE_AGREEMENT));
 $pages['membership'] = new moodle_url($baseurl, array('step' => APSOLU_PAGE_MEMBERSHIP));
+if ($adhesion->have_to_upload_parental_authorization() === true) {
+    $pages['parental_authorization'] = new moodle_url($baseurl, array('step' => APSOLU_PAGE_PARENTAL_AUTHORIZATION));
+}
 $pages['medical_certificate'] = new moodle_url($baseurl, array('step' => APSOLU_PAGE_MEDICAL_CERTIFICATE));
 $pages['payment'] = new moodle_url($baseurl, array('step' => APSOLU_PAGE_PAYMENT));
 $pages['summary'] = new moodle_url($baseurl, array('step' => APSOLU_PAGE_SUMMARY));
-
-$steps = array_keys($pages);
 
 if ($adhesion->questionnairestatus === null) {
     // Le questionnaire de santé n'a pas été rempli.

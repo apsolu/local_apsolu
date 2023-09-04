@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Page listant les activités FFSU.
+ * Page permettant le dépôt de l'autorisation parentale pour la FFSU.
  *
  * @package    local_apsolu
- * @copyright  2022 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2023 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -27,37 +27,22 @@ use local_apsolu\core\federation\adhesion as Adhesion;
 
 defined('MOODLE_INTERNAL') || die();
 
-require __DIR__.'/membership_form.php';
-
-// Prépare les données du formulaire.
-$sexes = array('' => '');
-foreach (Adhesion::get_sexes() as $id => $label) {
-    $sexes[$id] = $label;
-}
-
-$disciplines = array('' => '');
-foreach (Adhesion::get_disciplines() as $id => $label) {
-    $disciplines[$id] = $label;
-}
-
-$managertypes = Adhesion::get_manager_types();
-$starlicensevalues = Adhesion::get_star_license_values();
-
-$mainsports = array();
-foreach (Activity::get_records(array('mainsport' => 1), $sort = 'name') as $record) {
-    $mainsports[$record->id] = $record->name;
-}
-
-$sportswithconstraints = array();
-foreach (Activity::get_records(array('restriction' => 1), $sort = 'name') as $record) {
-    $sportswithconstraints[$record->id] = $record->name;
-}
+require __DIR__.'/parental_authorization_form.php';
 
 // Initialise le formulaire.
 $readonly = ($adhesion->can_edit() === false);
-$customdata = array($adhesion, $sexes, $disciplines, $mainsports, $managertypes, $starlicensevalues,
-    $sportswithconstraints, $readonly);
-$mform = new local_apsolu_federation_membership(null, $customdata);
+$customdata = array($adhesion, $course, $context, $readonly);
+$mform = new local_apsolu_federation_parental_authorization(null, $customdata);
+
+// Charge les fichiers éventuellement déposés précédemment.
+$mdata = new stdClass();
+$filemanageroptions = $mform::get_filemanager_options($course, $context);
+$fieldname = 'parentalauthorization';
+$component = 'local_apsolu';
+$filearea = 'parentalauthorization';
+$itemid = $USER->id;
+file_prepare_standard_filemanager($mdata, $fieldname, $filemanageroptions, $context, $component, $filearea, $itemid);
+$mform->set_data($mdata);
 
 // Traite les données renvoyées.
 if ($data = $mform->get_data()) {
@@ -66,23 +51,21 @@ if ($data = $mform->get_data()) {
     $messagetype = \core\output\notification::NOTIFY_INFO;
 
     try {
+        // Enregistre les fichiers en base de données.
+        file_postupdate_standard_filemanager($mdata, $fieldname, $filemanageroptions, $context, $component, $filearea, $itemid);
+
         $adhesion->save($data);
 
-        $nextstep = APSOLU_PAGE_MEDICAL_CERTIFICATE;
-        if ($adhesion->have_to_upload_parental_authorization() === true) {
-            $nextstep = APSOLU_PAGE_PARENTAL_AUTHORIZATION;
-        }
-
-        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => $nextstep));
+        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => APSOLU_PAGE_MEDICAL_CERTIFICATE));
     } catch (dml_exception $exception) {
         // Erreur d'écriture en base de données.
         $message = get_string('an_error_occurred_while_saving_data', 'local_apsolu');
-        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => APSOLU_PAGE_MEMBERSHIP));
+        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => APSOLU_PAGE_PARENTAL_AUTHORIZATION));
         $messagetype = \core\output\notification::NOTIFY_ERROR;
     } catch (Exception $exception) {
         // L'adhesion ne peut plus être modifiée.
         $message = implode(' ', $adhesion::get_contacts());
-        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => APSOLU_PAGE_MEMBERSHIP));
+        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => APSOLU_PAGE_PARENTAL_AUTHORIZATION));
         $messagetype = \core\output\notification::NOTIFY_ERROR;
     }
 
