@@ -24,11 +24,12 @@
 
 use local_apsolu\core\federation\adhesion as Adhesion;
 use local_apsolu\core\federation\activity as Activity;
+use local_apsolu\core\federation\course as FederationCourse;
 use local_apsolu\core\messaging;
 
 defined('MOODLE_INTERNAL') || die;
 
-
+require_once($CFG->dirroot.'/group/lib.php');
 require_once($CFG->dirroot.'/local/apsolu/locallib.php');
 require_once($CFG->dirroot.'/user/profile/definelib.php');
 
@@ -1211,6 +1212,81 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
         $text = get_string('default_federation_agreement', 'local_apsolu');
         set_config('ffsu_agreement', $text, 'local_apsolu');
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
+    $version = 2023091300;
+    if ($result && $oldversion < $version) {
+        // Ajoute les nouveaux champs dans la table `apsolu_federation_adhesions`.
+        $fields = array();
+        $fields[] = new xmldb_field('birthname', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $fields[] = new xmldb_field('nativecountry', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $fields[] = new xmldb_field('departmentofbirth', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL,
+            null, $default = 0, null);
+        $fields[] = new xmldb_field('cityofbirth', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $fields[] = new xmldb_field('honorabilityagreement', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL,
+            null, $default = 0, null);
+        $fields[] = new xmldb_field('usepersonalimage', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $nullable = null,
+            null, $default = 0, null);
+
+        $table = new xmldb_table('apsolu_federation_adhesions');
+        foreach ($fields as $field) {
+            if ($dbman->field_exists($table, $field) === false) {
+                $dbman->add_field($table, $field);
+            }
+        }
+
+        // Met à jour les activités FFSU.
+        $federationcourse = new FederationCourse();
+        $federationcourseid = $federationcourse->get_courseid();
+        $federationgroups = array();
+        if ($federationcourseid !== false) {
+            $fields = 'name, id, courseid, timecreated, timemodified';
+            $federationgroups = $DB->get_records('groups', array('courseid' => $federationcourseid), $sort = '', $fields);
+        }
+
+        $activities = $DB->get_records('apsolu_federation_activities');
+        foreach (Activity::get_activity_data() as $data) {
+            if (isset($activities[$data['id']]) !== false) {
+                // Met à jour l'activité FFSU.
+                $activity = $activities[$data['id']];
+
+                if ($activity->name !== $data['name'] ||
+                    $activity->mainsport != $data['mainsport'] ||
+                    $activity->restriction != $data['restriction']) {
+                    // Met à jour l'enregistrement dans la table apsolu_federation_activities.
+                    $sql = "UPDATE {apsolu_federation_activities}
+                               SET name = :name, mainsport = :mainsport, restriction = :restriction
+                             WHERE id = :id";
+                    $DB->execute($sql, $data);
+
+                    // Met à jour le nom du groupe dans le cours FFSU.
+                    if (isset($federationgroups[$activity->name]) === true) {
+                        $federationgroups[$activity->name]->name = $data['name'];
+                        $federationgroups[$activity->name]->timemodified = time();
+                        $DB->update_record('groups', $federationgroups[$activity->name]);
+                    }
+                }
+                continue;
+            }
+
+            // Insère une nouvelle activité FFSU.
+            $sql = "INSERT INTO {apsolu_federation_activities} (id, name, mainsport, restriction, categoryid)
+                                                        VALUES (:id, :name, :mainsport, :restriction, NULL)";
+            $DB->execute($sql, $data);
+
+            // Ajoute le groupe dans le cours FFSU.
+            if ($federationcourseid !== false) {
+                $group = new stdClass();
+                $group->name = $data['name'];
+                $group->courseid = $federationcourseid;
+                $group->timecreated = time();
+                $group->timemodified = $group->timecreated;
+                groups_create_group($group);
+            }
+        }
 
         // Savepoint reached.
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');

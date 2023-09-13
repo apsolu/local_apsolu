@@ -104,7 +104,7 @@ class activity extends record {
         $data[] = ['id' => 42, 'name' => 'Rugby(s) (XV, X, 7, XIII)', 'mainsport' => 1, 'restriction' => 1];
         $data[] = ['id' => 43, 'name' => 'Sauvetage sportif', 'mainsport' => 1, 'restriction' => 0];
         $data[] = ['id' => 44, 'name' => 'Savate Boxe Française en assaut', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 45, 'name' => 'Skateboard', 'mainsport' => 1, 'restriction' => 0];
+        $data[] = ['id' => 45, 'name' => 'Skateboard - Trottinette', 'mainsport' => 1, 'restriction' => 0];
         $data[] = ['id' => 46, 'name' => 'Ski - Snowboard (toutes formes)', 'mainsport' => 1, 'restriction' => 0];
         $data[] = ['id' => 47, 'name' => 'Squash', 'mainsport' => 1, 'restriction' => 0];
         $data[] = ['id' => 48, 'name' => 'Surf - Stand Up Paddle', 'mainsport' => 1, 'restriction' => 0];
@@ -120,6 +120,9 @@ class activity extends record {
         $data[] = ['id' => 58, 'name' => 'Water-polo', 'mainsport' => 1, 'restriction' => 0];
         $data[] = ['id' => 59, 'name' => 'Multisports', 'mainsport' => 0, 'restriction' => 0];
         $data[] = ['id' => 60, 'name' => 'E-sport', 'mainsport' => 1, 'restriction' => 0];
+        $data[] = ['id' => 61, 'name' => 'Pancrace assaut', 'mainsport' => 1, 'restriction' => 0];
+        $data[] = ['id' => 62, 'name' => 'Fléchettes', 'mainsport' => 1, 'restriction' => 0];
+        $data[] = ['id' => 63, 'name' => 'Taekwondo combat', 'mainsport' => 0, 'restriction' => 1];
 
         return $data;
     }

@@ -96,6 +96,9 @@ class adhesion extends record {
     /** @var int|string $id Identifiant numérique de la correspondance d'activités. */
     public $id = 0;
 
+    /** @var string $birthname Nom de naissance de l'adhérent. */
+    public $birthname = '';
+
     /** @var string $sex Sexe de l'adhérent (M ou F). */
     public $sex = '';
 
@@ -104,6 +107,15 @@ class adhesion extends record {
 
     /** @var string $birthday Date de naissance de l'adhérent (AAAA-MM-JJ). */
     public $birthday = '';
+
+    /** @var string $nativecountry Pays de naissance de l'adhérent. */
+    public $nativecountry = '';
+
+    /** @var int|string $departmentofbirth Identifiant numérique du département de naissance de l'adhérent. */
+    public $departmentofbirth = '0';
+
+    /** @var string $cityofbirth Ville de naissance de l'adhérent. */
+    public $cityofbirth = '';
 
     /** @var string $address1 Adresse 1 de l'adhérent. */
     public $address1 = '';
@@ -144,13 +156,21 @@ class adhesion extends record {
     /** @var int|string $refereelicense Booléen indiquant si l'adhésion comprend une licence arbitre (1: oui, 0: non). */
     public $refereelicense = 0;
 
+    /** @var int|string $honorabilityagreement Booléen indiquant l'acceptation du contrôle d'honorabilité pour arbitres et
+        dirigeants (1: oui, 0: non). */
+    public $honorabilityagreement = 0;
+
     /** @var int|string $managerlicensetype Pour licence dirigeant pour Non-étudiant/Etudiant (1: pour étudiant, 0: pour non-étudiant). */
     public $managerlicensetype = 0;
 
     /** @var string $starlicense Licence étoile (O: oui, N: non). */
     public $starlicense = '';
 
-    /** @var int|string $usepersonaldata Booléen indiquant si le droit à l'image a été donnée (1: oui, 0: non). */
+    /** @var int|string $usepersonalimage Booléen indiquant si le droit à l'image a été donnée (1: oui, 0: non). */
+    public $usepersonalimage = null;
+
+    /** @var int|string $usepersonaldata Booléen indiquant si le consentement d'utilisation des données personnelles
+        a été donnée (1: oui, 0: non). */
     public $usepersonaldata = null;
 
     /** @var int|string $sport1 Identifiant numérique de l'activité choisie sans contrainte médicale. */
@@ -240,21 +260,145 @@ class adhesion extends record {
     }
 
     /**
+     * Retourne la liste des départements français.
+     *
+     * @return array
+     */
+    public static function get_departments() {
+        $departments = array();
+        $departments['0'] = 'Autre';
+        $departments['01'] = '01 - Ain';
+        $departments['02'] = '02 - Aisne';
+        $departments['03'] = '03 - Allier';
+        $departments['04'] = '04 - Alpes-de-Haute-Provence';
+        $departments['05'] = '05 - Hautes-Alpes';
+        $departments['06'] = '06 - Alpes-Maritimes';
+        $departments['07'] = '07 - Ardèche';
+        $departments['08'] = '08 - Ardennes';
+        $departments['09'] = '09 - Ariège';
+        $departments['10'] = '10 - Aube';
+        $departments['11'] = '11 - Aude';
+        $departments['12'] = '12 - Aveyron';
+        $departments['13'] = '13 - Bouches-du-Rhône';
+        $departments['14'] = '14 - Calvados';
+        $departments['15'] = '15 - Cantal';
+        $departments['16'] = '16 - Charente';
+        $departments['17'] = '17 - Charente-Maritime';
+        $departments['18'] = '18 - Cher';
+        $departments['19'] = '19 - Corrèze';
+        $departments['2A'] = 'Corse-du-Sud';
+        $departments['2B'] = 'Haute-Corse';
+        $departments['21'] = '21 - Côte-d’Or';
+        $departments['22'] = '22 - Côtes-d’Armor';
+        $departments['23'] = '23 - Creuse';
+        $departments['24'] = '24 - Dordogne';
+        $departments['25'] = '25 - Doubs';
+        $departments['26'] = '26 - Drôme';
+        $departments['27'] = '27 - Eure';
+        $departments['28'] = '28 - Eure-et-Loir';
+        $departments['29'] = '29 - Finistère';
+        $departments['30'] = '30 - Gard';
+        $departments['31'] = '31 - Haute-Garonne';
+        $departments['32'] = '32 - Gers';
+        $departments['33'] = '33 - Gironde';
+        $departments['34'] = '34 - Hérault';
+        $departments['35'] = '35 - Ille-et-Vilaine';
+        $departments['36'] = '36 - Indre';
+        $departments['37'] = '37 - Indre-et-Loire';
+        $departments['38'] = '38 - Isère';
+        $departments['39'] = '39 - Jura';
+        $departments['40'] = '40 - Landes';
+        $departments['41'] = '41 - Loir-et-Cher';
+        $departments['42'] = '42 - Loire';
+        $departments['43'] = '43 - Haute-Loire';
+        $departments['44'] = '44 - Loire-Atlantique';
+        $departments['45'] = '45 - Loiret';
+        $departments['46'] = '46 - Lot';
+        $departments['47'] = '47 - Lot-et-Garonne';
+        $departments['48'] = '48 - Lozère';
+        $departments['49'] = '49 - Maine-et-Loire';
+        $departments['50'] = '50 - Manche';
+        $departments['51'] = '51 - Marne';
+        $departments['52'] = '52 - Haute-Marne';
+        $departments['53'] = '53 - Mayenne';
+        $departments['54'] = '54 - Meurthe-et-Moselle';
+        $departments['55'] = '55 - Meuse';
+        $departments['56'] = '56 - Morbihan';
+        $departments['57'] = '57 - Moselle';
+        $departments['58'] = '58 - Nièvre';
+        $departments['59'] = '59 - Nord';
+        $departments['60'] = '60 - Oise';
+        $departments['61'] = '61 - Orne';
+        $departments['62'] = '62 - Pas-de-Calais';
+        $departments['63'] = '63 - Puy-de-Dôme';
+        $departments['64'] = '64 - Pyrénées-Atlantiques';
+        $departments['65'] = '65 - Hautes-Pyrénées';
+        $departments['66'] = '66 - Pyrénées-Orientales';
+        $departments['67'] = '67 - Bas-Rhin';
+        $departments['68'] = '68 - Haut-Rhin';
+        $departments['69'] = '69 - Rhône';
+        $departments['70'] = '70 - Haute-Saône';
+        $departments['71'] = '71 - Saône-et-Loire';
+        $departments['72'] = '72 - Sarthe';
+        $departments['73'] = '73 - Savoie';
+        $departments['74'] = '74 - Haute-Savoie';
+        $departments['75'] = '75 - Paris';
+        $departments['76'] = '76 - Seine-Maritime';
+        $departments['77'] = '77 - Seine-et-Marne';
+        $departments['78'] = '78 - Yvelines';
+        $departments['79'] = '79 - Deux-Sèvres';
+        $departments['80'] = '80 - Somme';
+        $departments['81'] = '81 - Tarn';
+        $departments['82'] = '82 - Tarn-et-Garonne';
+        $departments['83'] = '83 - Var';
+        $departments['84'] = '84 - Vaucluse';
+        $departments['85'] = '85 - Vendée';
+        $departments['86'] = '86 - Vienne';
+        $departments['87'] = '87 - Haute-Vienne';
+        $departments['88'] = '88 - Vosges';
+        $departments['89'] = '89 - Yonne';
+        $departments['90'] = '90 - Territoire de Belfort';
+        $departments['91'] = '91 - Essonne';
+        $departments['92'] = '92 - Hauts-de-Seine';
+        $departments['93'] = '93 - Seine-Saint-Denis';
+        $departments['94'] = '94 - Val-de-Marne';
+        $departments['95'] = '95 - Val-d’Oise';
+        $departments['971'] = '971 - Guadeloupe';
+        $departments['972'] = '972 - Martinique';
+        $departments['973'] = '973 - Guyane';
+        $departments['974'] = '974 - La Réunion';
+        $departments['975'] = '975 - Saint-Pierre-et-Miquelon';
+        $departments['976'] = '976 - Mayotte';
+
+        return $departments;
+    }
+
+    /**
      * Retourne la liste des noms officiels des activités FFSU.
      *
      * @return array
      */
     public static function get_disciplines() {
         $disciplines = array();
-        $disciplines[1] = 'Droit / Sciences Po';
-        $disciplines[2] = 'Sciences Eco / Gestion';
-        $disciplines[3] = 'Lettres / Sciences humaines / Art';
+        $disciplines[15] = 'Animation';
+        $disciplines[13] = 'Architecture';
+        $disciplines[17] = 'Arts';
+        $disciplines[18] = 'Audiovisuel';
         $disciplines[4] = 'Commerce';
-        $disciplines[5] = 'Sciences / Technique';
-        $disciplines[6] = 'Métiers du sport';
-        $disciplines[7] = 'Langues';
-        $disciplines[8] = 'Médecine / Santé';
+        $disciplines[14] = 'Communication';
+        $disciplines[19] = 'Défense';
+        $disciplines[11] = 'Dirigeant';
+        $disciplines[1] = 'Droit / Sciences Po.';
         $disciplines[9] = 'Enseignement';
+        $disciplines[10] = 'Ingénierie';
+        $disciplines[7] = 'Langues';
+        $disciplines[3] = 'Lettres';
+        $disciplines[8] = 'Médecine / Santé';
+        $disciplines[6] = 'Métiers du Sport';
+        $disciplines[2] = 'Science Eco./Gestion';
+        $disciplines[5] = 'Sciences';
+        $disciplines[16] = 'Sciences Humaines';
+        $disciplines[12] = 'Technique';
 
         return $disciplines;
     }
@@ -266,41 +410,58 @@ class adhesion extends record {
      */
     public static function get_exportation_fields() {
         return array(
-            'federationnumberprefix', // Préfixe du numéro AS sur 4 caractères.
-            'lastname',
-            'firstname',
-            'sex',
-            'birthdayformat',
-            'address1',
-            'address2',
-            'postalcode',
-            'city',
-            'phone',
-            'email',
-            'instagram', // Instagram (30 caractères).
-            'disciplineid', // Discipline-Cursus 1 chiffre entre 1 et 10.
-            'otherfederation', // Autre fédération (30 caractères).
-            'mainsportname', // Sport (20 caractères).
-            'sportlicense', // Licence sportive (1 = oui, 0 = non).
-            'managerlicense', // Licence dirigeant (1 = oui, 0 = non).
-            'refereelicense', // Licence arbitre (1 = oui, 0 = non).
-            'managerlicensetype', // Pour licence dirigeant : Non-étudiant / étudiant (1 pour étudiant, 0 pour non-étudiant).
-            'starlicense', // Licence étoile (O ou N).
-            'usepersonaldata', // Autorisation / droit à l'image (1 = oui, 0 = non).
-            'insurance', // Assurance (1 = oui, 0 = non).
-            'sport1', // Certificat médical - activité 1 sans contrainte particulière [ 1 nombre entre 1 et 60(***)].
-            'sport2', // Certificat médical - activité 2 sans contrainte particulière [ 1 nombre entre 1 et 60(***)].
-            'sport3', // Certificat médical - activité 3 sans contrainte particulière [ 1 nombre entre 1 et 60(***)].
-            'sport4', // Certificat médical - activité 4 sans contrainte particulière [ 1 nombre entre 1 et 60(***)].
-            'sport5', // Certificat médical - activité 5 sans contrainte particulière [ 1 nombre entre 1 et 60(***)].
-            'constraintsport1', // Certificat médical - activité 1 à contraintes particulières [ 1 nombre entre 1 et 53(****)].
-            'constraintsport2', // Certificat médical - activité 2 à contraintes particulières [ 1 nombre entre 1 et 53(****)].
-            'constraintsport3', // Certificat médical - activité 3 à contraintes particulières [ 1 nombre entre 1 et 53(****)].
-            'constraintsport4', // Certificat médical - activité 4 à contraintes particulières [ 1 nombre entre 1 et 53(****)].
-            'constraintsport5', // Certificat médical - activité 5 à contraintes particulières [ 1 nombre entre 1 et 53(****)].
-            'medicalcertificatedateformat', // Date du certificat médical [ au format AAAA-MM-JJ ].
-            'questionnairestatus', // J’ai répondu NON à toutes les questions du questionnaire de santé (1 pour oui ou 0 pour non).
-            'medicalcertificatestatus', // J’ai répondu OUI à une rubrique du questionnaire de santé (1 pour oui ou 0 pour non).
+            'federationnumberprefix', // Champ A : N° A.S. [ 4 caractères ].
+            'lastname', // Champ B : Nom [ 25 caractères ].
+            'birthname', // Champ C : Nom de naissance [ 25 caractères ].
+            'firstname', // Champ D : Prénom [ 25 caractères ].
+            'sex', // Champ E : Sexe [ 1 caractère : M ou F ].
+            'birthdayformat', // Champ F : Date de naissance [ au format AAAA-MM-JJ ].
+            'nativecountry', // Champ G : Pays de naissance [ 25 caractères ].
+            'departmentofbirth', // Champ H : Département de naissance [ 3 caractères ] de 01 à 19, 2A, 2B, de 21 à 95, 971, 972,
+                // 973, 974, 975, 976, 0 pour autre.
+            'cityofbirth', // Champ I : Ville de naissance [ 25 caractères ].
+            'address1', // Champ J : Adresse 1 [ 30 caractères ].
+            'address2', // Champ K : Adresse 2 [ 30 caractères ] Vous pouvez laisser vide ce champ.
+            'postalcode', // Champ L : Code postal [ 5 caractères numériques ].
+            'city', // Champ M : Ville [ 25 caractères ].
+            'phone', // Champ N : Téléphone [ 20 caractères ] Vous pouvez laisser vide ce champ.
+            'email', // Champ O : Email [ 50 caractères ].
+            'instagram', // Champ p : Instagram [ 30 caractères ].
+            'disciplineid', // Champ Q : Discipline-Cursus [ 1 chiffre entre 1 et 10 (*) ].
+            'otherfederation', // Champ R : Autre fédé [ 30 caractères ].
+            'mainsportname', // Champ S : Sport [ 20 caractères (**)].
+            'sportlicense', // Champ T : Licence sportive [ 1 chiffre : 1 pour oui ou 0 pour non ].
+            'managerlicense', // Champ U : Licence dirigeant [ 1 chiffre : 1 pour oui ou 0 pour non ].
+            'refereelicense', // Champ V : Licence arbitre [ 1 chiffre : 1 pour oui ou 0 pour non ].
+            'managerlicensetype', // Champ W : Pour licence sportive ou dirigeant : Non-étudiant/Etudiant [ 1 chiffre
+                // : 1 pour Etudiant ou 0 pour Non-étudiant ].
+            'starlicense', // Champ X : Licence étoile [ 1 caractère : O ou N ].
+            'usepersonalimage', // Champ Y : Autorisation Droit à l’image[ 1 chiffre : 1 pour oui ou 0 pour non ].
+            'usepersonaldata', // Champ Z : Autorisation Loi Informatique & Libertés[ 1 chiffre : 1 pour oui ou 0 pour non ].
+            'insurance', // Champ AA : Assurance [ 1 chiffre : 1 pour oui ou 0 pour non ].
+            'sport1', // Champ AB : Certificat médical - activité 1 sans contrainte particulière [ 1 nombre entre 1 et 62(***)].
+            'sport2', // Champ AC : Certificat médical - activité 2 sans contrainte particulière [ 1 nombre entre 1 et 62(***)].
+            'sport3', // Champ AD : Certificat médical - activité 3 sans contrainte particulière [ 1 nombre entre 1 et 62(***)].
+            'sport4', // Champ AE : Certificat médical - activité 4 sans contrainte particulière [ 1 nombre entre 1 et 62(***)].
+            'sport5', // Champ AF : Certificat médical - activité 5 sans contrainte particulière [ 1 nombre entre 1 et 62(***)].
+            'constraintsport1', // Champ AG:Certificat médical-activité 1 à contraintes particulières [1 nombre entre 1 et 63(****)].
+            'constraintsport2', // Champ AH:Certificat médical-activité 2 à contraintes particulières [1 nombre entre 1 et 63(****)].
+            'constraintsport3', // Champ AI:Certificat médical-activité 3 à contraintes particulières [1 nombre entre 1 et 63(****)].
+            'constraintsport4', // Champ AJ:Certificat médical-activité 4 à contraintes particulières [1 nombre entre 1 et 63(****)].
+            'constraintsport5', // Champ AK:Certificat médical-activité 5 à contraintes particulières [1 nombre entre 1 et 63(****)].
+            'medicalcertificatedateformat', // Champ AL : Date du certificat médical [ au format AAAA-MM-JJ ].
+            'questionnairestatusno', // Champ AM : J’ai répondu NON à toutes les questions du questionnaire de santé (je peux
+                // pratiquer TOUTES les activités sans contrainte particulière sans fournir de
+                // certificat médical)[ 1 chiffre : 1 pour oui ou 0 pour non ].
+            'questionnairestatusyes', // Champ AN : J’ai répondu OUI à une rubrique du questionnaire de santé et atteste avoir
+                // présenté un certificat médical de non-contre-indication à la pratique d’un/des sport.s en compétition
+                // de moins de 6 mois [ 1 chiffre : 1 pour oui ou 0 pour non ].
+            'medicalcertificatestatus', // Champ AO : Je souhaite pratiquer une activité à contraintes particulières
+                // (Rugby(s), Boxe(s) combat plein contact, Tir sportif, Biathlon, Karting, Pentathlon, Taekwondo combat)
+                // et atteste avoir présenté un certificat médical de non-contre-indication à la pratique des sports de
+                // compétition de moins d’un an [ 1 chiffre : 1 pour oui ou 0 pour non ]
+            'honorability', // Champ AP : J'atteste avoir compris l'objet du contrôle d'honorabilité pour arbitres
+                // et dirigeants [ 1 chiffre : 1 pour oui ou 0 pour non ]
         );
     }
 
@@ -313,9 +474,13 @@ class adhesion extends record {
         return array(
             get_string('association_number', 'local_apsolu'),
             get_string('lastname'),
+            get_string('birthname', 'local_apsolu'),
             get_string('firstname'),
             get_string('sex', 'local_apsolu'),
             get_string('birthday', 'local_apsolu'),
+            get_string('native_country', 'local_apsolu'),
+            get_string('department_of_birth', 'local_apsolu'),
+            get_string('city_of_birth', 'local_apsolu'),
             get_string('address1', 'local_apsolu'),
             get_string('address2', 'local_apsolu'),
             get_string('postal_code', 'local_apsolu'),
@@ -331,6 +496,7 @@ class adhesion extends record {
             get_string('referee_license', 'local_apsolu'),
             get_string('manager_license_type', 'local_apsolu'),
             get_string('star_license', 'local_apsolu'),
+            get_string('use_personal_image', 'local_apsolu'),
             get_string('use_personal_data', 'local_apsolu'),
             get_string('insurance', 'local_apsolu'),
             get_string('medical_certificate_X_without_constraint', 'local_apsolu', 1),
@@ -347,6 +513,7 @@ class adhesion extends record {
             get_string('i_answered_no_to_all_the_questions_in_the_health_questionnaire_short', 'local_apsolu'),
             get_string('i_answered_yes_to_a_section_of_the_health_questionnaire_and_attest_to_having_presented_a_medical_certificate_short', 'local_apsolu'),
             get_string('i_wish_to_practice_an_activity_with_particular_constraints_and_certify_that_i_have_presented_a_medical_certificate_short', 'local_apsolu'),
+            get_string('i_certify_that_i_understand_the_purpose_of_the_integrity_check_for_arbitrators_and_managers', 'local_apsolu'),
         );
     }
 
@@ -425,8 +592,8 @@ class adhesion extends record {
      */
     public static function get_manager_types() {
         $types = array();
-        $types[0] = get_string('not_student', 'local_apsolu');
         $types[1] = get_string('student', 'local_apsolu');
+        $types[0] = get_string('not_student', 'local_apsolu');
 
         return $types;
     }

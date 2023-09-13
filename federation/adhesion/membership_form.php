@@ -48,6 +48,8 @@ class local_apsolu_federation_membership extends moodleform {
         list($adhesion, $sexes, $disciplines, $mainsports, $managertypes, $starlicensevalues,
             $sportswithconstraints, $readonly) = $this->_customdata;
 
+        $honorability = false;
+
         if ($readonly === true) {
             $messages = $adhesion::get_contacts();
             $mform->addElement('html', sprintf('<div class="alert alert-info">%s</div>', implode(' ', $messages)));
@@ -63,6 +65,10 @@ class local_apsolu_federation_membership extends moodleform {
         $mform->addElement('text', 'lastname', get_string('lastname'), $attributes = array('readonly' => 1));
         $mform->setType('lastname', PARAM_TEXT);
         $mform->setDefault('lastname', $USER->lastname);
+
+        // Birthname.
+        $mform->addElement('text', 'birthname', get_string('birthname', 'local_apsolu'));
+        $mform->setType('birthname', PARAM_TEXT);
 
         // Sport principal.
         $mform->addElement('select', 'mainsport', get_string('main_sport', 'local_apsolu'), $mainsports);
@@ -83,6 +89,17 @@ class local_apsolu_federation_membership extends moodleform {
             }
         }
 
+        // Type de licencié.
+        $visibility = get_config('local_apsolu', 'managerlicensetype_field_visibility');
+        if ($visibility !== Adhesion::FIELD_HIDDEN) {
+            $mform->addElement('select', 'managerlicensetype', get_string('i_am', 'local_apsolu'), $managertypes);
+            $mform->setType('managerlicensetype', PARAM_INT);
+
+            if ($visibility === Adhesion::FIELD_LOCKED) {
+                $mform->freeze('managerlicensetype');
+            }
+        }
+
         // Licence sport.
         $visibility = get_config('local_apsolu', 'sportlicense_field_visibility');
         if ($visibility !== Adhesion::FIELD_HIDDEN) {
@@ -97,6 +114,8 @@ class local_apsolu_federation_membership extends moodleform {
         // Licence dirigeant.
         $visibility = get_config('local_apsolu', 'managerlicense_field_visibility');
         if ($visibility !== Adhesion::FIELD_HIDDEN) {
+            $honorability = true;
+
             $mform->addElement('selectyesno', 'managerlicense', get_string('manager_license', 'local_apsolu'));
             $mform->setType('managerlicense', PARAM_INT);
 
@@ -105,27 +124,24 @@ class local_apsolu_federation_membership extends moodleform {
             }
         }
 
-        // Type de licence dirigeant.
-        $visibility = get_config('local_apsolu', 'managerlicensetype_field_visibility');
-        if ($visibility !== Adhesion::FIELD_HIDDEN) {
-            $mform->addElement('select', 'managerlicensetype', get_string('manager_license_type', 'local_apsolu'), $managertypes);
-            $mform->setType('managerlicensetype', PARAM_INT);
-            $mform->disabledIf('managerlicensetype', 'managerlicense', 'eq', 0);
-
-            if ($visibility === Adhesion::FIELD_LOCKED) {
-                $mform->freeze('managerlicensetype');
-            }
-        }
-
         // Licence arbitre.
         $visibility = get_config('local_apsolu', 'refereelicense_field_visibility');
         if ($visibility !== Adhesion::FIELD_HIDDEN) {
+            $honorability = true;
+
             $mform->addElement('selectyesno', 'refereelicense', get_string('referee_license', 'local_apsolu'));
             $mform->setType('refereelicense', PARAM_INT);
 
             if ($visibility === Adhesion::FIELD_LOCKED) {
                 $mform->freeze('refereelicense');
             }
+        }
+
+        // Contrôle de l'honorabilité.
+        if ($honorability === true) {
+            $label = get_string('honorability', 'local_apsolu');
+            $mform->addElement('checkbox', 'honorability', $label, get_string('honorability_description', 'local_apsolu'));
+            $mform->setType('honorability', PARAM_INT);
         }
 
         // Licence étoile.
@@ -153,6 +169,21 @@ class local_apsolu_federation_membership extends moodleform {
         // Date de naissance.
         $mform->addElement('date_selector', 'birthday', get_string('birthday', 'local_apsolu'));
         $mform->setType('birthday', PARAM_TEXT);
+
+        // Pays de naissance.
+        $mform->addElement('text', 'nativecountry', get_string('native_country', 'local_apsolu'));
+        $mform->setType('nativecountry', PARAM_TEXT);
+        $mform->addRule('nativecountry', get_string('required'), 'required', null, 'client');
+
+        // Département de naissance.
+        $departements = Adhesion::get_departments();
+        $mform->addElement('select', 'departmentofbirth', get_string('department_of_birth', 'local_apsolu'), $departements);
+        $mform->setType('departmentofbirth', PARAM_INT);
+
+        // Ville de naissance.
+        $mform->addElement('text', 'cityofbirth', get_string('city_of_birth', 'local_apsolu'));
+        $mform->setType('cityofbirth', PARAM_TEXT);
+        $mform->addRule('cityofbirth', get_string('required'), 'required', null, 'client');
 
         // Sexe.
         $mform->addElement('select', 'sex', get_string('sex', 'local_apsolu'), $sexes);
@@ -198,8 +229,13 @@ class local_apsolu_federation_membership extends moodleform {
         }
 
         // Autorisation / droit à l'image.
-        $mform->addElement('selectyesno', 'usepersonaldata', get_string('permission_to_use_my_personal_data', 'local_apsolu'));
-        $mform->addHelpButton('usepersonaldata', 'permission_to_use_my_personal_data', 'local_apsolu');
+        $label = get_string('permission_to_use_my_personal_image_description', 'local_apsolu');
+        $mform->addElement('selectyesno', 'usepersonalimage', $label);
+        $mform->setType('usepersonalimage', PARAM_INT);
+
+        // Autorisation d'utilisation des données personnelles.
+        $label = get_string('permission_to_use_my_personal_data_description', 'local_apsolu');
+        $mform->addElement('selectyesno', 'usepersonaldata', $label);
         $mform->setType('usepersonaldata', PARAM_INT);
 
         // Champs cachés.
@@ -231,6 +267,22 @@ class local_apsolu_federation_membership extends moodleform {
             $label = get_string('birthday', 'local_apsolu');
 
             $errors['birthday'] = get_string('the_field_X_has_an_invalid_value', 'local_apsolu', $label);
+        }
+
+        if (isset($data['managerlicense']) === true && empty($data['managerlicense']) === false) {
+            if (isset($data['honorability']) === false) {
+                $errors['honorability'] = get_string('you_must_accept_the_honorability_check', 'local_apsolu');
+            }
+        }
+
+        if (isset($data['refereelicense']) === true && empty($data['refereelicense']) === false) {
+            if (isset($data['honorability']) === false) {
+                $errors['honorability'] = get_string('you_must_accept_the_honorability_check', 'local_apsolu');
+            }
+        }
+
+        if (strlen($data['postalcode']) !== 5 || ctype_digit($data['postalcode']) === false) {
+            $errors['postalcode'] = get_string('the_given_postal_code_is_not_valid', 'local_apsolu');
         }
 
         return $errors;

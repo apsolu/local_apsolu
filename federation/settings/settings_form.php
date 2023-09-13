@@ -59,12 +59,12 @@ class local_apsolu_settings_form extends moodleform {
 
         // Positionnement des valeurs par défaut.
         $fields = array();
-        $fields['insurance'] = get_string('insurance', 'local_apsolu');
+        $fields['managerlicensetype'] = get_string('manager_license_type', 'local_apsolu');
         $fields['sportlicense'] = get_string('sport_license', 'local_apsolu');
         $fields['managerlicense'] =  get_string('manager_license', 'local_apsolu');
-        $fields['managerlicensetype'] = get_string('manager_license_type', 'local_apsolu');
         $fields['refereelicense'] =  get_string('referee_license', 'local_apsolu');
         $fields['starlicense'] =  get_string('star_license', 'local_apsolu');
+        $fields['insurance'] = get_string('insurance', 'local_apsolu');
 
         $mform->addElement('html', sprintf('<h4>%s</h4>', get_string('default_value_of_fields', 'local_apsolu')));
         foreach ($fields as $field => $labelname) {
@@ -90,14 +90,14 @@ class local_apsolu_settings_form extends moodleform {
 
         // Positionnement de la visibilité par défaut.
         $fields = array();
-        $fields['insurance'] = get_string('insurance', 'local_apsolu');
-        $fields['instagram'] = get_string('instagram', 'local_apsolu');
-        $fields['otherfederation'] = get_string('other_federation', 'local_apsolu');
+        $fields['managerlicensetype'] = get_string('manager_license_type', 'local_apsolu');
         $fields['sportlicense'] = get_string('sport_license', 'local_apsolu');
         $fields['managerlicense'] =  get_string('manager_license', 'local_apsolu');
-        $fields['managerlicensetype'] = get_string('manager_license_type', 'local_apsolu');
         $fields['refereelicense'] =  get_string('referee_license', 'local_apsolu');
         $fields['starlicense'] =  get_string('star_license', 'local_apsolu');
+        $fields['insurance'] = get_string('insurance', 'local_apsolu');
+        $fields['otherfederation'] = get_string('other_federation', 'local_apsolu');
+        $fields['instagram'] = get_string('instagram', 'local_apsolu');
 
         $options = array();
         $options[Adhesion::FIELD_VISIBLE] = get_string('visible', 'local_apsolu');
@@ -166,30 +166,5 @@ class local_apsolu_settings_form extends moodleform {
 
         // Set default values.
         $this->set_data($defaults);
-    }
-
-    /**
-     * Valide les données envoyées dans le formulaire.
-     *
-     * @param array $data
-     * @param array $files
-     *
-     * @return array The errors that were found.
-     */
-    public function validation($data, $files) {
-        $errors = parent::validation($data, $files);
-
-        if ($data['managerlicense_field_visibility'] != Adhesion::FIELD_HIDDEN) {
-            return $errors;
-        }
-
-        if ($data['managerlicense_field_visibility'] !== $data['managerlicensetype_field_visibility']) {
-            $params = array();
-            $params['field1'] = get_string('manager_license', 'local_apsolu');
-            $params['field2'] = get_string('manager_license_type', 'local_apsolu');
-            $errors['managerlicensetype_field_visibility'] = get_string('the_field_X_is_hidden_the_field_Y_must_be_hidden', 'local_apsolu', $params);
-        }
-
-        return $errors;
     }
 }

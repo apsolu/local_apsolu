@@ -116,6 +116,7 @@ $string['author_credit'] = 'Crédit d’auteurs';
 $string['authorization'] = 'Autorisation';
 $string['background_image'] = 'Image de fond';
 $string['birthday'] = 'Date de naissance';
+$string['birthname'] = 'Nom de naissance';
 $string['blue'] = 'Bleu';
 $string['by_checking_the_box_i_declare_to_accept_the_agreement_above'] = 'En cochant la case, je déclare accepter la charte ci-dessus.';
 $string['calendar_deleted'] = 'Calendrier supprimé';
@@ -171,6 +172,7 @@ $string['cities'] = 'Sites';
 $string['city'] = 'Site';
 $string['city_cannot_be_deleted'] = 'Le site « {$a} » ne peut pas être supprimé, car il est rattaché aux lieux suivants :';
 $string['city_has_been_deleted'] = 'Le site a été supprimé.';
+$string['city_of_birth'] = 'Ville de naissance';
 $string['city_saved'] = 'Site enregistré.';
 $string['city_updated'] = 'Site modifié.';
 $string['cycle'] = 'Cycle LMD';
@@ -191,6 +193,7 @@ $string['default_value_of_fields'] = 'Valeur par défaut des champs';
 $string['default_value_of_field_X'] = 'Valeur par défaut du champ « {$a} »';
 $string['delete_sessions_already_scheduled_for_that_day'] = 'Supprimer les sessions déjà planifiées pour cette journée';
 $string['delete_sessions_already_scheduled_for_those_days'] = 'Supprimer les sessions déjà planifiées pour ces journées';
+$string['department_of_birth'] = 'Département de naissance';
 $string['departments'] = 'Départements';
 $string['disable_replyto'] = 'Désactiver la possibilité de définir une adresse de « réponse à »';
 $string['discipline'] = 'Discipline';
@@ -302,12 +305,20 @@ $string['holidays_have_been_generated'] = 'Les jours fériés ont été génér�
 $string['holidays_have_been_purged'] = 'La liste des jours fériés a été vidée.';
 $string['holidays_list'] = 'Liste des jours fériés';
 $string['home'] = 'Accueil';
+$string['honorability'] = 'Concerne seulement la prise d’une licence arbitre ou dirigeante.<br />J’atteste avoir compris l’objet du contrôle d’honorabilité :';
+$string['honorability_description'] = 'La licence que je sollicite me permet d’accéder aux fonctions d’éducateur sportif et/ou d’exploitant d’établissement d’activités physiques et sportives au sens des articles L.212-1 et L. 322-1 du code du sport et/ou aux fonctions d’arbitre au sens de l’article L.223-1 du code du sport.<br />
+À ce titre, les éléments constitutifs de mon identité seront transmis par la fédération aux services de l’État afin qu’un contrôle automatisé de mon honorabilité au sens de l’article L.212-9 du code du sport soit effectué.<br />
+Dans l’hypothèse où le contrôle mettrait en évidence une condamnation incompatible avec les fonctions exercées, une notification me sera adressée, ainsi qu’à la fédération et au club au sein duquel j’exerce comme éducateur ou exploitant.<br />
+Je serai alors dans l’obligation de quitter mes fonctions.<br />
+À défaut, une sanction pénale pourra être prononcée en application des articles L.212-10 et L.322-4 du code du sport.';
+$string['i_am'] = 'Je suis...';
 $string['i_answered_no_to_all_the_questions_in_the_health_questionnaire_export'] = 'J’ai répondu NON à toutes les questions du questionnaire de santé (je peux pratiquer TOUTES les activités sans contrainte particulière sans fournir de certificat médical)';
 $string['i_answered_no_to_all_the_questions_in_the_health_questionnaire_short'] = 'J’ai répondu NON à toutes les questions du questionnaire de santé...';
 $string['i_answered_no_to_all_the_questions_in_the_health_questionnaire'] = 'J’ai répondu NON à toutes les questions du questionnaire de santé. Je peux pratiquer TOUTES les activités sans contrainte particulière sans fournir de certificat médical.';
 $string['i_answered_yes_to_a_section_of_the_health_questionnaire_and_attest_to_having_presented_a_medical_certificate_export'] = 'J’ai répondu OUI à une rubrique du questionnaire de santé et atteste avoir présenté un certificat médical de non-contre-indication à la pratique d’un/des sport.s en compétition de moins de 6 mois';
 $string['i_answered_yes_to_a_section_of_the_health_questionnaire_and_attest_to_having_presented_a_medical_certificate_short'] = 'J’ai répondu OUI à une rubrique du questionnaire de santé...';
 $string['i_answered_yes_to_a_section_of_the_health_questionnaire_and_attest_to_having_presented_a_medical_certificate'] = 'J’ai répondu OUI à une rubrique du questionnaire de santé. Je dois présenter un certificat médical de non-contre-indication à la pratique d’un/des sport.s en compétition de moins de 6 mois.';
+$string['i_certify_that_i_understand_the_purpose_of_the_integrity_check_for_arbitrators_and_managers'] = 'J’atteste avoir compris l’objet du contrôle d’honorabilité pour arbitres et dirigeants';
 $string['if_you_want_to_make_a_change_please_contact_X'] = 'Si vous souhaitez faire une modification, merci de contacter l’adresse <strong>{$a}</strong>.';
 $string['i_wish_to_practice_an_activity_with_particular_constraints_and_certify_that_i_have_presented_a_medical_certificate_export'] = 'Je souhaite pratiquer une activité à contraintes particulières (Rugby(s), Boxe(s) combat plein contact, Tir sportif, Biathlon, Karting, Pentathlon) et atteste avoir présenté un certificat médical de non-contre-indication à la pratique des sports de compétition de moins d’un an';
 $string['i_wish_to_practice_an_activity_with_particular_constraints_and_certify_that_i_have_presented_a_medical_certificate'] = 'Je souhaite pratiquer une activité à contraintes particulières. Je dois présenter un certificat médical de non-contre-indication à la pratique des sports de compétition de moins d’un an.';
@@ -358,7 +369,7 @@ $string['login'] = 'Se connecter';
 $string['long_label'] = 'Libellé long';
 $string['main_sport'] = 'Sport principal';
 $string['manager_license'] = 'Licence dirigeante';
-$string['manager_license_type'] = 'Pour licence dirigeant : Non-étudiant / étudiant';
+$string['manager_license_type'] = 'Type de licencié (non-étudiant / étudiant)';
 $string['man'] = 'Homme';
 $string['mapping_of_columns'] = 'Association des colonnes';
 $string['maximum_number_of_uploaded_files'] = 'Nombre maximum de fichiers à déposer';
@@ -407,6 +418,7 @@ $string['my_collaborative_course'] = 'Mon espace collaboratif';
 $string['named_section'] = 'Section « {$a} »';
 $string['name_used_by_apsolu'] = 'Nom utilisé dans APSOLU';
 $string['name_used_by_federation'] = 'Nom officiel utilisé par la FFSU';
+$string['native_country'] = 'Pays de naissance';
 $string['next'] = 'Continuer';
 $string['no_attendance_statuses'] = 'Aucun type de présence';
 $string['no_club_medical_certificate_will_be_accepted'] = '<strong>Important :</strong> aucune licence <u>fédérale</u> ne sera acceptée.';
@@ -488,7 +500,17 @@ $string['period_updated'] = 'Période modifiée.';
 $string['periods'] = 'Périodes';
 $string['permanent_link'] = 'Lien permanent';
 $string['permission_to_use_my_personal_data'] = 'Autorisation d’utilisation de mes données personnelles';
-$string['permission_to_use_my_personal_data_help'] = 'J’autorise l’utilisation de mon image et de mes informations (nom, prénom, sexe...) par la FF Sport U dans le cadre de ses activités statutaires liées à ma pratique du sport universitaire.';
+$string['permission_to_use_my_personal_data_description'] = '<u>Loi Informatique & Libertés (Loi du 6 janvier 1978):</u><br />
+Je suis informé du fait que des données à caractère personnel me concernant seront collectées et traitées informatiquement par l’A.S. ainsi que par la FF Sport U et ses organes déconcentrés.<br />
+Ces données seront stockées sur les serveurs informatiques de la Fédération et pourront être publiées sur le site internet de la FF Sport U et de ses organes déconcentrés (résultats sportifs).<br />
+Je suis informé de mon droit d’accès, de communication et de rectification, en cas d’inexactitude avérée, sur les données le concernant, ainsi que de son droit de s’opposer au traitement et/ou à la publication de ses données pour des motifs légitimes. À cet effet, il suffit d’adresser un courrier électronique à l’adresse suivante : federation@sport-u.com.<br />
+Par ailleurs, ces données peuvent être transmises à des partenaires commerciaux.<br />
+J’autorise :';
+$string['permission_to_use_my_personal_image'] = 'Autorisation de mon image';
+$string['permission_to_use_my_personal_image_description'] = '<u>Droit à l’image :</u><br />
+J’autorise l’A.S., la Fédération et ses organes déconcentrés à utiliser mon image sur tout support destiné à la promotion des activités de l’A.S. et de la Fédération, à l’exclusion de toute utilisation à titre commercial.<br />
+Cette autorisation est donnée à titre gracieux pour une durée de 5 ans et pour l’international.<br />
+J’autorise :';
 $string['postal_code'] = 'Code postal';
 $string['preview'] = 'Aperçu';
 $string['purge_holidays'] = 'Vider la liste des jours fériés';
@@ -625,6 +647,7 @@ $string['the_field_X_cannot_have_the_same_value_as_the_field_Y'] = 'Le champ «�
 $string['the_field_X_has_an_invalid_value'] = 'Le champ « {$a} » a une valeur incorrecte.';
 $string['the_field_X_is_hidden_the_field_Y_must_be_hidden'] = 'Le champ « {$a->field1} » est caché. Le champ « {$a->field2} » doit être caché.';
 $string['the_fields_of_X_page_have_to_be_completed'] = '<p>Les informations de la <a href="{$a->url}">page « {$a->page} » </a> doivent être renseignées.</p>';
+$string['the_given_postal_code_is_not_valid'] = 'Le code postal saisi n’est pas valide.';
 $string['the_license_number_X_associated_to_Y_is_invalid'] = 'Le numéro de licence « {$a->licenseid} » associé à {$a->profile} est <strong>invalide</strong>.';
 $string['the_path_X_is_a_directory'] = 'Le chemin « {$a} » est un répertoire.';
 $string['the_student_X_has_requested_for_a_license_number'] = 'L’étudiant {$a} a fait une demande de numéro de licence.';
@@ -652,6 +675,7 @@ $string['upload_a_medical_certificate'] = 'Déposer un certificat médical';
 $string['upload_a_parental_authorization'] = 'Déposer une autorisation parentale';
 $string['use_apsolu_homepage'] = 'Utiliser la page d’accueil APSOLU';
 $string['use_personal_data'] = 'Utilisation des données personnelles';
+$string['use_personal_image'] = 'Droit à l’image';
 $string['use_replyto_address'] = 'Utiliser une adresse de « réponse à »';
 $string['userid'] = 'Identifiant APSOLU';
 $string['validate'] = 'Valider';
@@ -665,6 +689,7 @@ $string['woman'] = 'Femme';
 $string['you_are_not_enrolled_in_this_course'] = 'Vous n’êtes pas inscrit à ce cours.';
 $string['you_do_not_have_to_pay_for_your_membership_in_the_sports_association'] = 'Vous n’avez pas à payer pour votre adhésion à l’association sportive.';
 $string['you_have_paid_for_your_membership_in_the_sports_association'] = 'Vous avez payé votre adhésion à l’association sportive.';
+$string['you_must_accept_the_honorability_check'] = 'Vous devez accepter le contrôle d’honorabilité.';
 $string['you_must_pay_for_your_membership_in_the_sports_association'] = 'Vous devez payer votre adhésion à l’association sportive.';
 $string['you_must_present_a_medical_certificate_of_less_than_X_months'] = 'Vous devez présenter un certificat médical de non-contre-indication à la pratique des sports de compétition de moins de {$a} mois.';
 $string['you_must_select_at_least_one_activity'] = 'Vous devez sélectionner au moins une activité.';

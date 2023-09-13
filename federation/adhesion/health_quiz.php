@@ -41,6 +41,8 @@ if ($quizstatus !== null && $quizstatus < 2) {
         $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => APSOLU_PAGE_AGREEMENT));
     } catch (dml_exception $exception) {
         // Erreur d'écriture en base de données.
+        debugging($exception->getMessage(), $level = DEBUG_DEVELOPER);
+
         $message = get_string('an_error_occurred_while_saving_data', 'local_apsolu');
         $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php');
         $messagetype = \core\output\notification::NOTIFY_ERROR;

@@ -248,8 +248,11 @@ if ($data = $mform->get_data()) {
             }
 
             switch ($field) {
-                case 'questionnairestatus':
-                    $row[] = intval(empty($record->{$field}));
+                case 'questionnairestatusno':
+                    $row[] = intval(empty($record->questionnairestatus));
+                    break;
+                case 'questionnairestatusyes':
+                    $row[] = intval(empty($record->questionnairestatus) === false);
                     break;
                 case 'medicalcertificatestatus':
                     $row[] = intval($record->{$field} === "1");
