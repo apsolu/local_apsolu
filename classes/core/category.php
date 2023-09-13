@@ -26,7 +26,9 @@ namespace local_apsolu\core;
 
 use coding_exception;
 use core_course_category;
+use local_apsolu\core\course as Course;
 use local_apsolu\core\federation\activity as Activity;
+use stdClass;
 
 /**
  * Classe gérant les activités sportives (catégories de cours Moodle).
@@ -167,6 +169,32 @@ class category extends record {
 
             $coursecat = core_course_category::get($this->id, MUST_EXIST, true);
             $coursecat->update($data, $mform->get_description_editor_options());
+
+            // Met à jour le nom complet des créneaux horaires.
+            $sql = "SELECT ac.*
+                      FROM {apsolu_courses} ac
+                      JOIN {course} c ON c.id = ac.id
+                     WHERE c.category = :category";
+            $courses = $DB->get_records_sql($sql, array('category' => $this->id));
+            if (count($courses) > 0) {
+                $skills = array();
+                foreach ($DB->get_records('apsolu_skills', $conditions = null, $sort = 'name') as $skill) {
+                    $skills[$skill->id] = $skill->name;
+                }
+
+                foreach ($courses as $course) {
+                    $data = new stdClass();
+                    $data->str_category = $this->name;
+                    $data->str_skill = $skills[$course->skillid];
+
+                    $moodlecourse = new stdClass();
+                    $moodlecourse->id = $course->id;
+                    $moodlecourse->fullname = Course::get_fullname($data->str_category, $course->event, $course->weekday,
+                        $course->starttime, $course->endtime, $data->str_skill);
+                    $moodlecourse->shortname = Course::get_shortname($course->id, $moodlecourse->fullname);
+                    $DB->update_record('course', $moodlecourse);
+                }
+            }
         }
 
         // Valide la transaction en cours.

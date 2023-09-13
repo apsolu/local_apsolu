@@ -157,5 +157,28 @@ class skill_test extends \advanced_testcase {
         } catch (dml_write_exception $exception) {
             $this->assertInstanceOf('dml_write_exception', $exception);
         }
+
+        // Teste la propagation d'un changement de nom pour un créneau.
+        $this->setAdminUser();
+        $this->getDataGenerator()->get_plugin_generator('local_apsolu')->create_courses();
+
+        $sql = "SELECT c.id
+                  FROM {course} c
+                 WHERE c.fullname LIKE '%expert%'
+                 LIMIT 1";
+        $record = $DB->get_record_sql($sql);
+        $course = new course();
+        $course->load($record->id);
+        $oldfullname = $course->fullname;
+
+        $skill->load($course->skillid);
+        $data->id = $course->skillid;
+        $data->name = 'avancé';
+        $skill->save($data);
+
+        $course->load($record->id); // Recharge le cours.
+
+        $this->assertNotEquals($oldfullname, $course->fullname);
+        $this->assertStringContainsString($data->name, $course->fullname);
     }
 }

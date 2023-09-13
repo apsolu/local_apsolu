@@ -140,5 +140,27 @@ class category_test extends \advanced_testcase {
         // Vérifie l'objet mis à jour.
         $this->assertSame($data->name, $category->name);
         $this->assertSame($countrecords, $initialcount + 1);
+
+        // Teste la propagation d'un changement de nom pour un créneau.
+        $this->getDataGenerator()->get_plugin_generator('local_apsolu')->create_courses();
+
+        $sql = "SELECT c.id
+                  FROM {course} c
+                 WHERE c.fullname LIKE '%Danse salsa%'
+                 LIMIT 1";
+        $record = $DB->get_record_sql($sql);
+        $course = new course();
+        $course->load($record->id);
+        $oldfullname = $course->fullname;
+
+        $category->load($course->category);
+        $data->id = $course->category;
+        $data->name = 'Football';
+        $category->save($data, $mform);
+
+        $course->load($record->id); // Recharge le cours.
+
+        $this->assertNotEquals($oldfullname, $course->fullname);
+        $this->assertStringContainsString($data->name, $course->fullname);
     }
 }

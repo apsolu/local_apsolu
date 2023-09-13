@@ -22,8 +22,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\core\course as Course;
 use local_apsolu\core\federation\activity as Activity;
+use local_apsolu\core\federation\adhesion as Adhesion;
 use local_apsolu\core\federation\course as FederationCourse;
 use local_apsolu\core\messaging;
 
@@ -1286,6 +1287,44 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
                 $group->timemodified = $group->timecreated;
                 groups_create_group($group);
             }
+        }
+
+        // Corrige les libellés des noms des créneaux horaires.
+        $sql = "SELECT cc.id, cc.name".
+            " FROM {course_categories} cc".
+            " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id".
+            " ORDER BY cc.name";
+        $categories = array();
+        foreach ($DB->get_records_sql($sql) as $category) {
+            $categories[$category->id] = $category->name;
+        }
+
+        $skills = array();
+        foreach ($DB->get_records('apsolu_skills', $conditions = null, $sort = 'name') as $skill) {
+            $skills[$skill->id] = $skill->name;
+        }
+
+        $courses = $DB->get_records('course');
+        foreach (Course::get_records() as $course) {
+            if (isset($courses[$course->id]) === false) {
+                continue;
+            }
+
+            $data = new stdClass();
+            $data->str_category = $categories[$courses[$course->id]->category];
+            $data->str_skill = $skills[$course->skillid];
+
+            $fullname = Course::get_fullname($data->str_category, $course->event, $course->weekday,
+                $course->starttime, $course->endtime, $data->str_skill);
+            $shortname = Course::get_shortname($course->id, $fullname);
+
+            if ($courses[$course->id]->shortname === $shortname && $courses[$course->id]->fullname === $fullname) {
+                continue;
+            }
+
+            $courses[$course->id]->shortname = $shortname;
+            $courses[$course->id]->fullname = $fullname;
+            $DB->update_record('course', $courses[$course->id]);
         }
 
         // Savepoint reached.
