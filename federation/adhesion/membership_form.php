@@ -179,6 +179,7 @@ class local_apsolu_federation_membership extends moodleform {
         $departements = Adhesion::get_departments();
         $mform->addElement('select', 'departmentofbirth', get_string('department_of_birth', 'local_apsolu'), $departements);
         $mform->setType('departmentofbirth', PARAM_INT);
+        $mform->addRule('departmentofbirth', get_string('required'), 'required', null, 'client');
 
         // Ville de naissance.
         $mform->addElement('text', 'cityofbirth', get_string('city_of_birth', 'local_apsolu'));
