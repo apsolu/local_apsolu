@@ -48,7 +48,7 @@ $PAGE->set_pagelayout('base');
 $PAGE->set_url('/local/apsolu/federation/form/index.php');
 $PAGE->set_title(get_string('membership_of_the_sports_association', 'local_apsolu'));
 
-require_login($course->id, $autologinguest = false);
+require_login($courseorid = null, $autologinguest = false);
 
 // Vérifie que l'utilsateur est bien inscrit au cours.
 if (is_enrolled($context, $user = null, $withcapability = '', $onlyactive = true) === false) {
