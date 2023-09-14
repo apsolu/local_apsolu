@@ -29,6 +29,7 @@ use local_apsolu\event\federation_adhesion_viewed;
 
 require_once(__DIR__.'/../../../../config.php');
 require_once(__DIR__.'/lib.php');
+require_once($CFG->dirroot.'/enrol/select/lib.php');
 require_once($CFG->dirroot.'/group/lib.php');
 require_once($CFG->dirroot.'/user/profile/lib.php');
 
@@ -51,7 +52,29 @@ require_login($course->id, $autologinguest = false);
 
 // Vérifie que l'utilsateur est bien inscrit au cours.
 if (is_enrolled($context, $user = null, $withcapability = '', $onlyactive = true) === false) {
-    print_error('you_are_not_enrolled_in_this_course', 'local_apsolu');
+    try {
+        // Procède à l'inscription.
+        $conditions = array('enrol' => 'select', 'status' => 0, 'courseid' => $federationcourse->get_courseid());
+        $instance = $DB->get_record('enrol', $conditions, '*', MUST_EXIST);
+
+        $conditions = array('enrolid' => $instance->id);
+        $federationrole = $DB->get_record('enrol_select_roles', $conditions, '*', MUST_EXIST);
+
+        $enrolselectplugin = new enrol_select_plugin();
+        if ($enrolselectplugin->can_enrol($instance, $USER, $federationrole->roleid) === false) {
+            throw new Exception(get_string('error_cannot_enrol', 'enrol_select'));
+        }
+
+        $timestart = 0;
+        $timeend = 0;
+        $status = $enrolselectplugin->get_available_status($instance, $USER);
+
+        $enrolselectplugin->enrol_user($instance, $USER->id, $federationrole->roleid, $timestart, $timeend, $status);
+    } catch (Exception $exception) {
+        debugging($exception->getMessage(), $level = DEBUG_DEVELOPER);
+
+        print_error('you_are_not_enrolled_in_this_course', 'local_apsolu');
+    }
 }
 
 // Navigation.
