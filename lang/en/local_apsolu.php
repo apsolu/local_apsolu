@@ -342,6 +342,7 @@ $string['internal_collaborative_course_help'] = 'Cours mis en avant dans un ongl
 
 Ce cours doit être un cours « normal » au sens Moodle. Il ne doit pas être créé via le menu « créneau horaire ».';
 $string['invalidate'] = 'Invalider';
+$string['join_the_sports_association'] = 'Adhérer à l’AS (Licence FFSU)';
 $string['justified_absence'] = 'Absence justifiée';
 $string['last_modification'] = 'Dernière modification';
 $string['license_not_paid'] = 'Licence non payée';
