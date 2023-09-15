@@ -37,7 +37,7 @@ $data->nextstep = APSOLU_PAGE_SUMMARY;
 $data->payment_url = (string) new moodle_url('/local/apsolu/payment/index.php');
 
 $images = Payment::get_statuses_images();
-foreach (Payment::get_user_cards_status_per_course($courseid, $USER->id) as $card) {
+foreach (Payment::get_user_cards_status_per_course($federationcourse->id, $USER->id) as $card) {
     $card->image = $images[$card->status]->image;
 
     $data->cards[] = $card;
