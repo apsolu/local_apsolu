@@ -25,6 +25,7 @@
 use local_apsolu\core\federation\course as FederationCourse;
 
 require_once(__DIR__.'/../../../../config.php');
+require_once($CFG->dirroot.'/enrol/select/lib.php');
 
 $confirm = optional_param('confirm', '', PARAM_ALPHANUM); // Confirmation hash.
 
@@ -48,8 +49,8 @@ if (is_enrolled($context, $user = null, $withcapability = '', $onlyactive = true
 }
 
 // Teste qu'une demande de numéro FFSU n'a pas déjà été envoyée.
-$adhesion = $DB->get_record('apsolu_federation_adhesions', array('userid' => $USER->id), '*', MUST_EXIST);
-if (empty($adhesion->federationnumberrequestdate) === false) {
+$adhesion = $DB->get_record('apsolu_federation_adhesions', array('userid' => $USER->id));
+if ($adhesion !== false && empty($adhesion->federationnumberrequestdate) === false) {
     throw new moodle_exception('a_license_number_request_is_being_processed', 'local_apsolu');
 }
 
