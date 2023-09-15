@@ -247,6 +247,15 @@ class local_apsolu_federation_membership extends moodleform {
         $attributes = array('class' => 'btn btn-default');
         $buttonarray[] = &$mform->createElement('submit', 'save', get_string('save'), $attributes);
 
+        if ($readonly === false) {
+            // Bouton d'annulation et de désinscription.
+            $attributes = new stdClass();
+            $attributes->href = (string) new moodle_url('/local/apsolu/federation/adhesion/cancel.php');
+            $attributes->class = 'btn btn-danger';
+            $label = get_string('cancel_and_unenrol_link', 'local_apsolu', $attributes);
+            $buttonarray[] = &$mform->createElement('static', '', '', $label);
+        }
+
         $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
 
         // Set default values.
