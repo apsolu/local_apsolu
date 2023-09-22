@@ -49,8 +49,15 @@ class local_apsolu_attendance_export_form extends moodleform {
         $label = get_string('enable_dates_if_you_do_not_want_to_export_the_entire_data', 'local_apsolu');
         $mform->addElement('html', '<p class="alert alert-info">'.$label.'</p>');
 
+        // Date.
         $mform->addElement('date_selector', 'startdate', get_string('start_date', 'local_apsolu'), $options);
         $mform->addElement('date_selector', 'enddate', get_string('end_date', 'local_apsolu'), $options);
+
+        // Format.
+        $formats = array();
+        $formats['csv'] = get_string('csv_format', 'local_apsolu');
+        $formats['excel'] = get_string('excel_format', 'local_apsolu');
+        $mform->addElement('select', 'format', get_string('export_format', 'local_apsolu'), $formats);
 
         // Courseid.
         $mform->addElement('hidden', 'courseid', $courseid);

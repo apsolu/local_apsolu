@@ -25,6 +25,7 @@
 require_once(__DIR__.'/../../../../config.php');
 require_once(__DIR__.'/export_form.php');
 require_once($CFG->libdir . '/csvlib.class.php');
+require_once($CFG->libdir . '/excellib.class.php');
 
 $courseid = required_param('courseid', PARAM_INT); // Course id.
 
@@ -180,32 +181,65 @@ if ($data = $mform->get_data()) {
         return $compare;
     });
 
-    // Prépare les données pour l'exportation csv.
-    $filename = 'presences_de_cours';
+    // Prépare les données pour l'exportation.
+    $filename = str_replace(' ', '_', 'presences du cours '.strtolower($course->fullname));
 
-    $csvexport = new csv_export_writer();
-    $csvexport->set_filename($filename);
-
-    $csvexport->add_data($headers);
-
+    $rows = array();
     foreach ($users as $user) {
-        $data = array();
-        $data[] = $user->firstname;
-        $data[] = $user->lastname;
-        $data[] = $user->idnumber;
-        $data[] = $user->email;
-        $data[] = implode(', ', $user->roles);
+        $columns = array();
+        $columns[] = $user->firstname;
+        $columns[] = $user->lastname;
+        $columns[] = $user->idnumber;
+        $columns[] = $user->email;
+        $columns[] = implode(', ', $user->roles);
 
         foreach ($user->presences as $presence) {
-            $data[] = $presence['status'];
-            $data[] = $presence['description'];
+            $columns[] = $presence['status'];
+            $columns[] = $presence['description'];
         }
 
-        $csvexport->add_data($data);
+        $rows[] = $columns;
     }
 
-    $csvexport->download_file();
-    exit();
+    switch ($data->format) {
+        case 'excel':
+            // Définit les entêtes.
+            $workbook = new MoodleExcelWorkbook("-");
+            $workbook->send($filename);
+            $myxls = $workbook->add_worksheet();
+            $properties = array('border' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+            $excelformat = new MoodleExcelFormat($properties);
+            foreach ($headers as $position => $value) {
+                $myxls->write_string(0, $position, $value, $excelformat);
+            }
+
+            // Définit les données.
+            $line = 1;
+            foreach ($rows as $row => $values) {
+                foreach ($values as $columnnumber => $value) {
+                    $myxls->write_string($line, $columnnumber, $value, $excelformat);
+                }
+                $line++;
+            }
+
+            // Transmet le fichier au navigateur.
+            $workbook->close();
+            break;
+        default: // Format CSV.
+            // Définit les entêtes.
+            $csvexport = new csv_export_writer();
+            $csvexport->set_filename($filename);
+            $csvexport->add_data($headers);
+
+            // Définit les données.
+            foreach ($rows as $row) {
+                $csvexport->add_data($row);
+            }
+
+            // Transmet le fichier au navigateur.
+            $csvexport->download_file();
+    }
+    exit(0);
 }
 
 // Affiche le formulaire.
