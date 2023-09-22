@@ -237,6 +237,7 @@ $string['edit_role'] = 'Modifier un type d’inscription';
 $string['edit_skill'] = 'Modifier un niveau de pratique';
 $string['employee'] = 'Personnel';
 $string['enable_parental_authorization_control'] = 'Activer le contrôle des autorisations parentales';
+$string['enable_dates_if_you_do_not_want_to_export_the_entire_data'] = 'Activer les dates si vous ne souhaitez pas exporter l’intégralité des données.';
 $string['end_date'] = 'Date de fin';
 $string['end_time_for_range_1'] = 'Première période : horaire de fin';
 $string['end_time_for_range_1_help'] = 'Détermine jusqu’à quel horaire une activité appartient au groupe de la première période.';
