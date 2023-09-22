@@ -44,8 +44,7 @@ require_capability('moodle/course:update', $coursecontext);
 // Vérifier qu'il s'agit d'une activité APSOLU.
 $activity = $DB->get_record('apsolu_courses', array('id' => $course->id));
 if ($activity === false) {
-    // TODO: créer un message.
-    print_error('needcoursecategroyid');
+    throw new moodle_exception('taking_attendance_is_only_possible_on_a_course', 'local_apsolu');
 }
 
 $strexport = get_string('export', 'local_apsolu');
