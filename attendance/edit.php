@@ -50,8 +50,7 @@ require_capability('moodle/course:update', $coursecontext);
 // Vérifier qu'il s'agit d'une activité APSOLU.
 $activity = $DB->get_record('apsolu_courses', array('id' => $course->id));
 if ($activity === false) {
-    // TODO: créer un message.
-    print_error('needcoursecategroyid');
+    throw new moodle_exception('taking_attendance_is_only_possible_on_a_course', 'local_apsolu');
 }
 
 $streditcoursesettings = get_string('attendance', 'local_apsolu');
@@ -92,8 +91,7 @@ $sessions = $DB->get_records('apsolu_attendance_sessions', array('courseid' => $
 $count_sessions = count($sessions);
 
 if ($count_sessions === 0) {
-    // TODO: créer un message.
-    print_error('needcoursecategroyid');
+    throw new moodle_exception('no_course_sessions_found_please_check_the_period_settings', 'local_apsolu');
 }
 
 // Faire choisir une session.
