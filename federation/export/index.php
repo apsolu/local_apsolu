@@ -296,26 +296,26 @@ if ($data = $mform->get_data()) {
     }
     $recordset->close();
 
-    if (isset($data->exportbutton) === true) {
-        // Exporte au format CSV.
-        $filename = 'exportation_ffsu_'.strftime('%FT%T');
-
-        $export = new csv_export_writer();
-        $export->set_filename($filename);
-
-        $export->add_data($headers);
-        foreach ($rows as $row) {
-            $export->add_data($row);
-        }
-
-        $export->download_file();
-        exit();
-    }
-
-    // Affiche le résultat au format HTML.
     if (empty($rows) === true) {
         $content = $OUTPUT->notification(get_string('no_results_with_these_criteria', 'local_apsolu'), 'notifyerror');
     } else {
+        if (isset($data->exportbutton) === true) {
+            // Exporte au format CSV.
+            $filename = 'exportation_ffsu_'.strftime('%FT%T');
+
+            $export = new csv_export_writer();
+            $export->set_filename($filename);
+
+            $export->add_data($headers);
+            foreach ($rows as $row) {
+                $export->add_data($row);
+            }
+
+            $export->download_file();
+            exit();
+        }
+
+        // Affiche le résultat au format HTML.
         $table = new html_table();
         $table->head  = $headers;
         $table->attributes['class'] = 'table table-sortable';
