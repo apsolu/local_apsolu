@@ -64,6 +64,12 @@ $licenses = array(
     APSOLU_SELECT_NO => get_string('license_number_not_assigned', 'local_apsolu'),
 );
 
+$statuses = [
+    APSOLU_SELECT_ANY => get_string('all'),
+    APSOLU_SELECT_NO => get_string('not_validated_by_the_student', 'local_apsolu'),
+    APSOLU_SELECT_YES => get_string('validated_by_the_student', 'local_apsolu'),
+];
+
 $disciplines = FederationAdhesion::get_disciplines();
 
 // Récupère la liste des activités FFSU.
@@ -74,7 +80,7 @@ foreach (FederationActivity::get_records(null, $sort = 'name') as $record) {
 
 $constraintactivities = FederationActivity::get_records(array('restriction' => 1), $sort = 'name');
 
-$customdata = array('numbers' => $numbers, 'payments' => $payments, 'certificates' => $certificates, 'licenses' => $licenses, 'activities' => $activities);
+$customdata = array('numbers' => $numbers, 'payments' => $payments, 'certificates' => $certificates, 'licenses' => $licenses, 'statuses' => $statuses, 'activities' => $activities);
 $mform = new local_apsolu_federation_export_licenses(null, $customdata);
 
 $content = '';
@@ -198,6 +204,16 @@ if ($data = $mform->get_data()) {
             if ($data->license === APSOLU_SELECT_YES && empty($record->federationnumber) === true) {
                 continue;
             } elseif ($data->license === APSOLU_SELECT_NO && empty($record->federationnumber) === false) {
+                continue;
+            }
+        }
+
+        // État de l'inscription.
+        if (empty($data->status) === false) {
+            // Rappel: APSOLU_SELECT_YES = en attende d'attribution d'un numéro, APSOLU_SELECT_NO = inscription en cours.
+            if ($data->status === APSOLU_SELECT_YES && empty($record->federationnumberrequestdate) === true) {
+                continue;
+            } else if ($data->status === APSOLU_SELECT_NO && empty($record->federationnumberrequestdate) === false) {
                 continue;
             }
         }

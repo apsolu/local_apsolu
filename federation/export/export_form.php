@@ -45,6 +45,7 @@ class local_apsolu_federation_export_licenses extends moodleform {
         $payments = $this->_customdata['payments'];
         $certificates = $this->_customdata['certificates'];
         $licenses = $this->_customdata['licenses'];
+        $statuses = $this->_customdata['statuses'];
         $activities = $this->_customdata['activities'];
 
         // Nom de l'étudiant.
@@ -75,6 +76,11 @@ class local_apsolu_federation_export_licenses extends moodleform {
         $mform->addElement('select', 'license', get_string('license_number_status', 'local_apsolu'), $licenses);
         $mform->setType('license', PARAM_INT);
         $mform->setDefault('license', APSOLU_SELECT_NO);
+
+        // État de l'inscription.
+        $mform->addElement('select', 'status', get_string('registration_status', 'local_apsolu'), $statuses);
+        $mform->setType('status', PARAM_INT);
+        $mform->setDefault('status', APSOLU_SELECT_YES);
 
         // Activité.
         $mform->addElement('select', 'activity', get_string('activities', 'local_apsolu'), $activities);
