@@ -212,9 +212,9 @@ if (empty($adhesion->federationnumber) === true) {
 
     // On récupère le champ sport principal.
     $value = '';
-    $activities = Activity::get_activity_data();
+    $activities = $DB->get_records('apsolu_federation_activities');
     if (isset($activities[$adhesion->mainsport]) === true) {
-        $value = $activities[$adhesion->mainsport]['name'];
+        $value = $activities[$adhesion->mainsport]->name;
     }
     $data->fields[] = ['label' => get_string('main_sport', 'local_apsolu'), 'value' => $value];
 
@@ -273,11 +273,11 @@ if (empty($adhesion->federationnumber) === true) {
             break;
         }
 
-        if (isset($activities[$adhesion->$field]['name']) === false) {
+        if (isset($activities[$adhesion->$field]->name) === false) {
             break;
         }
 
-        $data->fields[] = ['label' => $label, 'value' => $activities[$adhesion->$field]['name']];
+        $data->fields[] = ['label' => $label, 'value' => $activities[$adhesion->$field]->name];
     }
 
     // On récupère la date du certificat médical.
