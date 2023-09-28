@@ -57,7 +57,7 @@ class local_apsolu_request_federation_number_form extends moodleform {
                 $list[] = sprintf('%s %s', $crossicon, $item->label);
             }
         }
-        $mform->addElement('static', 'list', '', html_writer::alist($list, $attributes = array('class' => 'list-unstyled')));
+        $mform->addElement('static', 'list', '', html_writer::alist($list, $attributes = array('class' => 'list-unstyled mt-3')));
 
         // Champs cachés.
         $mform->addElement('hidden', 'step', APSOLU_PAGE_SUMMARY);
