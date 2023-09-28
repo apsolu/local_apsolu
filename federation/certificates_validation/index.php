@@ -84,6 +84,7 @@ if ($data = $mform->get_data()) {
 
     $rows = array();
     $recordset = $DB->get_recordset_sql($sql, $parameters);
+    $context = context_course::instance($courseid, MUST_EXIST);
     foreach ($recordset as $record) {
         $profileurl = new moodle_url('/user/view.php', array('id' => $record->id, 'course' => $courseid));
 
@@ -103,13 +104,37 @@ if ($data = $mform->get_data()) {
         if ($record->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_EXEMPTED) {
             $row[] = ''; // Aucun fichier.
             $cell = new html_table_cell(get_string('medical_certificate_not_required', 'local_apsolu'));
-            $cell->attributes = array('class' => 'table-info');
+            $cell->attributes = ['class' => 'medical-certificate-status table-info', 'data-userid' => $record->id];
             $row[] = $cell;
-            $row[] = ''; // Aucune action.
+
+            if (empty($record->federationnumberrequestdate) === false) {
+                // L'étudiant a validé sa demande.
+                // Les gestionnaires peuvent annuler sa demande, afin que l'étudiant puisse la modifier.
+                $menulink = new action_menu_link_secondary(
+                    new moodle_url(''),
+                    new pix_icon('i/grade_incorrect', '', null, ['class' => 'smallicon']),
+                    get_string('refuse', 'local_apsolu'),
+                    [
+                        'class' => 'local-apsolu-federation-medical-certificate-validation',
+                        'data-contextid' => $context->id,
+                        'data-target-validation' => Adhesion::MEDICAL_CERTIFICATE_STATUS_EXEMPTED,
+                        'data-target-validation-text' => get_string('medical_certificate_not_required', 'local_apsolu'),
+                        'data-stringid' => 'medical_certificate_refusal_message',
+                        'data-users' => $record->id,
+                    ],
+                );
+                $menu = new action_menu();
+                $menu->set_menu_trigger(get_string('edit'));
+                $menu->add($menulink);
+
+                $row[] = $OUTPUT->render($menu); // Action de refus.
+            } else {
+                // L'étudiant n'a pas encore validé sa demande. Il est inutile de permettre aux gestionnaires de refuser sa demande.
+                $row[] = ''; // Aucune action.
+            }
         } else {
             // Récupère les fichiers déposés.
             $fs = get_file_storage();
-            $context = context_course::instance($courseid, MUST_EXIST);
             list($component, $filearea, $itemid) = array('local_apsolu', 'medicalcertificate', $record->id);
             $sort = 'itemid, filepath, filename';
             $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);

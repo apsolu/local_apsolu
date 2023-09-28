@@ -55,7 +55,8 @@ class send_email_form extends dynamic_form {
         // Champ validation.
         if ($validation === (int) Adhesion::MEDICAL_CERTIFICATE_STATUS_VALIDATED) {
             $label = get_string('validate', 'local_apsolu');
-        } else if ($validation === (int) Adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING) {
+        } else if ($validation === (int) Adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING ||
+            $validation === (int) Adhesion::MEDICAL_CERTIFICATE_STATUS_EXEMPTED) {
             $label = get_string('refuse', 'local_apsolu');
         }
         $mform->addElement('static', 'validationstatic', get_string('validation', 'local_apsolu'), $label);
@@ -159,6 +160,12 @@ class send_email_form extends dynamic_form {
                     $adhesion->federationnumberrequestdate = null;
 
                     $adhesion->save($mdata = null, $mform =null, $check = false);
+                }
+            } else if ($validation === (int) Adhesion::MEDICAL_CERTIFICATE_STATUS_EXEMPTED) {
+                // On annule juste la date de demande de validation.
+                foreach (Adhesion::get_records(['userid' => $userid]) as $adhesion) {
+                    $adhesion->federationnumberrequestdate = null;
+                    $adhesion->save($mdata = null, $mform = null, $check = false);
                 }
             }
         }

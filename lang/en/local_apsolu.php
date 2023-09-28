@@ -389,6 +389,7 @@ $string['medical_certificate_awaiting_validation'] = 'Certificat médical en att
 $string['medical_certificate_date'] = 'Date du certificat médical';
 $string['medical_certificate_not_required'] = 'Certificat médical non requis';
 $string['medical_certificate_not_validated'] = 'Certificat médical non validé';
+$string['medical_certificate_refusal_message_body'] = '<p></p>';
 $string['medical_certificate_refusal_message_for_mention_missing_body'] = '<p>Bonjour,</p>
 <p>Nous ne pouvons valider votre certificat médical car le médecin ne vous autorise pas la pratique compétitive (mention obligatoire).</p>
 <p>Merci de retourner sur la page du formulaire d’adhésion, de supprimer votre certificat actuel et de déposer un nouveau certificat médical valide.</p>
@@ -404,6 +405,7 @@ $string['medical_certificate_refusal_message_for_six_months_expiration_body'] = 
 <p>Merci de retourner sur la page du formulaire d’adhésion, de supprimer votre certificat actuel et de déposer un nouveau certificat médical valide.</p>
 <p>Cordialement,</p>';
 $string['medical_certificate_refusal_message_for_six_months_expiration_subject'] = '[FFSU] Refus de votre certificat médical';
+$string['medical_certificate_refusal_message_subject'] = '[FFSU] Refus de la demande d’adhésion à la FFSU';
 $string['medical_certificate_status'] = 'État du certificat médical';
 $string['medical_certificate_validated'] = 'Certificat médical validé';
 $string['medical_certificate_validation_message_body'] = '<p>Bonjour,</p>
