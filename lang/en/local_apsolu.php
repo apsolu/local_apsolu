@@ -39,6 +39,7 @@ $string['accept_the_agreement'] = 'Accepter la charte';
 $string['accepted_at_least_once'] = 'Accepté au moins 1 fois';
 $string['accepted_file_types'] = 'Types de fichiers acceptés';
 $string['accepted_file_types_help'] = 'Les types de fichier acceptés peuvent être restreints en saisissant une liste d’extensions de fichiers. Si le champ est laissé vide, tous les types de fichier seront acceptés.';
+$string['access_the_licensees_area'] = 'Accéder à l’espace des licenciés';
 $string['activities'] = 'Activités';
 $string['activity'] = 'Activité';
 $string['activity_list_help'] = 'Lorsqu’une activité FFSU est liée à une activité APSOLU, une inscription facultative à la FFSU sera proposée à l’utilisateur.';

@@ -37,18 +37,22 @@
     }
 }}
 
-<div class="alert alert-success">{{#str}}a_license_number_has_been_assigned_to_you_by_the_federation, local_apsolu{{/str}}</div>
+<div class="container">
+    <p class="alert alert-success">{{#str}}a_license_number_has_been_assigned_to_you_by_the_federation, local_apsolu{{/str}}</p>
 
-<dl class="container" id="local-apsolu-federation-adhesion-summary">
-    {{#fields}}
-    <div class="row justify-content-md-center">
-        <dt class="col-3">{{label}}</dt>
-        {{^htmlvalue}}
-        <dd class="col-3">{{value}}</dd>
-        {{/htmlvalue}}
-        {{#htmlvalue}}
-        <dd class="col-3">{{{htmlvalue}}}</dd>
-        {{/htmlvalue}}
-    </div>
-    {{/fields}}
-</dl>
+    <p class="text-right"><a class="btn btn-secondary" href="http://www.sport-u-licences.com/portail_etudiants/">{{#str}}access_the_licensees_area, local_apsolu{{/str}}</a></p>
+
+    <dl id="local-apsolu-federation-adhesion-summary">
+        {{#fields}}
+        <div class="row justify-content-md-center">
+            <dt class="col-3">{{label}}</dt>
+            {{^htmlvalue}}
+            <dd class="col-3">{{value}}</dd>
+            {{/htmlvalue}}
+            {{#htmlvalue}}
+            <dd class="col-3">{{{htmlvalue}}}</dd>
+            {{/htmlvalue}}
+        </div>
+        {{/fields}}
+    </dl>
+</div>
