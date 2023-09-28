@@ -429,6 +429,7 @@ $string['more_than_six_months'] = 'Plus de six mois';
 $string['morning'] = 'Matin';
 $string['must_be_an_interger'] = 'Doit être un entier';
 $string['my_collaborative_course'] = 'Mon espace collaboratif';
+$string['my_membership_of_the_sports_association'] = 'Mon adhésion à l’AS (Licence FFSU)';
 $string['named_section'] = 'Section « {$a} »';
 $string['name_used_by_apsolu'] = 'Nom utilisé dans APSOLU';
 $string['name_used_by_federation'] = 'Nom officiel utilisé par la FFSU';
