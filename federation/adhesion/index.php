@@ -196,6 +196,7 @@ if ($adhesion->questionnairestatus === null) {
 } elseif (empty($adhesion->federationnumber) === false) {
     // Le numéro FFSU a été attribué.
     $stepid = APSOLU_PAGE_SUMMARY;
+    $pages = array();
 }
 
 if (isset($steps[$stepid]) === false) {
