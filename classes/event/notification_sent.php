@@ -80,8 +80,15 @@ class notification_sent extends \core\event\base {
             $receiver = $other->receiver;
         }
 
+        if ($this->contextlevel == CONTEXT_COURSE) {
+            $sender = sprintf('<a href="%s/user/view.php?course=%s&id=%s">\'%s\'</a>', $CFG->wwwroot, $this->contextinstanceid,
+                $this->userid, $this->userid);
+        } else {
+            $sender = sprintf('<a href="%s/user/view.php?id=%s">\'%s\'</a>', $CFG->wwwroot, $this->userid, $this->userid);
+        }
+
         $params = new stdClass();
-        $params->sender = sprintf("'%s'", $this->userid);
+        $params->sender = $sender;
         $params->receiver = $receiver;
         $params->subject = $other->subject;
 
