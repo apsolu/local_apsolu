@@ -172,12 +172,15 @@ if ($data = $mform->get_data()) {
 
                 $menuoptions = array();
 
+                // Option permettant la validation du certificat.
                 $attributes['data-stringid'] = 'medical_certificate_validation_message';
                 $menuoptions[] = array(
                     'attributes' => $attributes,
                     'icon' => 'i/grade_correct',
                     'label' => get_string('validate', 'local_apsolu')
                 );
+
+                // Option permettant le refus du certificat (raison: plus d'un an).
                 $attributes['data-stringid'] = 'medical_certificate_refusal_message_for_one_year_expiration';
                 $attributes['data-target-validation'] = Adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING;
                 $attributes['data-target-validation-text'] = get_string('medical_certificate_not_validated', 'local_apsolu');
@@ -186,12 +189,16 @@ if ($data = $mform->get_data()) {
                     'icon' => 'i/grade_incorrect',
                     'label' => get_string('refuse_with_reasons_X', 'local_apsolu', strtolower(get_string('more_than_one_year', 'local_apsolu')))
                 );
+
+                // Option permettant le refus du certificat (raison: plus de 6 mois).
                 $attributes['data-stringid'] = 'medical_certificate_refusal_message_for_six_months_expiration';
                 $menuoptions[] = array(
                     'attributes' => $attributes,
                     'icon' => 'i/grade_incorrect',
                     'label' => get_string('refuse_with_reasons_X', 'local_apsolu', strtolower(get_string('more_than_six_months', 'local_apsolu')))
                 );
+
+                // Option permettant le refus du certificat (raison: mention du sport manquante).
                 $attributes['data-stringid'] = 'medical_certificate_refusal_message_for_mention_missing';
                 $menuoptions[] = array(
                     'attributes' => $attributes,
