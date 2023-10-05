@@ -222,6 +222,35 @@ uasort($students, function($a, $b) {
     return 0;
 });
 
+// TODO: rendre moins spécifique à Brest.
+if ($CFG->wwwroot === 'https://espace-suaps.univ-brest.fr' || empty($CFG->debugdisplay) === false) {
+    // Détermine si il s'agit d'un cours appartenant au groupement d'activités APPN.
+    $sql = "SELECT c.id
+              FROM {course} c
+              JOIN {apsolu_courses} ac ON c.id = ac.id
+              JOIN {course_categories} cc1 ON cc1.id = c.category
+              JOIN {course_categories} cc2 ON cc2.id = cc1.parent
+              JOIN {apsolu_courses_groupings} acg ON cc2.id = acg.id
+             WHERE cc2.name LIKE 'APPN%'
+               AND c.id = :courseid";
+    if ($DB->get_record_sql($sql, ['courseid' => $courseid]) !== false) {
+        // Détermine si un dépôt de devoirs existe.
+        $sql = "SELECT cm.instance
+                  FROM {course_modules} cm
+                  JOIN {modules} m ON m.id = cm.module
+                 WHERE m.name = 'assign'
+                   AND cm.course = :courseid";
+        $cm = $DB->get_record_sql($sql, ['courseid' => $courseid]);
+        if ($cm !== false) {
+            $sql = "SELECT userid, grade
+                      FROM {assign_grades}
+                     WHERE assignment = :assignment
+                       AND grade > 0";
+            $appnvalidations = $DB->get_records_sql($sql, ['assignment' => $cm->instance]);
+        }
+    }
+}
+
 // Attendance form.
 $args = array(
     'courseid' => $course->id,
@@ -432,6 +461,17 @@ foreach ($students as $student) {
     if (isset($authorizedUsers[$student->id]) === false) {
         $informations[] = get_string('attendance_forbidden_enrolment', 'local_apsolu');
         $informations_style = 'table-danger';
+    }
+
+    // TODO: à supprimer.
+    if (isset($appnvalidations) === true) {
+        // Affiche l'état de la validation du certificat pour les APPN de Brest.
+        if (isset($appnvalidations[$student->id]) === true) {
+            $informations[] = $paymentsimages[Payment::PAID]->image.' Attestation savoir nager';
+        } else {
+            $informations[] = $paymentsimages[Payment::DUE]->image.' Attestation savoir nager';
+            $informations_style = 'table-danger';
+        }
     }
 
     if (isset($roles[$student->roleid]) === true) {
