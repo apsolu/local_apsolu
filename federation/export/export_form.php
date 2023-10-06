@@ -83,7 +83,7 @@ class local_apsolu_federation_export_licenses extends moodleform {
         $mform->setDefault('status', APSOLU_SELECT_YES);
 
         // Activité.
-        $mform->addElement('select', 'activity', get_string('activities', 'local_apsolu'), $activities);
+        $mform->addElement('autocomplete', 'activity', get_string('activities', 'local_apsolu'), $activities);
         $mform->setType('activity', PARAM_INT);
 
         // Submit buttons.
