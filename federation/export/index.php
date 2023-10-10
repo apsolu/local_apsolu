@@ -303,7 +303,7 @@ if ($data = $mform->get_data()) {
             // Exporte au format CSV.
             $filename = 'exportation_ffsu_'.strftime('%FT%T');
 
-            $export = new csv_export_writer();
+            $export = new csv_export_writer($delimiter = 'semicolon');
             $export->set_filename($filename);
 
             $export->add_data($headers);
