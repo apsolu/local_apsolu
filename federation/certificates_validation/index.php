@@ -118,6 +118,7 @@ if ($data = $mform->get_data()) {
                         'class' => 'local-apsolu-federation-medical-certificate-validation',
                         'data-contextid' => $context->id,
                         'data-target-validation' => Adhesion::MEDICAL_CERTIFICATE_STATUS_EXEMPTED,
+                        'data-target-validation-color' => 'table-info',
                         'data-target-validation-text' => get_string('medical_certificate_not_required', 'local_apsolu'),
                         'data-stringid' => 'medical_certificate_refusal_message',
                         'data-users' => $record->id,
@@ -166,6 +167,7 @@ if ($data = $mform->get_data()) {
                     'class' => 'local-apsolu-federation-medical-certificate-validation',
                     'data-contextid' => $context->id,
                     'data-target-validation' => Adhesion::MEDICAL_CERTIFICATE_STATUS_VALIDATED,
+                    'data-target-validation-color' => 'table-success',
                     'data-target-validation-text' => get_string('medical_certificate_validated', 'local_apsolu'),
                     'data-users' => $record->id,
                 );
@@ -183,6 +185,7 @@ if ($data = $mform->get_data()) {
                 // Option permettant le refus du certificat (raison: plus d'un an).
                 $attributes['data-stringid'] = 'medical_certificate_refusal_message_for_one_year_expiration';
                 $attributes['data-target-validation'] = Adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING;
+                $attributes['data-target-validation-color'] = 'table-warning';
                 $attributes['data-target-validation-text'] = get_string('medical_certificate_not_validated', 'local_apsolu');
                 $menuoptions[] = array(
                     'attributes' => $attributes,

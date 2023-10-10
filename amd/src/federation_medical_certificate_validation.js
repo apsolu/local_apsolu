@@ -27,6 +27,7 @@ define(['jquery', 'core_form/modalform', 'core/str', 'core/toast'], function($, 
 
                     var contextid = link.getAttribute('data-contextid');
                     var targetvalidation = link.getAttribute('data-target-validation');
+                    var targetvalidationcolor = link.getAttribute('data-target-validation-color');
                     var targetvalidationtext = link.getAttribute('data-target-validation-text');
                     var users = link.getAttribute('data-users');
 
@@ -86,11 +87,16 @@ define(['jquery', 'core_form/modalform', 'core/str', 'core/toast'], function($, 
                                 element = document.querySelector('td.medical-certificate-status[data-userid="'+items[i]+'"]');
                                 if (element) {
                                     element.textContent = targetvalidationtext;
+                                    element.classList.remove('table-success', 'table-warning', 'table-danger', 'table-info');
+                                    element.classList.add(targetvalidationcolor);
+
                                     menuitem = document.querySelector('a.dropdown-item[data-users="'+items[i]+'"]');
-                                    console.log('a.dropdown-item[data-userid="'+items[i]+'"]');
-                                    console.log(menuitem);
                                     if (menuitem) {
-                                        menuitem.classList.toggle('d-none');
+                                        // Supprime le dropdown "modifier".
+                                        let menuitemcontainer = menuitem.closest('.action-menu');
+                                        if (menuitemcontainer) {
+                                            menuitemcontainer.remove();
+                                        }
                                     }
                                 }
                             }
