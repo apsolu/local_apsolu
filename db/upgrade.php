@@ -1292,6 +1292,18 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         if ($dbman->index_exists($table, $index) === true) {
             $dbman->drop_index($table, $index);
         }
+
+        // Initialise la valeur du champ "Type de licencié" à "Étudiant", si elle n'est pas définie.
+        $value = get_config('local_apsolu', 'managerlicensetype_field_default');
+        if ($value === '') {
+            set_config('managerlicensetype_field_default', '1', 'local_apsolu');
+        }
+
+        // Initialise la valeur du champ "Texte de présentation pour les autorisations parentales", si elle n'est pas définie.
+        $value = get_config('local_apsolu', 'parental_authorization_description');
+        if ($value === '0') {
+            set_config('parental_authorization_description', '', 'local_apsolu');
+        }
     }
 
     return $result;
