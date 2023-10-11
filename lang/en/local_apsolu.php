@@ -264,7 +264,6 @@ $string['federation_course'] = 'Cours FFSU';
 $string['federation_course_help'] = 'Espace-cours permettant de gérer les étudiants inscrits à la Fédération Française des Sports Universitaires.
 
 Ce cours doit être un cours « normal » au sens Moodle. Il ne doit pas être créé via le menu « créneau horaire ». De plus, une méthode d’inscription par voeux doit y être configurée.';
-$string['federation_course_link_to_medical_form_description'] = 'Pour permettre aux étudiants de déposer leur certificat médical, vous devez créer une étiquette dans le <a href="{$a->courselink}">cours FFSU</a> contenant ce lien : <a href="{$a->formlink}">{$a->formlink}</a>.';
 $string['federation_list'] = 'Liste FFSU';
 $string['federation_module_is_not_configured'] = 'Le module FFSU n’est pas configuré.';
 $string['federation_number_created'] = 'Numéro de licence créé';

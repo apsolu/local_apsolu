@@ -56,14 +56,6 @@ class local_apsolu_special_courses_form extends moodleform {
         $mform->addHelpButton('federation_course', 'federation_course', 'local_apsolu');
         $mform->setType('federation_course', PARAM_TEXT);
 
-        if (empty($defaults->federation_course) === false) {
-            $params = new stdClass();
-            $params->courselink = (string) new moodle_url('/course/view.php', array('id' => $defaults->federation_course));
-            $params->formlink = (string) new moodle_url('/local/apsolu/federation/adhesion/index.php');
-            $string = get_string('federation_course_link_to_medical_form_description', 'local_apsolu', $params);
-            $mform->addElement('html', sprintf('<div class="alert alert-info col-8 offset-md-3">%s</div>', $string));
-        }
-
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
 
