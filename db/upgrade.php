@@ -1284,5 +1284,15 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 2023090000;
+    if ($result && $oldversion < $version) {
+        // Supprime la contrainte d'unicité sur le champ 'number' de la table 'apsolu_federation_numbers'.
+        $table = new xmldb_table('apsolu_federation_numbers');
+        $index = new xmldb_index($indexname = 'unique_number', XMLDB_INDEX_NOTUNIQUE, $fields = array('number'));
+        if ($dbman->index_exists($table, $index) === true) {
+            $dbman->drop_index($table, $index);
+        }
+    }
+
     return $result;
 }
