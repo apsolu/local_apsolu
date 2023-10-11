@@ -93,63 +93,94 @@ class course {
             return;
         }
 
-        if (isset($event->other['updatedfields']['category']) === false) {
-            // La catégorie n'a pas été modifiée.
+        if (isset($event->other['updatedfields']['shortname']) === false &&
+            isset($event->other['updatedfields']['fullname']) === false &&
+            isset($event->other['updatedfields']['category']) === false) {
+            // Le nom abrégé, le nom complet et la catégorie n'ont pas été modifiés.
             return;
         }
 
-        $categoryid = $event->other['updatedfields']['category'];
-        $sql = "SELECT cc.id, cc.name".
-            " FROM {course_categories} cc".
-            " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id".
-            " WHERE cc.id = :categoryid";
-        $category = $DB->get_record_sql($sql, array('categoryid' => $categoryid));
+        $changed = false;
 
-        if ($category === false) {
-            // Le cours n'a pas été déplacé dans une autre catégorie "activité sportive".
-            preg_match('/^(.*) [A-Za-z]+ \d\d:\d\d/', $course->fullname, $matches);
-
-            $category = false;
-            if (isset($matches[1]) === true) {
-                // On essaye de déterminer la catégorie d'origine du cours.
-                $sql = "SELECT cc.id, cc.name".
-                    " FROM {course_categories} cc".
-                    " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id".
-                    " WHERE cc.name = :name";
-                $category = $DB->get_record_sql($sql, array('name' => $matches[1]));
-            }
+        if (isset($event->other['updatedfields']['category']) === true) {
+            $categoryid = $event->other['updatedfields']['category'];
+            $sql = "SELECT cc.id, cc.name".
+                " FROM {course_categories} cc".
+                " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id".
+                " WHERE cc.id = :categoryid";
+            $category = $DB->get_record_sql($sql, array('categoryid' => $categoryid));
 
             if ($category === false) {
-                // On prend n'importe quelle catégorie "activité sportive".
-                $sql = "SELECT cc.id, cc.name".
-                    " FROM {course_categories} cc".
-                    " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id";
-                $categories = $DB->get_records_sql($sql);
-                $category = current($categories);
+                // Le cours n'a pas été déplacé dans une autre catégorie "activité sportive".
+                preg_match('/^(.*) [A-Za-z]+ \d\d:\d\d/', $course->fullname, $matches);
+
+                $category = false;
+                if (isset($matches[1]) === true) {
+                    // On essaye de déterminer la catégorie d'origine du cours.
+                    $sql = "SELECT cc.id, cc.name".
+                        " FROM {course_categories} cc".
+                        " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id".
+                        " WHERE cc.name = :name";
+                    $category = $DB->get_record_sql($sql, array('name' => $matches[1]));
+                }
+
+                if ($category === false) {
+                    // On prend n'importe quelle catégorie "activité sportive".
+                    $sql = "SELECT cc.id, cc.name".
+                        " FROM {course_categories} cc".
+                        " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id";
+                    $categories = $DB->get_records_sql($sql);
+                    $category = current($categories);
+                }
+
+                // Affiche un avertissement à l'utilisateur.
+                $params = new stdClass();
+                $params->fullname = $course->fullname;
+                $params->category = $category->name;
+                $stringid = 'course_has_been_moved_to_because_selected_category_did_not_match_to_grouping_of_sports_activities';
+                $message = get_string($stringid, 'local_apsolu', $params);
+                notification::add($message, notification::WARNING);
+
+                // Met à jour la valeur.
+                $changed = true;
+                $course->category = $category->id;
             }
-
-            $course->category = $category->id;
-
-            $params = new stdClass();
-            $params->fullname = $course->fullname;
-            $params->category = $category->name;
-            $message = get_string('course_has_been_moved_to_because_selected_category_did_not_match_to_grouping_of_sports_activities', 'local_apsolu', $params);
-            notification::add($message, notification::WARNING);
         }
 
-        // Recalcule les noms complets et abrégés du cours.
-        $fullname = apsolu_course::get_fullname($category->name, $course->event, $course->weekday, $course->starttime, $course->endtime, $course->skill);
+        // Recalcule le nom complet du cours.
+        $fullname = apsolu_course::get_fullname($category->name, $course->event, $course->weekday,
+            $course->starttime, $course->endtime, $course->skill);
         if ($course->fullname !== $fullname) {
+            // Affiche un avertissement à l'utilisateur.
             $params = new stdClass();
             $params->oldname = $course->fullname;
             $params->newname = $fullname;
-            $message = get_string('course_has_been_renamed_to', 'local_apsolu', $params);
+            $message = get_string('fullname_course_has_been_renamed_to', 'local_apsolu', $params);
             notification::add($message, notification::WARNING);
+
+            // Met à jour la valeur.
+            $changed = true;
+            $course->fullname = $fullname;
         }
-        $course->fullname = $fullname;
-        $course->shortname = apsolu_course::get_shortname($course->id, $fullname);
+
+        // Recalcule le nom abrégé du cours.
+        $shortname = apsolu_course::get_shortname($course->id, $fullname);
+        if ($course->shortname !== $shortname) {
+            // Affiche un avertissement à l'utilisateur.
+            $params = new stdClass();
+            $params->oldname = $course->shortname;
+            $params->newname = $shortname;
+            $message = get_string('shortname_course_has_been_renamed_to', 'local_apsolu', $params);
+            notification::add($message, notification::WARNING);
+
+            // Met à jour la valeur.
+            $changed = true;
+            $course->shortname = $shortname;
+        }
 
         // Enregistre les modifications.
-        $DB->update_record('course', $course);
+        if ($changed === true) {
+            $DB->update_record('course', $course);
+        }
     }
 }
