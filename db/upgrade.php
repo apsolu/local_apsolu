@@ -1239,55 +1239,8 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             }
         }
 
-        // Met à jour les activités FFSU.
-        $federationcourse = new FederationCourse();
-        $federationcourseid = $federationcourse->get_courseid();
-        $federationgroups = array();
-        if ($federationcourseid !== false) {
-            $fields = 'name, id, courseid, timecreated, timemodified';
-            $federationgroups = $DB->get_records('groups', array('courseid' => $federationcourseid), $sort = '', $fields);
-        }
-
-        $activities = $DB->get_records('apsolu_federation_activities');
-        foreach (Activity::get_activity_data() as $data) {
-            if (isset($activities[$data['id']]) !== false) {
-                // Met à jour l'activité FFSU.
-                $activity = $activities[$data['id']];
-
-                if ($activity->name !== $data['name'] ||
-                    $activity->mainsport != $data['mainsport'] ||
-                    $activity->restriction != $data['restriction']) {
-                    // Met à jour l'enregistrement dans la table apsolu_federation_activities.
-                    $sql = "UPDATE {apsolu_federation_activities}
-                               SET name = :name, mainsport = :mainsport, restriction = :restriction
-                             WHERE id = :id";
-                    $DB->execute($sql, $data);
-
-                    // Met à jour le nom du groupe dans le cours FFSU.
-                    if (isset($federationgroups[$activity->name]) === true) {
-                        $federationgroups[$activity->name]->name = $data['name'];
-                        $federationgroups[$activity->name]->timemodified = time();
-                        $DB->update_record('groups', $federationgroups[$activity->name]);
-                    }
-                }
-                continue;
-            }
-
-            // Insère une nouvelle activité FFSU.
-            $sql = "INSERT INTO {apsolu_federation_activities} (id, name, mainsport, restriction, categoryid)
-                                                        VALUES (:id, :name, :mainsport, :restriction, NULL)";
-            $DB->execute($sql, $data);
-
-            // Ajoute le groupe dans le cours FFSU.
-            if ($federationcourseid !== false) {
-                $group = new stdClass();
-                $group->name = $data['name'];
-                $group->courseid = $federationcourseid;
-                $group->timecreated = time();
-                $group->timemodified = $group->timecreated;
-                groups_create_group($group);
-            }
-        }
+        // Synchronise la table `apsolu_federation_activities` avec le référentiel FFSU.
+        Activity::synchronize_database();
 
         // Corrige les libellés des noms des créneaux horaires.
         $sql = "SELECT cc.id, cc.name".
