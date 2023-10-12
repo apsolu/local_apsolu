@@ -46,6 +46,16 @@ echo $OUTPUT->heading(get_string('dates', 'local_apsolu'));
 
 if ($data = $mform->get_data()) {
     foreach ($attributes as $attribute) {
+        if (isset($data->{$attribute}) === false) {
+            continue;
+        }
+
+        if ($data->{$attribute} == $defaults->{$attribute}) {
+            // La valeur n'a pas été modifiée.
+            continue;
+        }
+
+        add_to_config_log($attribute, $defaults->{$attribute}, $data->{$attribute}, 'local_apsolu');
         set_config($attribute, $data->{$attribute}, 'local_apsolu');
     }
 

@@ -40,15 +40,29 @@ if ($data = $mform->get_data()) {
         $data->apsoluheaderactive = 0;
     }
 
-    set_config('apsoluheaderactive', $data->apsoluheaderactive, 'local_apsolu');
-    set_config('apsoluheadercontent', $data->apsoluheadercontent['text'], 'local_apsolu');
+    if ($data->apsoluheaderactive != $defaults->apsoluheaderactive) {
+        add_to_config_log('apsoluheaderactive', $defaults->apsoluheaderactive, $data->apsoluheaderactive, 'local_apsolu');
+        set_config('apsoluheaderactive', $data->apsoluheaderactive, 'local_apsolu');
+    }
 
+    if ($data->apsoluheadercontent['text'] != $defaults->apsoluheadercontent['text']) {
+        $oldvalue = $defaults->apsoluheadercontent['text'];
+        $newvalue = $data->apsoluheadercontent['text'];
+        add_to_config_log('apsoluheadercontent', $oldvalue, $newvalue, 'local_apsolu');
+        set_config('apsoluheadercontent', $data->apsoluheadercontent['text'], 'local_apsolu');
+    }
+
+    $oldvalue = get_config('core', 'additionalhtmltopofbody');
     if (empty($data->apsoluheaderactive) === true) {
-        set_config('additionalhtmltopofbody', '');
+        $newvalue = '';
     } else {
         // Encapsule le HTML dans une div afin de pouvoir masquer le contenu sur la page d'accueil du site.
-        $additionalhtmltopofbody = sprintf('<div id="apsolu-topofbody">%s</div>', $data->apsoluheadercontent['text']);
-        set_config('additionalhtmltopofbody', $additionalhtmltopofbody);
+        $newvalue = sprintf('<div id="apsolu-topofbody">%s</div>', $data->apsoluheadercontent['text']);
+    }
+
+    if ($oldvalue !== $newvalue) {
+        add_to_config_log('additionalhtmltopofbody', $oldvalue, $newvalue, 'core');
+        set_config('additionalhtmltopofbody', $newvalue);
     }
 
     $notification = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');

@@ -78,15 +78,28 @@ if ($data = $mform->get_data()) {
         if (isset($data->{$attribute}) === false) {
             continue;
         }
+
+        if ($data->{$attribute} == $defaults->{$attribute}) {
+            // La valeur n'a pas été modifiée.
+            continue;
+        }
+
+        add_to_config_log($attribute, $defaults->{$attribute}, $data->{$attribute}, 'local_apsolu');
         set_config($attribute, $data->{$attribute}, 'local_apsolu');
     }
 
-    if (isset($data->ffsu_agreement['text']) === true) {
-        set_config('ffsu_agreement', $data->ffsu_agreement['text'], 'local_apsolu');
-    }
+    foreach (['ffsu_agreement', 'parental_authorization_description'] as $key) {
+        if (isset($data->{$key}['text']) === false) {
+            continue;
+        }
 
-    if (isset($data->parental_authorization_description['text']) === true) {
-        set_config('parental_authorization_description', $data->parental_authorization_description['text'], 'local_apsolu');
+        if ($data->{$key} === $defaults->{$key}) {
+            // La valeur n'a pas été modifiée.
+            continue;
+        }
+
+        add_to_config_log($key, json_encode($defaults->{$key}), json_encode($data->{$key}), 'local_apsolu');
+        set_config($key, $data->{$key}['text'], 'local_apsolu');
     }
 
     echo $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');

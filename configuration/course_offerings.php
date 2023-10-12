@@ -90,9 +90,21 @@ if ($data = $mform->get_data()) {
         }
     }
 
-    set_config('json_course_offerings_columns', json_encode($columns), 'local_apsolu');
-    set_config('json_course_offerings_filters', json_encode($filters), 'local_apsolu');
-    set_config('json_course_offerings_ranges', json_encode($ranges), 'local_apsolu');
+    $settings = [];
+    $settings['json_course_offerings_columns'] = json_encode($columns);
+    $settings['json_course_offerings_filters'] = json_encode($filters);
+    $settings['json_course_offerings_ranges'] = json_encode($ranges);
+
+    foreach ($settings as $key => $newvalue) {
+        $oldvalue = get_config('local_apsolu', $key);
+        if ($oldvalue === $newvalue) {
+            // Aucune modification.
+            continue;
+        }
+
+        add_to_config_log($key, $oldvalue, $newvalue, 'local_apsolu');
+        set_config($key, $newvalue, 'local_apsolu');
+    }
 
     // Redirige vers la page générale.
     $message = get_string('changessaved');

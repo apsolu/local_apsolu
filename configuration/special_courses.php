@@ -73,6 +73,11 @@ if ($data = $mform->get_data()) {
             $data->{$attribute} = '';
         }
 
+        if ($data->{$attribute} != $defaults->{$attribute}) {
+            // La valeur a été modifiée.
+            add_to_config_log($attribute, $defaults->{$attribute}, $data->{$attribute}, 'local_apsolu');
+        }
+
         set_config($attribute, $data->{$attribute}, 'local_apsolu');
 
         if ($attribute === 'federation_course') {
