@@ -292,9 +292,19 @@ if ($data = $mform->get_data()) {
             $export = new csv_export_writer($delimiter = 'semicolon');
             $export->set_filename($filename);
 
-            $export->add_data(mb_convert_encoding($headers, 'UTF-8', 'ASCII'));
-            foreach ($rows as $row) {
-                $export->add_data(mb_convert_encoding($row, 'UTF-8', 'ASCII'));
+            // Réencode les données du fichier en 'iso-8859-1'.
+            $row = [];
+            foreach ($headers as $value) {
+                $row[] = core_text::convert($value, 'utf-8', 'iso-8859-1');
+            }
+            $export->add_data($row);
+
+            foreach ($rows as $values) {
+                $row = [];
+                foreach ($values as $value) {
+                    $row[] = core_text::convert($value, 'utf-8', 'iso-8859-1');
+                }
+                $export->add_data($row);
             }
 
             $export->download_file();
