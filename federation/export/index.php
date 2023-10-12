@@ -278,20 +278,6 @@ if ($data = $mform->get_data()) {
             }
         }
 
-        // Détermine si l'étudiant pratique un sport à contrainte.
-        $constraint = 0;
-        if (isset($constraintactivities[$record->mainsport]) === true) {
-            $constraint = 1;
-        } else {
-            for ($i = 1; $i < 6; $i++) {
-                if (isset($constraintsports[$record->{'constraintsport'.$i}]) === true) {
-                    $constraint = 1;
-                    break;
-                }
-            }
-        }
-        $row[] = $constraint;
-
         $rows[] = $row;
     }
     $recordset->close();
@@ -306,9 +292,9 @@ if ($data = $mform->get_data()) {
             $export = new csv_export_writer($delimiter = 'semicolon');
             $export->set_filename($filename);
 
-            $export->add_data($headers);
+            $export->add_data(mb_convert_encoding($headers, 'UTF-8', 'ASCII'));
             foreach ($rows as $row) {
-                $export->add_data($row);
+                $export->add_data(mb_convert_encoding($row, 'UTF-8', 'ASCII'));
             }
 
             $export->download_file();

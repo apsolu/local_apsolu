@@ -460,7 +460,7 @@ class adhesion extends record {
                 // (Rugby(s), Boxe(s) combat plein contact, Tir sportif, Biathlon, Karting, Pentathlon, Taekwondo combat)
                 // et atteste avoir présenté un certificat médical de non-contre-indication à la pratique des sports de
                 // compétition de moins d’un an [ 1 chiffre : 1 pour oui ou 0 pour non ]
-            'honorability', // Champ AP : J'atteste avoir compris l'objet du contrôle d'honorabilité pour arbitres
+            'honorabilityagreement', // Champ AP : J'atteste avoir compris l'objet du contrôle d'honorabilité pour arbitres
                 // et dirigeants [ 1 chiffre : 1 pour oui ou 0 pour non ]
         );
     }
