@@ -63,4 +63,23 @@ class local_apsolu_calendar_form extends moodleform {
         // Set default values.
         $this->set_data($defaults);
     }
+
+    /**
+     * Validation.
+     *
+     * @param array $data
+     * @param array $files
+     *
+     * @return array The errors that were found.
+     */
+    public function validation($data, $files) {
+        $errors = parent::validation($data, $files);
+
+        // Contrôle que la date de début soit antérieure à la date de fin.
+        if ($data['payments_startdate'] >= $data['payments_enddate']) {
+            $errors['payments_enddate'] = get_string('enddatebeforestartdate', 'error');
+        }
+
+        return $errors;
+    }
 }
