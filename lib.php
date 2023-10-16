@@ -118,7 +118,8 @@ function local_apsolu_pluginfile($course, $cm, $context, $filearea, $args, $forc
         case 'medicalcertificate':
         case 'parentalauthorization':
             // Fichier visible uniquement par le propriétaire du fichier ou un gestionnaire.
-            if ($file->userid !== $USER->id && has_capability('local/apsolu:viewallmedicalcertificates', context_system::instance()) === false) {
+            if ($file->get_userid() !== $USER->id &&
+                has_capability('local/apsolu:viewallmedicalcertificates', context_system::instance()) === false) {
                 return false;
             }
     }
