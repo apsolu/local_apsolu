@@ -243,6 +243,56 @@ class adhesion extends record {
     }
 
     /**
+     * Retourne un tableau d'entiers contenant les identifiants des activités choisies par l'adhérent.
+     *
+     * @return array
+     */
+    public function get_activities() {
+        $activities = array();
+        foreach (self::get_activity_fields() as $field) {
+            if (isset($this->{$field}) === false) {
+                continue;
+            }
+
+            if ($this->{$field} === self::SPORT_NONE) {
+                // Ignore les champs ne contenant pas une activité.
+                continue;
+            }
+
+            if (in_array($field, $activities, $strict = true) === true) {
+                // Empêche l'ajout de doublons.
+                continue;
+            }
+
+            $activities[] = $this->{$field};
+        }
+
+        return $activities;
+    }
+
+    /**
+     * Retourne un tableau de chaines contenant la liste des champs représentant une activité.
+     *
+     * @return array
+     */
+    public static function get_activity_fields() {
+        $fields = [];
+        $fields[] = 'mainsport';
+        $fields[] = 'sport1';
+        $fields[] = 'sport2';
+        $fields[] = 'sport3';
+        $fields[] = 'sport4';
+        $fields[] = 'sport5';
+        $fields[] = 'constraintsport1';
+        $fields[] = 'constraintsport2';
+        $fields[] = 'constraintsport3';
+        $fields[] = 'constraintsport4';
+        $fields[] = 'constraintsport5';
+
+        return $fields;
+    }
+
+    /**
      * Retourne un tableau de chaînes indiquant que le certificat a été validé. Ajoute éventuellement l'adresse du contact fonctionnel.
      *
      * @return array

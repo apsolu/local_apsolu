@@ -75,7 +75,11 @@ if ($data = $mform->get_data()) {
         $url_options['medical_certificate_status'] = $parameters['status'];
     }
 
+    $federationactivities = $DB->get_records('apsolu_federation_activities');
+
     $sql = "SELECT u.id, u.lastname, u.firstname, u.idnumber, u.email, u.institution, afa.medicalcertificatedate,
+                   afa.mainsport, afa.sport1, afa.sport2, afa.sport3, afa.sport4, afa.sport5,
+                   afa.constraintsport1, afa.constraintsport2, afa.constraintsport3, afa.constraintsport4, afa.constraintsport5,
                    afa.medicalcertificatestatus, afa.federationnumber, afa.federationnumberrequestdate
               FROM {user} u
               JOIN {apsolu_federation_adhesions} afa ON u.id = afa.userid
@@ -100,6 +104,20 @@ if ($data = $mform->get_data()) {
         $row[] = html_writer::link($profileurl, $record->firstname);
         $row[] = $record->idnumber;
         $row[] = $record->institution;
+
+        $activities = [];
+        foreach (Adhesion::get_activity_fields() as $field) {
+            if ($record->{$field} === Adhesion::SPORT_NONE) {
+                continue;
+            }
+
+            if (isset($federationactivities[$record->{$field}]) === false) {
+                continue;
+            }
+
+            $activities[] = $federationactivities[$record->{$field}]->name;
+        }
+        $row[] = html_writer::alist($activities, $attributes = array(), $tag = 'ul');
 
         if ($record->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_EXEMPTED) {
             $row[] = ''; // Aucun fichier.
@@ -281,6 +299,7 @@ if ($data = $mform->get_data()) {
             get_string('firstname'),
             get_string('idnumber'),
             get_string('institution'),
+            get_string('activities'),
             get_string('file'),
             get_string('medical_certificate_status', 'local_apsolu'),
             get_string('action'),
