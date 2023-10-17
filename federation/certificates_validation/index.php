@@ -177,7 +177,8 @@ if ($data = $mform->get_data()) {
                 $items = array();
                 foreach ($files as $file) {
                     $url = moodle_url::make_pluginfile_url($context->id, $component, $filearea, $itemid, '/', $file->get_filename(), $forcedownload = false, $includetoken = false);
-                    $items[] = html_writer::link($url, $file->get_filename());
+                    $date = userdate($file->get_timemodified(), get_string('strftimedateshort', 'local_apsolu'));
+                    $items[] = html_writer::link($url, $file->get_filename()).' ('.$date.')';
                 }
                 $row[] = html_writer::alist($items, $attributes = array(), $tag = 'ul');
 

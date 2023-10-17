@@ -640,6 +640,7 @@ $string['special_courses'] = 'Cours spéciaux';
 $string['sport_license'] = 'Licence sportive';
 $string['sport'] = 'Sport';
 $string['star_license'] = 'Pass SPORT-U';
+$string['strftimedateshort'] = '%d %b %y';
 $string['strftimedatetimeshort'] = '%a %d %b %Y %H:%M';
 $string['strftimedatetimesortable'] = '%F %T';
 $string['student'] = 'Étudiant';
