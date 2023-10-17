@@ -504,6 +504,7 @@ $string['paybox_servers_outgoing_help'] = 'Ce paramètre doit contenir la liste 
 $string['paybox_servers_outgoing'] = 'paybox_servers_outgoing';
 $string['paybox_sitenumber_help'] = 'Ce champ correspond à l’élément PBX_SITE fourni par Paybox.';
 $string['paybox_sitenumber'] = 'Numéro de site';
+$string['pay'] = 'Payer';
 $string['pay_for_license'] = 'Payer sa licence';
 $string['payment_center'] = 'Centre de paiement';
 $string['payment_center_help'] = 'Champ libre qui sera affiché sur la page de paiement des utilisateurs.';
