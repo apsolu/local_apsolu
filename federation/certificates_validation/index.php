@@ -115,7 +115,7 @@ if ($data = $mform->get_data()) {
                 continue;
             }
 
-            $activities[] = $federationactivities[$record->{$field}]->name;
+            $activities[$record->{$field}] = $federationactivities[$record->{$field}]->name;
         }
         $row[] = html_writer::alist($activities, $attributes = array(), $tag = 'ul');
 
