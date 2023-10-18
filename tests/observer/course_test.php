@@ -26,6 +26,7 @@
 namespace local_apsolu\observer;
 
 use local_apsolu\core\course;
+use stdClass;
 
 global $CFG;
 
@@ -158,5 +159,29 @@ class course_test extends \advanced_testcase {
         $apsolucourse = $DB->get_record('course', array('id' => $apsolucourse->id));
         $this->assertNotSame($shortname, $apsolucourse->shortname);
         $this->assertNotSame($fullname, $apsolucourse->fullname);
+
+        // Teste le recalcule du nom complet et abrégé (sans changer de catégorie) depuis l'API APSOLU.
+        $sql = "SELECT c.*, sk.name AS str_skill, cat.name AS str_category
+                  FROM {course} c
+                  JOIN {course_categories} cat ON cat.id = c.category
+                  JOIN {apsolu_courses} ac ON c.id = ac.id
+                  JOIN {apsolu_skills} sk ON sk.id = ac.skillid";
+        $records = $DB->get_records_sql($sql);
+        $record = current($records);
+        $this->assertNotSame(false, $record);
+
+        $course = new course();
+        $course->load($record->id);
+
+        $data = new stdClass();
+        $data->str_category = $record->str_category;
+        $data->str_skill = $record->str_skill;
+        $data->event = 'changed';
+        $course->save($data);
+        // Recharge les données, car l'observateur a normalement modifié les noms du cours.
+        $course->load($record->id);
+
+        $this->assertStringContainsString($data->str_category, $course->shortname);
+        $this->assertStringContainsString($data->str_category, $course->fullname);
     }
 }

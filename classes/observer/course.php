@@ -104,47 +104,52 @@ class course {
 
         if (isset($event->other['updatedfields']['category']) === true) {
             $categoryid = $event->other['updatedfields']['category'];
-            $sql = "SELECT cc.id, cc.name".
-                " FROM {course_categories} cc".
-                " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id".
-                " WHERE cc.id = :categoryid";
-            $category = $DB->get_record_sql($sql, array('categoryid' => $categoryid));
+        } else {
+            $categoryid = $course->category;
+        }
+
+        $sql = "SELECT cc.id, cc.name".
+            " FROM {course_categories} cc".
+            " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id".
+            " WHERE cc.id = :categoryid";
+        $category = $DB->get_record_sql($sql, array('categoryid' => $categoryid));
+
+        if ($category === false) {
+            // Le cours n'a pas été déplacé dans une autre catégorie "activité sportive".
+            preg_match('/^(.*) [A-Za-z]+ \d\d:\d\d/', $course->fullname, $matches);
+
+            $category = false;
+            if (isset($matches[1]) === true) {
+                // On essaye de déterminer la catégorie d'origine du cours.
+                $sql = "SELECT cc.id, cc.name".
+                    " FROM {course_categories} cc".
+                    " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id".
+                    " WHERE cc.name = :name";
+                $category = $DB->get_record_sql($sql, array('name' => $matches[1]));
+            }
 
             if ($category === false) {
-                // Le cours n'a pas été déplacé dans une autre catégorie "activité sportive".
-                preg_match('/^(.*) [A-Za-z]+ \d\d:\d\d/', $course->fullname, $matches);
-
-                $category = false;
-                if (isset($matches[1]) === true) {
-                    // On essaye de déterminer la catégorie d'origine du cours.
-                    $sql = "SELECT cc.id, cc.name".
-                        " FROM {course_categories} cc".
-                        " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id".
-                        " WHERE cc.name = :name";
-                    $category = $DB->get_record_sql($sql, array('name' => $matches[1]));
-                }
-
-                if ($category === false) {
-                    // On prend n'importe quelle catégorie "activité sportive".
-                    $sql = "SELECT cc.id, cc.name".
-                        " FROM {course_categories} cc".
-                        " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id";
-                    $categories = $DB->get_records_sql($sql);
-                    $category = current($categories);
-                }
-
-                // Affiche un avertissement à l'utilisateur.
-                $params = new stdClass();
-                $params->fullname = $course->fullname;
-                $params->category = $category->name;
-                $stringid = 'course_has_been_moved_to_because_selected_category_did_not_match_to_grouping_of_sports_activities';
-                $message = get_string($stringid, 'local_apsolu', $params);
-                notification::add($message, notification::WARNING);
-
-                // Met à jour la valeur.
-                $changed = true;
-                $course->category = $category->id;
+                // On prend n'importe quelle catégorie "activité sportive".
+                $sql = "SELECT cc.id, cc.name".
+                    " FROM {course_categories} cc".
+                    " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id";
+                $categories = $DB->get_records_sql($sql);
+                $category = current($categories);
             }
+        }
+
+        if ($course->category !== $category->id) {
+            // Affiche un avertissement à l'utilisateur.
+            $params = new stdClass();
+            $params->fullname = $course->fullname;
+            $params->category = $category->name;
+            $stringid = 'course_has_been_moved_to_because_selected_category_did_not_match_to_grouping_of_sports_activities';
+            $message = get_string($stringid, 'local_apsolu', $params);
+            notification::add($message, notification::WARNING);
+
+            // Met à jour la valeur.
+            $changed = true;
+            $course->category = $category->id;
         }
 
         // Recalcule le nom complet du cours.
