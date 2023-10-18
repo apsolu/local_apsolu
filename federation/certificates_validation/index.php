@@ -105,6 +105,7 @@ if ($data = $mform->get_data()) {
         $row[] = $record->idnumber;
         $row[] = $record->institution;
 
+        // Liste les activités de l'adhérant.
         $activities = [];
         foreach (Adhesion::get_activity_fields() as $field) {
             if ($record->{$field} === Adhesion::SPORT_NONE) {
@@ -124,6 +125,13 @@ if ($data = $mform->get_data()) {
         }
 
         $row[] = html_writer::alist($activities, $attributes = array(), $tag = 'ul');
+
+        // Affiche la date d'émission du certificat médical.
+        if (empty($record->medicalcertificatedate) === false) {
+            $row[] = userdate($record->medicalcertificatedate, get_string('strftimedateshort', 'local_apsolu'));
+        } else {
+            $row[] = ''; // Aucune date de certificat médical.
+        }
 
         if ($record->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_EXEMPTED) {
             $row[] = ''; // Aucun fichier.
@@ -307,6 +315,7 @@ if ($data = $mform->get_data()) {
             get_string('idnumber'),
             get_string('institution'),
             get_string('activities'),
+            get_string('medical_certificate_date', 'local_apsolu'),
             get_string('file'),
             get_string('medical_certificate_status', 'local_apsolu'),
             get_string('action'),
