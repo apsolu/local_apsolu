@@ -33,7 +33,7 @@ require_once($CFG->libdir.'/csvlib.class.php');
 require_once(__DIR__.'/import_form.php');
 
 $context = context_course::instance($courseid, MUST_EXIST);
-$returnurl = new moodle_url('/local/apsolu/federation/index.php', array('page' => 'importation'));
+$returnurl = new moodle_url('/local/apsolu/federation/index.php', array('page' => 'import'));
 
 $mform = new local_apsolu_federation_import_licences();
 
