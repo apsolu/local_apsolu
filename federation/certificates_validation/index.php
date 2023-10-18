@@ -191,8 +191,14 @@ if ($data = $mform->get_data()) {
                 $items = array();
                 foreach ($files as $file) {
                     $url = moodle_url::make_pluginfile_url($context->id, $component, $filearea, $itemid, '/', $file->get_filename(), $forcedownload = false, $includetoken = false);
+                    $helpstr = get_string('help');
                     $date = userdate($file->get_timemodified(), get_string('strftimedateshort', 'local_apsolu'));
-                    $items[] = html_writer::link($url, $file->get_filename()).' ('.$date.')';
+                    $datacontent = format_string(get_string('uploaded_date', 'local_apsolu', $date));
+                    $link = '<a class="btn btn-link p-0" role="button" data-container="body" data-toggle="popover"
+                        data-placement="right" data-content="'.$datacontent.'" data-html="false" tabindex="0" data-trigger="focus"
+                        aria-label="'.$helpstr.'" data-original-title="" title=""><i class="icon fa fa-clock-o fa-fw"
+                        role="img"></i></a>';
+                    $items[] = html_writer::link($url, $file->get_filename()).' '.$link;
                 }
                 $row[] = html_writer::alist($items, $attributes = array(), $tag = 'ul');
 
