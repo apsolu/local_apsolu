@@ -54,12 +54,13 @@ $csvexport = new \csv_export_writer();
 $csvexport->set_filename($filename);
 $csvexport->add_data($headers);
 
-$sql = "SELECT ap.*, u.lastname, u.firstname, u.idnumber, u.institution, u.department".
-    " FROM {apsolu_payments} ap".
-    " JOIN {user} u ON u.id = ap.userid".
-    " WHERE ap.status = 1".
-    " AND ap.paymentcenterid = :centerid".
-    " ORDER BY ap.timepaid DESC, u.lastname, u.firstname, u.institution";
+$sql = "SELECT ap.*, apc.prefix, u.lastname, u.firstname, u.idnumber, u.institution, u.department
+          FROM {apsolu_payments} ap
+          JOIN {apsolu_payments_centers} apc ON apc.id = ap.paymentcenterid
+          JOIN {user} u ON u.id = ap.userid
+         WHERE ap.status = 1
+           AND ap.paymentcenterid = :centerid
+      ORDER BY ap.timepaid DESC, u.lastname, u.firstname, u.institution";
 $payments = $DB->get_records_sql($sql, array('centerid' => $center->id));
 foreach ($payments as $payment) {
     raise_memory_limit(MEMORY_EXTRA);
@@ -71,6 +72,11 @@ foreach ($payments as $payment) {
         $timepaid = $timepaid->format('d-m-Y H:i:s');
     } catch(Exception $exception) {
         $timepaid = '';
+    }
+
+    // Affiche le préfixe PayBox.
+    if (empty($payment->prefix) === false) {
+        $payment->id = $payment->prefix.$payment->id;
     }
 
     if ($payment->method !== 'paybox') {
