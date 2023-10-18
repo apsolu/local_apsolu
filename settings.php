@@ -147,6 +147,12 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
         $str = get_string('certificates_validation', 'local_apsolu');
         $url = new moodle_url('/local/apsolu/federation/index.php', array('page' => 'certificates_validation'));
         $ADMIN->add('local_apsolu_federation', new admin_externalpage('local_apsolu_federation_certificates_validation', $str, $url, $capabilities));
+
+        // Exportation des paiements.
+        $str = get_string('exporting_payments', 'local_apsolu');
+        $url = new moodle_url('/local/apsolu/federation/index.php', array('page' => 'payments'));
+        $ADMIN->add('local_apsolu_federation', new admin_externalpage('local_apsolu_federation_payments', $str, $url,
+            $capabilities));
     }
 
     // Inscriptions.

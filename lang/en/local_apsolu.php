@@ -260,6 +260,7 @@ $string['export'] = 'Exporter';
 $string['export_format'] = 'Format d’exportation';
 $string['exporting_license'] = 'Exportation des licences FFSU';
 $string['exporting_license_help'] = 'Exporte les licences au format attendu par le site de la FFSU.';
+$string['exporting_payments'] = 'Exportation des paiements';
 $string['federation_course'] = 'Cours FFSU';
 $string['federation_course_help'] = 'Espace-cours permettant de gérer les étudiants inscrits à la Fédération Française des Sports Universitaires.
 
@@ -270,6 +271,7 @@ $string['federation_number_created'] = 'Numéro de licence créé';
 $string['federation_number_request_date'] = 'Date de la demande de numéro de licence';
 $string['federation_number_request_sent'] = 'Demande de numéro de licence envoyée.';
 $string['federation_number_updated'] = 'Numéro de licence modifié';
+$string['federation_payments'] = 'Paiements FFSU';
 $string['field'] = 'Champ';
 $string['fields'] = 'Champs';
 $string['field_X_cannot_be_empty'] = 'Le champ « {$a} » ne peut pas être vide.';
