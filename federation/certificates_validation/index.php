@@ -77,10 +77,10 @@ if ($data = $mform->get_data()) {
 
     $federationactivities = $DB->get_records('apsolu_federation_activities');
 
-    $sql = "SELECT u.id, u.lastname, u.firstname, u.idnumber, u.email, u.institution, afa.medicalcertificatedate,
+    $sql = "SELECT u.id, u.lastname, u.firstname, u.idnumber, u.email, u.institution, afa.questionnairestatus,
                    afa.mainsport, afa.sport1, afa.sport2, afa.sport3, afa.sport4, afa.sport5,
                    afa.constraintsport1, afa.constraintsport2, afa.constraintsport3, afa.constraintsport4, afa.constraintsport5,
-                   afa.medicalcertificatestatus, afa.federationnumber, afa.federationnumberrequestdate
+                   afa.medicalcertificatedate, afa.medicalcertificatestatus, afa.federationnumber, afa.federationnumberrequestdate
               FROM {user} u
               JOIN {apsolu_federation_adhesions} afa ON u.id = afa.userid
              WHERE 1 = 1 ".implode(' ', $conditions)."
@@ -117,6 +117,12 @@ if ($data = $mform->get_data()) {
 
             $activities[$record->{$field}] = $federationactivities[$record->{$field}]->name;
         }
+
+        if (empty($record->questionnairestatus) === false) {
+            $label = get_string('health_constraints', 'local_apsolu');
+            $activities[] = '<i class="icon fa fa-medkit" aria-hidden="true" aria-selected="true"></i>'.$label;
+        }
+
         $row[] = html_writer::alist($activities, $attributes = array(), $tag = 'ul');
 
         if ($record->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_EXEMPTED) {

@@ -302,6 +302,7 @@ $string['grouping_has_been_deleted'] = 'Le groupement d’activités a été sup
 $string['grouping_saved'] = 'Groupement d’activités enregistré.';
 $string['grouping_updated'] = 'Groupement d’activités modifié.';
 $string['header_message'] = 'Message d’entête';
+$string['health_constraints'] = 'Contraintes de santé';
 $string['health_quiz'] = 'Questionnaire de santé';
 $string['hidden'] = 'Caché';
 $string['hide_uncommitted_transactions'] = 'Cacher les transactions non validées';
