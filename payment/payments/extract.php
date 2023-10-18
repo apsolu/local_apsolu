@@ -40,7 +40,6 @@ $headers = array(
     get_string('idnumber'),
     get_string('institution'),
     get_string('department'),
-    get_string('fields_apsoluhighlevelathlete', 'local_apsolu'),
     get_string('method', 'local_apsolu'),
     get_string('date', 'local_apsolu'),
     get_string('amount', 'local_apsolu'),
@@ -55,13 +54,6 @@ $csvexport = new \csv_export_writer();
 $csvexport->set_filename($filename);
 $csvexport->add_data($headers);
 
-$sql = "SELECT uid.userid".
-    " FROM {user_info_data} uid".
-    " JOIN {user_info_field} uif ON uif.id = uid.fieldid".
-    " WHERE uif.shortname = 'apsoluhighlevelathlete'".
-    " AND uid.data = 1";
-$highlevelathletes = $DB->get_records_sql($sql);
-
 $sql = "SELECT ap.*, u.lastname, u.firstname, u.idnumber, u.institution, u.department".
     " FROM {apsolu_payments} ap".
     " JOIN {user} u ON u.id = ap.userid".
@@ -73,12 +65,6 @@ foreach ($payments as $payment) {
     raise_memory_limit(MEMORY_EXTRA);
 
     $usercards = $DB->get_records('apsolu_payments_items', array('paymentid' => $payment->id), $sort = null, $fields = 'cardid');
-
-    if (isset($highlevelathletes[$payment->userid]) === true) {
-        $payment->highlevelathlete = get_string('yes');
-    } else {
-        $payment->highlevelathlete = get_string('no');
-    }
 
     try {
         $timepaid = new DateTime($payment->timepaid);
@@ -97,7 +83,6 @@ foreach ($payments as $payment) {
         $payment->idnumber,
         $payment->institution,
         $payment->department,
-        $payment->highlevelathlete,
         get_string('method_'.$payment->method, 'local_apsolu'),
         $timepaid,
         $payment->amount,
