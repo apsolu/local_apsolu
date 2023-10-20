@@ -40,7 +40,7 @@ foreach (Payment::get_course_cards($courseid) as $card) {
 // Récupère tous les adhérants ayant payé.
 list($insql, $params) = $DB->get_in_or_equal($cards, SQL_PARAMS_NAMED, 'cardid_');
 
-$sql = "SELECT u.lastname, u.firstname, u.idnumber, u.institution, u.department,
+$sql = "SELECT u.lastname, u.firstname, u.email, u.idnumber, u.institution, u.department,
                ap.method, ap.timepaid, ap.amount, ap.id, apc.prefix, afa.mainsport
           FROM {user} u
           JOIN {apsolu_federation_adhesions} afa ON u.id = afa.userid
@@ -65,6 +65,7 @@ if ($recordset->valid()) {
     $headers = array(
         get_string('lastname'),
         get_string('firstname'),
+        get_string('email'),
         get_string('idnumber'),
         get_string('institution'),
         get_string('department'),
@@ -95,6 +96,7 @@ if ($recordset->valid()) {
         $row = [];
         $row[] = $record->lastname;
         $row[] = $record->firstname;
+        $row[] = $record->email;
         $row[] = $record->idnumber;
         $row[] = $record->institution;
         $row[] = $record->department;
