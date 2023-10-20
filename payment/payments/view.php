@@ -62,6 +62,7 @@ if (isset($userid)) {
     }
 
     // Liste toutes les transactions de l'utilisateur enregistrées dans la table apsolu_payments.
+    $centers = $DB->get_records('apsolu_payments_centers');
     $payments = $DB->get_records('apsolu_payments', array('userid' => $userid), $sort = 'timemodified');
     foreach ($payments as $payment) {
         if (!empty($payment->timepaid)) {
@@ -74,6 +75,12 @@ if (isset($userid)) {
         } else if ($showalltransactions === 0) {
             // On ne traite pas ce paiement si la date de paiement n'est pas définie et qu'on n'affiche pas toutes les transactions.
             continue;
+        }
+
+        // Affiche le préfixe PayBox.
+        $payment->prefix = '';
+        if (isset($centers[$payment->paymentcenterid]) === true && empty($centers[$payment->paymentcenterid]->prefix) === false) {
+            $payment->prefix = $centers[$payment->paymentcenterid]->prefix;
         }
 
         $format = new NumberFormatter('fr_FR', NumberFormatter::CURRENCY);
