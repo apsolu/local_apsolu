@@ -205,7 +205,11 @@ if (isset($steps[$stepid]) === false) {
 
 $tabtree = array();
 foreach ($pages as $name => $url) {
-    $tabobject = new tabobject($name, $url, get_string($name, 'local_apsolu'));
+    $label = get_string($name, 'local_apsolu');
+    if ($name === 'summary' && empty($adhesion->federationnumberrequestdate) === true) {
+        $label = get_string('confirm', 'local_apsolu');
+    }
+    $tabobject = new tabobject($name, $url, $label);
     $tabobject->inactive = empty($url);
     $tabtree[] = $tabobject;
 }

@@ -165,6 +165,7 @@ $string['cohort_for_federation_insurance_payment_help'] = 'La cohorte sélection
 Ce tarif doit également être configuré au niveau de la méthode d’inscription du cours de FFSU.
 
 Si aucune cohorte n’est pas configurée, le coût de l’assurance FFSU devra être payé en présentiel.';
+$string['confirm'] = 'Confirmer';
 $string['course'] = 'Créneau horaire';
 $string['course_has_been_deleted'] = 'Le créneau horaire a été supprimé.';
 $string['course_has_been_moved_to_because_selected_category_did_not_match_to_grouping_of_sports_activities'] = 'Le cours « {$a->fullname} » a été déplacé dans la catégorie « {$a->category} », car la catégorie sélectionnée ne correspondait pas à une catégorie d’activité sportive.';
