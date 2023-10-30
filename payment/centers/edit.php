@@ -32,7 +32,7 @@ $centerid = optional_param('centerid', 0, PARAM_INT);
 // Generate object.
 $center = false;
 if ($centerid != 0) {
-    $center = $DB->get_record('apsolu_payments_centers', array('id' => $centerid));
+    $center = $DB->get_record('apsolu_payments_centers', ['id' => $centerid]);
 }
 
 if ($center === false) {
@@ -49,7 +49,7 @@ if ($center === false) {
 }
 
 // Build form.
-$customdata = array('center' => $center);
+$customdata = ['center' => $center];
 $mform = new local_apsolu_payment_centers_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
@@ -67,7 +67,7 @@ if ($data = $mform->get_data()) {
 
         $DB->insert_record('apsolu_payments_centers', $center);
     } else {
-        $fields = array('hmac');
+        $fields = ['hmac'];
         foreach ($fields as $field) {
             if (!empty($data->{$field})) {
                 $center->{$field} = trim($data->{$field});

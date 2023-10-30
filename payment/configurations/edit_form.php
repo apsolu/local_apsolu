@@ -46,12 +46,12 @@ class local_apsolu_payment_configurations_edit_form extends moodleform {
         $configuration = $this->_customdata['configuration'];
 
         // Name field.
-        $mform->addElement('text', 'name', get_string('name'), array('size' => '48', 'readonly' => '1'));
+        $mform->addElement('text', 'name', get_string('name'), ['size' => '48', 'readonly' => '1']);
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
 
         // Value field.
-        $mform->addElement('text', 'value', get_string('value', 'local_apsolu'), array('size' => '48'));
+        $mform->addElement('text', 'value', get_string('value', 'local_apsolu'), ['size' => '48']);
         $mform->setType('value', PARAM_TEXT);
         $mform->addRule('value', get_string('required'), 'required', null, 'client');
         $mform->addHelpButton('value', $configuration->name, 'local_apsolu');
@@ -64,7 +64,7 @@ class local_apsolu_payment_configurations_edit_form extends moodleform {
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
         $mform->addElement('hidden', 'tab', 'configurations');
@@ -91,7 +91,7 @@ class local_apsolu_payment_configurations_edit_form extends moodleform {
     public function validation($data, $files) {
         global $DB;
 
-        $errors = array();
+        $errors = [];
         $errors = parent::validation($data, $files);
 
         if (empty($data['value']) === true) {

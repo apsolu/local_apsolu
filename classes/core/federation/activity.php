@@ -61,7 +61,7 @@ class activity extends record {
      * @return array
      */
     public static function get_activity_data() {
-        $data = array();
+        $data = [];
         $data[] = ['id' => 2, 'name' => 'Athlétisme - Courses hors stade', 'mainsport' => 1, 'restriction' => 0];
         $data[] = ['id' => 3, 'name' => 'Aviron (en ligne,longue distance, de mer, indoor)', 'mainsport' => 1, 'restriction' => 0];
         $data[] = ['id' => 4, 'name' => 'Badminton', 'mainsport' => 1, 'restriction' => 0];
@@ -150,7 +150,7 @@ class activity extends record {
         if (empty($this->categoryid) === false) {
             if (isset($data->categoryid) === true && $data->categoryid !== $this->categoryid) {
                 $sql = "UPDATE {apsolu_courses} SET license = 0 WHERE id IN (SELECT id FROM {course} WHERE category = :categoryid)";
-                $DB->execute($sql, array('categoryid' => $this->categoryid));
+                $DB->execute($sql, ['categoryid' => $this->categoryid]);
             }
         }
 
@@ -181,10 +181,10 @@ class activity extends record {
 
         $federationcourse = new FederationCourse();
         $federationcourseid = $federationcourse->get_courseid();
-        $federationgroups = array();
+        $federationgroups = [];
         if ($federationcourseid !== false) {
             $fields = 'name, id, courseid, timecreated, timemodified';
-            $federationgroups = $DB->get_records('groups', array('courseid' => $federationcourseid), $sort = '', $fields);
+            $federationgroups = $DB->get_records('groups', ['courseid' => $federationcourseid], $sort = '', $fields);
         }
 
         $activities = $DB->get_records('apsolu_federation_activities');

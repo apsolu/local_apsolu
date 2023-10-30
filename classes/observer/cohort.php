@@ -47,6 +47,6 @@ class cohort {
         global $DB;
 
         // Supprime les références de la cohorte supprimée dans la table apsolu_payments_cards_cohort.
-        $DB->delete_records('apsolu_payments_cards_cohort', array('cohortid' => $event->objectid));
+        $DB->delete_records('apsolu_payments_cards_cohort', ['cohortid' => $event->objectid]);
     }
 }

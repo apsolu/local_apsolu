@@ -55,7 +55,7 @@ class edit_select_form extends moodleform {
         }
 
         // Sessions.
-        $sessions = array();
+        $sessions = [];
         foreach ($this->_customdata['sessions'] as $session) {
             $sessions[$session->id] = $session->name;
 

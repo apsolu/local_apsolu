@@ -70,7 +70,7 @@ class local_apsolu_federation_import_licences extends moodleform {
         $mform->addElement('select', 'encoding', get_string('encoding', 'tool_uploaduser'), $choices);
         $mform->setDefault('encoding', 'UTF-8');
 
-        $choices = array('5' => '5', '10' => 10, '20' => 20, '100' => 100, '1000' => 1000, '100000' => 100000);
+        $choices = ['5' => '5', '10' => 10, '20' => 20, '100' => 100, '1000' => 1000, '100000' => 100000];
         $mform->addElement('select', 'previewrows', get_string('rowpreviewnum', 'tool_uploaduser'), $choices);
         $mform->setType('previewrows', PARAM_INT);
 
@@ -85,7 +85,7 @@ class local_apsolu_federation_import_licences extends moodleform {
             // Seul le bouton aperçu est disponible.
             $buttonarray[] = &$mform->createElement('submit', 'previewbutton', get_string('federation_preview', 'local_apsolu'));
 
-            $attributes = array('class' => 'btn btn-default', 'disabled' => 'disabled');
+            $attributes = ['class' => 'btn btn-default', 'disabled' => 'disabled'];
             $buttonarray[] = &$mform->createElement('submit', 'importbutton',
                 get_string('federation_import', 'local_apsolu'), $attributes);
         } else {
@@ -105,14 +105,14 @@ class local_apsolu_federation_import_licences extends moodleform {
             $mform->setType('emailcolumn', PARAM_INT);
 
             // Les boutons aperçu et importer sont disponibles.
-            $attributes = array('class' => 'btn btn-default');
+            $attributes = ['class' => 'btn btn-default'];
             $buttonarray[] = &$mform->createElement('submit', 'previewbutton',
                 get_string('federation_preview', 'local_apsolu'), $attributes);
 
             $buttonarray[] = &$mform->createElement('submit', 'importbutton', get_string('federation_import', 'local_apsolu'));
         }
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
         $mform->closeHeaderBefore('buttonar');
 
         // Hidden fields.

@@ -38,7 +38,7 @@ $roleid = required_param('roleid', PARAM_INT); // Role id.
 $course = get_course($courseid);
 require_login($course);
 
-$student = $DB->get_record('user', array('id' => $userid), '*', MUST_EXIST);
+$student = $DB->get_record('user', ['id' => $userid], '*', MUST_EXIST);
 
 $context = context_course::instance($courseid);
 require_capability('moodle/course:update', $context);
@@ -46,12 +46,12 @@ require_capability('moodle/course:update', $context);
 $PAGE->set_context($context);
 
 $data = (object) ['userid' => $userid, 'courseid' => $courseid, 'enrolid' => $enrolid, 'statusid' => $statusid, 'roleid' => $roleid];
-$statuses = array();
+$statuses = [];
 foreach (enrol_select_plugin::$states as $stateid => $state) {
     $statuses[$stateid] = enrol_select_plugin::get_enrolment_list_name($stateid);
 }
 
-$roles = array();
+$roles = [];
 foreach (enrol_select_get_custom_student_roles() as $role) {
     $roles[$role->id] = $role->name;
 }
@@ -60,7 +60,7 @@ $json = new stdClass();
 
 // Initialize form.
 $url = new moodle_url('/local/apsolu/attendance/ajax/edit_enrolment.php');
-$params = array($data, $statuses, $roles);
+$params = [$data, $statuses, $roles];
 
 $mform = new edit_enrolment_form($url, $params);
 
@@ -69,7 +69,7 @@ if ($data = $mform->get_data()) {
     try {
         $transaction = $DB->start_delegated_transaction();
 
-        $instance = $DB->get_record('enrol', array('id' => $enrolid, 'enrol' => 'select'), '*', MUST_EXIST);
+        $instance = $DB->get_record('enrol', ['id' => $enrolid, 'enrol' => 'select'], '*', MUST_EXIST);
 
         $enrolselectplugin = new enrol_select_plugin();
         $enrolselectplugin->enrol_user($instance, $student->id, $data->roleid, $timestart = 0, $timeend = 0, $status = $data->statusid, $recovergrades = null);

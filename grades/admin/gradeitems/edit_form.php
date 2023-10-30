@@ -46,7 +46,7 @@ class local_apsolu_grades_gradeitems_edit_form extends moodleform {
         list($gradeitem, $roles, $calendars) = $this->_customdata;
 
         // Name field.
-        $mform->addElement('text', 'name', get_string('gradeitem_name', 'local_apsolu'), array('size' => '48'));
+        $mform->addElement('text', 'name', get_string('gradeitem_name', 'local_apsolu'), ['size' => '48']);
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
         $mform->addHelpButton('name', 'gradeitem_name', 'local_apsolu');
@@ -69,7 +69,7 @@ class local_apsolu_grades_gradeitems_edit_form extends moodleform {
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
         $mform->addElement('hidden', 'tab', 'gradeitems');
@@ -96,11 +96,11 @@ class local_apsolu_grades_gradeitems_edit_form extends moodleform {
     public function validation($data, $files) {
         global $DB;
 
-        $errors = array();
+        $errors = [];
         $errors = parent::validation($data, $files);
 
         // Is unique ?
-        $params = array('name' => $data['name'], 'calendarid' => $data['calendarid'], 'roleid' => $data['roleid']);
+        $params = ['name' => $data['name'], 'calendarid' => $data['calendarid'], 'roleid' => $data['roleid']];
         $gradeitem = $DB->get_record('apsolu_grade_items', $params);
         if ($gradeitem !== false && $gradeitem->id != $data['gradeitemid']) {
             $errors['name'] = get_string('error_name_is_already_used_for_another_context', 'local_apsolu');

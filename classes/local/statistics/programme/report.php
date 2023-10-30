@@ -94,7 +94,7 @@ class report extends \local_apsolu\local\statistics\report {
           [ 'data' => "cityname", 'title' => get_string("city", 'local_apsolu')] ,
           [ 'data' => "placename", 'title' => get_string("locations", 'local_apsolu')] ,
           [ 'data' => "placeaddress", 'title' => get_string("address", 'local_apsolu')] ,
-          [ 'data' => "slotnumweekday", 'title' => get_string("weekday", 'local_apsolu'),"render" => "function ( data, type, row ) {return moment.weekdays()[(data==7) ? 0 : data];}"],
+          [ 'data' => "slotnumweekday", 'title' => get_string("weekday", 'local_apsolu'), "render" => "function ( data, type, row ) {return moment.weekdays()[(data==7) ? 0 : data];}"],
           [ 'data' => "slotstart", 'title' => get_string("coursestartdate", 'local_apsolu')] ,
           [ 'data' => "slotend", 'title' => get_string("courseenddate", 'local_apsolu')] ,
           [ 'data' => "actifquota", 'title' => get_string("statistics_active_quota", 'local_apsolu')] ,
@@ -103,16 +103,16 @@ class report extends \local_apsolu\local\statistics\report {
           [ 'data' => "coursestartdate", 'title' => get_string("statistics_start_the", 'local_apsolu')] ,
           [ 'data' => "courseenddate", 'title' => get_string("statistics_end_the", 'local_apsolu')],
           [ 'data' => "reenrolstartdate", 'title' => get_string("reenrolstartdate", 'local_apsolu')] ,
-          [ 'data' => "reenrolenddate", 'title' => get_string("reenrolenddate", 'local_apsolu')]
+          [ 'data' => "reenrolenddate", 'title' => get_string("reenrolenddate", 'local_apsolu')],
         ];
         $orders = [0 => 'asc', 1 => 'asc'];
-        $filters = ['input' => [8,9,10,11,12,13,14,15],'select' => [0,1,2,3,4,5,6,7,8,9] ];
+        $filters = ['input' => [8, 9, 10, 11, 12, 13, 14, 15], 'select' => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] ];
 
-        return array(
+        return [
           'columns' => $columns,
           'orders' => $orders,
           'filters' => $filters,
-        );
+        ];
     }
 
     /**
@@ -123,7 +123,7 @@ class report extends \local_apsolu\local\statistics\report {
      *
      * @return array
      */
-    public function getReportData($queryBuilder,$criterias=null) {
+    public function getReportData($queryBuilder, $criterias=null) {
         global $DB;
 
         $condition = json_decode($queryBuilder);
@@ -140,10 +140,10 @@ class report extends \local_apsolu\local\statistics\report {
             $where .= " AND ". $condition->sql;
         }
         if (!is_null($criterias)) {
-            if (array_key_exists("cityid",$criterias) && $criterias["cityid"] != '') {
+            if (array_key_exists("cityid", $criterias) && $criterias["cityid"] != '') {
                 $where .= " AND cityid = " . $criterias["cityid"];
             }
-            if (array_key_exists("calendarstypeid",$criterias) && $criterias["calendarstypeid"] != '') {
+            if (array_key_exists("calendarstypeid", $criterias) && $criterias["calendarstypeid"] != '') {
                 $where .= " AND calendarstypeid = " . $criterias["calendarstypeid"];
             }
         }
@@ -159,7 +159,7 @@ class report extends \local_apsolu\local\statistics\report {
         $sql = $with. $select . $from . $where . $groupby . $having . $orderby;
 
         if(property_exists($condition, "params")) {
-            return $DB->get_records_sql($sql,$condition->params);
+            return $DB->get_records_sql($sql, $condition->params);
         } else {
             return $DB->get_records_sql($sql);
         }
@@ -176,7 +176,7 @@ class report extends \local_apsolu\local\statistics\report {
     public static function groupslots($params) {
         global $DB;
 
-        if (array_key_exists("cityid",$params) && $params["cityid"] != '') {
+        if (array_key_exists("cityid", $params) && $params["cityid"] != '') {
             $cityid = $params["cityid"];
         } else {
             $cities = self::get_cities();
@@ -187,7 +187,7 @@ class report extends \local_apsolu\local\statistics\report {
             array_keys($cities)
             ));
         }
-        if (array_key_exists("calendarstypeid",$params) && $params["calendarstypeid"] != '') {
+        if (array_key_exists("calendarstypeid", $params) && $params["calendarstypeid"] != '') {
             $calendarstypeid = $params["calendarstypeid"];
         } else {
             $calendarstypes = self::get_calendarstypes();
@@ -219,7 +219,7 @@ class report extends \local_apsolu\local\statistics\report {
     public static function activityslots($params) {
         global $DB;
 
-        if (array_key_exists("cityid",$params) && $params["cityid"] != '') {
+        if (array_key_exists("cityid", $params) && $params["cityid"] != '') {
             $cityid = $params["cityid"];
         } else {
             $cities = self::get_cities();
@@ -230,7 +230,7 @@ class report extends \local_apsolu\local\statistics\report {
             array_keys($cities)
             ));
         }
-        if (array_key_exists("calendarstypeid",$params) && $params["calendarstypeid"] != '') {
+        if (array_key_exists("calendarstypeid", $params) && $params["calendarstypeid"] != '') {
             $calendarstypeid = $params["calendarstypeid"];
         } else {
             $calendarstypes = self::get_calendarstypes();
@@ -265,7 +265,7 @@ class report extends \local_apsolu\local\statistics\report {
     public static function countslotsmainlist($params) {
         global $DB;
 
-        if (array_key_exists("cityid",$params) && $params["cityid"] != '') {
+        if (array_key_exists("cityid", $params) && $params["cityid"] != '') {
             $cityid = $params["cityid"];
         } else {
             $cities = self::get_cities();
@@ -276,7 +276,7 @@ class report extends \local_apsolu\local\statistics\report {
             array_keys($cities)
             ));
         }
-        if (array_key_exists("calendarstypeid",$params) && $params["calendarstypeid"] != '') {
+        if (array_key_exists("calendarstypeid", $params) && $params["calendarstypeid"] != '') {
             $calendarstypeid = $params["calendarstypeid"];
         } else {
             $calendarstypes = self::get_calendarstypes();

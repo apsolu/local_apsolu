@@ -57,7 +57,7 @@ class local_apsolu_federation_export_licenses extends moodleform {
         $mform->setType('idnumber', PARAM_TEXT);
 
         // Numéro de l'association.
-        $attributes = array('size' => 10, 'style' => 'width:6em');
+        $attributes = ['size' => 10, 'style' => 'width:6em'];
         $select = $mform->addElement('select', 'numbers', get_string('association_number_prefix', 'local_apsolu'), $numbers, $attributes);
         $select->setMultiple(true);
         $mform->setType('numbers', PARAM_INT);
@@ -87,12 +87,12 @@ class local_apsolu_federation_export_licenses extends moodleform {
         $mform->setType('activity', PARAM_INT);
 
         // Submit buttons.
-        $attributes = array('class' => 'btn btn-default');
+        $attributes = ['class' => 'btn btn-default'];
         $buttonarray[] = &$mform->createElement('submit', 'previewbutton', get_string('show'), $attributes);
 
         $buttonarray[] = &$mform->createElement('submit', 'exportbutton', get_string('export', 'local_apsolu'));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
         $mform->addElement('hidden', 'page', 'export');

@@ -34,16 +34,16 @@ $userid = optional_param('userid', null, PARAM_INT);
 $showalltransactions = optional_param('showall', 0, PARAM_INT);
 
 if (isset($userid)) {
-    $user = $DB->get_record('user', array('id' => $userid), '*', MUST_EXIST);
+    $user = $DB->get_record('user', ['id' => $userid], '*', MUST_EXIST);
     $customfields = profile_user_record($userid);
 
     $data = new stdClass();
     $data->wwwroot = $CFG->wwwroot;
     $data->userid = $userid;
     $data->useridentity = $OUTPUT->render(new user_picture($user)).' '.fullname($user);
-    $data->payments = array();
+    $data->payments = [];
     $data->count_payments = 0;
-    $data->due_payments = array();
+    $data->due_payments = [];
     $data->count_due_payments = 0;
     $data->has_sesame = (isset($customfields->apsolusesame) && $customfields->apsolusesame == 1);
     $data->user_auth = get_string('pluginname', 'auth_'.$user->auth);
@@ -63,7 +63,7 @@ if (isset($userid)) {
 
     // Liste toutes les transactions de l'utilisateur enregistrées dans la table apsolu_payments.
     $centers = $DB->get_records('apsolu_payments_centers');
-    $payments = $DB->get_records('apsolu_payments', array('userid' => $userid), $sort = 'timemodified');
+    $payments = $DB->get_records('apsolu_payments', ['userid' => $userid], $sort = 'timemodified');
     foreach ($payments as $payment) {
         if (!empty($payment->timepaid)) {
             try {
@@ -105,13 +105,13 @@ if (isset($userid)) {
                 $payment->status_string = get_string('paymentdue', 'local_apsolu');
         }
 
-        $payment->items = array();
+        $payment->items = [];
         $payment->count_items = 0;
         $sql = "SELECT api.*, apc.fullname".
             " FROM {apsolu_payments_items} api".
             " JOIN {apsolu_payments_cards} apc ON apc.id = api.cardid".
             " WHERE api.paymentid = :paymentid";
-        $items = $DB->get_records_sql($sql, array('paymentid' => $payment->id));
+        $items = $DB->get_records_sql($sql, ['paymentid' => $payment->id]);
         foreach ($items as $item) {
             $payment->items[] = $item->fullname;
             $payment->count_items++;
@@ -124,7 +124,7 @@ if (isset($userid)) {
     $data->backurl = $CFG->wwwroot.'/local/apsolu/payment/admin.php?tab=payments';
 } else {
     // Create the user selector objects.
-    $options = array('multiselect' => false);
+    $options = ['multiselect' => false];
     $userselector = new \UniversiteRennes2\Apsolu\local_apsolu_payment_user_selector('userid', $options);
     ob_start();
     $userselector->display();

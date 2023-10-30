@@ -47,12 +47,12 @@ class local_apsolu_federation_activities_edit_form extends moodleform {
         $fields = $this->_customdata['fields'];
 
         // Champ Numéro d'association.
-        $mform->addElement('text', 'number', get_string('association_number', 'local_apsolu'), array('maxlength' => 4));
+        $mform->addElement('text', 'number', get_string('association_number', 'local_apsolu'), ['maxlength' => 4]);
         $mform->setType('number', PARAM_TEXT);
         $mform->addRule('number', get_string('required'), 'required', null, 'client');
 
         // Champ "Champ".
-        $options = array();
+        $options = [];
         $options['multiple'] = false;
         $mform->addElement('select', 'field', get_string('field', 'local_apsolu'), $fields, $options);
         $mform->setType('field', PARAM_TEXT);
@@ -71,7 +71,7 @@ class local_apsolu_federation_activities_edit_form extends moodleform {
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
         $mform->addElement('hidden', 'page', 'numbers');

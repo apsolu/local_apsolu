@@ -54,7 +54,7 @@ $complementaries = $report->get_complementaries();
 * ACTIVITÉS PHYSIQUES
 *
 */
-$dashboard = $render->render_reportData(['classname' => 'population','reportid' => 'dashboard']);
+$dashboard = $render->render_reportData(['classname' => 'population', 'reportid' => 'dashboard']);
 // INSCRIPTIONS : Nombre d'inscriptions
 $data->enrollment['counter'] = $dashboard[0]->wish_list;
 $data->enrollment['report'] = new moodle_url('/local/apsolu/statistics/population/index.php', ['page' => 'reports', 'reportid' => 'enrollment']);
@@ -91,7 +91,7 @@ $data->enrollee_deletedlist['report'] = new moodle_url('/local/apsolu/statistics
 *
 *
 */
-$dashboard_complementaries = $render->render_reportData(['classname' => 'population','reportid' => 'dashboard_complementaries']);
+$dashboard_complementaries = $render->render_reportData(['classname' => 'population', 'reportid' => 'dashboard_complementaries']);
 // INSCRIPTIONS : Nombre d'inscriptions
 if ($dashboard_complementaries[0]->enrollment > 0) {
     $data->has_complementaries_enrollment = true;
@@ -101,17 +101,17 @@ if ($dashboard_complementaries[0]->enrollment > 0) {
     $data->complementaries_enrollee['counter'] = $dashboard_complementaries[0]->enrollee;
     $data->complementaries_enrollee['report'] = new moodle_url('/local/apsolu/statistics/population/index.php', ['page' => 'reports', 'reportid' => 'complementaries_enrollee']);
     $data->complementaries_enrollee['title'] = $report->getReport("complementaries_enrollee")->label;
-    $data->complementaries_enrollee['chart'] = $render->render_chart(['classname' => 'population','reportid' => 'complementaries_enrollee','criterias' => ['complementaries' => array_values($complementaries)]]);
+    $data->complementaries_enrollee['chart'] = $render->render_chart(['classname' => 'population', 'reportid' => 'complementaries_enrollee', 'criterias' => ['complementaries' => array_values($complementaries)]]);
 
     foreach ($complementaries as $complementary) {
         // INSCRIPTIONS : Nombre d'inscriptions par activités complémentaires
         if (property_exists($dashboard_complementaries[0], 'enrollment_'.$complementary->id)) {
             $prop = 'enrollment_'.$complementary->id;
-            $data->complementaries_enrollment_activity[] = array(
+            $data->complementaries_enrollment_activity[] = [
             'title' => $complementary->name,
             'counter' => $dashboard_complementaries[0]->$prop,
             'report' => new moodle_url('/local/apsolu/statistics/population/index.php', ['page' => 'reports', 'reportid' => 'complementaries_enrollment']),
-            );
+            ];
         }
     }
 
@@ -124,29 +124,29 @@ if ($dashboard_complementaries[0]->enrollment > 0) {
 */
 // INSCRITS : Nombre d'inscrits ayant au moins une activité physique / Refusés en cours
 $data->enrollee_accepted_refused['title'] = $report->getReport("accepted_refused")->label;
-$data->enrollee_accepted_refused['chart'] = $render->render_chart(['classname' => 'population','reportid' => 'accepted_refused','criterias' => ['cities' => array_values($cities),'calendarstypes' => array_values($calendarstypes)]]);
+$data->enrollee_accepted_refused['chart'] = $render->render_chart(['classname' => 'population', 'reportid' => 'accepted_refused', 'criterias' => ['cities' => array_values($cities), 'calendarstypes' => array_values($calendarstypes)]]);
 // INSCRITS : Répartition : Nb Personnels VS Nb étudiants
 $data->distribution_userprofile['title'] = $report->getReport("distribution_userprofile")->label;
-$data->distribution_userprofile['chart'] = $render->render_chart(['classname' => 'population','reportid' => 'distribution_userprofile','criterias' => ['cities' => array_values($cities),'calendarstypes' => array_values($calendarstypes)]]);
+$data->distribution_userprofile['chart'] = $render->render_chart(['classname' => 'population', 'reportid' => 'distribution_userprofile', 'criterias' => ['cities' => array_values($cities), 'calendarstypes' => array_values($calendarstypes)]]);
 // INSCRITS : Répartition : Nb garçons VS Nb filles
 $data->distribution_genders['title'] = $report->getReport("distribution_genders")->label;
-$data->distribution_genders['chart'] = $render->render_chart(['classname' => 'population','reportid' => 'distribution_genders','criterias' => ['cities' => array_values($cities),'calendarstypes' => array_values($calendarstypes)]]);
+$data->distribution_genders['chart'] = $render->render_chart(['classname' => 'population', 'reportid' => 'distribution_genders', 'criterias' => ['cities' => array_values($cities), 'calendarstypes' => array_values($calendarstypes)]]);
 // INSCRIPTIONS : Nombre de libres/Option évalués/Bonification évalués
 $data->enrol_roles['title'] = $report->getReport("enrol_roles")->label;
-$data->enrol_roles['chart'] = $render->render_chart(['classname' => 'population','reportid' => 'enrol_roles','criterias' => ['cities' => array_values($cities),'calendarstypes' => array_values($calendarstypes)]]);
+$data->enrol_roles['chart'] = $render->render_chart(['classname' => 'population', 'reportid' => 'enrol_roles', 'criterias' => ['cities' => array_values($cities), 'calendarstypes' => array_values($calendarstypes)]]);
 // INSCRIPTIONS : Répartition : Nb Personnels VS Nb étudiants
 $data->enrol_userprofile['title'] = $report->getReport("enrol_userprofile")->label;
-$data->enrol_userprofile['chart'] = $render->render_chart(['classname' => 'population','reportid' => 'enrol_userprofile','criterias' => ['cities' => array_values($cities),'calendarstypes' => array_values($calendarstypes)]]);
+$data->enrol_userprofile['chart'] = $render->render_chart(['classname' => 'population', 'reportid' => 'enrol_userprofile', 'criterias' => ['cities' => array_values($cities), 'calendarstypes' => array_values($calendarstypes)]]);
 // INSCRIPTIONS : Répartition : Nb garçons VS Nb filles
 $data->enrol_genders['title'] = $report->getReport("enrol_genders")->label;
-$data->enrol_genders['chart'] = $render->render_chart(['classname' => 'population','reportid' => 'enrol_genders','criterias' => ['cities' => array_values($cities),'calendarstypes' => array_values($calendarstypes)]]);
+$data->enrol_genders['chart'] = $render->render_chart(['classname' => 'population', 'reportid' => 'enrol_genders', 'criterias' => ['cities' => array_values($cities), 'calendarstypes' => array_values($calendarstypes)]]);
 if ($CFG->is_siuaps_rennes){
     // INSCRITS : Nombre de sportif de haut niveau inscrit à une pratique une activité physique / complémentaire
     $data->shnu_user['title'] = $report->getReport("custom_apsoluhighlevelathlete")->label;
-    $data->shnu_user['chart'] = $render->render_chart(['classname' => 'population','reportid' => 'custom_apsoluhighlevelathlete']);
+    $data->shnu_user['chart'] = $render->render_chart(['classname' => 'population', 'reportid' => 'custom_apsoluhighlevelathlete']);
 
     $data->shnu['title'] = $report->getReport("custom_shnu")->label;
-    $data->shnu['counter'] = $render->render_reportCounter(['classname' => 'population','reportid' => 'custom_shnu']);
+    $data->shnu['counter'] = $render->render_reportCounter(['classname' => 'population', 'reportid' => 'custom_shnu']);
     $data->shnu['report'] = new moodle_url('/local/apsolu/statistics/population/index.php', ['page' => 'reports', 'reportid' => 'custom_shnu']);
 
 }

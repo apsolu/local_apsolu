@@ -28,7 +28,7 @@ require_once($CFG->dirroot.'/local/apsolu/locallib.php');
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
-$data->dunnings = array();
+$data->dunnings = [];
 $data->count_dunnings = 0;
 
 $sql = "SELECT ad.*, u.firstname, u.lastname, COUNT(adp.id) AS count_posts".
@@ -60,7 +60,7 @@ foreach ($dunnings as $dunning) {
         $dunning->status_style = 'info';
     }
 
-    $dunning->cards = array();
+    $dunning->cards = [];
     $dunning->count_cards = 0;
     foreach ($cards as $recordid => $card) {
         if ($dunning->id === $card->dunningid) {

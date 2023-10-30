@@ -77,14 +77,14 @@ class category extends record {
         }
 
         // Supprime une éventuelle association dans la table des activités FFSU.
-        $records = Activity::get_records(array('categoryid' => $this->id));
+        $records = Activity::get_records(['categoryid' => $this->id]);
         foreach ($records as $record) {
             $record->categoryid = 0;
             $record->save();
         }
 
         // Supprime l'objet en base de données.
-        $DB->delete_records(self::TABLENAME, array('id' => $this->id));
+        $DB->delete_records(self::TABLENAME, ['id' => $this->id]);
 
         $coursecat = core_course_category::get($this->id, MUST_EXIST, true);
         $coursecat->delete_full();
@@ -117,7 +117,7 @@ class category extends record {
             " FROM {course_categories} cc".
             " JOIN {apsolu_courses_categories} acc ON acc.id = cc.id".
             " WHERE acc.id = :recordid";
-        $record = $DB->get_record_sql($sql, array('recordid' => $recordid), $strictness);
+        $record = $DB->get_record_sql($sql, ['recordid' => $recordid], $strictness);
 
         if ($record === false) {
             return;
@@ -163,7 +163,7 @@ class category extends record {
 
             // Note: insert_record() exige l'absence d'un id.
             $sql = "INSERT INTO {apsolu_courses_categories} (id, url) VALUES(:id, :url)";
-            $DB->execute($sql, array('id' => $this->id, 'url' => $this->url));
+            $DB->execute($sql, ['id' => $this->id, 'url' => $this->url]);
         } else {
             $DB->update_record(self::TABLENAME, $this);
 
@@ -175,9 +175,9 @@ class category extends record {
                       FROM {apsolu_courses} ac
                       JOIN {course} c ON c.id = ac.id
                      WHERE c.category = :category";
-            $courses = $DB->get_records_sql($sql, array('category' => $this->id));
+            $courses = $DB->get_records_sql($sql, ['category' => $this->id]);
             if (count($courses) > 0) {
-                $skills = array();
+                $skills = [];
                 foreach ($DB->get_records('apsolu_skills', $conditions = null, $sort = 'name') as $skill) {
                     $skills[$skill->id] = $skill->name;
                 }

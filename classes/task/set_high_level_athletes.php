@@ -67,13 +67,13 @@ class set_high_level_athletes extends \core\task\scheduled_task {
 
         $workoutcourseid = 250;
 
-        $field = $DB->get_record('user_info_field', array('shortname' => 'apsoluhighlevelathlete'));
+        $field = $DB->get_record('user_info_field', ['shortname' => 'apsoluhighlevelathlete']);
         if ($field === false) {
             mtrace('Le champ "apsoluhighlevelathlete" n\'existe pas.');
             return false;
         }
 
-        $grouping = $DB->get_record('groupings', array('id' => $groupingid, 'courseid' => $courseid));
+        $grouping = $DB->get_record('groupings', ['id' => $groupingid, 'courseid' => $courseid]);
         if ($grouping === false) {
             mtrace('Le groupement "athlètes de haut niveau validés" n\'existe pas.');
             return false;
@@ -85,7 +85,7 @@ class set_high_level_athletes extends \core\task\scheduled_task {
             " FROM {groups_members} gm".
             " JOIN {groupings_groups} gg ON gg.groupid = gm.groupid".
             " WHERE gg.groupingid = :groupingid";
-        $members = $DB->get_records_sql($sql, array('groupingid' => $grouping->id));
+        $members = $DB->get_records_sql($sql, ['groupingid' => $grouping->id]);
         foreach ($members as $member) {
             // Positionne le témoin sportifs de haut niveau dans le profil de l'utilisateur.
             $data = new \stdClass();
@@ -94,7 +94,7 @@ class set_high_level_athletes extends \core\task\scheduled_task {
             $data->data = '1';
             $data->dataformat = '0';
 
-            $conditions = array('userid' => $data->userid, 'fieldid' => $data->fieldid);
+            $conditions = ['userid' => $data->userid, 'fieldid' => $data->fieldid];
             if ($record = $DB->get_record('user_info_data', $conditions)) {
                 if ($data->data !== $record->data) {
                     $data->id = $record->id;
@@ -154,11 +154,11 @@ class set_high_level_athletes extends \core\task\scheduled_task {
                         mtrace("\t insert apsolu_payments_items: paymentid=".$payment->id.", cardid=".$cardid);
                     }
 
-                    $event = \local_apsolu\event\update_user_payment::create(array(
+                    $event = \local_apsolu\event\update_user_payment::create([
                         'relateduserid' => $member->userid,
                         'context' => context_system::instance(),
-                        'other' => json_encode(array('payment' => $payment, 'items' => $cardsid)),
-                    ));
+                        'other' => json_encode(['payment' => $payment, 'items' => $cardsid]),
+                    ]);
                     $event->trigger();
 
                     $success = true;
@@ -172,7 +172,7 @@ class set_high_level_athletes extends \core\task\scheduled_task {
         }
 
         // Supprime le témoin sportifs de haut niveau.
-        $datas = $DB->get_records('user_info_data', array('fieldid' => $field->id));
+        $datas = $DB->get_records('user_info_data', ['fieldid' => $field->id]);
         foreach ($datas as $data) {
             if ($data->data !== '1') {
                 continue; // Ne traiter que les comptes marqués haut niveau.

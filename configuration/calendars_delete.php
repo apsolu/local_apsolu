@@ -29,11 +29,11 @@ use local_apsolu\core\gradeitem;
 $calendarid = required_param('calendarid', PARAM_INT);
 $confirm = optional_param('confirm', '', PARAM_ALPHANUM); // Confirmation hash.
 
-$url = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'calendars', 'action' => 'delete', 'calendarid' => $calendarid));
+$url = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'calendars', 'action' => 'delete', 'calendarid' => $calendarid]);
 
-$calendar = $DB->get_record('apsolu_calendars', array('id' => $calendarid), $fields = '*', MUST_EXIST);
+$calendar = $DB->get_record('apsolu_calendars', ['id' => $calendarid], $fields = '*', MUST_EXIST);
 
-$returnurl = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'calendars'));
+$returnurl = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'calendars']);
 $deletehash = md5($calendar->id);
 
 if ($confirm === $deletehash) {
@@ -47,15 +47,15 @@ if ($confirm === $deletehash) {
         $transaction = $DB->start_delegated_transaction();
 
         $sql = "UPDATE {enrol} SET customchar1 = 0 WHERE enrol = 'select' AND customchar1 = :calendarid";
-        $DB->execute($sql, array('calendarid' => $calendar->id));
+        $DB->execute($sql, ['calendarid' => $calendar->id]);
 
         // Supprime les éléments de notations.
-        $gradeitems = gradeitem::get_records(array('calendarid' => $calendar->id));
+        $gradeitems = gradeitem::get_records(['calendarid' => $calendar->id]);
         foreach ($gradeitems as $gradeitem) {
             $gradeitem->delete();
         }
 
-        $DB->delete_records('apsolu_calendars', array('id' => $calendar->id));
+        $DB->delete_records('apsolu_calendars', ['id' => $calendar->id]);
 
         $transaction->allow_commit();
     } catch (Exception $exception) {
@@ -73,7 +73,7 @@ if ($confirm === $deletehash) {
         " WHERE e.enrol = 'select'".
         " AND e.customchar1 = :calendarid".
         " ORDER BY c.fullname";
-    $courses = $DB->get_records_sql($sql, array('calendarid' => $calendar->id));
+    $courses = $DB->get_records_sql($sql, ['calendarid' => $calendar->id]);
 
     $data = new stdClass();
     $data->wwwroot = $CFG->wwwroot;
@@ -83,7 +83,7 @@ if ($confirm === $deletehash) {
 
     $message = $OUTPUT->render_from_template('local_apsolu/configuration_calendars_delete', $data);
 
-    $urlarguments = array('page' => 'calendars', 'action' => 'delete', 'calendarid' => $calendarid, 'confirm' => $deletehash);
+    $urlarguments = ['page' => 'calendars', 'action' => 'delete', 'calendarid' => $calendarid, 'confirm' => $deletehash];
     $confirmurl = new moodle_url('/local/apsolu/configuration/index.php', $urlarguments);
     $confirmbutton = new single_button($confirmurl, get_string('delete'), 'post');
 

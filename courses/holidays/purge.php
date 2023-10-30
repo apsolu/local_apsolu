@@ -31,6 +31,6 @@ foreach ($holidays as $holiday) {
     $holiday->delete();
 }
 
-$returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'holidays'));
+$returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'holidays']);
 $message = get_string('holidays_have_been_purged', 'local_apsolu');
 redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);

@@ -80,19 +80,19 @@ class attendancesession extends record {
         }
 
         // Supprime les présences.
-        $presences = attendancepresence::get_records(array('sessionid' => $this->id));
+        $presences = attendancepresence::get_records(['sessionid' => $this->id]);
         foreach ($presences as $presence) {
             $presence->delete();
         }
 
         // Supprime l'objet en base de données.
-        $DB->delete_records(self::TABLENAME, array('id' => $this->id));
+        $DB->delete_records(self::TABLENAME, ['id' => $this->id]);
 
         // Enregistre un évènement dans les logs.
-        $event = \local_apsolu\event\session_deleted::create(array(
+        $event = \local_apsolu\event\session_deleted::create([
             'objectid' => $this->id,
             'context' => context_course::instance($this->courseid),
-            ));
+            ]);
         $event->trigger();
 
         // Valide la transaction en cours.
@@ -146,10 +146,10 @@ class attendancesession extends record {
         }
 
         // Enregistre un évènement dans les logs.
-        $event = $eventclass::create(array(
+        $event = $eventclass::create([
             'objectid' => $this->id,
             'context' => context_course::instance($this->courseid),
-            ));
+            ]);
         $event->trigger();
 
         // Valide la transaction en cours.

@@ -33,12 +33,12 @@ $compose->id = 0;
 $compose->simulation = 1;
 $compose->subject = '';
 $compose->message = '';
-$compose->cards = array();
+$compose->cards = [];
 
 $cards = $DB->get_records('apsolu_payments_cards');
 
 // Build form.
-$customdata = array($compose, $cards);
+$customdata = [$compose, $cards];
 $mform = new local_apsolu_payment_notifications_compose_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
@@ -57,7 +57,7 @@ if ($data = $mform->get_data()) {
         $compose->subject = '[x] '.$compose->subject;
     }
 
-    $compose->cards = array();
+    $compose->cards = [];
 
     foreach ($cards as $card) {
         $field = 'card'.$card->id;

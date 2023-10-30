@@ -49,7 +49,7 @@ class local_apsolu_request_federation_number_form extends moodleform {
         $crossicon = $OUTPUT->render(new pix_icon('i/grade_incorrect', ''));
         $checkicon = $OUTPUT->render(new pix_icon('i/grade_correct', ''));
 
-        $list = array();
+        $list = [];
         foreach ($items as $i => $item) {
             if ($item->status === true) {
                 $list[] = sprintf('%s %s', $checkicon, $item->label);
@@ -57,7 +57,7 @@ class local_apsolu_request_federation_number_form extends moodleform {
                 $list[] = sprintf('%s %s', $crossicon, $item->label);
             }
         }
-        $mform->addElement('static', 'list', '', html_writer::alist($list, $attributes = array('class' => 'list-unstyled mt-3')));
+        $mform->addElement('static', 'list', '', html_writer::alist($list, $attributes = ['class' => 'list-unstyled mt-3']));
 
         // Champs cachés.
         $mform->addElement('hidden', 'step', APSOLU_PAGE_SUMMARY);
@@ -70,13 +70,13 @@ class local_apsolu_request_federation_number_form extends moodleform {
             $label = get_string('request_a_federation_number', 'local_apsolu');
         }
 
-        $attributes = array('class' => 'btn btn-default');
+        $attributes = ['class' => 'btn btn-default'];
         if ($canrequestfederationnumber === false) {
             $attributes['disabled'] = 1;
         }
 
         $buttonarray[] = &$mform->createElement('submit', 'save', $label, $attributes);
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
     }
 }

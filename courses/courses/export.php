@@ -68,11 +68,11 @@ $recordset->close();
 $roles = role_fix_names($DB->get_records('role'));
 
 // Liste des rôles par méthodes d'inscription.
-$enrol_roles = array();
+$enrol_roles = [];
 $recordset = $DB->get_recordset('enrol_select_roles');
 foreach ($recordset as $enrol) {
     if (isset($enrol_roles[$enrol->enrolid]) === false) {
-        $enrol_roles[$enrol->enrolid] = array();
+        $enrol_roles[$enrol->enrolid] = [];
     }
 
     $enrol_roles[$enrol->enrolid][] = $roles[$enrol->roleid]->name;
@@ -83,11 +83,11 @@ $recordset->close();
 $cards = $DB->get_records('apsolu_payments_cards');
 
 // Liste des tarifs par méthodes d'inscription.
-$enrol_cards = array();
+$enrol_cards = [];
 $recordset = $DB->get_recordset('enrol_select_cards');
 foreach ($recordset as $enrol) {
     if (isset($enrol_cards[$enrol->enrolid]) === false) {
-        $enrol_cards[$enrol->enrolid] = array();
+        $enrol_cards[$enrol->enrolid] = [];
     }
 
     $enrol_cards[$enrol->enrolid][] = $cards[$enrol->cardid]->fullname;
@@ -95,7 +95,7 @@ foreach ($recordset as $enrol) {
 $recordset->close();
 
 // Liste des méthodes d'inscription.
-foreach ($DB->get_records('enrol', array('enrol' => 'select'), $sort = 'enrolstartdate') as $enrol) {
+foreach ($DB->get_records('enrol', ['enrol' => 'select'], $sort = 'enrolstartdate') as $enrol) {
     if (isset($courses[$enrol->courseid]) === false) {
         continue;
     }
@@ -125,7 +125,7 @@ foreach ($DB->get_records('enrol', array('enrol' => 'select'), $sort = 'enrolsta
 // Génération du fichier csv.
 $filename = str_replace(' ', '_', strtolower(get_string('courses', 'local_apsolu')));
 
-$headers = array(
+$headers = [
     get_string('idnumbercourse'),
     get_string('groupings', 'local_apsolu'),
     get_string('categories', 'local_apsolu'),
@@ -137,7 +137,7 @@ $headers = array(
     get_string('locations', 'local_apsolu'),
     get_string('periods', 'local_apsolu'),
     get_string('teachers'),
-);
+];
 
 $csvexport = new \csv_export_writer();
 $csvexport->set_filename($filename);

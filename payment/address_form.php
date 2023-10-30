@@ -48,7 +48,7 @@ class local_apsolu_payment_address_form extends moodleform {
         $mform = $this->_form;
         list($address) = $this->_customdata;
 
-        $attributes = array('maxlength' => 48, 'size' => 48);
+        $attributes = ['maxlength' => 48, 'size' => 48];
 
         // Lastname field.
         $attributes['maxlength'] = paybox::MAX_LENGTH_LASTNAME;
@@ -97,7 +97,7 @@ class local_apsolu_payment_address_form extends moodleform {
         $mform->addRule('city', get_string('required'), 'required', null, 'client');
 
         // CountryCode field.
-        $multiple = array('multiple' => false);
+        $multiple = ['multiple' => false];
         $mform->addElement('autocomplete', 'countrycode', get_string('cardholder_country', 'local_apsolu'), country::get_iso_3166_3(), $multiple);
         $mform->setType('countrycode', PARAM_INT);
         $mform->addRule('countrycode', get_string('required'), 'required', null, 'client');
@@ -110,7 +110,7 @@ class local_apsolu_payment_address_form extends moodleform {
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Set default values.
         $this->set_data($address);

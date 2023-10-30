@@ -62,7 +62,7 @@ if ($recordset->valid()) {
     $csvexport = new \csv_export_writer();
     $csvexport->set_filename($filename);
 
-    $headers = array(
+    $headers = [
         get_string('lastname'),
         get_string('firstname'),
         get_string('email'),
@@ -73,8 +73,8 @@ if ($recordset->valid()) {
         get_string('method', 'local_apsolu'),
         get_string('date', 'local_apsolu'),
         get_string('amount', 'local_apsolu'),
-        get_string('payment_number', 'local_apsolu')
-    );
+        get_string('payment_number', 'local_apsolu'),
+    ];
     $csvexport->add_data($headers);
 
     foreach ($recordset as $record) {

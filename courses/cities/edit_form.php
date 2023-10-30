@@ -46,7 +46,7 @@ class local_apsolu_courses_cities_edit_form extends moodleform {
         $city = $this->_customdata['city'];
 
         // Name field.
-        $mform->addElement('text', 'name', get_string('city', 'local_apsolu'), array('size' => '48'));
+        $mform->addElement('text', 'name', get_string('city', 'local_apsolu'), ['size' => '48']);
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
 
@@ -58,7 +58,7 @@ class local_apsolu_courses_cities_edit_form extends moodleform {
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
         $mform->addElement('hidden', 'tab', 'cities');
@@ -85,11 +85,11 @@ class local_apsolu_courses_cities_edit_form extends moodleform {
     public function validation($data, $files) {
         global $DB;
 
-        $errors = array();
+        $errors = [];
         $errors = parent::validation($data, $files);
 
         // Is unique ?
-        $city = $DB->get_record('apsolu_cities', array('name' => $data['name']));
+        $city = $DB->get_record('apsolu_cities', ['name' => $data['name']]);
         if ($city && $city->id != $data['cityid']) {
             $errors['name'] = get_string('shortnametaken', '', $data['name']);
         }

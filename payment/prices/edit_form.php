@@ -46,13 +46,13 @@ class local_apsolu_payment_cards_edit_form extends moodleform {
         list($instance, $cohorts, $roles, $centers, $calendarstypes) = $this->_customdata;
 
         // Libellé du tarif.
-        $mform->addElement('text', 'name', get_string('card_shortname', 'local_apsolu'), array('size' => '48'));
+        $mform->addElement('text', 'name', get_string('card_shortname', 'local_apsolu'), ['size' => '48']);
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
         $mform->addHelpButton('name', 'card_shortname', 'local_apsolu'); // liberllé affiché à l'étudiant
 
         // Libellé long du tarif.
-        $mform->addElement('text', 'fullname', get_string('card_fullname', 'local_apsolu'), array('size' => '48'));
+        $mform->addElement('text', 'fullname', get_string('card_fullname', 'local_apsolu'), ['size' => '48']);
         $mform->setType('fullname', PARAM_TEXT);
         $mform->addRule('fullname', get_string('required'), 'required', null, 'client');
         $mform->addHelpButton('fullname', 'card_fullname', 'local_apsolu'); // libellé affiché aux gestionnaires
@@ -61,26 +61,26 @@ class local_apsolu_payment_cards_edit_form extends moodleform {
         $mform->addElement('header', 'header', get_string('payments', 'local_apsolu'));
 
         // Centre de paiement.
-        $options = array();
+        $options = [];
         foreach ($centers as $center) {
             $options[$center->id] = $center->name;
         }
         $select = $mform->addElement('select', 'centerid', get_string('center', 'local_apsolu'), $options);
 
         // Prix.
-        $mform->addElement('text', 'price', get_string('price', 'local_apsolu'), array('size' => '48'));
+        $mform->addElement('text', 'price', get_string('price', 'local_apsolu'), ['size' => '48']);
         $mform->setType('price', PARAM_LOCALISEDFLOAT);
         $mform->addRule('price', get_string('required'), 'required', null, 'client');
 
         // Nombre de sessions offertes.
-        $mform->addElement('text', 'trial', get_string('freetrial', 'local_apsolu'), array('size' => '48'));
+        $mform->addElement('text', 'trial', get_string('freetrial', 'local_apsolu'), ['size' => '48']);
         $mform->setType('trial', PARAM_INT);
         $mform->addRule('trial', get_string('required'), 'required', null, 'client');
 
         // Nombre de créneaux offerts.
         foreach ($calendarstypes as $type) {
             $name = 'types['.$type->id.']';
-            $mform->addElement('text', $name, get_string('freecourses', 'local_apsolu', $type->name), array('size' => '48'));
+            $mform->addElement('text', $name, get_string('freecourses', 'local_apsolu', $type->name), ['size' => '48']);
             $mform->setType($name, PARAM_TEXT);
             $mform->addRule($name, get_string('required'), 'required', null, 'client');
         }
@@ -88,18 +88,18 @@ class local_apsolu_payment_cards_edit_form extends moodleform {
         // Cohortes.
         $mform->addElement('header', 'header', get_string('cohorts', 'enrol_select'));
 
-        $options = array();
+        $options = [];
         foreach ($cohorts as $cohort) {
             $options[$cohort->id] = $cohort->name;
         }
-        $attributes = array('size' => 10);
+        $attributes = ['size' => 10];
         $select = $mform->addElement('select', 'cohorts', get_string('selectcohorts', 'enrol_select'), $options, $attributes);
         $select->setMultiple(true);
 
         // Rôles.
         $mform->addElement('header', 'header', get_string('roles'));
 
-        $options = array();
+        $options = [];
         foreach ($roles as $role) {
             $options[$role->id] = $role->localname;
         }
@@ -114,7 +114,7 @@ class local_apsolu_payment_cards_edit_form extends moodleform {
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
         $mform->addElement('hidden', 'tab', 'prices');

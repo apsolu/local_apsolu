@@ -29,9 +29,9 @@ require_once($CFG->dirroot.'/local/apsolu/configuration/header_message_form.php'
 // Build form.
 $defaults = new stdClass();
 $defaults->apsoluheaderactive = get_config('local_apsolu', 'apsoluheaderactive');
-$defaults->apsoluheadercontent = array('text' => get_config('local_apsolu', 'apsoluheadercontent'), 'format' => 1);
+$defaults->apsoluheadercontent = ['text' => get_config('local_apsolu', 'apsoluheadercontent'), 'format' => 1];
 
-$customdata = array($defaults);
+$customdata = [$defaults];
 $mform = new local_apsolu_header_form(null, $customdata);
 
 $notification = '';

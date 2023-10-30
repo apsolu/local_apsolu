@@ -33,7 +33,7 @@ $holiday = new Holiday();
 $holiday->load($holidayid, $required = true);
 
 $deletehash = md5($holiday->id);
-$returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'holidays'));
+$returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'holidays']);
 
 if ($delete === $deletehash) {
     // Effectue les actions de suppression.
@@ -46,16 +46,16 @@ if ($delete === $deletehash) {
 }
 
 // Affiche un message de confirmation.
-$datatemplate = array();
+$datatemplate = [];
 $datatemplate['message'] = get_string('do_you_want_to_delete_holiday', 'local_apsolu', (string) $holiday);
 $message = $OUTPUT->render_from_template('local_apsolu/courses_form_delete_message', $datatemplate);
 
 // Bouton de validation.
-$urlarguments = array('tab' => 'holidays', 'action' => 'delete', 'holidayid' => $holiday->id, 'delete' => $deletehash);
+$urlarguments = ['tab' => 'holidays', 'action' => 'delete', 'holidayid' => $holiday->id, 'delete' => $deletehash];
 $confirmurl = new moodle_url('/local/apsolu/courses/index.php', $urlarguments);
 $confirmbutton = new single_button($confirmurl, get_string('delete'), 'post');
 
 // Bouton d'annulation.
-$cancelurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'holidays'));
+$cancelurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'holidays']);
 
 echo $OUTPUT->confirm($message, $confirmbutton, $cancelurl);

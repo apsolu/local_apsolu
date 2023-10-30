@@ -43,14 +43,14 @@ class local_apsolu_federation_export_form extends moodleform {
         $mform = $this->_form;
         list($activities, $sexes, $institutions, $ufrs, $departments) = $this->_customdata;
 
-        $multiple = array('multiple' => true);
+        $multiple = ['multiple' => true];
 
         $mform->addElement('autocomplete', 'activities', get_string('activities', 'local_apsolu'), $activities, $multiple);
         $mform->setType('activities', PARAM_TEXT);
 
         $mform->addElement('autocomplete', 'sexes', get_string('sex', 'local_apsolu'), $sexes, $multiple);
         $mform->setType('sexes', PARAM_TEXT);
-        $mform->setDefault('sexes', array('F', 'M'));
+        $mform->setDefault('sexes', ['F', 'M']);
 
         $mform->addElement('autocomplete', 'institutions', get_string('institution'), $institutions, $multiple);
         $mform->setType('institutions', PARAM_TEXT);
@@ -61,7 +61,7 @@ class local_apsolu_federation_export_form extends moodleform {
         $mform->addElement('autocomplete', 'departments', get_string('department'), $departments, $multiple);
         $mform->setType('departments', PARAM_TEXT);
 
-        $mform->addElement('text', 'lastnames', get_string('studentname', 'local_apsolu'), array('size' => '48'));
+        $mform->addElement('text', 'lastnames', get_string('studentname', 'local_apsolu'), ['size' => '48']);
         $mform->setType('lastnames', PARAM_TEXT);
         $mform->addHelpButton('lastnames', 'studentname', 'local_apsolu');
 
@@ -69,6 +69,6 @@ class local_apsolu_federation_export_form extends moodleform {
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('show'));
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('export', 'local_apsolu'));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
     }
 }

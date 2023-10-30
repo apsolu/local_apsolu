@@ -56,7 +56,7 @@ class local_apsolu_courses_courses_edit_form extends moodleform {
         // Hope to use instead : $mform->addDatalist('category', $categories);.
 
         // Event field.
-        $mform->addElement('text', 'event', get_string('event', 'local_apsolu'), array('size' => '48'));
+        $mform->addElement('text', 'event', get_string('event', 'local_apsolu'), ['size' => '48']);
         $mform->setType('event', PARAM_TEXT);
         $mform->setDefault('event', $course->event);
 
@@ -80,7 +80,7 @@ class local_apsolu_courses_courses_edit_form extends moodleform {
         $mform->addRule('weekday', get_string('required'), 'required', null, 'client');
 
         // Starttime field.
-        $attributes = array('size' => '8', 'maxlength' => 5, 'pattern' => '(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9])', 'placeholder' => 'hh:mm');
+        $attributes = ['size' => '8', 'maxlength' => 5, 'pattern' => '(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9])', 'placeholder' => 'hh:mm'];
         $mform->addElement('text', 'starttime', get_string('starttime', 'local_apsolu'), $attributes);
         $mform->setType('starttime', PARAM_TEXT);
         $mform->addRule('starttime', get_string('required'), 'required', null, 'client');
@@ -143,7 +143,7 @@ class local_apsolu_courses_courses_edit_form extends moodleform {
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
         $mform->addElement('hidden', 'tab', 'courses');
@@ -173,7 +173,7 @@ class local_apsolu_courses_courses_edit_form extends moodleform {
             $context = context_course::instance($courseid);
         }
 
-        $options = array();
+        $options = [];
         $options['subdirs'] = false;
         $options['maxbytes'] = 0; // Taille limite par défaut.
         $options['maxfiles'] = -1; // Nombre de fichiers attachés illimités.

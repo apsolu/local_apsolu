@@ -29,11 +29,11 @@ $sql = "SELECT ap.*, ac.numweekday, ac.starttime, al.name AS location".
     " JOIN {apsolu_courses} ac ON ap.id = ac.periodid".
     " JOIN {apsolu_locations} al ON al.id = ac.locationid".
     " WHERE ac.id = :courseid";
-$data->period = $DB->get_record_sql($sql, array('courseid' => $courseid));
+$data->period = $DB->get_record_sql($sql, ['courseid' => $courseid]);
 
 if ($data->period !== false) {
     $weeks = explode(',', $data->period->weeks);
-    $data->sessions = array();
+    $data->sessions = [];
     $data->count_sessions = 0;
 
     $sql = "SELECT aas.*, COUNT(aap.id) AS count, al.name AS location".
@@ -44,7 +44,7 @@ if ($data->period !== false) {
         " GROUP BY aas.id".
         " ORDER BY aas.sessiontime";
 
-    foreach ($DB->get_records_sql($sql, array('courseid' => $courseid)) as $session) {
+    foreach ($DB->get_records_sql($sql, ['courseid' => $courseid]) as $session) {
         // On calcule le premier jour de la semaine correspondant à la session.
         $week = strftime('%Y-%m-%d', $session->sessiontime - ($data->period->numweekday - 1) * 24 * 60 * 60);
 

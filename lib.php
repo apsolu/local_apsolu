@@ -64,8 +64,8 @@ function local_apsolu_override_course_page($course) {
 
     if (has_capability('moodle/course:update', context_course::instance($course->id, MUST_EXIST)) === true) {
         // Affiche les boutons de prise de présences et de gestion des étudiants en haut de la page.
-		$PAGE->requires->js_call_amd('local_apsolu/attendance', 'setupcourse');
-	}
+        $PAGE->requires->js_call_amd('local_apsolu/attendance', 'setupcourse');
+    }
 }
 
 /**
@@ -81,7 +81,7 @@ function local_apsolu_override_course_page($course) {
  *
  * @return void|bool Retourne False en cas d'erreur.
  */
-function local_apsolu_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+function local_apsolu_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=[]) {
     global $USER;
 
     if ($context->contextlevel != CONTEXT_COURSE) {
@@ -89,7 +89,7 @@ function local_apsolu_pluginfile($course, $cm, $context, $filearea, $args, $forc
         return false;
     }
 
-    if (in_array($filearea, array('information', 'medicalcertificate', 'parentalauthorization'), $strict = true) === false) {
+    if (in_array($filearea, ['information', 'medicalcertificate', 'parentalauthorization'], $strict = true) === false) {
         debugging('Wrong filearea: '.$filearea, DEBUG_DEVELOPER);
         return false;
     }

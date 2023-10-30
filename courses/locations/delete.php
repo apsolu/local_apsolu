@@ -33,7 +33,7 @@ $location = new Location();
 $location->load($locationid, $required = true);
 
 $deletehash = md5($location->id);
-$returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'locations'));
+$returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'locations']);
 
 if ($delete === $deletehash) {
     // Effectue les actions de suppression.
@@ -51,11 +51,11 @@ $sql = "SELECT c.fullname".
     " JOIN {apsolu_courses} cc ON c.id = cc.id".
     " WHERE cc.locationid = :locationid".
     " ORDER BY c.fullname";
-$courses = $DB->get_records_sql($sql, array('locationid' => $location->id));
+$courses = $DB->get_records_sql($sql, ['locationid' => $location->id]);
 if (count($courses) !== 0) {
-    $datatemplate = array();
+    $datatemplate = [];
     $datatemplate['message'] = get_string('location_cannot_be_deleted', 'local_apsolu', $location->name);
-    $datatemplate['dependences'] = array();
+    $datatemplate['dependences'] = [];
     foreach ($courses as $course) {
         $datatemplate['dependences'][] = $course->fullname;
     }
@@ -78,16 +78,16 @@ if (count($locations) !== 0) {
  */
 
 // Affiche un message de confirmation.
-$datatemplate = array();
+$datatemplate = [];
 $datatemplate['message'] = get_string('do_you_want_to_delete_location', 'local_apsolu', $location->name);
 $message = $OUTPUT->render_from_template('local_apsolu/courses_form_delete_message', $datatemplate);
 
 // Bouton de validation.
-$urlarguments = array('tab' => 'locations', 'action' => 'delete', 'locationid' => $location->id, 'delete' => $deletehash);
+$urlarguments = ['tab' => 'locations', 'action' => 'delete', 'locationid' => $location->id, 'delete' => $deletehash];
 $confirmurl = new moodle_url('/local/apsolu/courses/index.php', $urlarguments);
 $confirmbutton = new single_button($confirmurl, get_string('delete'), 'post');
 
 // Bouton d'annulation.
-$cancelurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'locations'));
+$cancelurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'locations']);
 
 echo $OUTPUT->confirm($message, $confirmbutton, $cancelurl);

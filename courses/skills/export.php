@@ -26,10 +26,10 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/csvlib.class.php');
 
-$headers = array(
+$headers = [
     get_string('skill_fullnames', 'local_apsolu'),
     get_string('skill_shortnames', 'local_apsolu'),
-);
+];
 
 $skills = $DB->get_records('apsolu_skills', null, 'name', 'name, shortname');
 $filename = strtolower(get_string('skills', 'local_apsolu'));

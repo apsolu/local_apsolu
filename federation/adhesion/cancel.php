@@ -49,13 +49,13 @@ if (is_enrolled($context, $user = null, $withcapability = '', $onlyactive = true
 }
 
 // Teste qu'une demande de numéro FFSU n'a pas déjà été envoyée.
-$adhesion = $DB->get_record('apsolu_federation_adhesions', array('userid' => $USER->id));
+$adhesion = $DB->get_record('apsolu_federation_adhesions', ['userid' => $USER->id]);
 if ($adhesion !== false && empty($adhesion->federationnumberrequestdate) === false) {
     throw new moodle_exception('a_license_number_request_is_being_processed', 'local_apsolu');
 }
 
 // Navigation.
-$url = new moodle_url('/course/view.php', array('id' => $federationcourse->get_courseid()));
+$url = new moodle_url('/course/view.php', ['id' => $federationcourse->get_courseid()]);
 $PAGE->navbar->add($federationcourse->get_course()->shortname, $url);
 $PAGE->navbar->add(get_string('membership_of_the_sports_association', 'local_apsolu'));
 
@@ -68,14 +68,14 @@ if ($confirm === $confirmhash) {
         require_sesskey();
 
         // Supprime l'inscription au cours.
-        $conditions = array('enrol' => 'select', 'status' => 0, 'courseid' => $federationcourse->get_courseid());
+        $conditions = ['enrol' => 'select', 'status' => 0, 'courseid' => $federationcourse->get_courseid()];
         $instance = $DB->get_record('enrol', $conditions, '*', MUST_EXIST);
 
         $enrolselectplugin = new enrol_select_plugin();
         $enrolselectplugin->unenrol_user($instance, $USER->id);
 
         // Supprime les données de l'adhésion FFSU.
-        $DB->delete_records('apsolu_federation_adhesions', array('userid' => $USER->id));
+        $DB->delete_records('apsolu_federation_adhesions', ['userid' => $USER->id]);
 
         // Supprime les fichiers déposés.
         $context = context_course::instance($federationcourse->get_courseid(), MUST_EXIST);
@@ -89,7 +89,7 @@ if ($confirm === $confirmhash) {
         $params['userid'] = $USER->id;
 
         $fs = get_file_storage();
-        foreach (array('parentalauthorization', 'medicalcertificate') as $filearea) {
+        foreach (['parentalauthorization', 'medicalcertificate'] as $filearea) {
             $params['filearea'] = $filearea;
 
             $filerecords = $DB->get_recordset_select('files', $where, $params);
@@ -109,12 +109,12 @@ if ($confirm === $confirmhash) {
 }
 
 // Affiche un message de confirmation.
-$datatemplate = array();
+$datatemplate = [];
 $datatemplate['message'] = get_string('are_you_sure_you_want_to_cancel_your_federation_registration', 'local_apsolu');
 $message = $OUTPUT->render_from_template('local_apsolu/courses_form_delete_message', $datatemplate);
 
 // Bouton de validation.
-$confirmurl = new moodle_url('/local/apsolu/federation/adhesion/cancel.php', array('confirm' => $confirmhash));
+$confirmurl = new moodle_url('/local/apsolu/federation/adhesion/cancel.php', ['confirm' => $confirmhash]);
 $confirmbutton = new single_button($confirmurl, get_string('confirm'), 'post');
 
 // Bouton d'annulation.

@@ -20,9 +20,9 @@
  */
 
 // We defined the web service functions to install.
-$functions = array(
+$functions = [
     // Function get_users().
-    'local_apsolu_get_users' => array(
+    'local_apsolu_get_users' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_users',
         'classpath'   => 'local/apsolu/externallib.php',
@@ -30,9 +30,9 @@ $functions = array(
         'type'        => 'read',
         'loginrequired' => true,
         'ajax' => true,
-    ),
+    ],
     // Function get_activities().
-    'local_apsolu_get_activities' => array(
+    'local_apsolu_get_activities' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_activities',
         'classpath'   => 'local/apsolu/externallib.php',
@@ -40,9 +40,9 @@ $functions = array(
         'type'        => 'read',
         'loginrequired' => true,
         'ajax' => true,
-    ),
+    ],
     // Function get_courses().
-    'local_apsolu_get_courses' => array(
+    'local_apsolu_get_courses' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_courses',
         'classpath'   => 'local/apsolu/externallib.php',
@@ -50,9 +50,9 @@ $functions = array(
         'type'        => 'read',
         'loginrequired' => true,
         'ajax' => true,
-    ),
+    ],
     // Function get_courses_list().
-    'local_apsolu_get_courses_list' => array(
+    'local_apsolu_get_courses_list' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_courses_list',
         'classpath'   => 'local/apsolu/externallib.php',
@@ -60,9 +60,9 @@ $functions = array(
         'type'        => 'read',
         'loginrequired' => false,
         'ajax' => true,
-    ),
+    ],
     // Function get_groupings().
-    'local_apsolu_get_groupings' => array(
+    'local_apsolu_get_groupings' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_groupings',
         'classpath'   => 'local/apsolu/externallib.php',
@@ -70,9 +70,9 @@ $functions = array(
         'type'        => 'read',
         'loginrequired' => false,
         'ajax' => true,
-    ),
+    ],
     // Function get_registrations().
-    'local_apsolu_get_registrations' => array(
+    'local_apsolu_get_registrations' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_registrations',
         'classpath'   => 'local/apsolu/externallib.php',
@@ -80,9 +80,9 @@ $functions = array(
         'type'        => 'read',
         'loginrequired' => true,
         'ajax' => true,
-    ),
+    ],
     // Function get_sports().
-    'local_apsolu_get_sports' => array(
+    'local_apsolu_get_sports' => [
         'classname'     => 'local_apsolu_webservices',
         'methodname'    => 'get_sports',
         'classpath'     => 'local/apsolu/externallib.php',
@@ -90,9 +90,9 @@ $functions = array(
         'type'          => 'read',
         'loginrequired' => false,
         'ajax'          => true,
-    ),
+    ],
     // Function get_unenrolments().
-    'local_apsolu_get_unenrolments' => array(
+    'local_apsolu_get_unenrolments' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_unenrolments',
         'classpath'   => 'local/apsolu/externallib.php',
@@ -100,9 +100,9 @@ $functions = array(
         'type'        => 'read',
         'loginrequired' => true,
         'ajax' => true,
-    ),
+    ],
     // Function get_teachers().
-    'local_apsolu_get_teachers' => array(
+    'local_apsolu_get_teachers' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_teachers',
         'classpath'   => 'local/apsolu/externallib.php',
@@ -110,9 +110,9 @@ $functions = array(
         'type'        => 'read',
         'loginrequired' => true,
         'ajax' => true,
-    ),
+    ],
     // Function get_attendances().
-    'local_apsolu_get_attendances' => array(
+    'local_apsolu_get_attendances' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_attendances',
         'classpath'   => 'local/apsolu/externallib.php',
@@ -120,9 +120,9 @@ $functions = array(
         'type'        => 'read',
         'loginrequired' => true,
         'ajax' => true,
-    ),
+    ],
     // Function set_card().
-    'local_apsolu_set_card' => array(
+    'local_apsolu_set_card' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'set_card',
         'classpath'   => 'local/apsolu/externallib.php',
@@ -130,9 +130,9 @@ $functions = array(
         'type'        => 'write',
         'loginrequired' => true,
         'ajax' => true,
-    ),
+    ],
     // Function set_presence().
-    'local_apsolu_set_presence' => array(
+    'local_apsolu_set_presence' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'set_presence',
         'classpath'   => 'local/apsolu/externallib.php',
@@ -140,9 +140,9 @@ $functions = array(
         'type'        => 'write',
         'loginrequired' => true,
         'ajax' => true,
-    ),
+    ],
     // Function debugging().
-    'local_apsolu_debugging' => array(
+    'local_apsolu_debugging' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'debugging',
         'classpath'   => 'local/apsolu/externallib.php',
@@ -150,9 +150,9 @@ $functions = array(
         'type'        => 'write',
         'loginrequired' => true,
         'ajax' => true,
-    ),
+    ],
     // Function get_chartdataset().
-    'local_apsolu_get_chartdataset' => array(
+    'local_apsolu_get_chartdataset' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_chartdataset',
         'classpath'   => 'local/apsolu/externallib.php',
@@ -160,9 +160,9 @@ $functions = array(
         'type'        => 'read',
         'loginrequired' => true,
         'ajax' => true,
-    ),
+    ],
     // Function get_reportdataset().
-    'local_apsolu_get_reportdataset' => array(
+    'local_apsolu_get_reportdataset' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_reportdataset',
         'classpath'   => 'local/apsolu/externallib.php',
@@ -170,9 +170,9 @@ $functions = array(
         'type'        => 'read',
         'loginrequired' => true,
         'ajax' => true,
-    ),
+    ],
     // Function get_reportfilters().
-    'local_apsolu_get_reportfilters' => array(
+    'local_apsolu_get_reportfilters' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_reportfilters',
         'classpath'   => 'local/apsolu/externallib.php',
@@ -180,21 +180,21 @@ $functions = array(
         'type'        => 'read',
         'loginrequired' => true,
         'ajax' => true,
-    ),
-    'core_message_send_instant_emails' => array(
+    ],
+    'core_message_send_instant_emails' => [
         'classname' => 'local_apsolu\external\email',
         'methodname' => 'send_instant_emails',
         'description' => 'Send instant emails',
         'type' => 'write',
         'capabilities' => 'moodle/site:sendmessage',
         'ajax' => true,
-    ),
-);
+    ],
+];
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
-$services = array(
-    'apsolu' => array(
-        'functions' => array(
+$services = [
+    'apsolu' => [
+        'functions' => [
             'local_apsolu_get_users',
             'local_apsolu_get_activities',
             'local_apsolu_get_courses',
@@ -208,23 +208,23 @@ $services = array(
             'local_apsolu_get_chartdataset',
             'local_apsolu_get_reportdataset',
             'local_apsolu_get_reportfilters',
-            ),
+            ],
         'restrictedusers' => 1,
         'enabled' => 0,
         'shortname' => 'apsolu',
         'downloadfiles' => 0,
         'uploadfiles' => 0,
-    ),
-    'apsolu_public' => array(
-        'functions' => array(
+    ],
+    'apsolu_public' => [
+        'functions' => [
             'local_apsolu_get_courses_list',
             'local_apsolu_get_groupings',
             'local_apsolu_get_sports',
-            ),
+            ],
         'restrictedusers' => 1,
         'enabled' => 0,
         'shortname' => 'apsolu_public',
         'downloadfiles' => 0,
         'uploadfiles' => 0,
-    ),
-);
+    ],
+];

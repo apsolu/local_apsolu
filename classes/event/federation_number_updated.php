@@ -68,7 +68,7 @@ class federation_number_updated extends \core\event\base {
      * @return \moodle_url
      */
     public function get_url() {
-        $parameters = array('page' => 'import');
+        $parameters = ['page' => 'import'];
         return new \moodle_url('/local/apsolu/federation/index.php', $parameters);
     }
 }

@@ -54,18 +54,18 @@ class course {
 
         $context = $event->get_context();
 
-        $course = $DB->get_record(apsolu_course::TABLENAME, array('id' => $context->instanceid));
+        $course = $DB->get_record(apsolu_course::TABLENAME, ['id' => $context->instanceid]);
         if ($course === false) {
             // Ce n'est pas un cours de type APSOLU.
             return;
         }
 
-        $sessions = attendancesession::get_records(array('courseid' => $course->id));
+        $sessions = attendancesession::get_records(['courseid' => $course->id]);
         foreach ($sessions as $session) {
             $session->delete();
         }
 
-        $DB->delete_records(apsolu_course::TABLENAME, array('id' => $course->id));
+        $DB->delete_records(apsolu_course::TABLENAME, ['id' => $course->id]);
     }
 
     /**
@@ -87,7 +87,7 @@ class course {
             " JOIN {apsolu_courses} ac ON c.id = ac.id".
             " JOIN {apsolu_skills} ask ON ask.id = ac.skillid".
             " WHERE c.id = :courseid";
-        $course = $DB->get_record_sql($sql, array('courseid' => $context->instanceid));
+        $course = $DB->get_record_sql($sql, ['courseid' => $context->instanceid]);
         if ($course === false) {
             // Ce n'est pas un cours de type APSOLU.
             return;
@@ -112,7 +112,7 @@ class course {
             " FROM {course_categories} cc".
             " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id".
             " WHERE cc.id = :categoryid";
-        $category = $DB->get_record_sql($sql, array('categoryid' => $categoryid));
+        $category = $DB->get_record_sql($sql, ['categoryid' => $categoryid]);
 
         if ($category === false) {
             // Le cours n'a pas été déplacé dans une autre catégorie "activité sportive".
@@ -125,7 +125,7 @@ class course {
                     " FROM {course_categories} cc".
                     " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id".
                     " WHERE cc.name = :name";
-                $category = $DB->get_record_sql($sql, array('name' => $matches[1]));
+                $category = $DB->get_record_sql($sql, ['name' => $matches[1]]);
             }
 
             if ($category === false) {

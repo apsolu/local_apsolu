@@ -38,7 +38,7 @@ if ($numberid !== 0) {
 }
 
 // Build form.
-$customdata = array('number' => $number, 'fields' => Number::get_default_fields());
+$customdata = ['number' => $number, 'fields' => Number::get_default_fields()];
 $mform = new local_apsolu_federation_activities_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
@@ -57,7 +57,7 @@ if ($data = $mform->get_data()) {
     $number->save($data, $mform);
 
     // Redirige vers la page générale.
-    $returnurl = new moodle_url('/local/apsolu/federation/index.php', array('page' => 'numbers'));
+    $returnurl = new moodle_url('/local/apsolu/federation/index.php', ['page' => 'numbers']);
     redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
 

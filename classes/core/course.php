@@ -132,17 +132,17 @@ class course extends record {
         }
 
         // We do this here because it spits out feedback as it goes.
-        $course = $DB->get_record('course', array('id' => $this->id), $fields = '*', MUST_EXIST);
+        $course = $DB->get_record('course', ['id' => $this->id], $fields = '*', MUST_EXIST);
         $result = delete_course($course, $showfeedback = false);
 
         if ($result === false) {
-            $link = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'courses'));
+            $link = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'courses']);
 
             throw new moodle_exception('cannotdeletecategorycourse', $module = '', $link, $parameter = $this->fullname);
         }
 
         // Supprime l'objet en base de données.
-        $DB->delete_records(self::TABLENAME, array('id' => $this->id));
+        $DB->delete_records(self::TABLENAME, ['id' => $this->id]);
 
         // TODO: supprimer les notes.
 
@@ -191,13 +191,13 @@ class course extends record {
 
         if (ctype_digit($category) === true) {
             // Récupère le nom de la catégorie en base de données, si c'est un identifiant qui a été entré en paramètre.
-            $record = $DB->get_record('course_categories', array('id' => $category), $fields = '*', MUST_EXIST);
+            $record = $DB->get_record('course_categories', ['id' => $category], $fields = '*', MUST_EXIST);
             $category = $record->name;
         }
 
         if (ctype_digit($skill) === true) {
             // Récupère le nom du niveau de pratique en base de données, si c'est un identifiant qui a été entré en paramètre.
-            $record = $DB->get_record('apsolu_skills', array('id' => $skill), $fields = '*', MUST_EXIST);
+            $record = $DB->get_record('apsolu_skills', ['id' => $skill], $fields = '*', MUST_EXIST);
             $skill = $record->name;
         }
 
@@ -225,7 +225,7 @@ class course extends record {
 
         // Contrôle que le nom abrégé est bien unique.
         while (true) {
-            $course = $DB->get_record('course', array('shortname' => $shortname));
+            $course = $DB->get_record('course', ['shortname' => $shortname]);
             if ($course === false) {
                 break;
             }
@@ -285,7 +285,7 @@ class course extends record {
                 return 7;
         }
 
-        throw new coding_exception('Invalid value ('.json_encode(array('day' => $day)).' for '.__METHOD__.'.');
+        throw new coding_exception('Invalid value ('.json_encode(['day' => $day]).' for '.__METHOD__.'.');
     }
 
     /**
@@ -305,7 +305,7 @@ class course extends record {
 
         $classname = __CLASS__;
 
-        $records = array();
+        $records = [];
 
         foreach ($DB->get_records(get_called_class()::TABLENAME, $conditions, $sort, $fields, $limitfrom, $limitnum) as $data) {
             $record = new $classname();
@@ -344,7 +344,7 @@ class course extends record {
      * @return array Retourne un tableau d'objets attendancesession.
      */
     public function get_sessions() {
-        return attendancesession::get_records(array('courseid' => $this->id));
+        return attendancesession::get_records(['courseid' => $this->id]);
     }
 
     /**
@@ -353,7 +353,7 @@ class course extends record {
      * @return array Tableau trié et indéxé par le jour de la semaine en anglais.
      */
     public static function get_weekdays() {
-        $weekdays = array();
+        $weekdays = [];
         $weekdays['monday'] = get_string('monday', 'calendar');
         $weekdays['tuesday'] = get_string('tuesday', 'calendar');
         $weekdays['wednesday'] = get_string('wednesday', 'calendar');
@@ -374,7 +374,7 @@ class course extends record {
      * @return int|false Durée en secondes du cours, ou false si une erreur est détectée.
      */
     public static function getDuration(string $starttime, string $endtime) {
-        $times = array();
+        $times = [];
         $times['starttime'] = explode(':', $starttime);
         $times['endtime'] = explode(':', $endtime);
 
@@ -426,7 +426,7 @@ class course extends record {
             " FROM {course} c".
             " JOIN {apsolu_courses} ac ON ac.id=c.id".
             " WHERE c.id = :id";
-        $record = $DB->get_record_sql($sql, array('id' => $recordid), $strictness);
+        $record = $DB->get_record_sql($sql, ['id' => $recordid], $strictness);
 
         if ($record === false) {
             return;
@@ -478,7 +478,7 @@ class course extends record {
             // Note: insert_record() exige l'absence d'un id.
             $sql = "INSERT INTO {apsolu_courses} (id, event, skillid, locationid, weekday, numweekday, starttime, endtime, periodid, license, on_homepage, showpolicy, information, informationformat)".
                 " VALUES(:id, :event, :skillid, :locationid, :weekday, :numweekday, :starttime, :endtime, :periodid, :license, :on_homepage, :showpolicy, :information, :informationformat)";
-            $params = array();
+            $params = [];
             $params['id'] = $this->id;
             $params['event'] = $this->event;
             $params['skillid'] = $this->skillid;
@@ -496,7 +496,7 @@ class course extends record {
             $DB->execute($sql, $params);
 
             // Ajoute une méthode d'inscription manuelle.
-            $instance = $DB->get_record('enrol', array('enrol' => 'manual', 'courseid' => $this->id));
+            $instance = $DB->get_record('enrol', ['enrol' => 'manual', 'courseid' => $this->id]);
             if ($instance === false) {
                 $plugin = enrol_get_plugin('manual');
 
@@ -541,7 +541,7 @@ class course extends record {
             $DB->update_record(self::TABLENAME, $this);
 
             // Vérifie que les informations liées aux sessions de cours n'ont pas été modifiées.
-            $sessionfields = array('locationid', 'weekday', 'numweekday', 'starttime', 'endtime', 'periodid');
+            $sessionfields = ['locationid', 'weekday', 'numweekday', 'starttime', 'endtime', 'periodid'];
             foreach ($sessionfields as $field) {
                 if ($oldcourse->{$field} == $this->{$field}) {
                     continue;
@@ -570,9 +570,9 @@ class course extends record {
         $gradecategoryname = gradebook::NAME;
 
         // Créer une catégorie de notes APSOLU.
-        $gradecategory = grade_category::fetch(array('courseid' => $this->id, 'fullname' => $gradecategoryname));
+        $gradecategory = grade_category::fetch(['courseid' => $this->id, 'fullname' => $gradecategoryname]);
         if ($gradecategory === false) {
-            $gradecategory = new grade_category(array('courseid' => $this->id), false);
+            $gradecategory = new grade_category(['courseid' => $this->id], false);
             $gradecategory->apply_default_settings();
             $gradecategory->apply_forced_settings();
 
@@ -586,13 +586,13 @@ class course extends record {
             " JOIN {enrol} e ON agi.calendarid = e.customchar1".
             " WHERE e.enrol = 'select'".
             " AND e.courseid = :courseid";
-        $gradeitems = $DB->get_records_sql($sql, array('courseid' => $this->id));
+        $gradeitems = $DB->get_records_sql($sql, ['courseid' => $this->id]);
 
         // Récupère tous les élements de notation actuels de ce cours.
-        $gradeitems_ = grade_item::fetch_all(array('courseid' => $this->id, 'categoryid' => $gradecategory->id));
+        $gradeitems_ = grade_item::fetch_all(['courseid' => $this->id, 'categoryid' => $gradecategory->id]);
 
         if ($gradeitems_ === false) {
-            $gradeitems_ = array();
+            $gradeitems_ = [];
         }
 
         foreach ($gradeitems_ as $item) {
@@ -620,7 +620,7 @@ class course extends record {
 
         // Enregistre les nouveaux éléments dans le carnet de notes.
         foreach ($gradeitems as $item) {
-            $gradeitem = new grade_item(array('id' => 0, 'courseid' => $this->id));
+            $gradeitem = new grade_item(['id' => 0, 'courseid' => $this->id]);
             $gradeitem->itemname = $item->id.'-'.$item->name;
             $gradeitem->itemtype = 'manual';
             $gradeitem->categoryid = $gradecategory->id;
@@ -639,7 +639,7 @@ class course extends record {
         // Récupère le nombre de secondes entre le début de la semaine et la date de début du cours.
         $offset = $this->get_session_offset();
 
-        $sessions = array();
+        $sessions = [];
 
         // Récupère les sessions prévues pour cette période.
         $period = new period();

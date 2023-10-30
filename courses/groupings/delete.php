@@ -33,7 +33,7 @@ $grouping = new Grouping();
 $grouping->load($groupingid, $required = true);
 
 $deletehash = md5($grouping->id);
-$returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'groupings'));
+$returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'groupings']);
 
 if ($delete === $deletehash) {
     // Effectue les actions de suppression.
@@ -46,11 +46,11 @@ if ($delete === $deletehash) {
 }
 
 // Vérifie si ce groupement n'est pas associé à une activité.
-$categories = $DB->get_records('course_categories', $conditions = array('parent' => $grouping->id), $sort = 'name');
+$categories = $DB->get_records('course_categories', $conditions = ['parent' => $grouping->id], $sort = 'name');
 if (count($categories) !== 0) {
-    $datatemplate = array();
+    $datatemplate = [];
     $datatemplate['message'] = get_string('grouping_cannot_be_deleted', 'local_apsolu', $grouping->name);
-    $datatemplate['dependences'] = array();
+    $datatemplate['dependences'] = [];
     foreach ($categories as $category) {
         $datatemplate['dependences'][] = $category->name;
     }
@@ -60,16 +60,16 @@ if (count($categories) !== 0) {
 }
 
 // Affiche un message de confirmation.
-$datatemplate = array();
+$datatemplate = [];
 $datatemplate['message'] = get_string('do_you_want_to_delete_grouping', 'local_apsolu', $grouping->name);
 $message = $OUTPUT->render_from_template('local_apsolu/courses_form_delete_message', $datatemplate);
 
 // Bouton de validation.
-$urlarguments = array('tab' => 'groupings', 'action' => 'delete', 'groupingid' => $grouping->id, 'delete' => $deletehash);
+$urlarguments = ['tab' => 'groupings', 'action' => 'delete', 'groupingid' => $grouping->id, 'delete' => $deletehash];
 $confirmurl = new moodle_url('/local/apsolu/courses/index.php', $urlarguments);
 $confirmbutton = new single_button($confirmurl, get_string('delete'), 'post');
 
 // Bouton d'annulation.
-$cancelurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'groupings'));
+$cancelurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'groupings']);
 
 echo $OUTPUT->confirm($message, $confirmbutton, $cancelurl);

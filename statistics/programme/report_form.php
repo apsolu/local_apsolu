@@ -42,9 +42,9 @@ class local_apsolu_statistics_report_form extends moodleform {
     protected function definition() {
         $mform = $this->_form;
 
-        list($reports,$reportid) = $this->_customdata;
+        list($reports, $reportid) = $this->_customdata;
 
-        $options = array();
+        $options = [];
         $options[0] = get_string('none');
         foreach ($reports as $report) {
             $options[$report->id] = $report->label;

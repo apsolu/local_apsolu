@@ -29,12 +29,12 @@ use local_apsolu\core\messaging;
 require_once($CFG->dirroot.'/local/apsolu/configuration/messaging_form.php');
 
 // Chargement des préférences.
-$attributes = array(
+$attributes = [
     'functional_contact',
     'technical_contact',
     'replytoaddresspreference',
     'defaultreplytoaddresspreference',
-    );
+    ];
 
 $defaults = new stdClass();
 foreach ($attributes as $attribute) {
@@ -42,7 +42,7 @@ foreach ($attributes as $attribute) {
 }
 
 // Build form.
-$customdata = array($defaults);
+$customdata = [$defaults];
 $mform = new local_apsolu_messaging_form(null, $customdata);
 
 echo $OUTPUT->header();

@@ -182,12 +182,12 @@ class course_test extends \advanced_testcase {
         list($catdata, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
         $category->save($catdata, $mform);
 
-        $oldcontext = $DB->get_record('context', array('instanceid' => $course->id, 'contextlevel' => CONTEXT_COURSE));
+        $oldcontext = $DB->get_record('context', ['instanceid' => $course->id, 'contextlevel' => CONTEXT_COURSE]);
 
         $data->category = $category->id;
         $course->save($data);
 
-        $newcontext = $DB->get_record('context', array('instanceid' => $course->id, 'contextlevel' => CONTEXT_COURSE));
+        $newcontext = $DB->get_record('context', ['instanceid' => $course->id, 'contextlevel' => CONTEXT_COURSE]);
 
         $this->assertNotEquals($oldcontext->path, $newcontext->path);
 
@@ -315,7 +315,7 @@ class course_test extends \advanced_testcase {
         $course->save($data);
 
         // Récupère la visibilité du cours.
-        $visibility = $DB->get_record('course', array('id' => $course->id));
+        $visibility = $DB->get_record('course', ['id' => $course->id]);
         $visible = intval($visibility->visible);
 
         // La visibilité du cours doit changer.

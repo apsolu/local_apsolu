@@ -59,26 +59,26 @@ class local_apsolu_courses_periods_edit_form extends moodleform {
             } else {
                 // On calcule l'année universitaire en cours (à partir de juin, on propose la nouvelle année universitaire).
                 if (date('n') >= 6) {
-                   $year = date('Y');
+                    $year = date('Y');
                 } else {
-                   $year = date('Y') - 1;
+                    $year = date('Y') - 1;
                 }
             }
         }
 
-        $lastyearurl = new moodle_url('/local/apsolu/courses/index.php', array('action' => 'edit', 'periodid' => $instance->id, 'tab' => 'periods', 'year' => $year - 1));
-        $nextyearurl = new moodle_url('/local/apsolu/courses/index.php', array('action' => 'edit', 'periodid' => $instance->id, 'tab' => 'periods', 'year' => $year + 1));
+        $lastyearurl = new moodle_url('/local/apsolu/courses/index.php', ['action' => 'edit', 'periodid' => $instance->id, 'tab' => 'periods', 'year' => $year - 1]);
+        $nextyearurl = new moodle_url('/local/apsolu/courses/index.php', ['action' => 'edit', 'periodid' => $instance->id, 'tab' => 'periods', 'year' => $year + 1]);
 
         $label = sprintf('<a class="mr-3" href="%s">&#129092;</a> %s-%s <a class="ml-3" href="%s">&#129094;</a>', $lastyearurl, $year, $year + 1, $nextyearurl);
         $mform->addElement('static', 'yearselector', get_string('year', 'form'), $label);
 
         // Name field.
-        $mform->addElement('text', 'name', get_string('name'), array('style' => 'width: 40em;'));
+        $mform->addElement('text', 'name', get_string('name'), ['style' => 'width: 40em;']);
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
 
         // Generic name field.
-        $mform->addElement('text', 'generic_name', get_string('generic_name', 'local_apsolu'), array('style' => 'width: 40em;'));
+        $mform->addElement('text', 'generic_name', get_string('generic_name', 'local_apsolu'), ['style' => 'width: 40em;']);
         $mform->setType('generic_name', PARAM_TEXT);
         $mform->addRule('generic_name', get_string('required'), 'required', null, 'client');
 
@@ -87,13 +87,13 @@ class local_apsolu_courses_periods_edit_form extends moodleform {
         $start->sub(new DateInterval('P'.($start->format('N') - 1).'D'));
         $end = new DateTime(($year + 1).'-06-30T00:00:00');
 
-        $weeks = array();
+        $weeks = [];
         while ($start < $end) {
             $range = 'du lun. '.$start->format('d').' au sam. '.strftime('%d %b %Y', $start->getTimestamp() + 5 * 24 * 60 * 60);
             $weeks[$start->format('Y-m-d')] = 'Sem. '.$start->format('W').' ('.$range.')';
             $start = $start->add(new DateInterval('P7D'));
         }
-        $select = $mform->addElement('select', 'weeks', get_string('week'), $weeks, array('size' => 50, 'style' => 'width: 40em;'));
+        $select = $mform->addElement('select', 'weeks', get_string('week'), $weeks, ['size' => 50, 'style' => 'width: 40em;']);
         $mform->setType('weeks', PARAM_TEXT);
         $mform->addRule('weeks', get_string('required'), 'required', null, 'client');
         $select->setMultiple(true);
@@ -106,7 +106,7 @@ class local_apsolu_courses_periods_edit_form extends moodleform {
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
         $mform->addElement('hidden', 'tab', 'periods');
@@ -136,11 +136,11 @@ class local_apsolu_courses_periods_edit_form extends moodleform {
     public function validation($data, $files) {
         global $DB;
 
-        $errors = array();
+        $errors = [];
         $errors = parent::validation($data, $files);
 
         // Is unique ?
-        $period = $DB->get_record('apsolu_periods', array('name' => $data['name']));
+        $period = $DB->get_record('apsolu_periods', ['name' => $data['name']]);
         if ($period && $period->id != $data['periodid']) {
             $errors['name'] = get_string('shortnametaken', '', $data['name']);
         }

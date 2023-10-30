@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$messageproviders = array (
-    'notification' => array(),
-    'payment_notification' => array(), // TODO: est-ce que ce provider est utilisé ?
-);
+$messageproviders = [
+    'notification' => [],
+    'payment_notification' => [], // TODO: est-ce que ce provider est utilisé ?
+];

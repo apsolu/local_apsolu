@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die;
 
 $action = optional_param('action', 'view', PARAM_ALPHA);
 
-$actions = array('view', 'edit', 'delete');
+$actions = ['view', 'edit', 'delete'];
 
 if (in_array($action, $actions, $strict = true) === false) {
     $action = 'view';

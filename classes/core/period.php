@@ -69,9 +69,9 @@ class period extends record {
      * @return array Retourne un tableau d'objets attendancesession indéxé par le timestamp unix de la session.
      */
     public function get_sessions(int $offset) {
-        $sessions = array();
+        $sessions = [];
 
-        $holidays = array();
+        $holidays = [];
         foreach (holiday::get_records() as $holiday) {
             $key = strftime('%F', $holiday->day);
             $holidays[$key] = $holiday;
@@ -135,7 +135,7 @@ class period extends record {
 
             // On régénère les sessions.
             if ($oldperiod->weeks !== $this->weeks) {
-                $courses = course::get_records(array('periodid' => $this->id));
+                $courses = course::get_records(['periodid' => $this->id]);
                 foreach ($courses as $course) {
                     $course->set_sessions();
                 }

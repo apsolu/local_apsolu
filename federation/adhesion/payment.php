@@ -32,7 +32,7 @@ $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
 $data->due = false;
 $data->count_cards = 0;
-$data->cards = array();
+$data->cards = [];
 $data->nextstep = APSOLU_PAGE_SUMMARY;
 $data->payment_url = (string) new moodle_url('/local/apsolu/payment/index.php');
 

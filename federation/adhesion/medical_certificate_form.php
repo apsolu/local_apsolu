@@ -59,10 +59,10 @@ class local_apsolu_federation_medical_certificate extends moodleform {
 
             $fs = get_file_storage();
             $context = context_course::instance($course->id, MUST_EXIST);
-            list($component, $filearea, $itemid) = array('local_apsolu', 'medicalcertificate', $USER->id);
+            list($component, $filearea, $itemid) = ['local_apsolu', 'medicalcertificate', $USER->id];
             $sort = 'itemid, filepath, filename';
             $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
-            $items = array();
+            $items = [];
             foreach ($files as $file) {
                 $url = moodle_url::make_pluginfile_url($context->id, $component, $filearea, $itemid, '/', $file->get_filename(), $forcedownload = false, $includetoken = false);
                 $items[] = html_writer::link($url, $file->get_filename());
@@ -71,7 +71,7 @@ class local_apsolu_federation_medical_certificate extends moodleform {
             if (empty($items) === true) {
                 $mform->addElement('static', 'medicalcertificate', $label, get_string('no_files', 'local_apsolu'));
             } else {
-                $attributes = array('class' => 'list-unstyled');
+                $attributes = ['class' => 'list-unstyled'];
                 $mform->addElement('static', 'medicalcertificate', $label, html_writer::alist($items, $attributes));
             }
         } else {
@@ -139,10 +139,10 @@ class local_apsolu_federation_medical_certificate extends moodleform {
         $mform->setType('validityperiod', PARAM_INT);
 
         // Submit buttons.
-        $attributes = array('class' => 'btn btn-default');
+        $attributes = ['class' => 'btn btn-default'];
         $buttonarray[] = &$mform->createElement('submit', 'save', get_string('save'), $attributes);
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Set default values.
         $this->set_data($adhesion);
@@ -161,7 +161,7 @@ class local_apsolu_federation_medical_certificate extends moodleform {
 
         $maxbytes = get_user_max_upload_file_size($context, $CFG->maxbytes, $course->maxbytes);
 
-        $options = array();
+        $options = [];
         $options['areamaxbytes'] = $maxbytes;
         $options['context'] = $context;
         $options['maxbytes'] = $maxbytes;
@@ -186,7 +186,7 @@ class local_apsolu_federation_medical_certificate extends moodleform {
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
 
-        $medicalsports = array();
+        $medicalsports = [];
         $medicalsports[6] = 'sport';
         $medicalsports[12] = 'constraintsport';
         foreach ($medicalsports as $validityperiod => $type) {
@@ -222,7 +222,7 @@ class local_apsolu_federation_medical_certificate extends moodleform {
 
         // Note : il est possible de modifier la période lors de l'envoi du formulaire. Pour bien faire, il faudrait calculer ici la validité attendue.
         // Avec cette vérification, au pire, une personne avec des contraintes médicales pourraient valider le dépôt d'un certificat de moins d'un an (au lieu de 6 mois).
-        if (in_array($data['validityperiod'], array(6, 12), $strict = true) == false) {
+        if (in_array($data['validityperiod'], [6, 12], $strict = true) == false) {
             $errors['medicalcertificatedate'] = get_string('errorinvaliddate', 'calendar');
             return $errors;
         }

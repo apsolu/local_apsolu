@@ -73,7 +73,7 @@ class update_user_payment extends \core\event\base {
      * @return moodle_url
      */
     public function get_url() {
-        return new \moodle_url('local/apsolu_presence/index.php', array('tab' => 'history', 'courseid' => $this->courseid));
+        return new \moodle_url('local/apsolu_presence/index.php', ['tab' => 'history', 'courseid' => $this->courseid]);
     }
 
     /**
@@ -85,7 +85,7 @@ class update_user_payment extends \core\event\base {
      */
     public function get_legacy_logdata() {
         // Override if you are migrating an add_to_log() call.
-        return array($this->courseid, 'local_apsolu', 'marked', '...........', $this->objectid, $this->contextinstanceid);
+        return [$this->courseid, 'local_apsolu', 'marked', '...........', $this->objectid, $this->contextinstanceid];
     }
 
     /**

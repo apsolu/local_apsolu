@@ -35,15 +35,15 @@ if ($roleid === 5) {
     $roleid = 0;
 }
 
-$record = $DB->get_record('role', array('id' => $roleid, 'archetype' => 'student'), $fields = '*', MUST_EXIST);
-$record = current(role_fix_names(array($record)));
+$record = $DB->get_record('role', ['id' => $roleid, 'archetype' => 'student'], $fields = '*', MUST_EXIST);
+$record = current(role_fix_names([$record]));
 
 $role = new Role();
 $role->load($roleid);
 $role->id = $record->id;
 
 // Build form.
-$customdata = array($role, $record->name);
+$customdata = [$role, $record->name];
 $mform = new local_apsolu_roles_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
@@ -54,7 +54,7 @@ if ($data = $mform->get_data()) {
     $role->save($data);
 
     // Redirige vers la page générale.
-    $returnurl = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'roles'));
+    $returnurl = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'roles']);
     redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
 

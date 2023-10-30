@@ -46,12 +46,12 @@ class local_apsolu_courses_skills_edit_form extends moodleform {
         $skill = $this->_customdata['skill'];
 
         // Name field.
-        $mform->addElement('text', 'name', get_string('skill_fullname', 'local_apsolu'), array('size' => '48'));
+        $mform->addElement('text', 'name', get_string('skill_fullname', 'local_apsolu'), ['size' => '48']);
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
 
         // Shortname field.
-        $mform->addElement('text', 'shortname', get_string('skill_shortname', 'local_apsolu'), array('size' => '48'));
+        $mform->addElement('text', 'shortname', get_string('skill_shortname', 'local_apsolu'), ['size' => '48']);
         $mform->setType('shortname', PARAM_TEXT);
         $mform->addRule('shortname', get_string('required'), 'required', null, 'client');
 
@@ -63,7 +63,7 @@ class local_apsolu_courses_skills_edit_form extends moodleform {
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
         $mform->addElement('hidden', 'tab', 'skills');
@@ -90,11 +90,11 @@ class local_apsolu_courses_skills_edit_form extends moodleform {
     public function validation($data, $files) {
         global $DB;
 
-        $errors = array();
+        $errors = [];
         $errors = parent::validation($data, $files);
 
         // Is unique ?
-        $skill = $DB->get_record('apsolu_skills', array('name' => $data['name']));
+        $skill = $DB->get_record('apsolu_skills', ['name' => $data['name']]);
         if ($skill && $skill->id != $data['skillid']) {
             $errors['name'] = get_string('shortnametaken', '', $data['name']);
         }

@@ -77,7 +77,7 @@ class local_apsolu_notification_form extends moodleform {
         }
 
         // Destinataires.
-        $users = array();
+        $users = [];
         foreach ($recipients as $user) {
             if (!empty($user->numberid)) {
                 $numberid = ' ('.$user->numberid.')';
@@ -97,13 +97,13 @@ class local_apsolu_notification_form extends moodleform {
 
         // Sujet.
         $label = get_string('subject', 'local_apsolu');
-        $mform->addElement('text', 'subject', $label, array('size' => 250));
+        $mform->addElement('text', 'subject', $label, ['size' => 250]);
         $mform->setType('subject', PARAM_TEXT);
         $mform->addRule('subject', get_string('required'), 'required', null, 'client');
 
         // Message.
         $label = get_string('message', 'local_apsolu');
-        $mform->addElement('editor', 'message', $label, array('rows' => '15', 'cols' => '50'));
+        $mform->addElement('editor', 'message', $label, ['rows' => '15', 'cols' => '50']);
         $mform->setType('message', PARAM_RAW);
         $mform->addRule('message', get_string('required'), 'required', null, 'client');
 
@@ -129,7 +129,7 @@ class local_apsolu_notification_form extends moodleform {
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Définit les valeurs par défaut.
         $this->set_data($defaultdata);
@@ -144,7 +144,7 @@ class local_apsolu_notification_form extends moodleform {
      *
      * @return void
      */
-    public function local_apsolu_notify($users = array(), $courseid = null) {
+    public function local_apsolu_notify($users = [], $courseid = null) {
         global $DB, $USER;
 
         if ($courseid === null) {
@@ -193,11 +193,11 @@ class local_apsolu_notification_form extends moodleform {
 
             if (message_send($eventdata) !== false) {
                 // Ajoute une trace dans les logs.
-                $event = \local_apsolu\event\notification_sent::create(array(
+                $event = \local_apsolu\event\notification_sent::create([
                     'relateduserid' => $userid,
                     'context' => $context,
-                    'other' => json_encode(array('sender' => $USER->id, 'receiver' => $userid, 'subject' => $eventdata->subject)),
-                ));
+                    'other' => json_encode(['sender' => $USER->id, 'receiver' => $userid, 'subject' => $eventdata->subject]),
+                ]);
                 $event->trigger();
             }
         }
@@ -220,11 +220,11 @@ class local_apsolu_notification_form extends moodleform {
                 email_to_user($admin, $USER, $data->subject, $messagetext, $messagehtml);
             }
 
-            $event = \local_apsolu\event\notification_sent::create(array(
+            $event = \local_apsolu\event\notification_sent::create([
                 'relateduserid' => $admin->id,
                 'context' => $context,
-                'other' => json_encode(array('sender' => $USER->id, 'receiver' => $admin->email, 'subject' => $eventdata->subject)),
-                ));
+                'other' => json_encode(['sender' => $USER->id, 'receiver' => $admin->email, 'subject' => $eventdata->subject]),
+                ]);
             $event->trigger();
         }
     }

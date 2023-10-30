@@ -34,7 +34,7 @@ $roles = role_get_names();
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
-$data->gradeitems = array();
+$data->gradeitems = [];
 $data->count_gradeitems = 0;
 
 foreach ($DB->get_records_sql($sql) as $gradeitem) {

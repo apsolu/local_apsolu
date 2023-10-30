@@ -41,11 +41,11 @@ class questionnaire {
      * @return array
      */
     public static function get_questions() {
-        $questions = array();
+        $questions = [];
 
         $category = new stdClass();
         $category->name = 'Durant les 12 derniers mois';
-        $category->questions = array();
+        $category->questions = [];
         $category->questions[] = (object) ['id' => 'q1', 'label' => 'Un membre de votre famille est-il décédé subitement d’une cause cardiaque ou inexpliquée ?'];
         $category->questions[] = (object) ['id' => 'q2', 'label' => 'Avez-vous ressenti une douleur dans la poitrine, des palpitations, un essoufflement inhabituel ou un malaise ?'];
         $category->questions[] = (object) ['id' => 'q3', 'label' => 'Avez-vous eu un épisode de respiration sifflante (asthme) ?'];
@@ -56,7 +56,7 @@ class questionnaire {
 
         $category = new stdClass();
         $category->name = 'À ce jour';
-        $category->questions = array();
+        $category->questions = [];
         $category->questions[] = (object) ['id' => 'q7', 'label' => 'Ressentez-vous une douleur, un manque de force ou une raideur suite à un problème osseux, articulaire ou musculaire (fracture, entorse, luxation, déchirure, tendinite, etc...) survenu durant les 12 derniers mois ?'];
         $category->questions[] = (object) ['id' => 'q8', 'label' => 'Votre pratique sportive est-elle interrompue pour des raisons de santé ?'];
         $category->questions[] = (object) ['id' => 'q9', 'label' => 'Pensez-vous avoir besoin d’un avis médical pour poursuivre votre pratique sportive ?'];

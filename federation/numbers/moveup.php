@@ -43,17 +43,17 @@ if ($number->sortorder === '0') {
 
         // Positionne l'ordre de tri de notre numéro d'association à -1, pour éviter les problèmes de contraintes d'unicité.
         $sql = "UPDATE {apsolu_federation_numbers} SET sortorder = -1 WHERE id = :id";
-        $DB->execute($sql, array('id' => $number->id));
+        $DB->execute($sql, ['id' => $number->id]);
 
         // Met à jour la position du numéro d'association situé avant notre numéro d'association édité.
         $sql = "UPDATE {apsolu_federation_numbers} SET sortorder = sortorder + 1 WHERE sortorder = :sortorder";
-        $DB->execute($sql, array('sortorder' => $order));
+        $DB->execute($sql, ['sortorder' => $order]);
 
         // Modifie la position de notre numéro d'association.
         $sql = "UPDATE {apsolu_federation_numbers} SET sortorder = :sortorder WHERE id = :id";
-        $DB->execute($sql, array('id' => $number->id, 'sortorder' => $order));
+        $DB->execute($sql, ['id' => $number->id, 'sortorder' => $order]);
 
-        $params = array('number' => $number->number, 'order' => $order + 1);
+        $params = ['number' => $number->number, 'order' => $order + 1];
         Notification::success(get_string('the_association_number_X_has_been_moved_to_Y_position', 'local_apsolu', $params));
 
         $transaction->allow_commit();

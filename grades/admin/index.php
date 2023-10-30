@@ -29,13 +29,13 @@ $tab = optional_param('tab', 'gradebooks', PARAM_ALPHA);
 $action = optional_param('action', 'view', PARAM_ALPHA);
 
 // Set tabs.
-$tabslist = array();
+$tabslist = [];
 $tabslist['gradeitems'] = get_string('gradeitemsettings', 'grades');
 $tabslist['gradebooks'] = get_string('gradebook', 'grades');
 
-$tabsbar = array();
+$tabsbar = [];
 foreach ($tabslist as $tabname => $tablabel) {
-    $url = new moodle_url('/local/apsolu/grades/admin/index.php', array('tab' => $tabname));
+    $url = new moodle_url('/local/apsolu/grades/admin/index.php', ['tab' => $tabname]);
     $tabsbar[] = new tabobject($tabname, $url, $tablabel);
 }
 

@@ -53,10 +53,10 @@ class email extends external_api {
      */
     public static function send_instant_emails_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'messages' => new external_multiple_structure(
                     new external_single_structure(
-                        array(
+                        [
                             'subject' => new external_value(PARAM_TEXT, 'the subject of the email'),
                             'carboncopy' => new external_value(PARAM_BOOL,
                                     'Send a copy of the email to sender', VALUE_DEFAULT, true),
@@ -64,10 +64,10 @@ class email extends external_api {
                             'receivers' => new external_multiple_structure(
                                     new external_value(PARAM_INT, 'id of the user to send the private email')
                             ),
-                        )
+                        ]
                     )
                 ),
-            )
+            ]
         );
     }
 
@@ -77,7 +77,7 @@ class email extends external_api {
      * @param array $messages An array of message to send.
      * @return array
      */
-    public static function send_instant_emails($messages = array()) {
+    public static function send_instant_emails($messages = []) {
         global $CFG, $USER, $DB;
 
         // Ensure the current user is allowed to run this function.
@@ -85,9 +85,9 @@ class email extends external_api {
         self::validate_context($context);
         require_capability('moodle/site:sendmessage', $context);
 
-        $params = self::validate_parameters(self::send_instant_emails_parameters(), array('messages' => $messages));
+        $params = self::validate_parameters(self::send_instant_emails_parameters(), ['messages' => $messages]);
 
-        $resultmessages = array();
+        $resultmessages = [];
         foreach ($params['messages'] as $message) {
             // Set email data.
             $subject = $message['subject'];
@@ -105,7 +105,7 @@ class email extends external_api {
             $tousers = $DB->get_records_select("user", "id " . $sqluserids . " AND deleted = 0", $sqlparams);
 
             foreach ($receivers as $receiver) {
-                $resultmsg = array(); // The info about the success of the operation.
+                $resultmsg = []; // The info about the success of the operation.
 
                 // We are going to do some checking.
                 // Code should match /messages/index.php checks.
@@ -149,11 +149,11 @@ class email extends external_api {
     public static function send_instant_emails_returns() {
         return new external_multiple_structure(
             new external_single_structure(
-                array(
+                [
                     'msgid' => new external_value(PARAM_INT,
                             'test this to know if it succeeds:  id of the created message if it succeeded, -1 when failed'),
-                    'errormessage' => new external_value(PARAM_TEXT, 'error message - if it failed', VALUE_OPTIONAL)
-                )
+                    'errormessage' => new external_value(PARAM_TEXT, 'error message - if it failed', VALUE_OPTIONAL),
+                ]
             )
         );
     }

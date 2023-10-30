@@ -35,7 +35,7 @@ $invalid_enrolments = optional_param('invalid_enrolments', null, PARAM_INT);
 $inactive_enrolments = optional_param('inactive_enrolments', null, PARAM_INT);
 
 $PAGE->set_pagelayout('base'); // Désactive l'affichage des blocs.
-$PAGE->set_url('/local/apsolu/attendance/edit.php', array('courseid' => $courseid));
+$PAGE->set_url('/local/apsolu/attendance/edit.php', ['courseid' => $courseid]);
 
 // Basic access control checks.
 // Login to the course and retrieve also all fields defined by course format.
@@ -43,19 +43,19 @@ $course = get_course($courseid);
 require_login($course);
 $course = course_get_format($course)->get_course();
 
-$category = $DB->get_record('course_categories', array('id' => $course->category), '*', MUST_EXIST);
+$category = $DB->get_record('course_categories', ['id' => $course->category], '*', MUST_EXIST);
 $coursecontext = context_course::instance($course->id);
 require_capability('moodle/course:update', $coursecontext);
 
 // Vérifier qu'il s'agit d'une activité APSOLU.
-$activity = $DB->get_record('apsolu_courses', array('id' => $course->id));
+$activity = $DB->get_record('apsolu_courses', ['id' => $course->id]);
 if ($activity === false) {
     throw new moodle_exception('taking_attendance_is_only_possible_on_a_course', 'local_apsolu');
 }
 
 $streditcoursesettings = get_string('attendance', 'local_apsolu');
 
-$PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', array('id' => $course->id)));
+$PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', ['id' => $course->id]));
 $PAGE->navbar->add($streditcoursesettings);
 
 $pagedesc = $streditcoursesettings;
@@ -69,25 +69,25 @@ $PAGE->set_heading($fullname);
 $PAGE->requires->js_call_amd('local_apsolu/attendance', 'initialise');
 
 // Build tabtree.
-$tabsbar = array();
+$tabsbar = [];
 
-$url = new moodle_url('/local/apsolu/attendance/edit.php', array('courseid' => $courseid));
+$url = new moodle_url('/local/apsolu/attendance/edit.php', ['courseid' => $courseid]);
 $tabsbar[] = new tabobject('sessions', $url, get_string('attendance_sessionsview', 'local_apsolu'));
 
-$url = new moodle_url('/local/apsolu/attendance/overview.php', array('courseid' => $courseid));
+$url = new moodle_url('/local/apsolu/attendance/overview.php', ['courseid' => $courseid]);
 $tabsbar[] = new tabobject('overview', $url, get_string('attendance_overview', 'local_apsolu'));
 
-$url = new moodle_url('/local/apsolu/attendance/sessions/index.php', array('courseid' => $courseid));
+$url = new moodle_url('/local/apsolu/attendance/sessions/index.php', ['courseid' => $courseid]);
 $tabsbar[] = new tabobject('sessions_edit', $url, get_string('attendance_sessions_edit', 'local_apsolu'));
 
-$url = new moodle_url('/local/apsolu/attendance/export/export.php', array('courseid' => $courseid));
+$url = new moodle_url('/local/apsolu/attendance/export/export.php', ['courseid' => $courseid]);
 $tabsbar[] = new tabobject('export', $url, get_string('export', 'local_apsolu'));
 
 echo $OUTPUT->header();
 echo $OUTPUT->tabtree($tabsbar, 'sessions');
 echo $OUTPUT->heading($pagedesc);
 
-$sessions = $DB->get_records('apsolu_attendance_sessions', array('courseid' => $courseid), $sort = 'sessiontime');
+$sessions = $DB->get_records('apsolu_attendance_sessions', ['courseid' => $courseid], $sort = 'sessiontime');
 $count_sessions = count($sessions);
 
 if ($count_sessions === 0) {
@@ -97,7 +97,7 @@ if ($count_sessions === 0) {
 // Faire choisir une session.
 require_once($CFG->dirroot.'/local/apsolu/attendance/edit_select_form.php');
 
-$sessions_select = array();
+$sessions_select = [];
 foreach ($sessions as $session) {
     $sessions_select[$session->id] = $session->name;
 
@@ -114,11 +114,11 @@ if ($sessionid === 0) {
 }
 
 // First create select form.
-$args = array(
+$args = [
     'courseid' => $course->id,
     'sessionid' => $sessionid,
     'sessions' => $sessions,
-);
+];
 
 if (isset($invalid_enrolments) === true) {
     $lists_style = '';
@@ -132,11 +132,11 @@ if (isset($inactive_enrolments) === true) {
 }
 
 // TODO: à revoir...
-$url = new moodle_url('/local/apsolu/attendance/edit.php', array('courseid' => $courseid));
+$url = new moodle_url('/local/apsolu/attendance/edit.php', ['courseid' => $courseid]);
 $selectform = new edit_select_form($url, $args);
 $selectform->display();
 
-$session = $DB->get_record('apsolu_attendance_sessions', array('id' => $sessionid, 'courseid' => $courseid));
+$session = $DB->get_record('apsolu_attendance_sessions', ['id' => $sessionid, 'courseid' => $courseid]);
 
 if ($session === false) {
     // TODO: créer un message.
@@ -160,7 +160,7 @@ $sql = "SELECT u.*, ue.id AS ueid, ue.status, ue.timestart, ue.timeend, ue.enrol
     " AND ctx.contextlevel = 50". // Course level.
     " AND r.archetype = 'student'";
 
-$params = array();
+$params = [];
 $params['apsolusesame'] = $customfields['apsolusesame']->id;
 
 if (isset($invalid_enrolments) === false) {
@@ -188,7 +188,7 @@ $sql = "SELECT DISTINCT u.*, uid1.data AS apsolusesame".
     " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = :apsolusesame".
     " WHERE aas.courseid = :courseid";
 
-$params = array();
+$params = [];
 $params['apsolusesame'] = $customfields['apsolusesame']->id;
 $params['courseid'] = $courseid;
 
@@ -252,14 +252,14 @@ if ($CFG->wwwroot === 'https://espace-suaps.univ-brest.fr' || empty($CFG->debugd
 }
 
 // Attendance form.
-$args = array(
+$args = [
     'courseid' => $course->id,
     'sessionid' => $sessionid,
     'students' => $students,
-);
+];
 
 // TODO: à revoir...
-$url = new moodle_url('/local/apsolu/attendance/edit.php', array('courseid' => $courseid));
+$url = new moodle_url('/local/apsolu/attendance/edit.php', ['courseid' => $courseid]);
 /*
 $mform = new edit_form($url, $args);
 $mform->display();
@@ -268,14 +268,14 @@ $mform->display();
 $course_presences = attendance::getCoursePresences($courseid);
 $activity_presences = attendance::getActivityPresences($course->category);
 
-$presences = $DB->get_records('apsolu_attendance_presences', array('sessionid' => $sessionid), $sort = '', $fields = 'studentid, statusid, description, id');
+$presences = $DB->get_records('apsolu_attendance_presences', ['sessionid' => $sessionid], $sort = '', $fields = 'studentid, statusid, description, id');
 
 $roles = role_fix_names($DB->get_records('role'));
 
 $notification = false;
 if (isset($_POST['apsolu']) === true) {
     if (isset($_POST['presences']) === false) {
-        $_POST['presences'] = array();
+        $_POST['presences'] = [];
     }
 
     foreach ($_POST['presences'] as $userid => $status) {
@@ -324,7 +324,7 @@ if (isset($_POST['apsolu']) === true) {
             continue;
         }
 
-        $DB->delete_records('apsolu_attendance_presences', array('id' => $presence->id));
+        $DB->delete_records('apsolu_attendance_presences', ['id' => $presence->id]);
         unset($presences[$userid]);
     }
 }
@@ -338,10 +338,10 @@ if ($notification === true) {
 // Construit le tableau HTML.
 $table = new html_table();
 $table->id = 'apsolu-attendance-table';
-$table->attributes = array('class' => 'table table-striped');
+$table->attributes = ['class' => 'table table-striped'];
 
 // Définit les entêtes du tableau.
-$table->head = array();
+$table->head = [];
 if (isset($inactive_enrolments) === true) {
     $table->head[] = get_string('attendance_enrolment_state', 'local_apsolu');
 }
@@ -361,7 +361,7 @@ $table->head[] = get_string('attendance_complement', 'local_apsolu');
 $table->head[] = get_string('attendance_enrolments_management', 'local_apsolu');
 
 // Initialise les données du tableau.
-$table->data = array();
+$table->data = [];
 
 $statuses = $DB->get_records('apsolu_attendance_statuses', $conditions = null, $sort = 'sortorder');
 
@@ -418,10 +418,10 @@ foreach ($students as $student) {
         $presence->name = get_string('attendances', 'local_apsolu');
         $presence->total = 0;
 
-        $course_presences[$student->id] = array($presence);
+        $course_presences[$student->id] = [$presence];
     }
 
-    $coursepresences[$student->id] = array();
+    $coursepresences[$student->id] = [];
     foreach ($course_presences[$student->id] as $presence) {
         $coursepresences[$student->id][] = get_string('attendances_total', 'local_apsolu', $presence);
     }
@@ -432,16 +432,16 @@ foreach ($students as $student) {
         $presence->name = get_string('attendances', 'local_apsolu');
         $presence->total = 0;
 
-        $activity_presences[$student->id] = array($presence);
+        $activity_presences[$student->id] = [$presence];
     }
 
-    $activitypresences[$student->id] = array();
+    $activitypresences[$student->id] = [];
     foreach ($activity_presences[$student->id] as $presence) {
         $activitypresences[$student->id][] = get_string('attendances_total', 'local_apsolu', $presence);
     }
 
     // Information.
-    $informations = array();
+    $informations = [];
 
     $informations_style = 'none';
     if (isset($student->apsolusesame) === false || $student->apsolusesame !== '1') {
@@ -486,11 +486,11 @@ foreach ($students as $student) {
         $enrolment_link = get_string('attendance_ontime_enrolment', 'local_apsolu');
     }
 
-    $cols = array();
+    $cols = [];
     if (isset($inactive_enrolments) === true) {
         $cell = new html_table_cell();
         $cell->text = $enrolment_status;
-        $cell->attributes = array('class' => $enrolment_status_style);
+        $cell->attributes = ['class' => $enrolment_status_style];
         $cols[] = $cell;
     }
     $cols[] = $OUTPUT->render($picture);
@@ -507,7 +507,7 @@ foreach ($students as $student) {
     $cols[] = '<ul><li>'.implode('</li><li>', $activitypresences[$student->id]).'</li></ul>';
     $cell = new html_table_cell();
     $cell->text = $rolename;
-    $cell->attributes = array('class' => 'apsolu-attendance-role', 'data-userid' => $student->id);
+    $cell->attributes = ['class' => 'apsolu-attendance-role', 'data-userid' => $student->id];
     $cols[] = $cell;
 
     if ($student->status === null) {
@@ -518,14 +518,14 @@ foreach ($students as $student) {
     } else {
         $cell  = new html_table_cell();
         $cell->text = enrol_select_plugin::get_enrolment_list_name($student->status, 'short');
-        $cell->attributes = array('class' => 'apsolu-attendance-status', 'data-userid' => $student->id);
+        $cell->attributes = ['class' => 'apsolu-attendance-status', 'data-userid' => $student->id];
         $cell->style = $lists_style;
         $cols[] = $cell;
     }
 
     $cell  = new html_table_cell();
     $cell->text = implode('<br />', $informations);
-    $cell->attributes = array('class' => $informations_style);
+    $cell->attributes = ['class' => $informations_style];
     $cols[] = $cell;
     $cols[] = $enrolment_link;
 

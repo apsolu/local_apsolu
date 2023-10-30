@@ -105,7 +105,7 @@ if (Payment::is_open() === false) {
 $address = paybox::get_address($USER->id);
 
 // Build form.
-$customdata = array($address);
+$customdata = [$address];
 $mform = new local_apsolu_payment_address_form(null, $customdata);
 
 if ($data = $mform->get_data()) {

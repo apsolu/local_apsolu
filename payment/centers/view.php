@@ -24,15 +24,15 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$centers = $DB->get_records('apsolu_payments_centers', $conditions = array(), $sort = 'name');
+$centers = $DB->get_records('apsolu_payments_centers', $conditions = [], $sort = 'name');
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
-$data->centers = array();;
+$data->centers = [];;
 $data->count_centers = 0;
 
 foreach ($centers as $center) {
-    $protectedfields = array('hmac');
+    $protectedfields = ['hmac'];
     foreach ($protectedfields as $field) {
         if (isset($center->{$field}) && !empty($center->{$field})) {
             if ($field === 'hmac') {

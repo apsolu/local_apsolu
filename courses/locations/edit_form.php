@@ -46,7 +46,7 @@ class local_apsolu_courses_locations_edit_form extends moodleform {
         list($location, $areas, $managers) = $this->_customdata;
 
         // Name field.
-        $mform->addElement('text', 'name', get_string('name'), array('size' => '48'));
+        $mform->addElement('text', 'name', get_string('name'), ['size' => '48']);
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
 
@@ -58,23 +58,23 @@ class local_apsolu_courses_locations_edit_form extends moodleform {
         // Hope to use instead : $mform->addDatalist('area', $areas);.
 
         // Address field.
-        $mform->addElement('textarea', 'address', get_string('address', 'local_apsolu'), array('cols' => '48'));
+        $mform->addElement('textarea', 'address', get_string('address', 'local_apsolu'), ['cols' => '48']);
         $mform->setType('address', PARAM_TEXT);
 
         // Email field.
-        $mform->addElement('text', 'email', get_string('email', 'local_apsolu'), array('size' => '48'));
+        $mform->addElement('text', 'email', get_string('email', 'local_apsolu'), ['size' => '48']);
         $mform->setType('email', PARAM_TEXT);
 
         // Phone field.
-        $mform->addElement('text', 'phone', get_string('phone', 'local_apsolu'), array('size' => '48'));
+        $mform->addElement('text', 'phone', get_string('phone', 'local_apsolu'), ['size' => '48']);
         $mform->setType('phone', PARAM_TEXT);
 
         // Longitude field.
-        $mform->addElement('text', 'longitude', get_string('longitude', 'local_apsolu'), array('size' => '48'));
+        $mform->addElement('text', 'longitude', get_string('longitude', 'local_apsolu'), ['size' => '48']);
         $mform->setType('longitude', PARAM_FLOAT);
 
         // Latitude field.
-        $mform->addElement('text', 'latitude', get_string('latitude', 'local_apsolu'), array('size' => '48'));
+        $mform->addElement('text', 'latitude', get_string('latitude', 'local_apsolu'), ['size' => '48']);
         $mform->setType('latitude', PARAM_FLOAT);
 
         // OpenStreetMap link.
@@ -108,7 +108,7 @@ class local_apsolu_courses_locations_edit_form extends moodleform {
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
         $mform->addElement('hidden', 'tab', 'locations');

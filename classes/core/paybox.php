@@ -85,7 +85,7 @@ class paybox {
             $userid = $USER->id;
         }
 
-        $address = $DB->get_record('apsolu_payments_addresses', array('userid' => $userid));
+        $address = $DB->get_record('apsolu_payments_addresses', ['userid' => $userid]);
 
         if ($address === false) {
             $address = new stdClass();
@@ -124,7 +124,7 @@ class paybox {
             }
 
             // Gère les éventuels paramètres de proxy.
-            $options = array();
+            $options = [];
             if (!empty($CFG->proxyhost) && !is_proxybypass('https://'.$server)) {
                 if (!empty($CFG->proxyport)) {
                     $proxy = $CFG->proxyhost.':'.$CFG->proxyport;
@@ -132,14 +132,14 @@ class paybox {
                     $proxy = $CFG->proxyhost;
                 }
 
-                $options = array(
-                    'http' => array (
+                $options = [
+                    'http' => [
                         'proxy' => $proxy,
-                    ),
-                    'https' => array (
+                    ],
+                    'https' => [
                         'proxy' => $proxy,
-                    )
-                );
+                    ],
+                ];
             }
 
             // Création du contexte de transaction.
@@ -173,7 +173,7 @@ class paybox {
             $userid = $USER->id;
         }
 
-        $address = $DB->get_record('apsolu_payments_addresses', array('userid' => $userid));
+        $address = $DB->get_record('apsolu_payments_addresses', ['userid' => $userid]);
 
         if ($address === false) {
             $address = new stdClass();
@@ -181,7 +181,7 @@ class paybox {
             $address->timecreated = time();
         }
 
-        $attributes = array();
+        $attributes = [];
         $attributes[] = 'firstname';
         $attributes[] = 'lastname';
         $attributes[] = 'address1';

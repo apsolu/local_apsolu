@@ -42,7 +42,7 @@ class local_apsolu_calendar_edit_form extends moodleform {
     protected function definition() {
         $mform = $this->_form;
 
-        $datetimeoptions = array('optional' => true);
+        $datetimeoptions = ['optional' => true];
 
         list($defaults, $calendarstypes) = $this->_customdata;
 
@@ -53,13 +53,13 @@ class local_apsolu_calendar_edit_form extends moodleform {
 
         $mform->addElement('header', 'general', get_string('general'));
         $mform->setExpanded('general');
-        $attributes = array('size' => '20', 'maxlength' => '255');
+        $attributes = ['size' => '20', 'maxlength' => '255'];
         $mform->addElement('text', 'name', get_string('calendarname', 'local_apsolu'), $attributes);
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'server');
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
 
-        $options = array();
+        $options = [];
         foreach ($calendarstypes as $type) {
             $options[$type->id] = $type->name;
         }
@@ -92,7 +92,7 @@ class local_apsolu_calendar_edit_form extends moodleform {
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
         $mform->addElement('hidden', 'action', 'edit');
@@ -120,11 +120,11 @@ class local_apsolu_calendar_edit_form extends moodleform {
         $errors = parent::validation($data, $files);
 
         // Contrôle que les dates de début soient antérieures aux dates de fin.
-        $datetimes = array();
-        $datetimes[] = array('enrolstartdate', 'enrolenddate');
-        $datetimes[] = array('coursestartdate', 'courseenddate');
-        $datetimes[] = array('reenrolstartdate', 'reenrolenddate');
-        $datetimes[] = array('gradestartdate', 'gradeenddate');
+        $datetimes = [];
+        $datetimes[] = ['enrolstartdate', 'enrolenddate'];
+        $datetimes[] = ['coursestartdate', 'courseenddate'];
+        $datetimes[] = ['reenrolstartdate', 'reenrolenddate'];
+        $datetimes[] = ['gradestartdate', 'gradeenddate'];
 
         foreach ($datetimes as $dates) {
             list($startdate, $enddate) = $dates;

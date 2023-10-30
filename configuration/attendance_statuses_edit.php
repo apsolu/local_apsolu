@@ -38,7 +38,7 @@ if ($statusid !== 0) {
 }
 
 // Build form.
-$customdata = array($status);
+$customdata = [$status];
 $mform = new local_apsolu_attendance_statuses_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
@@ -52,7 +52,7 @@ if ($data = $mform->get_data()) {
     $status->save($data);
 
     // Redirige vers la page générale.
-    $returnurl = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'attendancestatuses'));
+    $returnurl = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'attendancestatuses']);
     redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
 

@@ -62,16 +62,16 @@ class send_email_form extends dynamic_form {
         $mform->addElement('static', 'validationstatic', get_string('validation', 'local_apsolu'), $label);
 
         // Champ du destinataire.
-        $items = array();
+        $items = [];
         foreach (explode(',', $users) as $userid) {
-            $user = $DB->get_record('user', array('id' => $userid));
+            $user = $DB->get_record('user', ['id' => $userid]);
             $items[] = $user->email;
         }
-        $list = html_writer::alist($items, $attributes = array('class' => 'list-unstyled'), $tag = 'ul');
+        $list = html_writer::alist($items, $attributes = ['class' => 'list-unstyled'], $tag = 'ul');
         $mform->addElement('static', 'user', get_string('to', 'local_apsolu'), $list);
 
         // Champ du sujet.
-        $mform->addElement('text', 'subject', get_string('subject', 'local_apsolu'), array('size' => 50));
+        $mform->addElement('text', 'subject', get_string('subject', 'local_apsolu'), ['size' => 50]);
         $mform->addRule('subject', get_string('required'), 'required', null, 'client');
         $mform->setType('subject', PARAM_TEXT);
         $mform->setDefault('subject', $subject);
@@ -89,7 +89,7 @@ class send_email_form extends dynamic_form {
         }
         $mform->addRule('message', '', 'required', null, 'server');
         $mform->setType('message', PARAM_RAW);
-        $mform->setDefault('message', array('text' => $body, 'format' => FORMAT_HTML));
+        $mform->setDefault('message', ['text' => $body, 'format' => FORMAT_HTML]);
 
         // Users.
         $mform->addElement('hidden', 'users', $users);
@@ -126,7 +126,7 @@ class send_email_form extends dynamic_form {
      * @throws moodle_exception
      */
     protected function check_access_for_dynamic_submission(): void {
-        $capabilities = array('moodle/site:sendmessage', 'moodle/course:bulkmessaging');
+        $capabilities = ['moodle/site:sendmessage', 'moodle/course:bulkmessaging'];
         $context = $this->get_context_for_dynamic_submission();
 
         require_all_capabilities($capabilities, $context);
@@ -146,12 +146,12 @@ class send_email_form extends dynamic_form {
         $validation = $data->validation;
         foreach ($receivers as $userid) {
             if ($validation === (int) Adhesion::MEDICAL_CERTIFICATE_STATUS_VALIDATED) {
-                foreach (Adhesion::get_records(array('userid' => $userid)) as $adhesion) {
+                foreach (Adhesion::get_records(['userid' => $userid]) as $adhesion) {
                     $adhesion->medicalcertificatestatus = $validation;
-                    $adhesion->save($mdata = null, $mform =null, $check = false);
+                    $adhesion->save($mdata = null, $mform = null, $check = false);
                 }
             } else if ($validation === (int) Adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING) {
-                foreach (Adhesion::get_records(array('userid' => $userid)) as $adhesion) {
+                foreach (Adhesion::get_records(['userid' => $userid]) as $adhesion) {
                     if ($adhesion->have_to_upload_medical_certificate() === true) {
                         $adhesion->medicalcertificatestatus = $adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING;
                     } else {
@@ -159,7 +159,7 @@ class send_email_form extends dynamic_form {
                     }
                     $adhesion->federationnumberrequestdate = null;
 
-                    $adhesion->save($mdata = null, $mform =null, $check = false);
+                    $adhesion->save($mdata = null, $mform = null, $check = false);
                 }
             } else if ($validation === (int) Adhesion::MEDICAL_CERTIFICATE_STATUS_EXEMPTED) {
                 // On annule juste la date de demande de validation.
@@ -171,13 +171,13 @@ class send_email_form extends dynamic_form {
         }
 
         // Envoi de la notification.
-        $message = array();
+        $message = [];
         $message['subject'] = $data->subject;
         $message['carboncopy'] = isset($data->carboncopy);
         $message['body'] = $data->message['text'];
         $message['receivers'] = $receivers;
 
-        $messages = array($message);
+        $messages = [$message];
 
         return email::send_instant_emails($messages);
     }
@@ -202,7 +202,7 @@ class send_email_form extends dynamic_form {
         }
 
         if ($context->contextlevel == CONTEXT_COURSE) {
-            return new moodle_url('/user/index.php', array('id' => $context->instanceid));
+            return new moodle_url('/user/index.php', ['id' => $context->instanceid]);
         }
     }
 }

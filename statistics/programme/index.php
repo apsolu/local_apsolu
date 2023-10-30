@@ -28,11 +28,11 @@ require_once($CFG->libdir . '/adminlib.php');
 $page = optional_param('page', 'dashboard', PARAM_ALPHA);
 
 // Set tabs.
-$pages = array('dashboard','reports','custom');
+$pages = ['dashboard', 'reports', 'custom'];
 
-$tabtree = array();
+$tabtree = [];
 foreach ($pages as $pagename) {
-    $url = new moodle_url('/local/apsolu/statistics/programme/index.php', array('page' => $pagename));
+    $url = new moodle_url('/local/apsolu/statistics/programme/index.php', ['page' => $pagename]);
     $tabtree[] = new tabobject($pagename, $url, get_string('statistics_'.$pagename, 'local_apsolu'));
 }
 

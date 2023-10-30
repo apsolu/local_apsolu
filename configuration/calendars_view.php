@@ -27,10 +27,10 @@ defined('MOODLE_INTERNAL') || die;
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('calendars', 'local_apsolu'));
 
-$calendars = $DB->get_records('apsolu_calendars', $conditions = array(), $sort = 'name');
-$calendarstypes = $DB->get_records('apsolu_calendars_types', $conditions = array(), $sort = 'name');
+$calendars = $DB->get_records('apsolu_calendars', $conditions = [], $sort = 'name');
+$calendarstypes = $DB->get_records('apsolu_calendars_types', $conditions = [], $sort = 'name');
 
-$fields = array();
+$fields = [];
 $fields[] = 'enrolstartdate';
 $fields[] = 'enrolenddate';
 $fields[] = 'coursestartdate';
@@ -44,7 +44,7 @@ $now = time();
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
-$data->calendars = array();
+$data->calendars = [];
 $data->count_calendars = 0;
 
 foreach ($calendars as $calendar) {

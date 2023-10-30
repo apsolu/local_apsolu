@@ -68,6 +68,6 @@ class federation_adhesion_viewed extends \core\event\base {
     public function get_url() {
         $other = json_decode($this->other);
 
-        return new \moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => $other->step));
+        return new \moodle_url('/local/apsolu/federation/adhesion/index.php', ['step' => $other->step]);
     }
 }

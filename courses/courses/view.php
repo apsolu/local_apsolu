@@ -48,8 +48,8 @@ $sql = "SELECT c.id, cc.name AS category, ccc.name AS grouping, ac.event, ac.wee
     " JOIN {apsolu_cities} city ON city.id = aa.cityid".
     " JOIN {apsolu_periods} ap ON ap.id = ac.periodid".
     " ORDER BY category, ac.numweekday, ac.starttime, city, location, skill";
-$cities = array();
-$courses = array();
+$cities = [];
+$courses = [];
 foreach ($DB->get_records_sql($sql) as $course) {
     if ($currentactivity !== $course->category) {
         $currentactivity = $course->category;
@@ -96,7 +96,7 @@ if (isset($notificationform)) {
 }
 
 // Ajoute des avertissements aux gestionnaires pour indiquer que des paramètres n'ont pas été renseignés.
-$attributes = array('functional_contact', 'technical_contact');
+$attributes = ['functional_contact', 'technical_contact'];
 foreach ($attributes as $attribute) {
     $email = get_config('local_apsolu', $attribute);
     if (empty($email) === false && filter_var($email, FILTER_VALIDATE_EMAIL) !== false) {

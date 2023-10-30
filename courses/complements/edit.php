@@ -37,7 +37,7 @@ if ($complementid != 0) {
         " JOIN {apsolu_complements} ac ON c.id = ac.id".
         " WHERE ac.id = ?".
         " ORDER BY c.fullname";
-    $complement = $DB->get_record_sql($sql, array('id' => $complementid));
+    $complement = $DB->get_record_sql($sql, ['id' => $complementid]);
 }
 
 if ($complement === false) {
@@ -56,13 +56,13 @@ $sql = "SELECT id, name".
     " FROM {course_categories} cc".
     " WHERE parent=0".
     " ORDER BY cc.name";
-$categories = array();
+$categories = [];
 foreach ($DB->get_records_sql($sql) as $category) {
     $categories[$category->id] = $category->name;
 }
 
 // Build form.
-$customdata = array($complement, $categories);
+$customdata = [$complement, $categories];
 $mform = new local_apsolu_courses_complements_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
@@ -83,7 +83,7 @@ if ($data = $mform->get_data()) {
 
         $sql = "INSERT INTO {apsolu_complements} (id, price, federation)".
             " VALUES(?,?,?)";
-        $params = array($complement->id, $complement->price, $complement->federation);
+        $params = [$complement->id, $complement->price, $complement->federation];
         $DB->execute($sql, $params);
     } else {
         $DB->update_record('course', $complement);

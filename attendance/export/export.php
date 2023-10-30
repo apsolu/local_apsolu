@@ -30,7 +30,7 @@ require_once($CFG->libdir . '/excellib.class.php');
 $courseid = required_param('courseid', PARAM_INT); // Course id.
 
 $PAGE->set_pagelayout('base'); // Désactive l'affichage des blocs.
-$PAGE->set_url('/local/apsolu/attendance/export/export.php', array('courseid' => $courseid));
+$PAGE->set_url('/local/apsolu/attendance/export/export.php', ['courseid' => $courseid]);
 
 // Basic access control checks.
 // Login to the course and retrieve also all fields defined by course format.
@@ -38,12 +38,12 @@ $course = get_course($courseid);
 require_login($course);
 $course = course_get_format($course)->get_course();
 
-$category = $DB->get_record('course_categories', array('id' => $course->category), '*', MUST_EXIST);
+$category = $DB->get_record('course_categories', ['id' => $course->category], '*', MUST_EXIST);
 $coursecontext = context_course::instance($course->id);
 require_capability('moodle/course:update', $coursecontext);
 
 // Vérifier qu'il s'agit d'une activité APSOLU.
-$activity = $DB->get_record('apsolu_courses', array('id' => $course->id));
+$activity = $DB->get_record('apsolu_courses', ['id' => $course->id]);
 if ($activity === false) {
     throw new moodle_exception('taking_attendance_is_only_possible_on_a_course', 'local_apsolu');
 }
@@ -60,25 +60,25 @@ $PAGE->set_title($title);
 $PAGE->set_heading($fullname);
 
 // Build tabtree.
-$tabsbar = array();
+$tabsbar = [];
 
-$url = new moodle_url('/local/apsolu/attendance/edit.php', array('courseid' => $courseid));
+$url = new moodle_url('/local/apsolu/attendance/edit.php', ['courseid' => $courseid]);
 $tabsbar[] = new tabobject('sessions', $url, get_string('attendance_sessionsview', 'local_apsolu'));
 
-$url = new moodle_url('/local/apsolu/attendance/overview.php', array('courseid' => $courseid));
+$url = new moodle_url('/local/apsolu/attendance/overview.php', ['courseid' => $courseid]);
 $tabsbar[] = new tabobject('overview', $url, get_string('attendance_overview', 'local_apsolu'));
 
-$url = new moodle_url('/local/apsolu/attendance/sessions/index.php', array('courseid' => $courseid));
+$url = new moodle_url('/local/apsolu/attendance/sessions/index.php', ['courseid' => $courseid]);
 $tabsbar[] = new tabobject('sessions_edit', $url, get_string('attendance_sessions_edit', 'local_apsolu'));
 
-$url = new moodle_url('/local/apsolu/attendance/export/export.php', array('courseid' => $courseid));
+$url = new moodle_url('/local/apsolu/attendance/export/export.php', ['courseid' => $courseid]);
 $tabsbar[] = new tabobject('export', $url, get_string('export', 'local_apsolu'));
 
-$mform = new local_apsolu_attendance_export_form(null, array('courseid' => $courseid));
+$mform = new local_apsolu_attendance_export_form(null, ['courseid' => $courseid]);
 
 if ($data = $mform->get_data()) {
     // Définit les entêtes du fichier csv.
-    $headers = array();
+    $headers = [];
     $headers[] = get_string('firstname');
     $headers[] = get_string('lastname');
     $headers[] = get_string('idnumber');
@@ -86,10 +86,10 @@ if ($data = $mform->get_data()) {
     $headers[] = get_string('roles');
 
     // Prépare les paramètres conditionnels des requêtes SQL.
-    $conditions_enrolments = array();
-    $conditions_sessions = array();
+    $conditions_enrolments = [];
+    $conditions_sessions = [];
 
-    $params = array('courseid' => $courseid);
+    $params = ['courseid' => $courseid];
     if (empty($data->startdate) === false) {
         $conditions_sessions[] = "AND session.sessiontime >= :startdate";
         $conditions_enrolments[] = "AND (ue.timestart = 0 OR ue.timestart <= :startdate)";
@@ -109,11 +109,11 @@ if ($data = $mform->get_data()) {
         implode(' ', $conditions_sessions).
         " ORDER BY session.sessiontime";
     $recordset = $DB->get_recordset_sql($sql, $params);
-    $sessions = array();
+    $sessions = [];
     foreach ($recordset as $session) {
         $headers[] = $session->name;
         $headers[] = get_string('attendance_comment', 'local_apsolu');
-        $sessions[$session->id] = array('status' => '', 'description' => '');
+        $sessions[$session->id] = ['status' => '', 'description' => ''];
     }
     $recordset->close();
 
@@ -133,11 +133,11 @@ if ($data = $mform->get_data()) {
         " ORDER BY u.lastname, u.firstname";
     $recordset = $DB->get_recordset_sql($sql, $params);
 
-    $users = array();
+    $users = [];
     foreach ($recordset as $user) {
         if (isset($users[$user->id]) === false) {
             $users[$user->id] = $user;
-            $users[$user->id]->roles = array();
+            $users[$user->id]->roles = [];
             $users[$user->id]->presences = $sessions;
         }
 
@@ -151,11 +151,11 @@ if ($data = $mform->get_data()) {
         " JOIN {apsolu_attendance_statuses} aas ON aas.id = aap.statusid".
         " JOIN {apsolu_attendance_sessions} session ON session.id = aap.sessionid".
         " WHERE session.courseid = :courseid";
-    $recordset = $DB->get_recordset_sql($sql, array('courseid' => $courseid));
+    $recordset = $DB->get_recordset_sql($sql, ['courseid' => $courseid]);
     foreach ($recordset as $presence) {
         if (isset($users[$presence->studentid]) === false) {
-            $users[$presence->studentid] = $DB->get_record('user', array('id' => $presence->studentid), $fields = '*', MUST_EXIST);
-            $users[$presence->studentid]->roles = array();
+            $users[$presence->studentid] = $DB->get_record('user', ['id' => $presence->studentid], $fields = '*', MUST_EXIST);
+            $users[$presence->studentid]->roles = [];
         }
 
         if (isset($users[$presence->studentid]->presences) === false) {
@@ -184,9 +184,9 @@ if ($data = $mform->get_data()) {
     // Prépare les données pour l'exportation.
     $filename = str_replace(' ', '_', 'presences du cours '.strtolower($course->fullname));
 
-    $rows = array();
+    $rows = [];
     foreach ($users as $user) {
-        $columns = array();
+        $columns = [];
         $columns[] = $user->firstname;
         $columns[] = $user->lastname;
         $columns[] = $user->idnumber;
@@ -207,7 +207,7 @@ if ($data = $mform->get_data()) {
             $workbook = new MoodleExcelWorkbook("-");
             $workbook->send($filename);
             $myxls = $workbook->add_worksheet();
-            $properties = array('border' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+            $properties = ['border' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN];
             $excelformat = new MoodleExcelFormat($properties);
             foreach ($headers as $position => $value) {
                 $myxls->write_string(0, $position, $value, $excelformat);

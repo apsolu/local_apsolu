@@ -67,7 +67,7 @@ class grouping extends record {
         }
 
         // Supprime l'objet en base de données.
-        $DB->delete_records(self::TABLENAME, array('id' => $this->id));
+        $DB->delete_records(self::TABLENAME, ['id' => $this->id]);
 
         $coursecat = core_course_category::get($this->id, MUST_EXIST, true);
         $coursecat->delete_full();
@@ -100,7 +100,7 @@ class grouping extends record {
             " FROM {course_categories} cc".
             " JOIN {apsolu_courses_groupings} acg ON acg.id = cc.id".
             " WHERE acg.id = :recordid";
-        $record = $DB->get_record_sql($sql, array('recordid' => $recordid), $strictness);
+        $record = $DB->get_record_sql($sql, ['recordid' => $recordid], $strictness);
 
         if ($record === false) {
             return;
@@ -139,11 +139,11 @@ class grouping extends record {
 
             // Note: insert_record() exige l'absence d'un id.
             $sql = "INSERT INTO {apsolu_courses_groupings} (id, url) VALUES(:id, :url)";
-            $DB->execute($sql, array('id' => $this->id, 'url' => $this->url));
+            $DB->execute($sql, ['id' => $this->id, 'url' => $this->url]);
         } else {
             $DB->update_record(self::TABLENAME, $this);
 
-            $category = $DB->get_record('course_categories', array('id' => $this->id));
+            $category = $DB->get_record('course_categories', ['id' => $this->id]);
             if ($category !== false) {
                 $category->name = $this->name;
                 $category->parent = 0;

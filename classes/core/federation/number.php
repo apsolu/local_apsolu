@@ -70,11 +70,11 @@ class number extends record {
         }
 
         // Supprime l'objet en base de données.
-        $DB->delete_records(get_called_class()::TABLENAME, array('id' => $this->id));
+        $DB->delete_records(get_called_class()::TABLENAME, ['id' => $this->id]);
 
         // Corrige le champ sortorder des autres objets.
         $sql = "UPDATE {".self::TABLENAME."} SET sortorder = sortorder -1 WHERE sortorder > :sortorder";
-        $DB->execute($sql, array('sortorder' => $this->sortorder));
+        $DB->execute($sql, ['sortorder' => $this->sortorder]);
 
         // Valide la transaction en cours.
         if (isset($transaction) === true) {
@@ -90,7 +90,7 @@ class number extends record {
      * @return array.
      */
     public static function get_default_fields() {
-        $fields = array();
+        $fields = [];
         $fields['apsoluufr'] = get_string('fields_apsoluufr', 'local_apsolu');
         $fields['department'] = get_string('department');
         $fields['institution'] = get_string('institution');

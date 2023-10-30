@@ -38,13 +38,13 @@ if ($areaid !== 0) {
 }
 
 // Cities.
-$cities = array();
+$cities = [];
 foreach ($DB->get_records('apsolu_cities') as $city) {
     $cities[$city->id] = $city->name;
 }
 
 // Build form.
-$customdata = array($area, $cities);
+$customdata = [$area, $cities];
 $mform = new local_apsolu_courses_areas_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
@@ -58,7 +58,7 @@ if ($data = $mform->get_data()) {
     $area->save($data);
 
     // Redirige vers la page générale.
-    $returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'areas'));
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'areas']);
     redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
 

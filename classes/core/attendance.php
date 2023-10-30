@@ -43,7 +43,7 @@ class attendance {
      * @return array Tableau sous la forme array[userid] = 4.
      */
     public static function countActivityPresences($categoryid, $active = true) {
-        $presences = array();
+        $presences = [];
 
         foreach (self::getActivityPresences($categoryid, $active) as $studentid => $records) {
             $presences[$studentid] = 0;
@@ -64,7 +64,7 @@ class attendance {
      * @return array Tableau sous la forme array[userid] = 4.
      */
     public static function countCoursePresences($courseid, $active = true) {
-        $presences = array();
+        $presences = [];
 
         foreach (self::getCoursePresences($courseid, $active) as $studentid => $records) {
             $presences[$studentid] = 0;
@@ -87,8 +87,8 @@ class attendance {
     public static function getActivityPresences($categoryid, $active = false) {
         global $DB;
 
-        $conditions = array();
-        $params = array();
+        $conditions = [];
+        $params = [];
         $params['categoryid'] = $categoryid;
 
         if ($active === true) {
@@ -110,11 +110,11 @@ class attendance {
             " ".implode(' ', $conditions).
             " GROUP BY act.id, aap.studentid".
             " ORDER BY act.name";
-        $presences = array();
+        $presences = [];
         $recordset = $DB->get_recordset_sql($sql, $params);
         foreach ($recordset as $record) {
             if (isset($presences[$record->studentid]) === false) {
-                $presences[$record->studentid] = array();
+                $presences[$record->studentid] = [];
             }
 
             $presences[$record->studentid][] = $record;
@@ -135,8 +135,8 @@ class attendance {
     public static function getCoursePresences($courseid, $active = false) {
         global $DB;
 
-        $conditions = array();
-        $params = array();
+        $conditions = [];
+        $params = [];
         $params['courseid'] = $courseid;
 
         if ($active === true) {
@@ -157,11 +157,11 @@ class attendance {
             " ".implode(' ', $conditions).
             " GROUP BY act.id, aap.studentid".
             " ORDER BY act.name";
-        $presences = array();
+        $presences = [];
         $recordset = $DB->get_recordset_sql($sql, $params);
         foreach ($recordset as $record) {
             if (isset($presences[$record->studentid]) === false) {
-                $presences[$record->studentid] = array();
+                $presences[$record->studentid] = [];
             }
 
             $presences[$record->studentid][] = $record;
@@ -194,7 +194,7 @@ class attendance {
     public static function getUserPresencesPerCourses($userid) {
         global $DB;
 
-        $courses = array();
+        $courses = [];
 
         $sql = "SELECT c.id, c.fullname, aas.name AS sessionname, aas.sessiontime,".
             " aass.shortlabel, aass.longlabel, aass.sumlabel, aass.color, ac.starttime, ac.endtime".
@@ -205,13 +205,13 @@ class attendance {
             " JOIN {apsolu_attendance_statuses} aass ON aass.id = aap.statusid".
             " WHERE aap.studentid = :userid".
             " ORDER BY c.fullname, aas.sessiontime";
-        $recordset = $DB->get_recordset_sql($sql, array('userid' => $userid));
+        $recordset = $DB->get_recordset_sql($sql, ['userid' => $userid]);
         foreach ($recordset as $record) {
             if (isset($courses[$record->id]) === false) {
                 $course = new stdClass();
                 $course->id = $record->id;
                 $course->fullname = $record->fullname;
-                $course->sessions = array();
+                $course->sessions = [];
 
                 $courses[$course->id] = $course;
             }
@@ -248,6 +248,6 @@ class attendance {
             " AND aap.statusid != 4". // Exclus les absences.
             " GROUP BY e.id";
 
-        return $DB->get_records_sql($sql, array('userid' => $userid));
+        return $DB->get_records_sql($sql, ['userid' => $userid]);
     }
 }

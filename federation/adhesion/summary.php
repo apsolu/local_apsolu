@@ -35,7 +35,7 @@ require_once($CFG->dirroot.'/local/apsolu/federation/adhesion/request_federation
 $canrequestfederationnumber = true;
 $hasrequestedfederationnumber = false;
 
-$items = array();
+$items = [];
 
 // Répondre au questionnaire médical.
 $item = new stdClass();
@@ -64,7 +64,7 @@ if ($adhesion->have_to_upload_parental_authorization() === true) {
     // On récupère les certificats.
     $fs = get_file_storage();
     $context = context_course::instance($federationcourse->id, MUST_EXIST);
-    list($component, $filearea, $itemid) = array('local_apsolu', 'parentalauthorization', $USER->id);
+    list($component, $filearea, $itemid) = ['local_apsolu', 'parentalauthorization', $USER->id];
     $sort = 'itemid, filepath, filename';
     $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
 
@@ -88,7 +88,7 @@ if ($adhesion->have_to_upload_medical_certificate() === true) {
     // On récupère les certificats.
     $fs = get_file_storage();
     $context = context_course::instance($federationcourse->id, MUST_EXIST);
-    list($component, $filearea, $itemid) = array('local_apsolu', 'medicalcertificate', $USER->id);
+    list($component, $filearea, $itemid) = ['local_apsolu', 'medicalcertificate', $USER->id];
     $sort = 'itemid, filepath, filename';
     $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
 
@@ -129,7 +129,7 @@ if (empty($adhesion->federationnumberrequestdate) === false) {
 
 if (empty($adhesion->federationnumber) === true) {
     // Autorise l'utilisateur à faire une demande de numéro FFSU.
-    $customdata = array($items, $canrequestfederationnumber, $hasrequestedfederationnumber);
+    $customdata = [$items, $canrequestfederationnumber, $hasrequestedfederationnumber];
     $mform = new local_apsolu_request_federation_number_form(null, $customdata);
 
     // Traite le formulaire.
@@ -142,12 +142,12 @@ if (empty($adhesion->federationnumber) === true) {
         if (!empty($functional_contact)) {
             $subject = get_string('request_of_federation_number', 'local_apsolu');
 
-            $parameters = array();
+            $parameters = [];
             $parameters['fullname'] = fullname($USER);
-            $parameters['export_url'] = (string) new moodle_url('/local/apsolu/federation/index.php', array('page' => 'export'));
+            $parameters['export_url'] = (string) new moodle_url('/local/apsolu/federation/index.php', ['page' => 'export']);
             if ($adhesion->have_to_upload_medical_certificate() === true && empty($adhesion->medicalcertificatestatus) === true) {
                 // Le certificat médical doit être validé.
-                $parameters['validation_url'] = (string) new moodle_url('/local/apsolu/federation/index.php', array('page' => 'certificates_validation'));
+                $parameters['validation_url'] = (string) new moodle_url('/local/apsolu/federation/index.php', ['page' => 'certificates_validation']);
                 $messagetext = get_string('request_of_federation_number_with_medical_certificate_message', 'local_apsolu', $parameters);
             } else {
                 $messagetext = get_string('request_of_federation_number_without_medical_certificate_message', 'local_apsolu', $parameters);
@@ -160,11 +160,11 @@ if (empty($adhesion->federationnumber) === true) {
 
             email_to_user($admin, $USER, $subject, $messagetext);
 
-            $event = \local_apsolu\event\notification_sent::create(array(
+            $event = \local_apsolu\event\notification_sent::create([
                 'relateduserid' => $USER->id,
                 'context' => $context,
-                'other' => json_encode(array('sender' => $USER->id, 'receiver' => $admin->email, 'subject' => $subject)),
-                ));
+                'other' => json_encode(['sender' => $USER->id, 'receiver' => $admin->email, 'subject' => $subject]),
+                ]);
             $event->trigger();
         }
 
@@ -173,7 +173,7 @@ if (empty($adhesion->federationnumber) === true) {
         // Régénère le formulaire.
         $hasrequestedfederationnumber = true;
         $canrequestfederationnumber = false;
-        $customdata = array($items, $canrequestfederationnumber, $hasrequestedfederationnumber);
+        $customdata = [$items, $canrequestfederationnumber, $hasrequestedfederationnumber];
         $mform = new local_apsolu_request_federation_number_form(null, $customdata);
     }
 
@@ -219,7 +219,7 @@ if (empty($adhesion->federationnumber) === true) {
     $data->fields[] = ['label' => get_string('main_sport', 'local_apsolu'), 'value' => $value];
 
     // On récupère la liste des champs oui/non.
-    $yesnofields = array();
+    $yesnofields = [];
     $yesnofields['sportlicense'] = get_string('sport_license', 'local_apsolu');
     $yesnofields['managerlicense'] = get_string('manager_license', 'local_apsolu');
     $yesnofields['managerlicensetype'] = get_string('manager_license_type', 'local_apsolu');
@@ -289,11 +289,11 @@ if (empty($adhesion->federationnumber) === true) {
     // On récupère les certificats.
     $fs = get_file_storage();
     $context = context_course::instance($federationcourse->id, MUST_EXIST);
-    list($component, $filearea, $itemid) = array('local_apsolu', 'medicalcertificate', $USER->id);
+    list($component, $filearea, $itemid) = ['local_apsolu', 'medicalcertificate', $USER->id];
     $sort = 'itemid, filepath, filename';
     $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
 
-    $items = array();
+    $items = [];
     foreach ($files as $file) {
         $url = moodle_url::make_pluginfile_url($context->id, $component, $filearea, $itemid, '/', $file->get_filename(), $forcedownload = false, $includetoken = false);
         $items[] = html_writer::link($url, $file->get_filename());

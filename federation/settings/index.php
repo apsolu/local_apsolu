@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__.'/settings_form.php');
 
 // Chargement des préférences.
-$attributes = array(
+$attributes = [
     'ffsu_acceptedfiles',
     'ffsu_maxfiles',
     'instagram_field_visibility',
@@ -46,7 +46,7 @@ $attributes = array(
     'sportlicense_field_visibility',
     'starlicense_field_default',
     'starlicense_field_visibility',
-    );
+    ];
 
 $defaults = new stdClass();
 foreach ($attributes as $attribute) {
@@ -60,13 +60,13 @@ $defaults->parental_authorization_description['text'] = get_config('local_apsolu
 $defaults->parental_authorization_description['format'] = FORMAT_HTML;
 
 // Chargement des cohortes.
-$cohorts = array('0' => '');
+$cohorts = ['0' => ''];
 foreach ($DB->get_records('cohort', $conditions = null, $sort = 'name') as $cohort) {
     $cohorts[$cohort->id] = $cohort->name;
 }
 
 // Build form.
-$customdata = array($defaults, $cohorts);
+$customdata = [$defaults, $cohorts];
 $mform = new local_apsolu_settings_form(null, $customdata);
 
 echo $OUTPUT->header();

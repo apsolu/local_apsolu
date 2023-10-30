@@ -44,14 +44,14 @@ $sql = "SELECT cc.id, cc.name".
         "SELECT DISTINCT categoryid FROM {apsolu_federation_activities} WHERE categoryid != :categoryid".
     ")".
     " ORDER BY cc.name";
-$categories = array();
+$categories = [];
 $categories[0] = '';
-foreach ($DB->get_records_sql($sql, array('categoryid' => $activity->categoryid)) as $category) {
+foreach ($DB->get_records_sql($sql, ['categoryid' => $activity->categoryid]) as $category) {
     $categories[$category->id] = $category->name;
 }
 
 // Build form.
-$customdata = array('activity' => $activity, 'categories' => $categories);
+$customdata = ['activity' => $activity, 'categories' => $categories];
 $mform = new local_apsolu_federation_activities_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
@@ -62,7 +62,7 @@ if ($data = $mform->get_data()) {
     $activity->save($data, $mform);
 
     // Redirige vers la page générale.
-    $returnurl = new moodle_url('/local/apsolu/federation/index.php', array('page' => 'view'));
+    $returnurl = new moodle_url('/local/apsolu/federation/index.php', ['page' => 'view']);
     redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
 

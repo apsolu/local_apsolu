@@ -46,7 +46,7 @@ class local_apsolu_courses_managers_edit_form extends moodleform {
         $manager = $this->_customdata['manager'];
 
         // Name field.
-        $mform->addElement('text', 'name', get_string('name'), array('size' => '48'));
+        $mform->addElement('text', 'name', get_string('name'), ['size' => '48']);
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
 
@@ -58,7 +58,7 @@ class local_apsolu_courses_managers_edit_form extends moodleform {
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
         $mform->addElement('hidden', 'tab', 'managers');
@@ -84,11 +84,11 @@ class local_apsolu_courses_managers_edit_form extends moodleform {
     public function validation($data, $files) {
         global $DB;
 
-        $errors = array();
+        $errors = [];
         $errors = parent::validation($data, $files);
 
         // Is unique ?
-        $manager = $DB->get_record('apsolu_managers', array('name' => $data['name']));
+        $manager = $DB->get_record('apsolu_managers', ['name' => $data['name']]);
         if ($manager && $manager->id != $data['managerid']) {
             $errors['name'] = get_string('shortnametaken', '', $data['name']);
         }

@@ -27,7 +27,7 @@ use local_apsolu\core\federation\number as Number;
 defined('MOODLE_INTERNAL') || die();
 
 $fields = Number::get_default_fields();
-$numbers = $DB->get_records('apsolu_federation_numbers', $conditions = array(), $sort = 'sortorder');
+$numbers = $DB->get_records('apsolu_federation_numbers', $conditions = [], $sort = 'sortorder');
 $count = count($numbers);
 $sortorder = 1;
 foreach ($numbers as $id => $number) {

@@ -44,14 +44,14 @@ class local_apsolu_grades_gradebooks_filters_form extends moodleform {
 
         list($defaults, $courses, $roles, $calendarstypes, $gradeitems, $cities, $institutions, $ufrs, $departments, $cycles, $teachers) = $this->_customdata;
 
-        $fields = array();
+        $fields = [];
         $fields['emails'] = get_string('email');
         $fields['calendarstypes'] = get_string('calendartype', 'local_apsolu');
         $fields['courses'] = get_string('course');
         $fields['roles'] = get_string('role');
         $fields['graders'] = get_string('grader', 'local_apsolu');
 
-        $multiple = array('multiple' => true);
+        $multiple = ['multiple' => true];
 
         $mform->addElement('header', 'required_fields', get_string('default_filters', 'local_apsolu'));
         $mform->setExpanded('required_fields', true);
@@ -148,7 +148,7 @@ class local_apsolu_grades_gradebooks_filters_form extends moodleform {
         $buttonarray[] = &$mform->createElement('submit', 'displaybutton', get_string('display', 'local_apsolu'));
         $buttonarray[] = &$mform->createElement('submit', 'exportbutton', get_string('export', 'local_apsolu'));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
         $mform->closeHeaderBefore('buttonar');
 
         // Hidden fields.

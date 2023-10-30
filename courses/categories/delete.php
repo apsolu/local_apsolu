@@ -33,7 +33,7 @@ $category = new Category();
 $category->load($categoryid, $required = true);
 
 $deletehash = md5($category->id);
-$returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'categories'));
+$returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'categories']);
 
 if ($delete === $deletehash) {
     // Effectue les actions de suppression.
@@ -46,11 +46,11 @@ if ($delete === $deletehash) {
 }
 
 // Vérifie si cette activité n'est pas associée à des cours.
-$courses = $DB->get_records('course', $conditions = array('category' => $category->id), $sort = 'fullname');
+$courses = $DB->get_records('course', $conditions = ['category' => $category->id], $sort = 'fullname');
 if (count($courses) !== 0) {
-    $datatemplate = array();
+    $datatemplate = [];
     $datatemplate['message'] = get_string('category_cannot_be_deleted', 'local_apsolu', $category->name);
-    $datatemplate['dependences'] = array();
+    $datatemplate['dependences'] = [];
     foreach ($courses as $course) {
         $datatemplate['dependences'][] = $course->fullname;
     }
@@ -60,16 +60,16 @@ if (count($courses) !== 0) {
 }
 
 // Affiche un message de confirmation.
-$datatemplate = array();
+$datatemplate = [];
 $datatemplate['message'] = get_string('do_you_want_to_delete_category', 'local_apsolu', $category->name);
 $message = $OUTPUT->render_from_template('local_apsolu/courses_form_delete_message', $datatemplate);
 
 // Bouton de validation.
-$urlarguments = array('tab' => 'categories', 'action' => 'delete', 'categoryid' => $category->id, 'delete' => $deletehash);
+$urlarguments = ['tab' => 'categories', 'action' => 'delete', 'categoryid' => $category->id, 'delete' => $deletehash];
 $confirmurl = new moodle_url('/local/apsolu/courses/index.php', $urlarguments);
 $confirmbutton = new single_button($confirmurl, get_string('delete'), 'post');
 
 // Bouton d'annulation.
-$cancelurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'categories'));
+$cancelurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'categories']);
 
 echo $OUTPUT->confirm($message, $confirmbutton, $cancelurl);

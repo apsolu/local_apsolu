@@ -47,7 +47,7 @@ class gradebook {
     const NAME = 'APSOLU';
 
     /** @var array $caneditgrades Contient un tableau indexé par identifiant de cours, indiquant si l'utilisateur pour éditer les notes du cours. */
-    public static $caneditgrades = array();
+    public static $caneditgrades = [];
 
     /**
      * Indique si l'utilisateur est autorisé à éditer les notes pour un cours donné.
@@ -106,10 +106,10 @@ class gradebook {
         // Récupère la liste des rôles pouvant être évaluer.
         $gradableroles = array_keys(self::get_gradable_roles());
         if (count($gradableroles) === 0) {
-            return array();
+            return [];
         }
 
-        $params = array();
+        $params = [];
         $params['context_course'] = CONTEXT_COURSE;
 
         if ($contextlevel === CONTEXT_SYSTEM) {
@@ -128,7 +128,7 @@ class gradebook {
             // Récupère la liste des rôles pouvant évaluer.
             $graderroles = array_keys(get_roles_with_capability('local/apsolu:viewgrades', $permission = CAP_ALLOW, $syscontext));
             if (count($gradableroles) === 0) {
-                return array();
+                return [];
             }
 
             // Requête pour les enseignants.
@@ -172,7 +172,7 @@ class gradebook {
      *
      * @return array
      */
-    public static function get_gradebook(array $options, array $fields = array()) {
+    public static function get_gradebook(array $options, array $fields = []) {
         global $DB, $OUTPUT;
 
         // Indexe les champs dans un tableau associatif.
@@ -189,7 +189,7 @@ class gradebook {
 
         // Contrôle que les options obligatoires sont présentes.
         if (isset($options['courses']) === false) {
-            $options['courses'] = array();
+            $options['courses'] = [];
         }
 
         if (isset($options['calendarstypes']) === false) {
@@ -202,7 +202,7 @@ class gradebook {
 
         // Récupère les calendriers APSOLU.
         $now = time();
-        $options['calendars'] = array();
+        $options['calendars'] = [];
         $calendars = $DB->get_records('apsolu_calendars');
         foreach ($calendars as $calendarid => $calendar) {
             if (in_array($calendar->typeid, $options['calendarstypes'], $strict = true) === false) {
@@ -218,7 +218,7 @@ class gradebook {
         }
 
         // On récupère la liste des notes attendues en fonction des options passées en paramètre.
-        $gradeitems = array();
+        $gradeitems = [];
         foreach (gradeitem::get_records($conditions = null, $sort = 'name') as $item) {
             if (isset($options['gradeitems']) === true && in_array($item->id, $options['gradeitems'], $strict = true) === false) {
                 // Ignore les éléments de notation non sélectionnés par le filtre.
@@ -226,7 +226,7 @@ class gradebook {
             }
 
             if (is_array($options['roles']) === false) {
-                $options['roles'] = array($options['roles']);
+                $options['roles'] = [$options['roles']];
             }
 
             if (in_array($item->roleid, $options['roles'], $strict = true) === false) {
@@ -234,7 +234,7 @@ class gradebook {
             }
 
             if (is_array($options['calendars']) === false) {
-                $options['calendars'] = array($options['calendars']);
+                $options['calendars'] = [$options['calendars']];
             }
 
             if (in_array($item->calendarid, $options['calendars'], $strict = true) === false) {
@@ -250,7 +250,7 @@ class gradebook {
         }
 
         // Récupération des enseignants.
-        $teachers = array();
+        $teachers = [];
         if (isset($options['teachers']) === true || isset($fields['teachers']) === true) {
             $sql = "SELECT c.id AS courseid, u.*".
                 " FROM {user} u".
@@ -265,7 +265,7 @@ class gradebook {
                 unset($record->courseid);
 
                 if (isset($teachers[$courseid]) === false) {
-                    $teachers[$courseid] = array();
+                    $teachers[$courseid] = [];
                 }
 
                 $teachers[$courseid][$record->id] = fullname($record);
@@ -274,7 +274,7 @@ class gradebook {
         }
 
         // Récupération des notes.
-        $grades = array();
+        $grades = [];
         $sql = "SELECT gi.itemname, gg.userid, gg.finalgrade, gg.feedback, gi.courseid, gc.fullname,".
             " u.firstname, u.lastname, u.lastnamephonetic, u.firstnamephonetic, u.middlename, u.alternatename".
             " FROM {grade_items} gi".
@@ -297,11 +297,11 @@ class gradebook {
 
             // On récupère toutes les notes par étudiant et cours.
             if (isset($grades[$grade->userid]) === false) {
-                $grades[$grade->userid] = array();
+                $grades[$grade->userid] = [];
             }
 
             if (isset($grades[$grade->userid][$grade->courseid]) === false) {
-                $grades[$grade->userid][$grade->courseid] = array();
+                $grades[$grade->userid][$grade->courseid] = [];
             }
 
             if (empty($grade->feedback) === false) {
@@ -319,22 +319,22 @@ class gradebook {
         $customfields = customfields::getCustomFields();
         $gradableroles = self::get_gradable_roles();
 
-        $conditions = array();
+        $conditions = [];
 
-        $params = array();
+        $params = [];
         $params[] = $customfields['apsoluufr']->id;
         $params[] = $customfields['apsolucycle']->id;
         $params[] = CONTEXT_COURSE;
 
         // Filtres.
-        $filters = array();
+        $filters = [];
 
         if (defined('APSOLU_GRADES_COURSE_SCOPE') === false) {
             define('APSOLU_GRADES_COURSE_SCOPE', CONTEXT_COURSE);
         }
 
         // Extraction des catégories de cours.
-        $options['categories'] = array();
+        $options['categories'] = [];
         foreach ($options['courses'] as $key => $value) {
             list($categoryid, $courseid) = explode('-', $value);
             if ($courseid === '0') {
@@ -352,7 +352,7 @@ class gradebook {
             $courses = self::get_courses();
 
             // Contrôle les droits d'accès sur les activités.
-            if ($options['categories'] !== array()) {
+            if ($options['categories'] !== []) {
                 // Pour chaque catégorie sélectionnée, ajoute tous les cours auxquels l'utilisateur peut accéder.
                 foreach ($courses as $course) {
                     if (isset($options['categories'][$course->category]) === false) {
@@ -373,14 +373,14 @@ class gradebook {
                 unset($options['courses'][$key]);
             }
 
-            if ($options['courses'] === array()) {
+            if ($options['courses'] === []) {
                 // L'utilisateur a sélectionné tous les cours.
                 foreach ($courses as $course) {
                     $options['courses'][] = $course->id;
                 }
             }
         } else if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_SYSTEM) {
-            if ($options['categories'] !== array()) {
+            if ($options['categories'] !== []) {
                 // Gère la sélection des catégories.
                 foreach ($DB->get_records('course') as $course) {
                     if (isset($options['categories'][$course->category]) === false) {
@@ -391,7 +391,7 @@ class gradebook {
                 }
             }
 
-            if ($options['courses'] === array()) {
+            if ($options['courses'] === []) {
                 // Gère le cas où le gestionnaire demande tous les cours.
                 unset($options['courses']);
             }
@@ -408,7 +408,7 @@ class gradebook {
             }
 
             if (is_array($options[$optionname]) === false) {
-                $options[$optionname] = array($options[$optionname]);
+                $options[$optionname] = [$options[$optionname]];
             }
 
             $count = 0;
@@ -456,7 +456,7 @@ class gradebook {
 
         // Construction du carnet de notes.
         $gradebooks = new stdClass();
-        $gradebooks->headers = array();
+        $gradebooks->headers = [];
         if (isset($fields['pictures']) === true) {
             $gradebooks->headers[] = get_string('pictureofuser');
         }
@@ -500,7 +500,7 @@ class gradebook {
             $gradebooks->headers[] = $item->name;
         }
 
-        $gradebooks->users = array();
+        $gradebooks->users = [];
         foreach ($recordset as $user) {
             if (isset($options['institutions']) === true && in_array($user->institution, $options['institutions'], $strict = true) === false) {
                 continue;
@@ -548,7 +548,7 @@ class gradebook {
             }
 
             $gradebook = new stdClass();
-            $gradebook->profile = array();
+            $gradebook->profile = [];
             if (isset($fields['pictures']) === true) {
                 $gradebook->picture = $OUTPUT->user_picture($user);
             }
@@ -593,7 +593,7 @@ class gradebook {
                     $gradebook->profile[] = '';
                 }
             }
-            $gradebook->grades = array();
+            $gradebook->grades = [];
             $needagrade = false;
             foreach ($gradeitems as $apsolugradeitemid => $item) {
                 $grade = null;
@@ -646,7 +646,7 @@ class gradebook {
      *
      * @return void
      */
-    public static function export(array $options, array $fields = array()) {
+    public static function export(array $options, array $fields = []) {
         global $CFG;
 
         require_once($CFG->libdir . '/csvlib.class.php');
@@ -687,13 +687,13 @@ class gradebook {
 
         $transaction = $DB->start_delegated_transaction();
 
-        $gradeitems = array();
+        $gradeitems = [];
 
         foreach ($grades as $gradename => $value) {
             list($userid, $courseid, $apsolugradeitemid) = explode('-', $gradename, 3);
 
             if (isset($gradeitems[$courseid]) === false) {
-                $gradecategory = grade_category::fetch(array('courseid' => $courseid, 'fullname' => self::NAME));
+                $gradecategory = grade_category::fetch(['courseid' => $courseid, 'fullname' => self::NAME]);
 
                 if ($gradecategory === false) {
                     continue;
@@ -701,8 +701,8 @@ class gradebook {
 
                 $gradecategories[$courseid] = $gradecategory->id;
 
-                $gradeitems[$courseid] = array();
-                foreach (grade_item::fetch_all(array('courseid' => $courseid, 'categoryid' => $gradecategory->id)) as $item) {
+                $gradeitems[$courseid] = [];
+                foreach (grade_item::fetch_all(['courseid' => $courseid, 'categoryid' => $gradecategory->id]) as $item) {
                     $id = explode('-', $item->itemname);
                     if (isset($id[0]) === false) {
                         continue;
@@ -725,7 +725,7 @@ class gradebook {
 
             $grade = new stdClass();
             $grade->userid = $userid;
-            if (in_array(strtoupper($value), array('ABI', 'ABJ'), $strict = true) === true) {
+            if (in_array(strtoupper($value), ['ABI', 'ABJ'], $strict = true) === true) {
                 $grade->finalgrade = null;
                 $grade->feedback = strtoupper($value);
             } else {
@@ -737,7 +737,7 @@ class gradebook {
                 }
             }
 
-            $currentgrade = grade_grade::fetch(array('itemid' => $item->id, 'userid' => $userid));
+            $currentgrade = grade_grade::fetch(['itemid' => $item->id, 'userid' => $userid]);
             if ($currentgrade !== false && grade_floats_different($currentgrade->finalgrade, $grade->finalgrade) === false && $currentgrade->feedback === $grade->feedback) {
                 // La note n'a pas changé, on continue.
                 continue;

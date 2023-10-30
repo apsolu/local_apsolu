@@ -43,7 +43,7 @@ class country {
 
         $countries = $string_manager->load_component_strings('core_countries', $lang);
 
-        return array(
+        return [
             4 => $countries['AF'],
             710 => $countries['ZA'],
             8 => $countries['AL'],
@@ -237,6 +237,6 @@ class country {
             887 => $countries['YE'],
             894 => $countries['ZM'],
             716 => $countries['ZW'],
-        );
+        ];
     }
 }

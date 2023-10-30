@@ -26,22 +26,22 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot.'/enrol/select/locallib.php');
 
-$cards = $DB->get_records('apsolu_payments_cards', $conditions = array(), $sort = 'name');
+$cards = $DB->get_records('apsolu_payments_cards', $conditions = [], $sort = 'name');
 
-$cohorts = $DB->get_records('cohort', $conditions = array(), $sort = 'name');
+$cohorts = $DB->get_records('cohort', $conditions = [], $sort = 'name');
 $roles = enrol_select_get_custom_student_roles();
 $centers = $DB->get_records('apsolu_payments_centers');
-$calendarstypes = $DB->get_records('apsolu_calendars_types', $conditions = array(), $sort = 'name');
+$calendarstypes = $DB->get_records('apsolu_calendars_types', $conditions = [], $sort = 'name');
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
-$data->cards = array();
+$data->cards = [];
 $data->count_cards = 0;
 
 foreach ($cards as $card) {
-    $cardscohorts = $DB->get_records('apsolu_payments_cards_cohort', $conditions = array('cardid' => $card->id), $sort = '', $fields = 'cohortid');
-    $cardsroles = $DB->get_records('apsolu_payments_cards_roles', $conditions = array('cardid' => $card->id), $sort = '', $fields = 'roleid');
-    $cardscalendarstypes = $DB->get_records('apsolu_payments_cards_cals', $conditions = array('cardid' => $card->id), $sort = '', $fields = 'calendartypeid, value');
+    $cardscohorts = $DB->get_records('apsolu_payments_cards_cohort', $conditions = ['cardid' => $card->id], $sort = '', $fields = 'cohortid');
+    $cardsroles = $DB->get_records('apsolu_payments_cards_roles', $conditions = ['cardid' => $card->id], $sort = '', $fields = 'roleid');
+    $cardscalendarstypes = $DB->get_records('apsolu_payments_cards_cals', $conditions = ['cardid' => $card->id], $sort = '', $fields = 'calendartypeid, value');
 
     $card->price = number_format($card->price, 2).'€';
 
@@ -50,7 +50,7 @@ foreach ($cards as $card) {
         $card->center = $centers[$card->centerid]->name;
     }
 
-    $card->cohorts = array();
+    $card->cohorts = [];
     $card->count_cohorts = 0;
     foreach ($cardscohorts as $cohort) {
         if (isset($cohorts[$cohort->cohortid]) === true) {
@@ -60,7 +60,7 @@ foreach ($cards as $card) {
     }
     sort($card->cohorts);
 
-    $card->roles = array();
+    $card->roles = [];
     $card->count_roles = 0;
     foreach ($cardsroles as $role) {
         if (isset($roles[$role->roleid]) === true) {
@@ -69,7 +69,7 @@ foreach ($cards as $card) {
         }
     }
 
-    $card->calendars_types = array();
+    $card->calendars_types = [];
     $card->count_calendars_types = 0;
     foreach ($calendarstypes as $type) {
         $value = 0;

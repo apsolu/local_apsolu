@@ -72,7 +72,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = 0, null);
 
             // Adding key.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
             // Create table.
             $dbman->create_table($table);
@@ -91,8 +91,8 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_field('sessionid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, null, null);
 
             // Adding key.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-            $table->add_key('unique_presence', XMLDB_KEY_UNIQUE, array('studentid', 'sessionid'));
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+            $table->add_key('unique_presence', XMLDB_KEY_UNIQUE, ['studentid', 'sessionid']);
 
             // Create table.
             $dbman->create_table($table);
@@ -108,12 +108,12 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_field('code', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
 
             // Adding key.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
             // Create table.
             $dbman->create_table($table);
 
-            $statuses = array('present', 'late', 'excused', 'absent');
+            $statuses = ['present', 'late', 'excused', 'absent'];
             foreach ($statuses as $status) {
                 $record = new stdClass();
                 $record->name = $status;
@@ -154,7 +154,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_field('price', XMLDB_TYPE_FLOAT, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0', null);
 
             // Adding key.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
             // Create table.
             $dbman->create_table($table);
@@ -162,7 +162,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
         $field = new xmldb_field('paymentcenterid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $not_null = false, null, null, null);
 
-        foreach (array('apsolu_courses', 'apsolu_complements') as $tablename) {
+        foreach (['apsolu_courses', 'apsolu_complements'] as $tablename) {
             $table = new xmldb_table($tablename);
 
             if ($dbman->field_exists($table, $field) === false) {
@@ -203,15 +203,15 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         }
 
         // Add missing indexes !
-        $tables = array();
-        $tables['apsolu_courses'] = array('skillid', 'locationid', 'periodid', 'paymentcenterid');
-        $tables['apsolu_locations'] = array('areaid', 'managerid');
-        $tables['apsolu_complements'] = array('paymentcenterid');
+        $tables = [];
+        $tables['apsolu_courses'] = ['skillid', 'locationid', 'periodid', 'paymentcenterid'];
+        $tables['apsolu_locations'] = ['areaid', 'managerid'];
+        $tables['apsolu_complements'] = ['paymentcenterid'];
 
         foreach ($tables as $tablename => $indexes) {
             $table = new xmldb_table($tablename);
             foreach ($indexes as $indexname) {
-                $index = new xmldb_index($indexname, XMLDB_INDEX_NOTUNIQUE, array($indexname));
+                $index = new xmldb_index($indexname, XMLDB_INDEX_NOTUNIQUE, [$indexname]);
 
                 if ($dbman->index_exists($table, $index) === false) {
                     $dbman->add_index($table, $index);
@@ -237,7 +237,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_field('name', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
 
             // Adding key.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
             // Create table.
             $dbman->create_table($table);
@@ -251,18 +251,18 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         if ($dbman->field_exists($table, $field) === false) {
             $dbman->add_field($table, $field);
 
-            $table->add_key('cityid', XMLDB_KEY_FOREIGN, array('cityid'), 'apsolu_cities', array('id'));
+            $table->add_key('cityid', XMLDB_KEY_FOREIGN, ['cityid'], 'apsolu_cities', ['id']);
         }
 
         // Add missing indexes !
-        $tables = array();
-        $tables['apsolu_payments'] = array('userid', 'paymentcenterid');
-        $tables['apsolu_payments_items'] = array('paymentid', 'courseid', 'roleid');
+        $tables = [];
+        $tables['apsolu_payments'] = ['userid', 'paymentcenterid'];
+        $tables['apsolu_payments_items'] = ['paymentid', 'courseid', 'roleid'];
 
         foreach ($tables as $tablename => $indexes) {
             $table = new xmldb_table($tablename);
             foreach ($indexes as $indexname) {
-                $index = new xmldb_index($indexname, XMLDB_INDEX_NOTUNIQUE, array($indexname));
+                $index = new xmldb_index($indexname, XMLDB_INDEX_NOTUNIQUE, [$indexname]);
 
                 if ($dbman->index_exists($table, $index) === false) {
                     $dbman->add_index($table, $index);
@@ -276,10 +276,10 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
     $version = 2018071704;
     if ($result && $oldversion < $version) {
-        $fields = $DB->get_records('user_info_field', array(), $sort = 'sortorder DESC');
+        $fields = $DB->get_records('user_info_field', [], $sort = 'sortorder DESC');
         if (count($fields) === 0) {
             // Ajoute une sous-catégorie de champs complémentaires.
-            $category = $DB->get_record('user_info_category', array('sortorder' => 1));
+            $category = $DB->get_record('user_info_category', ['sortorder' => 1]);
             if ($category === false) {
                 $category = new stdClass();
                 $category->name = get_string('fields_complements_category', 'local_apsolu');
@@ -312,7 +312,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         }
 
         // Ajoute ou renomme les champs de profil complémentaires.
-        $customs = array();
+        $customs = [];
         $customs['postalcode'] = (object) ['shortname' => 'apsolupostalcode', 'datatype' => 'text', 'param1' => 30, 'param2' => 2048, 'param3' => 0, 'visible' => 0];
         $customs['sex'] = (object) ['shortname' => 'apsolusex', 'datatype' => 'text', 'param1' => 30, 'param2' => 2048, 'param3' => 0, 'visible' => 0];
         $customs['birthday'] = (object) ['shortname' => 'apsolubirthday', 'datatype' => 'text', 'param1' => 30, 'param2' => 2048, 'param3' => 0, 'visible' => 1];
@@ -329,7 +329,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         $customs['apsoludoublecursus'] = (object) ['shortname' => 'apsoludoublecursus', 'datatype' => 'checkbox', 'param1' => null, 'param2' => null, 'param3' => null, 'visible' => 0];
 
         foreach ($customs as $oldname => $custom) {
-            $field_ = $DB->get_record('user_info_field', array('shortname' => $oldname));
+            $field_ = $DB->get_record('user_info_field', ['shortname' => $oldname]);
             if ($field_ !== false) {
                 // Renomme le champ.
                 $field_->shortname = $custom->shortname;
@@ -340,7 +340,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
                 continue;
             }
 
-            $field_ = $DB->get_record('user_info_field', array('shortname' => $custom->shortname));
+            $field_ = $DB->get_record('user_info_field', ['shortname' => $custom->shortname]);
             if ($field_ === false) {
                 // Insert les nouveaux champs.
                 $field->shortname = $custom->shortname;
@@ -374,7 +374,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_field('skillid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = 0, null);
 
             // Adding key.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
             // Create table.
             $dbman->create_table($table);
@@ -402,7 +402,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_field('typeid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
 
             // Adding key.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
             // Create table.
             $dbman->create_table($table);
@@ -415,7 +415,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_field('name', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
 
             // Adding key.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
             // Create table.
             $dbman->create_table($table);
@@ -433,7 +433,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_field('centerid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
 
             // Adding key.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
             // Create table.
             $dbman->create_table($table);
@@ -446,7 +446,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_field('cohortid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
 
             // Adding key.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('cardid', 'cohortid'));
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['cardid', 'cohortid']);
 
             // Create table.
             $dbman->create_table($table);
@@ -459,7 +459,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_field('roleid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
 
             // Adding key.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('cardid', 'roleid'));
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['cardid', 'roleid']);
 
             // Create table.
             $dbman->create_table($table);
@@ -473,7 +473,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_field('value', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
 
             // Adding key.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('cardid', 'calendartypeid'));
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['cardid', 'calendartypeid']);
 
             // Create table.
             $dbman->create_table($table);
@@ -489,13 +489,13 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         $table->add_field('cardid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = 0, null);
 
         // Adding key.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
         // Create table.
         $dbman->create_table($table);
 
         // Corrige un problème sur le champ apsoludoublecursus.
-        $record = $DB->get_record('user_info_field', array('shortname' => 'apsoludoublecursus'));
+        $record = $DB->get_record('user_info_field', ['shortname' => 'apsoludoublecursus']);
         if ($record !== false) {
             $record->forceunique = 0;
             $record->defaultdata = 0;
@@ -518,9 +518,9 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
 
             // Adding key.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
-            $table->add_index($indexname = 'timestarted', XMLDB_INDEX_NOTUNIQUE, $fields = array('timestarted'));
+            $table->add_index($indexname = 'timestarted', XMLDB_INDEX_NOTUNIQUE, $fields = ['timestarted']);
 
             // Create table.
             $dbman->create_table($table);
@@ -535,7 +535,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
 
             // Adding key.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
             // Create table.
             $dbman->create_table($table);
@@ -549,7 +549,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_field('cardid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
 
             // Adding key.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
             // Create table.
             $dbman->create_table($table);
@@ -562,25 +562,25 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     $version = 2019030700;
     if ($result && $oldversion < $version) {
         // Corrige tous les indexes manquants en base de données.
-        $tables = array();
-        $tables['apsolu_areas'] = array('cityid');
-        $tables['apsolu_attendance_presences'] = array('studentid', 'teacherid', 'statusid', 'sessionid');
-        $tables['apsolu_attendance_sessions'] = array('courseid', 'locationid', 'activityid');
-        $tables['apsolu_calendars'] = array('typeid');
-        $tables['apsolu_colleges'] = array('roleid');
-        $tables['apsolu_dunnings'] = array('userid');
-        $tables['apsolu_dunnings_cards'] = array('dunningid', 'cardid');
-        $tables['apsolu_dunnings_posts'] = array('dunningid', 'userid');
-        $tables['apsolu_grades'] = array('courseid', 'userid', 'teacherid');
-        $tables['apsolu_grades_history'] = array('gradeid', 'teacherid');
-        $tables['apsolu_payments_cards'] = array('centerid');
-        $tables['apsolu_payments_items'] = array('paymentid', 'cardid');
-        $tables['apsolu_skills_descriptions'] = array('activityid', 'skillid');
+        $tables = [];
+        $tables['apsolu_areas'] = ['cityid'];
+        $tables['apsolu_attendance_presences'] = ['studentid', 'teacherid', 'statusid', 'sessionid'];
+        $tables['apsolu_attendance_sessions'] = ['courseid', 'locationid', 'activityid'];
+        $tables['apsolu_calendars'] = ['typeid'];
+        $tables['apsolu_colleges'] = ['roleid'];
+        $tables['apsolu_dunnings'] = ['userid'];
+        $tables['apsolu_dunnings_cards'] = ['dunningid', 'cardid'];
+        $tables['apsolu_dunnings_posts'] = ['dunningid', 'userid'];
+        $tables['apsolu_grades'] = ['courseid', 'userid', 'teacherid'];
+        $tables['apsolu_grades_history'] = ['gradeid', 'teacherid'];
+        $tables['apsolu_payments_cards'] = ['centerid'];
+        $tables['apsolu_payments_items'] = ['paymentid', 'cardid'];
+        $tables['apsolu_skills_descriptions'] = ['activityid', 'skillid'];
 
         foreach ($tables as $tablename => $indexes) {
             $table = new xmldb_table($tablename);
             foreach ($indexes as $indexname) {
-                $index = new xmldb_index($indexname, XMLDB_INDEX_NOTUNIQUE, array($indexname));
+                $index = new xmldb_index($indexname, XMLDB_INDEX_NOTUNIQUE, [$indexname]);
 
                 if ($dbman->index_exists($table, $index) === false) {
                     $dbman->add_index($table, $index);
@@ -629,7 +629,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         }
 
         // Rend nullable le champ 'timestarted' de la table 'apsolu_dunnings'.
-        $index = new xmldb_index($indexname = 'timestarted', XMLDB_INDEX_NOTUNIQUE, $fields = array('timestarted'));
+        $index = new xmldb_index($indexname = 'timestarted', XMLDB_INDEX_NOTUNIQUE, $fields = ['timestarted']);
         $dbman->drop_index($table, $index);
 
         $field = new xmldb_field('timestarted', XMLDB_TYPE_INTEGER, $precision = '10', $unsigned = XMLDB_UNSIGNED, $notnull = null, $sequence = null, $default = null, $previous = null);
@@ -663,10 +663,10 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     if ($result && $oldversion < $version) {
         $field = new xmldb_field('paymentcenterid');
 
-        foreach (array('apsolu_courses', 'apsolu_complements') as $tablename) {
+        foreach (['apsolu_courses', 'apsolu_complements'] as $tablename) {
             $table = new xmldb_table($tablename);
 
-            $index = new xmldb_index('paymentcenterid', XMLDB_INDEX_UNIQUE, array('paymentcenterid'));
+            $index = new xmldb_index('paymentcenterid', XMLDB_INDEX_UNIQUE, ['paymentcenterid']);
             if ($dbman->index_exists($table, $index) === true) {
                 $dbman->drop_index($table, $index);
             }
@@ -700,8 +700,8 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_field('day', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = 0, null);
 
             // Adding key.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-            $table->add_key('unique_day', XMLDB_KEY_UNIQUE, array('day'));
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+            $table->add_key('unique_day', XMLDB_KEY_UNIQUE, ['day']);
 
             // Create table.
             $dbman->create_table($table);
@@ -719,7 +719,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
     $version = 2020092300;
     if ($result && $oldversion < $version) {
-        $field = $DB->get_record('user_info_field', array('shortname' => 'apsoluusertype'));
+        $field = $DB->get_record('user_info_field', ['shortname' => 'apsoluusertype']);
         if ($field === false) {
             // Ajoute un champ de profil "type d'utilisateur".
             $sql = "SELECT id, MAX(sortorder) AS sortorder".
@@ -757,7 +757,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
         // Corrige la mauvaise initialisation du lieu d'une session lors de la génération des sessions d'un cours.
         $courses = $DB->get_records('apsolu_courses');
-        $sessions = $DB->get_records('apsolu_attendance_sessions', array('locationid' => 0));
+        $sessions = $DB->get_records('apsolu_attendance_sessions', ['locationid' => 0]);
         foreach ($sessions as $session) {
             if (isset($courses[$session->courseid]) === false) {
                 continue;
@@ -785,19 +785,19 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $notnull = null, null, null, null);
 
             // Adding keys.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-            $table->add_key('unique_name', XMLDB_KEY_UNIQUE, array('name', 'calendarid', 'roleid'));
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+            $table->add_key('unique_name', XMLDB_KEY_UNIQUE, ['name', 'calendarid', 'roleid']);
 
             // Adding indexes.
-            $table->add_index($indexname = 'name', XMLDB_INDEX_NOTUNIQUE, $fields = array('name'));
-            $table->add_index($indexname = 'calendarid', XMLDB_INDEX_NOTUNIQUE, $fields = array('calendarid'));
-            $table->add_index($indexname = 'roleid', XMLDB_INDEX_NOTUNIQUE, $fields = array('roleid'));
+            $table->add_index($indexname = 'name', XMLDB_INDEX_NOTUNIQUE, $fields = ['name']);
+            $table->add_index($indexname = 'calendarid', XMLDB_INDEX_NOTUNIQUE, $fields = ['calendarid']);
+            $table->add_index($indexname = 'roleid', XMLDB_INDEX_NOTUNIQUE, $fields = ['roleid']);
 
             // Create table.
             $dbman->create_table($table);
         }
 
-        $tables = array('apsolu_grades', 'apsolu_grades_history');
+        $tables = ['apsolu_grades', 'apsolu_grades_history'];
         foreach ($tables as $tablename) {
             $table = new xmldb_table($tablename);
             if ($dbman->table_exists($table) === true) {
@@ -824,7 +824,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     $version = 2021072300;
     if ($result && $oldversion < $version) {
         // Vérifie et corrige les valeurs des adresses de contact.
-        $settings = array();
+        $settings = [];
         $settings[] = 'functional_contact';
         $settings[] = 'technical_contact';
 
@@ -861,10 +861,10 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
 
             // Adding keys.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
             // Adding indexes.
-            $table->add_index($indexname = 'userid', XMLDB_INDEX_UNIQUE, $fields = array('userid'));
+            $table->add_index($indexname = 'userid', XMLDB_INDEX_UNIQUE, $fields = ['userid']);
 
             // Create table.
             $dbman->create_table($table);
@@ -879,7 +879,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         // Ajoute 2 champs `information` et `informationformat` dans la table `apsolu_courses`.
         $table = new xmldb_table('apsolu_courses');
 
-        $fields = array();
+        $fields = [];
         $fields[] = new xmldb_field('information', XMLDB_TYPE_TEXT, $precision = null, $unsigned = null, $notnull = null, $sequence = null, $default = null, $previous = null);
         $fields[] = new xmldb_field('informationformat', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $nullable = null, $sequence = null, null, null);
 
@@ -898,7 +898,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         // Ajoute 1 champ `showpolicy` dans la table `apsolu_courses`.
         $table = new xmldb_table('apsolu_courses');
 
-        $fields = array();
+        $fields = [];
         $fields[] = new xmldb_field('showpolicy', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $nullable = null, $sequence = null, null, null);
 
         foreach ($fields as $field) {
@@ -943,12 +943,12 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_field('categoryid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $nullable = null, $sequence = null, $default = null, null);
 
             // Ajoute la clé primaire.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
             // Ajoute les index.
-            $table->add_index($indexname = 'idx_mainsport', XMLDB_INDEX_NOTUNIQUE, $fields = array('mainsport'));
-            $table->add_index($indexname = 'idx_restriction', XMLDB_INDEX_NOTUNIQUE, $fields = array('restriction'));
-            $table->add_index($indexname = 'idx_categoryid', XMLDB_INDEX_NOTUNIQUE, $fields = array('categoryid'));
+            $table->add_index($indexname = 'idx_mainsport', XMLDB_INDEX_NOTUNIQUE, $fields = ['mainsport']);
+            $table->add_index($indexname = 'idx_restriction', XMLDB_INDEX_NOTUNIQUE, $fields = ['restriction']);
+            $table->add_index($indexname = 'idx_categoryid', XMLDB_INDEX_NOTUNIQUE, $fields = ['categoryid']);
 
             // Crée la table.
             $dbman->create_table($table);
@@ -972,11 +972,11 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_field('sortorder', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
 
             // Ajoute la clé primaire.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
             // Ajoute les index.
-            $table->add_index($indexname = 'unique_number', XMLDB_INDEX_NOTUNIQUE, $fields = array('number'));
-            $table->add_index($indexname = 'unique_sortorder', XMLDB_INDEX_NOTUNIQUE, $fields = array('sortorder'));
+            $table->add_index($indexname = 'unique_number', XMLDB_INDEX_NOTUNIQUE, $fields = ['number']);
+            $table->add_index($indexname = 'unique_sortorder', XMLDB_INDEX_NOTUNIQUE, $fields = ['sortorder']);
 
             // Crée la table.
             $dbman->create_table($table);
@@ -1027,11 +1027,11 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = null, null);
 
             // Ajoute la clé primaire.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
             // Ajoute les index.
-            $table->add_index($indexname = 'unique_userid', XMLDB_INDEX_UNIQUE, $fields = array('userid'));
-            $table->add_index($indexname = 'idx_mainsport', XMLDB_INDEX_NOTUNIQUE, $fields = array('mainsport'));
+            $table->add_index($indexname = 'unique_userid', XMLDB_INDEX_UNIQUE, $fields = ['userid']);
+            $table->add_index($indexname = 'idx_mainsport', XMLDB_INDEX_NOTUNIQUE, $fields = ['mainsport']);
 
             // Crée la table.
             $dbman->create_table($table);
@@ -1076,7 +1076,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
         $table = new xmldb_table('apsolu_attendance_statuses');
 
-        $fields = array();
+        $fields = [];
         $fields[] = new xmldb_field('shortlabel', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
         $fields[] = new xmldb_field('longlabel', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
         $fields[] = new xmldb_field('sumlabel', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
@@ -1090,7 +1090,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $dbman->add_field($table, $field);
         }
 
-        $fields = array();
+        $fields = [];
         $fields[] = new xmldb_field('name', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
         $fields[] = new xmldb_field('code', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
         foreach ($fields as $field) {
@@ -1104,7 +1104,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         // Réintègre les données dans la table apsolu_attendance_statuses.
         $sortorder = 1;
         foreach ($statuses as $status) {
-            $data = array();
+            $data = [];
             $data['id'] = $status->id;
             $data['shortlabel'] = get_string(sprintf('%s_short', $status->code), 'local_apsolu');
             $data['longlabel'] = get_string($status->code, 'local_apsolu');
@@ -1119,9 +1119,9 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $sortorder++;
         }
 
-        $indexes = array('shortlabel', 'longlabel', 'sumlabel', 'sortorder');
+        $indexes = ['shortlabel', 'longlabel', 'sumlabel', 'sortorder'];
         foreach ($indexes as $field) {
-            $index = new xmldb_index(sprintf('unique_%s', $field), XMLDB_INDEX_UNIQUE, array($field));
+            $index = new xmldb_index(sprintf('unique_%s', $field), XMLDB_INDEX_UNIQUE, [$field]);
 
             if ($dbman->index_exists($table, $index) === false) {
                 $dbman->add_index($table, $index);
@@ -1143,25 +1143,25 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $table->add_field('fontawesomeid', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
 
             // Ajoute la clé primaire.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
             // Crée la table.
             $dbman->create_table($table);
 
             // Initialise le jeu de couleurs.
-            $roles = array();
+            $roles = [];
             $roles['bonification'] = '#ffb844';
             $roles['libre'] = '#99cc33';
             $roles['option'] = '#e60000';
             $roles['decouverte'] = '#888888';
             foreach ($roles as $shortname => $color) {
-                $role = $DB->get_record('role', array('shortname' => $shortname, 'archetype' => 'student'));
+                $role = $DB->get_record('role', ['shortname' => $shortname, 'archetype' => 'student']);
 
                 if ($role === false) {
                     continue;
                 }
 
-                $params = array();
+                $params = [];
                 $params['id'] = $role->id;
                 $params['color'] = $color;
                 $params['fontawesomeid'] = 'check';
@@ -1178,7 +1178,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
     $version = 2023061600;
     if ($result && $oldversion < $version) {
-        $fields = array();
+        $fields = [];
         $fields[] = 'apsolucardpaid';
         $fields[] = 'apsolufederationnumber';
         $fields[] = 'apsolufederationpaid';
@@ -1189,7 +1189,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         $fields[] = 'optionpaid';
 
         foreach ($fields as $field) {
-            $record = $DB->get_record('user_info_field', array('shortname' => $field));
+            $record = $DB->get_record('user_info_field', ['shortname' => $field]);
             if ($record === false) {
                 continue;
             }
@@ -1221,7 +1221,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     $version = 2023091300;
     if ($result && $oldversion < $version) {
         // Ajoute les nouveaux champs dans la table `apsolu_federation_adhesions`.
-        $fields = array();
+        $fields = [];
         $fields[] = new xmldb_field('birthname', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $fields[] = new xmldb_field('nativecountry', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $fields[] = new xmldb_field('departmentofbirth', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL,
@@ -1247,12 +1247,12 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             " FROM {course_categories} cc".
             " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id".
             " ORDER BY cc.name";
-        $categories = array();
+        $categories = [];
         foreach ($DB->get_records_sql($sql) as $category) {
             $categories[$category->id] = $category->name;
         }
 
-        $skills = array();
+        $skills = [];
         foreach ($DB->get_records('apsolu_skills', $conditions = null, $sort = 'name') as $skill) {
             $skills[$skill->id] = $skill->name;
         }
@@ -1288,7 +1288,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     if ($result && $oldversion < $version) {
         // Supprime la contrainte d'unicité sur le champ 'number' de la table 'apsolu_federation_numbers'.
         $table = new xmldb_table('apsolu_federation_numbers');
-        $index = new xmldb_index($indexname = 'unique_number', XMLDB_INDEX_NOTUNIQUE, $fields = array('number'));
+        $index = new xmldb_index($indexname = 'unique_number', XMLDB_INDEX_NOTUNIQUE, $fields = ['number']);
         if ($dbman->index_exists($table, $index) === true) {
             $dbman->drop_index($table, $index);
         }

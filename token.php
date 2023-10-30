@@ -43,12 +43,12 @@ $sql = "SELECT uid.*".
     " FROM {user_info_data} uid".
     " JOIN {user_info_field} uif ON uif.id = uid.fieldid AND uif.shortname = 'apsoluidcardnumber'".
     " WHERE uid.data = :data";
-$card = $DB->get_record_sql($sql, array('data' => $cardnumber));
+$card = $DB->get_record_sql($sql, ['data' => $cardnumber]);
 
 if ($card) {
-    $service = $DB->get_record('external_services', array('component' => 'local_apsolu', 'enabled' => 1));
+    $service = $DB->get_record('external_services', ['component' => 'local_apsolu', 'enabled' => 1]);
     if ($service) {
-        $externaltoken = $DB->get_record('external_tokens', array('userid' => $card->userid, 'externalserviceid' => $service->id));
+        $externaltoken = $DB->get_record('external_tokens', ['userid' => $card->userid, 'externalserviceid' => $service->id]);
 
         if ($externaltoken) {
             $response = new stdClass();

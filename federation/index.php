@@ -38,7 +38,7 @@ if ($courseid === false) {
 }
 
 // Set tabs.
-$pages = array();
+$pages = [];
 $pages['settings'] = get_string('settings');
 $pages['activities'] = get_string('activity_list', 'local_apsolu');
 $pages['numbers'] = get_string('association_numbers', 'local_apsolu');
@@ -47,9 +47,9 @@ $pages['import'] = get_string('import', 'local_apsolu');
 $pages['certificates_validation'] = get_string('certificates_validation', 'local_apsolu');
 $pages['payments'] = get_string('exporting_payments', 'local_apsolu');
 
-$tabtree = array();
+$tabtree = [];
 foreach ($pages as $pagename => $label) {
-    $url = new moodle_url('/local/apsolu/federation/index.php', array('page' => $pagename));
+    $url = new moodle_url('/local/apsolu/federation/index.php', ['page' => $pagename]);
     $tabtree[] = new tabobject($pagename, $url, $label);
 }
 

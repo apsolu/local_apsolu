@@ -29,7 +29,7 @@ require_once($CFG->dirroot.'/local/apsolu/configuration/calendars_edit_form.php'
 $calendarid = optional_param('calendarid', 0, PARAM_INT);
 
 // Vérifie qu'il existe au moins un type de calendrier.
-$calendarstypes = $DB->get_records('apsolu_calendars_types', $conditions = array(), $sort = 'name');
+$calendarstypes = $DB->get_records('apsolu_calendars_types', $conditions = [], $sort = 'name');
 if (count($calendarstypes) === 0) {
     redirect($CFG->wwwroot.'/local/apsolu/configuration/index.php?page=calendarstypes', get_string('needcalendarstypefirst', 'local_apsolu'), null, \core\output\notification::NOTIFY_ERROR);
 }
@@ -37,7 +37,7 @@ if (count($calendarstypes) === 0) {
 // Définis l'instance.
 $instance = false;
 if ($calendarid !== 0) {
-    $instance = $DB->get_record('apsolu_calendars', array('id' => $calendarid));
+    $instance = $DB->get_record('apsolu_calendars', ['id' => $calendarid]);
 }
 
 if ($instance === false) {
@@ -56,7 +56,7 @@ if ($instance === false) {
 }
 
 // Build form.
-$customdata = array($instance, $calendarstypes);
+$customdata = [$instance, $calendarstypes];
 $mform = new local_apsolu_calendar_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
@@ -82,7 +82,7 @@ if ($data = $mform->get_data()) {
         // Mets à jour les méthodes d'inscription se basant sur ce calendrier.
         $sql = "UPDATE {enrol} SET enrolstartdate=:enrolstartdate, enrolenddate=:enrolenddate, customint7=:coursestartdate, customint8=:courseenddate, customint4=:reenrolstartdate, customint5=:reenrolenddate".
             " WHERE enrol = 'select' AND customchar1 = :calendarid";
-        $params = array();
+        $params = [];
         $params['enrolstartdate'] = $instance->enrolstartdate;
         $params['enrolenddate'] = $instance->enrolenddate;
         $params['coursestartdate'] = $instance->coursestartdate;
@@ -94,7 +94,7 @@ if ($data = $mform->get_data()) {
 
         // Mets à jour les inscriptions liées à ce calendrier.
         $sql = "UPDATE {user_enrolments} SET timestart = :coursestartdate, timeend = :courseenddate WHERE enrolid IN (SELECT id FROM {enrol} WHERE enrol = 'select' AND customchar1 = :calendarid)";
-        $DB->execute($sql, array('coursestartdate' => $instance->coursestartdate, 'courseenddate' => $instance->courseenddate, 'calendarid' => $instance->id));
+        $DB->execute($sql, ['coursestartdate' => $instance->coursestartdate, 'courseenddate' => $instance->courseenddate, 'calendarid' => $instance->id]);
     }
 
     // Display notification and display elements list.

@@ -58,12 +58,12 @@ try {
         throw new Exception('Unknown payment (cannot parse id): '.$_GET['Ref']);
     }
 
-    $payment = $DB->get_record('apsolu_payments', array('id' => $matches[1]));
+    $payment = $DB->get_record('apsolu_payments', ['id' => $matches[1]]);
     if (!$payment) {
         throw new Exception('Unknown payment (not found): '.$_GET['Ref']);
     }
 
-    $user = $DB->get_record('user', array('id' => $payment->userid));
+    $user = $DB->get_record('user', ['id' => $payment->userid]);
     if (!$user) {
         $user = new stdClass();
         $user->id = $payment->userid;

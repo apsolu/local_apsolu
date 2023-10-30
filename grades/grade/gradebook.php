@@ -57,14 +57,14 @@ if (defined('APSOLU_GRADES_COURSE_SCOPE') === false) {
     define('APSOLU_GRADES_COURSE_SCOPE', CONTEXT_COURSE);
 }
 
-$courses = array();
+$courses = [];
 foreach (Gradebook::get_courses(APSOLU_GRADES_COURSE_SCOPE) as $course) {
     $courses[$course->category.'-0'] = $categories[$course->category]->name;
     $courses[$course->category.'-'.$course->id] = $course->fullname;
 }
 
 // Vérifie les autorisations d'accès à la page.
-if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_COURSE && $courses === array()) {
+if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_COURSE && $courses === []) {
     // Cet utilisateur n'a pas de cours à évaluer.
     print_error('no_courses_to_grade', 'local_apsolu');
 } else if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_SYSTEM && has_capability('local/apsolu:viewallgrades', context_system::instance()) === false) {
@@ -73,31 +73,31 @@ if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_COURSE && $courses === array()) {
 }
 
 // Liste des rôles évaluables.
-$roles = array();
+$roles = [];
 foreach (Gradebook::get_gradable_roles() as $role) {
     $roles[$role->id] = $role->localname;
 }
 
 // Liste des types de calendrier.
-$calendarstypes = array();
+$calendarstypes = [];
 foreach ($DB->get_records('apsolu_calendars_types', null, 'name') as $calendar) {
     $calendarstypes[$calendar->id] = $calendar->name;
 }
 
 // Liste des éléments d'évaluation.
-$gradeitems = array();
+$gradeitems = [];
 foreach ($DB->get_records('apsolu_grade_items') as $item) {
     $gradeitems[$item->id] = $item->name;
 }
 
 // Liste des sites géographiques.
-$cities = array();
+$cities = [];
 foreach ($DB->get_records('apsolu_cities', null, 'name') as $city) {
     $cities[$city->id] = $city->name;
 }
 
 // Liste des établissements.
-$institutions = array();
+$institutions = [];
 $sql = "SELECT DISTINCT institution FROM {user} ORDER BY institution";
 foreach ($DB->get_records_sql($sql) as $institution) {
     $name = $institution->institution;
@@ -105,15 +105,15 @@ foreach ($DB->get_records_sql($sql) as $institution) {
 }
 
 // Liste des UFRS.
-$ufrs = array();
+$ufrs = [];
 $sql = "SELECT DISTINCT data FROM {user_info_data} WHERE fieldid = :fieldid ORDER BY data";
-foreach ($DB->get_records_sql($sql, array('fieldid' => $customfields['apsoluufr']->id)) as $ufr) {
+foreach ($DB->get_records_sql($sql, ['fieldid' => $customfields['apsoluufr']->id]) as $ufr) {
     $name = $ufr->data;
     $ufrs[$name] = $name;
 }
 
 // Liste des départements.
-$departments = array();
+$departments = [];
 $sql = "SELECT DISTINCT department FROM {user} ORDER BY department";
 foreach ($DB->get_records_sql($sql) as $department) {
     $name = $department->department;
@@ -121,9 +121,9 @@ foreach ($DB->get_records_sql($sql) as $department) {
 }
 
 // Liste des niveaux d'études.
-$cycles = array();
+$cycles = [];
 $sql = "SELECT DISTINCT data FROM {user_info_data} WHERE fieldid = :fieldid ORDER BY data";
-foreach ($DB->get_records_sql($sql, array('fieldid' => $customfields['apsolucycle']->id)) as $cycle) {
+foreach ($DB->get_records_sql($sql, ['fieldid' => $customfields['apsolucycle']->id]) as $cycle) {
     $name = $cycle->data;
     $cycles[$name] = $name;
 }
@@ -131,7 +131,7 @@ foreach ($DB->get_records_sql($sql, array('fieldid' => $customfields['apsolucycl
 // Liste des enseignants.
 $teachers = null;
 if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_SYSTEM && has_capability('local/apsolu:viewallgrades', context_system::instance()) === true) {
-    $teachers = array();
+    $teachers = [];
     $sql = "SELECT DISTINCT u.*".
         " FROM {user} u".
         " JOIN {role_assignments} ra ON u.id = ra.userid".
@@ -150,7 +150,7 @@ if ($filters === null) {
     $filters = new stdClass();
     $filters->roles = array_keys($roles);
 
-    $filters->calendarstypes = array();
+    $filters->calendarstypes = [];
     foreach ($DB->get_records('apsolu_calendars') as $calendar) {
         if ($calendar->gradestartdate > time()) {
             continue;
@@ -165,10 +165,10 @@ if ($filters === null) {
     $filters->calendarstypes = array_keys($filters->calendarstypes);
 
     if ($teachers !== null) {
-        $filters->fields = array('teachers');
+        $filters->fields = ['teachers'];
     }
 }
-$customdata = array($filters, $courses, $roles, $calendarstypes, $gradeitems, $cities, $institutions, $ufrs, $departments, $cycles, $teachers);
+$customdata = [$filters, $courses, $roles, $calendarstypes, $gradeitems, $cities, $institutions, $ufrs, $departments, $cycles, $teachers];
 $mform = new local_apsolu_grades_gradebooks_filters_form(null, $customdata);
 
 if (($formdata = $mform->get_data()) || ($data = data_submitted())) {
@@ -178,7 +178,7 @@ if (($formdata = $mform->get_data()) || ($data = data_submitted())) {
 
     if (is_object($filtersdata) === true) {
         // Filtre les options.
-        $acceptedoptions = array('courses', 'roles', 'calendarstypes', 'gradeitems', 'cities', 'institutions', 'ufrs', 'departments', 'cycles', 'teachers', 'fullnameuser', 'idnumber');
+        $acceptedoptions = ['courses', 'roles', 'calendarstypes', 'gradeitems', 'cities', 'institutions', 'ufrs', 'departments', 'cycles', 'teachers', 'fullnameuser', 'idnumber'];
         foreach ($acceptedoptions as $option) {
             if (isset($filtersdata->$option) === true && empty($filtersdata->$option) === false) {
                 $options[$option] = $filtersdata->$option;
@@ -197,7 +197,7 @@ if (($formdata = $mform->get_data()) || ($data = data_submitted())) {
     }
 
     if (isset($filtersdata->fields) === false) {
-        $filtersdata->fields = array();
+        $filtersdata->fields = [];
     }
 
     if (isset($options['courses']) === false || count($options['courses']) > 1 || substr(current($options['courses']), -2) === '-0') {

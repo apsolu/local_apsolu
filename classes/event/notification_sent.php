@@ -69,7 +69,7 @@ class notification_sent extends \core\event\base {
         $other = json_decode($this->other);
         if (ctype_digit($other->receiver) === true) {
             // Si on a l'identifiant du destinaire, on va chercher son nom dans la table des utilisateurs.
-            $user = $DB->get_record('user', array('id' => $other->receiver));
+            $user = $DB->get_record('user', ['id' => $other->receiver]);
             if ($this->contextlevel == CONTEXT_COURSE) {
                 $receiver = sprintf('<a href="%s/user/view.php?course=%s&id=%s">%s</a>', $CFG->wwwroot, $this->contextinstanceid, $user->id, fullname($user));
             } else {

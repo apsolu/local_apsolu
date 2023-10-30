@@ -31,7 +31,7 @@ require __DIR__.'/parental_authorization_form.php';
 
 // Initialise le formulaire.
 $readonly = ($adhesion->can_edit() === false);
-$customdata = array($adhesion, $course, $context, $readonly);
+$customdata = [$adhesion, $course, $context, $readonly];
 $mform = new local_apsolu_federation_parental_authorization(null, $customdata);
 
 // Charge les fichiers éventuellement déposés précédemment.
@@ -56,16 +56,16 @@ if ($data = $mform->get_data()) {
 
         $adhesion->save($data);
 
-        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => APSOLU_PAGE_MEDICAL_CERTIFICATE));
+        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', ['step' => APSOLU_PAGE_MEDICAL_CERTIFICATE]);
     } catch (dml_exception $exception) {
         // Erreur d'écriture en base de données.
         $message = get_string('an_error_occurred_while_saving_data', 'local_apsolu');
-        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => APSOLU_PAGE_PARENTAL_AUTHORIZATION));
+        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', ['step' => APSOLU_PAGE_PARENTAL_AUTHORIZATION]);
         $messagetype = \core\output\notification::NOTIFY_ERROR;
     } catch (Exception $exception) {
         // L'adhesion ne peut plus être modifiée.
         $message = implode(' ', $adhesion::get_contacts());
-        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => APSOLU_PAGE_PARENTAL_AUTHORIZATION));
+        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', ['step' => APSOLU_PAGE_PARENTAL_AUTHORIZATION]);
         $messagetype = \core\output\notification::NOTIFY_ERROR;
     }
 

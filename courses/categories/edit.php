@@ -44,19 +44,19 @@ $sql = "SELECT cc.id, cc.name".
     " FROM {course_categories} cc".
     " JOIN {apsolu_courses_groupings} acg ON cc.id = acg.id".
     " ORDER BY cc.name";
-$groupings = array();
+$groupings = [];
 foreach ($DB->get_records_sql($sql) as $grouping) {
     $groupings[$grouping->id] = $grouping->name;
 }
 
-if ($groupings === array()) {
+if ($groupings === []) {
     print_error('error_no_grouping', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=groupings');
 }
 
 // Build form.
 $context = context_system::instance();
 $itemid = 0;
-$customdata = array('category' => $category, 'groupings' => $groupings, 'context' => $context, 'itemid' => $itemid);
+$customdata = ['category' => $category, 'groupings' => $groupings, 'context' => $context, 'itemid' => $itemid];
 $mform = new local_apsolu_courses_categories_edit_form(null, $customdata);
 
 $editor = file_prepare_standard_editor($category, 'description', $mform->get_description_editor_options(), $context, 'coursecat', 'description', $itemid);
@@ -73,7 +73,7 @@ if ($data = $mform->get_data()) {
     $category->save($data, $mform);
 
     // Redirige vers la page générale.
-    $returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'categories'));
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'categories']);
     redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
 

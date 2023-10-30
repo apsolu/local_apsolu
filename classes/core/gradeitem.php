@@ -72,7 +72,7 @@ class gradeitem extends record {
 
         // On récupère tous les cours utilisant ce calendrier.
         $sql = "SELECT DISTINCT e.courseid FROM {enrol} e WHERE e.enrol = 'select' AND e.customchar1 = :calendarid";
-        foreach ($DB->get_records_sql($sql, array('calendarid' => $this->calendarid)) as $enrol) {
+        foreach ($DB->get_records_sql($sql, ['calendarid' => $this->calendarid]) as $enrol) {
             $course = new course();
             $course->load($enrol->courseid, $required = false);
 
@@ -84,7 +84,7 @@ class gradeitem extends record {
         }
 
         // Supprime l'objet en base de données.
-        $DB->delete_records(get_called_class()::TABLENAME, array('id' => $this->id));
+        $DB->delete_records(get_called_class()::TABLENAME, ['id' => $this->id]);
 
         // Valide la transaction en cours.
         if (isset($transaction) === true) {
@@ -125,7 +125,7 @@ class gradeitem extends record {
 
         // On récupère tous les cours utilisant ce calendrier.
         $sql = "SELECT DISTINCT e.courseid FROM {enrol} e WHERE e.enrol = 'select' AND e.customchar1 = :calendarid";
-        foreach ($DB->get_records_sql($sql, array('calendarid' => $this->calendarid)) as $enrol) {
+        foreach ($DB->get_records_sql($sql, ['calendarid' => $this->calendarid]) as $enrol) {
             $course = new course();
             $course->load($enrol->courseid, $required = false);
 

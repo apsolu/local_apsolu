@@ -60,10 +60,10 @@ class local_apsolu_federation_parental_authorization extends moodleform {
 
             $fs = get_file_storage();
             $context = context_course::instance($course->id, MUST_EXIST);
-            list($component, $filearea, $itemid) = array('local_apsolu', 'parentalauthorization', $USER->id);
+            list($component, $filearea, $itemid) = ['local_apsolu', 'parentalauthorization', $USER->id];
             $sort = 'itemid, filepath, filename';
             $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
-            $items = array();
+            $items = [];
             foreach ($files as $file) {
                 $url = moodle_url::make_pluginfile_url($context->id, $component, $filearea, $itemid, '/', $file->get_filename(), $forcedownload = false, $includetoken = false);
                 $items[] = html_writer::link($url, $file->get_filename());
@@ -72,7 +72,7 @@ class local_apsolu_federation_parental_authorization extends moodleform {
             if (empty($items) === true) {
                 $mform->addElement('static', 'parentalauthorization', $label, get_string('no_files', 'local_apsolu'));
             } else {
-                $attributes = array('class' => 'list-unstyled');
+                $attributes = ['class' => 'list-unstyled'];
                 $mform->addElement('static', 'parentalauthorization', $label, html_writer::alist($items, $attributes));
             }
         } else {
@@ -87,10 +87,10 @@ class local_apsolu_federation_parental_authorization extends moodleform {
         $mform->setType('step', PARAM_INT);
 
         // Submit buttons.
-        $attributes = array('class' => 'btn btn-default');
+        $attributes = ['class' => 'btn btn-default'];
         $buttonarray[] = &$mform->createElement('submit', 'save', get_string('save'), $attributes);
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Set default values.
         $this->set_data($adhesion);
@@ -109,7 +109,7 @@ class local_apsolu_federation_parental_authorization extends moodleform {
 
         $maxbytes = get_user_max_upload_file_size($context, $CFG->maxbytes, $course->maxbytes);
 
-        $options = array();
+        $options = [];
         $options['areamaxbytes'] = $maxbytes;
         $options['context'] = $context;
         $options['maxbytes'] = $maxbytes;

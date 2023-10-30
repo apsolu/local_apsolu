@@ -58,7 +58,7 @@ class course_category_test extends \advanced_testcase {
         $category1 = $this->getDataGenerator()->create_category();
 
         $category2 = new grouping();
-        $category2->save((object) array('name' => 'grouping'));
+        $category2->save((object) ['name' => 'grouping']);
 
         list($data, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
         $category3 = new category();
@@ -128,20 +128,20 @@ class course_category_test extends \advanced_testcase {
         $category = $this->getDataGenerator()->create_category();
 
         $coursecat = core_course_category::get($category->id);
-        $coursecat->update(array('parent' => $parent->id));
+        $coursecat->update(['parent' => $parent->id]);
 
-        $category = $DB->get_record('course_categories', array('id' => $category->id));
+        $category = $DB->get_record('course_categories', ['id' => $category->id]);
         $this->assertSame($parent->id, $category->parent);
 
         // Teste la mise à jour d'une catégorie de groupement d'activités APSOLU.
         $category = new grouping();
-        $category->save((object) array('name' => 'grouping'));
+        $category->save((object) ['name' => 'grouping']);
         $grouping = clone $category;
 
         $coursecat = core_course_category::get($category->id);
-        $coursecat->update(array('parent' => $parent->id));
+        $coursecat->update(['parent' => $parent->id]);
 
-        $category = $DB->get_record('course_categories', array('id' => $category->id));
+        $category = $DB->get_record('course_categories', ['id' => $category->id]);
         $this->assertNotSame($parent->id, $category->parent);
 
         // Teste la mise à jour d'une catégorie d'activité APSOLU dans une catégorie Moodle.
@@ -150,16 +150,16 @@ class course_category_test extends \advanced_testcase {
         $category->save($data, $mform);
 
         $coursecat = core_course_category::get($category->id);
-        $coursecat->update(array('parent' => $parent->id));
+        $coursecat->update(['parent' => $parent->id]);
 
-        $category = $DB->get_record('course_categories', array('id' => $category->id));
+        $category = $DB->get_record('course_categories', ['id' => $category->id]);
         $this->assertNotSame($parent->id, $category->parent);
 
         // Teste la mise à jour d'une catégorie d'activité APSOLU dans une catégorie de groupement d'activités APSOLU.
         $coursecat = core_course_category::get($category->id);
-        $coursecat->update(array('parent' => $grouping->id));
+        $coursecat->update(['parent' => $grouping->id]);
 
-        $category = $DB->get_record('course_categories', array('id' => $category->id));
+        $category = $DB->get_record('course_categories', ['id' => $category->id]);
         $this->assertSame($grouping->id, $category->parent);
     }
 }

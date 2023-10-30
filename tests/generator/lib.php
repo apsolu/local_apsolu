@@ -52,12 +52,12 @@ class local_apsolu_generator extends testing_module_generator {
      */
     public function create_courses() {
         // Données pour générer les niveaux de pratiques.
-        $records = array();
+        $records = [];
         $records[] = 'débutant';
         $records[] = 'intermédiaire';
         $records[] = 'expert';
 
-        $skills = array();
+        $skills = [];
         foreach ($records as $skillname) {
             $skill = new skill();
             $skill->name = $skillname;
@@ -68,20 +68,20 @@ class local_apsolu_generator extends testing_module_generator {
         }
 
         // Données pour générer les groupements d'activités sportives, les activités sportives et les créneaux.
-        $records = array();
-        $records[] = array('Pratiques artistiques', 'Arts du cirque');
-        $records[] = array('Pratiques artistiques', 'Danse salsa');
-        $records[] = array('Pratiques artistiques', 'Danse swing');
-        $records[] = array('Pratiques gymniques', 'Trampoline');
-        $records[] = array('Pratiques gymniques', 'Freestyle');
-        $records[] = array('Sports aquatiques', 'Apnée');
-        $records[] = array('Sports aquatiques', 'Aquagym');
-        $records[] = array('Sports aquatiques', 'Natation');
-        $records[] = array('Sports de plein air', 'Aviron');
-        $records[] = array('Sports de plein air', 'Cyclisme sur route');
-        $records[] = array('Sports de plein air', 'Escalade');
+        $records = [];
+        $records[] = ['Pratiques artistiques', 'Arts du cirque'];
+        $records[] = ['Pratiques artistiques', 'Danse salsa'];
+        $records[] = ['Pratiques artistiques', 'Danse swing'];
+        $records[] = ['Pratiques gymniques', 'Trampoline'];
+        $records[] = ['Pratiques gymniques', 'Freestyle'];
+        $records[] = ['Sports aquatiques', 'Apnée'];
+        $records[] = ['Sports aquatiques', 'Aquagym'];
+        $records[] = ['Sports aquatiques', 'Natation'];
+        $records[] = ['Sports de plein air', 'Aviron'];
+        $records[] = ['Sports de plein air', 'Cyclisme sur route'];
+        $records[] = ['Sports de plein air', 'Escalade'];
 
-        $groupings = array();
+        $groupings = [];
         foreach ($records as $record) {
             list($groupingname, $categoryname) = $record;
 
@@ -136,17 +136,17 @@ class local_apsolu_generator extends testing_module_generator {
         $category->url = '';
 
         // Form.
-        $groupings = array($grouping->id => $grouping->name);
+        $groupings = [$grouping->id => $grouping->name];
         $context = context_system::instance();
         $itemid = 0;
 
-        $customdata = array('category' => $category, 'groupings' => $groupings, 'context' => $context, 'itemid' => $itemid);
+        $customdata = ['category' => $category, 'groupings' => $groupings, 'context' => $context, 'itemid' => $itemid];
         $mform = new local_apsolu_courses_categories_edit_form(null, $customdata);
 
         $editor = file_prepare_standard_editor($category, 'description', $mform->get_description_editor_options(), $context, 'coursecat', 'description', $itemid);
         $mform->set_data($editor);
 
-        return array($category, $mform);
+        return [$category, $mform];
     }
 
     /**
@@ -186,7 +186,7 @@ class local_apsolu_generator extends testing_module_generator {
     public function get_period_data(string $name, string $type = null) {
         $monday = strtotime('monday this week');
 
-        $weeks = array();
+        $weeks = [];
 
         switch ($type) {
             case 'past':

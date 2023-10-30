@@ -29,7 +29,7 @@ require_once($CFG->dirroot.'/local/apsolu/configuration/course_offerings_form.ph
 // Build form.
 $data = new stdClass();
 
-$configurations = array();
+$configurations = [];
 $configurations[] = 'json_course_offerings_columns';
 $configurations[] = 'json_course_offerings_filters';
 $configurations[] = 'json_course_offerings_ranges';
@@ -108,7 +108,7 @@ if ($data = $mform->get_data()) {
 
     // Redirige vers la page générale.
     $message = get_string('changessaved');
-    $returnurl = new moodle_url('/local/apsolu/configuration/index.php', array('page' => 'courseofferings'));
+    $returnurl = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'courseofferings']);
     redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
 

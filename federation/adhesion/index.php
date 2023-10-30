@@ -54,10 +54,10 @@ require_login($courseorid = null, $autologinguest = false);
 if (is_enrolled($context, $user = null, $withcapability = '', $onlyactive = true) === false) {
     try {
         // Procède à l'inscription.
-        $conditions = array('enrol' => 'select', 'status' => 0, 'courseid' => $federationcourse->get_courseid());
+        $conditions = ['enrol' => 'select', 'status' => 0, 'courseid' => $federationcourse->get_courseid()];
         $instance = $DB->get_record('enrol', $conditions, '*', MUST_EXIST);
 
-        $conditions = array('enrolid' => $instance->id);
+        $conditions = ['enrolid' => $instance->id];
         $federationrole = $DB->get_record('enrol_select_roles', $conditions, '*', MUST_EXIST);
 
         $enrolselectplugin = new enrol_select_plugin();
@@ -80,7 +80,7 @@ if (is_enrolled($context, $user = null, $withcapability = '', $onlyactive = true
 // Navigation.
 $PAGE->navbar->add(get_string('membership_of_the_sports_association', 'local_apsolu'));
 
-$records = Adhesion::get_records(array('userid' => $USER->id));
+$records = Adhesion::get_records(['userid' => $USER->id]);
 $count = count($records);
 
 if ($count === 0) {
@@ -98,9 +98,9 @@ if ($count === 0) {
     if (empty($adhesion->mainsport) === true) {
         // TODO: bidouille temporaire. Ça ne devrait jamais arriver à ce stade. L'étudiant doit appartenir à un groupe.
         $adhesion->mainsport = null;
-        $groups = $DB->get_records('groups', array('courseid' => $course->id), $sort = 'name');
+        $groups = $DB->get_records('groups', ['courseid' => $course->id], $sort = 'name');
         foreach ($groups as $group) {
-            foreach (Activity::get_records(array('name' => $group->name)) as $activity) {
+            foreach (Activity::get_records(['name' => $group->name]) as $activity) {
                 $adhesion->mainsport = $activity->id;
                 break 2;
             }
@@ -147,7 +147,7 @@ if ($count === 0) {
 // Set navigation.
 $baseurl = '/local/apsolu/federation/adhesion/index.php';
 
-$steps = array();
+$steps = [];
 $steps[APSOLU_PAGE_HEALTH_QUIZ] = 'health_quiz';
 $steps[APSOLU_PAGE_AGREEMENT] = 'agreement';
 $steps[APSOLU_PAGE_MEMBERSHIP] = 'membership';
@@ -156,16 +156,16 @@ $steps[APSOLU_PAGE_MEDICAL_CERTIFICATE] = 'medical_certificate';
 $steps[APSOLU_PAGE_PAYMENT] = 'payment';
 $steps[APSOLU_PAGE_SUMMARY] = 'summary';
 
-$pages = array();
-$pages['health_quiz'] = new moodle_url($baseurl, array('step' => APSOLU_PAGE_HEALTH_QUIZ));
-$pages['agreement'] = new moodle_url($baseurl, array('step' => APSOLU_PAGE_AGREEMENT));
-$pages['membership'] = new moodle_url($baseurl, array('step' => APSOLU_PAGE_MEMBERSHIP));
+$pages = [];
+$pages['health_quiz'] = new moodle_url($baseurl, ['step' => APSOLU_PAGE_HEALTH_QUIZ]);
+$pages['agreement'] = new moodle_url($baseurl, ['step' => APSOLU_PAGE_AGREEMENT]);
+$pages['membership'] = new moodle_url($baseurl, ['step' => APSOLU_PAGE_MEMBERSHIP]);
 if ($adhesion->have_to_upload_parental_authorization() === true) {
-    $pages['parental_authorization'] = new moodle_url($baseurl, array('step' => APSOLU_PAGE_PARENTAL_AUTHORIZATION));
+    $pages['parental_authorization'] = new moodle_url($baseurl, ['step' => APSOLU_PAGE_PARENTAL_AUTHORIZATION]);
 }
-$pages['medical_certificate'] = new moodle_url($baseurl, array('step' => APSOLU_PAGE_MEDICAL_CERTIFICATE));
-$pages['payment'] = new moodle_url($baseurl, array('step' => APSOLU_PAGE_PAYMENT));
-$pages['summary'] = new moodle_url($baseurl, array('step' => APSOLU_PAGE_SUMMARY));
+$pages['medical_certificate'] = new moodle_url($baseurl, ['step' => APSOLU_PAGE_MEDICAL_CERTIFICATE]);
+$pages['payment'] = new moodle_url($baseurl, ['step' => APSOLU_PAGE_PAYMENT]);
+$pages['summary'] = new moodle_url($baseurl, ['step' => APSOLU_PAGE_SUMMARY]);
 
 if ($adhesion->questionnairestatus === null) {
     // Le questionnaire de santé n'a pas été rempli.
@@ -175,35 +175,35 @@ if ($adhesion->questionnairestatus === null) {
     $pages['payment'] = null;
     $pages['summary'] = null;
     $stepid = APSOLU_PAGE_HEALTH_QUIZ;
-} elseif (empty($adhesion->agreementaccepted) === true) {
+} else if (empty($adhesion->agreementaccepted) === true) {
     $pages['membership'] = null;
     $pages['medical_certificate'] = null;
     $pages['payment'] = null;
     $pages['summary'] = null;
 
-    if (in_array($stepid, array(APSOLU_PAGE_HEALTH_QUIZ, APSOLU_PAGE_AGREEMENT), $strict = true) === false) {
+    if (in_array($stepid, [APSOLU_PAGE_HEALTH_QUIZ, APSOLU_PAGE_AGREEMENT], $strict = true) === false) {
         $stepid = APSOLU_PAGE_AGREEMENT;
     }
-} elseif ($adhesion->usepersonaldata === null) {
+} else if ($adhesion->usepersonaldata === null) {
     // Le formulaire d'adhésion n'a jamais été rempli.
     $pages['medical_certificate'] = null;
     $pages['payment'] = null;
     $pages['summary'] = null;
 
-    if (in_array($stepid, array(APSOLU_PAGE_HEALTH_QUIZ, APSOLU_PAGE_AGREEMENT, APSOLU_PAGE_MEMBERSHIP), $strict = true) === false) {
+    if (in_array($stepid, [APSOLU_PAGE_HEALTH_QUIZ, APSOLU_PAGE_AGREEMENT, APSOLU_PAGE_MEMBERSHIP], $strict = true) === false) {
         $stepid = APSOLU_PAGE_MEMBERSHIP;
     }
-} elseif (empty($adhesion->federationnumber) === false) {
+} else if (empty($adhesion->federationnumber) === false) {
     // Le numéro FFSU a été attribué.
     $stepid = APSOLU_PAGE_SUMMARY;
-    $pages = array();
+    $pages = [];
 }
 
 if (isset($steps[$stepid]) === false) {
     $stepid = APSOLU_PAGE_HEALTH_QUIZ;
 }
 
-$tabtree = array();
+$tabtree = [];
 foreach ($pages as $name => $url) {
     $label = get_string($name, 'local_apsolu');
     if ($name === 'summary' && empty($adhesion->federationnumberrequestdate) === true) {
@@ -221,15 +221,15 @@ $content = ob_get_contents();
 ob_end_clean();
 
 // Enregistre un évènement dans les logs.
-$event = federation_adhesion_viewed::create(array(
+$event = federation_adhesion_viewed::create([
     'objectid' => $adhesion->id,
     'context' => $context,
-    'other' => json_encode(array('step' => $stepid)),
-    ));
+    'other' => json_encode(['step' => $stepid]),
+    ]);
 $event->trigger();
 
 // Display.
-$PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', array('id' => $course->id)));
+$PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', ['id' => $course->id]));
 $PAGE->navbar->add(get_string('membership_of_the_sports_association', 'local_apsolu'));
 
 echo $OUTPUT->header();

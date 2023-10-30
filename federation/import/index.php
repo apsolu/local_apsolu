@@ -33,7 +33,7 @@ require_once($CFG->libdir.'/csvlib.class.php');
 require_once(__DIR__.'/import_form.php');
 
 $context = context_course::instance($courseid, MUST_EXIST);
-$returnurl = new moodle_url('/local/apsolu/federation/index.php', array('page' => 'import'));
+$returnurl = new moodle_url('/local/apsolu/federation/index.php', ['page' => 'import']);
 
 $mform = new local_apsolu_federation_import_licences();
 
@@ -71,7 +71,7 @@ if ($formdata = $mform->get_data()) {
             $formdata->previewbutton = true;
         }
 
-        $result = array();
+        $result = [];
     }
 
     // init csv import helper
@@ -100,7 +100,7 @@ if ($formdata = $mform->get_data()) {
             }
 
             $adhesion = $users[$email];
-            $profile_url = new moodle_url('/user/profile.php', array('id' => $adhesion->userid));
+            $profile_url = new moodle_url('/user/profile.php', ['id' => $adhesion->userid]);
 
             $licenseid = trim($line[$federationnumbercolumnindex]);
             if (empty($licenseid) === true) {
@@ -124,7 +124,7 @@ if ($formdata = $mform->get_data()) {
             $oldlicenseid = $adhesion->federationnumber;
 
             $sql = "UPDATE {apsolu_federation_adhesions} SET federationnumber = :federationnumber WHERE id = :id AND userid = :userid";
-            $DB->execute($sql, array('federationnumber' => $licenseid, 'id' => $adhesion->id, 'userid' => $adhesion->userid));
+            $DB->execute($sql, ['federationnumber' => $licenseid, 'id' => $adhesion->id, 'userid' => $adhesion->userid]);
 
             $params = new stdClass();
             $params->licenseid = $licenseid;
@@ -135,12 +135,12 @@ if ($formdata = $mform->get_data()) {
                 $result[] = get_string('federation_insert_license', 'local_apsolu', $params);
 
                 // Enregistre un événement dans les logs.
-                $event = federation_number_created::create(array(
+                $event = federation_number_created::create([
                     'objectid' => $adhesion->id,
                     'context' => $context,
                     'relateduserid' => $adhesion->userid,
-                    'other' => json_encode(array('federationnumber' => $licenseid)),
-                    ));
+                    'other' => json_encode(['federationnumber' => $licenseid]),
+                    ]);
                 $event->trigger();
             } else {
                 // Mise à jour du numéro AS.
@@ -148,12 +148,12 @@ if ($formdata = $mform->get_data()) {
                 $result[] = get_string('federation_update_license', 'local_apsolu', $params);
 
                 // Enregistre un événement dans les logs.
-                $event = federation_number_updated::create(array(
+                $event = federation_number_updated::create([
                     'objectid' => $adhesion->id,
                     'context' => $context,
                     'relateduserid' => $adhesion->userid,
-                    'other' => json_encode(array('federationnumber' => $licenseid, 'oldfederationnumber' => $oldlicenseid)),
-                    ));
+                    'other' => json_encode(['federationnumber' => $licenseid, 'oldfederationnumber' => $oldlicenseid]),
+                    ]);
                 $event->trigger();
             }
         } else {
@@ -186,10 +186,10 @@ if (isset($formdata->previewbutton) === true) {
     $table->head = $columns;
     $table->data = $data;
 
-    $previewtable = html_writer::tag('div', html_writer::table($table), array('class' => 'flexible-wrap'));
+    $previewtable = html_writer::tag('div', html_writer::table($table), ['class' => 'flexible-wrap']);
 
     // On régénère le formulaire pour afficher l'aperçu et permettre l'association des colonnes.
-    $mform = new local_apsolu_federation_import_licences(null, array($columns, $previewtable));
+    $mform = new local_apsolu_federation_import_licences(null, [$columns, $previewtable]);
 }
 
 $mform->display();
@@ -202,7 +202,7 @@ if (isset($formdata->importbutton) === true) {
         $content = html_writer::alist($result);
     }
 
-    echo html_writer::tag('div', $content, array('class' => 'alert alert-info'));
+    echo html_writer::tag('div', $content, ['class' => 'alert alert-info']);
 }
 
 echo $OUTPUT->footer();

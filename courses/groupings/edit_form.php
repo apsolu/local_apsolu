@@ -46,12 +46,12 @@ class local_apsolu_courses_groupings_edit_form extends moodleform {
         list($grouping) = $this->_customdata;
 
         // Name field.
-        $mform->addElement('text', 'name', get_string('name'), array('size' => '48'));
+        $mform->addElement('text', 'name', get_string('name'), ['size' => '48']);
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
 
         // URL field.
-        $mform->addElement('text', 'url', get_string('url'), array('size' => '48'));
+        $mform->addElement('text', 'url', get_string('url'), ['size' => '48']);
         $mform->setType('url', PARAM_URL);
 
         // Submit buttons.
@@ -62,7 +62,7 @@ class local_apsolu_courses_groupings_edit_form extends moodleform {
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
         $mform->addElement('hidden', 'tab', 'groupings');

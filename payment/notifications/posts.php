@@ -30,8 +30,8 @@ require_once($CFG->dirroot.'/local/apsolu/locallib.php');
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
-$data->dunning = $DB->get_record('apsolu_dunnings', array('id' => $dunningid));
-$data->posts = array();
+$data->dunning = $DB->get_record('apsolu_dunnings', ['id' => $dunningid]);
+$data->posts = [];
 $data->count_posts = 0;
 
 if ($data->dunning !== false) {
@@ -40,7 +40,7 @@ if ($data->dunning !== false) {
         " JOIN {user} u ON u.id = adp.userid".
         " WHERE adp.dunningid = :dunningid".
         " ORDER BY u.lastname, u.firstname";
-    $posts = $DB->get_records_sql($sql, array('dunningid' => $dunningid));
+    $posts = $DB->get_records_sql($sql, ['dunningid' => $dunningid]);
 
     foreach ($posts as $post) {
         $post->timecreated = userdate($post->timecreated, get_string('strftimedatetime', 'local_apsolu'));

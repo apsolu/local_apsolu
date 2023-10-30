@@ -63,7 +63,7 @@ class messaging {
      * @return array
      */
     public static function get_replyto_options() {
-        $options = array();
+        $options = [];
         $options[self::DISABLE_REPLYTO_ADDRESS] = get_string('disable_replyto', 'local_apsolu');
         $options[self::FORCE_REPLYTO_ADDRESS] = get_string('force_replyto', 'local_apsolu');
         $options[self::ALLOW_REPLYTO_ADDRESS_CHOICE] = get_string('allow_to_choose_or_not_a_replyto_address', 'local_apsolu');
@@ -77,7 +77,7 @@ class messaging {
      * @return array
      */
     public static function get_default_replyto_options() {
-        $options = array();
+        $options = [];
         $options[self::DO_NOT_USE_REPLYTO_ADDRESS] = get_string('do_not_use_replyto_address', 'local_apsolu');
         $options[self::USE_REPLYTO_ADDRESS] = get_string('use_replyto_address', 'local_apsolu');
 

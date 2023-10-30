@@ -83,7 +83,7 @@ class payment_notification extends \core\event\base {
      */
     public function get_legacy_logdata() {
         // Override if you are migrating an add_to_log() call.
-        return array($this->courseid, 'local_apsolu', 'notified', '...........', $this->objectid, $this->contextinstanceid);
+        return [$this->courseid, 'local_apsolu', 'notified', '...........', $this->objectid, $this->contextinstanceid];
     }
 
     /**

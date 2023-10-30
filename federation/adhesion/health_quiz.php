@@ -38,7 +38,7 @@ if ($quizstatus !== null && $quizstatus < 2) {
     try {
         $adhesion->save();
 
-        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => APSOLU_PAGE_AGREEMENT));
+        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', ['step' => APSOLU_PAGE_AGREEMENT]);
     } catch (dml_exception $exception) {
         // Erreur d'écriture en base de données.
         debugging($exception->getMessage(), $level = DEBUG_DEVELOPER);
@@ -58,7 +58,7 @@ if ($quizstatus !== null && $quizstatus < 2) {
 
 if ($adhesion->can_edit() === false) {
     $messages = $adhesion::get_contacts();
-    echo html_writer::tag('div', implode(' ', $messages), array('class' => 'alert alert-info'));
+    echo html_writer::tag('div', implode(' ', $messages), ['class' => 'alert alert-info']);
 } else {
     $PAGE->requires->js_call_amd('local_apsolu/federation_adhesion_health_quiz', 'initialise');
 

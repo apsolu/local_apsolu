@@ -40,7 +40,7 @@ class customfields {
     public static function getCustomFields() {
         global $DB;
 
-        $fields = array();
+        $fields = [];
 
         $sql = "SELECT * FROM {user_info_field} WHERE shortname LIKE 'apsolu%'";
         foreach ($DB->get_records_sql($sql) as $field) {

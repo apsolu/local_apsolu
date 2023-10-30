@@ -74,7 +74,7 @@ if (Payment::is_open() === false) {
 $PAGE->requires->js_call_amd('local_apsolu/payment', 'initialise');
 
 // Données à afficher.
-$address = $DB->get_record('apsolu_payments_addresses', array('userid' => $USER->id), '*', MUST_EXIST);
+$address = $DB->get_record('apsolu_payments_addresses', ['userid' => $USER->id], '*', MUST_EXIST);
 
 $paymentcenters = $DB->get_records('apsolu_payments_centers');
 $cards = Payment::get_user_cards();
@@ -85,7 +85,7 @@ foreach ($cards as $card) {
     }
 
     if (isset($paymentcenters[$card->centerid]->cards) === false) {
-        $paymentcenters[$card->centerid]->cards = array();
+        $paymentcenters[$card->centerid]->cards = [];
         $paymentcenters[$card->centerid]->count_cards = 0;
         $paymentcenters[$card->centerid]->total_amount = 0;
         $paymentcenters[$card->centerid]->paid_amount = 0;

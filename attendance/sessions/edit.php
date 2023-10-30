@@ -34,13 +34,13 @@ $sessionid = optional_param('sessionid', 0, PARAM_INT);
 // Generate object.
 $session = false;
 if ($sessionid != 0) {
-    $session = $DB->get_record('apsolu_attendance_sessions', array('id' => $sessionid));
+    $session = $DB->get_record('apsolu_attendance_sessions', ['id' => $sessionid]);
 }
 
 if ($session === false) {
-    $apsolu_course = $DB->get_record('apsolu_courses', array('id' => $courseid));
+    $apsolu_course = $DB->get_record('apsolu_courses', ['id' => $courseid]);
 
-    $sessions = $DB->get_records('apsolu_attendance_sessions', array('courseid' => $courseid));
+    $sessions = $DB->get_records('apsolu_attendance_sessions', ['courseid' => $courseid]);
     $name = 'Cours n°'.(count($sessions) + 1);
 
     $instance = new stdClass();
@@ -58,13 +58,13 @@ if ($session === false) {
 $instance->notify = 1; // Default: notify students.
 
 // Load locations.
-$locations = array();
+$locations = [];
 foreach ($DB->get_records('apsolu_locations', $conditions = null, $sort = 'name') as $location) {
     $locations[$location->id] = $location->name;
 }
 
 // Build form.
-$customdata = array('session' => $instance, 'locations' => $locations);
+$customdata = ['session' => $instance, 'locations' => $locations];
 $mform = new local_apsolu_attendance_sessions_edit_form(null, $customdata);
 
 if ($mdata = $mform->get_data()) {
@@ -105,7 +105,7 @@ if ($mdata = $mform->get_data()) {
             $notifications[] = $OUTPUT->notification(get_string('attendance_error_no_modification', 'local_apsolu'), 'notifymessage');
         }
 
-        $forum = $DB->get_record('forum', array('type' => 'news', 'course' => $course->id));
+        $forum = $DB->get_record('forum', ['type' => 'news', 'course' => $course->id]);
         if ($forum === false) {
             $notifications[] = $OUTPUT->notification(get_string('attendance_error_no_news_forum', 'local_apsolu'), 'notifyproblem');
         }
@@ -123,16 +123,16 @@ if ($mdata = $mform->get_data()) {
             $discussion->message = $message;
             $discussion->messageformat = FORMAT_HTML;   // Force formatting for now.
             $discussion->messagetrust = trusttext_trusted($context);
-            $discussion->itemid = array();
+            $discussion->itemid = [];
             $discussion->groupid = 0;
             $discussion->mailnow = 0;
             $discussion->subject = $subject;
             $discussion->name = $subject;
             $discussion->timestart = 0;
             $discussion->timeend = 0;
-            $discussion->attachments = array();
+            $discussion->attachments = [];
             $discussion->pinned = FORUM_DISCUSSION_UNPINNED;
-            $fakemform = array();
+            $fakemform = [];
             if ($discussionid = forum_add_discussion($discussion, $fakemform)) {
                 $notifications[] = $OUTPUT->notification(get_string('attendance_success_message_forum', 'local_apsolu'), 'notifysuccess');
             } else {

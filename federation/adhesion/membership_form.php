@@ -57,12 +57,12 @@ class local_apsolu_federation_membership extends moodleform {
         }
 
         // Prénom.
-        $mform->addElement('text', 'firstname', get_string('firstname'), $attributes = array('readonly' => 1));
+        $mform->addElement('text', 'firstname', get_string('firstname'), $attributes = ['readonly' => 1]);
         $mform->setType('firstname', PARAM_TEXT);
         $mform->setDefault('firstname', $USER->firstname);
 
         // Nom.
-        $mform->addElement('text', 'lastname', get_string('lastname'), $attributes = array('readonly' => 1));
+        $mform->addElement('text', 'lastname', get_string('lastname'), $attributes = ['readonly' => 1]);
         $mform->setType('lastname', PARAM_TEXT);
         $mform->setDefault('lastname', $USER->lastname);
 
@@ -82,7 +82,7 @@ class local_apsolu_federation_membership extends moodleform {
         // Autre fédération.
         $visibility = get_config('local_apsolu', 'otherfederation_field_visibility');
         if ($visibility !== Adhesion::FIELD_HIDDEN) {
-            $mform->addElement('text', 'otherfederation', get_string('other_federation', 'local_apsolu'), array('size' => 50));
+            $mform->addElement('text', 'otherfederation', get_string('other_federation', 'local_apsolu'), ['size' => 50]);
             $mform->setType('otherfederation', PARAM_TEXT);
             if ($visibility === Adhesion::FIELD_LOCKED) {
                 $mform->freeze('otherfederation');
@@ -244,7 +244,7 @@ class local_apsolu_federation_membership extends moodleform {
         $mform->setType('step', PARAM_INT);
 
         // Submit buttons.
-        $attributes = array('class' => 'btn btn-default');
+        $attributes = ['class' => 'btn btn-default'];
         $buttonarray[] = &$mform->createElement('submit', 'save', get_string('save'), $attributes);
 
         if ($readonly === false) {
@@ -256,7 +256,7 @@ class local_apsolu_federation_membership extends moodleform {
             $buttonarray[] = &$mform->createElement('static', '', '', $label);
         }
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Set default values.
         $this->set_data($adhesion);

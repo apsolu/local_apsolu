@@ -24,20 +24,20 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$actions = array('compose', 'history', 'posts', 'export');
+$actions = ['compose', 'history', 'posts', 'export'];
 
 if (in_array($action, $actions, $strict = true) === false) {
     $action = 'compose';
 }
 
 // Création d'un sous-menu.
-$tabsbar2 = array();
+$tabsbar2 = [];
 foreach ($actions as $action_) {
     if ($action_ === 'posts') {
         continue;
     }
 
-    $url = new moodle_url('/local/apsolu/payment/admin.php', array('tab' => 'notifications', 'action' => $action_));
+    $url = new moodle_url('/local/apsolu/payment/admin.php', ['tab' => 'notifications', 'action' => $action_]);
     $tabsbar2[] = new tabobject($action_, $url, get_string($action_, 'local_apsolu'));
 }
 

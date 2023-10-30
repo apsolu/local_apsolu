@@ -41,28 +41,28 @@ define('APSOLU_SELECT_NO', '2');
 $returnurl = new moodle_url('/local/apsolu/federation/index.php', ['page' => 'export']);
 
 // Récupère la liste des numéros d'association.
-$numbers = array();
+$numbers = [];
 foreach (FederationNumber::get_records(null, $sort = 'number') as $record) {
     $numbers[$record->id] = $record->number;
 }
 
-$payments = array(
+$payments = [
     APSOLU_SELECT_ANY => get_string('all'),
     APSOLU_SELECT_YES => get_string('license_paid', 'local_apsolu'),
     APSOLU_SELECT_NO => get_string('license_not_paid', 'local_apsolu'),
-);
+];
 
-$certificates = array(
+$certificates = [
     APSOLU_SELECT_ANY => get_string('all'),
     APSOLU_SELECT_YES => get_string('medical_certificate_validated', 'local_apsolu'),
     APSOLU_SELECT_NO => get_string('medical_certificate_not_validated', 'local_apsolu'),
-);
+];
 
-$licenses = array(
+$licenses = [
     APSOLU_SELECT_ANY => get_string('all'),
     APSOLU_SELECT_YES => get_string('license_number_assigned', 'local_apsolu'),
     APSOLU_SELECT_NO => get_string('license_number_not_assigned', 'local_apsolu'),
-);
+];
 
 $statuses = [
     APSOLU_SELECT_ANY => get_string('all'),
@@ -73,14 +73,14 @@ $statuses = [
 $disciplines = FederationAdhesion::get_disciplines();
 
 // Récupère la liste des activités FFSU.
-$activities = array(0 => get_string('all'));
+$activities = [0 => get_string('all')];
 foreach (FederationActivity::get_records(null, $sort = 'name') as $record) {
     $activities[$record->id] = $record->name;
 }
 
-$constraintactivities = FederationActivity::get_records(array('restriction' => 1), $sort = 'name');
+$constraintactivities = FederationActivity::get_records(['restriction' => 1], $sort = 'name');
 
-$customdata = array('numbers' => $numbers, 'payments' => $payments, 'certificates' => $certificates, 'licenses' => $licenses, 'statuses' => $statuses, 'activities' => $activities);
+$customdata = ['numbers' => $numbers, 'payments' => $payments, 'certificates' => $certificates, 'licenses' => $licenses, 'statuses' => $statuses, 'activities' => $activities];
 $mform = new local_apsolu_federation_export_licenses(null, $customdata);
 
 $content = '';
@@ -99,10 +99,10 @@ if ($data = $mform->get_data()) {
     }
 
     // Récupère la liste des utilisateurs en fonction des critères.
-    $parameters = array();
+    $parameters = [];
     $parameters['courseid'] = $courseid;
 
-    $conditions = array();
+    $conditions = [];
     if (empty($data->fullnameuser) === false) {
         $parameters['fullnameuser'] = '%'.$data->fullnameuser.'%';
         $conditions[] = sprintf(" AND %s LIKE :fullnameuser ", $DB->sql_fullname('u.firstname', 'u.lastname'));
@@ -128,7 +128,7 @@ if ($data = $mform->get_data()) {
         implode(' ', $conditions).
         " ORDER BY adh.timemodified DESC, u.lastname, u.firstname";
 
-    $rows = array();
+    $rows = [];
     $recordset = $DB->get_recordset_sql($sql, $parameters);
     foreach ($recordset as $record) {
         // Convertit les dates.
@@ -162,7 +162,7 @@ if ($data = $mform->get_data()) {
         // État du paiement de licence.
         if (empty($data->payment) === false) {
             if (isset($payments[$record->userid]) === false) {
-                $payments[$record->userid] = array();
+                $payments[$record->userid] = [];
             }
 
             if ($data->payment === APSOLU_SELECT_YES) {
@@ -174,7 +174,7 @@ if ($data = $mform->get_data()) {
                         break;
                     }
                 }
-            } elseif ($data->payment === APSOLU_SELECT_NO) {
+            } else if ($data->payment === APSOLU_SELECT_NO) {
                 // On ne récupère que les licences non payées.
                 $skip = true;
                 foreach ($payments[$record->userid] as $payment) {
@@ -194,7 +194,7 @@ if ($data = $mform->get_data()) {
         if (empty($data->medical) === false) {
             if ($data->medical === APSOLU_SELECT_YES && empty($record->medicalcertificatestatus) === true) {
                 continue;
-            } elseif ($data->medical === APSOLU_SELECT_NO && empty($record->medicalcertificatestatus) === false) {
+            } else if ($data->medical === APSOLU_SELECT_NO && empty($record->medicalcertificatestatus) === false) {
                 continue;
             }
         }
@@ -203,7 +203,7 @@ if ($data = $mform->get_data()) {
         if (empty($data->license) === false) {
             if ($data->license === APSOLU_SELECT_YES && empty($record->federationnumber) === true) {
                 continue;
-            } elseif ($data->license === APSOLU_SELECT_NO && empty($record->federationnumber) === false) {
+            } else if ($data->license === APSOLU_SELECT_NO && empty($record->federationnumber) === false) {
                 continue;
             }
         }
@@ -219,7 +219,7 @@ if ($data = $mform->get_data()) {
         }
 
         // Remplit toutes les lignes.
-        $row = array();
+        $row = [];
 
         if (isset($data->exportbutton) === false) {
             $title = userdate($record->timemodified, get_string('strftimedatetimeshort', 'local_apsolu'));
@@ -233,7 +233,7 @@ if ($data = $mform->get_data()) {
                 switch ($field) {
                     case 'firstname':
                     case 'lastname':
-                        $profileurl = new moodle_url('/user/view.php', array('id' => $record->userid, 'course' => $courseid));
+                        $profileurl = new moodle_url('/user/view.php', ['id' => $record->userid, 'course' => $courseid]);
                         $record->{$field} = html_writer::link($profileurl, $record->{$field});
                         break;
                     case 'federationnumberprefix':

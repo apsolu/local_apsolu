@@ -24,21 +24,21 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
+$capabilities = [
     // Droits autour de Paybox.
-    'local/apsolu:configpaybox' => array(
+    'local/apsolu:configpaybox' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'riskbitmask' => RISK_CONFIG,
-    ),
+    ],
     // Droits autour de la notation.
-    'local/apsolu:gradable' => array(
+    'local/apsolu:gradable' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
-            'student' => CAP_ALLOW
-        ),
-    ),
+        'archetypes' => [
+            'student' => CAP_ALLOW,
+        ],
+    ],
     // TODO: À implémenter.
     /*
     'local/apsolu:viewallownstudentsgrades' => array(
@@ -52,48 +52,48 @@ $capabilities = array(
         ),
     ),
     */
-    'local/apsolu:viewgrades' => array(
+    'local/apsolu:viewgrades' => [
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
         'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
+        'archetypes' => [
             'manager' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-        ),
-    ),
-    'local/apsolu:viewallgrades' => array(
+        ],
+    ],
+    'local/apsolu:viewallgrades' => [
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
         'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => array(
-            'manager' => CAP_ALLOW
-        ),
-    ),
-    'local/apsolu:editgrades' => array(
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+    'local/apsolu:editgrades' => [
         'riskbitmask' => RISK_DATALOSS | RISK_PERSONAL,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
+        'archetypes' => [
             'manager' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-        ),
-    ),
-    'local/apsolu:editgradesafterdeadline' => array(
+        ],
+    ],
+    'local/apsolu:editgradesafterdeadline' => [
         'riskbitmask' => RISK_DATALOSS | RISK_PERSONAL,
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => array(
-            'manager' => CAP_ALLOW
-        ),
-    ),
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+        ],
+    ],
     // Droits autour de la gestion FFSU.
-    'local/apsolu:viewallmedicalcertificates' => array(
+    'local/apsolu:viewallmedicalcertificates' => [
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
         'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => array(
+        'archetypes' => [
             'manager' => CAP_ALLOW,
-        ),
-    ),
-);
+        ],
+    ],
+];

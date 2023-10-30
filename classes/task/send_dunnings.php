@@ -55,7 +55,7 @@ class send_dunnings extends \core\task\scheduled_task {
 
         require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
 
-        $dunnings = $DB->get_records('apsolu_dunnings', array('timestarted' => null));
+        $dunnings = $DB->get_records('apsolu_dunnings', ['timestarted' => null]);
 
         if (count($dunnings) === 0) {
             return;
@@ -71,14 +71,14 @@ class send_dunnings extends \core\task\scheduled_task {
 
             $simulation = (substr($dunning->subject, 0, 4) === '[x] ');
 
-            $sender = $DB->get_record('user', array('id' => $dunning->userid));
-            $receivers = array();
+            $sender = $DB->get_record('user', ['id' => $dunning->userid]);
+            $receivers = [];
 
             $sql = "SELECT apc.*".
                 " FROM {apsolu_payments_cards} apc".
                 " JOIN {apsolu_dunnings_cards} adc ON apc.id = adc.cardid".
                 " WHERE adc.dunningid = :dunningid";
-            $cards = $DB->get_records_sql($sql, array('dunningid' => $dunning->id));
+            $cards = $DB->get_records_sql($sql, ['dunningid' => $dunning->id]);
             foreach ($cards as $card) {
                 mtrace(' - carte '.$card->fullname);
 

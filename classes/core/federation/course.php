@@ -54,7 +54,7 @@ class course {
             if ($required === true && $this->course === false) {
                 // Lève une exception.
                 $courseid = $this->get_courseid();
-                $this->course = $DB->get_record('course', array('id' => $courseid), $fields = '*', MUST_EXIST);
+                $this->course = $DB->get_record('course', ['id' => $courseid], $fields = '*', MUST_EXIST);
             }
 
             return $this->course;
@@ -66,7 +66,7 @@ class course {
         }
 
         $courseid = $this->get_courseid();
-        $this->course = $DB->get_record('course', array('id' => $courseid), $fields = '*', $strictness);
+        $this->course = $DB->get_record('course', ['id' => $courseid], $fields = '*', $strictness);
         return $this->course;
     }
 

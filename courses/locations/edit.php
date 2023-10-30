@@ -38,27 +38,27 @@ if ($locationid !== 0) {
 }
 
 // Load areas.
-$areas = array();
+$areas = [];
 foreach ($DB->get_records('apsolu_areas', $conditions = null, $sort = 'name') as $area) {
     $areas[$area->id] = $area->name;
 }
 
-if ($areas === array()) {
+if ($areas === []) {
     print_error('error_no_area', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=areas');
 }
 
 // Load managers.
-$managers = array();
+$managers = [];
 foreach ($DB->get_records('apsolu_managers', $conditions = null, $sort = 'name') as $manager) {
     $managers[$manager->id] = $manager->name;
 }
 
-if ($managers === array()) {
+if ($managers === []) {
     print_error('error_no_manager', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=managers');
 }
 
 // Build form.
-$customdata = array($location, $areas, $managers);
+$customdata = [$location, $areas, $managers];
 $mform = new local_apsolu_courses_locations_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
@@ -72,7 +72,7 @@ if ($data = $mform->get_data()) {
     $location->save($data);
 
     // Redirige vers la page générale.
-    $returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'locations'));
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'locations']);
     redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
 

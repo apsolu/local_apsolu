@@ -22,45 +22,45 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$observers = array(
+$observers = [
     // Gère les déplacements de cours depuis l'interface Administration du site > Cours > Gestion des cours et catégories.
-    array(
+    [
         'eventname'   => '\core\event\course_updated',
         'callback'    => '\local_apsolu\observer\course::updated',
         'includefile' => null,
         'internal'    => true,
         'priority'    => 9999,
-    ),
+    ],
     // Gère la suppression de cours depuis l'interface Administration du site > Cours > Gestion des cours et catégories.
-    array(
+    [
         'eventname'   => '\core\event\course_deleted',
         'callback'    => '\local_apsolu\observer\course::deleted',
         'includefile' => null,
         'internal'    => true,
         'priority'    => 9999,
-    ),
+    ],
     // Gère les déplacements de catégories depuis l'interface Administration du site > Cours > Gestion des cours et catégories.
-    array(
+    [
         'eventname'   => '\core\event\course_category_updated',
         'callback'    => '\local_apsolu\observer\course_category::updated',
         'includefile' => null,
         'internal'    => true,
         'priority'    => 9999,
-    ),
+    ],
     // Gère la suppression de catégories depuis l'interface Administration du site > Cours > Gestion des cours et catégories.
-    array(
+    [
         'eventname'   => '\core\event\course_category_deleted',
         'callback'    => '\local_apsolu\observer\course_category::deleted',
         'includefile' => null,
         'internal'    => true,
         'priority'    => 9999,
-    ),
+    ],
     // Gère la suppression des cohortes depuis l'interface Administration du site > Utilisateurs > Comptes > Cohortes.
-    array(
+    [
         'eventname'   => '\core\event\cohort_deleted',
         'callback'    => '\local_apsolu\observer\cohort::deleted',
         'includefile' => null,
         'internal'    => true,
         'priority'    => 9999,
-    ),
-);
+    ],
+];

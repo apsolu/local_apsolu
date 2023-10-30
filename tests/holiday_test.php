@@ -92,7 +92,7 @@ class holiday_test extends \advanced_testcase {
 
     public function test_get_holidays() {
         // Teste les jours fériés de l'année 2019.
-        $holidays2019 = array(
+        $holidays2019 = [
             '2019-01-01',
             '2019-04-22',
             '2019-05-01',
@@ -104,7 +104,7 @@ class holiday_test extends \advanced_testcase {
             '2019-11-01',
             '2019-11-11',
             '2019-12-25',
-            );
+            ];
 
         $holidays = holiday::get_holidays(2019);
 
@@ -114,7 +114,7 @@ class holiday_test extends \advanced_testcase {
         }
 
         // Teste les jours fériés de l'année 2020.
-        $holidays2020 = array(
+        $holidays2020 = [
             '2020-01-01',
             '2020-04-13',
             '2020-05-01',
@@ -126,7 +126,7 @@ class holiday_test extends \advanced_testcase {
             '2020-11-01',
             '2020-11-11',
             '2020-12-25',
-            );
+            ];
 
         $holidays = holiday::get_holidays(2020);
 

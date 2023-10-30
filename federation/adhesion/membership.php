@@ -30,12 +30,12 @@ defined('MOODLE_INTERNAL') || die();
 require __DIR__.'/membership_form.php';
 
 // Prépare les données du formulaire.
-$sexes = array('' => '');
+$sexes = ['' => ''];
 foreach (Adhesion::get_sexes() as $id => $label) {
     $sexes[$id] = $label;
 }
 
-$disciplines = array('' => '');
+$disciplines = ['' => ''];
 foreach (Adhesion::get_disciplines() as $id => $label) {
     $disciplines[$id] = $label;
 }
@@ -43,20 +43,20 @@ foreach (Adhesion::get_disciplines() as $id => $label) {
 $managertypes = Adhesion::get_manager_types();
 $starlicensevalues = Adhesion::get_star_license_values();
 
-$mainsports = array();
-foreach (Activity::get_records(array('mainsport' => 1), $sort = 'name') as $record) {
+$mainsports = [];
+foreach (Activity::get_records(['mainsport' => 1], $sort = 'name') as $record) {
     $mainsports[$record->id] = $record->name;
 }
 
-$sportswithconstraints = array();
-foreach (Activity::get_records(array('restriction' => 1), $sort = 'name') as $record) {
+$sportswithconstraints = [];
+foreach (Activity::get_records(['restriction' => 1], $sort = 'name') as $record) {
     $sportswithconstraints[$record->id] = $record->name;
 }
 
 // Initialise le formulaire.
 $readonly = ($adhesion->can_edit() === false);
-$customdata = array($adhesion, $sexes, $disciplines, $mainsports, $managertypes, $starlicensevalues,
-    $sportswithconstraints, $readonly);
+$customdata = [$adhesion, $sexes, $disciplines, $mainsports, $managertypes, $starlicensevalues,
+    $sportswithconstraints, $readonly, ];
 $mform = new local_apsolu_federation_membership(null, $customdata);
 
 // Traite les données renvoyées.
@@ -73,16 +73,16 @@ if ($data = $mform->get_data()) {
             $nextstep = APSOLU_PAGE_PARENTAL_AUTHORIZATION;
         }
 
-        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => $nextstep));
+        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', ['step' => $nextstep]);
     } catch (dml_exception $exception) {
         // Erreur d'écriture en base de données.
         $message = get_string('an_error_occurred_while_saving_data', 'local_apsolu');
-        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => APSOLU_PAGE_MEMBERSHIP));
+        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', ['step' => APSOLU_PAGE_MEMBERSHIP]);
         $messagetype = \core\output\notification::NOTIFY_ERROR;
     } catch (Exception $exception) {
         // L'adhesion ne peut plus être modifiée.
         $message = implode(' ', $adhesion::get_contacts());
-        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => APSOLU_PAGE_MEMBERSHIP));
+        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', ['step' => APSOLU_PAGE_MEMBERSHIP]);
         $messagetype = \core\output\notification::NOTIFY_ERROR;
     }
 

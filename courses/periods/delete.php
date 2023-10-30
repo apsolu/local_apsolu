@@ -33,7 +33,7 @@ $period = new Period();
 $period->load($periodid, $required = true);
 
 $deletehash = md5($period->id);
-$returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'periods'));
+$returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'periods']);
 
 if ($delete === $deletehash) {
     // Effectue les actions de suppression.
@@ -51,11 +51,11 @@ $sql = "SELECT c.fullname".
     " JOIN {apsolu_courses} cc ON c.id = cc.id".
     " WHERE cc.periodid = :periodid".
     " ORDER BY c.fullname";
-$courses = $DB->get_records_sql($sql, array('periodid' => $period->id));
+$courses = $DB->get_records_sql($sql, ['periodid' => $period->id]);
 if (count($courses) !== 0) {
-    $datatemplate = array();
+    $datatemplate = [];
     $datatemplate['message'] = get_string('period_cannot_be_deleted', 'local_apsolu', $period->name);
-    $datatemplate['dependences'] = array();
+    $datatemplate['dependences'] = [];
     foreach ($courses as $course) {
         $datatemplate['dependences'][] = $course->fullname;
     }
@@ -65,16 +65,16 @@ if (count($courses) !== 0) {
 }
 
 // Affiche un message de confirmation.
-$datatemplate = array();
+$datatemplate = [];
 $datatemplate['message'] = get_string('do_you_want_to_delete_period', 'local_apsolu', $period->name);
 $message = $OUTPUT->render_from_template('local_apsolu/courses_form_delete_message', $datatemplate);
 
 // Bouton de validation.
-$urlarguments = array('tab' => 'periods', 'action' => 'delete', 'periodid' => $period->id, 'delete' => $deletehash);
+$urlarguments = ['tab' => 'periods', 'action' => 'delete', 'periodid' => $period->id, 'delete' => $deletehash];
 $confirmurl = new moodle_url('/local/apsolu/courses/index.php', $urlarguments);
 $confirmbutton = new single_button($confirmurl, get_string('delete'), 'post');
 
 // Bouton d'annulation.
-$cancelurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'periods'));
+$cancelurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'periods']);
 
 echo $OUTPUT->confirm($message, $confirmbutton, $cancelurl);

@@ -34,7 +34,7 @@ $city = new City();
 $city->load($cityid, $required = true);
 
 $deletehash = md5($city->id);
-$returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'cities'));
+$returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'cities']);
 
 if ($delete === $deletehash) {
     // Effectue les actions de suppression.
@@ -47,9 +47,9 @@ if ($delete === $deletehash) {
 }
 
 // Vérifie si ce site n'est pas associé à une zone.
-$areas = Area::get_records(array('cityid' => $city->id), 'name');
+$areas = Area::get_records(['cityid' => $city->id], 'name');
 if (count($areas) !== 0) {
-    $datatemplate = array();
+    $datatemplate = [];
     $datatemplate['message'] = get_string('city_cannot_be_deleted', 'local_apsolu', $city->name);
     $datatemplate['dependences'] = array_values($areas);
     $message = $OUTPUT->render_from_template('local_apsolu/courses_form_undeletable_message', $datatemplate);
@@ -58,16 +58,16 @@ if (count($areas) !== 0) {
 }
 
 // Affiche un message de confirmation.
-$datatemplate = array();
+$datatemplate = [];
 $datatemplate['message'] = get_string('do_you_want_to_delete_areas_city', 'local_apsolu', $city->name);
 $message = $OUTPUT->render_from_template('local_apsolu/courses_form_delete_message', $datatemplate);
 
 // Bouton de validation.
-$urlarguments = array('tab' => 'cities', 'action' => 'delete', 'cityid' => $city->id, 'delete' => $deletehash);
+$urlarguments = ['tab' => 'cities', 'action' => 'delete', 'cityid' => $city->id, 'delete' => $deletehash];
 $confirmurl = new moodle_url('/local/apsolu/courses/index.php', $urlarguments);
 $confirmbutton = new single_button($confirmurl, get_string('delete'), 'post');
 
 // Bouton d'annulation.
-$cancelurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'cities'));
+$cancelurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'cities']);
 
 echo $OUTPUT->confirm($message, $confirmbutton, $cancelurl);

@@ -50,11 +50,11 @@ if (preg_match('/^[0-9]+-[0-9]+-[0-9]+$/', $inputname) !== 1) {
 list($userid, $courseid, $apsolugradeitemid) = explode('-', $inputname);
 
 // Recherche l'élément de notation APSOLU.
-$apsolugradeitem = $DB->get_record('apsolu_grade_items', array('id' => $apsolugradeitemid), '*', MUST_EXIST);
+$apsolugradeitem = $DB->get_record('apsolu_grade_items', ['id' => $apsolugradeitemid], '*', MUST_EXIST);
 $itemname = sprintf('%s-%s', $apsolugradeitem->id, $apsolugradeitem->name);
 
 // Recherche la catégorie de notation du cours.
-$gradecategory = grade_category::fetch(array('courseid' => $courseid, 'fullname' => gradebook::NAME));
+$gradecategory = grade_category::fetch(['courseid' => $courseid, 'fullname' => gradebook::NAME]);
 if ($gradecategory === false) {
     $record = new grade_category();
     throw new dml_missing_record_exception($record->table);
@@ -62,7 +62,7 @@ if ($gradecategory === false) {
 
 // Recherche l'élément de notation du cours.
 $item = false;
-foreach (grade_item::fetch_all(array('courseid' => $courseid, 'categoryid' => $gradecategory->id)) as $record) {
+foreach (grade_item::fetch_all(['courseid' => $courseid, 'categoryid' => $gradecategory->id]) as $record) {
     if ($record->itemname !== $itemname) {
         continue;
     }
@@ -100,7 +100,7 @@ if (has_capability('local/apsolu:viewallgrades', context_system::instance()) ===
 
 // Vérifie que l'édition des notes n'est pas hors-délai.
 if (has_capability('local/apsolu:editgradesafterdeadline', context_system::instance()) === false) {
-    $calendar = $DB->get_record('apsolu_calendars', array('id' => $apsolugradeitem->calendarid), '*', MUST_EXIST);
+    $calendar = $DB->get_record('apsolu_calendars', ['id' => $apsolugradeitem->calendarid], '*', MUST_EXIST);
 
     $now = time();
     $canedit = ((empty($calendar->gradestartdate) || $now > $calendar->gradestartdate) && (empty($calendar->gradeenddate) || $now < $calendar->gradeenddate));
@@ -113,7 +113,7 @@ if (has_capability('local/apsolu:editgradesafterdeadline', context_system::insta
 $label = get_string('grade_has_been_deleted', 'local_apsolu');
 $status = \core\output\notification::NOTIFY_SUCCESS;
 
-$currentgrade = grade_grade::fetch(array('itemid' => $item->id, 'userid' => $userid));
+$currentgrade = grade_grade::fetch(['itemid' => $item->id, 'userid' => $userid]);
 if ($currentgrade !== false && $currentgrade->delete($source = 'local_apsolu') === false) {
     $label = get_string('grade_has_not_been_deleted', 'local_apsolu');
     $status = \core\output\notification::NOTIFY_ERROR;

@@ -75,12 +75,12 @@ class email_test extends externallib_advanced_testcase {
         $noemaildebugmessage = 'Not sending email due to $CFG->noemailever config setting';
 
         // Create test message data.
-        $message = array();
+        $message = [];
         $message['subject'] = 'the subject';
         $message['carboncopy'] = false;
         $message['body'] = 'the message';
-        $message['receivers'] = array($user2->id);
-        $messages = array($message);
+        $message['receivers'] = [$user2->id];
+        $messages = [$message];
 
         // Test email sending.
         $sentemails = email::send_instant_emails($messages);
@@ -105,7 +105,7 @@ class email_test extends externallib_advanced_testcase {
 
         // Test to send message only once per user.
         $messages[0]['carboncopy'] = true;
-        $messages[0]['receivers'] = array($user1->id);
+        $messages[0]['receivers'] = [$user1->id];
         $sentemails = email::send_instant_emails($messages);
         $sentemails = external_api::clean_returnvalue(email::send_instant_emails_returns(), $sentemails);
         $this->assertDebuggingCalled($noemaildebugmessage, DEBUG_NORMAL);
@@ -129,19 +129,19 @@ class email_test extends externallib_advanced_testcase {
 
         // Unset the required capabilities by the external function.
         $contextid = context_system::instance()->id;
-        $userrole = $DB->get_record('role', array('shortname' => 'user'));
+        $userrole = $DB->get_record('role', ['shortname' => 'user']);
         $this->unassignUserCapability('moodle/site:sendmessage', $contextid, $userrole->id);
 
         // Enable messaging.
         $CFG->emailbulkmessaging = 1;
 
         // Create test message data.
-        $message = array();
+        $message = [];
         $message['subject'] = 'the subject';
         $message['carboncopy'] = false;
         $message['text'] = 'the message';
-        $message['receivers'] = array($user2->id);
-        $messages = array($message);
+        $message['receivers'] = [$user2->id];
+        $messages = [$message];
 
         $this->expectException('required_capability_exception');
         email::send_instant_emails($messages);
@@ -167,12 +167,12 @@ class email_test extends externallib_advanced_testcase {
         $CFG->emailbulkmessaging = 0;
 
         // Create test message data.
-        $message = array();
+        $message = [];
         $message['subject'] = 'the subject';
         $message['carboncopy'] = false;
         $message['text'] = 'the message';
-        $message['receivers'] = array($user2->id);
-        $messages = array($message);
+        $message['receivers'] = [$user2->id];
+        $messages = [$message];
 
         $this->expectException('moodle_exception');
         email::send_instant_emails($messages);

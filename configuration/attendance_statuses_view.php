@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die;
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('attendance_statuses', 'local_apsolu'));
 
-$statuses = $DB->get_records('apsolu_attendance_statuses', $conditions = array(), $sort = 'sortorder');
+$statuses = $DB->get_records('apsolu_attendance_statuses', $conditions = [], $sort = 'sortorder');
 $count = count($statuses);
 $sortorder = 1;
 foreach ($statuses as $id => $status) {

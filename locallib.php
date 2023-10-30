@@ -66,7 +66,7 @@ class local_apsolu_payment_user_selector extends \user_selector_base {
         $availableusers = $DB->get_records_sql($fields . $sql . $order, array_merge($params, $sortparams));
 
         if (empty($availableusers)) {
-            return array();
+            return [];
         }
 
         if ($search) {
@@ -75,7 +75,7 @@ class local_apsolu_payment_user_selector extends \user_selector_base {
             $groupname = get_string('enrolcandidates', 'enrol');
         }
 
-        return array($groupname => $availableusers);
+        return [$groupname => $availableusers];
     }
 
     /**
@@ -85,7 +85,7 @@ class local_apsolu_payment_user_selector extends \user_selector_base {
      * @return array the options needed to recreate this user_selector.
      */
     protected function get_options() {
-        return array(
+        return [
             'class' => get_class($this),
             'file' => '/local/apsolu/locallib.php',
             'name' => $this->name,
@@ -93,7 +93,7 @@ class local_apsolu_payment_user_selector extends \user_selector_base {
             'extrafields' => $this->extrafields,
             'multiselect' => $this->multiselect,
             'accesscontext' => $this->accesscontext,
-        );
+        ];
     }
 }
 
@@ -114,7 +114,7 @@ function get_teachers($courseid) {
         " WHERE c.instanceid = :courseid".
         " AND c.contextlevel = 50".
         " AND ra.roleid = 3";
-    return $DB->get_records_sql($sql, array('courseid' => $courseid));
+    return $DB->get_records_sql($sql, ['courseid' => $courseid]);
 }
 
 /**
@@ -159,7 +159,7 @@ class local_apsolu_courses_federation_user_selector extends \user_selector_base 
         $availableusers = $DB->get_records_sql($fields . $sql . $order, array_merge($params, $sortparams));
 
         if (empty($availableusers)) {
-            return array();
+            return [];
         }
 
         if ($search) {
@@ -168,7 +168,7 @@ class local_apsolu_courses_federation_user_selector extends \user_selector_base 
             $groupname = get_string('enrolcandidates', 'enrol');
         }
 
-        return array($groupname => $availableusers);
+        return [$groupname => $availableusers];
     }
 
     /**
@@ -178,7 +178,7 @@ class local_apsolu_courses_federation_user_selector extends \user_selector_base 
      * @return array the options needed to recreate this user_selector.
      */
     protected function get_options() {
-        return array(
+        return [
             'class' => get_class($this),
             'file' => '/local/apsolu/courses/locallib.php',
             'name' => $this->name,
@@ -186,7 +186,7 @@ class local_apsolu_courses_federation_user_selector extends \user_selector_base 
             'extrafields' => $this->extrafields,
             'multiselect' => $this->multiselect,
             'accesscontext' => $this->accesscontext,
-        );
+        ];
     }
 }
 

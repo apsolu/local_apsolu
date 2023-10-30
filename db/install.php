@@ -75,10 +75,10 @@ function xmldb_local_apsolu_install() {
     UniversiteRennes2\Apsolu\set_initial_course_offerings_settings();
 
     // Ajoute les différents champs de profil complémentaires.
-    $fields = $DB->get_records('user_info_field', array(), $sort = 'sortorder DESC');
+    $fields = $DB->get_records('user_info_field', [], $sort = 'sortorder DESC');
     if (count($fields) === 0) {
         // Ajoute une sous-catégorie de champs complémentaires.
-        $category = $DB->get_record('user_info_category', array('sortorder' => 1));
+        $category = $DB->get_record('user_info_category', ['sortorder' => 1]);
         if ($category === false) {
             $category = new stdClass();
             $category->name = get_string('fields_complements_category', 'local_apsolu');
@@ -110,7 +110,7 @@ function xmldb_local_apsolu_install() {
         unset($field->id);
     }
 
-    $customs = array();
+    $customs = [];
     $customs[] = (object) ['shortname' => 'apsolupostalcode', 'datatype' => 'text', 'param1' => 30, 'param2' => 2048, 'param3' => 0, 'visible' => 0];
     $customs[] = (object) ['shortname' => 'apsolusex', 'datatype' => 'text', 'param1' => 30, 'param2' => 2048, 'param3' => 0, 'visible' => 0];
     $customs[] = (object) ['shortname' => 'apsolubirthday', 'datatype' => 'text', 'param1' => 30, 'param2' => 2048, 'param3' => 0, 'visible' => 1];
@@ -143,7 +143,7 @@ function xmldb_local_apsolu_install() {
     }
 
     // Initialise les données dans la table apsolu_attendance_statuses.
-    $statuses = array();
+    $statuses = [];
     $statuses['attendance_present'] = 'success';
     $statuses['attendance_late'] = 'warning';
     $statuses['attendance_excused'] = 'info';
@@ -151,7 +151,7 @@ function xmldb_local_apsolu_install() {
 
     $sortorder = 1;
     foreach ($statuses as $code => $color) {
-        $data = array();
+        $data = [];
         $data['shortlabel'] = get_string(sprintf('%s_short', $code), 'local_apsolu');
         $data['longlabel'] = get_string($code, 'local_apsolu');
         $data['sumlabel'] = get_string(sprintf('%s_total', $code), 'local_apsolu');

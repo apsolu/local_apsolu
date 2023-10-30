@@ -59,7 +59,7 @@ class report {
 
         // custom reports
         if ($CFG->is_siuaps_rennes){
-            $model->reports = array_merge($model->reports,$model->reportsCustomRennes);
+            $model->reports = array_merge($model->reports, $model->reportsCustomRennes);
         }
 
         $model = self::localize_reports($model);
@@ -100,14 +100,14 @@ class report {
 
         // Custom filter.
         if ($CFG->is_siuaps_rennes){
-            $model->filters = array_merge($model->filters,$model->filtersCustomRennes);
+            $model->filters = array_merge($model->filters, $model->filtersCustomRennes);
         }
 
         // Remove filter not corresponding to the selected datatype.
         foreach ($model->filters as $key => $value) {
             if (property_exists($model->filters[$key], "datatype")) {
-                if (!in_array($datatype,$model->filters[$key]->datatype)) {
-                    unset($model->filters[$key]) ;
+                if (!in_array($datatype, $model->filters[$key]->datatype)) {
+                    unset($model->filters[$key]);
                 }
             }
         }
@@ -127,7 +127,7 @@ class report {
                     }
                     $records = $DB->get_records_sql('SELECT DISTINCT '.$filter->values->fields.' FROM {'.$filter->values->table.'} ' .$where.' ORDER BY '.$filter->values->sort);
                     $records = json_decode(json_encode($records), true);
-                    $fields = explode(",",$filter->values->fields);
+                    $fields = explode(",", $filter->values->fields);
                     $values = [];
                     foreach($records as $record){
                         if (sizeof($fields) > 1) {

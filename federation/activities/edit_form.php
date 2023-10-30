@@ -51,7 +51,7 @@ class local_apsolu_federation_activities_edit_form extends moodleform {
         $mform->setType('name', PARAM_TEXT);
 
         // Champ Nom utilisé dans APSOLU.
-        $options = array();
+        $options = [];
         $options['multiple'] = false;
         $mform->addElement('autocomplete', 'categoryid', get_string('name_used_by_apsolu', 'local_apsolu'), $categories, $options);
         $mform->setType('categoryid', PARAM_INT);
@@ -64,7 +64,7 @@ class local_apsolu_federation_activities_edit_form extends moodleform {
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
         $mform->addElement('hidden', 'tab', 'categories');
@@ -98,7 +98,7 @@ class local_apsolu_federation_activities_edit_form extends moodleform {
                 " FROM {apsolu_federation_activities} afa".
                 " WHERE afa.categoryid = :categoryid".
                 " AND afa.id != :id";
-            $record = $DB->get_record_sql($sql, array('categoryid' => $data['categoryid'], 'id' => $data['activityid']));
+            $record = $DB->get_record_sql($sql, ['categoryid' => $data['categoryid'], 'id' => $data['activityid']]);
             if ($record !== false) {
                 $errors['categoryid'] = get_string('this_activity_is_already_associated_with_activity_X', 'local_apsolu', $record->name);
             }

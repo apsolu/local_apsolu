@@ -48,7 +48,7 @@ function local_apsolu_is_valid_token() {
         " WHERE et.token = :token".
         " AND et.token != ''".
         " AND es.component = 'local_apsolu'";
-    $token = $DB->get_record_sql($sql, array('token' => optional_param('wstoken', '', PARAM_ALPHANUM)));
+    $token = $DB->get_record_sql($sql, ['token' => optional_param('wstoken', '', PARAM_ALPHANUM)]);
 
     return ($token !== false);
 }
@@ -89,7 +89,7 @@ function local_apsolu_grant_ws_access() {
     require_once($CFG->libdir . '/externallib.php');
     require_once($CFG->dirroot . '/webservice/lib.php');
 
-    $service = $DB->get_record('external_services', array('shortname' => 'apsolu'));
+    $service = $DB->get_record('external_services', ['shortname' => 'apsolu']);
     if ($service === false) {
         mtrace('Le webservice apsolu n\'existe pas.');
         return;
@@ -97,7 +97,7 @@ function local_apsolu_grant_ws_access() {
 
     $webservicemanager = new \webservice();
 
-    $tokens = $DB->get_records('external_tokens', array('externalserviceid' => $service->id), $sort = '', $fields = 'userid, id');
+    $tokens = $DB->get_records('external_tokens', ['externalserviceid' => $service->id], $sort = '', $fields = 'userid, id');
 
     // Ajoute les tokens.
     $sql = "SELECT DISTINCT u.id, u.firstname, u.lastname".
@@ -118,10 +118,10 @@ function local_apsolu_grant_ws_access() {
         $serviceuser->userid = $user->id;
         $webservicemanager->add_ws_authorised_user($serviceuser);
 
-        $params = array(
+        $params = [
             'objectid' => $serviceuser->externalserviceid,
-            'relateduserid' => $serviceuser->userid
-            );
+            'relateduserid' => $serviceuser->userid,
+            ];
         $event = \core\event\webservice_service_user_added::create($params);
         $event->trigger();
 
@@ -136,7 +136,7 @@ function local_apsolu_grant_ws_access() {
             continue;
         }
 
-        $user = $DB->get_record('user', array('id' => $token->userid));
+        $user = $DB->get_record('user', ['id' => $token->userid]);
 
         if ($user === false) {
             mtrace('Token supprimé pour l\'utilisateur #'.$token->userid.' (non trouvable dans la table user)');
@@ -147,10 +147,10 @@ function local_apsolu_grant_ws_access() {
 
         $webservicemanager->remove_ws_authorised_user($user, $service->id);
 
-        $params = array(
+        $params = [
             'objectid' => $service->id,
             'relateduserid' => $user->id,
-        );
+        ];
         $event = \core\event\webservice_service_user_removed::create($params);
         $event->trigger();
 
@@ -176,7 +176,7 @@ class local_apsolu_webservices extends external_api {
     public static function get_users($since) {
         global $DB;
 
-        $data = array();
+        $data = [];
 
         local_apsolu_write_log(__METHOD__, ['since='.$since]);
 
@@ -186,7 +186,7 @@ class local_apsolu_webservices extends external_api {
             return $data;
         }
 
-        $fields = $DB->get_records('user_info_field', $conditions = array(), $sort = '', $fields = 'shortname, id');
+        $fields = $DB->get_records('user_info_field', $conditions = [], $sort = '', $fields = 'shortname, id');
 
         $sql = "SELECT DISTINCT u.id AS iduser, u.username, u.auth, u.firstname, u.lastname, IFNULL(uid1.data, '') AS cardnumber, 'category', u.institution, '' AS nosportcard".
             " FROM {user} u".
@@ -195,7 +195,7 @@ class local_apsolu_webservices extends external_api {
             " WHERE u.timemodified >= :timemodified".
             " AND u.deleted = 0".
             " ORDER BY u.lastname, u.firstname";
-        foreach ($DB->get_records_sql($sql, array('timemodified' => $since, 'apsoluidcardnumber' => $fields['apsoluidcardnumber']->id)) as $record) {
+        foreach ($DB->get_records_sql($sql, ['timemodified' => $since, 'apsoluidcardnumber' => $fields['apsoluidcardnumber']->id]) as $record) {
             $user = new stdClass();
             $user->iduser = $record->iduser;
             $user->instuid = $record->auth.'|'.$record->username;
@@ -219,7 +219,7 @@ class local_apsolu_webservices extends external_api {
      */
     public static function get_users_parameters() {
         return new external_function_parameters(
-            array('since' => new external_value(PARAM_INT, get_string('ws_value_since', 'local_apsolu'), VALUE_DEFAULT, '0'))
+            ['since' => new external_value(PARAM_INT, get_string('ws_value_since', 'local_apsolu'), VALUE_DEFAULT, '0')]
         );
     }
 
@@ -231,7 +231,7 @@ class local_apsolu_webservices extends external_api {
     public static function get_users_returns() {
         return new external_multiple_structure(
             new external_single_structure(
-                array(
+                [
                     'iduser' => new external_value(PARAM_INT, get_string('ws_value_iduser', 'local_apsolu')),
                     'instuid' => new external_value(PARAM_RAW, get_string('ws_value_instuid', 'local_apsolu')),
                     'firstname' => new external_value(PARAM_RAW, get_string('ws_value_firstname', 'local_apsolu')),
@@ -240,7 +240,7 @@ class local_apsolu_webservices extends external_api {
                     'category' => new external_value(PARAM_RAW, get_string('ws_value_category', 'local_apsolu')),
                     'institution' => new external_value(PARAM_RAW, get_string('ws_value_institution', 'local_apsolu')),
                     'nosportcard' => new external_value(PARAM_BOOL, get_string('ws_value_nosportcard', 'local_apsolu')),
-                )
+                ]
             )
         );
     }
@@ -255,7 +255,7 @@ class local_apsolu_webservices extends external_api {
     public static function get_activities($since) {
         global $DB;
 
-        $data = array();
+        $data = [];
 
         local_apsolu_write_log(__METHOD__, ['since='.$since]);
 
@@ -271,7 +271,7 @@ class local_apsolu_webservices extends external_api {
             " JOIN {apsolu_courses} ac ON c.id = ac.id".
             " WHERE c.timemodified >= :timemodified".
             " ORDER BY cc.name";
-        foreach ($DB->get_records_sql($sql, array('timemodified' => $since)) as $record) {
+        foreach ($DB->get_records_sql($sql, ['timemodified' => $since]) as $record) {
             $activity = new stdClass();
             $activity->idactivity = $record->idactivity;
             $activity->name = $record->name;
@@ -289,7 +289,7 @@ class local_apsolu_webservices extends external_api {
      */
     public static function get_activities_parameters() {
         return new external_function_parameters(
-            array('since' => new external_value(PARAM_INT, get_string('ws_value_since', 'local_apsolu'), VALUE_DEFAULT, '0'))
+            ['since' => new external_value(PARAM_INT, get_string('ws_value_since', 'local_apsolu'), VALUE_DEFAULT, '0')]
         );
     }
 
@@ -301,10 +301,10 @@ class local_apsolu_webservices extends external_api {
     public static function get_activities_returns() {
         return new external_multiple_structure(
             new external_single_structure(
-                array(
+                [
                     'idactivity' => new external_value(PARAM_INT, get_string('ws_value_idactivity', 'local_apsolu')),
                     'name' => new external_value(PARAM_RAW, get_string('ws_value_activity_name', 'local_apsolu')),
-                )
+                ]
             )
         );
     }
@@ -319,7 +319,7 @@ class local_apsolu_webservices extends external_api {
     public static function get_courses($since) {
         global $DB;
 
-        $data = array();
+        $data = [];
 
         local_apsolu_write_log(__METHOD__, ['since='.$since]);
 
@@ -340,7 +340,7 @@ class local_apsolu_webservices extends external_api {
             " WHERE c.timemodified >= :timemodified".
             " AND ap.weeks >= :semester1_enrol_startdate". // On ne propose que les cours de l'année en cours ; pas les cours antérieurs au S1.
             " ORDER BY c.fullname";
-        foreach ($DB->get_records_sql($sql, array('timemodified' => $since, 'semester1_enrol_startdate' => $semester1_enrol_startdate)) as $record) {
+        foreach ($DB->get_records_sql($sql, ['timemodified' => $since, 'semester1_enrol_startdate' => $semester1_enrol_startdate]) as $record) {
             $course = new stdClass();
             $course->idcourse = $record->idcourse;
             $course->idactivity = $record->idactivity;
@@ -363,7 +363,7 @@ class local_apsolu_webservices extends external_api {
      */
     public static function get_courses_parameters() {
         return new external_function_parameters(
-            array('since' => new external_value(PARAM_INT, get_string('ws_value_since', 'local_apsolu'), VALUE_DEFAULT, '0'))
+            ['since' => new external_value(PARAM_INT, get_string('ws_value_since', 'local_apsolu'), VALUE_DEFAULT, '0')]
         );
     }
 
@@ -375,7 +375,7 @@ class local_apsolu_webservices extends external_api {
     public static function get_courses_returns() {
         return new external_multiple_structure(
             new external_single_structure(
-                array(
+                [
                     'idcourse' => new external_value(PARAM_INT, get_string('ws_value_idcourse', 'local_apsolu')),
                     'idactivity' => new external_value(PARAM_INT, get_string('ws_value_idactivity', 'local_apsolu')),
                     'event' => new external_value(PARAM_RAW, get_string('ws_value_event', 'local_apsolu')),
@@ -383,7 +383,7 @@ class local_apsolu_webservices extends external_api {
                     'numweekday' => new external_value(PARAM_INT, get_string('ws_value_numweekday', 'local_apsolu')),
                     'starttime' => new external_value(PARAM_RAW, get_string('ws_value_starttime', 'local_apsolu')),
                     'endtime' => new external_value(PARAM_RAW, get_string('ws_value_endtime', 'local_apsolu')),
-                )
+                ]
             )
         );
     }
@@ -396,7 +396,7 @@ class local_apsolu_webservices extends external_api {
     public static function get_courses_list() {
         global $DB;
 
-        $data = array();
+        $data = [];
 
         $roles = enrol_select_get_activities_roles();
         $teachers = enrol_select_get_activities_teachers();
@@ -427,14 +427,14 @@ class local_apsolu_webservices extends external_api {
             $course->courseid = $course->id;
             $course->weekday = get_string($course->weekday, 'calendar');
 
-            $course->roles = array();
+            $course->roles = [];
             if (isset($roles[$course->id]) === true) {
                 foreach ($roles[$course->id] as $role) {
                     $course->roles[] = $role->localname;
                 }
             }
 
-            $course->teachers = array();
+            $course->teachers = [];
             if (isset($teachers[$course->id]) === true) {
                 foreach ($teachers[$course->id] as $teacher) {
                     $course->teachers[] = fullname($teacher);
@@ -453,7 +453,7 @@ class local_apsolu_webservices extends external_api {
      * @return external_external_function_parameters
      */
     public static function get_courses_list_parameters() {
-        return new external_function_parameters(array());
+        return new external_function_parameters([]);
     }
 
     /**
@@ -464,7 +464,7 @@ class local_apsolu_webservices extends external_api {
     public static function get_courses_list_returns() {
         return new external_multiple_structure(
             new external_single_structure(
-                array(
+                [
                     'courseid' => new external_value(PARAM_INT, get_string('ws_value_courseid', 'local_apsolu')),
                     'coursename' => new external_value(PARAM_TEXT, get_string('ws_value_course_name', 'local_apsolu')),
                     'event' => new external_value(PARAM_TEXT, get_string('ws_value_event', 'local_apsolu')),
@@ -495,7 +495,7 @@ class local_apsolu_webservices extends external_api {
                     'teachers' => new external_multiple_structure(
                         new external_value(PARAM_TEXT, get_string('ws_value_teacher', 'local_apsolu'))
                     ),
-                  )
+                  ]
             )
         );
     }
@@ -508,7 +508,7 @@ class local_apsolu_webservices extends external_api {
     public static function get_groupings() {
         global $DB;
 
-        $data = array();
+        $data = [];
 
         $sql = "SELECT DISTINCT cc.id, cc.name, acg.url".
             " FROM {course_categories} cc".
@@ -524,7 +524,7 @@ class local_apsolu_webservices extends external_api {
      * @return external_external_function_parameters
      */
     public static function get_groupings_parameters() {
-        return new external_function_parameters(array());
+        return new external_function_parameters([]);
     }
 
     /**
@@ -535,11 +535,11 @@ class local_apsolu_webservices extends external_api {
     public static function get_groupings_returns() {
         return new external_multiple_structure(
             new external_single_structure(
-                array(
+                [
                     'id' => new external_value(PARAM_INT, get_string('ws_value_domainid', 'local_apsolu')),
                     'name' => new external_value(PARAM_TEXT, get_string('ws_value_domain', 'local_apsolu')),
                     'url' => new external_value(PARAM_TEXT, get_string('ws_value_domain_url', 'local_apsolu')),
-                  )
+                  ]
             )
         );
     }
@@ -554,7 +554,7 @@ class local_apsolu_webservices extends external_api {
     public static function get_registrations($since) {
         global $DB;
 
-        $data = array();
+        $data = [];
 
         local_apsolu_write_log(__METHOD__, ['since='.$since]);
 
@@ -566,9 +566,9 @@ class local_apsolu_webservices extends external_api {
 
         require_once(__DIR__.'/classes/apsolu/payment.php');
 
-        $courses = array();
-        $activities = array();
-        $fields = $DB->get_records('user_info_field', $conditions = array(), $sort = '', $fields = 'shortname, id');
+        $courses = [];
+        $activities = [];
+        $fields = $DB->get_records('user_info_field', $conditions = [], $sort = '', $fields = 'shortname, id');
 
         // Note: cette requête retourne potentiellement trop d'enregistrements.
         // Exemple: une personne inscrite à un cours, et qui aurait payé sa carte de musculation ou sa FFSU sortirait dans les résultats.
@@ -595,7 +595,7 @@ class local_apsolu_webservices extends external_api {
             " )".
             " GROUP BY ra.id, ra.userid, ctx.instanceid";
 
-        $params = array();
+        $params = [];
         $params['apsolusesame'] = $fields['apsolusesame']->id;
         $params['now'] = time();
         $params['timemodified1'] = $since;
@@ -649,7 +649,7 @@ class local_apsolu_webservices extends external_api {
      */
     public static function get_registrations_parameters() {
         return new external_function_parameters(
-            array('since' => new external_value(PARAM_INT, get_string('ws_value_since', 'local_apsolu'), VALUE_DEFAULT, '0'))
+            ['since' => new external_value(PARAM_INT, get_string('ws_value_since', 'local_apsolu'), VALUE_DEFAULT, '0')]
         );
     }
 
@@ -661,7 +661,7 @@ class local_apsolu_webservices extends external_api {
     public static function get_registrations_returns() {
         return new external_multiple_structure(
             new external_single_structure(
-                array(
+                [
                     'idregistration' => new external_value(PARAM_INT, get_string('ws_value_idregistration', 'local_apsolu')),
                     'iduser' => new external_value(PARAM_INT, get_string('ws_value_iduser', 'local_apsolu')),
                     'idcourse' => new external_value(PARAM_INT, get_string('ws_value_idcourse', 'local_apsolu')),
@@ -670,7 +670,7 @@ class local_apsolu_webservices extends external_api {
                     'validity' => new external_value(PARAM_BOOL, get_string('ws_value_validity', 'local_apsolu')),
                     'sportcard' => new external_value(PARAM_INT, get_string('ws_value_sportcard', 'local_apsolu')),
                     'evaluation' => new external_value(PARAM_INT, get_string('ws_value_evaluation', 'local_apsolu')),
-                )
+                ]
             )
         );
     }
@@ -685,7 +685,7 @@ class local_apsolu_webservices extends external_api {
     public static function get_unenrolments($since) {
         global $DB;
 
-        $data = array();
+        $data = [];
 
         local_apsolu_write_log(__METHOD__, ['since='.$since]);
 
@@ -697,7 +697,7 @@ class local_apsolu_webservices extends external_api {
 
         if (empty($since) === true) {
             // Normalement, à l'initialisation, on n'a pas besoin des désinscriptions.
-            return array();
+            return [];
         }
 
         $sql = "SELECT DISTINCT ra.id AS idregistration, ra.userid AS iduser, ctx.instanceid AS idcourse".
@@ -712,7 +712,7 @@ class local_apsolu_webservices extends external_api {
             " AND ue.status > 0". // Inactive.
             " AND (ue.timemodified >= :timemodified".
             " OR ue.timeend BETWEEN :since AND :now)";
-        return $DB->get_records_sql($sql, array('timemodified' => $since, 'since' => $since, 'now' => time()));
+        return $DB->get_records_sql($sql, ['timemodified' => $since, 'since' => $since, 'now' => time()]);
     }
 
     /**
@@ -722,7 +722,7 @@ class local_apsolu_webservices extends external_api {
      */
     public static function get_unenrolments_parameters() {
         return new external_function_parameters(
-            array('since' => new external_value(PARAM_INT, get_string('ws_value_since', 'local_apsolu'), VALUE_DEFAULT, '0'))
+            ['since' => new external_value(PARAM_INT, get_string('ws_value_since', 'local_apsolu'), VALUE_DEFAULT, '0')]
         );
     }
 
@@ -734,11 +734,11 @@ class local_apsolu_webservices extends external_api {
     public static function get_unenrolments_returns() {
         return new external_multiple_structure(
             new external_single_structure(
-                array(
+                [
                     'idregistration' => new external_value(PARAM_INT, get_string('ws_value_idregistration', 'local_apsolu')),
                     'iduser' => new external_value(PARAM_INT, get_string('ws_value_iduser', 'local_apsolu')),
                     'idcourse' => new external_value(PARAM_INT, get_string('ws_value_idcourse', 'local_apsolu')),
-                )
+                ]
             )
         );
     }
@@ -753,7 +753,7 @@ class local_apsolu_webservices extends external_api {
     public static function get_teachers($since) {
         global $DB;
 
-        $data = array();
+        $data = [];
 
         local_apsolu_write_log(__METHOD__, ['since='.$since]);
 
@@ -770,7 +770,7 @@ class local_apsolu_webservices extends external_api {
             " WHERE ra.timemodified >= :timemodified".
             " AND ra.roleid = 3". // Enseignant.
             " ORDER BY ra.userid, ctx.instanceid";
-        foreach ($DB->get_records_sql($sql, array('timemodified' => $since)) as $record) {
+        foreach ($DB->get_records_sql($sql, ['timemodified' => $since]) as $record) {
             $teacher = new stdClass();
             $teacher->iduser = $record->userid;
             $teacher->idcourse = $record->idcourse;
@@ -788,7 +788,7 @@ class local_apsolu_webservices extends external_api {
      */
     public static function get_teachers_parameters() {
         return new external_function_parameters(
-            array('since' => new external_value(PARAM_INT, get_string('ws_value_since', 'local_apsolu'), VALUE_DEFAULT, '0'))
+            ['since' => new external_value(PARAM_INT, get_string('ws_value_since', 'local_apsolu'), VALUE_DEFAULT, '0')]
         );
     }
 
@@ -800,10 +800,10 @@ class local_apsolu_webservices extends external_api {
     public static function get_teachers_returns() {
         return new external_multiple_structure(
             new external_single_structure(
-                array(
+                [
                     'iduser' => new external_value(PARAM_INT, get_string('ws_value_iduser', 'local_apsolu')),
                     'idcourse' => new external_value(PARAM_INT, get_string('ws_value_idcourse', 'local_apsolu')),
-                )
+                ]
             )
         );
     }
@@ -819,7 +819,7 @@ class local_apsolu_webservices extends external_api {
     public static function get_attendances($since, $from) {
         global $DB;
 
-        $data = array();
+        $data = [];
 
         local_apsolu_write_log(__METHOD__, ['since='.$since, 'from='.$from]);
 
@@ -838,7 +838,7 @@ class local_apsolu_webservices extends external_api {
             " AND aap.timemodified >= :since".
             " ORDER BY aas.courseid";
 
-        $params = array();
+        $params = [];
         $params['from1'] = $from;
         $params['from2'] = $from + 7 * 24 * 60 * 60;
         $params['since'] = $since;
@@ -863,10 +863,10 @@ class local_apsolu_webservices extends external_api {
      */
     public static function get_attendances_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'since' => new external_value(PARAM_INT, get_string('ws_value_since', 'local_apsolu'), VALUE_DEFAULT, '0'),
                 'from' => new external_value(PARAM_INT, get_string('ws_value_from', 'local_apsolu'), VALUE_DEFAULT, '0'),
-                )
+                ]
         );
     }
 
@@ -878,11 +878,11 @@ class local_apsolu_webservices extends external_api {
     public static function get_attendances_returns() {
         return new external_multiple_structure(
             new external_single_structure(
-                array(
+                [
                     'iduser' => new external_value(PARAM_INT, get_string('ws_value_iduser', 'local_apsolu')),
                     'idcourse' => new external_value(PARAM_INT, get_string('ws_value_idcourse', 'local_apsolu')),
                     'timestamp' => new external_value(PARAM_INT, get_string('ws_value_timestamp', 'local_apsolu')),
-                )
+                ]
             )
         );
     }
@@ -900,7 +900,7 @@ class local_apsolu_webservices extends external_api {
 
         require_once($CFG->dirroot.'/user/profile/lib.php');
 
-        $data = array('success' => false, 'cardnumber' => '');
+        $data = ['success' => false, 'cardnumber' => ''];
 
         local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber]);
 
@@ -911,7 +911,7 @@ class local_apsolu_webservices extends external_api {
                 throw new Exception(get_string('invalidtoken', 'webservice'));
             }
 
-            $user = $DB->get_record('user', array('id' => $iduser));
+            $user = $DB->get_record('user', ['id' => $iduser]);
             if ($user === false) {
                 local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, get_string('unknownuser')]);
                 return $data;
@@ -919,7 +919,7 @@ class local_apsolu_webservices extends external_api {
 
             $fields = CustomFields::getCustomFields();
 
-            $card = $DB->get_record('user_info_data', array('fieldid' => $fields['apsoluidcardnumber']->id, 'userid' => $iduser));
+            $card = $DB->get_record('user_info_data', ['fieldid' => $fields['apsoluidcardnumber']->id, 'userid' => $iduser]);
             if ($card === false || empty($card->data) === true) {
                 $previouscard = '<vide>';
             } else {
@@ -928,7 +928,7 @@ class local_apsolu_webservices extends external_api {
 
             $userfield = (object) ['id' => $iduser, 'profile_field_apsoluidcardnumber' => $cardnumber];
 
-            $errors = profile_validation($userfield, $files = array());
+            $errors = profile_validation($userfield, $files = []);
             if (count($errors) > 0) {
                 local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, 'impossible d\'enregistrer la carte ('.json_encode($errors).')']);
                 throw new Exception(json_encode($errors));
@@ -952,7 +952,7 @@ class local_apsolu_webservices extends external_api {
         }
 
         // Récupère la carte actuelle de l'utilisateur.
-        $card = $DB->get_record('user_info_data', array('fieldid' => $fields['apsoluidcardnumber']->id, 'userid' => $iduser));
+        $card = $DB->get_record('user_info_data', ['fieldid' => $fields['apsoluidcardnumber']->id, 'userid' => $iduser]);
         if ($card !== false && empty($card->data) === false) {
             $data['cardnumber'] = $card->data;
         }
@@ -969,10 +969,10 @@ class local_apsolu_webservices extends external_api {
      */
     public static function set_card_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'iduser' => new external_value(PARAM_INT, get_string('ws_value_iduser', 'local_apsolu'), VALUE_DEFAULT, '0'),
                 'cardnumber' => new external_value(PARAM_ALPHANUM, get_string('ws_value_cardnumber', 'local_apsolu'), VALUE_DEFAULT, ''),
-                )
+                ]
         );
     }
 
@@ -983,10 +983,10 @@ class local_apsolu_webservices extends external_api {
      */
     public static function set_card_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, get_string('ws_value_boolean', 'local_apsolu')),
                 'cardnumber' => new external_value(PARAM_ALPHANUM, get_string('ws_value_cardnumber', 'local_apsolu')),
-            )
+            ]
         );
     }
 
@@ -1002,7 +1002,7 @@ class local_apsolu_webservices extends external_api {
     public static function set_presence($iduser, $idcourse, $timestamp) {
         global $DB;
 
-        $data = array('success' => false);
+        $data = ['success' => false];
 
         local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp]);
 
@@ -1012,7 +1012,7 @@ class local_apsolu_webservices extends external_api {
             return $data;
         }
 
-        $course = $DB->get_record('course', array('id' => $idcourse), '*', MUST_EXIST);
+        $course = $DB->get_record('course', ['id' => $idcourse], '*', MUST_EXIST);
 
         $beforesessiontime = $timestamp - 2 * 60 * 60; // 2h avant le badgeage.
         $aftersessiontime = $timestamp + 2 * 60 * 60; // 2h après le badgeage.
@@ -1023,7 +1023,7 @@ class local_apsolu_webservices extends external_api {
             " AND sessiontime BETWEEN :beforesessiontime AND :aftersessiontime";
 
         // Cherche la première session dont l'heure de début est comprise dans un interval de 2h avec l'horodatage de la présence saisie.
-        $sessions = $DB->get_records_sql($sql, array('courseid' => $course->id, 'beforesessiontime' => $beforesessiontime, 'aftersessiontime' => $aftersessiontime));
+        $sessions = $DB->get_records_sql($sql, ['courseid' => $course->id, 'beforesessiontime' => $beforesessiontime, 'aftersessiontime' => $aftersessiontime]);
         $session = current($sessions);
 
         if (isset($session->id) === false) {
@@ -1033,7 +1033,7 @@ class local_apsolu_webservices extends external_api {
             $aftersessiontime = strtotime('sunday this week', $timestamp);
 
             // Cherche la première session dont l'heure de début est comprise dans l'interval de la semaine correspondant à l'horodatage de la présence saisie.
-            $sessions = $DB->get_records_sql($sql, array('courseid' => $course->id, 'beforesessiontime' => $beforesessiontime, 'aftersessiontime' => $aftersessiontime));
+            $sessions = $DB->get_records_sql($sql, ['courseid' => $course->id, 'beforesessiontime' => $beforesessiontime, 'aftersessiontime' => $aftersessiontime]);
             $session = current($sessions);
         }
 
@@ -1046,7 +1046,7 @@ class local_apsolu_webservices extends external_api {
                 " AND sessiontime >= :timestamp";
 
             // Cherche la première session dont l'heure de début est supérieure à l'horodatage de la présence saisie.
-            $sessions = $DB->get_records_sql($sql, array('courseid' => $course->id, 'timestamp' => $timestamp));
+            $sessions = $DB->get_records_sql($sql, ['courseid' => $course->id, 'timestamp' => $timestamp]);
             $session = current($sessions);
         }
 
@@ -1060,7 +1060,7 @@ class local_apsolu_webservices extends external_api {
                 " ORDER BY sessiontime DESC";
 
             // Cherche la première session dont l'heure de début est inférieure à l'horodatage de la présence saisie.
-            $sessions = $DB->get_records_sql($sql, array('courseid' => $course->id, 'timestamp' => $timestamp));
+            $sessions = $DB->get_records_sql($sql, ['courseid' => $course->id, 'timestamp' => $timestamp]);
             $session = current($sessions);
         }
 
@@ -1068,7 +1068,7 @@ class local_apsolu_webservices extends external_api {
             local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'impossible de trouver une session inférieure à la date du timestamp']);
             local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'impossible de trouver une session pour ce cours']);
 
-            return array('success' => true);
+            return ['success' => true];
         }
 
         $presence = new stdClass();
@@ -1085,10 +1085,10 @@ class local_apsolu_webservices extends external_api {
         } catch (Exception $exception) {
             local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp, 'impossible d\'enregistrer la présence']);
 
-            return array('success' => true);
+            return ['success' => true];
         }
 
-        return array('success' => true);
+        return ['success' => true];
     }
 
     /**
@@ -1098,11 +1098,11 @@ class local_apsolu_webservices extends external_api {
      */
     public static function set_presence_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'iduser' => new external_value(PARAM_INT, get_string('ws_value_iduser', 'local_apsolu'), VALUE_DEFAULT, '0'),
                 'idcourse' => new external_value(PARAM_INT, get_string('ws_value_idcourse', 'local_apsolu'), VALUE_DEFAULT, '0'),
                 'timestamp' => new external_value(PARAM_INT, get_string('ws_value_timestamp', 'local_apsolu'), VALUE_DEFAULT, '0'),
-                )
+                ]
         );
     }
 
@@ -1113,9 +1113,9 @@ class local_apsolu_webservices extends external_api {
      */
     public static function set_presence_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, get_string('ws_value_boolean', 'local_apsolu')),
-            )
+            ]
         );
     }
 
@@ -1133,19 +1133,19 @@ class local_apsolu_webservices extends external_api {
         global $CFG, $DB;
 
         if (isset($CFG->apsolu_enable_ws_debugging) === false) {
-            return array('success' => false);
+            return ['success' => false];
         }
 
         // Vérifier que le token appartienne à un enseignant du SIUAPS.
         if (local_apsolu_is_valid_token() === false) {
             local_apsolu_write_log(__METHOD__, ['serial='.$serial, 'idteacher='.$idteacher, 'message='.$message, 'timestamp='.$timestamp, get_string('invalidtoken', 'webservice')]);
 
-            return array('success' => false);
+            return ['success' => false];
         }
 
         $return = local_apsolu_write_log(__METHOD__, ['serial='.$serial, 'idteacher='.$idteacher, 'message='.$message, 'timestamp='.$timestamp]);
 
-        return array('success' => $return);
+        return ['success' => $return];
     }
 
     /**
@@ -1155,12 +1155,12 @@ class local_apsolu_webservices extends external_api {
      */
     public static function debugging_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'serial' => new external_value(PARAM_ALPHANUM, get_string('ws_value_serial', 'local_apsolu'), VALUE_DEFAULT, ''),
                 'idteacher' => new external_value(PARAM_INT, get_string('ws_value_idteacher', 'local_apsolu'), VALUE_DEFAULT, '0'),
                 'message' => new external_value(PARAM_TEXT, get_string('ws_value_message', 'local_apsolu'), VALUE_DEFAULT, ''),
                 'timestamp' => new external_value(PARAM_INT, get_string('ws_value_timestamp', 'local_apsolu'), VALUE_DEFAULT, '0'),
-                )
+                ]
         );
     }
 
@@ -1171,9 +1171,9 @@ class local_apsolu_webservices extends external_api {
      */
     public static function debugging_returns() {
         return new external_single_structure(
-            array(
+            [
                 'success' => new external_value(PARAM_BOOL, get_string('ws_value_boolean', 'local_apsolu')),
-            )
+            ]
         );
     }
 
@@ -1186,7 +1186,7 @@ class local_apsolu_webservices extends external_api {
      */
     public static function get_chartdataset($options) {
         $class = 'local_apsolu\local\statistics\\'.$options['classname'].'\chart';
-        return call_user_func(array($class, $options['reportid']),$options);
+        return call_user_func([$class, $options['reportid']], $options);
     }
 
     /**
@@ -1196,43 +1196,43 @@ class local_apsolu_webservices extends external_api {
      */
     public static function get_chartdataset_parameters() {
         return new external_function_parameters(
-          array(
+          [
             'options' => new external_single_structure(
-              array(
-                'classname' => new external_value(PARAM_TEXT,'Nom de la classe'),
-                'reportid' => new external_value(PARAM_TEXT,'Identifiant du rapport'),
+              [
+                'classname' => new external_value(PARAM_TEXT, 'Nom de la classe'),
+                'reportid' => new external_value(PARAM_TEXT, 'Identifiant du rapport'),
                 'criterias' => new external_single_structure(
-                  array(
+                  [
                     'cities' =>
                       new external_multiple_structure(
                       new external_single_structure(
-                      array(
-                          'active' => new external_value(PARAM_BOOL,'Site par défaut',VALUE_DEFAULT, null, NULL_ALLOWED),
-                          'id' => new external_value(PARAM_INT,'Identifiant du site',VALUE_DEFAULT, null, NULL_ALLOWED),
-                          'name' => new external_value(PARAM_TEXT,'Nom du site',VALUE_DEFAULT, null, NULL_ALLOWED),
-                      ), 'Cities'), VALUE_DEFAULT, array()
+                      [
+                          'active' => new external_value(PARAM_BOOL, 'Site par défaut', VALUE_DEFAULT, null, NULL_ALLOWED),
+                          'id' => new external_value(PARAM_INT, 'Identifiant du site', VALUE_DEFAULT, null, NULL_ALLOWED),
+                          'name' => new external_value(PARAM_TEXT, 'Nom du site', VALUE_DEFAULT, null, NULL_ALLOWED),
+                      ], 'Cities'), VALUE_DEFAULT, []
                       ),
                     'calendarstypes' =>
                       new external_multiple_structure(
                       new external_single_structure(
-                      array(
-                          'active' => new external_value(PARAM_BOOL,'Site par défaut',VALUE_DEFAULT, null, NULL_ALLOWED),
-                          'id' => new external_value(PARAM_INT,'Identifiant du type de calendrier',VALUE_DEFAULT, null, NULL_ALLOWED),
-                          'name' => new external_value(PARAM_TEXT,'Nom du type de calendrier',VALUE_DEFAULT, null, NULL_ALLOWED),
-                      ), 'CalendarsTypes'), VALUE_DEFAULT, array()
+                      [
+                          'active' => new external_value(PARAM_BOOL, 'Site par défaut', VALUE_DEFAULT, null, NULL_ALLOWED),
+                          'id' => new external_value(PARAM_INT, 'Identifiant du type de calendrier', VALUE_DEFAULT, null, NULL_ALLOWED),
+                          'name' => new external_value(PARAM_TEXT, 'Nom du type de calendrier', VALUE_DEFAULT, null, NULL_ALLOWED),
+                      ], 'CalendarsTypes'), VALUE_DEFAULT, []
                       ),
                     'complementaries' =>
                       new external_multiple_structure(
                       new external_single_structure(
-                      array(
-                          'active' => new external_value(PARAM_BOOL,'Site par défaut',VALUE_DEFAULT, null, NULL_ALLOWED),
-                          'id' => new external_value(PARAM_INT,'Identifiant de l\'activité complementaire',VALUE_DEFAULT, null, NULL_ALLOWED),
-                          'name' => new external_value(PARAM_TEXT,'Nom de l\'activité complémentaire',VALUE_DEFAULT, null, NULL_ALLOWED),
-                      ), 'Complementaries'), VALUE_DEFAULT, array()
+                      [
+                          'active' => new external_value(PARAM_BOOL, 'Site par défaut', VALUE_DEFAULT, null, NULL_ALLOWED),
+                          'id' => new external_value(PARAM_INT, 'Identifiant de l\'activité complementaire', VALUE_DEFAULT, null, NULL_ALLOWED),
+                          'name' => new external_value(PARAM_TEXT, 'Nom de l\'activité complémentaire', VALUE_DEFAULT, null, NULL_ALLOWED),
+                      ], 'Complementaries'), VALUE_DEFAULT, []
                       ),
-                  ), 'Criterias', VALUE_DEFAULT, array())
-              ), 'Options', VALUE_DEFAULT, array())
-          )
+                  ], 'Criterias', VALUE_DEFAULT, []),
+              ], 'Options', VALUE_DEFAULT, []),
+          ]
         );
     }
 
@@ -1243,10 +1243,10 @@ class local_apsolu_webservices extends external_api {
      */
     public static function get_chartdataset_returns() {
         return new external_single_structure(
-        array(
+        [
           'success' => new external_value(PARAM_BOOL, get_string('ws_value_boolean', 'local_apsolu')),
-          'chartdata' => new external_value(PARAM_RAW,'chart object'),
-          )
+          'chartdata' => new external_value(PARAM_RAW, 'chart object'),
+          ]
         );
     }
 
@@ -1260,7 +1260,7 @@ class local_apsolu_webservices extends external_api {
      *
      * @return array
      */
-    public static function get_reportdataset($classname,$reportid, $custom = null, $criterias = null) {
+    public static function get_reportdataset($classname, $reportid, $custom = null, $criterias = null) {
 
         raise_memory_limit(MEMORY_EXTRA);
 
@@ -1280,36 +1280,36 @@ class local_apsolu_webservices extends external_api {
         if(!property_exists($condition, "datatype")) {
             // custom report
             if ($classname == 'population') {
-                $params = array("WithEnrolments" => $reportObj->WithEnrolments,"WithComplementary" => $reportObj->WithComplementary);
+                $params = ["WithEnrolments" => $reportObj->WithEnrolments, "WithComplementary" => $reportObj->WithComplementary];
             }
             if ($classname == 'programme') {
-                $params = array("WithProgramme" => $reportObj->WithProgramme);
+                $params = ["WithProgramme" => $reportObj->WithProgramme];
             }
             if (!is_null($criterias)){
-                $params = array_merge($params,$criterias);
+                $params = array_merge($params, $criterias);
             }
-            $data = call_user_func(array($class, $condition->method),$params);
+            $data = call_user_func([$class, $condition->method], $params);
 
-            return array('success' => true,
+            return ['success' => true,
             'columns' => json_encode($condition->columns),
             'data' => json_encode(array_values($data)),
             'orders' => json_encode($condition->orders),
             'filters' => json_encode($condition->filters),
-              );
+              ];
         } else {
             // Report using querybuilder
             $display = $reportObj->getReportDisplay($condition->datatype);
-            $data = $reportObj->getReportData($custom,$criterias);
+            $data = $reportObj->getReportData($custom, $criterias);
 
-            return array('success' => true,
+            return ['success' => true,
             'data' => json_encode(array_values($data)),
             'columns' => json_encode($display['columns']),
             'orders' => json_encode($display['orders']),
             'filters' => json_encode($display['filters']),
-            );
+            ];
         }
 
-        return array('success' => false,'columns' => '','data' => json_encode(get_string("statistics_noavailabledata","local_apsolu")));
+        return ['success' => false, 'columns' => '', 'data' => json_encode(get_string("statistics_noavailabledata", "local_apsolu"))];
     }
 
     /**
@@ -1319,12 +1319,12 @@ class local_apsolu_webservices extends external_api {
      */
     public static function get_reportdataset_parameters() {
         return new external_function_parameters(
-          array(
-            'classname' => new external_value(PARAM_TEXT,'Nom de la classe',VALUE_DEFAULT, null, NULL_ALLOWED),
-            'reportid' => new external_value(PARAM_TEXT,'Identifiant du rapport',VALUE_DEFAULT, null, NULL_ALLOWED),
-            'querybuilder' => new external_value(PARAM_RAW,'Requête customisée',VALUE_DEFAULT, null, NULL_ALLOWED),
-            'criterias' => new external_value(PARAM_RAW,'filtres de customisation',VALUE_DEFAULT, null, NULL_ALLOWED),
-          )
+          [
+            'classname' => new external_value(PARAM_TEXT, 'Nom de la classe', VALUE_DEFAULT, null, NULL_ALLOWED),
+            'reportid' => new external_value(PARAM_TEXT, 'Identifiant du rapport', VALUE_DEFAULT, null, NULL_ALLOWED),
+            'querybuilder' => new external_value(PARAM_RAW, 'Requête customisée', VALUE_DEFAULT, null, NULL_ALLOWED),
+            'criterias' => new external_value(PARAM_RAW, 'filtres de customisation', VALUE_DEFAULT, null, NULL_ALLOWED),
+          ]
         );
     }
 
@@ -1335,13 +1335,13 @@ class local_apsolu_webservices extends external_api {
      */
     public static function get_reportdataset_returns() {
         return new external_single_structure(
-        array(
-          'success' => new external_value(PARAM_BOOL, get_string('ws_value_boolean', 'local_apsolu'),VALUE_DEFAULT, null, NULL_ALLOWED),
-          'columns' => new external_value(PARAM_RAW,'report column',VALUE_DEFAULT, null, NULL_ALLOWED),
-          'data' => new external_value(PARAM_RAW,'report data'),
-          'orders' => new external_value(PARAM_RAW,'report orders',VALUE_DEFAULT, null, NULL_ALLOWED),
-          'filters' => new external_value(PARAM_RAW,'report columns filters type',VALUE_DEFAULT, null, NULL_ALLOWED),
-          )
+        [
+          'success' => new external_value(PARAM_BOOL, get_string('ws_value_boolean', 'local_apsolu'), VALUE_DEFAULT, null, NULL_ALLOWED),
+          'columns' => new external_value(PARAM_RAW, 'report column', VALUE_DEFAULT, null, NULL_ALLOWED),
+          'data' => new external_value(PARAM_RAW, 'report data'),
+          'orders' => new external_value(PARAM_RAW, 'report orders', VALUE_DEFAULT, null, NULL_ALLOWED),
+          'filters' => new external_value(PARAM_RAW, 'report columns filters type', VALUE_DEFAULT, null, NULL_ALLOWED),
+          ]
         );
     }
 
@@ -1353,7 +1353,7 @@ class local_apsolu_webservices extends external_api {
     public static function get_sports() {
         global $DB;
 
-        $data = array();
+        $data = [];
 
         $sql = "SELECT DISTINCT cc.id AS sportid, cc.name AS sport, acc.url AS sporturl, cc.description,".
             " cc0.id AS domainid, cc0.name AS domain, acg.url AS domainurl".
@@ -1372,7 +1372,7 @@ class local_apsolu_webservices extends external_api {
      * @return external_external_function_parameters
      */
     public static function get_sports_parameters() {
-        return new external_function_parameters(array());
+        return new external_function_parameters([]);
     }
 
     /**
@@ -1383,7 +1383,7 @@ class local_apsolu_webservices extends external_api {
     public static function get_sports_returns() {
         return new external_multiple_structure(
             new external_single_structure(
-                array(
+                [
                     'sportid' => new external_value(PARAM_INT, get_string('ws_value_activityid', 'local_apsolu')),
                     'sport' => new external_value(PARAM_TEXT, get_string('ws_value_activity_name', 'local_apsolu')),
                     'sporturl' => new external_value(PARAM_TEXT, get_string('ws_value_activity_url', 'local_apsolu')),
@@ -1391,7 +1391,7 @@ class local_apsolu_webservices extends external_api {
                     'domainid' => new external_value(PARAM_INT, get_string('ws_value_domainid', 'local_apsolu')),
                     'domain' => new external_value(PARAM_TEXT, get_string('ws_value_domain', 'local_apsolu')),
                     'domainurl' => new external_value(PARAM_TEXT, get_string('ws_value_domain_url', 'local_apsolu')),
-                  )
+                  ]
             )
         );
     }
@@ -1414,10 +1414,9 @@ class local_apsolu_webservices extends external_api {
         $filters = $reportObj->getfilters($datatype);
         $result = array_values(json_decode($filters, true));
 
+        // echo "<pre>";print_r(json_encode($result));echo "</pre>";
 
-        //echo "<pre>";print_r(json_encode($result));echo "</pre>";
-
-        return array('success' => true,'filters' => json_encode($result));
+        return ['success' => true, 'filters' => json_encode($result)];
     }
 
     /**
@@ -1427,10 +1426,10 @@ class local_apsolu_webservices extends external_api {
      */
     public static function get_reportfilters_parameters() {
         return new external_function_parameters(
-          array(
-            'classname' => new external_value(PARAM_TEXT,'Nom de la classe',VALUE_DEFAULT, null, NULL_ALLOWED),
-            'datatype' => new external_value(PARAM_TEXT,'type de rapport',VALUE_DEFAULT, null, NULL_ALLOWED),
-          )
+          [
+            'classname' => new external_value(PARAM_TEXT, 'Nom de la classe', VALUE_DEFAULT, null, NULL_ALLOWED),
+            'datatype' => new external_value(PARAM_TEXT, 'type de rapport', VALUE_DEFAULT, null, NULL_ALLOWED),
+          ]
         );
     }
 
@@ -1441,10 +1440,10 @@ class local_apsolu_webservices extends external_api {
      */
     public static function get_reportfilters_returns() {
         return new external_single_structure(
-        array(
-          'success' => new external_value(PARAM_BOOL, get_string('ws_value_boolean', 'local_apsolu'),VALUE_DEFAULT, null, NULL_ALLOWED),
-          'filters' => new external_value(PARAM_RAW,'report columns filters type',VALUE_DEFAULT, null, NULL_ALLOWED),
-          )
+        [
+          'success' => new external_value(PARAM_BOOL, get_string('ws_value_boolean', 'local_apsolu'), VALUE_DEFAULT, null, NULL_ALLOWED),
+          'filters' => new external_value(PARAM_RAW, 'report columns filters type', VALUE_DEFAULT, null, NULL_ALLOWED),
+          ]
         );
     }
 }

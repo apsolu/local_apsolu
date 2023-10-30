@@ -93,7 +93,7 @@ class Payment {
             " AND ue.status = 0". // Inscription validée.
             " AND cm.userid = :userid".
             " ORDER BY apc.fullname";
-        return $DB->get_records_sql($sql, array('userid' => $userid));
+        return $DB->get_records_sql($sql, ['userid' => $userid]);
     }
 
     /**
@@ -132,7 +132,7 @@ class Payment {
             " AND ue.status = 0". // Inscription validée.
             " AND uif.shortname = 'apsolusesame'". // Compte Sésame validé.
             " AND esc.cardid = :cardid";
-        return $DB->get_records_sql($sql, array('cardid' => $cardid));
+        return $DB->get_records_sql($sql, ['cardid' => $cardid]);
     }
 
     /**
@@ -171,7 +171,7 @@ class Payment {
             " AND ue.status = 0". // Inscription validée.
             " AND cm.userid = :userid".
             " AND esc.cardid = :cardid";
-        return $DB->get_records_sql($sql, array('cardid' => $cardid, 'userid' => $userid));
+        return $DB->get_records_sql($sql, ['cardid' => $cardid, 'userid' => $userid]);
     }
 
     /**
@@ -197,7 +197,7 @@ class Payment {
             " WHERE api.cardid = :cardid".
             " AND ap.userid = :userid".
             " AND ap.timepaid IS NOT NULL";
-        $payment = $DB->get_record_sql($sql, array('cardid' => $card->id, 'userid' => $userid));
+        $payment = $DB->get_record_sql($sql, ['cardid' => $card->id, 'userid' => $userid]);
         if ($payment !== false) {
             debugging('Carte '.$card->fullname.' payée !', $level = DEBUG_DEVELOPER);
             return $payment->status; // self::PAID or self::GIFT.
@@ -210,7 +210,7 @@ class Payment {
             foreach ($enrols as $enrol) {
                 // TODO: mauvais component.
                 // TODO: n'utilise pas un champ indexé ! ÇA RAME !
-                $conditions = array('component' => 'local_apsolu_presence', 'courseid' => $enrol->courseid, 'relateduserid' => $userid);
+                $conditions = ['component' => 'local_apsolu_presence', 'courseid' => $enrol->courseid, 'relateduserid' => $userid];
                 if ($DB->count_records('logstore_standard_log', $conditions) >= $card->trial) {
                     debugging('Carte '.$card->fullname.' due (fin des séances d\'essais).', $level = DEBUG_DEVELOPER);
                     return self::DUE;
@@ -223,7 +223,7 @@ class Payment {
         // Vérifie les activités offertes.
         $calendars = $DB->get_records('apsolu_calendars');
 
-        $enrolcalendars = array();
+        $enrolcalendars = [];
         foreach ($enrols as $enrol) {
             if (isset($calendars[$enrol->customchar1]) === false) {
                 debugging('Aucun calendrier pour l\'inscription #'.$enrol->id.' (course #'.$enrol->courseid.')', $level = DEBUG_DEVELOPER);
@@ -237,7 +237,7 @@ class Payment {
             $enrolcalendars[$calendartypeid]++;
         }
 
-        $calendars = $DB->get_records('apsolu_payments_cards_cals', array('cardid' => $card->id), $sort = '', $fields = 'calendartypeid, value');
+        $calendars = $DB->get_records('apsolu_payments_cards_cals', ['cardid' => $card->id], $sort = '', $fields = 'calendartypeid, value');
         foreach ($calendars as $calendar) {
             if (isset($enrolcalendars[$calendar->calendartypeid]) === false) {
                 continue;
@@ -262,7 +262,7 @@ class Payment {
     public static function get_paybox_settings($payment) {
         global $CFG, $DB, $USER;
 
-        $center = $DB->get_record('apsolu_payments_centers', array('id' => $payment->paymentcenterid), '*', MUST_EXIST);
+        $center = $DB->get_record('apsolu_payments_centers', ['id' => $payment->paymentcenterid], '*', MUST_EXIST);
 
         // Variables paybox.
         $paybox = new \stdClass();
@@ -359,7 +359,7 @@ class Payment {
             " AND c.id = :courseid".
             " AND e.status = 0". // Méthode d'inscription active.
             " ORDER BY apc.fullname";
-        return $DB->get_records_sql($sql, array('courseid' => $courseid));
+        return $DB->get_records_sql($sql, ['courseid' => $courseid]);
     }
 
     /**
@@ -380,7 +380,7 @@ class Payment {
         $users = self::get_users_cards_status_per_course($courseid, $userid);
 
         if (empty($users) === true) {
-            return array();
+            return [];
         }
 
         return current($users);
@@ -397,7 +397,7 @@ class Payment {
     public static function get_users_cards_status_per_course($courseid, $userid = null) {
         global $DB;
 
-        $users = array();
+        $users = [];
 
         // Sélectionner les cartes dûes pour chaque utilisateur dans un cours.
         $sql = "SELECT apc.*, ue.userid".
@@ -421,7 +421,7 @@ class Payment {
             " AND c.id = :courseid".
             " AND e.status = 0". // Méthode d'inscription active.
             " AND ue.status = 0"; // Inscription validée.
-        $params = array('courseid' => $courseid);
+        $params = ['courseid' => $courseid];
 
         if (empty($userid) === false) {
             $sql .= " AND ue.userid = :userid";
@@ -431,7 +431,7 @@ class Payment {
         $recordset = $DB->get_recordset_sql($sql, $params);
         foreach ($recordset as $record) {
             if (isset($users[$record->userid]) === false) {
-                $users[$record->userid] = array();
+                $users[$record->userid] = [];
             }
 
             $userid = $record->userid;
@@ -452,7 +452,7 @@ class Payment {
      * @return array
      */
     public static function get_statuses_labels() {
-        $labels = array();
+        $labels = [];
         $labels[self::DUE] = 'due';
         $labels[self::PAID] = 'paid';
         $labels[self::FREE] = 'free';
@@ -469,13 +469,13 @@ class Payment {
     public static function get_statuses_images() {
         global $OUTPUT;
 
-        $images = array();
+        $images = [];
         foreach (self::get_statuses_labels() as $statusid => $statusname) {
             $alt = 'alt_'.$statusname;
             $definition = 'definition_'.$statusname;
 
             $images[$statusid] = new stdClass();
-            $images[$statusid]->image = $OUTPUT->pix_icon('t/'.$statusname, get_string($alt, 'local_apsolu'), 'local_apsolu', array('title' => get_string($alt, 'local_apsolu'), 'width' => '12px', 'height' => '12px'));
+            $images[$statusid]->image = $OUTPUT->pix_icon('t/'.$statusname, get_string($alt, 'local_apsolu'), 'local_apsolu', ['title' => get_string($alt, 'local_apsolu'), 'width' => '12px', 'height' => '12px']);
             $images[$statusid]->definition = get_string($definition, 'local_apsolu');
         }
 

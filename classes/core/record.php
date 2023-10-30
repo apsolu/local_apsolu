@@ -56,7 +56,7 @@ abstract class record {
         global $DB;
 
         // Supprime l'objet en base de données.
-        $DB->delete_records(get_called_class()::TABLENAME, array('id' => $this->id));
+        $DB->delete_records(get_called_class()::TABLENAME, ['id' => $this->id]);
 
         return true;
     }
@@ -78,7 +78,7 @@ abstract class record {
 
         $classname = get_called_class();
 
-        $records = array();
+        $records = [];
 
         foreach ($DB->get_records($classname::TABLENAME, $conditions, $sort, $fields, $limitfrom, $limitnum) as $data) {
             $record = new $classname();
@@ -105,7 +105,7 @@ abstract class record {
             $strictness = MUST_EXIST;
         }
 
-        $record = $DB->get_record(get_called_class()::TABLENAME, array('id' => $recordid), $fields = '*', $strictness);
+        $record = $DB->get_record(get_called_class()::TABLENAME, ['id' => $recordid], $fields = '*', $strictness);
 
         if ($record === false) {
             return;

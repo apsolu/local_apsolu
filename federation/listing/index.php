@@ -56,7 +56,7 @@ require_capability('moodle/course:update', $coursecontext);
 $PAGE->navbar->add(get_string('list_of_my_students', 'local_apsolu'));
 
 // Récupère les activités.
-$activities = array();
+$activities = [];
 foreach (activity::get_activity_data() as $activity) {
     $activities[$activity['id']] = $activity['name'];
 }
@@ -70,11 +70,11 @@ $sql = "SELECT DISTINCT u.institution, u.department, uid.data AS ufr
           FROM {user} u
      LEFT JOIN {user_info_data} uid ON u.id = uid.userid AND uid.fieldid = :fieldid
          WHERE u.deleted = 0";
-$institutions = array();
-$ufrs = array();
-$departments = array();
+$institutions = [];
+$ufrs = [];
+$departments = [];
 
-$recordset = $DB->get_recordset_sql($sql, array('fieldid' => $customfields['apsoluufr']->id));
+$recordset = $DB->get_recordset_sql($sql, ['fieldid' => $customfields['apsoluufr']->id]);
 foreach ($recordset as $record) {
     $institution = trim($record->institution);
     if (empty($institution) === false) {
@@ -98,7 +98,7 @@ ksort($ufrs);
 ksort($departments);
 
 // Build form.
-$customdata = array($activities, $sexes, $institutions, $ufrs, $departments);
+$customdata = [$activities, $sexes, $institutions, $ufrs, $departments];
 $mform = new local_apsolu_federation_export_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
@@ -113,7 +113,7 @@ if ($data = $mform->get_data()) {
          LEFT JOIN {user_info_data} uid2 ON u.id = uid2.userid AND uid2.fieldid = :fieldid2
              WHERE u.deleted = 0
                AND afa.federationnumber IS NOT NULL";
-    $params = array();
+    $params = [];
     $params['fieldid1'] = $customfields['apsoluufr']->id;
     $params['fieldid2'] = $customfields['apsolucycle']->id;
 
@@ -157,7 +157,7 @@ if ($data = $mform->get_data()) {
 
     // Champ nom de famille.
     if (isset($data->lastnames) === true) {
-        $lastnames = array();
+        $lastnames = [];
         foreach (explode(',', $data->lastnames) as $i => $lastname) {
             $lastname = trim($lastname);
             if (empty($lastname)) {
@@ -179,13 +179,13 @@ if ($data = $mform->get_data()) {
     if ($data->submitbutton === get_string('show')) {
         // Récupère les données.
         $data = new stdClass();
-        $data->users = array();
+        $data->users = [];
         $data->count_users = 0;
         $data->action = $CFG->wwwroot.'/blocks/apsolu_dashboard/notify.php';
 
         $recordset = $DB->get_recordset_sql($sql, $params);
         foreach ($recordset as $user) {
-            $user->htmlpicture = $OUTPUT->user_picture($user, array('courseid' => $courseid));
+            $user->htmlpicture = $OUTPUT->user_picture($user, ['courseid' => $courseid]);
             $data->users[] = $user;
             $data->count_users++;
         }
@@ -198,16 +198,16 @@ if ($data = $mform->get_data()) {
 
         if (class_exists('PHPExcel_Style_Border') === true) {
             // Jusqu'à Moodle 3.7.x.
-            $properties = array('border' => PHPExcel_Style_Border::BORDER_THIN);
+            $properties = ['border' => PHPExcel_Style_Border::BORDER_THIN];
         } else {
             // Depuis Moodle 3.8.x.
-            $properties = array('border' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+            $properties = ['border' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN];
         }
 
         $excelformat = new MoodleExcelFormat($properties);
 
         // Set headers.
-        $headers = array();
+        $headers = [];
         $headers[] = get_string('lastname');
         $headers[] = get_string('firstname');
         $headers[] = get_string('federation_number', 'local_apsolu');

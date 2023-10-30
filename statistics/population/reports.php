@@ -30,7 +30,7 @@ use local_apsolu\local\statistics\population\report;
 
 
 // Output
-$PAGE->requires->js_call_amd('local_apsolu/population_reports', 'init', array(".report-enrolList-table"));
+$PAGE->requires->js_call_amd('local_apsolu/population_reports', 'init', [".report-enrolList-table"]);
 $PAGE->requires->css('/local/apsolu/lib/jquery/DataTables/datatables.min.css');
 
 // Data
@@ -41,7 +41,7 @@ if ($CFG->is_siuaps_rennes){
 
 $report = new report();
 $reportid = optional_param('reportid', null, PARAM_TEXT);
-$reportdata = array($report->getReport(),$reportid);
+$reportdata = [$report->getReport(), $reportid];
 $mform = new local_apsolu_statistics_report_form(null, $reportdata);
 
 echo $OUTPUT->header();

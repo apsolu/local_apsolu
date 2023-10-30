@@ -40,7 +40,7 @@ if ($periodid !== 0) {
 $period->weeks = explode(',', $period->weeks);
 
 // Build form.
-$customdata = array('period' => $period);
+$customdata = ['period' => $period];
 $mform = new local_apsolu_courses_periods_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
@@ -55,7 +55,7 @@ if ($data = $mform->get_data()) {
     $period->save($data);
 
     // Redirige vers la page générale.
-    $returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'periods'));
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'periods']);
     redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
 

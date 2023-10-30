@@ -40,19 +40,19 @@ if ($gradeitemid !== 0) {
 }
 
 // Roles.
-$roles = array();
+$roles = [];
 foreach (Gradebook::get_gradable_roles() as $role) {
     $roles[$role->id] = $role->localname;
 }
 
 // Calendriers.
-$calendars = array();
+$calendars = [];
 foreach ($DB->get_records('apsolu_calendars') as $calendar) {
     $calendars[$calendar->id] = $calendar->name;
 }
 
 // Build form.
-$customdata = array($gradeitem, $roles, $calendars);
+$customdata = [$gradeitem, $roles, $calendars];
 $mform = new local_apsolu_grades_gradeitems_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
@@ -66,7 +66,7 @@ if ($data = $mform->get_data()) {
     $gradeitem->save($data);
 
     // Redirige vers la page générale.
-    $returnurl = new moodle_url('/local/apsolu/grades/admin/index.php', array('tab' => 'gradeitems'));
+    $returnurl = new moodle_url('/local/apsolu/grades/admin/index.php', ['tab' => 'gradeitems']);
     redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
 

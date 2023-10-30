@@ -47,13 +47,13 @@ class local_apsolu_messaging_form extends moodleform {
         list($defaults) = $this->_customdata;
 
         // Functional contact.
-        $mform->addElement('text', 'functional_contact', get_string('functional_contact', 'local_apsolu'), array('size' => '48'));
+        $mform->addElement('text', 'functional_contact', get_string('functional_contact', 'local_apsolu'), ['size' => '48']);
         $mform->addHelpButton('functional_contact', 'functional_contact', 'local_apsolu');
         $mform->setType('functional_contact', PARAM_TEXT);
         $mform->addRule('functional_contact', get_string('required'), 'required', null, 'client');
 
         // Technical contact.
-        $mform->addElement('text', 'technical_contact', get_string('technical_contact', 'local_apsolu'), array('size' => '48'));
+        $mform->addElement('text', 'technical_contact', get_string('technical_contact', 'local_apsolu'), ['size' => '48']);
         $mform->addHelpButton('technical_contact', 'technical_contact', 'local_apsolu');
         $mform->setType('technical_contact', PARAM_TEXT);
         $mform->addRule('technical_contact', get_string('required'), 'required', null, 'client');
@@ -71,7 +71,7 @@ class local_apsolu_messaging_form extends moodleform {
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
         $mform->addElement('hidden', 'page', 'messaging');
@@ -92,7 +92,7 @@ class local_apsolu_messaging_form extends moodleform {
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
 
-        $addresses = array();
+        $addresses = [];
         $addresses[] = 'functional_contact';
         $addresses[] = 'technical_contact';
 

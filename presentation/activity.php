@@ -57,24 +57,24 @@ $roles = enrol_select_get_activities_roles();
 $teachers = enrol_select_get_activities_teachers();
 
 // category, site, activity, period, jour, start, end, level, zone geo, zone, enroltype, enseignant
-$courses = array();
+$courses = [];
 foreach ($activities as $activity) {
     if (isset($courses[$activity->sport]) === false) {
         $courses[$activity->sport] = new \stdClass();
         $courses[$activity->sport]->name = $activity->sport;
         $courses[$activity->sport]->url = $activity->url;
         $courses[$activity->sport]->description = $activity->description;
-        $courses[$activity->sport]->courses = array();
+        $courses[$activity->sport]->courses = [];
     }
 
     $activity->weekday = get_string($activity->weekday, 'calendar');
 
-    $activity->roles = array();
+    $activity->roles = [];
     if (isset($roles[$activity->id]) === true) {
         $activity->roles = array_values($roles[$activity->id]);
     }
 
-    $activity->teachers = array();
+    $activity->teachers = [];
     if (isset($teachers[$activity->id]) === true) {
         $activity->teachers = array_values($teachers[$activity->id]);
     }
@@ -87,7 +87,7 @@ foreach ($activities as $activity) {
 ksort($courses);
 $courses = array_values($courses);
 
-$data = array('courses' => $courses);
+$data = ['courses' => $courses];
 echo $OUTPUT->render_from_template('local_apsolu/presentation_activity', $data);
 
 echo $OUTPUT->footer();

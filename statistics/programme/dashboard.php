@@ -45,16 +45,16 @@ $calendarstypes = $report->get_calendarstypes();
 
 // Nombre de cours proposés par groupe d'activités
 $data->groupslots['title'] = $report->getReport("groupslots")->label;
-$data->groupslots['chart'] = $render->render_chart(['classname' => 'programme','reportid' => 'groupslots','criterias' => ['cities' => array_values($cities),'calendarstypes' => array_values($calendarstypes)]]);
+$data->groupslots['chart'] = $render->render_chart(['classname' => 'programme', 'reportid' => 'groupslots', 'criterias' => ['cities' => array_values($cities), 'calendarstypes' => array_values($calendarstypes)]]);
 
 // Nombre de cours proposés par groupe d'activités
 $data->activityslots['title'] = $report->getReport("activityslots")->label;
-$data->activityslots['chart'] = $render->render_chart(['classname' => 'programme','reportid' => 'activityslots','criterias' => ['cities' => array_values($cities),'calendarstypes' => array_values($calendarstypes)]]);
+$data->activityslots['chart'] = $render->render_chart(['classname' => 'programme', 'reportid' => 'activityslots', 'criterias' => ['cities' => array_values($cities), 'calendarstypes' => array_values($calendarstypes)]]);
 
 // Nombre de places en liste principale (potentiel d'accueil)
 $data->countslotsmainlist['title'] = $report->getReport("countslotsmainlist")->label;
-$data->countslotsmainlist['counter'] = $render->render_reportCounterSum(['classname' => 'programme','reportid' => 'countslotsmainlist']);
-$data->countslotsmainlist['chart'] = $render->render_chart(['classname' => 'programme','reportid' => 'countslotsmainlist','criterias' => ['cities' => array_values($cities),'calendarstypes' => array_values($calendarstypes)]]);
+$data->countslotsmainlist['counter'] = $render->render_reportCounterSum(['classname' => 'programme', 'reportid' => 'countslotsmainlist']);
+$data->countslotsmainlist['chart'] = $render->render_chart(['classname' => 'programme', 'reportid' => 'countslotsmainlist', 'criterias' => ['cities' => array_values($cities), 'calendarstypes' => array_values($calendarstypes)]]);
 
 
 echo $OUTPUT->header();

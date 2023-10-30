@@ -32,7 +32,7 @@ if (empty($cityid) === true) {
     $cityid = optional_param('cityid', 0, PARAM_INT);
 }
 
-$cities = $DB->get_records('apsolu_cities', $params = array(), $sort = 'name');
+$cities = $DB->get_records('apsolu_cities', $params = [], $sort = 'name');
 if (isset($cities[$cityid]) === true) {
     $cities[$cityid]->active = true;
 } else {
@@ -57,31 +57,31 @@ echo $OUTPUT->heading($title);
 $roles = enrol_select_get_activities_roles();
 $teachers = enrol_select_get_activities_teachers();
 
-$filters = array();
+$filters = [];
 
 $filters['city'] = new \stdClass();
 $filters['city']->label = get_string('city', 'local_apsolu');
-$filters['city']->values = array();
+$filters['city']->values = [];
 
 $filters['grouping'] = new \stdClass();
 $filters['grouping']->label = get_string('grouping', 'local_apsolu');
-$filters['grouping']->values = array();
+$filters['grouping']->values = [];
 
 $filters['category'] = new \stdClass();
 $filters['category']->label = get_string('activity', 'local_apsolu');
-$filters['category']->values = array();
+$filters['category']->values = [];
 
 $filters['area'] = new \stdClass();
 $filters['area']->label = get_string('area', 'local_apsolu');
-$filters['area']->values = array();
+$filters['area']->values = [];
 
 $filters['period'] = new \stdClass();
 $filters['period']->label = get_string('period', 'local_apsolu');
-$filters['period']->values = array();
+$filters['period']->values = [];
 
 $filters['times'] = new \stdClass();
 $filters['times']->label = get_string('time_of_day', 'local_apsolu');
-$filters['times']->values = array();
+$filters['times']->values = [];
 $filters['times']->values[] = get_string('morning', 'local_apsolu');
 $filters['times']->values[] = get_string('midday', 'local_apsolu');
 $filters['times']->values[] = get_string('afternoon', 'local_apsolu');
@@ -89,7 +89,7 @@ $filters['times']->values[] = get_string('evening', 'local_apsolu');
 
 $filters['weekday'] = new \stdClass();
 $filters['weekday']->label = get_string('day_of_the_week', 'local_apsolu');
-$filters['weekday']->values = array();
+$filters['weekday']->values = [];
 $filters['weekday']->values[] = get_string('monday', 'calendar');
 $filters['weekday']->values[] = get_string('tuesday', 'calendar');
 $filters['weekday']->values[] = get_string('wednesday', 'calendar');
@@ -100,25 +100,25 @@ $filters['weekday']->values[] = get_string('sunday', 'calendar');
 
 $filters['location'] = new \stdClass();
 $filters['location']->label = get_string('location', 'local_apsolu');
-$filters['location']->values = array();
+$filters['location']->values = [];
 
 $filters['skill'] = new \stdClass();
 $filters['skill']->label = get_string('skill', 'local_apsolu');
-$filters['skill']->values = array();
+$filters['skill']->values = [];
 
 $filters['role'] = new \stdClass();
 $filters['role']->label = get_string('role', 'local_apsolu');
-$filters['role']->values = array();
+$filters['role']->values = [];
 
 $filters['teachers'] = new \stdClass();
 $filters['teachers']->label = get_string('teachers');
-$filters['teachers']->values = array();
+$filters['teachers']->values = [];
 
 $jsondata = get_config('local_apsolu', 'json_course_offerings_ranges');
 $ranges = json_decode($jsondata);
 
 // category, site, activity, period, jour, start, end, level, zone geo, zone, enroltype, enseignant
-$courses = array();
+$courses = [];
 foreach (enrol_select_get_activities($cityid) as $activity) {
     // TODO: la méthode enrol_select_get_activities() ne retourne pas le nom "officiel" de ces 3 champs.
     $activity->category = $activity->sport;
@@ -132,25 +132,25 @@ foreach (enrol_select_get_activities($cityid) as $activity) {
         $courses[$activity->category]->url = $activity->url;
         $courses[$activity->category]->description = $activity->description;
         $courses[$activity->category]->modal = (empty($activity->url) === false || empty($activity->description) === false);
-        $courses[$activity->category]->courses = array();
+        $courses[$activity->category]->courses = [];
 
         $filters['grouping']->values[$activity->domainid] = $activity->domain;
     }
 
     $activity->weekday = get_string($activity->weekday, 'calendar');
 
-    $activity->roles = array();
+    $activity->roles = [];
     if (isset($roles[$activity->id]) === true) {
         $activity->roles = array_values($roles[$activity->id]);
     }
 
-    $activity->teachers = array();
+    $activity->teachers = [];
     if (isset($teachers[$activity->id]) === true) {
         $activity->teachers = array_values($teachers[$activity->id]);
     }
 
     // Times.
-    $time = array();
+    $time = [];
     if ($activity->endtime < $ranges->range1_end) {
         // Matin.
         $time[] = $filters['times']->values[0];
@@ -182,7 +182,7 @@ foreach (enrol_select_get_activities($cityid) as $activity) {
     $activity->period = $activity->generic_name;
 
     // Filtres.
-    foreach (array('area', 'category', 'city', 'location', 'period', 'skill') as $type) {
+    foreach (['area', 'category', 'city', 'location', 'period', 'skill'] as $type) {
         if (in_array($activity->{$type}, $filters[$type]->values, $strict = true) === false) {
             $filters[$type]->values[] = $activity->{$type};
         }
@@ -210,15 +210,15 @@ ksort($filters['teachers']->values);
 $filters['teachers']->values = array_values($filters['teachers']->values);
 
 foreach ($filters as $name => $filter) {
-    if (in_array($name, array('teachers', 'times', 'weekday'), $strict = true) === false) {
+    if (in_array($name, ['teachers', 'times', 'weekday'], $strict = true) === false) {
         sort($filter->values, SORT_LOCALE_STRING);
     }
 
-    $attributes = array('class' => 'apsolu-enrol-selects', 'multiple' => 'multiple');
+    $attributes = ['class' => 'apsolu-enrol-selects', 'multiple' => 'multiple'];
     $filter->html = \html_writer::select($filter->values, $name, $selected = '', $nothing = false, $attributes);
 }
 
-$data = array();
+$data = [];
 $data['wwwroot'] = $CFG->wwwroot;
 $data['courses'] = $courses;
 if (isset($cities[$cityid]->name) === true) {

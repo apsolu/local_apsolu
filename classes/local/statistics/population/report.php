@@ -200,7 +200,7 @@ class report extends \local_apsolu\local\statistics\report {
           [ 'data' => "institution", 'title' => get_string('institution')] ,
           [ 'data' => "department", 'title' => get_string('department')] ,
           [ 'data' => "ufr", 'title' => get_string('ufr', 'local_apsolu')] ,
-          [ 'data' => "lmd", 'title' => get_string('cycle', 'local_apsolu')]
+          [ 'data' => "lmd", 'title' => get_string('cycle', 'local_apsolu')],
         ];
 
         switch ($datatype) {
@@ -215,17 +215,17 @@ class report extends \local_apsolu\local\statistics\report {
                 ];
 
                 $orders = [2 => 'asc', 3 => 'asc'];
-                $filters = ['input' => [1,2,3,4,7,8],'select' => [0,5,6,9,10,11,12,13,14] ];
+                $filters = ['input' => [1, 2, 3, 4, 7, 8], 'select' => [0, 5, 6, 9, 10, 11, 12, 13, 14] ];
               break;
             case 4: // Vue activités complémentaires par candidats
                 $columnsDatatype = [
                 [ 'data' => "wish_list", 'title' => get_string('number_of_wishes', 'enrol_select')] ,
                 [ 'data' => "accepted_list", 'title' => get_string('number_of_accepted_enrolments', 'enrol_select')] ,
-                [ 'data' => "deleted_list", 'title' => get_string('number_of_deleted_enrolments', 'enrol_select')]
+                [ 'data' => "deleted_list", 'title' => get_string('number_of_deleted_enrolments', 'enrol_select')],
                 ];
 
                 $orders = [2 => 'asc', 3 => 'asc'];
-                $filters = ['input' => [1,2,3,4,7,8],'select' => [0,5,6,9,10,11,12] ];
+                $filters = ['input' => [1, 2, 3, 4, 7, 8], 'select' => [0, 5, 6, 9, 10, 11, 12] ];
               break;
             case 3: // 1 : Vue activités compmlémentaires par inscription
                 $columnsDatatype = [
@@ -233,7 +233,7 @@ class report extends \local_apsolu\local\statistics\report {
                 [ 'data' => "statusname", 'title' => get_string('enrolment_status', 'local_apsolu')],
                 ];
                 $orders = [2 => 'asc', 3 => 'asc'];
-                $filters = ['input' => [1,2,3,4,7,8],'select' => [0,5,6,9,10,11,12] ];
+                $filters = ['input' => [1, 2, 3, 4, 7, 8], 'select' => [0, 5, 6, 9, 10, 11, 12] ];
 
               break;
             default: // 1 : Vue activités physiques par inscription
@@ -252,20 +252,20 @@ class report extends \local_apsolu\local\statistics\report {
                 [ 'data' => "locationname", 'title' => get_string('location', 'local_apsolu')],
                 [ 'data' => "teachers", 'title' => get_string('teacher', 'local_apsolu')],
                 [ 'data' => "cohortnames", 'visible' => false, 'title' => get_string('cohort', 'cohort')],
-                [ 'data' => null, 'visible' => false, 'title' => "Activité détaillée","render" => "function ( data, type, row ) {return data.activityname.replace(/\s/g,'&nbsp;') + '&nbsp;/&nbsp;' + moment.weekdays()[(data.slotnumweekday==7) ? 0 : data.slotnumweekday] +'&nbsp;/&nbsp;' + data.slotstart + '&nbsp;-&nbsp;' + data.slotend + '&nbsp;/&nbsp;' + data.skillsname.replace(/\s/g,'&nbsp;');}"],
+                [ 'data' => null, 'visible' => false, 'title' => "Activité détaillée", "render" => "function ( data, type, row ) {return data.activityname.replace(/\s/g,'&nbsp;') + '&nbsp;/&nbsp;' + moment.weekdays()[(data.slotnumweekday==7) ? 0 : data.slotnumweekday] +'&nbsp;/&nbsp;' + data.slotstart + '&nbsp;-&nbsp;' + data.slotend + '&nbsp;/&nbsp;' + data.skillsname.replace(/\s/g,'&nbsp;');}"],
                 ];
                 $orders = [2 => 'asc', 3 => 'asc'];
-                $filters = ['input' => [1,2,3,4,7,8,13],'select' => [0,5,6,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24] ];
+                $filters = ['input' => [1, 2, 3, 4, 7, 8, 13], 'select' => [0, 5, 6, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24] ];
 
               break;
         }
         $columns = array_merge($columns, $columnsDatatype);
 
-        return array(
+        return [
           'columns' => $columns,
           'orders' => $orders,
           'filters' => $filters,
-        );
+        ];
 
     }
 
@@ -277,7 +277,7 @@ class report extends \local_apsolu\local\statistics\report {
      *
      * @return array
      */
-    public function getReportData($queryBuilder,$criterias=null) {
+    public function getReportData($queryBuilder, $criterias=null) {
         global $DB;
 
         $condition = json_decode($queryBuilder);
@@ -316,13 +316,13 @@ class report extends \local_apsolu\local\statistics\report {
             $where .= " AND ". $condition->sql;
         }
         if (!is_null($criterias)) {
-            if (array_key_exists("cityid",$criterias) && $criterias["cityid"] != '') {
+            if (array_key_exists("cityid", $criterias) && $criterias["cityid"] != '') {
                 $where .= " AND cityid = " . $criterias["cityid"];
             }
-            if (array_key_exists("calendarstypeid",$criterias) && $criterias["calendarstypeid"] != '') {
+            if (array_key_exists("calendarstypeid", $criterias) && $criterias["calendarstypeid"] != '') {
                 $where .= " AND calendarstypeid = " . $criterias["calendarstypeid"];
             }
-            if (array_key_exists("activityid",$criterias) && $criterias["activityid"] != '') {
+            if (array_key_exists("activityid", $criterias) && $criterias["activityid"] != '') {
                 $where .= " AND activityid = " . $criterias["activityid"];
             }
         }
@@ -338,7 +338,7 @@ class report extends \local_apsolu\local\statistics\report {
         $sql = $with. $select . $from . $where . $groupby . $having . $orderby;
 
         if(property_exists($condition, "params")) {
-            return $DB->get_records_sql($sql,$condition->params);
+            return $DB->get_records_sql($sql, $condition->params);
         } else {
             return $DB->get_records_sql($sql);
         }
@@ -409,7 +409,7 @@ class report extends \local_apsolu\local\statistics\report {
     public static function accepted_refused($params) {
         global $DB;
 
-        if (array_key_exists("cityid",$params) && $params["cityid"] != '') {
+        if (array_key_exists("cityid", $params) && $params["cityid"] != '') {
             $cityid = $params["cityid"];
         } else {
             $cities = self::get_cities();
@@ -420,7 +420,7 @@ class report extends \local_apsolu\local\statistics\report {
             array_keys($cities)
             ));
         }
-        if (array_key_exists("calendarstypeid",$params) && $params["calendarstypeid"] != '') {
+        if (array_key_exists("calendarstypeid", $params) && $params["calendarstypeid"] != '') {
             $calendarstypeid = $params["calendarstypeid"];
         } else {
             $calendarstypes = self::get_calendarstypes();
@@ -518,7 +518,7 @@ class report extends \local_apsolu\local\statistics\report {
     public static function get_semesters($params) {
         global $DB;
 
-        if (array_key_exists("cityid",$params)) {
+        if (array_key_exists("cityid", $params)) {
             $cityid = $params["cityid"];
         } else {
             $cities = self::get_cities();
@@ -566,7 +566,7 @@ class report extends \local_apsolu\local\statistics\report {
     public static function distribution_userprofile($params) {
         global $DB;
 
-        if (array_key_exists("cityid",$params) && $params["cityid"] != '') {
+        if (array_key_exists("cityid", $params) && $params["cityid"] != '') {
             $cityid = $params["cityid"];
         } else {
             $cities = self::get_cities();
@@ -577,7 +577,7 @@ class report extends \local_apsolu\local\statistics\report {
             array_keys($cities)
             ));
         }
-        if (array_key_exists("calendarstypeid",$params) && $params["calendarstypeid"] != '') {
+        if (array_key_exists("calendarstypeid", $params) && $params["calendarstypeid"] != '') {
             $calendarstypeid = $params["calendarstypeid"];
         } else {
             $calendarstypes = self::get_calendarstypes();
@@ -609,7 +609,7 @@ class report extends \local_apsolu\local\statistics\report {
     public static function distribution_genders($params) {
         global $DB;
 
-        if (array_key_exists("cityid",$params) && $params["cityid"] != '') {
+        if (array_key_exists("cityid", $params) && $params["cityid"] != '') {
             $cityid = $params["cityid"];
         } else {
             $cities = self::get_cities();
@@ -620,7 +620,7 @@ class report extends \local_apsolu\local\statistics\report {
             array_keys($cities)
             ));
         }
-        if (array_key_exists("calendarstypeid",$params) && $params["calendarstypeid"] != '') {
+        if (array_key_exists("calendarstypeid", $params) && $params["calendarstypeid"] != '') {
             $calendarstypeid = $params["calendarstypeid"];
         } else {
             $calendarstypes = self::get_calendarstypes();
@@ -652,7 +652,7 @@ class report extends \local_apsolu\local\statistics\report {
     public static function enrol_userprofile($params) {
         global $DB;
 
-        if (array_key_exists("cityid",$params) && $params["cityid"] != '') {
+        if (array_key_exists("cityid", $params) && $params["cityid"] != '') {
             $cityid = $params["cityid"];
         } else {
             $cities = self::get_cities();
@@ -663,7 +663,7 @@ class report extends \local_apsolu\local\statistics\report {
             array_keys($cities)
             ));
         }
-        if (array_key_exists("calendarstypeid",$params) && $params["calendarstypeid"] != '') {
+        if (array_key_exists("calendarstypeid", $params) && $params["calendarstypeid"] != '') {
             $calendarstypeid = $params["calendarstypeid"];
         } else {
             $calendarstypes = self::get_calendarstypes();
@@ -695,7 +695,7 @@ class report extends \local_apsolu\local\statistics\report {
     public static function enrol_genders($params) {
         global $DB;
 
-        if (array_key_exists("cityid",$params) && $params["cityid"] != '') {
+        if (array_key_exists("cityid", $params) && $params["cityid"] != '') {
             $cityid = $params["cityid"];
         } else {
             $cities = self::get_cities();
@@ -706,7 +706,7 @@ class report extends \local_apsolu\local\statistics\report {
             array_keys($cities)
             ));
         }
-        if (array_key_exists("calendarstypeid",$params) && $params["calendarstypeid"] != '') {
+        if (array_key_exists("calendarstypeid", $params) && $params["calendarstypeid"] != '') {
             $calendarstypeid = $params["calendarstypeid"];
         } else {
             $calendarstypes = self::get_calendarstypes();
@@ -743,7 +743,7 @@ class report extends \local_apsolu\local\statistics\report {
           ROW_NUMBER() OVER (ORDER BY institution, roleshortname ASC) AS row_num,
         	institution, roleshortname, count(distinct userid) as total
         FROM enrolments e";
-        if (array_key_exists("institution",$params)) {
+        if (array_key_exists("institution", $params)) {
             $sql .= " WHERE institution = '".$params["institution"]."'";
         }
         $sql .= " GROUP BY institution, roleshortname
@@ -763,7 +763,7 @@ class report extends \local_apsolu\local\statistics\report {
     public static function enrol_roles($params) {
         global $DB;
 
-        if (array_key_exists("cityid",$params) && $params["cityid"] != '') {
+        if (array_key_exists("cityid", $params) && $params["cityid"] != '') {
             $cityid = $params["cityid"];
         } else {
             $cities = self::get_cities();
@@ -774,7 +774,7 @@ class report extends \local_apsolu\local\statistics\report {
             array_keys($cities)
             ));
         }
-        if (array_key_exists("calendarstypeid",$params) && $params["calendarstypeid"] != '') {
+        if (array_key_exists("calendarstypeid", $params) && $params["calendarstypeid"] != '') {
             $calendarstypeid = $params["calendarstypeid"];
         } else {
             $calendarstypes = self::get_calendarstypes();
@@ -862,9 +862,9 @@ class report extends \local_apsolu\local\statistics\report {
      * @return array
      */
     public function enrollment_accepted_evaluated($params) {
-      global $DB;
+        global $DB;
 
-      $sql = $params["WithEnrolments"] . ",gradable AS (
+        $sql = $params["WithEnrolments"] . ",gradable AS (
         SELECT r.id,r.shortname,CONCAT('{\"id\": \"roleshortname\", \"operator\": \"contains\", \"value\": \"',shortname,'\"}') AS rules 
         FROM mdl_role r 
             JOIN mdl_role_capabilities rc ON rc.roleid = r.id
@@ -902,6 +902,6 @@ class report extends \local_apsolu\local\statistics\report {
       GROUP BY institution,ufr,department,lmd
       ORDER BY institution,ufr,department,lmd;";
 
-      return $DB->get_records_sql($sql);
-  }
+        return $DB->get_records_sql($sql);
+    }
 }

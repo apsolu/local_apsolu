@@ -29,12 +29,12 @@ $centerid = required_param('centerid', PARAM_INT);
 require_once($CFG->dirroot.'/user/profile/lib.php');
 require_once($CFG->libdir.'/csvlib.class.php');
 
-$center = $DB->get_record('apsolu_payments_centers', array('id' => $centerid), $fields = '*', MUST_EXIST);
-$cards = $DB->get_records('apsolu_payments_cards', array('centerid' => $center->id), $sort = 'name, fullname');
+$center = $DB->get_record('apsolu_payments_centers', ['id' => $centerid], $fields = '*', MUST_EXIST);
+$cards = $DB->get_records('apsolu_payments_cards', ['centerid' => $center->id], $sort = 'name, fullname');
 
 $filename = clean_filename($center->name);
 
-$headers = array(
+$headers = [
     get_string('lastname'),
     get_string('firstname'),
     get_string('idnumber'),
@@ -43,8 +43,8 @@ $headers = array(
     get_string('method', 'local_apsolu'),
     get_string('date', 'local_apsolu'),
     get_string('amount', 'local_apsolu'),
-    get_string('payment_number', 'local_apsolu')
-);
+    get_string('payment_number', 'local_apsolu'),
+];
 
 foreach ($cards as $card) {
     $headers[] = $card->fullname;
@@ -61,11 +61,11 @@ $sql = "SELECT ap.*, apc.prefix, u.lastname, u.firstname, u.idnumber, u.institut
          WHERE ap.status = 1
            AND ap.paymentcenterid = :centerid
       ORDER BY ap.timepaid DESC, u.lastname, u.firstname, u.institution";
-$payments = $DB->get_records_sql($sql, array('centerid' => $center->id));
+$payments = $DB->get_records_sql($sql, ['centerid' => $center->id]);
 foreach ($payments as $payment) {
     raise_memory_limit(MEMORY_EXTRA);
 
-    $usercards = $DB->get_records('apsolu_payments_items', array('paymentid' => $payment->id), $sort = null, $fields = 'cardid');
+    $usercards = $DB->get_records('apsolu_payments_items', ['paymentid' => $payment->id], $sort = null, $fields = 'cardid');
 
     try {
         $timepaid = new DateTime($payment->timepaid);
@@ -83,7 +83,7 @@ foreach ($payments as $payment) {
         $payment->id = '';
     }
 
-    $data = array(
+    $data = [
         $payment->lastname,
         $payment->firstname,
         $payment->idnumber,
@@ -93,7 +93,7 @@ foreach ($payments as $payment) {
         $timepaid,
         $payment->amount,
         $payment->id,
-        );
+        ];
 
     foreach ($cards as $card) {
         if (isset($usercards[$card->id]) === true) {

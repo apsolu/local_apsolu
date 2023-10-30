@@ -31,10 +31,10 @@ $action = optional_param('action', 'view', PARAM_ALPHA);
 $PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise');
 
 // Set tabs.
-$coursestabs = array('courses', 'groupings', 'categories', 'skills', 'periods');
-$locationstabs = array('locations', 'areas', 'cities', 'managers');
-$skillstabs = array('skills', 'skills_descriptions');
-$periodstabs = array('periods', 'holidays');
+$coursestabs = ['courses', 'groupings', 'categories', 'skills', 'periods'];
+$locationstabs = ['locations', 'areas', 'cities', 'managers'];
+$skillstabs = ['skills', 'skills_descriptions'];
+$periodstabs = ['periods', 'holidays'];
 
 // Set default tabs.
 if (in_array($tab, $locationstabs, $strict = true) === true) {
@@ -54,9 +54,9 @@ if (in_array($tab, $locationstabs, $strict = true) === true) {
     }
 }
 
-$tabsbar = array();
+$tabsbar = [];
 foreach ($tabslist as $tabname) {
-    $url = new moodle_url('/local/apsolu/courses/index.php', array('tab' => $tabname));
+    $url = new moodle_url('/local/apsolu/courses/index.php', ['tab' => $tabname]);
     $tabsbar[] = new tabobject($tabname, $url, get_string($tabname, 'local_apsolu'));
 }
 

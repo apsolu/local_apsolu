@@ -28,7 +28,7 @@ require_once($CFG->libdir . '/adminlib.php');
 $page = optional_param('page', 'calendars', PARAM_ALPHA);
 
 // Set tabs.
-$pages = array();
+$pages = [];
 $pages['calendars'] = 'calendars';
 $pages['calendarstypes'] = 'calendars_types';
 $pages['courseofferings'] = 'course_offerings';
@@ -39,9 +39,9 @@ $pages['attendancestatuses'] = 'attendance_statuses';
 $pages['roles'] = 'roles';
 $pages['specialcourses'] = 'special_courses';
 
-$tabtree = array();
+$tabtree = [];
 foreach ($pages as $pagename => $name) {
-    $url = new moodle_url('/local/apsolu/index.php', array('page' => $pagename));
+    $url = new moodle_url('/local/apsolu/index.php', ['page' => $pagename]);
     $tabtree[] = new tabobject($name, $url, get_string($name, 'local_apsolu'));
 }
 

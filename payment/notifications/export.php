@@ -35,13 +35,13 @@ require_once($CFG->libdir.'/csvlib.class.php');
 $cards = $DB->get_records('apsolu_payments_cards');
 
 // Build form.
-$customdata = array($cards);
+$customdata = [$cards];
 $mform = new local_apsolu_payment_notifications_export_form(null, $customdata);
 $notificationform = '';
 
 if ($data = $mform->get_data()) {
     // Définit les entêtes du fichier csv.
-    $headers = array();
+    $headers = [];
     $headers[] = get_string('firstname');
     $headers[] = get_string('lastname');
     $headers[] = get_string('idnumber');
@@ -71,7 +71,7 @@ if ($data = $mform->get_data()) {
                 continue;
             }
 
-            $row = array();
+            $row = [];
             $row[] = $user->firstname;
             $row[] = $user->lastname;
             $row[] = $user->idnumber;

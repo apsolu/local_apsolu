@@ -57,10 +57,10 @@ class local_apsolu_federation_certificates_validation extends moodleform {
         $mform->setDefault('medical_certificate_status', APSOLU_SELECT_NO);
 
         // Submit buttons.
-        $attributes = array('class' => 'btn btn-default');
+        $attributes = ['class' => 'btn btn-default'];
         $buttonarray[] = &$mform->createElement('submit', 'showbutton', get_string('show'), $attributes);
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
         $mform->addElement('hidden', 'page', 'certificates_validation');

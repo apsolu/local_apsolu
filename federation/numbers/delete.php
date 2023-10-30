@@ -33,7 +33,7 @@ $number = new Number();
 $number->load($numberid, $required = true);
 
 $deletehash = md5($number->id);
-$returnurl = new moodle_url('/local/apsolu/federation/index.php', array('page' => 'numbers'));
+$returnurl = new moodle_url('/local/apsolu/federation/index.php', ['page' => 'numbers']);
 
 if ($delete === $deletehash) {
     // Effectue les actions de suppression.
@@ -46,17 +46,17 @@ if ($delete === $deletehash) {
 }
 
 // Affiche un message de confirmation.
-$datatemplate = array();
+$datatemplate = [];
 $datatemplate['message'] = get_string('do_you_want_to_delete_association_number', 'local_apsolu', $number->number);
 $message = $OUTPUT->render_from_template('local_apsolu/courses_form_delete_message', $datatemplate);
 
 // Bouton de validation.
-$urlarguments = array('page' => 'numbers', 'action' => 'delete', 'numberid' => $number->id, 'delete' => $deletehash);
+$urlarguments = ['page' => 'numbers', 'action' => 'delete', 'numberid' => $number->id, 'delete' => $deletehash];
 $confirmurl = new moodle_url('/local/apsolu/federation/index.php', $urlarguments);
 $confirmbutton = new single_button($confirmurl, get_string('delete'), 'post');
 
 // Bouton d'annulation.
-$cancelurl = new moodle_url('/local/apsolu/federation/index.php', array('page' => 'numbers'));
+$cancelurl = new moodle_url('/local/apsolu/federation/index.php', ['page' => 'numbers']);
 
 // Display form.
 echo $OUTPUT->header();

@@ -195,7 +195,7 @@ class local_apsolu_course_offerings_form extends moodleform {
         // 4. Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
         $mform->addElement('hidden', 'page', 'courseofferings');
@@ -215,11 +215,11 @@ class local_apsolu_course_offerings_form extends moodleform {
 
         $errors = parent::validation($data, $files);
 
-        $ranges = array();
-        $ranges['range1'] = array('end');
-        $ranges['range2'] = array('start', 'end');
-        $ranges['range3'] = array('start', 'end');
-        $ranges['range4'] = array('start');
+        $ranges = [];
+        $ranges['range1'] = ['end'];
+        $ranges['range2'] = ['start', 'end'];
+        $ranges['range3'] = ['start', 'end'];
+        $ranges['range4'] = ['start'];
 
         foreach ($ranges as $name => $types) {
             // Vérifie que les données sont bien au format HH:MM.

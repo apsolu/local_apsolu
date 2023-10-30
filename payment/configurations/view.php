@@ -24,11 +24,11 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$configurations = array();
+$configurations = [];
 
-$requiredvariables = array('paybox_servers_incoming', 'paybox_servers_outgoing', 'paybox_log_success_path', 'paybox_log_error_path');
+$requiredvariables = ['paybox_servers_incoming', 'paybox_servers_outgoing', 'paybox_log_success_path', 'paybox_log_error_path'];
 foreach ($requiredvariables as $variable) {
-    $configuration = $DB->get_record('config_plugins', array('name' => $variable, 'plugin' => 'local_apsolu'));
+    $configuration = $DB->get_record('config_plugins', ['name' => $variable, 'plugin' => 'local_apsolu']);
 
     if ($configuration === false) {
         $configuration = new stdClass();

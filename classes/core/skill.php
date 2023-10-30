@@ -77,9 +77,9 @@ class skill extends record {
                       FROM {apsolu_courses} ac
                       JOIN {course} c ON c.id = ac.id
                      WHERE ac.skillid = :skillid";
-            $courses = $DB->get_records_sql($sql, array('skillid' => $this->id));
+            $courses = $DB->get_records_sql($sql, ['skillid' => $this->id]);
             if (count($courses) > 0) {
-                $categories = array();
+                $categories = [];
                 $sql = "SELECT cc.*
                           FROM {course_categories} cc
                           JOIN {apsolu_courses_categories} acc ON cc.id = acc.id";

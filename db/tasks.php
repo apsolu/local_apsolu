@@ -22,8 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$tasks = array(
-    array(
+$tasks = [
+    [
         // Tâche exécutée toutes les 15 minutes.
         'classname' => 'local_apsolu\task\set_high_level_athletes',
         'blocking' => 0,
@@ -31,9 +31,9 @@ $tasks = array(
         'hour' => '*',
         'day' => '*',
         'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
+        'month' => '*',
+    ],
+    [
         // Tâche exécutée toutes les heures.
         'classname' => 'local_apsolu\task\send_dunnings',
         'blocking' => 0,
@@ -41,9 +41,9 @@ $tasks = array(
         'hour' => '*',
         'day' => '*',
         'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
+        'month' => '*',
+    ],
+    [
         // Tâche exécutée toutes les heures.
         'classname' => 'local_apsolu\task\grant_ws_access',
         'blocking' => 0,
@@ -51,6 +51,6 @@ $tasks = array(
         'hour' => '*',
         'day' => '*',
         'dayofweek' => '*',
-        'month' => '*'
-    ),
-);
+        'month' => '*',
+    ],
+];

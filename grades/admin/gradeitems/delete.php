@@ -35,7 +35,7 @@ $gradeitem = new Gradeitem();
 $gradeitem->load($gradeitemid, $required = true);
 
 $deletehash = md5($gradeitem->id);
-$returnurl = new moodle_url('/local/apsolu/grades/admin/index.php', array('tab' => 'gradeitems'));
+$returnurl = new moodle_url('/local/apsolu/grades/admin/index.php', ['tab' => 'gradeitems']);
 
 if ($delete === $deletehash) {
     // Effectue les actions de suppression.
@@ -48,16 +48,16 @@ if ($delete === $deletehash) {
 }
 
 // Affiche un message de confirmation.
-$datatemplate = array();
+$datatemplate = [];
 $datatemplate['message'] = get_string('do_you_want_to_delete_gradeitem', 'local_apsolu', $gradeitem->name);
 $message = $OUTPUT->render_from_template('local_apsolu/courses_form_delete_message', $datatemplate);
 
 // Bouton de validation.
-$urlarguments = array('tab' => 'gradeitems', 'action' => 'delete', 'gradeitemid' => $gradeitem->id, 'delete' => $deletehash);
+$urlarguments = ['tab' => 'gradeitems', 'action' => 'delete', 'gradeitemid' => $gradeitem->id, 'delete' => $deletehash];
 $confirmurl = new moodle_url('/local/apsolu/grades/admin/index.php', $urlarguments);
 $confirmbutton = new single_button($confirmurl, get_string('delete'), 'post');
 
 // Bouton d'annulation.
-$cancelurl = new moodle_url('/local/apsolu/grades/admin/index.php', array('tab' => 'gradeitems'));
+$cancelurl = new moodle_url('/local/apsolu/grades/admin/index.php', ['tab' => 'gradeitems']);
 
 echo $OUTPUT->confirm($message, $confirmbutton, $cancelurl);

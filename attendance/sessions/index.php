@@ -29,7 +29,7 @@ $sessionid = optional_param('sessionid', 0, PARAM_INT); // Session id.
 $action = optional_param('action', 'view', PARAM_ALPHANUM);
 
 $PAGE->set_pagelayout('admin');
-$PAGE->set_url('/local/apsolu/attendance/sessions/index.php', array('courseid' => $courseid));
+$PAGE->set_url('/local/apsolu/attendance/sessions/index.php', ['courseid' => $courseid]);
 
 // Basic access control checks.
 // Login to the course and retrieve also all fields defined by course format.
@@ -41,13 +41,13 @@ $coursecontext = context_course::instance($course->id);
 require_capability('moodle/course:update', $coursecontext);
 
 // Vérifier qu'il s'agit d'une activité APSOLU.
-$activity = $DB->get_record('apsolu_courses', array('id' => $course->id));
+$activity = $DB->get_record('apsolu_courses', ['id' => $course->id]);
 if ($activity === false) {
     // TODO: créer un message.
     print_error('needcoursecategroyid');
 }
 
-$notifications = array();
+$notifications = [];
 $streditcoursesettings = get_string('attendance_sessions_edit', 'local_apsolu');
 
 $data = new stdClass();
@@ -75,18 +75,18 @@ $PAGE->set_title($title);
 $PAGE->set_heading($fullname);
 
 // Build tabtree.
-$tabsbar = array();
+$tabsbar = [];
 
-$url = new moodle_url('/local/apsolu/attendance/edit.php', array('courseid' => $courseid));
+$url = new moodle_url('/local/apsolu/attendance/edit.php', ['courseid' => $courseid]);
 $tabsbar[] = new tabobject('sessions', $url, get_string('attendance_sessionsview', 'local_apsolu'));
 
-$url = new moodle_url('/local/apsolu/attendance/overview.php', array('courseid' => $courseid));
+$url = new moodle_url('/local/apsolu/attendance/overview.php', ['courseid' => $courseid]);
 $tabsbar[] = new tabobject('overview', $url, get_string('attendance_overview', 'local_apsolu'));
 
-$url = new moodle_url('/local/apsolu/attendance/sessions/index.php', array('courseid' => $courseid));
+$url = new moodle_url('/local/apsolu/attendance/sessions/index.php', ['courseid' => $courseid]);
 $tabsbar[] = new tabobject('sessions_edit', $url, get_string('attendance_sessions_edit', 'local_apsolu'));
 
-$url = new moodle_url('/local/apsolu/attendance/export/export.php', array('courseid' => $courseid));
+$url = new moodle_url('/local/apsolu/attendance/export/export.php', ['courseid' => $courseid]);
 $tabsbar[] = new tabobject('export', $url, get_string('export', 'local_apsolu'));
 
 echo $OUTPUT->header();

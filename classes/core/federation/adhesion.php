@@ -248,7 +248,7 @@ class adhesion extends record {
      * @return array
      */
     public function get_activities() {
-        $activities = array();
+        $activities = [];
         foreach (self::get_activity_fields() as $field) {
             if (isset($this->{$field}) === false) {
                 continue;
@@ -298,7 +298,7 @@ class adhesion extends record {
      * @return array
      */
     public static function get_contacts() {
-        $messages = array();
+        $messages = [];
         $messages[] = get_string('your_medical_certificate_has_already_been_validated', 'local_apsolu');
 
         $functional_contact_mail = get_config('local_apsolu', 'functional_contact');
@@ -315,7 +315,7 @@ class adhesion extends record {
      * @return array
      */
     public static function get_departments() {
-        $departments = array();
+        $departments = [];
         $departments['0'] = 'Autre';
         $departments['01'] = '01 - Ain';
         $departments['02'] = '02 - Aisne';
@@ -429,7 +429,7 @@ class adhesion extends record {
      * @return array
      */
     public static function get_disciplines() {
-        $disciplines = array();
+        $disciplines = [];
         $disciplines[15] = 'Animation';
         $disciplines[13] = 'Architecture';
         $disciplines[17] = 'Arts';
@@ -459,7 +459,7 @@ class adhesion extends record {
      * @return array
      */
     public static function get_exportation_fields() {
-        return array(
+        return [
             'federationnumberprefix', // Champ A : N° A.S. [ 4 caractères ].
             'lastname', // Champ B : Nom [ 25 caractères ].
             'birthname', // Champ C : Nom de naissance [ 25 caractères ].
@@ -512,7 +512,7 @@ class adhesion extends record {
                 // compétition de moins d’un an [ 1 chiffre : 1 pour oui ou 0 pour non ]
             'honorabilityagreement', // Champ AP : J'atteste avoir compris l'objet du contrôle d'honorabilité pour arbitres
                 // et dirigeants [ 1 chiffre : 1 pour oui ou 0 pour non ]
-        );
+        ];
     }
 
     /**
@@ -521,7 +521,7 @@ class adhesion extends record {
      * @return array
      */
     public static function get_exportation_headers() {
-        return array(
+        return [
             get_string('association_number', 'local_apsolu'),
             get_string('lastname'),
             get_string('birthname', 'local_apsolu'),
@@ -564,7 +564,7 @@ class adhesion extends record {
             get_string('i_answered_yes_to_a_section_of_the_health_questionnaire_and_attest_to_having_presented_a_medical_certificate_short', 'local_apsolu'),
             get_string('i_wish_to_practice_an_activity_with_particular_constraints_and_certify_that_i_have_presented_a_medical_certificate_short', 'local_apsolu'),
             get_string('i_certify_that_i_understand_the_purpose_of_the_integrity_check_for_arbitrators_and_managers', 'local_apsolu'),
-        );
+        ];
     }
 
     /**
@@ -575,7 +575,7 @@ class adhesion extends record {
     public function get_federation_number_prefix() {
         global $DB;
 
-        $user = $DB->get_record('user', array('id' => $this->userid), $fields = '*', MUST_EXIST);
+        $user = $DB->get_record('user', ['id' => $this->userid], $fields = '*', MUST_EXIST);
 
         $customfields = profile_user_record($user->id);
         $user->apsoluufr = $customfields->apsoluufr;
@@ -626,7 +626,7 @@ class adhesion extends record {
         if (isset($groups[0]) === true) {
             foreach ($groups[0] as $groupid) {
                 $group = groups_get_group($groupid);
-                foreach (Activity::get_records(array('name' => $group->name)) as $activity) {
+                foreach (Activity::get_records(['name' => $group->name]) as $activity) {
                     return $activity->id;
                 }
             }
@@ -641,7 +641,7 @@ class adhesion extends record {
      * @return array
      */
     public static function get_manager_types() {
-        $types = array();
+        $types = [];
         $types[1] = get_string('student', 'local_apsolu');
         $types[0] = get_string('not_student', 'local_apsolu');
 
@@ -654,7 +654,7 @@ class adhesion extends record {
      * @return array
      */
     public static function get_sexes() {
-        $types = array();
+        $types = [];
         $types['F'] = get_string('woman', 'local_apsolu');
         $types['M'] = get_string('man', 'local_apsolu');
 
@@ -667,7 +667,7 @@ class adhesion extends record {
      * @return array
      */
     public static function get_star_license_values() {
-        $values = array();
+        $values = [];
         $values['O'] = get_string('yes');
         $values['N'] = get_string('no');
 
@@ -680,7 +680,7 @@ class adhesion extends record {
      * @return boolean
      */
     public function has_constraint_sports() {
-        $constraintsports = Activity::get_records(array('restriction' => 1));
+        $constraintsports = Activity::get_records(['restriction' => 1]);
 
         if (isset($constraintsports[$this->mainsport]) === true) {
             return true;
@@ -785,7 +785,7 @@ class adhesion extends record {
 
             if ($this->have_to_upload_medical_certificate() === false) {
                 // Si l'utilisateur n'a pas de certificat à déposer, on réinitialise tout.
-                foreach (array('sport', 'constraintsport') as $sport) {
+                foreach (['sport', 'constraintsport'] as $sport) {
                     for ($i = 1; $i <= 5; $i++) {
                         $property = $sport.$i;
                         $this->{$property} = self::SPORT_NONE;
@@ -794,12 +794,12 @@ class adhesion extends record {
             } else {
                 // Recalcule les valeurs sportN et constraintsportN.
                 if ($this->has_constraint_sports() === true) {
-                    $sportkeeped = array('constraintsport1', 'constraintsport2', 'constraintsport3', 'constraintsport4', 'constraintsport5');
-                    $sportremoved = array('sport1', 'sport2', 'sport3', 'sport4', 'sport5');
+                    $sportkeeped = ['constraintsport1', 'constraintsport2', 'constraintsport3', 'constraintsport4', 'constraintsport5'];
+                    $sportremoved = ['sport1', 'sport2', 'sport3', 'sport4', 'sport5'];
                     $constraint = 1;
                 } else {
-                    $sportkeeped = array('sport1', 'sport2', 'sport3', 'sport4', 'sport5');
-                    $sportremoved = array('constraintsport1', 'constraintsport2', 'constraintsport3', 'constraintsport4', 'constraintsport5');
+                    $sportkeeped = ['sport1', 'sport2', 'sport3', 'sport4', 'sport5'];
+                    $sportremoved = ['constraintsport1', 'constraintsport2', 'constraintsport3', 'constraintsport4', 'constraintsport5'];
                     $constraint = 0;
                 }
 
@@ -809,7 +809,7 @@ class adhesion extends record {
                 }
 
                 // On liste tous les sports qu'on souhaite conserver (sauf les NONE).
-                $items = array();
+                $items = [];
                 foreach ($sportkeeped as $sport) {
                     if ($this->{$sport} == self::SPORT_NONE) {
                         continue;
@@ -821,7 +821,7 @@ class adhesion extends record {
 
                 // On place le sport principal au début de la liste des sports à conserver.
                 if ($constraint === 1 || $this->questionnairestatus == self::HEALTH_QUESTIONNAIRE_ANSWERED_YES_ONCE) {
-                    $sports = Activity::get_records(array('restriction' => $constraint));
+                    $sports = Activity::get_records(['restriction' => $constraint]);
                     if (isset($sports[$this->mainsport]) === true && in_array($this->mainsport, $items, $strict = true) === false) {
                         array_unshift($items, $this->mainsport);
                     }
@@ -864,10 +864,10 @@ class adhesion extends record {
         }
 
         // Enregistre un évènement dans les logs.
-        $event = federation_adhesion_updated::create(array(
+        $event = federation_adhesion_updated::create([
             'objectid' => $this->id,
             'context' => context_course::instance($courseid),
-            ));
+            ]);
         $event->trigger();
     }
 }

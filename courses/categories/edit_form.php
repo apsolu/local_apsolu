@@ -52,12 +52,12 @@ class local_apsolu_courses_categories_edit_form extends moodleform {
         $mform->addRule('parent', get_string('required'), 'required', null, 'client');
 
         // Name field.
-        $mform->addElement('text', 'name', get_string('name'), array('size' => '48'));
+        $mform->addElement('text', 'name', get_string('name'), ['size' => '48']);
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
 
         // URL field.
-        $mform->addElement('text', 'url', get_string('url'), array('size' => '48'));
+        $mform->addElement('text', 'url', get_string('url'), ['size' => '48']);
         $mform->setType('url', PARAM_URL);
 
         // Description field.
@@ -72,7 +72,7 @@ class local_apsolu_courses_categories_edit_form extends moodleform {
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
         $mform->addElement('hidden', 'tab', 'categories');
@@ -96,13 +96,13 @@ class local_apsolu_courses_categories_edit_form extends moodleform {
         global $CFG;
         $context = $this->_customdata['context'];
         $itemid = $this->_customdata['itemid'];
-        return array(
+        return [
             'maxfiles'  => EDITOR_UNLIMITED_FILES,
             'maxbytes'  => $CFG->maxbytes,
             'trusttext' => true,
             'context'   => $context,
             'subdirs'   => file_area_contains_subdirs($context, 'coursecat', 'description', $itemid),
-        );
+        ];
     }
 
     /**

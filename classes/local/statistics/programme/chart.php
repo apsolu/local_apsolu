@@ -56,7 +56,8 @@ class chart {
             if (isset($options['criterias']['cities'])) {
                 foreach ($options['criterias']['cities'] as $city){
                     $city = (object)$city;
-                    if(property_exists($city,'active')) { $criterias["cityid"] = $city->id;
+                    if (property_exists($city, 'active')) {
+                        $criterias["cityid"] = $city->id;
                     }
                 }
             }
@@ -65,13 +66,14 @@ class chart {
             if (isset($options['criterias']['calendarstypes'])) {
                 foreach ($options['criterias']['calendarstypes'] as $calendarstype){
                     $calendarstype = (object)$calendarstype;
-                    if(property_exists($calendarstype,'active')) { $criterias["calendarstypeid"] = $calendarstype->id;
+                    if (property_exists($calendarstype, 'active')) {
+                        $criterias["calendarstypeid"] = $calendarstype->id;
                     }
                 }
             }
-            $result = \local_apsolu_webservices::get_reportdataset($options['classname'],$options['reportid'],null,$criterias);
+            $result = \local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid'], null, $criterias);
         } else {
-            $result = \local_apsolu_webservices::get_reportdataset($options['classname'],$options['reportid']);
+            $result = \local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid']);
         }
 
         $programmes = json_decode($result['data']);
@@ -84,16 +86,16 @@ class chart {
                 $data['serie'][$count] = $programme->total;
                 $count++;
             }
-            $count = new \core\chart_series(get_string("statistics_number","local_apsolu"), array_values($data['serie']));
+            $count = new \core\chart_series(get_string("statistics_number", "local_apsolu"), array_values($data['serie']));
             $chart = new \core\chart_bar();
             $chart->set_stacked(true);
             $chart->set_horizontal(true);
             $chart->add_series($count);
             $chart->set_labels($data['labels']);
 
-            return array('success' => true,'chartdata' => json_encode($chart));
+            return ['success' => true, 'chartdata' => json_encode($chart)];
         }
-        return array('success' => false,'chartdata' => json_encode(get_string("statistics_noavailabledata","local_apsolu")));
+        return ['success' => false, 'chartdata' => json_encode(get_string("statistics_noavailabledata", "local_apsolu"))];
     }
 
     /**
@@ -110,7 +112,8 @@ class chart {
             if (isset($options['criterias']['cities'])) {
                 foreach ($options['criterias']['cities'] as $city){
                     $city = (object)$city;
-                    if(property_exists($city,'active')) { $criterias["cityid"] = $city->id;
+                    if (property_exists($city, 'active')) {
+                        $criterias["cityid"] = $city->id;
                     }
                 }
             }
@@ -119,13 +122,14 @@ class chart {
             if (isset($options['criterias']['calendarstypes'])) {
                 foreach ($options['criterias']['calendarstypes'] as $calendarstype){
                     $calendarstype = (object)$calendarstype;
-                    if(property_exists($calendarstype,'active')) { $criterias["calendarstypeid"] = $calendarstype->id;
+                    if (property_exists($calendarstype, 'active')) {
+                        $criterias["calendarstypeid"] = $calendarstype->id;
                     }
                 }
             }
-            $result = \local_apsolu_webservices::get_reportdataset($options['classname'],$options['reportid'],null,$criterias);
+            $result = \local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid'], null, $criterias);
         } else {
-            $result = \local_apsolu_webservices::get_reportdataset($options['classname'],$options['reportid']);
+            $result = \local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid']);
         }
 
         $programmes = json_decode($result['data']);
@@ -138,16 +142,16 @@ class chart {
                 $data['serie'][$count] = $programme->total;
                 $count++;
             }
-            $count = new \core\chart_series(get_string("statistics_number","local_apsolu"), array_values($data['serie']));
+            $count = new \core\chart_series(get_string("statistics_number", "local_apsolu"), array_values($data['serie']));
             $chart = new \core\chart_bar();
             $chart->set_stacked(true);
             $chart->set_horizontal(true);
             $chart->add_series($count);
             $chart->set_labels($data['labels']);
 
-            return array('success' => true,'chartdata' => json_encode($chart));
+            return ['success' => true, 'chartdata' => json_encode($chart)];
         }
-        return array('success' => false,'chartdata' => json_encode(get_string("statistics_noavailabledata","local_apsolu")));
+        return ['success' => false, 'chartdata' => json_encode(get_string("statistics_noavailabledata", "local_apsolu"))];
     }
 
     /**
@@ -164,7 +168,8 @@ class chart {
             if (isset($options['criterias']['cities'])) {
                 foreach ($options['criterias']['cities'] as $city){
                     $city = (object)$city;
-                    if(property_exists($city,'active')) { $criterias["cityid"] = $city->id;
+                    if (property_exists($city, 'active')) {
+                        $criterias["cityid"] = $city->id;
                     }
                 }
             }
@@ -173,13 +178,14 @@ class chart {
             if (isset($options['criterias']['calendarstypes'])) {
                 foreach ($options['criterias']['calendarstypes'] as $calendarstype){
                     $calendarstype = (object)$calendarstype;
-                    if(property_exists($calendarstype,'active')) { $criterias["calendarstypeid"] = $calendarstype->id;
+                    if (property_exists($calendarstype, 'active')) {
+                        $criterias["calendarstypeid"] = $calendarstype->id;
                     }
                 }
             }
-            $result = \local_apsolu_webservices::get_reportdataset($options['classname'],$options['reportid'],null,$criterias);
+            $result = \local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid'], null, $criterias);
         } else {
-            $result = \local_apsolu_webservices::get_reportdataset($options['classname'],$options['reportid']);
+            $result = \local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid']);
         }
 
         $programmes = json_decode($result['data']);
@@ -188,19 +194,19 @@ class chart {
             $count = 0;
             $data = [];
             foreach ($programmes as $programme) {
-                $data['labels'][$count] = get_string("statistics_number","local_apsolu");
+                $data['labels'][$count] = get_string("statistics_number", "local_apsolu");
                 $data['serie'][$count] = $programme->total;
                 $count++;
             }
-            $count = new \core\chart_series(get_string("statistics_number","local_apsolu"), array_values($data['serie']));
+            $count = new \core\chart_series(get_string("statistics_number", "local_apsolu"), array_values($data['serie']));
             $chart = new \core\chart_bar();
             $chart->set_stacked(true);
             $chart->set_horizontal(true);
             $chart->add_series($count);
             $chart->set_labels($data['labels']);
 
-            return array('success' => true,'chartdata' => json_encode($chart));
+            return ['success' => true, 'chartdata' => json_encode($chart)];
         }
-        return array('success' => false,'chartdata' => json_encode(get_string("statistics_noavailabledata","local_apsolu")));
+        return ['success' => false, 'chartdata' => json_encode(get_string("statistics_noavailabledata", "local_apsolu"))];
     }
 }

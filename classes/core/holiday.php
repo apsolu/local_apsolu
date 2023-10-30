@@ -69,7 +69,7 @@ class holiday extends record {
         $easter = strftime('%d-%m', easter_date($year));
         list($easterday, $eastermonth) = explode('-', $easter);
 
-        $holidays = array();
+        $holidays = [];
         $holidays[] = make_timestamp($year, 1, 1); // 1er janvier.
         $holidays[] = make_timestamp($year, $eastermonth, $easterday + 1);  // Lundi de pâques.
         $holidays[] = make_timestamp($year, 5, 1); // Fête du travail.
@@ -94,7 +94,7 @@ class holiday extends record {
         global $DB;
 
         $sql = "SELECT DISTINCT courseid FROM {".attendancesession::TABLENAME."} WHERE sessiontime BETWEEN :startdate AND :enddate";
-        $params = array('startdate' => $this->day, 'enddate' => $this->day + 24 * 60 * 60 - 1);
+        $params = ['startdate' => $this->day, 'enddate' => $this->day + 24 * 60 * 60 - 1];
         $sessions = $DB->get_records_sql($sql, $params);
 
         foreach ($sessions as $session) {

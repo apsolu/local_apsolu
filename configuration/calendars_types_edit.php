@@ -31,7 +31,7 @@ $typeid = optional_param('typeid', 0, PARAM_INT);
 // Définis l'instance.
 $instance = false;
 if ($typeid !== 0) {
-    $instance = $DB->get_record('apsolu_calendars_types', array('id' => $typeid));
+    $instance = $DB->get_record('apsolu_calendars_types', ['id' => $typeid]);
 }
 
 if ($instance === false) {
@@ -41,7 +41,7 @@ if ($instance === false) {
 }
 
 // Build form.
-$customdata = array($instance);
+$customdata = [$instance];
 $mform = new local_apsolu_calendars_types_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {

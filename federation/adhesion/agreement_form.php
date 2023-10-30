@@ -67,10 +67,10 @@ class local_apsolu_federation_agreement extends moodleform {
         $mform->setType('step', PARAM_INT);
 
         // Submit buttons.
-        $attributes = array('class' => 'btn btn-default');
+        $attributes = ['class' => 'btn btn-default'];
         $buttonarray[] = &$mform->createElement('submit', 'save', get_string('save'), $attributes);
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Set default values.
         $this->set_data($adhesion);

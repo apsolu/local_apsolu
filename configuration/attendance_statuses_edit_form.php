@@ -44,27 +44,27 @@ class local_apsolu_attendance_statuses_edit_form extends moodleform {
 
         $mform = $this->_form;
 
-        $datetimeoptions = array('optional' => true);
+        $datetimeoptions = ['optional' => true];
 
         list($defaults) = $this->_customdata;
 
         // Shortlabel field.
-        $mform->addElement('text', 'shortlabel', get_string('short_label', 'local_apsolu'), array('maxlength' => 3, 'size' => '48'));
+        $mform->addElement('text', 'shortlabel', get_string('short_label', 'local_apsolu'), ['maxlength' => 3, 'size' => '48']);
         $mform->setType('shortlabel', PARAM_TEXT);
         $mform->addRule('shortlabel', get_string('required'), 'required', null, 'client');
 
         // Longlabel field.
-        $mform->addElement('text', 'longlabel', get_string('long_label', 'local_apsolu'), array('size' => '48'));
+        $mform->addElement('text', 'longlabel', get_string('long_label', 'local_apsolu'), ['size' => '48']);
         $mform->setType('longlabel', PARAM_TEXT);
         $mform->addRule('longlabel', get_string('required'), 'required', null, 'client');
 
         // Sumlabel field.
-        $mform->addElement('text', 'sumlabel', get_string('sum_label', 'local_apsolu'), array('size' => '48'));
+        $mform->addElement('text', 'sumlabel', get_string('sum_label', 'local_apsolu'), ['size' => '48']);
         $mform->setType('sumlabel', PARAM_TEXT);
         $mform->addRule('sumlabel', get_string('required'), 'required', null, 'client');
 
         // Color field.
-        $colors = array();
+        $colors = [];
         $colors['success'] = get_string('green', 'local_apsolu');
         $colors['warning'] = get_string('orange', 'local_apsolu');
         $colors['info'] = get_string('blue', 'local_apsolu');
@@ -82,7 +82,7 @@ class local_apsolu_attendance_statuses_edit_form extends moodleform {
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
         $mform->addElement('hidden', 'action', 'edit');
@@ -111,7 +111,7 @@ class local_apsolu_attendance_statuses_edit_form extends moodleform {
 
         $errors = parent::validation($data, $files);
 
-        $fields = array();
+        $fields = [];
         $fields['short_label'] = 'shortlabel';
         $fields['long_label'] = 'longlabel';
         $fields['sum_label'] = 'sumlabel';
@@ -129,7 +129,7 @@ class local_apsolu_attendance_statuses_edit_form extends moodleform {
                 continue;
             }
 
-            $record = $DB->get_record('apsolu_attendance_statuses', array($field => $data[$field]));
+            $record = $DB->get_record('apsolu_attendance_statuses', [$field => $data[$field]]);
 
             if ($record === false) {
                 continue;

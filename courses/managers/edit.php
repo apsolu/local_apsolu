@@ -38,7 +38,7 @@ if ($managerid !== 0) {
 }
 
 // Build form.
-$customdata = array('manager' => $manager);
+$customdata = ['manager' => $manager];
 $mform = new local_apsolu_courses_managers_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
@@ -52,7 +52,7 @@ if ($data = $mform->get_data()) {
     $manager->save($data);
 
     // Redirige vers la page générale.
-    $returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'managers'));
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'managers']);
     redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
 

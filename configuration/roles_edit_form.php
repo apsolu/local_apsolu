@@ -50,12 +50,12 @@ class local_apsolu_roles_edit_form extends moodleform {
         $mform->addElement('static', 'description', get_string('role'), $role);
 
         // Color field.
-        $attributes = array('data-apsolu' => 'colorpicker');
+        $attributes = ['data-apsolu' => 'colorpicker'];
         $mform->addElement('text', 'color', get_string('color', 'local_apsolu'), $attributes);
         $mform->setType('color', PARAM_TEXT);
 
         // Font Awesome field.
-        $icons = array();
+        $icons = [];
         $icons['adjust'] = '&#xf042; adjust';
         $icons['asterisk'] = '&#xf069; asterisk';
         $icons['bookmark-o'] = '&#xf097; bookmark-o';
@@ -89,7 +89,7 @@ class local_apsolu_roles_edit_form extends moodleform {
         $icons['users'] = '&#xf0c0; users';
         $icons['user'] = '&#xf007; user';
 
-        $attributes = array('data-apsolu' => 'fontawesome', 'size' => count($icons));
+        $attributes = ['data-apsolu' => 'fontawesome', 'size' => count($icons)];
         $mform->addElement('select', 'fontawesomeid', get_string('icon'), $icons, $attributes);
         $mform->setType('fontawesomeid', PARAM_TEXT);
 
@@ -101,7 +101,7 @@ class local_apsolu_roles_edit_form extends moodleform {
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
         $mform->addElement('hidden', 'action', 'edit');

@@ -31,7 +31,7 @@ require __DIR__.'/medical_certificate_form.php';
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
-$data->notifications = array();
+$data->notifications = [];
 
 if ($adhesion->have_to_upload_medical_certificate() === false) {
     // L'étudiant a répondu NON à toutes les questions du questionnaire médical ou ne pratique pas un sport à risque.
@@ -45,36 +45,36 @@ if ($adhesion->have_to_upload_medical_certificate() === false) {
     // Validité attendue en mois du certificat médical.
     if ($adhesion->sport1 === Adhesion::SPORT_NONE) {
         $validityperiod = 12;
-        $sportswithoutconstraint = array();
+        $sportswithoutconstraint = [];
 
         // Liste les activités avec contraintes.
-        $sportswithconstraints = array($adhesion::SPORT_NONE => get_string('none'));
-        foreach (Activity::get_records(array('restriction' => 1), $sort = 'name') as $record) {
+        $sportswithconstraints = [$adhesion::SPORT_NONE => get_string('none')];
+        foreach (Activity::get_records(['restriction' => 1], $sort = 'name') as $record) {
             $sportswithconstraints[$record->id] = $record->name;
         }
     } else {
         $validityperiod = 6;
-        $sportswithconstraints = array();
+        $sportswithconstraints = [];
 
         // Liste les activités sans contrainte.
-        $sportswithoutconstraint = array($adhesion::SPORT_NONE => get_string('none'));
-        foreach (Activity::get_records(array('restriction' => 0), $sort = 'name') as $record) {
+        $sportswithoutconstraint = [$adhesion::SPORT_NONE => get_string('none')];
+        foreach (Activity::get_records(['restriction' => 0], $sort = 'name') as $record) {
             $sportswithoutconstraint[$record->id] = $record->name;
         }
     }
-    $customdata = array($adhesion, $course, $context, $validityperiod, $sportswithoutconstraint, $sportswithconstraints, $freeze = true);
+    $customdata = [$adhesion, $course, $context, $validityperiod, $sportswithoutconstraint, $sportswithconstraints, $freeze = true];
     $mform = new local_apsolu_federation_medical_certificate(null, $customdata);
     $data->content = $mform->render();
 } else {
     // Liste les activités sans contrainte.
-    $sportswithoutconstraint = array($adhesion::SPORT_NONE => get_string('none'));
-    foreach (Activity::get_records(array('restriction' => 0), $sort = 'name') as $record) {
+    $sportswithoutconstraint = [$adhesion::SPORT_NONE => get_string('none')];
+    foreach (Activity::get_records(['restriction' => 0], $sort = 'name') as $record) {
         $sportswithoutconstraint[$record->id] = $record->name;
     }
 
     // Liste les activités avec contraintes.
-    $sportswithconstraints = array($adhesion::SPORT_NONE => get_string('none'));
-    foreach (Activity::get_records(array('restriction' => 1), $sort = 'name') as $record) {
+    $sportswithconstraints = [$adhesion::SPORT_NONE => get_string('none')];
+    foreach (Activity::get_records(['restriction' => 1], $sort = 'name') as $record) {
         $sportswithconstraints[$record->id] = $record->name;
     }
 
@@ -103,7 +103,7 @@ if ($adhesion->have_to_upload_medical_certificate() === false) {
     }
 
     // Construit le formulaire.
-    $customdata = array($adhesion, $course, $context, $validityperiod, $sportswithoutconstraint, $sportswithconstraints, $freeze = false);
+    $customdata = [$adhesion, $course, $context, $validityperiod, $sportswithoutconstraint, $sportswithconstraints, $freeze = false];
     $mform = new local_apsolu_federation_medical_certificate(null, $customdata);
 
     // Charge les fichiers éventuellement déposés précédemment.
@@ -123,7 +123,7 @@ if ($adhesion->have_to_upload_medical_certificate() === false) {
         // Met à jour l'adhésion en base de données.
         $adhesion->save($mdata);
 
-        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', array('step' => APSOLU_PAGE_PAYMENT));
+        $returnurl = new moodle_url('/local/apsolu/federation/adhesion/index.php', ['step' => APSOLU_PAGE_PAYMENT]);
         redirect($returnurl);
     }
 

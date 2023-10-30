@@ -30,10 +30,10 @@ require(__DIR__.'/edit_form.php');
 $configurationid = optional_param('configurationid', 0, PARAM_INT);
 
 // Generate object.
-$configuration = $DB->get_record('config_plugins', array('id' => $configurationid, 'plugin' => 'local_apsolu'), '*', MUST_EXIST);
+$configuration = $DB->get_record('config_plugins', ['id' => $configurationid, 'plugin' => 'local_apsolu'], '*', MUST_EXIST);
 
 // Build form.
-$customdata = array('configuration' => $configuration);
+$customdata = ['configuration' => $configuration];
 $mform = new local_apsolu_payment_configurations_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {

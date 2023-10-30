@@ -63,10 +63,10 @@ class role extends record {
             $this->set_vars($data);
         }
 
-        if ($DB->get_record(self::TABLENAME, array('id' => $this->id)) === false) {
+        if ($DB->get_record(self::TABLENAME, ['id' => $this->id]) === false) {
             $sql = "INSERT INTO {".self::TABLENAME."} (id, color, fontawesomeid)".
                 " VALUES(:id, :color, :fontawesomeid)";
-            $parameters = array('id' => $this->id, 'color' => $this->color, 'fontawesomeid' => $this->fontawesomeid);
+            $parameters = ['id' => $this->id, 'color' => $this->color, 'fontawesomeid' => $this->fontawesomeid];
             $DB->execute($sql, $parameters);
         } else {
             $DB->update_record(self::TABLENAME, $this);

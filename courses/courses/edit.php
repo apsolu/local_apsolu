@@ -37,49 +37,49 @@ if ($courseid !== 0) {
     $course->load($courseid);
 }
 
-$url = new moodle_url('local/apsolu/courses/courses/edit.php', array('tab' => $tab, 'action' => 'edit', 'courseid' => $courseid));
+$url = new moodle_url('local/apsolu/courses/courses/edit.php', ['tab' => $tab, 'action' => 'edit', 'courseid' => $courseid]);
 
 // Load categories.
 $sql = "SELECT cc.id, cc.name".
     " FROM {course_categories} cc".
     " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id".
     " ORDER BY cc.name";
-$categories = array();
+$categories = [];
 foreach ($DB->get_records_sql($sql) as $category) {
     $categories[$category->id] = $category->name;
 }
 
-if ($categories === array()) {
+if ($categories === []) {
     print_error('error_no_category', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=categories');
 }
 
 // Load skills.
-$skills = array();
+$skills = [];
 foreach ($DB->get_records('apsolu_skills', $conditions = null, $sort = 'name') as $skill) {
     $skills[$skill->id] = $skill->name;
 }
 
-if ($skills === array()) {
+if ($skills === []) {
     print_error('error_no_skill', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=skills');
 }
 
 // Load locations.
-$locations = array();
+$locations = [];
 foreach ($DB->get_records('apsolu_locations', $conditions = null, $sort = 'name') as $location) {
     $locations[$location->id] = $location->name;
 }
 
-if ($locations === array()) {
+if ($locations === []) {
     print_error('error_no_location', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=locations');
 }
 
 // Load periods.
-$periods = array();
+$periods = [];
 foreach ($DB->get_records('apsolu_periods', $conditions = null, $sort = 'name') as $period) {
     $periods[$period->id] = $period->name;
 }
 
-if ($periods === array()) {
+if ($periods === []) {
     print_error('error_no_period', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=periods');
 }
 
@@ -102,7 +102,7 @@ $course = file_prepare_standard_editor($course, $field = 'information', $editoro
     $context, $component, $filearea, $itemid);
 
 // Build form.
-$customdata = array($course, $categories, $skills, $locations, $periods, $weekdays);
+$customdata = [$course, $categories, $skills, $locations, $periods, $weekdays];
 $mform = new local_apsolu_courses_courses_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
@@ -130,12 +130,12 @@ if ($data = $mform->get_data()) {
         $data = file_postupdate_standard_editor($data, $field = 'information', $editoroptions,
             $context, $component, $filearea, $itemid);
 
-        $DB->set_field('apsolu_courses', 'information', $data->information, array('id' => $course->id));
-        $DB->set_field('apsolu_courses', 'informationformat', $data->informationformat, array('id' => $course->id));
+        $DB->set_field('apsolu_courses', 'information', $data->information, ['id' => $course->id]);
+        $DB->set_field('apsolu_courses', 'informationformat', $data->informationformat, ['id' => $course->id]);
     }
 
     // Redirige vers la page générale.
-    $returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'courses'));
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'courses']);
     redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
 

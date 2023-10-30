@@ -58,12 +58,12 @@ class local_apsolu_settings_form extends moodleform {
         $mform->setExpanded('membership_form', $expanded = true);
 
         // Positionnement des valeurs par défaut.
-        $fields = array();
+        $fields = [];
         $fields['managerlicensetype'] = get_string('manager_license_type', 'local_apsolu');
         $fields['sportlicense'] = get_string('sport_license', 'local_apsolu');
-        $fields['managerlicense'] =  get_string('manager_license', 'local_apsolu');
-        $fields['refereelicense'] =  get_string('referee_license', 'local_apsolu');
-        $fields['starlicense'] =  get_string('star_license', 'local_apsolu');
+        $fields['managerlicense'] = get_string('manager_license', 'local_apsolu');
+        $fields['refereelicense'] = get_string('referee_license', 'local_apsolu');
+        $fields['starlicense'] = get_string('star_license', 'local_apsolu');
         $fields['insurance'] = get_string('insurance', 'local_apsolu');
 
         $mform->addElement('html', sprintf('<h4>%s</h4>', get_string('default_value_of_fields', 'local_apsolu')));
@@ -89,17 +89,17 @@ class local_apsolu_settings_form extends moodleform {
         }
 
         // Positionnement de la visibilité par défaut.
-        $fields = array();
+        $fields = [];
         $fields['managerlicensetype'] = get_string('manager_license_type', 'local_apsolu');
         $fields['sportlicense'] = get_string('sport_license', 'local_apsolu');
-        $fields['managerlicense'] =  get_string('manager_license', 'local_apsolu');
-        $fields['refereelicense'] =  get_string('referee_license', 'local_apsolu');
-        $fields['starlicense'] =  get_string('star_license', 'local_apsolu');
+        $fields['managerlicense'] = get_string('manager_license', 'local_apsolu');
+        $fields['refereelicense'] = get_string('referee_license', 'local_apsolu');
+        $fields['starlicense'] = get_string('star_license', 'local_apsolu');
         $fields['insurance'] = get_string('insurance', 'local_apsolu');
         $fields['otherfederation'] = get_string('other_federation', 'local_apsolu');
         $fields['instagram'] = get_string('instagram', 'local_apsolu');
 
-        $options = array();
+        $options = [];
         $options[Adhesion::FIELD_VISIBLE] = get_string('visible', 'local_apsolu');
         $options[Adhesion::FIELD_HIDDEN] = get_string('hidden', 'local_apsolu');
         $options[Adhesion::FIELD_LOCKED] = get_string('locked', 'local_apsolu');
@@ -135,7 +135,7 @@ class local_apsolu_settings_form extends moodleform {
         $mform->setType('ffsu_acceptedfiles', PARAM_TEXT);
 
         // Nombre maximum de fichiers à remettre pour le dépot de certificat médical.
-        $options = array();
+        $options = [];
         for ($i = 1; $i <= get_config('assignsubmission_file', 'maxfiles'); $i++) {
             $options[$i] = $i;
         }
@@ -158,7 +158,7 @@ class local_apsolu_settings_form extends moodleform {
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
 
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
         $mform->addElement('hidden', 'page', 'settings');

@@ -34,7 +34,7 @@ $manager = new Manager();
 $manager->load($managerid, $required = true);
 
 $deletehash = md5($manager->id);
-$returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'managers'));
+$returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'managers']);
 
 if ($delete === $deletehash) {
     // Effectue les actions de suppression.
@@ -47,9 +47,9 @@ if ($delete === $deletehash) {
 }
 
 // Vérifie si ce gestionnaire n'est pas associé à un lieu.
-$locations = Location::get_records(array('managerid' => $manager->id), 'name');
+$locations = Location::get_records(['managerid' => $manager->id], 'name');
 if (count($locations) !== 0) {
-    $datatemplate = array();
+    $datatemplate = [];
     $datatemplate['message'] = get_string('locations_manager_cannot_be_deleted', 'local_apsolu', $manager->name);
     $datatemplate['dependences'] = array_values($locations);
     $message = $OUTPUT->render_from_template('local_apsolu/courses_form_undeletable_message', $datatemplate);
@@ -58,16 +58,16 @@ if (count($locations) !== 0) {
 }
 
 // Affiche un message de confirmation.
-$datatemplate = array();
+$datatemplate = [];
 $datatemplate['message'] = get_string('do_you_want_to_delete_locations_manager', 'local_apsolu', $manager->name);
 $message = $OUTPUT->render_from_template('local_apsolu/courses_form_delete_message', $datatemplate);
 
 // Bouton de validation.
-$urlarguments = array('tab' => 'managers', 'action' => 'delete', 'managerid' => $manager->id, 'delete' => $deletehash);
+$urlarguments = ['tab' => 'managers', 'action' => 'delete', 'managerid' => $manager->id, 'delete' => $deletehash];
 $confirmurl = new moodle_url('/local/apsolu/courses/index.php', $urlarguments);
 $confirmbutton = new single_button($confirmurl, get_string('delete'), 'post');
 
 // Bouton d'annulation.
-$cancelurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'managers'));
+$cancelurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'managers']);
 
 echo $OUTPUT->confirm($message, $confirmbutton, $cancelurl);

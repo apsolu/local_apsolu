@@ -42,17 +42,17 @@ if ($status->sortorder === '1') {
 
         // Positionne l'ordre de tri de notre type de présence à -1, pour éviter les problèmes de contraintes d'unicité.
         $sql = "UPDATE {apsolu_attendance_statuses} SET sortorder = -1 WHERE id = :id";
-        $DB->execute($sql, array('id' => $status->id));
+        $DB->execute($sql, ['id' => $status->id]);
 
         // Met à jour la position du type de présence situé avant notre type de présence édité.
         $sql = "UPDATE {apsolu_attendance_statuses} SET sortorder = sortorder + 1 WHERE sortorder = :sortorder";
-        $DB->execute($sql, array('sortorder' => $order));
+        $DB->execute($sql, ['sortorder' => $order]);
 
         // Modifie la position de notre type de présence.
         $sql = "UPDATE {apsolu_attendance_statuses} SET sortorder = :sortorder WHERE id = :id";
-        $DB->execute($sql, array('id' => $status->id, 'sortorder' => $order));
+        $DB->execute($sql, ['id' => $status->id, 'sortorder' => $order]);
 
-        $params = array('label' => $status->longlabel, 'order' => $order);
+        $params = ['label' => $status->longlabel, 'order' => $order];
         Notification::success(get_string('the_attendance_status_X_has_been_moved_to_Y_position', 'local_apsolu', $params));
 
         $transaction->allow_commit();

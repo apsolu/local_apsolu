@@ -31,11 +31,11 @@ $action = optional_param('action', 'view', PARAM_ALPHA);
 $PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise');
 
 // Set tabs.
-$tabslist = array('complements', 'federations');
+$tabslist = ['complements', 'federations'];
 
-$tabsbar = array();
+$tabsbar = [];
 foreach ($tabslist as $tabname) {
-    $url = new moodle_url('/local/apsolu/courses/complements.php', array('tab' => $tabname));
+    $url = new moodle_url('/local/apsolu/courses/complements.php', ['tab' => $tabname]);
     $tabsbar[] = new tabobject($tabname, $url, get_string($tabname, 'local_apsolu'));
 }
 

@@ -27,17 +27,17 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->dirroot.'/local/apsolu/configuration/dates_form.php');
 
 // Build form.
-$attributes = array(
+$attributes = [
     'payments_startdate',
     'payments_enddate',
-    );
+    ];
 
 $defaults = new stdClass();
 foreach ($attributes as $attribute) {
     $defaults->{$attribute} = get_config('local_apsolu', $attribute);
 }
 
-$customdata = array($defaults);
+$customdata = [$defaults];
 
 $mform = new local_apsolu_calendar_form(null, $customdata);
 

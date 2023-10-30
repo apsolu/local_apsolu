@@ -38,7 +38,7 @@ if ($holidayid !== 0) {
 }
 
 // Build form.
-$customdata = array('holiday' => $holiday);
+$customdata = ['holiday' => $holiday];
 $mform = new local_apsolu_courses_holidays_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
@@ -49,7 +49,7 @@ if ($data = $mform->get_data()) {
     }
 
     // Save data.
-    $record = $DB->get_record(Holiday::TABLENAME, array('day' => $data->day));
+    $record = $DB->get_record(Holiday::TABLENAME, ['day' => $data->day]);
     if ($record !== false) {
         $holiday->load($record->id);
     }
@@ -61,7 +61,7 @@ if ($data = $mform->get_data()) {
     }
 
     // Redirige vers la page générale.
-    $returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'holidays'));
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'holidays']);
     redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
 

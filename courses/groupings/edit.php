@@ -38,7 +38,7 @@ if ($groupingid !== 0) {
 }
 
 // Build form.
-$customdata = array($grouping);
+$customdata = [$grouping];
 $mform = new local_apsolu_courses_groupings_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
@@ -52,7 +52,7 @@ if ($data = $mform->get_data()) {
     $grouping->save($data);
 
     // Redirige vers la page générale.
-    $returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'groupings'));
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'groupings']);
     redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
 

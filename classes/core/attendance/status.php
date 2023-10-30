@@ -83,14 +83,14 @@ class status extends record {
 
         // Supprime toutes les présences utilisant ce statut.
         $sql = "DELETE FROM {apsolu_attendance_presences} WHERE statusid = :statusid";
-        $DB->execute($sql, array('statusid' => $this->id));
+        $DB->execute($sql, ['statusid' => $this->id]);
 
         // Supprime l'objet en base de données.
-        $DB->delete_records(self::TABLENAME, array('id' => $this->id));
+        $DB->delete_records(self::TABLENAME, ['id' => $this->id]);
 
         // Trie les champs.
         $sql = "UPDATE {apsolu_attendance_statuses} SET sortorder = sortorder - 1 WHERE sortorder > :sortorder";
-        $DB->execute($sql, array('sortorder' => $this->sortorder));
+        $DB->execute($sql, ['sortorder' => $this->sortorder]);
 
         // Valide la transaction en cours.
         if (isset($transaction) === true) {

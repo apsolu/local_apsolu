@@ -50,12 +50,12 @@ class local_apsolu_payment_notifications_compose_form extends moodleform {
         $mform->addHelpButton('simulation', 'simulation', 'local_apsolu');
 
         // Subject field.
-        $mform->addElement('text', 'subject', get_string('subject', 'local_apsolu'), array('size' => '48'));
+        $mform->addElement('text', 'subject', get_string('subject', 'local_apsolu'), ['size' => '48']);
         $mform->setType('subject', PARAM_TEXT);
         $mform->addRule('subject', get_string('required'), 'required', null, 'client');
 
         // Message field.
-        $mform->addElement('editor', 'message', get_string('description'), null,  array('maxfiles' => EDITOR_UNLIMITED_FILES));
+        $mform->addElement('editor', 'message', get_string('description'), null,  ['maxfiles' => EDITOR_UNLIMITED_FILES]);
         $mform->setType('message', PARAM_RAW);
         $mform->addRule('message', get_string('required'), 'required', null, 'client');
 
@@ -91,7 +91,7 @@ class local_apsolu_payment_notifications_compose_form extends moodleform {
     public function validation($data, $files) {
         global $DB;
 
-        $errors = array();
+        $errors = [];
         $errors = parent::validation($data, $files);
 
         // Vérifie qu'au moins une carte est cochée.

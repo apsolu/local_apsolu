@@ -48,17 +48,17 @@ class course_category {
 
         $context = $event->get_context();
 
-        $category = $DB->get_record(\local_apsolu\core\category::TABLENAME, array('id' => $context->instanceid));
+        $category = $DB->get_record(\local_apsolu\core\category::TABLENAME, ['id' => $context->instanceid]);
         if ($category !== false) {
             // C'est une catégorie d'activité sportive APSOLU.
-            $DB->delete_records(\local_apsolu\core\category::TABLENAME, array('id' => $category->id));
+            $DB->delete_records(\local_apsolu\core\category::TABLENAME, ['id' => $category->id]);
             return;
         }
 
-        $category = $DB->get_record(\local_apsolu\core\grouping::TABLENAME, array('id' => $context->instanceid));
+        $category = $DB->get_record(\local_apsolu\core\grouping::TABLENAME, ['id' => $context->instanceid]);
         if ($category !== false) {
             // C'est une catégorie de groupement d'activités sportives APSOLU.
-            $DB->delete_records(\local_apsolu\core\grouping::TABLENAME, array('id' => $category->id));
+            $DB->delete_records(\local_apsolu\core\grouping::TABLENAME, ['id' => $category->id]);
             return;
         }
     }
@@ -79,10 +79,10 @@ class course_category {
             " FROM {course_categories} cc".
             " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id".
             " WHERE cc.id = :categoryid";
-        $category = $DB->get_record_sql($sql, array('categoryid' => $context->instanceid));
+        $category = $DB->get_record_sql($sql, ['categoryid' => $context->instanceid]);
         if ($category !== false) {
             // C'est une catégorie d'activité sportive APSOLU. Le parent doit être une catégorie de groupement d'activités sportives APSOLU.
-            $parent = $DB->get_record(\local_apsolu\core\grouping::TABLENAME, array('id' => $category->parent));
+            $parent = $DB->get_record(\local_apsolu\core\grouping::TABLENAME, ['id' => $category->parent]);
             if ($parent === false) {
                 $message = get_string('category_must_be_parent_of_a_grouping_of_sports_activities', 'local_apsolu', $category->name);
                 \core\notification::add($message, \core\notification::WARNING);
@@ -110,7 +110,7 @@ class course_category {
             " FROM {course_categories} cc".
             " JOIN {apsolu_courses_groupings} acg ON cc.id = acg.id".
             " WHERE cc.id = :categoryid";
-        $category = $DB->get_record_sql($sql, array('categoryid' => $context->instanceid));
+        $category = $DB->get_record_sql($sql, ['categoryid' => $context->instanceid]);
         if ($category !== false) {
             // C'est une catégorie de groupement d'activités sportives APSOLU. Le parent ne peut pas être changé.
             if (empty($category->parent) === false) {

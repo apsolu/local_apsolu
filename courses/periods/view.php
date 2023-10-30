@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$periods = array();
+$periods = [];
 foreach ($DB->get_records('apsolu_periods', null, 'name') as $period) {
     $period->weeks = explode(',', $period->weeks);
     $period->count_weeks = 0;

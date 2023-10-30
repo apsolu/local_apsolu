@@ -29,7 +29,7 @@ use local_apsolu\core\holiday as Holiday;
 require(__DIR__.'/generate_form.php');
 
 // Build form.
-$customdata = array('holiday' => (object) ['from' => time(), 'until' => time() + 365 * 24 * 60 * 60]);
+$customdata = ['holiday' => (object) ['from' => time(), 'until' => time() + 365 * 24 * 60 * 60]];
 $mform = new local_apsolu_courses_holidays_generate_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
@@ -42,7 +42,7 @@ if ($data = $mform->get_data()) {
     // Parcourt chaque année dans l'intervalle donné.
     $year = strftime('%Y', $data->from);
     $endyear = strftime('%Y', $data->until);
-    for ($year ; $year <= $endyear ; $year++) {
+    for ($year; $year <= $endyear; $year++) {
         // Parcourt les jours fériés de l'année.
         foreach (Holiday::get_holidays($year) as $holidaytimestamp) {
             if ($holidaytimestamp < $data->from) {
@@ -73,7 +73,7 @@ if ($data = $mform->get_data()) {
     }
 
     // Redirige vers la page générale.
-    $returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'holidays'));
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'holidays']);
     redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
 

@@ -33,7 +33,7 @@ $skill = new Skill();
 $skill->load($skillid, $required = true);
 
 $deletehash = md5($skill->id);
-$returnurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'skills'));
+$returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'skills']);
 
 if ($delete === $deletehash) {
     // Effectue les actions de suppression.
@@ -47,11 +47,11 @@ if ($delete === $deletehash) {
 
 // Vérifie si ce niveau de pratique n'est pas associé à un cours.
 $sql = "SELECT c.fullname FROM {course} c JOIN {apsolu_courses} cc ON c.id = cc.id WHERE cc.skillid = :skillid ORDER BY c.fullname";
-$courses = $DB->get_records_sql($sql, array('skillid' => $skill->id));
+$courses = $DB->get_records_sql($sql, ['skillid' => $skill->id]);
 if (count($courses) !== 0) {
-    $datatemplate = array();
+    $datatemplate = [];
     $datatemplate['message'] = get_string('skill_cannot_be_deleted', 'local_apsolu', $skill->name);
-    $datatemplate['dependences'] = array();
+    $datatemplate['dependences'] = [];
     foreach ($courses as $course) {
         $datatemplate['dependences'][] = $course->fullname;
     }
@@ -61,16 +61,16 @@ if (count($courses) !== 0) {
 }
 
 // Affiche un message de confirmation.
-$datatemplate = array();
+$datatemplate = [];
 $datatemplate['message'] = get_string('do_you_want_to_delete_skill', 'local_apsolu', $skill->name);
 $message = $OUTPUT->render_from_template('local_apsolu/courses_form_delete_message', $datatemplate);
 
 // Bouton de validation.
-$urlarguments = array('tab' => 'skills', 'action' => 'delete', 'skillid' => $skill->id, 'delete' => $deletehash);
+$urlarguments = ['tab' => 'skills', 'action' => 'delete', 'skillid' => $skill->id, 'delete' => $deletehash];
 $confirmurl = new moodle_url('/local/apsolu/courses/index.php', $urlarguments);
 $confirmbutton = new single_button($confirmurl, get_string('delete'), 'post');
 
 // Bouton d'annulation.
-$cancelurl = new moodle_url('/local/apsolu/courses/index.php', array('tab' => 'skills'));
+$cancelurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'skills']);
 
 echo $OUTPUT->confirm($message, $confirmbutton, $cancelurl);

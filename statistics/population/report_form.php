@@ -42,16 +42,16 @@ class local_apsolu_statistics_report_form extends moodleform {
     protected function definition() {
         $mform = $this->_form;
 
-        list($reports,$reportid) = $this->_customdata;
+        list($reports, $reportid) = $this->_customdata;
 
-        $options = array();
+        $options = [];
 
         $group = get_string('none');
-        $options[$group] = array();
+        $options[$group] = [];
         $options[$group][0] = $group;
 
         $group = get_string('statistics_enrollments', 'local_apsolu');
-        $options[$group] = array();
+        $options[$group] = [];
         foreach($reports as $property => $value) {
             if (property_exists($value, 'group') && $value->group == "statistics_enrollments") {
                 $options[$group][$value->id] = $value->label;
@@ -59,7 +59,7 @@ class local_apsolu_statistics_report_form extends moodleform {
         }
 
         $group = get_string('statistics_enrollees', 'local_apsolu');
-        $options[$group] = array();
+        $options[$group] = [];
         foreach($reports as $property => $value) {
             if (property_exists($value, 'group') && $value->group == "statistics_enrollees") {
                 $options[$group][$value->id] = $value->label;
@@ -67,7 +67,7 @@ class local_apsolu_statistics_report_form extends moodleform {
         }
 
         $group = get_string('other');
-        $options[$group] = array();
+        $options[$group] = [];
         foreach($reports as $property => $value) {
             if (!property_exists($value, 'group')) {
                 $options[$group][$value->id] = $value->label;

@@ -33,7 +33,7 @@ require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
 
 // Get user id.
 $userid = required_param('userid', PARAM_INT);
-$user = $DB->get_record('user', array('id' => $userid, 'deleted' => '0'));
+$user = $DB->get_record('user', ['id' => $userid, 'deleted' => '0']);
 
 if ($user === false) {
     print_error('invaliduser');
@@ -45,7 +45,7 @@ $backurl = $CFG->wwwroot.'/local/apsolu/payment/admin.php?tab=payments&userid='.
 
 $paymentid = optional_param('paymentid', null, PARAM_INT);
 if ($paymentid !== null) {
-    $payment = $DB->get_record('apsolu_payments', array('id' => $paymentid, 'userid' => $userid));
+    $payment = $DB->get_record('apsolu_payments', ['id' => $paymentid, 'userid' => $userid]);
     if ($payment === false) {
         $paymentid = null;
     } else if (empty($payment->timepaid) === false) {
@@ -68,57 +68,57 @@ if ($paymentid === null) {
     $payment->userid = $userid;
     $payment->paymentcenterid = '1';
 } else {
-    foreach ($DB->get_records('apsolu_payments_items', array('paymentid' => $payment->id)) as $item) {
+    foreach ($DB->get_records('apsolu_payments_items', ['paymentid' => $payment->id]) as $item) {
         $cardname = 'card'.$item->cardid;
         $payment->{$cardname} = 1;
     }
 }
 
 // Build form.
-$methods = array(
+$methods = [
     'card' => get_string('method_card', 'local_apsolu'),
     'check' => get_string('method_check', 'local_apsolu'),
     'coins' => get_string('method_coins', 'local_apsolu'),
     'paybox' => get_string('method_paybox', 'local_apsolu'),
-    );
+    ];
 
-$sources = array(
+$sources = [
     'apogee' => get_string('source_apogee', 'local_apsolu'),
     'apsolu' => get_string('source_apsolu', 'local_apsolu'),
     'manual' => get_string('source_manual', 'local_apsolu'),
-    );
+    ];
 
-$statuses = array(
+$statuses = [
     Payment::PAID => get_string('paymentpaid', 'local_apsolu'),
     Payment::DUE => get_string('paymentdue', 'local_apsolu'),
     Payment::GIFT => get_string('paymentgift', 'local_apsolu'),
-    );
+    ];
 
-$centers = array();
+$centers = [];
 foreach ($DB->get_records('apsolu_payments_centers') as $center) {
     $centers[$center->id] = $center->name;
 }
 
-$cards = array();
-foreach ($DB->get_records('apsolu_payments_cards', $conditions = array(), $sort = 'fullname') as $card) {
+$cards = [];
+foreach ($DB->get_records('apsolu_payments_cards', $conditions = [], $sort = 'fullname') as $card) {
     $sql = "SELECT *".
         " FROM {apsolu_payments} ap".
         " JOIN {apsolu_payments_items} api ON ap.id = api.paymentid".
         " WHERE ap.timepaid IS NOT NULL".
         " AND api.cardid = :cardid".
         " AND ap.userid = :userid";
-    if ($DB->get_record_sql($sql, array('cardid' => $card->id, 'userid' => $userid)) !== false) {
+    if ($DB->get_record_sql($sql, ['cardid' => $card->id, 'userid' => $userid]) !== false) {
         continue;
     }
     $cards[$card->id] = $card->fullname;
 }
 
-$customdata = array('payment' => $payment, 'methods' => $methods, 'sources' => $sources, 'statuses' => $statuses, 'centers' => $centers, 'cards' => $cards);
+$customdata = ['payment' => $payment, 'methods' => $methods, 'sources' => $sources, 'statuses' => $statuses, 'centers' => $centers, 'cards' => $cards];
 $mform = new local_apsolu_payment_payments_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
     // Save data.
-    $items = array();
+    $items = [];
     foreach ($cards as $cardid => $cardname) {
         $name = 'card'.$cardid;
         if (isset($data->{$name}) === true) {
@@ -162,7 +162,7 @@ if ($data = $mform->get_data()) {
         }
 
         $sql = "DELETE FROM {apsolu_payments_items} WHERE paymentid = :paymentid";
-        $DB->execute($sql, array('paymentid' => $payment->id));
+        $DB->execute($sql, ['paymentid' => $payment->id]);
 
         foreach ($items as $cardid) {
             $item = new stdClass();
@@ -172,11 +172,11 @@ if ($data = $mform->get_data()) {
             $DB->insert_record('apsolu_payments_items', $item);
         }
 
-        $event = \local_apsolu\event\update_user_payment::create(array(
+        $event = \local_apsolu\event\update_user_payment::create([
             'relateduserid' => $userid,
             'context' => context_system::instance(),
-            'other' => json_encode(array('payment' => $payment, 'items' => $items)),
-        ));
+            'other' => json_encode(['payment' => $payment, 'items' => $items]),
+        ]);
         $event->trigger();
 
         $success = true;

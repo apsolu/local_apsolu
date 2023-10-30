@@ -66,7 +66,7 @@ class session_deleted extends \core\event\base {
      * @return \moodle_url
      */
     public function get_url() {
-        $parameters = array('courseid' => $this->courseid);
+        $parameters = ['courseid' => $this->courseid];
         return new \moodle_url('local/apsolu/attendance/sessions/index.php', $parameters);
     }
 }
