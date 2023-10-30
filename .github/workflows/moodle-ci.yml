@@ -94,7 +94,9 @@ jobs:
       - name: Install moodle-plugin-ci
         run: |
           moodle-plugin-ci add-plugin --clone https://github.com/apsolu/block_apsolu_course.git
+          moodle-plugin-ci add-plugin --clone https://github.com/apsolu/block_apsolu_dashboard.git
           moodle-plugin-ci add-plugin --clone https://github.com/apsolu/enrol_select.git
+          moodle-plugin-ci add-plugin --clone https://github.com/apsolu/theme_apsolu.git
           moodle-plugin-ci install --plugin ./plugin --db-host=127.0.0.1
         env:
           DB: ${{ matrix.database }}
