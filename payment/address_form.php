@@ -87,6 +87,7 @@ class local_apsolu_payment_address_form extends moodleform {
         $mform->addElement('text', 'zipcode', get_string('cardholder_zipcode', 'local_apsolu'), $attributes);
         $mform->addRule('zipcode', get_string('maximumchars', '', paybox::MAX_LENGTH_ZIPCODE), 'maxlength', paybox::MAX_LENGTH_ZIPCODE, 'server');
         $mform->setType('zipcode', PARAM_TEXT);
+        $mform->addRule('zipcode', get_string('required'), 'required', null, 'client');
 
         // City field.
         $attributes['maxlength'] = paybox::MAX_LENGTH_CITY;
