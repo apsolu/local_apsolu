@@ -38,7 +38,7 @@ if ($adhesion->have_to_upload_medical_certificate() === false) {
     $message = get_string('i_answered_no_to_all_the_questions_in_the_health_questionnaire', 'local_apsolu');
     $data->notifications[] = $message;
     $data->nextstep = APSOLU_PAGE_PAYMENT;
-} else if ($adhesion->medicalcertificatestatus === $adhesion::MEDICAL_CERTIFICATE_STATUS_VALIDATED) {
+} else if ($adhesion->can_edit() === false) {
     $messages = $adhesion::get_contacts();
     $data->notifications[] = implode(' ', $messages);
 
