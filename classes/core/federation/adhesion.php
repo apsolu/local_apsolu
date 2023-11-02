@@ -299,7 +299,7 @@ class adhesion extends record {
      */
     public static function get_contacts() {
         $messages = [];
-        $messages[] = get_string('your_medical_certificate_has_already_been_validated', 'local_apsolu');
+        $messages[] = get_string('your_request_is_being_processed', 'local_apsolu').'.';
 
         $functional_contact_mail = get_config('local_apsolu', 'functional_contact');
         if (filter_var($functional_contact_mail, FILTER_VALIDATE_EMAIL) !== false) {
