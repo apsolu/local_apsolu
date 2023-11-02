@@ -779,6 +779,7 @@ class adhesion extends record {
                 if ($this->have_to_upload_medical_certificate() === true) {
                     $this->medicalcertificatestatus = self::MEDICAL_CERTIFICATE_STATUS_PENDING;
                 } else {
+                    $this->medicalcertificatedate = null;
                     $this->medicalcertificatestatus = self::MEDICAL_CERTIFICATE_STATUS_EXEMPTED;
                 }
             }
