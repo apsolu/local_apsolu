@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\federation\adhesion as Adhesion;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once $CFG->libdir.'/formslib.php';
@@ -45,6 +47,11 @@ class local_apsolu_request_federation_number_form extends moodleform {
         $mform = $this->_form;
 
         list($items, $canrequestfederationnumber, $hasrequestedfederationnumber) = $this->_customdata;
+
+        if ($hasrequestedfederationnumber === true) {
+            $content = Adhesion::get_contacts();
+            $mform->addElement('html', html_writer::div(implode(' ', $content), 'alert alert-info'));
+        }
 
         $crossicon = $OUTPUT->render(new pix_icon('i/grade_incorrect', ''));
         $checkicon = $OUTPUT->render(new pix_icon('i/grade_correct', ''));

@@ -22,6 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\federation\adhesion as Adhesion;
 use UniversiteRennes2\Apsolu\Payment;
 
 defined('MOODLE_INTERNAL') || die();
@@ -35,6 +36,11 @@ $data->count_cards = 0;
 $data->cards = [];
 $data->nextstep = APSOLU_PAGE_SUMMARY;
 $data->payment_url = (string) new moodle_url('/local/apsolu/payment/index.php');
+$data->can_edit = $adhesion->can_edit();
+
+if ($data->can_edit === false) {
+    $data->contacts = Adhesion::get_contacts();
+}
 
 $images = Payment::get_statuses_images();
 foreach (Payment::get_user_cards_status_per_course($federationcourse->id, $USER->id) as $card) {

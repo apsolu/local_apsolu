@@ -34,6 +34,10 @@
         "activities": []
     }
 }}
+{{^can_edit}}
+    <div class="alert alert-info">{{#contacts}}{{{.}}} {{/contacts}}</div>
+{{/can_edit}}
+
 {{#count_cards}}
     {{#due}}
     <div class="alert alert-warning">{{#str}}you_must_pay_for_your_membership_in_the_sports_association, local_apsolu{{/str}}</div>
@@ -49,6 +53,7 @@
     {{/cards}}
     </ul>
 
+    {{#can_edit}}
     {{#due}}
     <p><a class="btn btn-success" href="{{ payment_url }}">{{#str}}pay_for_license, local_apsolu{{/str}}</a><p>
     {{/due}}
@@ -56,8 +61,11 @@
     {{^due}}
     <p><a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/federation/adhesion/index.php?step={{nextstep}}">{{#str}}next, local_apsolu{{/str}}</a></p>
     {{/due}}
+    {{/can_edit}}
 {{/count_cards}}
 
+{{#can_edit}}
 {{^count_cards}}
     <p class="alert alert-info">{{#str}}you_do_not_have_to_pay_for_your_membership_in_the_sports_association, local_apsolu{{/str}}</p>
 {{/count_cards}}
+{{/can_edit}}
