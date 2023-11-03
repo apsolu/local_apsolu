@@ -275,7 +275,7 @@ class gradebook {
 
         // Récupération des notes.
         $grades = [];
-        $sql = "SELECT gi.itemname, gg.userid, gg.finalgrade, gg.feedback, gi.courseid, gc.fullname,".
+        $sql = "SELECT gi.itemname, gi.grademax, gg.userid, gg.finalgrade, gg.feedback, gi.courseid, gc.fullname,".
             " u.firstname, u.lastname, u.lastnamephonetic, u.firstnamephonetic, u.middlename, u.alternatename".
             " FROM {grade_items} gi".
             " JOIN {grade_categories} gc ON gc.id = gi.categoryid".
@@ -307,6 +307,8 @@ class gradebook {
             if (empty($grade->feedback) === false) {
                 $grade->finalgrade = $grade->feedback;
             }
+
+            $gradeitems[$apsolugradeitemid]->grademax = (float) $grade->grademax;
 
             $value = new stdClass();
             $value->grade = $grade->finalgrade;
@@ -605,6 +607,7 @@ class gradebook {
                     $grade->abi = false;
                     $grade->abj = false;
                     $grade->value = null;
+                    $grade->max = $item->grademax;
                     $grade->inputname = $user->id.'-'.$user->courseid.'-'.$apsolugradeitemid;
 
                     if (isset($grades[$user->id][$user->courseid][$apsolugradeitemid]) === true) {
