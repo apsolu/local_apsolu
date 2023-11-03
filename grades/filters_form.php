@@ -50,6 +50,9 @@ class local_apsolu_grades_gradebooks_filters_form extends moodleform {
         $fields['courses'] = get_string('course');
         $fields['roles'] = get_string('role');
         $fields['graders'] = get_string('grader', 'local_apsolu');
+        $fields['categories'] = get_string('activity', 'local_apsolu');
+        $fields['groupings'] = get_string('grouping', 'local_apsolu');
+        $fields['sexes'] = get_string('sex', 'local_apsolu');
 
         $multiple = ['multiple' => true];
 

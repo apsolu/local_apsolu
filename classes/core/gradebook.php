@@ -326,6 +326,7 @@ class gradebook {
         $params = [];
         $params[] = $customfields['apsoluufr']->id;
         $params[] = $customfields['apsolucycle']->id;
+        $params[] = $customfields['apsolusex']->id;
         $params[] = CONTEXT_COURSE;
 
         // Filtres.
@@ -435,17 +436,19 @@ class gradebook {
             $conditions[] = sprintf(" AND %s LIKE ? ", $DB->sql_fullname('u.firstname', 'u.lastname'));
         }
 
-        $sql = "SELECT u.id, u.lastname, u.firstname, u.email, u.idnumber, act.name AS city, u.institution, uid1.data AS ufr, u.department,".
+        $sql = "SELECT u.id, u.lastname, u.firstname, u.email, u.idnumber, uid3.data AS sex, act.name AS city, u.institution, uid1.data AS ufr, u.department,".
             " u.lastnamephonetic, u.firstnamephonetic, u.middlename, u.alternatename, u.picture, u.imagealt,".
-            " uid2.data AS cycle, aca.id AS calendarid, aca.name AS calendar, c.id AS courseid, c.fullname AS course, cc.name AS category, ra.roleid".
+            " uid2.data AS cycle, aca.id AS calendarid, aca.name AS calendar, c.id AS courseid, c.fullname AS course, cc.name AS category, cc2.name AS grouping, ra.roleid".
             " FROM {user} u".
             " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = ?".
             " LEFT JOIN {user_info_data} uid2 ON u.id = uid2.userid AND uid2.fieldid = ?".
+            " LEFT JOIN {user_info_data} uid3 ON u.id = uid3.userid AND uid3.fieldid = ?".
             " JOIN {user_enrolments} ue ON u.id = ue.userid AND ue.status = 0".
             " JOIN {enrol} e ON e.id = ue.enrolid AND e.enrol = 'select' AND e.status = 0".
             " JOIN {apsolu_calendars} aca ON aca.id = e.customchar1".
             " JOIN {course} c ON c.id = e.courseid".
             " JOIN {course_categories} cc ON cc.id = c.category".
+            " JOIN {course_categories} cc2 ON cc2.id = cc.parent".
             " JOIN {apsolu_courses} ac ON ac.id = c.id".
             " JOIN {apsolu_locations} al ON al.id = ac.locationid".
             " JOIN {apsolu_areas} aa ON aa.id = al.areaid".
@@ -465,6 +468,9 @@ class gradebook {
         $gradebooks->headers[] = get_string('idnumber');
         $gradebooks->headers[] = get_string('lastname');
         $gradebooks->headers[] = get_string('firstname');
+        if (isset($fields['sexes']) === true) {
+            $gradebooks->headers[] = get_string('sex', 'local_apsolu');
+        }
         if (isset($fields['emails']) === true) {
             $gradebooks->headers[] = get_string('email');
         }
@@ -485,6 +491,9 @@ class gradebook {
         }
         if (isset($fields['calendars']) === true) {
             $gradebooks->headers[] = get_string('calendar', 'local_apsolu');
+        }
+        if (isset($fields['groupings']) === true) {
+            $gradebooks->headers[] = get_string('grouping', 'local_apsolu');
         }
         if (isset($fields['categories']) === true) {
             $gradebooks->headers[] = get_string('activity', 'local_apsolu');
@@ -558,6 +567,9 @@ class gradebook {
             $gradebook->profile[] = $user->lastname;
             $gradebook->profile[] = $user->firstname;
 
+            if (isset($fields['sexes']) === true) {
+                $gradebook->profile[] = $user->sex;
+            }
             if (isset($fields['emails']) === true) {
                 $gradebook->profile[] = $user->email;
             }
@@ -578,6 +590,9 @@ class gradebook {
             }
             if (isset($fields['calendars']) === true) {
                 $gradebook->profile[] = $user->calendar;
+            }
+            if (isset($fields['groupings']) === true) {
+                $gradebook->profile[] = $user->grouping;
             }
             if (isset($fields['categories']) === true) {
                 $gradebook->profile[] = $user->category;
