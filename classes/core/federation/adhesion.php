@@ -32,6 +32,7 @@ use local_apsolu\core\federation\activity as Activity;
 use local_apsolu\core\federation\number as Number;
 use local_apsolu\core\record;
 use local_apsolu\event\federation_adhesion_updated;
+use UniversiteRennes2\Apsolu\Payment;
 
 require_once($CFG->dirroot.'/cohort/lib.php');
 
@@ -240,6 +241,81 @@ class adhesion extends record {
      */
     public function can_edit() {
         return empty($this->federationnumberrequestdate) === true;
+    }
+
+    /**
+     * Détermine si l'adhérent peut faire une demande de numéro de licence.
+     *
+     * @return boolean
+     */
+    public function can_request_a_federation_number() {
+        global $CFG;
+
+        require_once($CFG->dirroot . '/local/apsolu/classes/apsolu/payment.php');
+
+        if (empty($this->federationnumber) === false) {
+            // Un numéro de licence a déjà été attribué.
+            return false;
+        }
+
+        if (empty($this->federationnumberrequestdate) === false) {
+            // Une demande de licence est déjà en cours.
+            return false;
+        }
+
+        if ($this->questionnairestatus === null) {
+            // Le questionnaire médical n'a pas été rempli.
+            return false;
+        }
+
+        if (empty($this->agreementaccepted) === true) {
+            // La charte n'a pas été acceptée.
+            return false;
+        }
+
+        if (empty($this->mainsport) === true) {
+            // Le formulaire d'adhésion n'a pas été rempli.
+            return false;
+        }
+
+        $federationcourse = new FederationCourse();
+        $federationcourse->id = $federationcourse->get_courseid();
+
+        if ($this->have_to_upload_parental_authorization() === true) {
+            $fs = get_file_storage();
+            $context = context_course::instance($federationcourse->id, MUST_EXIST);
+            list($component, $filearea, $itemid) = ['local_apsolu', 'parentalauthorization', $this->userid];
+            $sort = 'itemid, filepath, filename';
+            $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
+            if (count($files) === 0) {
+                // Aucune autorisation parentale n'a été déposée.
+                return false;
+            }
+        }
+
+        if ($this->have_to_upload_medical_certificate() === true) {
+            $fs = get_file_storage();
+            $context = context_course::instance($federationcourse->id, MUST_EXIST);
+            list($component, $filearea, $itemid) = ['local_apsolu', 'medicalcertificate', $this->userid];
+            $sort = 'itemid, filepath, filename';
+            $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
+            if (count($files) === 0) {
+                // Aucun certificat médical déposé.
+                return false;
+            }
+        }
+
+        foreach (Payment::get_user_cards_status_per_course($federationcourse->id, $this->userid) as $card) {
+            if ($card->status !== Payment::DUE) {
+                continue;
+            }
+
+            // Un paiement est du.
+            return false;
+        }
+
+        // L'adhérent peut valider sa demande de licence.
+        return true;
     }
 
     /**

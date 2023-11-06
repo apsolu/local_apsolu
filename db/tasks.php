@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 $tasks = [
     [
         // Tâche exécutée toutes les 15 minutes.
@@ -49,6 +51,16 @@ $tasks = [
         'blocking' => 0,
         'minute' => '0',
         'hour' => '*',
+        'day' => '*',
+        'dayofweek' => '*',
+        'month' => '*',
+    ],
+    [
+        // Tâche exécutée une fois par jour.
+        'classname' => 'local_apsolu\task\follow_up_incomplete_federation_adhesions',
+        'blocking' => 0,
+        'minute' => '30',
+        'hour' => '7',
         'day' => '*',
         'dayofweek' => '*',
         'month' => '*',

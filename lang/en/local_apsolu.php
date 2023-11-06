@@ -278,6 +278,15 @@ $string['fields'] = 'Champs';
 $string['field_X_cannot_be_empty'] = 'Le champ « {$a} » ne peut pas être vide.';
 $string['fill_out_the_membership_form'] = 'Remplir le formulaire d’adhésion';
 $string['filter'] = 'Filtrer';
+$string['follow_up_incomplete_federation_adhesions_message'] = 'Bonjour {$a->firstname} {$a->lastname},
+
+Vous semblez avoir réalisé toutes les étapes de la procédure d’adhésion à l’Association Sportive / Licence FFSU.
+
+Cependant vous n’avez pas confirmé votre demande de numéro de licence.
+
+Vous pouvez le faire en vous rendant sur cette page : {$a->url}
+
+Cordialement,';
 $string['force_replyto'] = 'Utiliser l’adresse de courriel de l’utilisateur en adresse de « réponse à »';
 $string['from'] = 'À partir de';
 $string['fullname_course_has_been_renamed_to'] = 'Le nom complet du cours « {$a->oldname} » a été renommé en « {$a->newname} ».';
@@ -652,6 +661,7 @@ $string['students_found'] = '{$a} étudiant(s) trouvé(s)';
 $string['subject'] = 'Sujet';
 $string['sum_label'] = 'Libellé des totaux';
 $string['summary'] = 'Récapitulatif';
+$string['task_for_follow_up_incomplete_federation_adhesions'] = 'Tâche pour relancer les adhésions incomplètes de la FFSU';
 $string['taking_attendance_is_only_possible_on_a_course'] = 'La prise de présences est uniquement possible sur un cours de type « créneau horaire ».';
 $string['teacher'] = 'Enseignant';
 $string['teachers'] = 'Enseignants';
