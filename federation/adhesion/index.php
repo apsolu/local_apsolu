@@ -45,7 +45,7 @@ if ($course === false) {
 $context = context_course::instance($course->id, MUST_EXIST);
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('base');
-$PAGE->set_url('/local/apsolu/federation/form/index.php');
+$PAGE->set_url(new moodle_url('/local/apsolu/federation/adhesion/index.php', ['step' => $stepid]));
 $PAGE->set_title(get_string('membership_of_the_sports_association', 'local_apsolu'));
 
 require_login($courseorid = null, $autologinguest = false);
