@@ -14,6 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace local_apsolu\task;
+
+use core_user;
+use local_apsolu\core\federation\adhesion as Adhesion;
+
 /**
  * Classe représentant la tâche pour relancer inscriptions incomplètes à la FFSU.
  *
@@ -29,12 +34,6 @@
  * @copyright  2023 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-namespace local_apsolu\task;
-
-use core_user;
-use local_apsolu\core\federation\adhesion as Adhesion;
-
 class follow_up_incomplete_federation_adhesions extends \core\task\scheduled_task {
     /**
      * Retourne le nom de la tâche.
