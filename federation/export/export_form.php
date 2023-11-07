@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once $CFG->libdir.'/formslib.php';
+require_once($CFG->libdir . '/formslib.php');
 
 /**
  * Classe pour le formulaire permettant d'exporter les licences FFSU.

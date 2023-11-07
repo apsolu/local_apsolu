@@ -38,7 +38,7 @@ $template = 'local_apsolu/attendance_sessions_form';
 if (count($presences) > 0) {
     $notifications[] = $OUTPUT->notification(get_string('attendance_undeletable_session', 'local_apsolu', $session->name), 'notifyproblem');
 
-    require(__DIR__.'/view.php');
+    require(__DIR__ . '/view.php');
 } else if ($delete === 1) {
     // We do - time to delete the course.
     require_sesskey();
@@ -52,7 +52,7 @@ if (count($presences) > 0) {
         $notifications[] = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
 
         // Notification.
-        require_once($CFG->dirroot.'/mod/forum/lib.php');
+        require_once($CFG->dirroot . '/mod/forum/lib.php');
 
         $forum = $DB->get_record('forum', ['type' => 'news', 'course' => $course->id]);
         if ($forum === false) {
@@ -103,7 +103,7 @@ if (count($presences) > 0) {
                     $functional_contact_mail = $CFG->divertallemailsto;
                 }
 
-                require_once $CFG->libdir.'/phpmailer/moodle_phpmailer.php';
+                require_once($CFG->libdir . '/phpmailer/moodle_phpmailer.php');
 
                 $mailer = new moodle_phpmailer();
                 $mailer->AddAddress($functional_contact_mail);
@@ -124,7 +124,7 @@ if (count($presences) > 0) {
         $transaction->rollback($exception);
     }
 
-    require(__DIR__.'/view.php');
+    require(__DIR__ . '/view.php');
 } else {
     // Affichage du formulaire de confirmation.
     $message = $OUTPUT->notification(get_string('attendance_delete_session', 'local_apsolu', $session->name), 'notifyproblem');

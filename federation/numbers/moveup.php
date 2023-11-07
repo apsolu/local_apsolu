@@ -64,4 +64,4 @@ if ($number->sortorder === '0') {
     }
 }
 
-require __DIR__.'/view.php';
+require(__DIR__ . '/view.php');

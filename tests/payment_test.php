@@ -28,7 +28,7 @@ namespace local_apsolu\core;
 use stdClass;
 use UniversiteRennes2\Apsolu\Payment;
 
-require_once __DIR__.'/../classes/apsolu/payment.php';
+require_once(__DIR__ . '/../classes/apsolu/payment.php');
 
 /**
  * Classe de tests pour local_apsolu\apsolu\payment

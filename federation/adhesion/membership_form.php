@@ -26,7 +26,7 @@ use local_apsolu\core\federation\adhesion as Adhesion;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once $CFG->libdir.'/formslib.php';
+require_once($CFG->libdir . '/formslib.php');
 
 /**
  * Classe pour le formulaire permettant d'exporter les licences FFSU.

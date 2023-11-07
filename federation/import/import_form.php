@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once $CFG->libdir.'/formslib.php';
-require_once($CFG->dirroot.'/user/editlib.php');
+require_once($CFG->libdir . '/formslib.php');
+require_once($CFG->dirroot . '/user/editlib.php');
 
 /**
  * Classe pour le formulaire permettant d'importer les licences FFSU.

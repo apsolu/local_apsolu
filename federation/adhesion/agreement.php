@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require __DIR__.'/agreement_form.php';
+require(__DIR__ . '/agreement_form.php');
 
 // Initialise le formulaire.
 $readonly = ($adhesion->can_edit() === false);

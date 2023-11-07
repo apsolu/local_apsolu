@@ -27,7 +27,7 @@ use local_apsolu\core\federation\adhesion as Adhesion;
 
 defined('MOODLE_INTERNAL') || die();
 
-require __DIR__.'/membership_form.php';
+require(__DIR__ . '/membership_form.php');
 
 // Prépare les données du formulaire.
 $sexes = ['' => ''];

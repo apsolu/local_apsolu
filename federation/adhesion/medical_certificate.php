@@ -27,7 +27,7 @@ use local_apsolu\core\federation\adhesion as Adhesion;
 
 defined('MOODLE_INTERNAL') || die();
 
-require __DIR__.'/medical_certificate_form.php';
+require(__DIR__ . '/medical_certificate_form.php');
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;

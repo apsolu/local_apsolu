@@ -23,7 +23,7 @@
  */
 
 // Redirection vers le nouveau carnet de notes pour les enseignants. Supprimer cette redirection un jour.
-require __DIR__.'/../../../config.php';
+require(__DIR__ . '/../../../config.php');
 
 $redirection = $CFG->wwwroot.'/local/apsolu/grades/grade/index.php';
 

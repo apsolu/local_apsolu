@@ -21,7 +21,7 @@
  * @copyright  2018 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require __DIR__.'/../../config.php';
+require(__DIR__ . '/../../config.php');
 
 header('Content-Type: application/json');
 

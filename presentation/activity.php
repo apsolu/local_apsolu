@@ -24,7 +24,7 @@
 
 use UniversiteRennes2\Apsolu;
 
-require __DIR__.'/../../../config.php';
+require(__DIR__ . '/../../../config.php');
 require_once($CFG->dirroot.'/enrol/select/locallib.php');
 
 $activityid = optional_param('id', 0, PARAM_INT);

@@ -27,7 +27,7 @@ use local_apsolu\core\federation\adhesion as Adhesion;
 
 defined('MOODLE_INTERNAL') || die();
 
-require __DIR__.'/parental_authorization_form.php';
+require(__DIR__ . '/parental_authorization_form.php');
 
 // Initialise le formulaire.
 $readonly = ($adhesion->can_edit() === false);

@@ -64,4 +64,4 @@ if ($status->sortorder == $count) {
     }
 }
 
-require __DIR__.'/attendance_statuses_view.php';
+require(__DIR__ . '/attendance_statuses_view.php');

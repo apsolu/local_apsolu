@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require __DIR__.'/edit_form.php';
+require(__DIR__ . '/edit_form.php');
 
 $template = 'local_apsolu/attendance_sessions_form';
 
@@ -111,7 +111,7 @@ if ($mdata = $mform->get_data()) {
         }
 
         if ($changed === true && $forum !== false) {
-            require_once($CFG->dirroot.'/mod/forum/lib.php');
+            require_once($CFG->dirroot . '/mod/forum/lib.php');
 
             list($course, $cm) = get_course_and_cm_from_instance($forum, 'forum');
             $context = context_module::instance($cm->id);
@@ -149,7 +149,7 @@ if ($mdata = $mform->get_data()) {
                 $functional_contact_mail = $CFG->divertallemailsto;
             }
 
-            require_once $CFG->libdir.'/phpmailer/moodle_phpmailer.php';
+            require_once($CFG->libdir . '/phpmailer/moodle_phpmailer.php');
 
             $mailer = new moodle_phpmailer();
             $mailer->AddAddress($functional_contact_mail);
@@ -168,7 +168,7 @@ if ($mdata = $mform->get_data()) {
         }
     }
 
-    require(__DIR__.'/view.php');
+    require(__DIR__ . '/view.php');
 } else {
     // Display form.
     $data->form = $mform->render();

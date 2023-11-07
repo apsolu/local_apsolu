@@ -216,7 +216,7 @@ foreach ($pages as $name => $url) {
 
 // Content.
 ob_start();
-require __DIR__.'/'.$steps[$stepid].'.php';
+require(__DIR__ . '/'.$steps[$stepid].'.php');
 $content = ob_get_contents();
 ob_end_clean();
 
