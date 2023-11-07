@@ -278,15 +278,12 @@ $string['fields'] = 'Champs';
 $string['field_X_cannot_be_empty'] = 'Le champ « {$a} » ne peut pas être vide.';
 $string['fill_out_the_membership_form'] = 'Remplir le formulaire d’adhésion';
 $string['filter'] = 'Filtrer';
-$string['follow_up_incomplete_federation_adhesions_message'] = 'Bonjour {$a->firstname} {$a->lastname},
-
-Vous semblez avoir réalisé toutes les étapes de la procédure d’adhésion à l’Association Sportive / Licence FFSU.
-
-Cependant vous n’avez pas confirmé votre demande de numéro de licence.
-
-Vous pouvez le faire en vous rendant sur cette page : {$a->url}
-
-Cordialement,';
+$string['follow_up_incomplete_federation_adhesions_message'] = '<p>Bonjour {$a->firstname} {$a->lastname},</p>
+<p>Vous semblez avoir réalisé toutes les étapes de la procédure d’adhésion à l’Association Sportive / Licence FFSU.</p>
+<p>Cependant vous n’avez pas confirmé votre demande de numéro de licence.</p>
+<p>Vous pouvez le faire en vous connectant sur votre tableau de bord ou en cliquant directement sur ce lien :</p>
+<p><a href="{$a->url}">{$a->url}</a></p>
+<p>Cordialement,</p>';
 $string['force_replyto'] = 'Utiliser l’adresse de courriel de l’utilisateur en adresse de « réponse à »';
 $string['from'] = 'À partir de';
 $string['fullname_course_has_been_renamed_to'] = 'Le nom complet du cours « {$a->oldname} » a été renommé en « {$a->newname} ».';
