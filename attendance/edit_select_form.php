@@ -39,7 +39,7 @@ class edit_select_form extends moodleform {
      *
      * @return void
      */
-    function definition() {
+    protected function definition() {
         $mform = $this->_form;
 
         $data = new stdClass();

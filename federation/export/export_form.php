@@ -39,7 +39,7 @@ class local_apsolu_federation_export_licenses extends moodleform {
      *
      * @return void
      */
-    function definition () {
+    protected function definition() {
         $mform = $this->_form;
         $numbers = $this->_customdata['numbers'];
         $payments = $this->_customdata['payments'];

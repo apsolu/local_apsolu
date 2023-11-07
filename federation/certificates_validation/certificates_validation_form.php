@@ -39,7 +39,7 @@ class local_apsolu_federation_certificates_validation extends moodleform {
      *
      * @return void
      */
-    function definition () {
+    protected function definition() {
         $mform = $this->_form;
         $certificates = $this->_customdata['certificates'];
 

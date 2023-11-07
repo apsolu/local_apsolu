@@ -41,7 +41,7 @@ class local_apsolu_federation_medical_certificate extends moodleform {
      *
      * @return void
      */
-    function definition () {
+    protected function definition() {
         global $USER;
 
         $mform = $this->_form;

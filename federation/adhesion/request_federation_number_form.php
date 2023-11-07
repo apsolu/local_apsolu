@@ -41,7 +41,7 @@ class local_apsolu_request_federation_number_form extends moodleform {
      *
      * @return void
      */
-    function definition () {
+    protected function definition() {
         global $OUTPUT;
 
         $mform = $this->_form;

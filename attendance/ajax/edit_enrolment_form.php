@@ -39,7 +39,7 @@ class edit_enrolment_form extends moodleform {
      *
      * @return void
      */
-    function definition() {
+    protected function definition() {
         $mform = $this->_form;
 
         list($data, $statuses, $roles) = $this->_customdata;

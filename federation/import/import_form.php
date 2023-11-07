@@ -40,7 +40,7 @@ class local_apsolu_federation_import_licences extends moodleform {
      *
      * @return void
      */
-    function definition () {
+    protected function definition() {
         $preview = optional_param('previewbutton', null, PARAM_ALPHA);
         $federationnumbercolumn = optional_param('federationnumbercolumn', null, PARAM_INT);
         $emailcolumn = optional_param('emailcolumn', null, PARAM_INT);

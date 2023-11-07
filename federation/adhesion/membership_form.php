@@ -41,7 +41,7 @@ class local_apsolu_federation_membership extends moodleform {
      *
      * @return void
      */
-    function definition () {
+    protected function definition() {
         global $USER;
 
         $mform = $this->_form;

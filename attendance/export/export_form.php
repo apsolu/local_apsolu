@@ -39,7 +39,7 @@ class local_apsolu_attendance_export_form extends moodleform {
      *
      * @return void
      */
-    function definition() {
+    protected function definition() {
         $mform = $this->_form;
 
         $courseid = $this->_customdata['courseid'];
