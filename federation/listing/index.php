@@ -44,7 +44,7 @@ $federationcourse = new FederationCourse();
 $courseid = $federationcourse->get_courseid();
 if (empty($courseid) === true) {
     // La cours FFSU n'est pas configuré.
-    print_error('federation_module_is_not_configured', 'local_apsolu');
+    throw new moodle_exception('federation_module_is_not_configured', 'local_apsolu');
 }
 
 $coursecontext = context_course::instance($courseid, MUST_EXIST);

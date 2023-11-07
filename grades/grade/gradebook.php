@@ -66,10 +66,10 @@ foreach (Gradebook::get_courses(APSOLU_GRADES_COURSE_SCOPE) as $course) {
 // Vérifie les autorisations d'accès à la page.
 if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_COURSE && $courses === []) {
     // Cet utilisateur n'a pas de cours à évaluer.
-    print_error('no_courses_to_grade', 'local_apsolu');
+    throw new moodle_exception('no_courses_to_grade', 'local_apsolu');
 } else if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_SYSTEM && has_capability('local/apsolu:viewallgrades', context_system::instance()) === false) {
     // Cet utilisateur n'a pas les droits de gestionnaires.
-    print_error('nopermissions', 'error', '', get_capability_string('local/apsolu:viewallgrades'));
+    throw new moodle_exception('nopermissions', 'error', '', get_capability_string('local/apsolu:viewallgrades'));
 }
 
 // Liste des rôles évaluables.

@@ -44,7 +44,7 @@ foreach ($DB->get_records('apsolu_areas', $conditions = null, $sort = 'name') as
 }
 
 if ($areas === []) {
-    print_error('error_no_area', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=areas');
+    throw new moodle_exception('error_no_area', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=areas');
 }
 
 // Load managers.
@@ -54,7 +54,7 @@ foreach ($DB->get_records('apsolu_managers', $conditions = null, $sort = 'name')
 }
 
 if ($managers === []) {
-    print_error('error_no_manager', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=managers');
+    throw new moodle_exception('error_no_manager', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=managers');
 }
 
 // Build form.

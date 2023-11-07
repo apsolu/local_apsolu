@@ -140,7 +140,7 @@ $session = $DB->get_record('apsolu_attendance_sessions', ['id' => $sessionid, 'c
 
 if ($session === false) {
     // TODO: créer un message.
-    print_error('needcoursecategroyid');
+    throw new moodle_exception('needcoursecategroyid');
 }
 
 $customfields = customfields::getCustomFields();

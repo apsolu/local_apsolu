@@ -48,7 +48,7 @@ if ($formdata = $mform->get_data()) {
     unset($content);
 
     if ($csvloaderror !== null) {
-        print_error('csvloaderror', '', $returnurl, $csvloaderror);
+        throw new moodle_exception('csvloaderror', '', $returnurl, $csvloaderror);
     }
 
     if (isset($formdata->importbutton) === true) {

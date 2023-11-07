@@ -50,7 +50,7 @@ foreach ($DB->get_records_sql($sql) as $grouping) {
 }
 
 if ($groupings === []) {
-    print_error('error_no_grouping', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=groupings');
+    throw new moodle_exception('error_no_grouping', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=groupings');
 }
 
 // Build form.

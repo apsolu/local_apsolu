@@ -31,13 +31,13 @@ $activityid = optional_param('id', 0, PARAM_INT);
 $activityname = optional_param('name', '', PARAM_TAG);
 
 if (empty($activityid) === true && empty($activityname) === true) {
-    print_error('invalidrecordunknown');
+    throw new moodle_exception('invalidrecordunknown');
 }
 
 $activities = enrol_select_get_activities($siteid = 0, $activityid, $activityname);
 
 if (count($activities) === 0) {
-    print_error('invalidrecordunknown');
+    throw new moodle_exception('invalidrecordunknown');
 }
 
 $PAGE->set_url('/local/apsolu/presentation/activity.php');

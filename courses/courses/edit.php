@@ -50,7 +50,7 @@ foreach ($DB->get_records_sql($sql) as $category) {
 }
 
 if ($categories === []) {
-    print_error('error_no_category', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=categories');
+    throw new moodle_exception('error_no_category', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=categories');
 }
 
 // Load skills.
@@ -60,7 +60,7 @@ foreach ($DB->get_records('apsolu_skills', $conditions = null, $sort = 'name') a
 }
 
 if ($skills === []) {
-    print_error('error_no_skill', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=skills');
+    throw new moodle_exception('error_no_skill', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=skills');
 }
 
 // Load locations.
@@ -70,7 +70,7 @@ foreach ($DB->get_records('apsolu_locations', $conditions = null, $sort = 'name'
 }
 
 if ($locations === []) {
-    print_error('error_no_location', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=locations');
+    throw new moodle_exception('error_no_location', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=locations');
 }
 
 // Load periods.
@@ -80,7 +80,7 @@ foreach ($DB->get_records('apsolu_periods', $conditions = null, $sort = 'name') 
 }
 
 if ($periods === []) {
-    print_error('error_no_period', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=periods');
+    throw new moodle_exception('error_no_period', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=periods');
 }
 
 // Load weekdays.

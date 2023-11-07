@@ -90,11 +90,11 @@ if (has_capability('local/apsolu:viewallgrades', context_system::instance()) ===
     }
 
     if ($find === false) {
-        print_error('nopermissions', 'error', '', get_capability_string('local/apsolu:editgrades'));
+        throw new moodle_exception('nopermissions', 'error', '', get_capability_string('local/apsolu:editgrades'));
     }
 
     if (has_capability('local/apsolu:editgrades', context_course::instance($item->courseid)) === false) {
-        print_error('nopermissions', 'error', '', get_capability_string('local/apsolu:editgrades'));
+        throw new moodle_exception('nopermissions', 'error', '', get_capability_string('local/apsolu:editgrades'));
     }
 }
 
@@ -105,7 +105,7 @@ if (has_capability('local/apsolu:editgradesafterdeadline', context_system::insta
     $now = time();
     $canedit = ((empty($calendar->gradestartdate) || $now > $calendar->gradestartdate) && (empty($calendar->gradeenddate) || $now < $calendar->gradeenddate));
     if ($canedit === false) {
-        print_error('nopermissions', 'error', '', get_capability_string('local/apsolu:editgradesafterdeadline'));
+        throw new moodle_exception('nopermissions', 'error', '', get_capability_string('local/apsolu:editgradesafterdeadline'));
     }
 }
 

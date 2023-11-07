@@ -45,7 +45,7 @@ require_capability('moodle/course:update', $coursecontext);
 $activity = $DB->get_record('apsolu_courses', ['id' => $course->id]);
 if ($activity === false) {
     // TODO: créer un message.
-    print_error('needcoursecategroyid');
+    throw new moodle_exception('needcoursecategroyid');
 }
 
 $streditcoursesettings = get_string('attendance_overview', 'local_apsolu');

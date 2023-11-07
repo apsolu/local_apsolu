@@ -32,7 +32,7 @@ $confirm = optional_param('confirm', '', PARAM_ALPHANUM); // Confirmation hash.
 $federationcourse = new FederationCourse();
 if ($federationcourse->get_course() === false) {
     // Le cours FFSU n'est pas configuré.
-    print_error('federation_module_is_not_configured', 'local_apsolu');
+    throw new moodle_exception('federation_module_is_not_configured', 'local_apsolu');
 }
 
 $context = context_course::instance($federationcourse->get_courseid(), MUST_EXIST);

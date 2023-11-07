@@ -39,7 +39,7 @@ $federationcourse = new FederationCourse();
 $course = $federationcourse->get_course();
 if ($course === false) {
     // Le cours FFSU n'est pas configuré.
-    print_error('federation_module_is_not_configured', 'local_apsolu');
+    throw new moodle_exception('federation_module_is_not_configured', 'local_apsolu');
 }
 
 $context = context_course::instance($course->id, MUST_EXIST);
@@ -73,7 +73,7 @@ if (is_enrolled($context, $user = null, $withcapability = '', $onlyactive = true
     } catch (Exception $exception) {
         debugging($exception->getMessage(), $level = DEBUG_DEVELOPER);
 
-        print_error('you_are_not_enrolled_in_this_course', 'local_apsolu');
+        throw new moodle_exception('you_are_not_enrolled_in_this_course', 'local_apsolu');
     }
 }
 

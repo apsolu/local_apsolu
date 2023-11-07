@@ -36,7 +36,7 @@ $userid = required_param('userid', PARAM_INT);
 $user = $DB->get_record('user', ['id' => $userid, 'deleted' => '0']);
 
 if ($user === false) {
-    print_error('invaliduser');
+    throw new moodle_exception('invaliduser');
 }
 
 // TODO: vérifier le témoin : sesame valide.
@@ -127,7 +127,7 @@ if ($data = $mform->get_data()) {
     }
 
     if (count($items) === 0) {
-        print_error('error_missing_items', 'local_apsolu', $backurl);
+        throw new moodle_exception('error_missing_items', 'local_apsolu', $backurl);
     }
 
     $payment->method = $data->method;
