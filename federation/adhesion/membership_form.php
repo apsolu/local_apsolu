@@ -140,8 +140,8 @@ class local_apsolu_federation_membership extends moodleform {
         // Contrôle de l'honorabilité.
         if ($honorability === true) {
             $label = get_string('honorability', 'local_apsolu');
-            $mform->addElement('checkbox', 'honorability', $label, get_string('honorability_description', 'local_apsolu'));
-            $mform->setType('honorability', PARAM_INT);
+            $mform->addElement('checkbox', 'honorabilityagreement', $label, get_string('honorability_description', 'local_apsolu'));
+            $mform->setType('honorabilityagreement', PARAM_INT);
         }
 
         // Licence étoile.
@@ -280,14 +280,14 @@ class local_apsolu_federation_membership extends moodleform {
         }
 
         if (isset($data['managerlicense']) === true && empty($data['managerlicense']) === false) {
-            if (isset($data['honorability']) === false) {
-                $errors['honorability'] = get_string('you_must_accept_the_honorability_check', 'local_apsolu');
+            if (isset($data['honorabilityagreement']) === false) {
+                $errors['honorabilityagreement'] = get_string('you_must_accept_the_honorability_check', 'local_apsolu');
             }
         }
 
         if (isset($data['refereelicense']) === true && empty($data['refereelicense']) === false) {
-            if (isset($data['honorability']) === false) {
-                $errors['honorability'] = get_string('you_must_accept_the_honorability_check', 'local_apsolu');
+            if (isset($data['honorabilityagreement']) === false) {
+                $errors['honorabilityagreement'] = get_string('you_must_accept_the_honorability_check', 'local_apsolu');
             }
         }
 

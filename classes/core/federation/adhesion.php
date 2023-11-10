@@ -840,6 +840,11 @@ class adhesion extends record {
                 throw new Exception(get_string('your_medical_certificate_has_already_been_validated', 'local_apsolu'));
             }
 
+            // Modifie la valeur du champ honorabilité.
+            if (empty($this->managerlicense) === true && empty($this->refereelicense) === true) {
+                $this->honorabilityagreement = 0;
+            }
+
             // Ajoute/retire l'étudiant de la cohorte assurance FFSU.
             $insurancecohortid = get_config('local_apsolu', 'insurance_cohort');
             if (empty($insurancecohortid) === false) {
