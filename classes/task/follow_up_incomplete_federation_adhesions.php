@@ -96,7 +96,7 @@ class follow_up_incomplete_federation_adhesions extends \core\task\scheduled_tas
                 continue;
             }
 
-            mtrace(sprintf('relance %s %s (%s)', $user->firstname, $user->lastname, $user->email));
+            mtrace(sprintf('relance #%s %s %s (%s)', $user->id, $user->firstname, $user->lastname, $user->email));
 
             $url = $CFG->wwwroot . '/local/apsolu/federation/adhesion/index.php?step=6';
             $params = ['firstname' => $user->firstname, 'lastname' => $user->lastname, 'url' => $url];
