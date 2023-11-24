@@ -37,84 +37,86 @@ foreach (Payment::get_course_cards($courseid) as $card) {
     $cards[] = $card->id;
 }
 
-// Récupère tous les adhérants ayant payé.
-list($insql, $params) = $DB->get_in_or_equal($cards, SQL_PARAMS_NAMED, 'cardid_');
+if (empty($cards) === false) {
+    // Récupère tous les adhérants ayant payé.
+    list($insql, $params) = $DB->get_in_or_equal($cards, SQL_PARAMS_NAMED, 'cardid_');
 
-$sql = "SELECT u.lastname, u.firstname, u.email, u.idnumber, u.institution, u.department,
-               ap.method, ap.timepaid, ap.amount, ap.id, apc.prefix, afa.mainsport
-          FROM {user} u
-          JOIN {apsolu_federation_adhesions} afa ON u.id = afa.userid
-          JOIN {apsolu_payments} ap ON ap.userid = afa.userid
-          JOIN {apsolu_payments_centers} apc ON apc.id = ap.paymentcenterid
-          JOIN {apsolu_payments_items} api ON ap.id = api.paymentid
-         WHERE api.cardid $insql
-           AND ap.status != :status
-      ORDER BY u.lastname, u.firstname, ap.timepaid DESC";
-$params['status'] = Payment::DUE;
-$recordset = $DB->get_recordset_sql($sql, $params);
+    $sql = "SELECT u.lastname, u.firstname, u.email, u.idnumber, u.institution, u.department,
+                   ap.method, ap.timepaid, ap.amount, ap.id, apc.prefix, afa.mainsport
+              FROM {user} u
+              JOIN {apsolu_federation_adhesions} afa ON u.id = afa.userid
+              JOIN {apsolu_payments} ap ON ap.userid = afa.userid
+              JOIN {apsolu_payments_centers} apc ON apc.id = ap.paymentcenterid
+              JOIN {apsolu_payments_items} api ON ap.id = api.paymentid
+             WHERE api.cardid $insql
+               AND ap.status != :status
+          ORDER BY u.lastname, u.firstname, ap.timepaid DESC";
+    $params['status'] = Payment::DUE;
+    $recordset = $DB->get_recordset_sql($sql, $params);
 
-if ($recordset->valid()) {
-    // Récupère la liste des sports.
-    $federationactivities = $DB->get_records('apsolu_federation_activities');
+    if ($recordset->valid()) {
+        // Récupère la liste des sports.
+        $federationactivities = $DB->get_records('apsolu_federation_activities');
 
-    // Construit le fichier csv.
-    $filename = clean_filename(get_string('federation_payments', 'local_apsolu'));
-    $csvexport = new \csv_export_writer();
-    $csvexport->set_filename($filename);
+        // Construit le fichier csv.
+        $filename = clean_filename(get_string('federation_payments', 'local_apsolu'));
+        $csvexport = new \csv_export_writer();
+        $csvexport->set_filename($filename);
 
-    $headers = [
-        get_string('lastname'),
-        get_string('firstname'),
-        get_string('email'),
-        get_string('idnumber'),
-        get_string('institution'),
-        get_string('department'),
-        get_string('main_sport', 'local_apsolu'),
-        get_string('method', 'local_apsolu'),
-        get_string('date', 'local_apsolu'),
-        get_string('amount', 'local_apsolu'),
-        get_string('payment_number', 'local_apsolu'),
-    ];
-    $csvexport->add_data($headers);
+        $headers = [
+            get_string('lastname'),
+            get_string('firstname'),
+            get_string('email'),
+            get_string('idnumber'),
+            get_string('institution'),
+            get_string('department'),
+            get_string('main_sport', 'local_apsolu'),
+            get_string('method', 'local_apsolu'),
+            get_string('date', 'local_apsolu'),
+            get_string('amount', 'local_apsolu'),
+            get_string('payment_number', 'local_apsolu'),
+        ];
+        $csvexport->add_data($headers);
 
-    foreach ($recordset as $record) {
-        if (empty($record->prefix) === false) {
-            $record->id = $record->prefix.$record->id;
+        foreach ($recordset as $record) {
+            if (empty($record->prefix) === false) {
+                $record->id = $record->prefix.$record->id;
+            }
+
+            if ($record->method !== 'paybox') {
+                $record->id = '';
+            }
+
+            try {
+                $timepaid = new DateTime($record->timepaid);
+                $timepaid = $timepaid->format('d-m-Y H:i:s');
+            } catch (Exception $exception) {
+                $timepaid = '';
+            }
+
+            $row = [];
+            $row[] = $record->lastname;
+            $row[] = $record->firstname;
+            $row[] = $record->email;
+            $row[] = $record->idnumber;
+            $row[] = $record->institution;
+            $row[] = $record->department;
+            $row[] = $federationactivities[$record->mainsport]->name;
+            $row[] = get_string('method_'.$record->method, 'local_apsolu');
+            $row[] = $timepaid;
+            $row[] = $record->amount;
+            $row[] = $record->id;
+
+            $csvexport->add_data($row);
         }
+        $recordset->close();
 
-        if ($record->method !== 'paybox') {
-            $record->id = '';
-        }
-
-        try {
-            $timepaid = new DateTime($record->timepaid);
-            $timepaid = $timepaid->format('d-m-Y H:i:s');
-        } catch(Exception $exception) {
-            $timepaid = '';
-        }
-
-        $row = [];
-        $row[] = $record->lastname;
-        $row[] = $record->firstname;
-        $row[] = $record->email;
-        $row[] = $record->idnumber;
-        $row[] = $record->institution;
-        $row[] = $record->department;
-        $row[] = $federationactivities[$record->mainsport]->name;
-        $row[] = get_string('method_'.$record->method, 'local_apsolu');
-        $row[] = $timepaid;
-        $row[] = $record->amount;
-        $row[] = $record->id;
-
-        $csvexport->add_data($row);
+        $csvexport->download_file();
+        exit(0);
     }
+
     $recordset->close();
-
-    $csvexport->download_file();
-    exit(0);
 }
-
-$recordset->close();
 
 echo $OUTPUT->header();
 echo $OUTPUT->tabtree($tabtree, $page);
