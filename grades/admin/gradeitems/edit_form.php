@@ -61,6 +61,20 @@ class local_apsolu_grades_gradeitems_edit_form extends moodleform {
         $mform->setType('calendarid', PARAM_TEXT);
         $mform->addRule('calendarid', get_string('required'), 'required', null, 'client');
 
+        // Note maximum.
+        $mform->addElement('text', 'grademax', get_string('maxgrade', 'grades'));
+        $mform->setType('grademax', PARAM_FLOAT);
+        $mform->addRule('grademax', get_string('required'), 'required', null, 'client');
+
+        // Ré-évaluer les notes.
+        $choices = ['0' => get_string('no'), '1' => get_string('yes')];
+        $mform->addElement('select', 'rescalegrades', get_string('modgraderescalegrades', 'grades'), $choices);
+        $mform->addHelpButton('rescalegrades', 'modgraderescalegrades', 'grades');
+
+        // Date de publication.
+        $label = get_string('publication_date', 'local_apsolu');
+        $mform->addElement('date_time_selector', 'publicationdate', $label, ['optional' => true]);
+
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 

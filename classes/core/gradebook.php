@@ -28,7 +28,6 @@ use context_course;
 use context_system;
 use csv_export_writer;
 use Exception;
-use grade_category;
 use grade_grade;
 use grade_item;
 use stdClass;
@@ -42,9 +41,24 @@ use stdClass;
  */
 class gradebook {
     /**
+     * Valeur utilisée pour cacher un élément de notation.
+     */
+    const GRADE_ITEM_HIDDEN = '1';
+
+    /**
+     * Valeur utilisée pour rendre visible un élément de notation.
+     */
+    const GRADE_ITEM_VISIBLE = '0';
+
+    /**
      * Nom de la catégorie contenant les éléments d'évaluation d'APSOLU dans chaque cours.
      */
     const NAME = 'APSOLU';
+
+    /**
+     * Nom utilisé dans le champ source pour l'historique des modifications.
+     */
+    const SOURCE = 'apsolu-gradebook';
 
     /** @var array $caneditgrades Contient un tableau indexé par identifiant de cours, indiquant si l'utilisateur pour éditer les notes du cours. */
     public static $caneditgrades = [];
@@ -275,17 +289,16 @@ class gradebook {
 
         // Récupération des notes.
         $grades = [];
-        $sql = "SELECT gi.itemname, gi.grademax, gg.userid, gg.finalgrade, gg.feedback, gi.courseid, gc.fullname,".
+        $sql = "SELECT gi.itemname, gi.grademax, gg.userid, gg.finalgrade, gg.feedback, gi.courseid, gi.iteminfo,".
             " u.firstname, u.lastname, u.lastnamephonetic, u.firstnamephonetic, u.middlename, u.alternatename".
             " FROM {grade_items} gi".
-            " JOIN {grade_categories} gc ON gc.id = gi.categoryid".
             " JOIN {grade_grades} gg ON gi.id = gg.itemid".
             " LEFT JOIN {user} u ON u.id = gg.usermodified";
         $recordset = $DB->get_recordset_sql($sql);
         foreach ($recordset as $grade) {
-            if ($grade->fullname !== self::NAME) {
-                // On garde uniquement les éléments de notation de la catégorie APSOLU.
-                // Note: il n'y a pas d'index sur le champ grade_categories.fullname. On traite cette info côté PHP.
+            if ($grade->iteminfo !== self::NAME) {
+                // On garde uniquement les éléments de notation dont l'iteminfo est APSOLU.
+                // Note: il n'y a pas d'index sur le champ grade_items.iteminfo. On traite cette info côté PHP.
                 continue;
             }
 
@@ -711,16 +724,8 @@ class gradebook {
             list($userid, $courseid, $apsolugradeitemid) = explode('-', $gradename, 3);
 
             if (isset($gradeitems[$courseid]) === false) {
-                $gradecategory = grade_category::fetch(['courseid' => $courseid, 'fullname' => self::NAME]);
-
-                if ($gradecategory === false) {
-                    continue;
-                }
-
-                $gradecategories[$courseid] = $gradecategory->id;
-
                 $gradeitems[$courseid] = [];
-                foreach (grade_item::fetch_all(['courseid' => $courseid, 'categoryid' => $gradecategory->id]) as $item) {
+                foreach (grade_item::fetch_all(['courseid' => $courseid, 'iteminfo' => self::NAME]) as $item) {
                     $id = explode('-', $item->itemname);
                     if (isset($id[0]) === false) {
                         continue;

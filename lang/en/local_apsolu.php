@@ -543,6 +543,7 @@ Cette autorisation est donnée à titre gracieux pour une durée de 5 ans et pou
 J’autorise :';
 $string['postal_code'] = 'Code postal';
 $string['preview'] = 'Aperçu';
+$string['publication_date'] = 'Date de publication';
 $string['purge_holidays'] = 'Vider la liste des jours fériés';
 $string['recipients'] = 'Destinataires';
 $string['red'] = 'Rouge';

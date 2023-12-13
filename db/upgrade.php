@@ -26,11 +26,13 @@ use local_apsolu\core\course as Course;
 use local_apsolu\core\federation\activity as Activity;
 use local_apsolu\core\federation\adhesion as Adhesion;
 use local_apsolu\core\federation\course as FederationCourse;
+use local_apsolu\core\gradebook as Gradebook;
 use local_apsolu\core\messaging;
 
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot.'/group/lib.php');
+require_once($CFG->dirroot.'/lib/gradelib.php');
 require_once($CFG->dirroot.'/local/apsolu/locallib.php');
 require_once($CFG->dirroot.'/user/profile/definelib.php');
 
@@ -1303,6 +1305,58 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         $value = get_config('local_apsolu', 'parental_authorization_description');
         if ($value === '0') {
             set_config('parental_authorization_description', '', 'local_apsolu');
+        }
+    }
+
+    $version = 2023110400;
+    if ($result && $oldversion < $version) {
+        // Ajoute 2 nouveaux champs à la table 'apsolu_grade_items'.
+        $table = new xmldb_table('apsolu_grade_items');
+
+        $fields = [];
+        $fields[] = new xmldb_field('grademax', XMLDB_TYPE_NUMBER, '10,5', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '20', null);
+        $fields[] = new xmldb_field('publicationdate', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '1', null);
+        foreach ($fields as $field) {
+            if ($dbman->field_exists($table, $field) === true) {
+                continue;
+            }
+
+            $dbman->add_field($table, $field);
+        }
+
+        // Remplit le champ 'iteminfo' et déplace les éléments de notation à la racine du carnet de notes.
+        $rootcategories = $DB->get_records('grade_categories', ['parent' => null], $sort = '', $fields = 'courseid, id');
+
+        $categories = grade_category::fetch_all(['fullname' => 'APSOLU']);
+        if ($categories === false) {
+            $categories = [];
+        }
+
+        foreach ($categories as $category) {
+            $items = grade_item::fetch_all(['categoryid' => $category->id]);
+            if ($items === false) {
+                $items = [];
+            }
+
+            foreach ($items as $item) {
+                if (isset($rootcategories[$item->courseid]) === false) {
+                    mtrace('La catégorie racine du carnet de notes du cours #'.$item->courseid.' n’a pas été trouvée.');
+                    continue;
+                }
+
+                $item->iteminfo = 'APSOLU';
+                $item->set_hidden(Gradebook::GRADE_ITEM_HIDDEN);
+                $item->set_parent($rootcategories[$item->courseid]->id);
+            }
+
+            // Supprime les catégories APSOLU obsolètes.
+            $items = grade_item::fetch_all(['categoryid' => $category->id]);
+            if ($items !== false) {
+                mtrace('La catégorie APSOLU du cours #'.$category->courseid.' contient toujours des éléments de notation.');
+                continue;
+            }
+
+            $category->delete('apsolu-gradebook');
         }
     }
 

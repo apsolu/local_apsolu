@@ -28,7 +28,6 @@ use coding_exception;
 use context_block;
 use context_course;
 use core_php_time_limit;
-use grade_category;
 use grade_item;
 use moodle_exception;
 use moodle_url;
@@ -562,23 +561,12 @@ class course extends record {
     /**
      * Génère ou met à jour le carnet de notes.
      *
+     * @param bool $rescalegrades Témoin indiquant si la note doit être ajustée lorsque la note maximale attendue change.
+     *
      * @return void
      */
-    public function set_gradebook() {
+    public function set_gradebook($rescalegrades = false) {
         global $DB;
-
-        $gradecategoryname = gradebook::NAME;
-
-        // Créer une catégorie de notes APSOLU.
-        $gradecategory = grade_category::fetch(['courseid' => $this->id, 'fullname' => $gradecategoryname]);
-        if ($gradecategory === false) {
-            $gradecategory = new grade_category(['courseid' => $this->id], false);
-            $gradecategory->apply_default_settings();
-            $gradecategory->apply_forced_settings();
-
-            grade_category::set_properties($gradecategory, ['fullname' => $gradecategoryname, 'hidden' => 1]);
-            $gradecategory->id = $gradecategory->insert();
-        }
 
         // Récupère tous les éléments de notation prévus pour ce cours.
         $sql = "SELECT agi.*".
@@ -586,46 +574,54 @@ class course extends record {
             " JOIN {enrol} e ON agi.calendarid = e.customchar1".
             " WHERE e.enrol = 'select'".
             " AND e.courseid = :courseid";
-        $gradeitems = $DB->get_records_sql($sql, ['courseid' => $this->id]);
+        $coursegradeitems = $DB->get_records_sql($sql, ['courseid' => $this->id]);
 
         // Récupère tous les élements de notation actuels de ce cours.
-        $gradeitems_ = grade_item::fetch_all(['courseid' => $this->id, 'categoryid' => $gradecategory->id]);
+        $gradeitems = grade_item::fetch_all(['courseid' => $this->id, 'iteminfo' => Gradebook::NAME]);
 
-        if ($gradeitems_ === false) {
-            $gradeitems_ = [];
+        if ($gradeitems === false) {
+            $gradeitems = [];
         }
 
-        foreach ($gradeitems_ as $item) {
+        foreach ($gradeitems as $item) {
             list($apsolugradeid, $itemname) = explode('-', $item->itemname, 2);
 
-            if (isset($gradeitems[$apsolugradeid]) === false) {
+            if (isset($coursegradeitems[$apsolugradeid]) === false) {
                 // Supprime un élément de notation obsolète.
                 $item->delete();
                 continue;
             }
 
-            $gradeitem = $gradeitems[$apsolugradeid];
-            unset($gradeitems[$apsolugradeid]);
-
-            if ($gradeitem->name === $itemname) {
-                continue;
-            }
+            $gradeitem = $coursegradeitems[$apsolugradeid];
+            unset($coursegradeitems[$apsolugradeid]);
 
             // Met à jour le nom de l'élément de notation.
+            $item->iteminfo = 'APSOLU';
             $item->itemname = $gradeitem->id.'-'.$gradeitem->name;
-            $item->hidden = 1;
-            $item->grademax = 20.0;
+            $item->set_hidden($gradeitem->publicationdate);
+            $oldmax = $item->grademax;
+            $item->grademax = $gradeitem->grademax;
+            if ($rescalegrades === true) {
+                $oldmin = 0;
+                $newmin = 0;
+                $newmax = $item->grademax;
+                $source = Gradebook::SOURCE;
+                $item->rescale_grades_keep_percentage($oldmin, $oldmax, $newmin, $newmax, $source);
+            }
             $item->update();
         }
 
         // Enregistre les nouveaux éléments dans le carnet de notes.
-        foreach ($gradeitems as $item) {
+        $rootcategory = $DB->get_record('grade_categories', ['courseid' => $this->id, 'parent' => null]);
+
+        foreach ($coursegradeitems as $item) {
             $gradeitem = new grade_item(['id' => 0, 'courseid' => $this->id]);
+            $gradeitem->iteminfo = Gradebook::NAME;
             $gradeitem->itemname = $item->id.'-'.$item->name;
             $gradeitem->itemtype = 'manual';
-            $gradeitem->categoryid = $gradecategory->id;
-            $gradeitem->hidden = 1;
-            $gradeitem->grademax = 20.0;
+            $gradeitem->categoryid = $rootcategory->id;
+            $gradeitem->hidden = $gradeitem->hidden;
+            $gradeitem->grademax = $gradeitem->grademax;
             $gradeitem->id = $gradeitem->insert();
         }
     }

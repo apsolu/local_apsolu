@@ -53,16 +53,9 @@ list($userid, $courseid, $apsolugradeitemid) = explode('-', $inputname);
 $apsolugradeitem = $DB->get_record('apsolu_grade_items', ['id' => $apsolugradeitemid], '*', MUST_EXIST);
 $itemname = sprintf('%s-%s', $apsolugradeitem->id, $apsolugradeitem->name);
 
-// Recherche la catégorie de notation du cours.
-$gradecategory = grade_category::fetch(['courseid' => $courseid, 'fullname' => gradebook::NAME]);
-if ($gradecategory === false) {
-    $record = new grade_category();
-    throw new dml_missing_record_exception($record->table);
-}
-
 // Recherche l'élément de notation du cours.
 $item = false;
-foreach (grade_item::fetch_all(['courseid' => $courseid, 'categoryid' => $gradecategory->id]) as $record) {
+foreach (grade_item::fetch_all(['courseid' => $courseid, 'iteminfo' => gradebook::NAME]) as $record) {
     if ($record->itemname !== $itemname) {
         continue;
     }

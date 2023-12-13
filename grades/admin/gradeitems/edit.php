@@ -51,6 +51,11 @@ foreach ($DB->get_records('apsolu_calendars') as $calendar) {
     $calendars[$calendar->id] = $calendar->name;
 }
 
+// Gestion de la date de publication.
+if ($gradeitem->publicationdate == Gradebook::GRADE_ITEM_HIDDEN) {
+    $gradeitem->publicationdate = 0;
+}
+
 // Build form.
 $customdata = [$gradeitem, $roles, $calendars];
 $mform = new local_apsolu_grades_gradeitems_edit_form(null, $customdata);
@@ -60,6 +65,11 @@ if ($data = $mform->get_data()) {
     $message = get_string('gradeitem_updated', 'local_apsolu');
     if (empty($gradeitem->id) === true) {
         $message = get_string('gradeitem_saved', 'local_apsolu');
+    }
+
+    // Gestion de la date de publication.
+    if (empty($data->publicationdate) === true) {
+        $data->publicationdate = Gradebook::GRADE_ITEM_HIDDEN;
     }
 
     // Save data.

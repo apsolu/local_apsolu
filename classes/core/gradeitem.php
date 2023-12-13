@@ -49,6 +49,12 @@ class gradeitem extends record {
     /** @var int|string $teacherid Identifiant numérique du calendrier. */
     public $calendarid = '';
 
+    /** @var float $grademax Indique la note maximale attribuable. */
+    public $grademax = null;
+
+    /** @var int $publicationdate Date de publication des notes. Pour ne pas publier les notes, la valeur doit être à 1. */
+    public $publicationdate = 1;
+
     /** @var int|string $timecreated Timestamp Unix de création du paramètre de notation. */
     public $timecreated = '';
 
@@ -133,7 +139,8 @@ class gradeitem extends record {
                 continue;
             }
 
-            $course->set_gradebook();
+            $rescale = (isset($data->rescalegrades) === true && empty($data->rescalegrades) === false);
+            $course->set_gradebook($rescale);
         }
 
         // Valide la transaction en cours.
