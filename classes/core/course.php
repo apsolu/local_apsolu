@@ -577,7 +577,7 @@ class course extends record {
         $coursegradeitems = $DB->get_records_sql($sql, ['courseid' => $this->id]);
 
         // Récupère tous les élements de notation actuels de ce cours.
-        $gradeitems = grade_item::fetch_all(['courseid' => $this->id, 'iteminfo' => Gradebook::NAME]);
+        $gradeitems = grade_item::fetch_all(['courseid' => $this->id, 'iteminfo' => gradebook::NAME]);
 
         if ($gradeitems === false) {
             $gradeitems = [];
@@ -605,7 +605,7 @@ class course extends record {
                 $oldmin = 0;
                 $newmin = 0;
                 $newmax = $item->grademax;
-                $source = Gradebook::SOURCE;
+                $source = gradebook::SOURCE;
                 $item->rescale_grades_keep_percentage($oldmin, $oldmax, $newmin, $newmax, $source);
             }
             $item->update();
@@ -616,7 +616,7 @@ class course extends record {
 
         foreach ($coursegradeitems as $item) {
             $gradeitem = new grade_item(['id' => 0, 'courseid' => $this->id]);
-            $gradeitem->iteminfo = Gradebook::NAME;
+            $gradeitem->iteminfo = gradebook::NAME;
             $gradeitem->itemname = $item->id.'-'.$item->name;
             $gradeitem->itemtype = 'manual';
             $gradeitem->categoryid = $rootcategory->id;
