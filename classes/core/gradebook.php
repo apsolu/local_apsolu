@@ -30,6 +30,9 @@ use csv_export_writer;
 use Exception;
 use grade_grade;
 use grade_item;
+use MoodleExcelFormat;
+use MoodleExcelWorkbook;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 use stdClass;
 
 /**
@@ -672,38 +675,79 @@ class gradebook {
     /**
      * Retourne un tableau contenant l'intégralité du carnet de notes.
      *
-     * @param array $options Liste des options d'affichage du carnet de notes (seulement les évalués en option, seulement certaines activités, etc).
+     * @param array $options Liste des options d'affichage du carnet de notes (seulement les évalués en option, seulement certaines
+     *                       activités, etc).
      * @param array $fields  Liste des champs à retourner.
+     * @param string $format Format de fichier de l'exportation. Valeur gérée : csv ou xls.
      *
      * @return void
      */
-    public static function export(array $options, array $fields = []) {
+    public static function export(array $options, array $fields = [], string $format = 'csv') {
         global $CFG;
 
-        require_once($CFG->libdir . '/csvlib.class.php');
-
         $filename = 'extraction_des_notes';
-
-        $csvexport = new csv_export_writer();
-        $csvexport->set_filename($filename);
-
         $gradebook = self::get_gradebook($options, $fields);
-        $csvexport->add_data($gradebook->headers);
 
-        foreach ($gradebook->users as $user) {
-            $data = $user->profile;
-            foreach ($user->grades as $grade) {
-                if ($grade === null) {
-                    $data[] = get_string('not_applicable', 'local_apsolu');
-                } else {
-                    $data[] = $grade->value;
+        switch ($format) {
+            case 'xls':
+                require_once($CFG->libdir . '/excellib.class.php');
+
+                // Définit les entêtes.
+                $workbook = new MoodleExcelWorkbook("-");
+                $workbook->send($filename);
+                $myxls = $workbook->add_worksheet();
+                $properties = ['border' => Border::BORDER_THIN];
+                $excelformat = new MoodleExcelFormat($properties);
+                foreach ($gradebook->headers as $position => $value) {
+                    $myxls->write_string(0, $position, $value, $excelformat);
                 }
-            }
-            $csvexport->add_data($data);
-        }
 
-        $csvexport->download_file();
-        exit();
+                // Définit les données.
+                $line = 1;
+                foreach ($gradebook->users as $user) {
+                    $column = 0;
+                    $myxls->write_string($line, $column, $user->profile[0], $excelformat);
+                    $myxls->write_string($line, ++$column, $user->profile[1], $excelformat);
+                    $myxls->write_string($line, ++$column, $user->profile[2], $excelformat);
+                    foreach ($user->grades as $grade) {
+                        $value = $grade->value;
+                        if ($value === null) {
+                            $value = get_string('not_applicable', 'local_apsolu');
+                        }
+
+                        $myxls->write_string($line, ++$column, $value, $excelformat);
+                    }
+                    $line++;
+                }
+
+                // Transmet le fichier au navigateur.
+                $workbook->close();
+                exit();
+            case 'csv':
+                require_once($CFG->libdir . '/csvlib.class.php');
+
+                $csvexport = new csv_export_writer();
+                $csvexport->set_filename($filename);
+
+                $csvexport->add_data($gradebook->headers);
+
+                foreach ($gradebook->users as $user) {
+                    $data = $user->profile;
+                    foreach ($user->grades as $grade) {
+                        if ($grade === null) {
+                            $data[] = get_string('not_applicable', 'local_apsolu');
+                        } else {
+                            $data[] = $grade->value;
+                        }
+                    }
+                    $csvexport->add_data($data);
+                }
+
+                $csvexport->download_file();
+                exit();
+            default:
+                throw new coding_exception(get_string('unknowformat', 'error', $format));
+        }
     }
 
     /**

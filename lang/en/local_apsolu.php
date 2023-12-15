@@ -262,6 +262,8 @@ $string['export_format'] = 'Format d’exportation';
 $string['exporting_license'] = 'Exportation des licences FFSU';
 $string['exporting_license_help'] = 'Exporte les licences au format attendu par le site de la FFSU.';
 $string['exporting_payments'] = 'Exportation des paiements';
+$string['export_to_csv_format'] = 'Exporter au format CSV';
+$string['export_to_excel_format'] = 'Exporter au format Excel';
 $string['federation_course'] = 'Cours FFSU';
 $string['federation_course_help'] = 'Espace-cours permettant de gérer les étudiants inscrits à la Fédération Française des Sports Universitaires.
 

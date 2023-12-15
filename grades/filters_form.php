@@ -149,7 +149,8 @@ class local_apsolu_grades_gradebooks_filters_form extends moodleform {
 
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'displaybutton', get_string('display', 'local_apsolu'));
-        $buttonarray[] = &$mform->createElement('submit', 'exportbutton', get_string('export', 'local_apsolu'));
+        $buttonarray[] = &$mform->createElement('submit', 'exportcsvbutton', get_string('export_to_csv_format', 'local_apsolu'));
+        $buttonarray[] = &$mform->createElement('submit', 'exportxlsbutton', get_string('export_to_excel_format', 'local_apsolu'));
 
         $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
         $mform->closeHeaderBefore('buttonar');

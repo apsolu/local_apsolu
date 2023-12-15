@@ -208,9 +208,12 @@ if (($formdata = $mform->get_data()) || ($data = data_submitted())) {
         }
     }
 
-    if (isset($filtersdata->exportbutton) === true || isset($data->exportbutton) === true) {
+    if (isset($filtersdata->exportcsvbutton) === true || isset($data->exportcsvbutton) === true) {
         // Exporte le carnet de notes au format csv.
-        Gradebook::export($options, $filtersdata->fields);
+        Gradebook::export($options, $filtersdata->fields, 'csv');
+    } else if (isset($filtersdata->exportxlsbutton) === true || isset($data->exportxlsbutton) === true) {
+        // Exporte le carnet de notes au format excel.
+        Gradebook::export($options, $filtersdata->fields, 'xls');
     }
 
     // Ajoute le champ "pictures" pour l'affichage.
