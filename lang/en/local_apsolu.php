@@ -349,6 +349,7 @@ $string['i_wish_to_practice_an_complementary_activity_with_particular_constraint
 $string['i_wish_to_practice_this_activity_with_particular_constraints_and_certify_that_i_have_presented_a_medical_certificate'] = 'Je souhaite pratiquer une activité à contraintes particulières. Je dois présenter un certificat médical de non-contre-indication à la pratique du {$a} de compétition de moins d’un an.';
 $string['import'] = 'Importer';
 $string['important'] = 'Important';
+$string['important_once_you_have_paid_your_membership_fee_you_must_return_to_this_form_and_confirm'] = '<strong>Important:</strong> après votre paiement, vous devez revenir sur ce formulaire d’adhésion, relire attentivement vos informations saisies précédemment et confirmer votre demande de licence sportive.';
 $string['importing_license'] = 'Importation des licences FFSU';
 $string['importing_license_help'] = 'Importe les licences FFSU dans APSOLU.
 
