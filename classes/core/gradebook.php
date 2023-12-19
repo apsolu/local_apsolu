@@ -706,16 +706,17 @@ class gradebook {
                 $line = 1;
                 foreach ($gradebook->users as $user) {
                     $column = 0;
-                    $myxls->write_string($line, $column, $user->profile[0], $excelformat);
-                    $myxls->write_string($line, ++$column, $user->profile[1], $excelformat);
-                    $myxls->write_string($line, ++$column, $user->profile[2], $excelformat);
+                    foreach ($user->profile as $value) {
+                        $myxls->write_string($line, $column++, $value, $excelformat);
+                    }
+
                     foreach ($user->grades as $grade) {
                         $value = $grade->value;
                         if ($value === null) {
                             $value = get_string('not_applicable', 'local_apsolu');
                         }
 
-                        $myxls->write_string($line, ++$column, $value, $excelformat);
+                        $myxls->write_string($line, $column++, $value, $excelformat);
                     }
                     $line++;
                 }
