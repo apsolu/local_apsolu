@@ -312,6 +312,7 @@ $string['grouping_cannot_be_deleted'] = 'Le groupement d’activités « {$a} 
 $string['grouping_has_been_deleted'] = 'Le groupement d’activités a été supprimé.';
 $string['grouping_saved'] = 'Groupement d’activités enregistré.';
 $string['grouping_updated'] = 'Groupement d’activités modifié.';
+$string['guest'] = 'Invité';
 $string['header_message'] = 'Message d’entête';
 $string['health_constraints'] = 'Contraintes de santé';
 $string['health_quiz'] = 'Questionnaire de santé';

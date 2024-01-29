@@ -154,7 +154,7 @@ $totalpresencespersessions = [];
 $users = [];
 
 // Récupère la liste des utilisateurs inscrits aux cours.
-$sql = "SELECT DISTINCT u.*
+$sql = "SELECT DISTINCT u.*, '0' AS guest
           FROM {user} u
           JOIN {user_enrolments} ue ON u.id = ue.userid
           JOIN {enrol} e ON e.id = ue.enrolid
@@ -174,7 +174,7 @@ foreach ($DB->get_records_sql($sql, $params) as $user) {
 }
 
 // Récupère la liste des utilisateurs ayant une présence dans ce cours.
-$sql = "SELECT DISTINCT u.*
+$sql = "SELECT DISTINCT u.*, '1' AS guest
           FROM {user} u
           JOIN {apsolu_attendance_presences} aap ON u.id = aap.studentid
           JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid
@@ -208,6 +208,7 @@ foreach ($users as $user) {
     $student->picture = $OUTPUT->render($picture);
     $student->lastname = $user->lastname;
     $student->firstname = $user->firstname;
+    $student->guest = $user->guest;
     $student->presences_per_sessions = [];
     $student->total_presences_per_statuses = $totalpresences;
 

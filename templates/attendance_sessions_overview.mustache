@@ -113,6 +113,7 @@
         <th rowspan="2">{{#str}}pictureofuser{{/str}}</th>
         <th rowspan="2">{{#str}}lastname{{/str}}</th>
         <th rowspan="2">{{#str}}firstname{{/str}}</th>
+        <th rowspan="2"><span class="sr-only">{{#str}}guest, local_apsolu{{/str}}</span></th>
         {{#sessions}}
         <th rowspan="2" class="text-center">{{ . }}</th>
         {{/sessions}}
@@ -130,6 +131,7 @@
         <td>{{{ picture }}}</td>
         <td>{{ lastname }}</td>
         <td>{{ firstname }}</td>
+        <td>{{#guest}}<i class="fa fa-fw fa-user-plus icon iconsmall" title="{{#str}}guest, local_apsolu{{/str}}" role="img" aria-label="{{#str}}guest, local_apsolu{{/str}}"></i>{{/guest}}</td>
         {{#presences_per_sessions}}
             {{#abbr}}
             {{! Étudiant avec une présence saisie pour cette session. }}
