@@ -150,15 +150,57 @@ foreach ($statuses as $status) {
 
 $totalpresencespersessions = [];
 
+// Construit la liste des utilisateurs.
+$users = [];
+
+// Récupère la liste des utilisateurs inscrits aux cours.
+$sql = "SELECT DISTINCT u.*
+          FROM {user} u
+          JOIN {user_enrolments} ue ON u.id = ue.userid
+          JOIN {enrol} e ON e.id = ue.enrolid
+         WHERE ue.status = 0
+           AND e.status = 0
+           AND e.courseid = :courseid";
+$params = ['courseid' => $courseid];
+
+if (isset($calendars[$calendarid]) === true) {
+    $sql .= " AND e.customchar1 = :calendarid";
+    $params['calendarid'] = $calendarid;
+}
+
+foreach ($DB->get_records_sql($sql, $params) as $user) {
+    $id = $user->lastname.' '.$user->firstname.' '.$user->institution.' '.$user->id;
+    $users[$id] = $user;
+}
+
 // Récupère la liste des utilisateurs ayant une présence dans ce cours.
-$sql = "SELECT DISTINCT u.*".
-    " FROM {user} u".
-    " JOIN {apsolu_attendance_presences} aap ON u.id = aap.studentid".
-    " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid".
-    " WHERE aas.courseid = :courseid".
-    " ORDER BY u.lastname, u.firstname, u.institution";
+$sql = "SELECT DISTINCT u.*
+          FROM {user} u
+          JOIN {apsolu_attendance_presences} aap ON u.id = aap.studentid
+          JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid
+         WHERE aas.courseid = :courseid";
+$params = ['courseid' => $courseid];
+
+if (isset($calendars[$calendarid]) === true) {
+    $sql .= " AND aas.sessiontime BETWEEN :starttime AND :endtime";
+    $params['starttime'] = $calendars[$calendarid]->coursestartdate;
+    $params['endtime'] = $calendars[$calendarid]->courseenddate;
+}
+
+foreach ($DB->get_records_sql($sql, $params) as $user) {
+    $id = $user->lastname.' '.$user->firstname.' '.$user->institution.' '.$user->id;
+
+    if (isset($users[$id])) {
+        continue;
+    }
+
+    $users[$id] = $user;
+}
+
+ksort($users);
+
 $data->users = [];
-foreach ($DB->get_records_sql($sql, ['courseid' => $courseid]) as $user) {
+foreach ($users as $user) {
     $picture = new user_picture($user);
     $picture->size = 50;
 
