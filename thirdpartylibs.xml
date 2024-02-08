@@ -1,13 +1,6 @@
 <?xml version="1.0"?>
 <libraries>
     <library>
-        <location>amd/src/jquery.tablefilter.js</location>
-        <name>tablefilter</name>
-        <version>0.5.20</version>
-        <license>MIT</license>
-        <licenseversion></licenseversion>
-    </library>
-    <library>
         <location>amd/src/jquery.tablesorter.js</location>
         <name>TableSorter</name>
         <version>2.31.3</version>
