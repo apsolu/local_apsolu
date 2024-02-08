@@ -30,8 +30,6 @@ use local_apsolu\core\federation\course as FederationCourse;
 
 require_once(__DIR__.'/../../locallib.php');
 
-$PAGE->requires->js_call_amd('local_apsolu/sort_courses', 'initialise');
-
 $currentactivity = null;
 $currentaltclass = 'odd';
 

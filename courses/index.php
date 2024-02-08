@@ -28,8 +28,6 @@ require_once($CFG->libdir . '/adminlib.php');
 $tab = optional_param('tab', 'courses', PARAM_ALPHA);
 $action = optional_param('action', 'view', PARAM_ALPHA);
 
-$PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise');
-
 // Set tabs.
 $coursestabs = ['courses', 'groupings', 'categories', 'skills', 'periods'];
 $locationstabs = ['locations', 'areas', 'cities', 'managers'];
@@ -59,6 +57,18 @@ foreach ($tabslist as $tabname) {
     $url = new moodle_url('/local/apsolu/courses/index.php', ['tab' => $tabname]);
     $tabsbar[] = new tabobject($tabname, $url, get_string($tabname, 'local_apsolu'));
 }
+
+$options = [];
+$options['sortLocaleCompare'] = true;
+if (in_array($tab, ['courses', 'locations'], $strict = true) === true) {
+    $options['widgets'] = ['filter', 'stickyHeaders'];
+    $options['widgetOptions'] = ['stickyHeaders_attachTo' => '.tablesorter-wrapper'];
+    if ($tab === 'courses') {
+        // Workaround pour éviter un bug avec tablesorter (ref: https://github.com/Mottie/tablesorter/issues/1806).
+        $options['widgetOptions']['filter_defaultFilter'] = [7 => '{q}='];
+    }
+}
+$PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise', [$options]);
 
 // Setup admin access requirement.
 admin_externalpage_setup('local_apsolu_courses_'.$subpage.'_'.$tab);

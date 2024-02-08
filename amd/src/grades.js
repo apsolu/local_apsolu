@@ -1,4 +1,4 @@
-define(['jquery', 'local_apsolu/jquery.tablesorter'], function($) {
+define(['jquery'], function($) {
     return {
         initialise : function(){
 
@@ -29,13 +29,6 @@ define(['jquery', 'local_apsolu/jquery.tablesorter'], function($) {
 
                 if ($(this).prop("checked")) {
                     $("input[name='grades"+id+"']").prop('readonly', true);
-                }
-            });
-
-            // Ajoute la possiblité de trier les tableaux.
-            $(".table-sortable").tablesorter({
-                headers: {
-                    0: {sorter: false},
                 }
             });
         }

@@ -313,15 +313,29 @@ if ($data = $mform->get_data()) {
 
         // Affiche le résultat au format HTML.
         $table = new html_table();
-        $table->head  = $headers;
+        $table->head = [];
+        foreach ($headers as $value) {
+            if (mb_strlen($value) <= 16) {
+                $table->head[] = $value;
+                continue;
+            }
+
+            // Tronque les chaines de plus de 16 caractères.
+            $table->head[] = '<span title="'.s($value).'">'.mb_strimwidth($value, 0, 16, "...").'</span>';
+        }
         $table->attributes['class'] = 'table table-sortable';
         $table->caption = count($rows).' '.get_string('users');
         $table->data = $rows;
-        $content = html_writer::table($table);
+        $table->responsive = false;
+        $content = html_writer::tag('div', html_writer::table($table), ['class' => 'tablesorter-wrapper']);
     }
 }
 
-$PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise');
+$options = [];
+$options['sortLocaleCompare'] = true;
+$options['widgets'] = ['filter', 'stickyHeaders'];
+$options['widgetOptions'] = ['stickyHeaders_attachTo' => '.tablesorter-wrapper'];
+$PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise', [$options]);
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading_with_help(get_string('exporting_license', 'local_apsolu'), 'exporting_license', 'local_apsolu');

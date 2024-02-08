@@ -60,16 +60,16 @@
 <table class="table table-striped table-sortable">
 <thead>
 	<tr>
-		<th>{{#str}}areas, local_apsolu{{/str}}</th>
 		<th>{{#str}}cities, local_apsolu{{/str}}</th>
-		<th>{{#str}}actions{{/str}}</th>
+		<th>{{#str}}areas, local_apsolu{{/str}}</th>
+		<th class="sorter-false">{{#str}}actions{{/str}}</th>
 	</tr>
 </thead>
 <tbody>
 	{{#areas}}
 	<tr>
-		<td>{{name}}</td>
 		<td>{{city}}</td>
+		<td>{{name}}</td>
 		<td>
 			<ul class="list-inline">
 				<li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=areas&action=edit&areaid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></li>

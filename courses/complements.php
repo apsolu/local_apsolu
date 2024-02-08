@@ -28,8 +28,6 @@ require_once($CFG->libdir . '/adminlib.php');
 $tab = optional_param('tab', 'complements', PARAM_ALPHA);
 $action = optional_param('action', 'view', PARAM_ALPHA);
 
-$PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise');
-
 // Set tabs.
 $tabslist = ['complements', 'federations'];
 

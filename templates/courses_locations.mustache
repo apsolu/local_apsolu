@@ -63,6 +63,7 @@
 {{/count_locations}}
 
 {{#count_locations}}
+<div class="tablesorter-wrapper">
 <table class="table table-striped table-sortable">
 <thead>
 	<tr>
@@ -74,7 +75,7 @@
 		<th>{{#str}}latitudes, local_apsolu{{/str}}</th>
 		<th>{{#str}}areas, local_apsolu{{/str}}</th>
 		<th>{{#str}}managers, local_apsolu{{/str}}</th>
-		<th>{{#str}}actions{{/str}}</th>
+		<th class="filter-false sorter-false">{{#str}}actions{{/str}}</th>
 	</tr>
 </thead>
 <tbody>
@@ -98,4 +99,5 @@
 	{{/locations}}
 </tbody>
 </table>
+</div>
 {{/count_locations}}

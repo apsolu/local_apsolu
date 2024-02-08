@@ -65,7 +65,8 @@
 {{/count_courses}}
 
 {{#count_courses}}
-<table class="table table-striped" id="table-courses-sortable">
+<div class="tablesorter-wrapper">
+<table class="table table-sortable table-striped" id="table-courses-sortable">
 <thead>
     <tr>
         <th>{{#str}}idnumbercourse{{/str}}</th>
@@ -75,10 +76,10 @@
         <th>{{#str}}weekdays, local_apsolu{{/str}}</th>
         <th>{{#str}}schedule, local_apsolu{{/str}}</th>
         <th>{{#str}}locations, local_apsolu{{/str}}</th>
-        <th>{{#str}}periods, local_apsolu{{/str}}</th>
-        {{#federation_course}}<th>{{#str}}federation, local_apsolu{{/str}}</th>{{/federation_course}}
+        <th class="filter-select">{{#str}}periods, local_apsolu{{/str}}</th>
+        {{#federation_course}}<th class="filter-select">{{#str}}federation, local_apsolu{{/str}}</th>{{/federation_course}}
         <th>{{#str}}teachers{{/str}}</th>
-        <th>{{#str}}actions{{/str}}</th>
+        <th class="filter-false sorter-false">{{#str}}actions{{/str}}</th>
     </tr>
 </thead>
 <tbody>
@@ -130,4 +131,5 @@
     {{/courses}}
 </tbody>
 </table>
+</div>
 {{/count_courses}}

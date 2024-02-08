@@ -30,6 +30,13 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir.'/gradelib.php');
 require_once($CFG->dirroot.'/local/apsolu/grades/filters_form.php');
 
+$options = [];
+$options['headers'] = [0 => ['sorter' => false]];
+$options['sortLocaleCompare'] = true;
+$options['widgets'] = ['stickyHeaders'];
+$options['widgetOptions'] = ['stickyHeaders_attachTo' => '.tablesorter-wrapper'];
+$PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise', [$options]);
+
 $PAGE->requires->js_call_amd('local_apsolu/grades', 'initialise');
 
 $customfields = customfields::getCustomFields();

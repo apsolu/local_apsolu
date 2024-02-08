@@ -314,6 +314,10 @@ if ($data = $mform->get_data()) {
     if (empty($rows) === true) {
         $content = $OUTPUT->notification(get_string('no_results_with_these_criteria', 'local_apsolu'), 'notifyerror');
     } else {
+        $actioncell = new html_table_cell();
+        $actioncell->text = get_string('action');
+        $actioncell->attributes = ['class' => 'filter-false sorter-false'];
+
         $headers = [
             get_string('federation_number_request_date', 'local_apsolu'),
             get_string('lastname'),
@@ -324,7 +328,7 @@ if ($data = $mform->get_data()) {
             get_string('medical_certificate_date', 'local_apsolu'),
             get_string('file'),
             get_string('medical_certificate_status', 'local_apsolu'),
-            get_string('action'),
+            $actioncell,
         ];
 
         $table = new html_table();
@@ -333,12 +337,17 @@ if ($data = $mform->get_data()) {
         $table->attributes['class'] = 'table table-sortable';
         $table->caption = count($rows).' '.get_string('users');
         $table->data  = $rows;
-        $content = html_writer::table($table);
+        $content = html_writer::tag('div', html_writer::table($table), ['class' => 'tablesorter-wrapper']);
     }
 }
 
+$options = [];
+$options['sortLocaleCompare'] = true;
+$options['widgets'] = ['filter', 'stickyHeaders'];
+$options['widgetOptions'] = ['stickyHeaders_attachTo' => '.tablesorter-wrapper'];
+$PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise', [$options]);
+
 $PAGE->requires->js_call_amd('local_apsolu/federation_medical_certificate_validation', 'initialise');
-$PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise');
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('certificates_validation', 'local_apsolu'));
