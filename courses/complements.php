@@ -28,30 +28,10 @@ require_once($CFG->libdir . '/adminlib.php');
 $tab = optional_param('tab', 'complements', PARAM_ALPHA);
 $action = optional_param('action', 'view', PARAM_ALPHA);
 
-// Set tabs.
-$tabslist = ['complements', 'federations'];
-
-$tabsbar = [];
-foreach ($tabslist as $tabname) {
-    $url = new moodle_url('/local/apsolu/courses/complements.php', ['tab' => $tabname]);
-    $tabsbar[] = new tabobject($tabname, $url, get_string($tabname, 'local_apsolu'));
-}
-
-// Set default tabs.
-if (!in_array($tab, $tabslist, true)) {
-    $tab = $tabslist[0];
-}
-
 // Setup admin access requirement.
-admin_externalpage_setup('local_apsolu_complements_'.$tab);
+admin_externalpage_setup('local_apsolu_complements_complements');
 
 // Display page.
-ob_start();
-require(__DIR__.'/'.$tab.'/index.php');
-$content = ob_get_contents();
-ob_end_clean();
-
 echo $OUTPUT->header();
-echo $OUTPUT->tabtree($tabsbar, $tab);
-echo $content;
+require(__DIR__.'/complements/index.php');
 echo $OUTPUT->footer();
