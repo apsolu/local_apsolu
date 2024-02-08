@@ -52,29 +52,118 @@
     text-decoration: line-through;
 }
 
-.table-sortable thead tr .header {
-    background-color: transparent;
+/* Règles CSS pour le module javascript jquery.tablesorter. */
+.table-sortable thead .tablesorter-header {
+    background-position: right 5px center;
+    background-repeat: no-repeat;
+    white-space: normal;
+}
+
+.table-sortable caption,
+.table-sortable thead .tablesorter-header,
+.table-sortable thead .tablesorter-filter-row {
+    background-color: #fff;
+}
+
+.table-sortable .tablesorter-header-inner {
+    padding: 4px 18px 4px 4px;
+    position: relative;
+}
+
+.table-sortable .tablesorter-filter-row input.tablesorter-filter,
+.table-sortable .tablesorter-filter-row select.tablesorter-filter {
+    box-sizing: border-box;
+    margin: 0;
+    -moz-box-sizing: border-box;
+    -moz-transition: height .1s ease;
+    -o-transition: height .1s ease;
+    transition: height .1s ease;
+    -webkit-box-sizing: border-box;
+    -webkit-transition: height .1s ease;
+    width: 98%;
+}
+
+.table-sortable .tablesorter-filter-row .tablesorter-filter.disabled {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .075) inset;
+    box-sizing: border-box;
+    cursor: not-allowed;
+    transition: height .1s ease;
+}
+
+.table-sortable .tablesorter-filter-row.hideme td {
+    line-height: 0;
+    margin: 0;
+    padding: 2px;
+}
+
+.table-sortable .tablesorter-filter-row.hideme * {
+    border: 0;
+    height: 1px;
+    margin: 0;
+    min-height: 0;
+    opacity: 0;
+    padding: 0;
+}
+
+.table-sortable thead tr .tablesorter-header:not(.sorter-false) {
     background-image: url([[pix:core|t/sort]]);
     background-repeat: no-repeat;
     background-position: 95% center;
     cursor: pointer;
-    padding-right: 5%;
 }
 
-.table-sortable thead tr .headerSortUp {
-    /*background-color: #F39C12;*/
-    /*background-color: #434241;*/
+.table-sortable thead tr .tablesorter-headerAsc:not(.sorter-false) {
     background-image: url([[pix:core|t/sort_asc]]);
-    /*color: #F39C12;*/
     color: #b50;
 }
 
-.table-sortable thead tr .headerSortDown {
-    /*background-color: #F39C12;*/
-    /*background-color: #434241;*/
+.table-sortable thead tr .tablesorter-headerDesc:not(.sorter-false) {
     background-image: url([[pix:core|t/sort_desc]]);
-    /*color: #F39C12;*/
     color: #b50;
+}
+
+.table-sortable .filtered {
+    display: none;
+}
+
+.tablesorter-filter-row .disabled {
+    visibility: hidden;
+}
+
+select.tablesorter-filter {
+    background-color: #fff;
+    padding: .2em;
+}
+
+.tablesorter-wrapper {
+    max-height: 600px;
+    overflow-y: auto;
+    padding: 0 5px;
+    position: relative;
+}
+
+/* Réduit les marges verticales sur la page des créneaux et des notes. */
+#page-admin-local-apsolu-courses-index #page-wrapper,
+#page-admin-local-apsolu-federation-index #page-wrapper,
+#page-admin-local-apsolu-grades-admin-index #page-wrapper,
+#page-local-apsolu-grades-index #page-wrapper {
+    padding-top: 3rem;
+}
+
+#page-admin-local-apsolu-courses-index #page-header,
+#page-admin-local-apsolu-federation-index #page-header,
+#page-admin-local-apsolu-grades-admin-index #page-header,
+#page-local-apsolu-grades-index #page-header {
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
+#page-admin-local-apsolu-courses-index #topofscroll,
+#page-admin-local-apsolu-federation-index #topofscroll,
+#page-admin-local-apsolu-grades-admin-index #topofscroll,
+#page-local-apsolu-grades-index #topofscroll {
+    margin-top: 0;
+    padding-top: 0;
 }
 
 .local-apsolu-courses-details {
