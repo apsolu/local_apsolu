@@ -98,7 +98,7 @@ if ($data = $mform->get_data()) {
         } else {
             $title = userdate($record->federationnumberrequestdate, get_string('strftimedatetimeshort', 'local_apsolu'));
             $text = userdate($record->federationnumberrequestdate, get_string('strftimedatetimesortable', 'local_apsolu'));
-            $row[] = '<span class="apsolu-cursor-help" title="'.s($title).'">'.s($text).'</span>';
+            $row[] = '<span class="apsolu-cursor-help" title="'.s($title).'">'.s(substr($text, 0, -3)).'</span>';
         }
         $row[] = html_writer::link($profileurl, $record->lastname);
         $row[] = html_writer::link($profileurl, $record->firstname);
@@ -198,7 +198,7 @@ if ($data = $mform->get_data()) {
                         data-placement="right" data-content="'.$datacontent.'" data-html="false" tabindex="0" data-trigger="focus"
                         aria-label="'.$helpstr.'" data-original-title="" title=""><i class="icon fa fa-clock-o fa-fw"
                         role="img"></i></a>';
-                    $items[] = html_writer::link($url, $file->get_filename()).' '.$link;
+                    $items[] = html_writer::link($url, mb_strimwidth($file->get_filename(), 0, 16, '...')).' '.$link;
                 }
                 $row[] = html_writer::alist($items, $attributes = [], $tag = 'ul');
 
@@ -334,7 +334,7 @@ if ($data = $mform->get_data()) {
         $table = new html_table();
         $table->id = 'local-apsolu-certificates-validation-table';
         $table->head  = $headers;
-        $table->attributes['class'] = 'table table-sortable';
+        $table->attributes['class'] = 'table table-bordered table-sortable';
         $table->caption = count($rows).' '.get_string('users');
         $table->data  = $rows;
         $content = html_writer::tag('div', html_writer::table($table), ['class' => 'tablesorter-wrapper']);
@@ -343,8 +343,8 @@ if ($data = $mform->get_data()) {
 
 $options = [];
 $options['sortLocaleCompare'] = true;
-$options['widgets'] = ['filter', 'stickyHeaders'];
-$options['widgetOptions'] = ['stickyHeaders_attachTo' => '.tablesorter-wrapper'];
+$options['widgets'] = ['filter', 'resizable', 'stickyHeaders'];
+$options['widgetOptions'] = ['resizable' => true, 'stickyHeaders_attachTo' => '.tablesorter-wrapper'];
 $PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise', [$options]);
 
 $PAGE->requires->js_call_amd('local_apsolu/federation_medical_certificate_validation', 'initialise');
