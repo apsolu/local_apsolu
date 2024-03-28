@@ -40,11 +40,105 @@ class role extends record {
     /** @var int|string Identifiant numérique du rôle. */
     public $id = 0;
 
+    /** @var string $name Nom du rôle. */
+    public $name;
+
+    /** @var string $shortname Nom abrégé du rôle. */
+    public $shortname;
+
+    /** @var string $description Description du rôle. */
+    public $description;
+
+    /** @var int|string $sortorder Ordre de tri du rôle. */
+    public $sortorder;
+
+    /** @var string $archetype Modèle du rôle. */
+    public $archetype;
+
     /** @var string $color Couleur de l'icône représentant le rôle. */
     public $color = 'gray';
 
     /** @var string $fontawesomeid Identifiant font awesome de l'icône représentant le rôle. */
     public $fontawesomeid = 'check';
+
+    /** @var string $icon Code HTML représentant l'icône associée au rôle. */
+    public $icon;
+
+    /**
+     * Retourne le code HTML pour afficher l'icône utilisée pour le rôle.
+     *
+     * @return string
+     */
+    public function get_icon() {
+        return '<i aria-hidden="true" class="fa fa-'.$this->fontawesomeid.'" style="color:'.$this->color.';"></i>';
+    }
+
+    /**
+     * Recherche et instancie des objets depuis la base de données.
+     *
+     * @see Se référer à la documentation de la méthode get_records() de la variable globale $DB.
+     * @param array|null $conditions Critères de sélection des objets.
+     * @param string     $sort       Champs par lesquels s'effectue le tri.
+     * @param string     $fields     Liste des champs retournés.
+     * @param int        $limitfrom  Retourne les enregistrements à partir de n+$limitfrom.
+     * @param int        $limitnum   Nombre total d'enregistrements retournés.
+     *
+     * @return array Un tableau d'objets instanciés.
+     */
+    public static function get_records(array $conditions = null, string $sort = '', string $fields = '*',
+        int $limitfrom = 0, int $limitnum = 0) {
+        global $DB;
+
+        $sql = "SELECT r.id, r.name, r.shortname, r.description, r.sortorder, r.archetype, ar.color, ar.fontawesomeid
+                  FROM {role} r
+             LEFT JOIN {apsolu_roles} ar ON r.id = ar.id
+                 WHERE r.archetype = 'student'
+                   AND r.id != 5
+              ORDER BY sortorder";
+        $roles = role_fix_names($DB->get_records_sql($sql));
+
+        $records = [];
+
+        foreach ($roles as $data) {
+            $record = new role();
+            $record->set_vars($data);
+            $record->set_icon();
+            $records[$record->id] = $record;
+        }
+
+        return $records;
+    }
+
+    /**
+     * Charge un objet à partir de son identifiant.
+     *
+     * @param int|string $recordid Identifiant de l'objet à charger.
+     * @param bool       $required Si true, lève une exception lorsque l'objet n'existe pas. Aucune exception levée par défaut.
+     *
+     * @return void
+     */
+    public function load($recordid, bool $required = false) {
+        global $DB;
+
+        $strictness = IGNORE_MISSING;
+        if ($required) {
+            $strictness = MUST_EXIST;
+        }
+
+        $sql = "SELECT r.id, r.name, r.shortname, r.description, r.sortorder, r.archetype, ar.color, ar.fontawesomeid
+                  FROM {role} r
+             LEFT JOIN {apsolu_roles} ar ON r.id = ar.id
+                 WHERE r.archetype = 'student'
+                   AND r.id = :roleid";
+        $roles = role_fix_names($DB->get_records_sql($sql, ['roleid' => $recordid], $strictness));
+
+        if (count($roles) === 0) {
+            return;
+        }
+
+        $record = current($roles);
+        $this->set_vars($record);
+    }
 
     /**
      * Enregistre un objet en base de données.
@@ -71,5 +165,14 @@ class role extends record {
         } else {
             $DB->update_record(self::TABLENAME, $this);
         }
+    }
+
+    /**
+     * Définit la propriété "icon".
+     *
+     * @return void
+     */
+    public function set_icon() {
+        $this->icon = $this->get_icon();
     }
 }

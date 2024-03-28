@@ -62,7 +62,7 @@
 <tbody>
 	{{#roles}}
 	<tr>
-		<td><i aria-hidden="true" class="fa fa-{{fontawesomeid}}{{^fontawesomeid}}check{{/fontawesomeid}}" style="color: {{color}}{{^color}}gray{{/color}};"></i></td>
+		<td>{{{icon}}}</td>
 		<td>{{name}}</td>
 		<td><a href="{{wwwroot}}/local/apsolu/configuration/index.php?page=roles&action=edit&roleid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></td>
 	</tr>

@@ -22,18 +22,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\role;
+
 defined('MOODLE_INTERNAL') || die;
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('roles', 'local_apsolu'));
 
-$sql = "SELECT r.id, r.name, r.shortname, r.description, r.sortorder, r.archetype, ar.color, ar.fontawesomeid".
-    " FROM {role} r".
-    " LEFT JOIN {apsolu_roles} ar ON r.id = ar.id".
-    " WHERE r.archetype = 'student'".
-    " ORDER BY sortorder";
-$roles = role_fix_names($DB->get_records_sql($sql));
-unset($roles[5]);
+$roles = role::get_records();
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
