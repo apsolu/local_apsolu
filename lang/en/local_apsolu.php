@@ -207,7 +207,7 @@ $string['departments'] = 'Départements';
 $string['disable_replyto'] = 'Désactiver la possibilité de définir une adresse de « réponse à »';
 $string['discipline'] = 'Discipline';
 $string['discipline_cursus'] = 'Discipline / cursus';
-$string['disclaimer_dsp2'] = 'Afin de satisfaire aux obligations européennes liées à la <a href="https://fr.wikipedia.org/wiki/Directive_sur_les_services_de_paiement#La_Directive_sur_les_services_de_paiements_(DSP_2)">directive sur les services de paiements (DSP 2)</a>, notre prestataire de paiement doit récupérer les coordonnées postales du porteur de la carte de paiement.';
+$string['disclaimer_dsp2'] = 'Afin de satisfaire aux obligations européennes liées à la <a href="https://fr.wikipedia.org/wiki/Directive_sur_les_services_de_paiement#La_Directive_sur_les_services_de_paiements_(DSP_2)" target="_blank">directive sur les services de paiements (DSP 2)</a>, notre prestataire de paiement doit récupérer les coordonnées postales du porteur de la carte de paiement.';
 $string['do_i_plan_to_practice_one_of_the_following_sports_in_addition'] = 'Est-ce que j’envisage de pratiquer en complément un des sports suivants ?{$a}';
 $string['do_not_use_replyto_address'] = 'Ne pas utiliser d’adresse de « réponse à »';
 $string['do_you_want_to_delete_attendance_status'] = 'Voulez-vous supprimer le type de présence « {$a} » ?';
