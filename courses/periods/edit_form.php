@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe pour le formulaire permettant de configurer les périodes.
- *
- * @package    local_apsolu
- * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/formslib.php');
@@ -66,10 +58,27 @@ class local_apsolu_courses_periods_edit_form extends moodleform {
             }
         }
 
-        $lastyearurl = new moodle_url('/local/apsolu/courses/index.php', ['action' => 'edit', 'periodid' => $instance->id, 'tab' => 'periods', 'year' => $year - 1]);
-        $nextyearurl = new moodle_url('/local/apsolu/courses/index.php', ['action' => 'edit', 'periodid' => $instance->id, 'tab' => 'periods', 'year' => $year + 1]);
+        // Construit l'url de l'année N-1.
+        $lastyearurlparams = ['action' => 'edit', 'periodid' => $instance->id, 'tab' => 'periods', 'year' => $year - 1];
+        $lastyearurl = new moodle_url('/local/apsolu/courses/index.php', $lastyearurlparams);
 
-        $label = sprintf('<a class="mr-3" href="%s">&#129092;</a> %s-%s <a class="ml-3" href="%s">&#129094;</a>', $lastyearurl, $year, $year + 1, $nextyearurl);
+        // Construit l'url de l'année N+1.
+        $nextyearurlparams = ['action' => 'edit', 'periodid' => $instance->id, 'tab' => 'periods', 'year' => $year + 1];
+        $nextyearurl = new moodle_url('/local/apsolu/courses/index.php', $nextyearurlparams);
+
+        // Contruit l'icône font-awesome pour l'année N-1.
+        $str = get_string('previous');
+        $previcon = '<i class="fa fa-chevron-circle-left" title="'.s($str).'" aria-hidden="true"></i>
+            <span class="sr-only">'.s($str).'</span>';
+
+        // Contruit l'icône font-awesome pour l'année N+1.
+        $str = get_string('next');
+        $nexticon = '<i class="fa fa-chevron-circle-right" title="'.s($str).'" aria-hidden="true"></i>
+            <span class="sr-only">'.s($str).'</span>';
+
+        // Construit le menu permettant de changer d'année universitaire.
+        $label = sprintf('<a class="mr-3" href="%s">%s</a> %s-%s <a class="ml-3" href="%s">%s</a>', $lastyearurl, $previcon, $year,
+            $year + 1, $nextyearurl, $nexticon);
         $mform->addElement('static', 'yearselector', get_string('year', 'form'), $label);
 
         // Name field.
@@ -89,7 +98,7 @@ class local_apsolu_courses_periods_edit_form extends moodleform {
 
         $weeks = [];
         while ($start < $end) {
-            $range = 'du lun. '.$start->format('d').' au sam. '.strftime('%d %b %Y', $start->getTimestamp() + 5 * 24 * 60 * 60);
+            $range = 'du lun. '.$start->format('d').' au sam. '.userdate($start->getTimestamp() + 5 * 24 * 60 * 60, '%d %b %Y');
             $weeks[$start->format('Y-m-d')] = 'Sem. '.$start->format('W').' ('.$range.')';
             $start = $start->add(new DateInterval('P7D'));
         }
