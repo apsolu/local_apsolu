@@ -135,13 +135,6 @@ select.tablesorter-filter {
     padding: .2em;
 }
 
-.tablesorter-wrapper {
-    max-height: 600px;
-    overflow-y: auto;
-    padding: 0 5px;
-    position: relative;
-}
-
 /* Réduit les marges verticales sur la page des créneaux et des notes. */
 #page-admin-local-apsolu-courses-index #page-wrapper,
 #page-admin-local-apsolu-federation-index #page-wrapper,

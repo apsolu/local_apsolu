@@ -61,8 +61,9 @@ foreach ($tabslist as $tabname) {
 $options = [];
 $options['sortLocaleCompare'] = true;
 if (in_array($tab, ['courses', 'locations'], $strict = true) === true) {
+    $options['widthFixed'] = true;
     $options['widgets'] = ['filter', 'stickyHeaders'];
-    $options['widgetOptions'] = ['stickyHeaders_attachTo' => '.tablesorter-wrapper'];
+    $options['widgetOptions'] = ['stickyHeaders_filteredToTop' => true, 'stickyHeaders_offset' => '50px'];
     if ($tab === 'courses') {
         // Workaround pour éviter un bug avec tablesorter (ref: https://github.com/Mottie/tablesorter/issues/1806).
         $options['widgetOptions']['filter_defaultFilter'] = [7 => '{q}='];

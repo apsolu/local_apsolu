@@ -327,14 +327,14 @@ if ($data = $mform->get_data()) {
         $table->caption = count($rows).' '.get_string('users');
         $table->data = $rows;
         $table->responsive = false;
-        $content = html_writer::tag('div', html_writer::table($table), ['class' => 'tablesorter-wrapper']);
+        $content = html_writer::table($table);
     }
 }
 
 $options = [];
 $options['sortLocaleCompare'] = true;
 $options['widgets'] = ['filter', 'stickyHeaders'];
-$options['widgetOptions'] = ['stickyHeaders_attachTo' => '.tablesorter-wrapper'];
+$options['widgetOptions'] = ['stickyHeaders_filteredToTop' => true, 'stickyHeaders_offset' => '50px'];
 $PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise', [$options]);
 
 echo $OUTPUT->header();

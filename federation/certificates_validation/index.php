@@ -337,14 +337,14 @@ if ($data = $mform->get_data()) {
         $table->attributes['class'] = 'table table-bordered table-sortable';
         $table->caption = count($rows).' '.get_string('users');
         $table->data  = $rows;
-        $content = html_writer::tag('div', html_writer::table($table), ['class' => 'tablesorter-wrapper']);
+        $content = html_writer::table($table);
     }
 }
 
 $options = [];
 $options['sortLocaleCompare'] = true;
 $options['widgets'] = ['filter', 'resizable', 'stickyHeaders'];
-$options['widgetOptions'] = ['resizable' => true, 'stickyHeaders_attachTo' => '.tablesorter-wrapper'];
+$options['widgetOptions'] = ['resizable' => true, 'stickyHeaders_filteredToTop' => true, 'stickyHeaders_offset' => '50px'];
 $PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise', [$options]);
 
 $PAGE->requires->js_call_amd('local_apsolu/federation_medical_certificate_validation', 'initialise');
