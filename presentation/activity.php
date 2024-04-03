@@ -63,7 +63,7 @@ foreach ($activities as $activity) {
         $courses[$activity->sport] = new \stdClass();
         $courses[$activity->sport]->name = $activity->sport;
         $courses[$activity->sport]->url = $activity->url;
-        $courses[$activity->sport]->description = $activity->description;
+        $courses[$activity->sport]->description = nl2br($activity->description);
         $courses[$activity->sport]->courses = [];
     }
 

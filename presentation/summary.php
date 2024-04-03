@@ -130,7 +130,7 @@ foreach (enrol_select_get_activities($cityid) as $activity) {
         $courses[$activity->category]->id = $activity->categoryid;
         $courses[$activity->category]->name = $activity->category;
         $courses[$activity->category]->url = $activity->url;
-        $courses[$activity->category]->description = $activity->description;
+        $courses[$activity->category]->description = nl2br($activity->description);
         $courses[$activity->category]->modal = (empty($activity->url) === false || empty($activity->description) === false);
         $courses[$activity->category]->courses = [];
 
