@@ -66,6 +66,16 @@ $PAGE->set_title($title);
 $PAGE->set_heading($fullname);
 
 // Call javascript.
+$options = [];
+$options['headers'] = [];
+for ($i = 0; $i <= 11; $i++) {
+    $options['headers'][$i] = ['sorter' => false];
+}
+$options['widthFixed'] = true;
+$options['widgets'] = ['stickyHeaders'];
+$options['widgetOptions'] = ['stickyHeaders_filteredToTop' => true, 'stickyHeaders_offset' => '50px'];
+$PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise', [$options]);
+
 $PAGE->requires->js_call_amd('local_apsolu/attendance', 'initialise');
 
 // Build tabtree.
@@ -338,7 +348,7 @@ if ($notification === true) {
 // Construit le tableau HTML.
 $table = new html_table();
 $table->id = 'apsolu-attendance-table';
-$table->attributes = ['class' => 'table table-striped'];
+$table->attributes = ['class' => 'table table-sortable table-striped'];
 
 // Définit les entêtes du tableau.
 $table->head = [];

@@ -59,6 +59,12 @@ $PAGE->set_title($title);
 $PAGE->set_heading($fullname);
 
 // Call javascript.
+$options = [];
+$options['widthFixed'] = true;
+$options['widgets'] = ['stickyHeaders'];
+$options['widgetOptions'] = ['stickyHeaders_filteredToTop' => true, 'stickyHeaders_offset' => '50px'];
+$PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise', [$options]);
+
 $PAGE->requires->js_call_amd('local_apsolu/attendance', 'initialise');
 
 // Build tabtree.
