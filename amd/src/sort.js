@@ -2,8 +2,11 @@ define(["jquery", "local_apsolu/jquery.tablesorter"], function($) {
     return {
         initialise: function(options = {}) {
             if (options.hasOwnProperty("widgets") && options.widgets.includes("stickyHeaders")) {
-                // Modifie le style de <body> afin de faire fonctionner le stickyHeaders de TableSorter.
-                document.body.style.height = 'auto';
+                let ignoredpages = ["page-local-apsolu-presentation-activity", "page-local-apsolu-presentation-summary"];
+                if (ignoredpages.includes(document.body.id) === false) {
+                    // Modifie le style de <body> afin de faire fonctionner le stickyHeaders de TableSorter.
+                    document.body.style.height = 'auto';
+                }
             }
 
             $(".table-sortable").tablesorter(options);
