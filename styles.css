@@ -233,6 +233,38 @@ select.tablesorter-filter {
     margin: 1em 0 0 0;
 }
 
+#apsolu-presentation-table tbody th {
+    background-color: #434241;
+    color: #f39c12;
+    padding: 0 1em;
+    line-height: 2em;
+}
+
+#apsolu-presentation-table .hide,
+#apsolu-presentation-table-sticky .hide {
+    display: none;
+}
+
+#apsolu-presentation-table tbody ul {
+    margin: 0;
+}
+
+#apsolu-presentation-table tbody ul li {
+    white-space: nowrap;
+}
+
+#apsolu-presentation-table .apsolu-modal-sports-descriptions {
+    z-index: 4040;
+}
+
+#apsolu-presentation-table .apsolu-modal-sports-descriptions-button,
+#apsolu-presentation-table .apsolu-modal-sports-descriptions-button:focus,
+#apsolu-presentation-table .apsolu-modal-sports-descriptions-button:hover {
+    background: none;
+    border: none;
+    line-height: 1.5;
+}
+
 /* Module FFSU. */
 #local-apsolu-federation-adhesion-summary .row:nth-child(odd) {
     background-color: rgba(0, 0, 0, .05);

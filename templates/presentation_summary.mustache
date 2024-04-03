@@ -89,7 +89,7 @@
         "courses": []
     }
 }}
-<div id="apsolu-enrol-select-presentation">
+<div id="apsolu-presentation">
     {{#is_siuaps_rennes}}
     {{#selected_site}}
     <p><strong>Réservés aux étudiants/personnels du site de {{.}}.</strong></p>
@@ -143,20 +143,20 @@
 
         <!-- Liste des cours. -->
         <div class="table-responsive" id="apsolu-offerings-courses"> <!-- div table -->
-            <table class="table table-bordered" id="apsolu-enrol-select">
+            <table class="table table-bordered table-sortable" id="apsolu-presentation-table">
                 <thead>
                     <tr>
-                        <th class="col-md-1{{^show_city_column}} hide{{/show_city_column}}" data-column="city">{{#str}}city, local_apsolu{{/str}}</th>
-                        <th class="col-md-1{{^show_category_column}} hide{{/show_category_column}}" data-column="category">{{#str}}activity, local_apsolu{{/str}}</th>
-                        <th class="col-md-1{{^show_grouping_column}} hide{{/show_grouping_column}}" data-column="grouping">{{#str}}grouping, local_apsolu{{/str}}</th>
-                        <th class="col-md-1{{^show_period_column}} hide{{/show_period_column}}" data-column="period">{{#str}}period, local_apsolu{{/str}}</th>
-                        <th class="col-md-1{{^show_weekday_column}} hide{{/show_weekday_column}}" data-column="weekday">{{#str}}weekday, local_apsolu{{/str}}</th>
-                        <th class="col-md-1{{^show_times_column}} hide{{/show_times_column}}" data-column="times">{{#str}}times, local_apsolu{{/str}}</th>
-                        <th class="col-md-2{{^show_area_column}} hide{{/show_area_column}}" data-column="area">{{#str}}area, local_apsolu{{/str}}</th>
-                        <th class="col-md-2{{^show_location_column}} hide{{/show_location_column}}" data-column="location">{{#str}}location, local_apsolu{{/str}}</th>
-                        <th class="col-md-1{{^show_skill_column}} hide{{/show_skill_column}}" data-column="skill">{{#str}}skill, local_apsolu{{/str}}</th>
-                        <th class="col-md-1{{^show_role_column}} hide{{/show_role_column}}" data-column="role">{{#str}}role, local_apsolu{{/str}}</th>
-                        <th class="col-md-2{{^show_teachers_column}} hide{{/show_teachers_column}}" data-column="teachers">{{#str}}teachers{{/str}}</th>
+                        <th class="col-md-1{{^show_city_column}} hide{{/show_city_column}} sorter-false" data-column="city">{{#str}}city, local_apsolu{{/str}}</th>
+                        <th class="col-md-1{{^show_category_column}} hide{{/show_category_column}} sorter-false" data-column="category">{{#str}}activity, local_apsolu{{/str}}</th>
+                        <th class="col-md-1{{^show_grouping_column}} hide{{/show_grouping_column}} sorter-false" data-column="grouping">{{#str}}grouping, local_apsolu{{/str}}</th>
+                        <th class="col-md-1{{^show_period_column}} hide{{/show_period_column}} sorter-false" data-column="period">{{#str}}period, local_apsolu{{/str}}</th>
+                        <th class="col-md-1{{^show_weekday_column}} hide{{/show_weekday_column}} sorter-false" data-column="weekday">{{#str}}weekday, local_apsolu{{/str}}</th>
+                        <th class="col-md-1{{^show_times_column}} hide{{/show_times_column}} sorter-false" data-column="times">{{#str}}times, local_apsolu{{/str}}</th>
+                        <th class="col-md-2{{^show_area_column}} hide{{/show_area_column}} sorter-false" data-column="area">{{#str}}area, local_apsolu{{/str}}</th>
+                        <th class="col-md-2{{^show_location_column}} hide{{/show_location_column}} sorter-false" data-column="location">{{#str}}location, local_apsolu{{/str}}</th>
+                        <th class="col-md-1{{^show_skill_column}} hide{{/show_skill_column}} sorter-false" data-column="skill">{{#str}}skill, local_apsolu{{/str}}</th>
+                        <th class="col-md-1{{^show_role_column}} hide{{/show_role_column}} sorter-false" data-column="role">{{#str}}role, local_apsolu{{/str}}</th>
+                        <th class="col-md-2{{^show_teachers_column}} hide{{/show_teachers_column}} sorter-false" data-column="teachers">{{#str}}teachers{{/str}}</th>
                     </tr>
                   </thead>
                 <tbody>

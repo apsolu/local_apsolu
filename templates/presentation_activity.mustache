@@ -49,29 +49,29 @@
         "courses": []
     }
 }}
-<div id="apsolu-enrol-select-presentation">
+<div id="apsolu-presentation">
 
     <!-- Boite de filtres générée avec javascript. -->
 
     <!-- Liste des cours. -->
-    <div id="apsolu-enrol-select-presentation-courses-list2" class="table-unresponsive">
+    <div id="apsolu-presentation-courses-list2" class="table-unresponsive">
     {{#courses}}
         {{#url}}<p><a href="{{.}}">Modalités pédagogiques</a></p>{{/url}}
         {{#description}}<div class="mb-4 mt-2">{{{.}}}</div>{{/description}}
 
-        <table class="table table-bordered table-striped" id="apsolu-enrol-select">
+        <table class="table table-bordered table-sortable table-striped" id="apsolu-presentation-table">
             <thead>
                 <tr>
-                    <th class="col-md-1 hide" data-column="sites">{{#str}}city, local_apsolu{{/str}}</th>
-                    <th class="col-md-1 hide" data-column="sports">{{#str}}category, local_apsolu{{/str}}</th>
-                    <th class="col-md-1" data-column="periods">{{#str}}period, local_apsolu{{/str}}</th>
-                    <th class="col-md-1" data-column="weekdays">{{#str}}weekday, local_apsolu{{/str}}</th>
-                    <th class="col-md-1" data-column="times">{{#str}}times, local_apsolu{{/str}}</th>
-                    <th class="col-md-2" data-column="areas">{{#str}}area, local_apsolu{{/str}}</th>
-                    <th class="col-md-2" data-column="locations">{{#str}}location, local_apsolu{{/str}}</th>
-                    <th class="col-md-1" data-column="skills">{{#str}}skill, local_apsolu{{/str}}</th>
-                    <th class="col-md-1" data-column="roles">{{#str}}role, local_apsolu{{/str}}</th>
-                    <th class="col-md-2" data-column="teachers">{{#str}}teachers{{/str}}</th>
+                    <th class="col-md-1 sorter-false hide" data-column="sites">{{#str}}city, local_apsolu{{/str}}</th>
+                    <th class="col-md-1 sorter-false hide" data-column="sports">{{#str}}category, local_apsolu{{/str}}</th>
+                    <th class="col-md-1 sorter-false" data-column="periods">{{#str}}period, local_apsolu{{/str}}</th>
+                    <th class="col-md-1 sorter-false" data-column="weekdays">{{#str}}weekday, local_apsolu{{/str}}</th>
+                    <th class="col-md-1 sorter-false" data-column="times">{{#str}}times, local_apsolu{{/str}}</th>
+                    <th class="col-md-2 sorter-false" data-column="areas">{{#str}}area, local_apsolu{{/str}}</th>
+                    <th class="col-md-2 sorter-false" data-column="locations">{{#str}}location, local_apsolu{{/str}}</th>
+                    <th class="col-md-1 sorter-false" data-column="skills">{{#str}}skill, local_apsolu{{/str}}</th>
+                    <th class="col-md-1 sorter-false" data-column="roles">{{#str}}role, local_apsolu{{/str}}</th>
+                    <th class="col-md-2 sorter-false" data-column="teachers">{{#str}}teachers{{/str}}</th>
                 </tr>
             </thead>
             <tbody>

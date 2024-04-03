@@ -50,6 +50,12 @@ $PAGE->set_title($title);
 $PAGE->navbar->add(get_string('courses', 'local_apsolu'), new moodle_url('/local/apsolu/presentation/summary.php'));
 $PAGE->navbar->add($title);
 
+$options = [];
+$options['widthFixed'] = true;
+$options['widgets'] = ['stickyHeaders'];
+$options['widgetOptions'] = ['stickyHeaders_filteredToTop' => true, 'stickyHeaders_offset' => '50px'];
+$PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise', [$options]);
+
 echo $OUTPUT->header();
 echo $OUTPUT->heading($title);
 

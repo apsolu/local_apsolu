@@ -20,7 +20,9 @@
  * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-define(['jquery', 'core/modal_events', 'core/modal_factory', 'core/templates', 'enrol_select/select2'], function($, ModalEvents, ModalFactory, templates) {
+define(['jquery', 'core/modal_events', 'core/modal_factory', 'core/templates', 'enrol_select/select2'],
+    function($, ModalEvents, ModalFactory, templates) {
+
     return {
         initialise: function() {
             /**
@@ -32,9 +34,9 @@ define(['jquery', 'core/modal_events', 'core/modal_factory', 'core/templates', '
                 var filters = {};
 
                 // Réaffiche toutes les lignes pour mieux les masquer ensuite.
-                $('#apsolu-enrol-select tbody tr').css('display', 'table-row');
+                $('#apsolu-presentation-table tbody tr').css('display', 'table-row');
 
-                $('.apsolu-enrol-selects').each(function() {
+                $('.apsolu-presentation-selects').each(function() {
                     var values = $(this).select2('data');
                     var target = $(this).attr('name');
                     if (values.length === 0) {
@@ -50,7 +52,7 @@ define(['jquery', 'core/modal_events', 'core/modal_factory', 'core/templates', '
                     var header;
                     var headerChildren;
 
-                    $('#apsolu-enrol-select tbody tr').each(function() {
+                    $('#apsolu-presentation-table tbody tr').each(function() {
                         if ($(this).children().length === 1) {
                             // On ne traite pas les <th>, mais on les masque si elles ne servent à rien.
                             if (headerChildren === 0) {
@@ -112,13 +114,13 @@ define(['jquery', 'core/modal_events', 'core/modal_factory', 'core/templates', '
             }
 
             // Initialise les entrées HTML du formulaire contenant les filtres.
-            $('.apsolu-enrol-selects').select2({
+            $('.apsolu-presentation-selects').select2({
                 allowClear: true,
                 width: '18em'
                 });
 
             // Appelle la fonction filter() à chaque changement de valeurs dans les entrées du formulaire.
-            $('.apsolu-enrol-selects').on('change.select2', function() {
+            $('.apsolu-presentation-selects').on('change.select2', function() {
                 filter();
             });
 
@@ -134,15 +136,15 @@ define(['jquery', 'core/modal_events', 'core/modal_factory', 'core/templates', '
                 try {
                     selections = JSON.parse(selections);
 
-                    for (selection in selections) {
-                        var select = $('.apsolu-enrol-selects[name='+selection+']');
+                    for (const selection in selections) {
+                        var select = $('.apsolu-presentation-selects[name=' + selection + ']');
                         if (select) {
                             select.val(selections[selection]);
                             select.trigger('change');
                         }
                     }
                 } catch (error) {
-                    console.log(error);
+                    // TODO: améliorer la gestion d'erreurs : console.log(error);
                 }
             }
 
@@ -192,14 +194,14 @@ define(['jquery', 'core/modal_events', 'core/modal_factory', 'core/templates', '
                         }
                     }
 
-                    var context = { event: complementaryrows[i].getAttribute('data-category-event') };
-                    var nodepath= '#'+complementaryrows[i].getAttribute('id')+' td:eq('+tdindex+')';
+                    var context = {event: complementaryrows[i].getAttribute('data-category-event')};
+                    var nodepath = '#' + complementaryrows[i].getAttribute('id') + ' td:eq(' + tdindex + ')';
 
                     // Appelle le template local_apsolu/presentation_event_popover.
                     var updateTemplate = function(templates, context, nodepath) {
-                        templates.render('local_apsolu/presentation_event_popover', context)
+                        return templates.render('local_apsolu/presentation_event_popover', context)
                             .then(function(html, js) {
-                                templates.prependNodeContents(nodepath, html, js);
+                                return templates.prependNodeContents(nodepath, html, js);
                             });
                     };
                     updateTemplate(templates, context, nodepath);
@@ -214,12 +216,13 @@ define(['jquery', 'core/modal_events', 'core/modal_factory', 'core/templates', '
                 }, permalink)
                 .done(function(modal) {
                     // Do what you want with your new modal.
-                    modal.getRoot().on(ModalEvents.shown, function(){
+                    modal.getRoot().on(ModalEvents.shown, function() {
                         var href = window.location.href.split('#')[0];
                         var permalink = document.getElementById('apsolu-offerings-permalink-button');
                         var value = href + permalink.getAttribute('data-href');
 
-                        modal.setBody('<p><input id="apsolu-offerings-permalink-input" size="75" type="text" value="'+value+'" /></p>');
+                        modal.setBody('<p><input id="apsolu-offerings-permalink-input" size="75" type="text" value="' +
+                            value + '" /></p>');
                     });
                 });
             }

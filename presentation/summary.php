@@ -49,6 +49,13 @@ $PAGE->set_title($title);
 $PAGE->navbar->add($title);
 
 $PAGE->requires->css(new moodle_url($CFG->wwwroot.'/enrol/select/styles/select2.min.css'));
+
+$options = [];
+$options['widthFixed'] = true;
+$options['widgets'] = ['stickyHeaders'];
+$options['widgetOptions'] = ['stickyHeaders_filteredToTop' => true, 'stickyHeaders_offset' => '50px'];
+$PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise', [$options]);
+
 $PAGE->requires->js_call_amd('local_apsolu/presentation', 'initialise');
 
 echo $OUTPUT->header();
@@ -214,7 +221,7 @@ foreach ($filters as $name => $filter) {
         sort($filter->values, SORT_LOCALE_STRING);
     }
 
-    $attributes = ['class' => 'apsolu-enrol-selects', 'multiple' => 'multiple'];
+    $attributes = ['class' => 'apsolu-presentation-selects', 'multiple' => 'multiple'];
     $filter->html = \html_writer::select($filter->values, $name, $selected = '', $nothing = false, $attributes);
 }
 
