@@ -485,6 +485,7 @@ $string['obtain_a_license_number'] = 'Obtenir un numéro de licence';
 $string['orange'] = 'Orange';
 $string['other_federation'] = 'Autre fédération';
 $string['other_filters'] = 'Autres filtres';
+$string['overview_of_using_payments'] = 'Vue d’ensemble tarifs et usages';
 $string['parental_authorization'] = 'Autorisation parentale';
 $string['parental_authorization_description'] = 'Texte de présentation pour les autorisations parentales';
 $string['parental_authorization_description_help'] = 'Texte de présentation afficher aux utilisateurs ayant besoin d’une autorisation parentale.';

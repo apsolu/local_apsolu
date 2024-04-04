@@ -43,9 +43,18 @@
 	{{{notification}}}
 {{/notification}}
 
-<p class="text-right">
-	<a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=prices&action=edit">{{#str}}card_add, local_apsolu{{/str}}</a>
-</p>
+<ul class="list-unstyled text-right">
+    <li class="list-inline-item"><a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=prices&action=edit">{{#str}}card_add, local_apsolu{{/str}}</a></li>
+    <li class="list-inline-item">
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">{{#str}}overview_of_using_payments, local_apsolu{{/str}}</button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=prices&amp;action=extract&amp;format=csv">{{#str}}export_to_csv_format, local_apsolu{{/str}}</a>
+                <a class="dropdown-item" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=prices&amp;action=extract&amp;format=xls">{{#str}}export_to_excel_format, local_apsolu{{/str}}</a>
+            </div>
+        </div>
+    </li>
+</ul>
 
 {{^cards}}
 <p class="alert alert-info">{{#str}}no_card, local_apsolu{{/str}}</p>
