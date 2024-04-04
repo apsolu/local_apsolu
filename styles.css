@@ -59,6 +59,7 @@
     white-space: normal;
 }
 
+.table-sortable,
 .table-sortable caption,
 .table-sortable thead .tablesorter-header,
 .table-sortable thead .tablesorter-filter-row {
