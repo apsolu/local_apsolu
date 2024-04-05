@@ -24,6 +24,8 @@
 
 namespace local_apsolu\core;
 
+use stdClass;
+
 /**
  * Classe gérant les rôles.
  *
@@ -70,7 +72,14 @@ class role extends record {
      * @return string
      */
     public function get_icon() {
-        return '<i aria-hidden="true" class="fa fa-'.$this->fontawesomeid.'" style="color:'.$this->color.';"></i>';
+        global $OUTPUT;
+
+        $data = new stdClass();
+        $data->fontawesomeid = $this->fontawesomeid;
+        $data->color = $this->color;
+        $data->name = $this->name;
+
+        return $OUTPUT->render_from_template('local_apsolu/role_pix', $data);
     }
 
     /**
