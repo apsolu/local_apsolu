@@ -233,33 +233,7 @@ uasort($students, function($a, $b) {
 });
 
 // TODO: rendre moins spécifique à Brest.
-if ($CFG->wwwroot === 'https://espace-suaps.univ-brest.fr' || empty($CFG->debugdisplay) === false) {
-    // Détermine si il s'agit d'un cours appartenant au groupement d'activités APPN.
-    $sql = "SELECT c.id
-              FROM {course} c
-              JOIN {apsolu_courses} ac ON c.id = ac.id
-              JOIN {course_categories} cc1 ON cc1.id = c.category
-              JOIN {course_categories} cc2 ON cc2.id = cc1.parent
-              JOIN {apsolu_courses_groupings} acg ON cc2.id = acg.id
-             WHERE cc2.name LIKE 'APPN%'
-               AND c.id = :courseid";
-    if ($DB->get_record_sql($sql, ['courseid' => $courseid]) !== false) {
-        // Détermine si un dépôt de devoirs existe.
-        $sql = "SELECT cm.instance
-                  FROM {course_modules} cm
-                  JOIN {modules} m ON m.id = cm.module
-                 WHERE m.name = 'assign'
-                   AND cm.course = :courseid";
-        $cm = $DB->get_record_sql($sql, ['courseid' => $courseid]);
-        if ($cm !== false) {
-            $sql = "SELECT userid, grade
-                      FROM {assign_grades}
-                     WHERE assignment = :assignment
-                       AND grade > 0";
-            $appnvalidations = $DB->get_records_sql($sql, ['assignment' => $cm->instance]);
-        }
-    }
-}
+$appnvalidations = Payment::get_appn_brest($courseid);
 
 // Attendance form.
 $args = [
