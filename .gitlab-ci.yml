@@ -1,0 +1,20 @@
+---
+# yamllint disable rule:line-length
+
+variables:
+  ALLOW_FAILURE_GRUNT: "true"  # Beaucoup d'erreurs javascript.
+  ALLOW_FAILURE_MUSTACHE: "true"  # Principalement à cause de code JS intégré dans le HTML.
+  ALLOW_FAILURE_PHPCPD: "true"  # Problème de code dupliqué.
+  ALLOW_FAILURE_PHPCS: "true"  # Principalement à cause du nom de certaines variables.
+  ALLOW_FAILURE_VALIDATE: "true"  # Manque une table local_apsolu.
+
+  ENABLE_BEHAT: "false"  # Non implémenté.
+
+  MOODLE_EXTRA_PLUGINS: >
+    https://github.com/apsolu/block_apsolu_course.git
+    https://github.com/apsolu/block_apsolu_dashboard.git
+    https://github.com/apsolu/enrol_select.git
+    https://github.com/apsolu/theme_apsolu.git
+
+include:
+  - local: "/.gitlab/moodle401.yml"

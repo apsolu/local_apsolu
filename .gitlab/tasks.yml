@@ -1,0 +1,144 @@
+---
+# yamllint disable rule:line-length
+
+# Job savepoints : Validate your plugin’s upgrade steps.
+savepoints:
+  stage: validations
+  script:
+    - moodle-plugin-ci savepoints $PLUGIN_PATH
+  rules:
+    - if: $ENABLE_SAVEPOINTS == "false"
+      when: never
+    - if: $ALLOW_FAILURE_SAVEPOINTS == "true"
+      allow_failure: true
+    - when: on_success
+
+# Job validate : Run some light validation on the plugin file structure and code.
+validate:
+  stage: validations
+  script:
+    - moodle-plugin-ci validate $PLUGIN_PATH
+  rules:
+    - if: $ENABLE_VALIDATE == "false"
+      when: never
+    - if: $ALLOW_FAILURE_VALIDATE == "true"
+      allow_failure: true
+    - when: on_success
+
+# Job phplint : Run PHP Lint on a plugin.
+phplint:
+  stage: analyses
+  script:
+    - moodle-plugin-ci phplint $PLUGIN_PATH
+  rules:
+    - if: $ENABLE_PHPLINT == "false"
+      when: never
+    - if: $ALLOW_FAILURE_PHPLINT == "true"
+      allow_failure: true
+    - when: on_success
+
+# Job phpcs : Run Moodle CodeSniffer standard on a plugin.
+phpcs:
+  stage: analyses
+  script:
+    - moodle-plugin-ci phpcs $PLUGIN_PATH
+  rules:
+    - if: $ENABLE_PHPCS == "false"
+      when: never
+    - if: $ALLOW_FAILURE_PHPCS == "true"
+      allow_failure: true
+    - when: on_success
+
+# Job phpdoc : Run Moodle PHPDoc Checker on a plugin.
+phpdoc:
+  stage: analyses
+  script:
+    - moodle-plugin-ci phpdoc --moodle=$CI_PROJECT_DIR/.cache/moodle --max-warnings 0 $PLUGIN_PATH
+  rules:
+    - if: $ENABLE_PHPDOC == "false"
+      when: never
+    - if: $ALLOW_FAILURE_PHPDOC == "true"
+      allow_failure: true
+    - when: on_success
+
+# Job grunt : Run Grunt task on a plugin.
+grunt:
+  stage: analyses
+  script:
+    - moodle-plugin-ci grunt --moodle=$CI_PROJECT_DIR/.cache/moodle $PLUGIN_PATH
+  rules:
+    - if: $ENABLE_GRUNT == "false"
+      when: never
+    - if: $ALLOW_FAILURE_GRUNT == "true"
+      allow_failure: true
+    - when: on_success
+
+# Job phpcpd : Run PHP Copy/Paste Detector on a plugin.
+phpcpd:
+  stage: analyses
+  script:
+    - moodle-plugin-ci phpcpd $PLUGIN_PATH
+  rules:
+    - if: $ENABLE_PHPCPD == "false"
+      when: never
+    - if: $ALLOW_FAILURE_PHPCPD == "true"
+      allow_failure: true
+    - when: on_success
+
+# Job phpmd : Run PHP Mess Detector on a plugin.
+phpmd:
+  stage: analyses
+  script:
+    - moodle-plugin-ci phpmd $PLUGIN_PATH
+  rules:
+    - if: $ENABLE_PHPMD == "false"
+      when: never
+    - if: $ALLOW_FAILURE_PHPMD == "true"
+      allow_failure: true
+    - when: on_success
+
+# Job phpunit : Run PHPUnit on a plugin.
+phpunit:
+  stage: tests
+  script:
+    # La commande moodle-plugin-ci phpunit doit initier la DB... ça fonctionne sur ma machine, mais pas en CI. À creuser...
+    - cd "$CI_PROJECT_DIR/.cache/moodle/"
+    - php admin/tool/phpunit/cli/util.php --install
+    - php admin/tool/phpunit/cli/init.php
+    - cd -
+    - moodle-plugin-ci phpunit --moodle $CI_PROJECT_DIR/.cache/moodle $PLUGIN_PATH
+  rules:
+    - if: $ENABLE_PHPUNIT == "false"
+      when: never
+    - if: $ALLOW_FAILURE_PHPUNIT == "true"
+      allow_failure: true
+    - when: on_success
+
+# Job mustache : Run Mustache Lint on a plugin.
+mustache:
+  stage: tests
+  script:
+    - moodle-plugin-ci mustache $PLUGIN_PATH
+  rules:
+    - if: $ENABLE_MUSTACHE == "false"
+      when: never
+    - if: $ALLOW_FAILURE_MUSTACHE == "true"
+      allow_failure: true
+    - when: on_success
+
+# Job behat : Run Behat on a plugin.
+# TODO: Non implémenté.
+# behat:
+#   stage: tests
+#   script:
+#     - moodle-plugin-ci behat --profile chrome $PLUGIN_PATH
+#     # Alternative:
+#     - cd "$CI_PROJECT_DIR/.cache/moodle/"
+#     - vendor/bin/behat --config /builds/applis-fir-siuaps/local_apsolu/.cache/moodledata/behat_moodledata/behatrun/behat/behat.yml
+#     - cd -
+#   rules:
+#     - if: $ENABLE_BEHAT == "false"
+#       when: never
+#     - if: $ALLOW_FAILURE_BEHAT == "true"
+#       allow_failure: true
+#     - when: on_success
