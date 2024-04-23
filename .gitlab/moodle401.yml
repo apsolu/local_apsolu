@@ -44,7 +44,6 @@ variables:
 #   - si un stage contient plusieurs jobs, ils sont executés en parallèle.
 #   - si un job d'un stage plante, le processus d'intégration est arrêté.
 stages:
-  - build
   - validations
   - analyses
   - tests
@@ -59,10 +58,6 @@ default:
     paths:
       - $CI_PROJECT_DIR/.cache/apt
       - $CI_PROJECT_DIR/.cache/composer
-      - $CI_PROJECT_DIR/.cache/moodle
-      - $CI_PROJECT_DIR/.cache/moodledata
-      - $CI_PROJECT_DIR/.cache/moodle-extra-plugins
-      - $CI_PROJECT_DIR/.cache/moodle-plugin-ci
       - $CI_PROJECT_DIR/.cache/npm
       - $CI_PROJECT_DIR/.cache/nvm
     policy: pull-push
@@ -103,7 +98,7 @@ default:
     - mkdir -p "$CI_PROJECT_DIR/.cache/apt"
     - rm -rf /var/cache/apt
     - ln -s "$CI_PROJECT_DIR/.cache/apt" /var/cache/apt
-    - export apt_options="-y -qq -o Dir::Cache::Archives=\"$CI_PROJECT_DIR/.cache/apt\""
+    - export apt_options="-y -qq -o Dir::Cache::Archives=$CI_PROJECT_DIR/.cache/apt"
 
     # Met à jour l'OS.
     - apt $apt_options update 1> /dev/null
@@ -122,35 +117,18 @@ default:
     - apt $apt_options install default-jre-headless 1> /dev/null
 
     # Installe toutes les locales (dont en_AU.UTF-8)
-    - apt $apt_options install locales-all
+    - apt $apt_options install locales-all 1> /dev/null
 
     # Installe les paquets PHP.
-    - apt $apt_options install composer
+    - apt $apt_options install composer 1> /dev/null
     - apt $apt_options install php-bcmath php-cli php-curl php-gd php-gmp php-intl php-json php-mbstring php-mysql php-xml php-xmlrpc php-zip 1> /dev/null
 
-build:
-  stage: build
-  allow_failure: false
-  # only: [schedules, web]
-  cache:
-    key: cache-$MOODLE_BRANCH
-    paths:
-      - $CI_PROJECT_DIR/.cache/apt
-      - $CI_PROJECT_DIR/.cache/composer
-      - $CI_PROJECT_DIR/.cache/moodle
-      - $CI_PROJECT_DIR/.cache/moodledata
-      - $CI_PROJECT_DIR/.cache/moodle-extra-plugins
-      - $CI_PROJECT_DIR/.cache/moodle-plugin-ci
-      - $CI_PROJECT_DIR/.cache/npm
-      - $CI_PROJECT_DIR/.cache/nvm
-    policy: pull-push
-  script:
     # Installe NVM (Node Version Manager).
     - apt $apt_options install build-essential curl 1> /dev/null
     - test -d "$CI_PROJECT_DIR/.cache/nvm" || git clone https://github.com/nvm-sh/nvm.git "$CI_PROJECT_DIR/.cache/nvm"
     - git -C "$CI_PROJECT_DIR/.cache/nvm" pull --ff-only origin master
     - source "$CI_PROJECT_DIR/.cache/nvm/nvm.sh"
-    - nvm install $NODE_VERSION
+    - nvm install "$NODE_VERSION"
 
     # Supprime les sources la précédente installation de moodle et des moodle-extra-plugins.
     - rm -rf "$CI_PROJECT_DIR/.cache/moodle"*
@@ -180,4 +158,4 @@ build:
       --extra-plugins "$CI_PROJECT_DIR/.cache/moodle-extra-plugins"
 
 include:
-  - local: "/.gitlab/tasks.yml"
+  - local: "/.gitlab/jobs.yml"

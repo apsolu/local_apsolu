@@ -1,6 +1,18 @@
 ---
 # yamllint disable rule:line-length
 
+default:
+  cache:
+    key: cache-$MOODLE_BRANCH
+    paths:
+      - $CI_PROJECT_DIR/.cache/apt
+      - $CI_PROJECT_DIR/.cache/composer
+      - $CI_PROJECT_DIR/.cache/npm
+      - $CI_PROJECT_DIR/.cache/nvm
+    policy: pull
+  after_script:
+    - rm -rf "$CI_PROJECT_DIR/.cache/moodle"*
+
 # Job savepoints : Validate your plugin’s upgrade steps.
 savepoints:
   stage: validations
