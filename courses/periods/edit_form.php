@@ -94,7 +94,8 @@ class local_apsolu_courses_periods_edit_form extends moodleform {
         // Weeks field.
         $start = new DateTime($year.'-08-15T00:00:00');
         $start->sub(new DateInterval('P'.($start->format('N') - 1).'D'));
-        $end = new DateTime(($year + 1).'-06-30T00:00:00');
+        $end = new DateTime(($year + 1).'-08-15T00:00:00');
+        $end->add(new DateInterval('P'.($end->format('N') - 1).'D'));
 
         $weeks = [];
         while ($start < $end) {
