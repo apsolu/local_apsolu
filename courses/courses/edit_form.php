@@ -61,14 +61,14 @@ class local_apsolu_courses_courses_edit_form extends moodleform {
         $mform->setDefault('event', $course->event);
 
         // Skill field.
-        $mform->addElement('select', 'skillid', get_string('skill', 'local_apsolu'), $skills);
+        $mform->addElement('autocomplete', 'skillid', get_string('skill', 'local_apsolu'), $skills);
         $mform->setType('skillid', PARAM_INT);
         $mform->addRule('skillid', get_string('required'), 'required', null, 'client');
         // See MDL-53725.
         // Hope to use instead : $mform->addDatalist('skill', $skills);.
 
         // Location field.
-        $mform->addElement('select', 'locationid', get_string('location', 'local_apsolu'), $locations);
+        $mform->addElement('autocomplete', 'locationid', get_string('location', 'local_apsolu'), $locations);
         $mform->setType('locationid', PARAM_INT);
         $mform->addRule('locationid', get_string('required'), 'required', null, 'client');
         // See MDL-53725.
@@ -121,7 +121,7 @@ class local_apsolu_courses_courses_edit_form extends moodleform {
         $mform->addRule('showpolicy', get_string('required'), 'required', null, 'client');
 
         // Periods field.
-        $mform->addElement('select', 'periodid', get_string('period', 'local_apsolu'), $periods);
+        $mform->addElement('autocomplete', 'periodid', get_string('period', 'local_apsolu'), $periods);
         $mform->setType('periodid', PARAM_INT);
         $mform->addRule('periodid', get_string('required'), 'required', null, 'client');
         // See MDL-53725.
