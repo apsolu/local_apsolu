@@ -309,3 +309,9 @@ select[data-apsolu=fontawesome],
 select[data-apsolu=fontawesome] option {
     font: normal normal normal 14px/1 FontAwesome;
 }
+
+/* Administration > statistiques > tableau de bord: corrige le débordement des tableaux. */
+#page-admin-local-apsolu-statistics-population-index .chart-area .chart-image,
+#page-admin-local-apsolu-statistics-programme-index .chart-area .chart-image {
+    width: auto;
+}
