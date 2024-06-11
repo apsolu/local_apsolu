@@ -1,13 +1,13 @@
 define(
   [
     "jquery",
-    'core/notification',    
+    'core/notification',
     "core/ajax",
     "local_apsolu/moment",
     "local_apsolu/jszip",
     "local_apsolu/datatables.net",
     "local_apsolu/datatables.net-buttons",
-    "local_apsolu/datatables.net-bs4",  
+    "local_apsolu/datatables.net-bs4",
     "buttons.bootstrap4",
     "buttons.html5",
   ],
@@ -18,44 +18,44 @@ define(
         moment.locale('fr');
 
         $(document).ready(function(){
-            var reportid = $( "#id_reportid" ).val(); 
+            var reportid = $( "#id_reportid" ).val();
             if (reportid != "0") {
               $( "#id_reportid" ).trigger("change");
-            } 
+            }
         });
-        
+
         $( "#id_reportid" ).change(function() {
           var requests = [];
           var selector = '.report-enrolList-table';
-          
-          // Destroy results table        
+
+          // Destroy results table
           if ( $.fn.dataTable.isDataTable( selector ) ) {
             table = $(selector).DataTable();
             table.destroy();
-            $(selector).empty(); 
-          } 
-          
+            $(selector).empty();
+          }
+
           if (this.value != "0") {
             $("#spinner").css('visibility', 'visible');
-            
+
             // Get Report value
             var requests = Ajax.call([{
               methodname: 'local_apsolu_get_reportdataset',
               args: {'classname':'population','reportid':this.value}
             }]);
-            
+
             requests[0].done(function(enrols) {
               // Display tooltip
               if (enrols.tooltip) {
                 console.log (enrols.tooltip)
               }
-            
+
               // Get ordering
               var json_order = JSON.parse(enrols.orders);
               var order = [];
               for(var i in json_order)
                   order.push([i, json_order[i]]);
-                  
+
               // Build results table
               var options = {
                 data : JSON.parse(enrols.data),
@@ -72,7 +72,7 @@ define(
                     "render": function ( data, type, row, meta ) {
           							         return type === 'filter' ? (data === null || data === '') ? '(Vide)' : data : data;
                               }
-                }],                                
+                }],
                 order: order,
                 buttons: ['excelHtml5','csvHtml5'],
                 dom: '<"top"Bfi>rt<"bottom"lp><"clear">', //'dom': 'lfrtip',
@@ -104,24 +104,24 @@ define(
                                   "_": "%d lignes sélectionnées",
                                   "0": "Aucune ligne sélectionnée",
                                   "1": "1 ligne sélectionnée"
-                              } 
-                      }              
+                              }
+                      }
                     },
                 initComplete: function(settings, json) {
-                  $("#spinner").css('visibility', 'hidden');                          
-                          
+                  $("#spinner").css('visibility', 'hidden');
+
                   // Build columns filters
                   if (enrols.filters) {
                     var filters = JSON.parse(enrols.filters);
-                    
+
                     $(selector+' thead tr').clone(false).appendTo( selector+' thead' );
                     $(selector+' thead tr:eq(1) th').removeAttr('class').html('');
-                    
+
                     if (filters.input) {
                       this.api().columns(filters.input).every( function () {
                         var column = this;
                         if (column.visible()) {
-                          
+
                           var title = $(column.header()).html();
                           var input = $('<input type="text" class="column_search" placeholder=" '+title+'" />')
                               .appendTo( $(selector+' thead tr:eq(1) th').eq(column.index()).empty() )
@@ -146,19 +146,19 @@ define(
                                   var val = $.fn.dataTable.util.escapeRegex(
                                       $(this).val()
                                   );
-           
+
                                   column
                                       .search( val ? '^'+val+'$' : '', true, false )
                                       .draw();
                               } );
-           
+
                           column.data().unique().sort().each( function ( d, j ) {
                             var title = $(column.header()).html();
                             if (title != "Jour")
-                            {                      
+                            {
                               if (d === null || d === '') {
                               	d = '(Vide)';
-                              }                
+                              }
                               var values = select.children('option').map(function(i, e){
                                   return e.value || e.innerText;
                               }).get();
@@ -168,20 +168,20 @@ define(
                             } else {
                               select.append( '<option value="'+moment.weekdays()[d]+'">'+moment.weekdays()[d]+'</option>' )
                             }
-                          });                                                 
+                          });
                         }
                       });
                     }
                   }
-                  
+
                 },
-                
-                
+
+
               };
-                      
+
               var table = $(selector).DataTable(options);
               table.unique(); // Remove doublons
-              
+
               // build link to rules
               $(selector+' tbody').on('click', 'a', function (e) {
                 e.preventDefault();
@@ -192,11 +192,11 @@ define(
                   window.open("/local/apsolu/statistics/population/index.php?page=custom&rules=" + btoa(rules), "_blank");
                 }
                 return false;
-              });                
-            }).fail(notification.exception);     
-            
-            
-          }            
+              });
+            }).fail(notification.exception);
+
+
+          }
         });
 
       }

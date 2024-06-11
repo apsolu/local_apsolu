@@ -11,7 +11,7 @@ define(
     'core/templates',
   ], function($, str, Chartjs, Ajax, Builder, Output, OutputTable, Mustache, Templates) {
 
-    $.extend({ 
+    $.extend({
       resetChart : function (id,args) {
         Chartjs.helpers.each(Chartjs.instances, function(instance){
           if (instance.canvas.parentNode){
@@ -23,7 +23,7 @@ define(
                 var chartArea = $('#chart-area-' + id),
                 chartTable = chartArea.find('.chart-table-data'),
                 chartCanvas = chartArea.find('canvas');
-                
+
                 if (data.success) {
                   chartArea.show();
                   instance.destroy();
@@ -36,7 +36,7 @@ define(
                   chartArea.hide();
                   alert (JSON.parse(data.chartdata));
                 }
-              
+
               },
               fail: Notification.exception
             }]);
@@ -44,7 +44,7 @@ define(
           }
         })
       },
-      
+
       actionCriterias : function (uniqid,reportid,criteriatype) {
         $("button[id^='btn-"+criteriatype+"-"+uniqid+"']").each(function(i){
           $(this).unbind("click");
@@ -56,7 +56,7 @@ define(
             if ($(this).attr('value') != "resetCriterias") {
               $(this).addClass('active');
             }
-            
+
             // build search criterias
             var criterias = {};
             var classname = $(this).attr('data-type');
@@ -66,14 +66,14 @@ define(
               criterias[criteria] = [{"id":id,"active":true}];
             });
             args = {'options':{"classname":classname,"reportid": reportid,"criterias":criterias}};
-    
+
             // reset chart from criterias
             $.resetChart(uniqid,args);
-            
+
           });
-        });  
+        });
       },
-      
+
       renderCriteria : function (key,uniqid,options) {
         var label;
         var strings = [
@@ -86,11 +86,11 @@ define(
                   $.actionCriterias(uniqid,options.reportid,key);
               });
         });
-  
+
       },
-      
-    }); 
-    
+
+    });
+
     $.fn.extend({
       renderCriterias : function (uniqid,options) {
         if (options.criterias) {
@@ -101,9 +101,9 @@ define(
             $.renderCriteria("calendarstypes",uniqid,options);
           }
           if (options.criterias.complementaries) {
-            $.renderCriteria("complementaries",uniqid,options);          
-          }  
-        }  
+            $.renderCriteria("complementaries",uniqid,options);
+          }
+        }
       },
     });
   }

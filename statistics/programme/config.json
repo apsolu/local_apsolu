@@ -26,7 +26,7 @@
             ],
             "orders":{"0":"asc","1":"asc"},
             "filters":{"select":[0,1]}
-          }          
+          }
         },
         {
           "id": "countslotsmainlist",
@@ -38,10 +38,10 @@
             ],
             "orders":{},
             "filters":{}
-          }                    
-        }                
+          }
+        }
     ],
-    "reportsCustomRennes": [],              
+    "reportsCustomRennes": [],
     "filters": [
         {
           "id": "groupid",
@@ -80,7 +80,7 @@
               "fields" : "id,name",
               "sort" : "name"
           }
-        },   
+        },
         {
           "id": "calendartypeid",
           "label": "calendartype,local_apsolu",
@@ -92,7 +92,7 @@
               "fields" : "id,name",
               "sort" : "name"
           }
-        },        
+        },
         {
           "id": "cityid",
           "label": "city,local_apsolu",
@@ -110,7 +110,7 @@
           "label": "statistics_id,local_apsolu",
           "type": "string",
           "operators": ["equal", "not_equal", "is_null", "is_not_null"]
-        },        
+        },
         {
           "id": "slotnumweekday",
           "label": "weekday,local_apsolu",
@@ -148,7 +148,7 @@
           "values" : {
               "table" : "apsolu_courses",
               "fields" : "starttime",
-              "sort" : "starttime"              
+              "sort" : "starttime"
           }
         },
         {
@@ -160,7 +160,7 @@
           "values" : {
               "table" : "apsolu_courses",
               "fields" : "endtime",
-              "sort" : "endtime"              
+              "sort" : "endtime"
           }
         },
         {
@@ -171,7 +171,7 @@
           "operators": ["equal", "not_equal"],
           "values" : {
               "Oui" : "Oui",
-              "Non" : "Non"              
+              "Non" : "Non"
           }
         },
         {
@@ -227,9 +227,9 @@
           "values" : {
               "table" : "apsolu_locations",
               "fields" : "id,name",
-              "sort" : "name"              
+              "sort" : "name"
           }
-        }        
+        }
     ],
-    "filtersCustomRennes": []    
+    "filtersCustomRennes": []
 }

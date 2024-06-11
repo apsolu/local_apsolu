@@ -52,7 +52,7 @@
           "values": {
             "datatype":"2"
           }
-        },                        
+        },
         {
           "id": "enrollee_acceptedlist",
           "label":"Nombre d'inscrits acceptés aux activités physiques",
@@ -88,7 +88,7 @@
             "datatype":"2",
             "having":"deleted_list > 0 "
           }
-        },        
+        },
         {
           "id": "complementaries_enrollment",
           "label":"Nombre d'inscriptions aux activités complémentaires",
@@ -105,8 +105,8 @@
             "datatype":"4",
             "having":"accepted_list > 0 ",
             "order" : "institution"
-          }    
-        },        
+          }
+        },
         {
           "id": "accepted_refused",
           "label": "Inscrits ayant au moins un cours/ Refusés en cours",
@@ -136,7 +136,7 @@
             "orders":{"0":"asc","1":"asc"},
             "filters":{"select":[0,1]}
           }
-        },        
+        },
         {
           "id": "distribution_genders",
           "label":"Nombre d'inscrits garçons VS Nombre d'inscrits filles",
@@ -166,7 +166,7 @@
             "orders":{"0":"asc","1":"asc"},
             "filters":{"select":[0,1]}
           }
-        },        
+        },
         {
           "id": "enrol_genders",
           "label":"Nombre d'inscriptions garçons VS Nombre d'inscriptions filles",
@@ -181,7 +181,7 @@
             "orders":{"0":"asc","1":"asc"},
             "filters":{"select":[0,1]}
           }
-        },        
+        },
         {
           "id": "accepted_once",
           "label":"Nombre d'inscrits ayant obtenu une inscription acceptée",
@@ -299,7 +299,7 @@
             "orders":{},
             "filters":{}
           }
-        }        
+        }
     ],
     "reportsCustomRennes": [
         {
@@ -348,7 +348,7 @@
             "filters":{"select":[0,1]}
           }
         }
-    ],              
+    ],
     "filters": [
       {
         "id": "activityid",
@@ -363,13 +363,13 @@
             "conditions" : "parent > 0",
             "sort" : "name"
         }
-      }, 
+      },
       {
         "id": "email",
         "label": "email,moodle",
         "type": "string",
         "operators": ["equal", "not_equal"]
-      },           
+      },
       {
         "id": "calendarid",
         "datatype": [1],
@@ -407,7 +407,7 @@
             "fields" : "data",
             "conditions" : "fieldid=5",
             "sort" : "data"
-        }          
+        }
       },
       {
         "id": "department",
@@ -434,7 +434,7 @@
             "conditions" : "parent = 0",
             "sort" : "name"
         }
-      },   
+      },
       {
         "id": "userid",
         "label": "userid,local_apsolu",
@@ -453,7 +453,7 @@
             "fields" : "name",
             "conditions" : "enrol = 'select'",
             "sort" : "name"
-        }          
+        }
       },
       {
         "id": "institution",
@@ -491,14 +491,14 @@
             "2" : "Liste principale",
             "3" : "Liste complémentaire",
             "4" : "Liste des étudiants désinscrits"
-        }          
-      }, 
+        }
+      },
       {
         "id": "lastname",
         "label": "lastname,moodle",
         "type": "string",
         "operators": ["equal", "not_equal", "is_null", "is_not_null"]
-      }, 
+      },
       {
         "id": "idnumber",
         "label": "idnumber,moodle",
@@ -561,8 +561,8 @@
             "fields" : "shortname",
             "conditions" : "archetype = 'student' and shortname <> 'student'",
             "sort" : "shortname"
-        }          
-      },  
+        }
+      },
       {
         "id": "calendartypeid",
         "datatype": [1],
@@ -587,7 +587,7 @@
             "fields" : "data",
             "conditions" : "fieldid=4",
             "sort" : "data"
-        }          
+        }
       }
     ],
     "filtersCustomRennes": [
@@ -603,5 +603,5 @@
               "false" : "Non"
           }
         }
-    ]    
+    ]
 }

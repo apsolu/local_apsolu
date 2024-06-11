@@ -61,10 +61,10 @@ class report extends \local_apsolu\local\statistics\report {
       			ACT.id as calendartypeid,ACT.name as calendartypename,
             ACI.id as cityid,ACI.name as cityname,
       			U.institution, U.department, U.id as userid, U.idnumber, U.firstname, U.lastname, U.email,
-            Sexe.data as sexe, 
+            Sexe.data as sexe,
             CASE WHEN UFR.data IS NULL THEN \'\' ELSE UFR.data END AS ufr, CASE WHEN LMD.data IS NULL THEN \'\' ELSE LMD.data END AS lmd, apsoluhighlevelathlete.data as shnu,
             E.id as enrolid, E.name as enrolname, UE.status,
-            CASE WHEN (apsoluusertype.data IS NOT NULL AND apsoluusertype.data <> \'\') 
+            CASE WHEN (apsoluusertype.data IS NOT NULL AND apsoluusertype.data <> \'\')
 					    THEN apsoluusertype.data
               ELSE CASE WHEN (U.email LIKE \'%@etudiant.univ-%\' OR U.email LIKE \'%@etu.univ-%\' OR U.email LIKE \'%@eleves.%\' OR U.email LIKE \'%@etud.univ-%\' OR U.email LIKE \'%@etudiant.%\')
             	THEN \'Étudiant\'
@@ -99,8 +99,8 @@ class report extends \local_apsolu\local\statistics\report {
   					FROM {cohort} co
   					INNER JOIN {cohort_members} com ON co.id = com.cohortid
   					WHERE com.userid = U.id
-  					) as cohortnames 
-                        
+  					) as cohortnames
+
           FROM {user_enrolments} UE
           INNER JOIN {user} U ON U.id = UE.userid AND U.deleted = 0
           LEFT JOIN {user_info_data} Sexe ON Sexe.userid = U.id AND Sexe.fieldid = (select id from mdl_user_info_field where shortname = \'apsolusex\')
@@ -108,7 +108,7 @@ class report extends \local_apsolu\local\statistics\report {
           LEFT JOIN {user_info_data} LMD ON LMD.userid = U.id AND LMD.fieldid = (select id from mdl_user_info_field where shortname = \'apsolucycle\')
           LEFT JOIN {user_info_data} apsoluhighlevelathlete ON apsoluhighlevelathlete.userid = U.id AND apsoluhighlevelathlete.fieldid = (select id from mdl_user_info_field where shortname = \'apsoluhighlevelathlete\')
           LEFT JOIN {user_info_data} apsoluusertype ON apsoluusertype.userid = U.id AND apsoluusertype.fieldid = (select id from mdl_user_info_field where shortname = \'apsoluusertype\')
-          
+
           INNER JOIN {enrol} E ON E.id = UE.enrolid AND E.enrol = \'select\'
           INNER JOIN {course} C on C.id = E.courseid
           INNER JOIN {apsolu_courses} APSOLU_C on APSOLU_C.id = C.id
@@ -133,7 +133,7 @@ class report extends \local_apsolu\local\statistics\report {
       			U.institution, U.department, U.id as userid, U.idnumber, U.firstname, U.lastname, U.email,
             Sexe.data as sexe, UFR.data as ufr, LMD.data as lmd, apsoluhighlevelathlete.data as shnu,
       			E.id as enrolid, E.name as enrolname, UE.status,
-            CASE WHEN (apsoluusertype.data IS NOT NULL AND apsoluusertype.data <> \'\') 
+            CASE WHEN (apsoluusertype.data IS NOT NULL AND apsoluusertype.data <> \'\')
 					    THEN apsoluusertype.data
               ELSE CASE WHEN (U.email LIKE \'%@etudiant.univ-%\' OR U.email LIKE \'%@etu.univ-%\' OR U.email LIKE \'%@eleves.%\' OR U.email LIKE \'%@etud.univ-%\' OR U.email LIKE \'%@etudiant.%\')
             	THEN \'Étudiant\'
@@ -167,7 +167,7 @@ class report extends \local_apsolu\local\statistics\report {
           LEFT JOIN {user_info_data} LMD ON LMD.userid = U.id AND LMD.fieldid = (select id from mdl_user_info_field where shortname = \'apsolucycle\')
           LEFT JOIN {user_info_data} apsoluhighlevelathlete ON apsoluhighlevelathlete.userid = U.id AND apsoluhighlevelathlete.fieldid = (select id from mdl_user_info_field where shortname = \'apsoluhighlevelathlete\')
           LEFT JOIN {user_info_data} apsoluusertype ON apsoluusertype.userid = U.id AND apsoluusertype.fieldid = (select id from mdl_user_info_field where shortname = \'apsoluusertype\')
-          
+
           INNER JOIN {enrol} E ON E.id = UE.enrolid AND E.enrol = \'select\'
       		INNER JOIN {course} C on C.id = E.courseid
       		INNER JOIN {apsolu_complements} APSOLU_C on APSOLU_C.id = C.id
@@ -866,32 +866,32 @@ class report extends \local_apsolu\local\statistics\report {
         global $DB;
 
         $sql = $params["WithEnrolments"] . ",gradable AS (
-        SELECT r.id,r.shortname,CONCAT('{\"id\": \"roleshortname\", \"operator\": \"contains\", \"value\": \"',shortname,'\"}') AS rules 
-        FROM mdl_role r 
+        SELECT r.id,r.shortname,CONCAT('{\"id\": \"roleshortname\", \"operator\": \"contains\", \"value\": \"',shortname,'\"}') AS rules
+        FROM mdl_role r
             JOIN mdl_role_capabilities rc ON rc.roleid = r.id
-            WHERE r.archetype = 'student'     
+            WHERE r.archetype = 'student'
             AND rc.capability LIKE 'local/apsolu:%'
             AND rc.capability LIKE '%gradable'
             AND rc.permission = 1
         ) SELECT DISTINCT
         ROW_NUMBER() OVER (ORDER BY e.institution,e.ufr,e.department,e.lmd DESC) AS row_num,
         e.institution, SUM(COUNT(e.enrolid)) OVER (PARTITION BY e.institution) AS institution_total,
-        CONCAT('{\"condition\":\"AND\",\"rules\":[{\"id\":\"status\",\"operator\":\"equal\",\"value\": \"0\"}, 
+        CONCAT('{\"condition\":\"AND\",\"rules\":[{\"id\":\"status\",\"operator\":\"equal\",\"value\": \"0\"},
         {\"condition\": \"OR\",\"rules\": [',(SELECT GROUP_CONCAT(rules ORDER BY rules SEPARATOR ',') FROM gradable),']},
         {\"id\": \"institution\", \"operator\": \"equal\", \"value\": \"',CASE WHEN (e.institution = '' OR e.institution IS NULL) THEN ' ' ELSE e.institution END,'\"}]}') AS institution_rules,
-        e.ufr, SUM(COUNT(e.enrolid)) OVER (PARTITION BY e.institution,e.ufr) AS ufr_total, 
-        CONCAT('{\"condition\":\"AND\",\"rules\":[{\"id\":\"status\",\"operator\":\"equal\",\"value\": \"0\"}, 
+        e.ufr, SUM(COUNT(e.enrolid)) OVER (PARTITION BY e.institution,e.ufr) AS ufr_total,
+        CONCAT('{\"condition\":\"AND\",\"rules\":[{\"id\":\"status\",\"operator\":\"equal\",\"value\": \"0\"},
         {\"condition\": \"OR\",\"rules\": [',(SELECT GROUP_CONCAT(rules ORDER BY rules SEPARATOR ',') FROM gradable),']},
         {\"id\": \"institution\", \"operator\": \"equal\", \"value\": \"',CASE WHEN (e.institution = '' OR e.institution IS NULL) THEN ' ' ELSE e.institution END,'\"},
         {\"id\": \"ufr\", \"operator\": \"equal\", \"value\": \"',CASE WHEN (e.ufr = '' OR e.ufr IS NULL) THEN ' ' ELSE e.ufr END,'\"}]}') AS ufr_rules,
         e.department, SUM(COUNT(e.enrolid)) OVER (PARTITION BY e.institution,e.ufr,e.department) AS department_total,
-        CONCAT('{\"condition\":\"AND\",\"rules\":[{\"id\":\"status\",\"operator\":\"equal\",\"value\": \"0\"}, 
+        CONCAT('{\"condition\":\"AND\",\"rules\":[{\"id\":\"status\",\"operator\":\"equal\",\"value\": \"0\"},
         {\"condition\": \"OR\",\"rules\": [',(SELECT GROUP_CONCAT(rules ORDER BY rules SEPARATOR ',') FROM gradable),']},
         {\"id\": \"institution\", \"operator\": \"equal\", \"value\": \"',CASE WHEN (e.institution = '' OR e.institution IS NULL) THEN ' ' ELSE e.institution END,'\"},
         {\"id\": \"ufr\", \"operator\": \"equal\", \"value\": \"',CASE WHEN (e.ufr = '' OR e.ufr IS NULL) THEN ' ' ELSE e.ufr END,'\"},
         {\"id\": \"department\", \"operator\": \"equal\", \"value\": \"',CASE WHEN (e.department = '' OR e.department IS NULL) THEN ' ' ELSE e.department END,'\"}]}') AS department_rules,
         e.lmd, COUNT(e.enrolid) AS lmd_total,
-        CONCAT('{\"condition\":\"AND\",\"rules\":[{\"id\":\"status\",\"operator\":\"equal\",\"value\": \"0\"}, 
+        CONCAT('{\"condition\":\"AND\",\"rules\":[{\"id\":\"status\",\"operator\":\"equal\",\"value\": \"0\"},
         {\"condition\": \"OR\",\"rules\": [',(SELECT GROUP_CONCAT(rules ORDER BY rules SEPARATOR ',') FROM gradable),']},
         {\"id\": \"institution\", \"operator\": \"equal\", \"value\": \"',CASE WHEN (e.institution = '' OR e.institution IS NULL) THEN ' ' ELSE e.institution END,'\"},
         {\"id\": \"ufr\", \"operator\": \"equal\", \"value\": \"',CASE WHEN (e.ufr = '' OR e.ufr IS NULL) THEN ' ' ELSE e.ufr END,'\"},
