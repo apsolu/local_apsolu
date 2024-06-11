@@ -44,4 +44,7 @@ if (in_array($page, $pages, true) === false) {
 // Setup admin access requirement.
 admin_externalpage_setup('local_apsolu_statistics_population_'.$page);
 
+$heading = sprintf('%s : %s', get_string('statistics', 'local_apsolu'), get_string('statistics_population', 'local_apsolu'));
+$PAGE->set_heading($heading);
+
 require(__DIR__.'/'.$page.'.php');
