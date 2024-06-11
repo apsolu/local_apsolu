@@ -246,6 +246,7 @@ class report extends \local_apsolu\local\statistics\report {
                 [ 'data' => "statusname", 'title' => get_string('enrolment_status', 'local_apsolu')],
                 [ 'data' => "groupname", 'title' => get_string('grouping', 'local_apsolu')],
                 [ 'data' => "activityname", 'title' => get_string('activity', 'local_apsolu')],
+                [ 'data' => "slotevent", 'title' => get_string('event', 'local_apsolu')],
                 [ 'data' => "skillsname", 'title' => get_string('skill', 'local_apsolu')],
                 [ 'data' => "slotnumweekday", 'title' => get_string('weekday', 'local_apsolu'), "render" => "function ( data, type, row ) {return moment.weekdays()[(data==7) ? 0 : data];}"],
                 [ 'data' => "slotstartend", 'title' => get_string('schedule', 'local_apsolu')],

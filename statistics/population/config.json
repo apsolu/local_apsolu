@@ -468,6 +468,19 @@
         }
       },
       {
+        "id": "slotevent",
+        "datatype": [1],
+        "label": "event,local_apsolu",
+        "type": "string",
+        "input": "select",
+        "operators": ["equal", "not_equal"],
+        "values" : {
+            "table" : "apsolu_courses",
+            "fields" : "event",
+            "sort" : "event"
+        }
+      },
+      {
         "id": "status",
         "datatype": [1,3],
         "label": "enrolment_status,local_apsolu",

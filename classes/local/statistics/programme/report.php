@@ -90,6 +90,7 @@ class report extends \local_apsolu\local\statistics\report {
         $columns = [
           [ 'data' => "groupname", 'title' => get_string("statistics_groupe", 'local_apsolu')],
           [ 'data' => "activityname", 'title' => get_string("activity", 'local_apsolu')],
+          [ 'data' => "slotevent", 'title' => get_string("event", 'local_apsolu')],
           [ 'data' => "calendartypename", 'title' => get_string("calendartype", 'local_apsolu')] ,
           [ 'data' => "cityname", 'title' => get_string("city", 'local_apsolu')] ,
           [ 'data' => "placename", 'title' => get_string("locations", 'local_apsolu')] ,
@@ -245,7 +246,7 @@ class report extends \local_apsolu\local\statistics\report {
         $sql = $params["WithProgramme"] . "SELECT
           ROW_NUMBER() OVER (ORDER BY p.groupid,p.activityid ASC) AS row_num,
         	p.groupid, p.groupname,
-        	p.activityid, p.activityname,
+            p.activityid, p.activityname, p.slotevent,
         	count(p.slotid) as total
         FROM programme p
         WHERE cityid in (". $cityid .") AND calendartypeid in (". $calendarstypeid .")

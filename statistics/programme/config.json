@@ -21,6 +21,7 @@
             "columns" : [
               {"data":"groupname", "title":"group,moodle"},
               {"data":"activityname", "title":"activity,local_apsolu"},
+              {"data":"slotevent", "title":"event,local_apsolu"},
               {"data":"total", "title":"total,local_apsolu"}
             ],
             "orders":{"0":"asc","1":"asc"},
@@ -124,6 +125,18 @@
               "5" : "Vendredi",
               "6" : "Samedi",
               "7" : "Dimanche"
+          }
+        },
+        {
+          "id": "slotevent",
+          "label": "event,local_apsolu",
+          "type": "string",
+          "input": "select",
+          "operators": ["equal", "not_equal"],
+          "values" : {
+            "table" : "apsolu_courses",
+            "fields" : "event",
+            "sort" : "event"
           }
         },
         {
