@@ -30,6 +30,7 @@ use core\event\course_updated;
 use core\notification;
 use local_apsolu\core\attendancesession;
 use local_apsolu\core\course as apsolu_course;
+use moodle_url;
 use stdClass;
 
 defined('MOODLE_INTERNAL') || die();
@@ -78,7 +79,13 @@ class course {
      * @return void
      */
     public static function updated(course_updated $event) {
-        global $DB, $OUTPUT;
+        global $DB, $OUTPUT, $PAGE;
+
+        $url = new moodle_url('/local/apsolu/courses/index.php');
+        if ($PAGE->url->compare($url, URL_MATCH_BASE) === true) {
+            // N'applique pas ce hook lorsque la mise à jour est provoquée par l'interface de gestion des créneaux d'APSOLU.
+            return;
+        }
 
         $context = $event->get_context();
 
