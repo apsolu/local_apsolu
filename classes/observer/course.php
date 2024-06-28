@@ -82,7 +82,7 @@ class course {
         global $DB, $OUTPUT, $PAGE;
 
         $url = new moodle_url('/local/apsolu/courses/index.php');
-        if ($PAGE->url->compare($url, URL_MATCH_BASE) === true) {
+        if (PHPUNIT_TEST === false && $PAGE->url->compare($url, URL_MATCH_BASE) === true) {
             // N'applique pas ce hook lorsque la mise à jour est provoquée par l'interface de gestion des créneaux d'APSOLU.
             return;
         }
