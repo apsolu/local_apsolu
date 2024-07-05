@@ -17,4 +17,5 @@ variables:
     https://github.com/apsolu/theme_apsolu.git
 
 include:
-  - local: "/.gitlab/moodle401.yml"
+  # - local: "/.gitlab/moodle401.yml"
+  - local: "/.gitlab/moodle404.yml"

@@ -1,0 +1,162 @@
+---
+# yamllint disable rule:line-length
+
+variables:
+  # Configuration de Moodle.
+  MOODLE_REPOSITORY: https://github.com/moodle/moodle.git
+  MOODLE_BRANCH: MOODLE_404_STABLE
+  MARIADB_VERSION: 10.11
+  NODE_VERSION: 20.12.1
+  SELENIUM_VERSION: 3
+  # Configuration des autorisations d'échecs des tests.
+  ALLOW_FAILURE_BEHAT: "false"
+  ALLOW_FAILURE_GRUNT: "false"
+  ALLOW_FAILURE_MUSTACHE: "false"
+  ALLOW_FAILURE_PHPCPD: "false"
+  ALLOW_FAILURE_PHPCS: "false"
+  ALLOW_FAILURE_PHPDOC: "false"
+  ALLOW_FAILURE_PHPLINT: "false"
+  ALLOW_FAILURE_PHPMD: "false"
+  ALLOW_FAILURE_PHPUNIT: "false"
+  ALLOW_FAILURE_SAVEPOINTS: "false"
+  ALLOW_FAILURE_VALIDATE: "false"
+  # Configuration des tests à réaliser.
+  ENABLE_BEHAT: "false"  # Non implémenté.
+  ENABLE_GRUNT: "true"
+  ENABLE_MUSTACHE: "true"
+  ENABLE_PHPCPD: "true"
+  ENABLE_PHPCS: "true"
+  ENABLE_PHPDOC: "true"
+  ENABLE_PHPLINT: "true"
+  ENABLE_PHPMD: "true"
+  ENABLE_PHPUNIT: "true"
+  ENABLE_SAVEPOINTS: "true"
+  ENABLE_VALIDATE: "true"
+  # Configuration d'un éventuel proxy http.
+  HTTP_PROXY:
+  HTTPS_PROXY:
+  NO_PROXY:
+  # Configuration d'éventuels miroirs Debian personnalisés.
+  BULLSEYE_DEBIAN_MIRRORS:
+
+# Définit des stages.
+#   - chaque stage sont exécutés dans l'ordre.
+#   - si un stage contient plusieurs jobs, ils sont executés en parallèle.
+#   - si un job d'un stage plante, le processus d'intégration est arrêté.
+stages:
+  - validations
+  - analyses
+  - tests
+
+default:
+  # Récupère une image slim de Debian 12.
+  image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/debian:bookworm-slim
+
+  # Cette partie n'est jamais effacée et est réutilisée entre différentes exécutions de pipeline.
+  cache:
+    key: cache-$MOODLE_BRANCH
+    paths:
+      - $CI_PROJECT_DIR/.cache/apt
+      - $CI_PROJECT_DIR/.cache/composer
+      - $CI_PROJECT_DIR/.cache/npm
+      - $CI_PROJECT_DIR/.cache/nvm
+    policy: pull-push
+
+  # Démarre des services externes.
+  services:
+    # - name: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/selenium/standalone-chrome:${SELENIUM_VERSION}
+    #   alias: behat
+    - name: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/mariadb:${MARIADB_VERSION}
+      alias: docker-mariadb
+      command:
+        - "--character-set-server=utf8mb4"
+        - "--collation-server=utf8mb4_unicode_ci"
+        - "--innodb_file_per_table=On"
+        - "--wait-timeout=28800"
+        - "--skip-log-bin"
+      variables:
+        MARIADB_DATABASE: moodle
+        MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "yes"
+
+  # Commandes lancées avant chaque job.
+  before_script:
+    # Définit les variables.
+    - export COMPOSER_HOME="$CI_PROJECT_DIR/.cache/composer"
+    - export npm_config_cache="$CI_PROJECT_DIR/.cache/npm"
+    - export NVM_DIR="$CI_PROJECT_DIR/.cache/nvm"
+    - export PATH="$CI_PROJECT_DIR/.cache/moodle-plugin-ci/bin:/usr/local/nvm/versions/node/v$NODE_VERSION/bin:$PATH"
+
+    # Définit les variables pour le proxy.
+    - export http_proxy=$HTTP_PROXY
+    - export https_proxy=$HTTPS_PROXY
+    - export no_proxy=$NO_PROXY
+
+    # Utilise des mirroirs debian spécifiques si la variable BULLSEYE_DEBIAN_MIRRORS n'est pas vide.
+    - test -z "$BULLSEYE_DEBIAN_MIRRORS" || echo "$BULLSEYE_DEBIAN_MIRRORS" > /etc/apt/sources.list
+
+    # Prépare le cache pour APT.
+    - mkdir -p "$CI_PROJECT_DIR/.cache/apt"
+    - rm -rf /var/cache/apt
+    - ln -s "$CI_PROJECT_DIR/.cache/apt" /var/cache/apt
+    - export apt_options="-y -qq -o Dir::Cache::Archives=$CI_PROJECT_DIR/.cache/apt"
+
+    # Met à jour l'OS.
+    - apt $apt_options update 1> /dev/null
+    - apt $apt_options upgrade 1> /dev/null
+
+    # Affiche la distribution.
+    # TODO: - lsb_release -a
+
+    # Installe les paquets nécessaires à l'application.
+    - apt $apt_options install git wget 1> /dev/null
+
+    # Installe les paquets nécessaires à moodle-plugin-ci.
+    - apt $apt_options install mariadb-client 1> /dev/null
+
+    # Installe les paquets nécessaires au test 'mustache'.
+    - apt $apt_options install default-jre-headless 1> /dev/null
+
+    # Installe toutes les locales (dont en_AU.UTF-8)
+    - apt $apt_options install locales-all 1> /dev/null
+
+    # Installe les paquets PHP.
+    - apt $apt_options install composer 1> /dev/null
+    - apt $apt_options install php-bcmath php-cli php-curl php-gd php-gmp php-intl php-json php-mbstring php-mysql php-xml php-xmlrpc php-zip 1> /dev/null
+    - echo "max_input_vars = 5000" > /etc/php/8.2/cli/conf.d/99-applis.ini
+
+    # Installe NVM (Node Version Manager).
+    - apt $apt_options install build-essential curl 1> /dev/null
+    - test -d "$CI_PROJECT_DIR/.cache/nvm" || git clone https://github.com/nvm-sh/nvm.git "$CI_PROJECT_DIR/.cache/nvm"
+    - git -C "$CI_PROJECT_DIR/.cache/nvm" pull --ff-only origin master
+    - source "$CI_PROJECT_DIR/.cache/nvm/nvm.sh"
+    - nvm install "$NODE_VERSION"
+
+    # Supprime les sources la précédente installation de moodle et des moodle-extra-plugins.
+    - rm -rf "$CI_PROJECT_DIR/.cache/moodle"*
+
+    # Supprime la base de données de la précédente installation.
+    - echo "DROP DATABASE IF EXISTS moodle" | mysql -h docker-mariadb
+
+    # Installe moodle-plugin-ci.
+    - mkdir -p /tmp/tested-moodle-plugin
+    - tar -c --exclude .cache . | tar -x -C /tmp/tested-moodle-plugin  # Recopie les sources du plugin à tester dans /tmp à l'exception du répertoire .cache.
+    - composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci:^4 "$CI_PROJECT_DIR/.cache/moodle-plugin-ci"
+    - |+
+      for repository in $MOODLE_EXTRA_PLUGINS
+      do
+          moodle-plugin-ci add-plugin --storage "$CI_PROJECT_DIR/.cache/moodle-extra-plugins" --clone "$repository"
+      done
+    - moodle-plugin-ci install -vvv
+      --node-version "$NODE_VERSION"
+      --moodle "$CI_PROJECT_DIR/.cache/moodle"
+      --data "$CI_PROJECT_DIR/.cache/moodledata"
+      --repo "$MOODLE_REPOSITORY"
+      --branch "$MOODLE_BRANCH"
+      --db-type mariadb
+      --db-host docker-mariadb
+      --db-user root
+      --plugin /tmp/tested-moodle-plugin
+      --extra-plugins "$CI_PROJECT_DIR/.cache/moodle-extra-plugins"
+
+include:
+  - local: "/.gitlab/jobs.yml"
