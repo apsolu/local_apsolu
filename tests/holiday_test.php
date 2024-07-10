@@ -25,6 +25,7 @@
 
 namespace local_apsolu\core;
 
+use core_date;
 use dml_write_exception;
 use stdClass;
 
@@ -110,7 +111,7 @@ class holiday_test extends \advanced_testcase {
 
         $this->assertEquals(11, count($holidays));
         foreach ($holidays as $holiday) {
-            $this->assertContains(strftime('%F', $holiday), $holidays2019);
+            $this->assertContains(core_date::strftime('%F', $holiday), $holidays2019);
         }
 
         // Teste les jours fériés de l'année 2020.
@@ -132,7 +133,7 @@ class holiday_test extends \advanced_testcase {
 
         $this->assertEquals(11, count($holidays));
         foreach ($holidays as $holiday) {
-            $this->assertContains(strftime('%F', $holiday), $holidays2020);
+            $this->assertContains(core_date::strftime('%F', $holiday), $holidays2020);
         }
     }
 

@@ -68,7 +68,7 @@ if (isset($userid)) {
         if (!empty($payment->timepaid)) {
             try {
                 $timepaid = new DateTime($payment->timepaid);
-                $payment->timepaid = strftime('%c', $timepaid->getTimestamp());
+                $payment->timepaid = core_date::strftime('%c', $timepaid->getTimestamp());
             } catch (Exception $exception) {
 
             }

@@ -40,8 +40,8 @@ if ($data = $mform->get_data()) {
     $holidays = $DB->get_records('apsolu_holidays', null, null, 'day');
 
     // Parcourt chaque année dans l'intervalle donné.
-    $year = strftime('%Y', $data->from);
-    $endyear = strftime('%Y', $data->until);
+    $year = core_date::strftime('%Y', $data->from);
+    $endyear = core_date::strftime('%Y', $data->until);
     for ($year; $year <= $endyear; $year++) {
         // Parcourt les jours fériés de l'année.
         foreach (Holiday::get_holidays($year) as $holidaytimestamp) {

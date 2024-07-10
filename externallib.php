@@ -69,7 +69,7 @@ function local_apsolu_write_log($method, $arguments) {
             // Place systématiquement en début de tableau le token utilisé.
             array_unshift($arguments, 'token='.optional_param('wstoken', '', PARAM_ALPHANUM));
 
-            $result = file_put_contents($CFG->apsolu_enable_ws_logging, strftime('%c').' '.$method.' '.implode(', ', $arguments).PHP_EOL, FILE_APPEND | LOCK_EX);
+            $result = file_put_contents($CFG->apsolu_enable_ws_logging, core_date::strftime('%c').' '.$method.' '.implode(', ', $arguments).PHP_EOL, FILE_APPEND | LOCK_EX);
 
             return $result !== false;
         }
@@ -330,7 +330,7 @@ class local_apsolu_webservices extends external_api {
         }
 
         $semester1_enrol_startdate = get_config('local_apsolu', 'semester1_enrol_startdate');
-        $semester1_enrol_startdate = strftime('%Y-%m-%d', $semester1_enrol_startdate);
+        $semester1_enrol_startdate = core_date::strftime('%Y-%m-%d', $semester1_enrol_startdate);
 
         $sql = "SELECT c.id AS idcourse, c.category AS idactivity, ac.event, sk.name AS skill, ac.numweekday, ac.starttime, ac.endtime".
             " FROM {course} c".
@@ -601,7 +601,7 @@ class local_apsolu_webservices extends external_api {
         $params['timemodified1'] = $since;
         $params['timemodified2'] = $since;
         $params['timemodified3'] = $since;
-        $params['timemodified4'] = strftime('%FT%T', $since);
+        $params['timemodified4'] = core_date::strftime('%FT%T', $since);
 
         foreach ($DB->get_records_sql($sql, $params) as $record) {
             if (isset($courses[$record->idcourse]) === false) {

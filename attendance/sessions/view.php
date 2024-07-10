@@ -46,7 +46,7 @@ if ($data->period !== false) {
 
     foreach ($DB->get_records_sql($sql, ['courseid' => $courseid]) as $session) {
         // On calcule le premier jour de la semaine correspondant à la session.
-        $week = strftime('%Y-%m-%d', $session->sessiontime - ($data->period->numweekday - 1) * 24 * 60 * 60);
+        $week = core_date::strftime('%Y-%m-%d', $session->sessiontime - ($data->period->numweekday - 1) * 24 * 60 * 60);
 
         $index = array_search($week, $weeks);
         if ($index !== false) {

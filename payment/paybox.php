@@ -31,7 +31,7 @@ $PAGE->set_context(context_system::instance());
 $ip = getremoteaddr();
 $response = json_encode($_GET);
 
-$outputsuccesscontent = strftime('%c').' '.$ip.' :: '.$response.PHP_EOL;
+$outputsuccesscontent = core_date::strftime('%c').' '.$ip.' :: '.$response.PHP_EOL;
 $payboxaddresses = explode(',', get_config('local_apsolu', 'paybox_servers_incoming'));
 
 try {
@@ -76,7 +76,7 @@ try {
     }
 
     $transaction = new stdClass();
-    $transaction->timecreated = strftime('%FT%T');
+    $transaction->timecreated = core_date::strftime('%FT%T');
     $transaction->amount = $_GET['Mt'];
     $transaction->reference = $_GET['Ref'];
     $transaction->auto = $_GET['Auto'];
@@ -92,12 +92,12 @@ try {
     }
 
     $payment->status = 1;
-    $payment->timepaid = strftime('%FT%T');
+    $payment->timepaid = core_date::strftime('%FT%T');
     if (!$DB->update_record('apsolu_payments', $payment)) {
         throw new Exception('Unable to write in apsolu_payments: '.var_export($payment, true));
     }
 
-    $outputsuccesscontent .= strftime('%c').' '.$ip.' :: OK for user '.$userstr.PHP_EOL;
+    $outputsuccesscontent .= core_date::strftime('%c').' '.$ip.' :: OK for user '.$userstr.PHP_EOL;
 
     if (!file_put_contents($outputsuccess, $outputsuccesscontent, FILE_APPEND | LOCK_EX)) {
         throw new Exception('Can\'t write in '.$outputsuccess);

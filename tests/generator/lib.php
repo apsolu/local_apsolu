@@ -190,26 +190,26 @@ class local_apsolu_generator extends testing_module_generator {
 
         switch ($type) {
             case 'past':
-                $weeks[] = strftime('%F', $monday - (4 * WEEKSECS));
-                $weeks[] = strftime('%F', $monday - (3 * WEEKSECS));
-                $weeks[] = strftime('%F', $monday - (2 * WEEKSECS));
-                $weeks[] = strftime('%F', $monday - WEEKSECS);
+                $weeks[] = core_date::strftime('%F', $monday - (4 * WEEKSECS));
+                $weeks[] = core_date::strftime('%F', $monday - (3 * WEEKSECS));
+                $weeks[] = core_date::strftime('%F', $monday - (2 * WEEKSECS));
+                $weeks[] = core_date::strftime('%F', $monday - WEEKSECS);
                 break;
             case 'mixed':
-                $weeks[] = strftime('%F', $monday - (2 * WEEKSECS));
-                $weeks[] = strftime('%F', $monday - WEEKSECS);
-                $weeks[] = strftime('%F', $monday + WEEKSECS);
-                $weeks[] = strftime('%F', $monday + (2 * WEEKSECS));
+                $weeks[] = core_date::strftime('%F', $monday - (2 * WEEKSECS));
+                $weeks[] = core_date::strftime('%F', $monday - WEEKSECS);
+                $weeks[] = core_date::strftime('%F', $monday + WEEKSECS);
+                $weeks[] = core_date::strftime('%F', $monday + (2 * WEEKSECS));
                 break;
             case 'future':
-                $weeks[] = strftime('%F', $monday + (3 * WEEKSECS));
-                $weeks[] = strftime('%F', $monday + (4 * WEEKSECS));
-                $weeks[] = strftime('%F', $monday + (5 * WEEKSECS));
-                $weeks[] = strftime('%F', $monday + (6 * WEEKSECS));
+                $weeks[] = core_date::strftime('%F', $monday + (3 * WEEKSECS));
+                $weeks[] = core_date::strftime('%F', $monday + (4 * WEEKSECS));
+                $weeks[] = core_date::strftime('%F', $monday + (5 * WEEKSECS));
+                $weeks[] = core_date::strftime('%F', $monday + (6 * WEEKSECS));
                 break;
             default:
-                $weeks[] = strftime('%F', $monday + WEEKSECS);
-                $weeks[] = strftime('%F', $monday + (2 * WEEKSECS));
+                $weeks[] = core_date::strftime('%F', $monday + WEEKSECS);
+                $weeks[] = core_date::strftime('%F', $monday + (2 * WEEKSECS));
         }
 
         $data = new stdClass();

@@ -287,7 +287,7 @@ if ($data = $mform->get_data()) {
     } else {
         if (isset($data->exportbutton) === true) {
             // Exporte au format CSV.
-            $filename = 'exportation_ffsu_'.strftime('%FT%T');
+            $filename = 'exportation_ffsu_'.core_date::strftime('%FT%T');
 
             $export = new csv_export_writer($delimiter = 'semicolon');
             $export->set_filename($filename);

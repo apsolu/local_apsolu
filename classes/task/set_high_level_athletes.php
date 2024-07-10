@@ -25,6 +25,7 @@
 namespace local_apsolu\task;
 
 use context_system;
+use core_date;
 use stdClass;
 use UniversiteRennes2\Apsolu\Payment;
 
@@ -133,7 +134,7 @@ class set_high_level_athletes extends \core\task\scheduled_task {
                 $payment->amount = 0;
                 $payment->status = Payment::GIFT;
                 $payment->timepaid = '';
-                $payment->timecreated = strftime('%FT%T');
+                $payment->timecreated = core_date::strftime('%FT%T');
                 $payment->timemodified = $payment->timecreated;
                 $payment->timepaid = $payment->timecreated;
                 $payment->userid = $member->userid;

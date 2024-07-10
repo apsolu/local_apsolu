@@ -24,6 +24,8 @@
 
 namespace local_apsolu\core;
 
+use core_date;
+
 /**
  * Classe gérant les jours fériés.
  *
@@ -62,11 +64,11 @@ class holiday extends record {
     public static function get_holidays(int $year = null) {
         if ($year === null) {
             // Récupère l'année courante.
-            $year = strftime('%Y');
+            $year = core_date::strftime('%Y');
         }
 
         // Récupère la date du dimanche de Pâques.
-        $easter = strftime('%d-%m', easter_date($year));
+        $easter = core_date::strftime('%d-%m', easter_date($year));
         list($easterday, $eastermonth) = explode('-', $easter);
 
         $holidays = [];

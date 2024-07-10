@@ -33,7 +33,8 @@ foreach ($DB->get_records('apsolu_periods', null, 'name') as $period) {
         foreach ($period->weeks as $i => $week) {
             $date = new DateTime($week);
 
-            $range = 'du lun. '.$date->format('d').' au sam. '.strftime('%d %b %Y', $date->getTimestamp() + 5 * 24 * 60 * 60);
+            $range = 'du lun. '.$date->format('d').' au sam. '.
+                core_date::strftime('%d %b %Y', $date->getTimestamp() + 5 * 24 * 60 * 60);
             $period->weeks[$i] = 'Semaine '.$date->format('W').' ('.$range.')';
 
             $period->count_weeks++;

@@ -134,7 +134,7 @@ if ($data = $mform->get_data()) {
     $payment->source = $data->source;
     $payment->amount = $data->amount;
     $payment->status = intval($data->status);
-    $payment->timemodified = strftime('%FT%T');
+    $payment->timemodified = core_date::strftime('%FT%T');
     $payment->paymentcenterid = $data->center;
 
     switch ($payment->status) {
@@ -153,7 +153,7 @@ if ($data = $mform->get_data()) {
         $transaction = $DB->start_delegated_transaction();
 
         if (empty($payment->id) === true) {
-            $payment->timecreated = strftime('%FT%T');
+            $payment->timecreated = core_date::strftime('%FT%T');
 
             unset($payment->id);
             $payment->id = $DB->insert_record('apsolu_payments', $payment);

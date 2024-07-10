@@ -24,6 +24,8 @@
 
 namespace local_apsolu\core;
 
+use core_date;
+
 /**
  * Classe gérant les périodes.
  *
@@ -73,7 +75,7 @@ class period extends record {
 
         $holidays = [];
         foreach (holiday::get_records() as $holiday) {
-            $key = strftime('%F', $holiday->day);
+            $key = core_date::strftime('%F', $holiday->day);
             $holidays[$key] = $holiday;
         }
 
@@ -89,7 +91,7 @@ class period extends record {
             $sessiontime += $offset;
 
             // Contrôle si il s'agit d'un jour férié.
-            $key = strftime('%F', $sessiontime);
+            $key = core_date::strftime('%F', $sessiontime);
             if (isset($holidays[$key]) === true) {
                 // On ignore les jours fériés.
                 continue;
