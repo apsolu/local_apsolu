@@ -74,6 +74,9 @@ class local_apsolu_courses_holidays_edit_form extends moodleform {
         $mform->addElement('hidden', 'holidayid', $instance->id);
         $mform->setType('holidayid', PARAM_INT);
 
+        // Note : empêche l'erreur getdate(): Argument #1 ($timestamp) must be of type ?int, string given.
+        $instance->day = (int) $instance->day;
+
         // Set default values.
         $this->set_data($instance);
     }
