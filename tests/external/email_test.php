@@ -55,6 +55,8 @@ class email_test extends externallib_advanced_testcase {
 
     /**
      * Test send_instant_emails.
+     *
+     * @runInSeparateProcess
      */
     public function test_send_instant_emails() {
         global $CFG, $DB;
@@ -113,6 +115,8 @@ class email_test extends externallib_advanced_testcase {
 
     /**
      * Test send_instant_emails with no capabilities.
+     *
+     * @runInSeparateProcess
      */
     public function test_send_instant_emails_no_capability() {
         global $CFG, $DB;
