@@ -37,6 +37,7 @@ use stdClass;
  * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\AllowDynamicProperties]
 class category extends record {
     /**
      * Nom de la table de référence en base de données.
