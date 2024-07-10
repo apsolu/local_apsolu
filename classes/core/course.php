@@ -185,7 +185,7 @@ class course extends record {
      *
      * @return string Nom abrégé unique.
      */
-    public static function get_fullname($category, $event = '', $weekday, $starttime, $endtime, $skill) {
+    public static function get_fullname($category, $event, $weekday, $starttime, $endtime, $skill) {
         global $DB;
 
         if (ctype_digit($category) === true) {
