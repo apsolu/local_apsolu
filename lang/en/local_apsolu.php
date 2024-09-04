@@ -1162,6 +1162,7 @@ $string['method_apogee'] = 'Apogée';
 $string['method_card'] = 'Carte bancaire';
 $string['method_check'] = 'Chèque';
 $string['method_coins'] = 'Espèce';
+$string['method_pass'] = 'Pass Sport';
 $string['method_paybox'] = 'PayBox';
 $string['source_apogee'] = 'Apogée';
 $string['source_apsolu'] = 'Apsolu';
