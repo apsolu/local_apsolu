@@ -1123,9 +1123,8 @@ $string['no_courses'] = 'Vous ne pouvez pas payer car vous n’avez aucune inscr
 $string['no_courses_complements'] = 'Pour les cours du SIUAPS, si vous êtes inscrit en évaluation, vérifier avec votre enseignant que vous êtes autorisé à l’être.<br />'.
 ' Pour l’accès aux salles de musculation, vous devez avoir validé votre séance gratuite avant de pouvoir payer.';
 $string['no_paybox'] = 'Notre prestataire de paiement semble rencontrer des difficultés techniques. Merci de réessayer ultérieurement.';
-$string['warning_payment'] = '<p><strong>Attention</strong> : vérifiez les cours qui vous sont facturés. Si vous ne souhaitez plus suivre une activité, merci de contacter votre enseignant.</p>'.
-    '<p>Aucun remboursement ne sera procédé.'.
-    ' Si vous constatez une erreur dans le montant à payer, merci d’envoyer un mail à l’adresse <a href="mailto:{$a}">{$a}</a>.</p>';
+$string['warning_payment'] = '<div class="alert alert-info col-md-12"><p><strong>Attention</strong> : vérifiez les cours qui vous sont facturés. Si vous ne souhaitez plus suivre une activité, merci de contacter votre enseignant.</p>'.
+    '<p>Aucun remboursement ne sera effectué ; si vous constatez une erreur dans le montant à payer, merci d’envoyer un mail à l’adresse <a href="mailto:{$a}">{$a}</a>.</p></div>';
 $string['status_accepted'] = 'Paiement accepté.';
 $string['status_refused'] = 'Paiement refusé.';
 $string['status_wait'] = 'Paiement en attente.';
