@@ -108,4 +108,5 @@ foreach ($attributes as $attribute) {
     break;
 }
 
+$PAGE->requires->js_call_amd('local_apsolu/table-row-counter', 'initialise');
 echo $OUTPUT->render_from_template('local_apsolu/courses_courses', $data);
