@@ -42,13 +42,15 @@ class local_apsolu_calendar_edit_form extends moodleform {
     protected function definition() {
         $mform = $this->_form;
 
-        $datetimeoptions = ['optional' => true];
+        $optional = ['optional' => true];
+        $required = ['optional' => false];
 
         list($defaults, $calendarstypes) = $this->_customdata;
 
         if (empty($defaults->id) === false) {
             // Avertissement affiché lorsqu'on modifie un calendrier existant.
-            $mform->addElement('html', '<div class="alert alert-info">'.get_string('calendar_modification_warning', 'local_apsolu').'</div>');
+            $html = '<div class="alert alert-info">'.get_string('calendar_modification_warning', 'local_apsolu').'</div>';
+            $mform->addElement('html', $html);
         }
 
         $mform->addElement('header', 'general', get_string('general'));
@@ -68,26 +70,26 @@ class local_apsolu_calendar_edit_form extends moodleform {
         // Inscriptions.
         $mform->addElement('header', 'enrolments', get_string('enrolments', 'enrol'));
         $mform->setExpanded('enrolments');
-        $mform->addElement('date_time_selector', 'enrolstartdate', get_string('enrolstartdate', 'local_apsolu'), $datetimeoptions);
-        $mform->addElement('date_time_selector', 'enrolenddate', get_string('enrolenddate', 'local_apsolu'), $datetimeoptions);
+        $mform->addElement('date_time_selector', 'enrolstartdate', get_string('enrolstartdate', 'local_apsolu'), $required);
+        $mform->addElement('date_time_selector', 'enrolenddate', get_string('enrolenddate', 'local_apsolu'), $required);
 
         // Cours.
         $mform->addElement('header', 'courses', get_string('courses'));
         $mform->setExpanded('courses');
-        $mform->addElement('date_time_selector', 'coursestartdate', get_string('coursestartdate', 'local_apsolu'), $datetimeoptions);
-        $mform->addElement('date_time_selector', 'courseenddate', get_string('courseenddate', 'local_apsolu'), $datetimeoptions);
+        $mform->addElement('date_time_selector', 'coursestartdate', get_string('coursestartdate', 'local_apsolu'), $required);
+        $mform->addElement('date_time_selector', 'courseenddate', get_string('courseenddate', 'local_apsolu'), $required);
 
         // Réinscriptions.
         $mform->addElement('header', 'reenrolments', get_string('reenrolments', 'local_apsolu'));
         $mform->setExpanded('reenrolments');
-        $mform->addElement('date_time_selector', 'reenrolstartdate', get_string('reenrolstartdate', 'local_apsolu'), $datetimeoptions);
-        $mform->addElement('date_time_selector', 'reenrolenddate', get_string('reenrolenddate', 'local_apsolu'), $datetimeoptions);
+        $mform->addElement('date_time_selector', 'reenrolstartdate', get_string('reenrolstartdate', 'local_apsolu'), $optional);
+        $mform->addElement('date_time_selector', 'reenrolenddate', get_string('reenrolenddate', 'local_apsolu'), $optional);
 
         // Grades.
         $mform->addElement('header', 'grades', get_string('grades'));
         $mform->setExpanded('grades');
-        $mform->addElement('date_time_selector', 'gradestartdate', get_string('gradestartdate', 'local_apsolu'), $datetimeoptions);
-        $mform->addElement('date_time_selector', 'gradeenddate', get_string('gradeenddate', 'local_apsolu'), $datetimeoptions);
+        $mform->addElement('date_time_selector', 'gradestartdate', get_string('gradestartdate', 'local_apsolu'), $optional);
+        $mform->addElement('date_time_selector', 'gradeenddate', get_string('gradeenddate', 'local_apsolu'), $optional);
 
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
