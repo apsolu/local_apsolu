@@ -1,45 +1,66 @@
 define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
     return {
-        initialise : function() {
-            // Créé un bouton pour cocher toutes les présences non définies.
-            $('#apsolu-attendance-table').before('<div id="apsolu-attendance-check-javascript-helper" class="text-right"><p>Pour les présences <u>non saisies</u> :<ul class="list-inline">'+
-                '<li class="list-inline-item"><span class="btn btn-sm btn-primary" id="apsolu-check-radio-present">Cocher "présent" pour tous</span></li>'+
-                '<li class="list-inline-item"><span class="btn btn-sm btn-primary" id="apsolu-check-radio-absent">Cocher "absent" pour tous</span></li>'+
-                '<li class="list-inline-item"><span class="btn btn-sm btn-dark" id="apsolu-check-radio-uncheck">Décocher toutes les cases</span></li>'+
-                '</ul></div>');
+        initialise: function() {
+            // Créé un bouton dropdown pour cocher toutes les présences non définies.
+            let selector = '#apsolu-attendance-table tbody tr:first-child .apsolu-attendance-status-form input';
+            let attendancestatus = document.querySelectorAll(selector);
 
-            // Ajoute un évènement sur le bouton "présent" créé précédemment.
-            $('#apsolu-check-radio-present').click(function(){
-                $('#apsolu-attendance-table tbody tr').each(function() {
-                    // Recherche si un des 4 boutons radio est coché.
-                    if ($(this).find('input[type=radio]:checked').length == 0) {
-                        // Coche le premier bouton radio de la liste.
-                        $(this).find('input[type=radio]').first().prop('checked', true);
-                    }
-                });
-            });
+            if (attendancestatus) {
+                // Génère le bouton dropdown avec la liste des motifs de présences disponibles.
+                let dropdown = '<div class="dropdown">' +
+                    '<button class="btn btn-primary dropdown-toggle" type="button" id="apsolu-dropdown-status-selector"' +
+                    ' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+                    'Pour les présences <u>non saisies</u> :' +
+                    '</button>' +
+                    '<div class="dropdown-menu" aria-labelledby="apsolu-dropdown-status-selector">';
+                for (let i = 0; i < attendancestatus.length; i++) {
+                    let state = attendancestatus[i];
+                    dropdown += '<button class="apsolu-status-selector dropdown-item" data-value="' + state.value + '">' +
+                        'Cocher "' + state.parentNode.textContent.trim() + '"' +
+                        '</button>';
+                }
 
-            // Ajoute un évènement sur le bouton "absent" créé précédemment.
-            $('#apsolu-check-radio-absent').click(function(){
-                $('#apsolu-attendance-table tbody tr').each(function() {
-                    // Recherche si un des 4 boutons radio est coché.
-                    if ($(this).find('input[type=radio]:checked').length == 0) {
-                        // Coche le dernier bouton radio de la liste.
-                        $(this).find('input[type=radio]').last().prop('checked', true);
-                    }
-                });
-            });
+                // Ajoute une option permettant de décocher toutes les présences.
+                dropdown += '<div class="dropdown-divider"></div>' +
+                    '<button class="apsolu-status-selector dropdown-item" data-value="0">Tout décocher</button>' +
+                    '</div></div>';
 
-            // Ajoute un évènement sur le bouton "décocher" créé précédemment.
-            $('#apsolu-check-radio-uncheck').click(function(){
-                $('#apsolu-attendance-table tbody tr').each(function() {
-                    // Recherche si un des 4 boutons radio est coché.
-                    if ($(this).find('input[type=radio]:checked').length != 0) {
-                        // Décoche toutes les boutons.
-                        $(this).find('input[type=radio]').prop('checked', false);
-                    }
+                let quickform = document.createElement('div');
+                quickform.id = 'apsolu-attendance-check-javascript-helper';
+                quickform.classList = 'text-right';
+                quickform.innerHTML = dropdown;
+
+                // Ajoute le bouton dropdown au dessus du tableau des présences.
+                let table = document.getElementById('apsolu-attendance-table');
+                table.parentNode.insertBefore(quickform, table);
+
+                // Ajoute les évènements sur les boutons dropdown pour gérer les actions.
+                document.querySelectorAll('.apsolu-status-selector').forEach(function(btn) {
+                    btn.addEventListener('click', function(evnt) {
+                        evnt.preventDefault(); // Prevent default click event.
+
+                        $('#apsolu-attendance-table tbody tr').each(function() {
+                            // Détermine si un des boutons radio est coché.
+                            let ischecked = $(this).find('input[type=radio]:checked').length != 0;
+                            let value = btn.getAttribute('data-value');
+
+                            if (value == 0) {
+                                // Le bouton "décocher" a été sélectionné.
+                                if (ischecked) {
+                                    // Si un des boutons radio est coché dans la liste, on le décoche.
+                                    $(this).find('input[type=radio]').prop('checked', false);
+                                }
+                            } else {
+                                // Un des boutons de présences a été sélectionné.
+                                if (!ischecked) {
+                                    // Coche le bouton radio de la liste correspondant à la présence sélectionnée.
+                                    $(this).find('input[type=radio][value=' + value + ']').prop('checked', true);
+                                }
+                            }
+                        });
+                    });
                 });
-            });
+            }
 
             // Ajoute un évènement pour permettre de désélectionner un bouton radio.
             $('#apsolu-attendance-table tbody tr input[type=radio]').click(function() {

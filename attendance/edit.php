@@ -482,6 +482,7 @@ foreach ($students as $student) {
     $cols[] = $student->firstname;
     $cell = new html_table_cell();
     $cell->text = $radios;
+    $cell->attributes = ['class' => 'apsolu-attendance-status-form'];
     if (empty($status_style) === false) {
         $cell->style = 'table-warning';
     }
