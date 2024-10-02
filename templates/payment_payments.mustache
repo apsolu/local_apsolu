@@ -54,17 +54,30 @@
 {{#user_selector}}
 
 {{#count_payments_centers}}
-<div class="dropdown show text-right">
-    <a aria-expanded="false" aria-haspopup="true" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#" id="dropdown-payments-centers" role="button">
-        {{#str}}payments_extraction, local_apsolu{{/str}}
-    </a>
+<ul class="list-inline text-right">
+    <li class="dropdown list-inline-item show">
+        <a aria-expanded="false" aria-haspopup="true" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#" id="dropdown-payments-centers-csv" role="button">
+            {{#str}}payments_extraction_in_csv_format, local_apsolu{{/str}}
+        </a>
 
-    <div aria-labelledby="dropdown-payments-centers" class="dropdown-menu">
-        {{#payments_centers}}
-        <a class="dropdown-item" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=payments&action=extract&centerid={{id}}">{{name}}</a>
-        {{/payments_centers}}
-    </div>
-</div>
+        <div aria-labelledby="dropdown-payments-centers-csv" class="dropdown-menu">
+            {{#payments_centers}}
+            <a class="dropdown-item" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=payments&action=extract&format=csv&centerid={{id}}">{{name}}</a>
+            {{/payments_centers}}
+        </div>
+    </li>
+    <li class="dropdown list-inline-item show">
+        <a aria-expanded="false" aria-haspopup="true" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#" id="dropdown-payments-centers-excel" role="button">
+            {{#str}}payments_extraction_in_excel_format, local_apsolu{{/str}}
+        </a>
+
+        <div aria-labelledby="dropdown-payments-centers-excel" class="dropdown-menu">
+            {{#payments_centers}}
+            <a class="dropdown-item" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=payments&action=extract&format=xls&centerid={{id}}">{{name}}</a>
+            {{/payments_centers}}
+        </div>
+    </li>
+</ul>
 {{/count_payments_centers}}
 
 <form method="post" action="{{action}}">

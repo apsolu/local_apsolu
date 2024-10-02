@@ -25,9 +25,9 @@
 defined('MOODLE_INTERNAL') || die;
 
 $centerid = required_param('centerid', PARAM_INT);
+$format = optional_param('format', 'csv', PARAM_ALPHA);
 
 require_once($CFG->dirroot.'/user/profile/lib.php');
-require_once($CFG->libdir.'/csvlib.class.php');
 
 $center = $DB->get_record('apsolu_payments_centers', ['id' => $centerid], $fields = '*', MUST_EXIST);
 $cards = $DB->get_records('apsolu_payments_cards', ['centerid' => $center->id], $sort = 'name, fullname');
@@ -50,9 +50,35 @@ foreach ($cards as $card) {
     $headers[] = $card->fullname;
 }
 
-$csvexport = new \csv_export_writer();
-$csvexport->set_filename($filename);
-$csvexport->add_data($headers);
+if ($format === 'xls') {
+    // Export au format excel.
+    require_once($CFG->libdir.'/excellib.class.php');
+
+    $workbook = new MoodleExcelWorkbook('-');
+    $workbook->send($filename);
+    $myxls = $workbook->add_worksheet();
+
+    if (class_exists('PHPExcel_Style_Border') === true) {
+        // Jusqu'à Moodle 3.7.x.
+        $properties = ['border' => PHPExcel_Style_Border::BORDER_THIN];
+    } else {
+        // Depuis Moodle 3.8.x.
+        $properties = ['border' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN];
+    }
+
+    $excelformat = new MoodleExcelFormat($properties);
+
+    foreach ($headers as $position => $value) {
+        $myxls->write_string(0, $position, $value, $excelformat);
+    }
+} else {
+    // Export au format csv.
+    require_once($CFG->libdir.'/csvlib.class.php');
+
+    $csvexport = new \csv_export_writer();
+    $csvexport->set_filename($filename);
+    $csvexport->add_data($headers);
+}
 
 $sql = "SELECT ap.*, apc.prefix, u.lastname, u.firstname, u.idnumber, u.institution, u.department
           FROM {apsolu_payments} ap
@@ -62,6 +88,7 @@ $sql = "SELECT ap.*, apc.prefix, u.lastname, u.firstname, u.idnumber, u.institut
            AND ap.paymentcenterid = :centerid
       ORDER BY ap.timepaid DESC, u.lastname, u.firstname, u.institution";
 $payments = $DB->get_records_sql($sql, ['centerid' => $center->id]);
+$line = 1;
 foreach ($payments as $payment) {
     raise_memory_limit(MEMORY_EXTRA);
 
@@ -70,7 +97,7 @@ foreach ($payments as $payment) {
     try {
         $timepaid = new DateTime($payment->timepaid);
         $timepaid = $timepaid->format('d-m-Y H:i:s');
-    } catch(Exception $exception) {
+    } catch (Exception $exception) {
         $timepaid = '';
     }
 
@@ -103,9 +130,24 @@ foreach ($payments as $payment) {
         }
     }
 
-    $csvexport->add_data($data);
+    if ($format === 'xls') {
+        foreach ($data as $position => $value) {
+            if ($position === 7) {
+                $myxls->write_number($line, $position, $value, ['num_format' => '0.00']);
+            } else {
+                $myxls->write_string($line, $position, $value, $excelformat);
+            }
+        }
+        $line++;
+    } else {
+        $csvexport->add_data($data);
+    }
 }
 
-$csvexport->download_file();
+if ($format === 'xls') {
+    $workbook->close();
+} else {
+    $csvexport->download_file();
+}
 
 exit(0);
