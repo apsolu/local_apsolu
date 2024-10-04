@@ -26,6 +26,7 @@ namespace local_apsolu\core\federation;
 
 use local_apsolu\core\federation\course as FederationCourse;
 use local_apsolu\core\record;
+use stdClass;
 
 /**
  * Classe gérant la correspondance entre le nom des activités FFSU et le nom des activités APSOLU.
