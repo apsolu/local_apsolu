@@ -75,7 +75,7 @@ class activity extends record {
         $data[] = ['id' => 12, 'name' => 'Canoë-kayak', 'mainsport' => 1, 'restriction' => 0];
         $data[] = ['id' => 13, 'name' => 'Cheerleading', 'mainsport' => 1, 'restriction' => 0];
         $data[] = ['id' => 14, 'name' => 'Course d\'orientation', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 15, 'name' => 'Cyclisme - VTT', 'mainsport' => 1, 'restriction' => 0];
+        $data[] = ['id' => 15, 'name' => 'Cyclisme - VTT - BMX', 'mainsport' => 1, 'restriction' => 0];
         $data[] = ['id' => 16, 'name' => 'Danse (toutes formes)', 'mainsport' => 1, 'restriction' => 0];
         $data[] = ['id' => 17, 'name' => 'Echecs', 'mainsport' => 1, 'restriction' => 0];
         $data[] = ['id' => 18, 'name' => 'Equitation', 'mainsport' => 1, 'restriction' => 0];
@@ -124,6 +124,7 @@ class activity extends record {
         $data[] = ['id' => 61, 'name' => 'Pancrace assaut', 'mainsport' => 1, 'restriction' => 0];
         $data[] = ['id' => 62, 'name' => 'Fléchettes', 'mainsport' => 1, 'restriction' => 0];
         $data[] = ['id' => 63, 'name' => 'Taekwondo combat', 'mainsport' => 0, 'restriction' => 1];
+        $data[] = ['id' => 64, 'name' => 'Rugby sans contact', 'mainsport' => 0, 'restriction' => 0];
 
         return $data;
     }
