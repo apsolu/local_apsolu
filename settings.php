@@ -113,6 +113,30 @@ if ($hassiteconfig or has_any_capability($capabilities, context_system::instance
     $url = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'attendancestatuses']);
     $ADMIN->add('local_apsolu_configuration', new admin_externalpage('local_apsolu_configuration_attendance_statuses', $str, $url, $capabilities));
 
+    // Communication.
+    $ADMIN->add('apsolu', new admin_category('local_apsolu_communication', get_string('communication', 'local_apsolu')));
+
+    // Communication > Historique.
+    $page = 'history';
+    $pageid = 'local_apsolu_communication_'.$page;
+    $str = get_string($page, 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/communication/index.php', ['page' => $page]);
+    $ADMIN->add('local_apsolu_communication', new admin_externalpage($pageid, $str, $url, $capabilities));
+
+    // Communication > Modèle.
+    $page = 'templates';
+    $pageid = 'local_apsolu_communication_'.$page;
+    $str = get_string($page, 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/communication/index.php', ['page' => $page]);
+    $ADMIN->add('local_apsolu_communication', new admin_externalpage($pageid, $str, $url, $capabilities));
+
+    // Communication > Notifier.
+    $page = 'notify';
+    $pageid = 'local_apsolu_communication_'.$page;
+    $str = get_string($page, 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/communication/index.php', ['page' => $page]);
+    $ADMIN->add('local_apsolu_communication', new admin_externalpage($pageid, $str, $url, $capabilities));
+
     // Fédération FSU.
     $federationcourse = new FederationCourse();
     if ($federationcourse->get_courseid() !== false) {

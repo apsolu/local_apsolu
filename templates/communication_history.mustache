@@ -1,0 +1,74 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_apsolu/communication_history
+
+    Template Moodle pour afficher l'historique des messages envoyés
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * wwwroot
+    * count_messages
+    * messages
+        * id
+        * date
+        * subject
+        * countmessages
+
+    Example context (json):
+    {
+        "wwwroot": "",
+        "count_messages": 0,
+        "messages": []
+    }
+}}
+{{^count_messages}}
+    <p class="alert alert-info">{{#str}}no_histories, local_apsolu{{/str}}</p>
+{{/count_messages}}
+
+{{#count_messages}}
+<table class="table table-striped">
+    <tr>
+        <th>{{#str}}date{{/str}}</th>
+        <th>{{#str}}subject{{/str}}</th>
+        <th>{{#str}}number_of_notifications, local_apsolu{{/str}}</th>
+        <th>{{#str}}actions{{/str}}</th>
+    </tr>
+    {{#messages}}
+    <tr>
+        <td>{{ date }}</td>
+        <td>{{ subject }}</td>
+        <td>{{ countmessages }}</td>
+        <td>
+            <ul class="list-inline">
+                <li class="list-inline-item">
+                    <a href="{{wwwroot}}/local/apsolu/communication/index.php?page=history&action=showcontent&id={{id}}" aria-label="{{#str}}see_the_message, local_apsolu{{/str}}"><i class="icon fa fa-file-text-o fa-fw" aria-hidden="true"></i></a>
+                </li>
+                <li class="list-inline-item">
+                    <a href="{{wwwroot}}/local/apsolu/communication/index.php?page=history&action=showusers&id={{id}}" aria-label="{{#str}}notified_users, local_apsolu{{/str}}"><i class="icon fa fa-users fa-fw" aria-hidden="true"></i></a>
+                </li>
+            </ul>
+        </td>
+    </tr>
+    {{/messages}}
+</table>
+{{/count_messages}}

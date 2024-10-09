@@ -68,6 +68,25 @@
         </INDEXES>
     </TABLE>
 
+    <!-- COMMUNICATION -->
+    <TABLE NAME="apsolu_communication_templates" COMMENT="apsolu_communication_templates table">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="subject" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="body" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="carboncopy" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="functionalcontact" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="filters" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="hidden" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_communication_templates" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="hidden" UNIQUE="false" FIELDS="hidden"/>
+        </INDEXES>
+    </TABLE>
+
     <!-- COURSES (SLOTS) -->
     <TABLE NAME="apsolu_courses" COMMENT="Extend courses data">
         <FIELDS>

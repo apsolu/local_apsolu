@@ -1360,5 +1360,30 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         }
     }
 
+    $version = 2024100900;
+    if ($result && $oldversion < $version) {
+        // Ajoute la table apsolu_communication_templates.
+        $table = new xmldb_table('apsolu_communication_templates');
+        if ($dbman->table_exists($table) === false) {
+            // Ajoute les champs.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+            $table->add_field('subject', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('body', XMLDB_TYPE_TEXT, null, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('carboncopy', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('functionalcontact', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('filters', XMLDB_TYPE_TEXT, null, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('hidden', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+
+            // Ajoute la clé primaire.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+            // Ajoute les index.
+            $table->add_index($indexname = 'hidden', XMLDB_INDEX_NOTUNIQUE, $fields = ['hidden']);
+
+            // Crée la table.
+            $dbman->create_table($table);
+        }
+    }
+
     return $result;
 }

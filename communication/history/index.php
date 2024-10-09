@@ -15,17 +15,19 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines message providers for payment notifications.
+ * Contrôleur pour l'historique des communications.
  *
  * @package    local_apsolu
- * @copyright  2017 Université Rennes 2
+ * @copyright  2024 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 
-$messageproviders = [
-    'communication' => [],
-    'notification' => [],
-    'payment_notification' => [], // NOTE: est-ce que ce provider est utilisé ?
-];
+$actions = ['view'];
+
+if (!in_array($action, $actions, true)) {
+    $action = 'view';
+}
+
+require(__DIR__.'/'.$action.'.php');

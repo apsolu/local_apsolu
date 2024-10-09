@@ -81,6 +81,56 @@ class grouping extends record {
     }
 
     /**
+     * Recherche et instancie des objets depuis la base de données.
+     *
+     * @see Se référer à la documentation de la méthode get_records() de la variable globale $DB.
+     * @param array|null $conditions Critères de sélection des objets.
+     * @param string     $sort       Champs par lesquels s'effectue le tri.
+     * @param string     $fields     Liste des champs retournés.
+     * @param int        $limitfrom  Retourne les enregistrements à partir de n+$limitfrom.
+     * @param int        $limitnum   Nombre total d'enregistrements retournés.
+     *
+     * @return array Un tableau d'objets instanciés.
+     */
+    public static function get_records(array $conditions = null, string $sort = '', string $fields = '*',
+        int $limitfrom = 0, int $limitnum = 0) {
+        global $DB;
+
+        if ($conditions !== null) {
+            throw new coding_exception('You cannot define your own value for $conditions argument.');
+        }
+
+        if ($fields !== '*') {
+            throw new coding_exception('You cannot define your own value for $fields argument.');
+        }
+
+        if ($limitfrom !== 0) {
+            throw new coding_exception('You cannot define your own value for $limitfrom argument.');
+        }
+
+        if ($limitnum !== 0) {
+            throw new coding_exception('You cannot define your own value for $limitnum argument.');
+        }
+
+        $records = [];
+
+        $sql = "SELECT cc.id, cc.name, cc.parent, acg.url
+                  FROM {course_categories} cc
+                  JOIN {apsolu_courses_groupings} acg ON acg.id = cc.id";
+        if ($sort !== '') {
+            $sql .= " ORDER BY ".$sort;
+        }
+
+        foreach ($DB->get_records_sql($sql) as $data) {
+            $record = new grouping();
+            $record->set_vars($data);
+            $records[$record->id] = $record;
+        }
+
+        return $records;
+    }
+
+    /**
      * Charge un objet à partir de son identifiant.
      *
      * @param int|string $recordid Identifiant de l'objet à charger.
