@@ -1386,6 +1386,15 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
         // Synchronise la table `apsolu_federation_activities` avec le référentiel FFSU.
         Activity::synchronize_database();
+
+        // Ajoute une colonne 'timerefunded' sur la table 'apsolu_payments'.
+        $table = new xmldb_table('apsolu_payments');
+        $field = new xmldb_field('timerefunded', XMLDB_TYPE_CHAR, $precision = '19', $unsigned = XMLDB_UNSIGNED, $notnull = null,
+            $sequence = null, $default = null, $previous = null);
+
+        if ($dbman->field_exists($table, $field) === false) {
+            $dbman->add_field($table, $field);
+        }
     }
 
     return $result;
