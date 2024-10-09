@@ -1383,6 +1383,9 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             // Crée la table.
             $dbman->create_table($table);
         }
+
+        // Synchronise la table `apsolu_federation_activities` avec le référentiel FFSU.
+        Activity::synchronize_database();
     }
 
     return $result;
