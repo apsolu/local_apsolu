@@ -73,7 +73,7 @@ class update_user_payment extends \core\event\base {
      * @return moodle_url
      */
     public function get_url() {
-        return new \moodle_url('local/apsolu_presence/index.php', ['tab' => 'history', 'courseid' => $this->courseid]);
+        return new \moodle_url('/local/apsolu_presence/index.php', ['tab' => 'history', 'courseid' => $this->courseid]);
     }
 
     /**

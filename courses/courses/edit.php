@@ -37,7 +37,7 @@ if ($courseid !== 0) {
     $course->load($courseid);
 }
 
-$url = new moodle_url('local/apsolu/courses/courses/edit.php', ['tab' => $tab, 'action' => 'edit', 'courseid' => $courseid]);
+$url = new moodle_url('/local/apsolu/courses/courses/edit.php', ['tab' => $tab, 'action' => 'edit', 'courseid' => $courseid]);
 
 // Load categories.
 $sql = "SELECT cc.id, cc.name".

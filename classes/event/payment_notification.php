@@ -71,7 +71,7 @@ class payment_notification extends \core\event\base {
      * @return moodle_url
      */
     public function get_url() {
-        return new \moodle_url('local/apsolu_courses/reports.php');
+        return new \moodle_url('/local/apsolu_courses/reports.php');
     }
 
     /**
