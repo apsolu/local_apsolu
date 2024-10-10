@@ -103,7 +103,7 @@ class activity extends record {
         $data[] = ['id' => 39, 'name' => 'Pentathlon', 'mainsport' => 1, 'restriction' => 1];
         $data[] = ['id' => 40, 'name' => 'Pétanque', 'mainsport' => 1, 'restriction' => 0];
         $data[] = ['id' => 41, 'name' => 'Roller hockey', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 42, 'name' => 'Rugby(s) (XV, X, 7, XIII)', 'mainsport' => 1, 'restriction' => 1];
+        $data[] = ['id' => 42, 'name' => 'Rugby(s) (XV, X, 7, XIII)', 'mainsport' => 1, 'restriction' => 0];
         $data[] = ['id' => 43, 'name' => 'Sauvetage sportif', 'mainsport' => 1, 'restriction' => 0];
         $data[] = ['id' => 44, 'name' => 'Savate Boxe Française en assaut', 'mainsport' => 1, 'restriction' => 0];
         $data[] = ['id' => 45, 'name' => 'Skateboard - Trottinette', 'mainsport' => 1, 'restriction' => 0];
