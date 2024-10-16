@@ -279,7 +279,7 @@ class notify extends \local_apsolu_notification_form {
         if (isset($data->cohorts) === true && count($data->cohorts) > 0) {
             list($insql, $namedparams) = $DB->get_in_or_equal($data->cohorts, SQL_PARAMS_NAMED, 'cohortid_');
 
-            $conditions[] = 'u.id IN (SELECT DISTINCT userid FROM {cohort_members} cm WHERE cm.cohorid '.$insql.')';
+            $conditions[] = 'u.id IN (SELECT DISTINCT userid FROM {cohort_members} cm WHERE cm.cohortid '.$insql.')';
             $params = array_merge($params, $namedparams);
         }
 
