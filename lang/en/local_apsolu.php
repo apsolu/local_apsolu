@@ -757,7 +757,9 @@ $string['you_have_paid_for_your_membership_in_the_sports_association'] = 'Vous a
 $string['you_must_accept_the_honorability_check'] = 'Vous devez accepter le contrôle d’honorabilité.';
 $string['you_must_pay_for_your_membership_in_the_sports_association'] = 'Vous devez payer votre adhésion à l’association sportive.';
 $string['you_must_present_a_medical_certificate_of_less_than_X_months'] = 'Vous devez présenter un certificat médical de non-contre-indication à la pratique des sports de compétition de moins de {$a} mois.';
+$string['you_must_select_a_department_if_your_native_country_is_france'] = 'Vous devez sélectionner un département valide si votre pays de naissance est la France.';
 $string['you_must_select_at_least_one_activity'] = 'Vous devez sélectionner au moins une activité.';
+$string['you_must_select_other_department_if_your_native_country_is_not_france'] = 'Vous devez sélectionner « autre » département si votre pays de naissance n’est pas la France.';
 $string['your_medical_certificate_has_already_been_validated'] = 'Votre certificat médical a déjà été validé par le secrétariat.';
 $string['your_request_is_being_processed'] = 'Votre demande est en cours de traitement';
 

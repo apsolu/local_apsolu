@@ -297,6 +297,17 @@ class local_apsolu_federation_membership extends moodleform {
             }
         }
 
+        if (isset($data['nativecountry'], $data['departmentofbirth']) === true) {
+            $nativecountry = strtolower(trim($data['nativecountry']));
+            if ($nativecountry === 'france' && empty($data['departmentofbirth']) === true) {
+                $errors['departmentofbirth'] = get_string('you_must_select_a_department_if_your_native_country_is_france',
+                    'local_apsolu');
+            } else if ($nativecountry !== 'france' && empty($data['departmentofbirth']) === false) {
+                $errors['departmentofbirth'] = get_string('you_must_select_other_department_if_your_native_country_is_not_france',
+                    'local_apsolu');
+            }
+        }
+
         if (strlen($data['postalcode']) !== 5 || ctype_digit($data['postalcode']) === false) {
             $errors['postalcode'] = get_string('the_given_postal_code_is_not_valid', 'local_apsolu');
         }
