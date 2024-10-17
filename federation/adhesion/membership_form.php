@@ -273,6 +273,12 @@ class local_apsolu_federation_membership extends moodleform {
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
 
+        if (preg_match('#[0-9]/#', $data['birthname']) === 1 || preg_match('#/[0-9]#', $data['birthname']) === 1) {
+            $label = get_string('birthname', 'local_apsolu');
+
+            $errors['birthname'] = get_string('the_field_X_has_an_invalid_value', 'local_apsolu', $label);
+        }
+
         if ($data['birthday'] > (time() - DAYSECS)) {
             $label = get_string('birthday', 'local_apsolu');
 
