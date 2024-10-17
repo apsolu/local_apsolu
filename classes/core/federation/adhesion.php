@@ -412,8 +412,8 @@ class adhesion extends record {
         $departments['17'] = '17 - Charente-Maritime';
         $departments['18'] = '18 - Cher';
         $departments['19'] = '19 - Corrèze';
-        $departments['2A'] = 'Corse-du-Sud';
-        $departments['2B'] = 'Haute-Corse';
+        $departments['2A'] = '2A - Corse-du-Sud';
+        $departments['2B'] = '2B - Haute-Corse';
         $departments['21'] = '21 - Côte-d’Or';
         $departments['22'] = '22 - Côtes-d’Armor';
         $departments['23'] = '23 - Creuse';
