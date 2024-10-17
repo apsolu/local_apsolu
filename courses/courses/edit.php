@@ -144,12 +144,5 @@ $heading = get_string('edit_course', 'local_apsolu');
 if (empty($course->id) === true) {
     $heading = get_string('add_course', 'local_apsolu');
 }
-
 echo $OUTPUT->heading($heading);
-if (empty($course->id) === false) {
-    echo '<ul class="list-inline text-right">'.
-        '<li class="list-inline-item"><a class="btn btn-primary" href="'.$CFG->wwwroot.'/user/index.php?id='.$course->id.'">Inscrire un utilisateur</a></li>'.
-        '<li class="list-inline-item"><a class="btn btn-primary" href="'.$CFG->wwwroot.'/enrol/instances.php?id='.$course->id.'">Méthode d\'inscription</a></li>'.
-        '</ul>';
-}
 $mform->display();

@@ -14,13 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe gérant les présences dans Apsolu.
- *
- * @package    local_apsolu
- * @copyright  2018 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+// phpcs:disable moodle.NamingConventions.ValidFunctionName.LowercaseMethod
 
 namespace local_apsolu\core;
 
@@ -189,7 +183,8 @@ class attendance {
      *
      * @param int|string $userid Identifiant Moodle de l'utilisateur.
      *
-     * @return array Tableau sous la forme array[courseid] = (object) ['courseid' => courseid, 'fullname' => nom complet du cours, 'session' => nom de la session, 'status' => statut de la présence].
+     * @return array Tableau sous la forme array[courseid] = (object) ['courseid' => courseid,
+     *               'fullname' => nom complet du cours, 'session' => nom de la session, 'status' => statut de la présence].
      */
     public static function getUserPresencesPerCourses($userid) {
         global $DB;

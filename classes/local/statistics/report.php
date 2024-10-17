@@ -14,19 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe pour les statistiques APSOLU.
- *
- * @package    local_apsolu
- * @copyright  2019 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+// phpcs:disable moodle.NamingConventions.ValidFunctionName.LowercaseMethod
+// phpcs:disable moodle.NamingConventions.ValidVariableName.MemberNameUnderscore
 
 namespace local_apsolu\local\statistics;
 
 use stdClass;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Classe pour les statistiques APSOLU.
@@ -53,12 +46,12 @@ class report {
     public function getReport($reportid = null) {
         global $CFG;
 
-        $jsonConfigPath = $CFG->dirroot.$this->configFilePath;
-        $jsonModeldata = file_get_contents($jsonConfigPath);
-        $model = json_decode($jsonModeldata);
+        $jsonconfigpath = $CFG->dirroot.$this->configFilePath;
+        $jsonmodeldata = file_get_contents($jsonconfigpath);
+        $model = json_decode($jsonmodeldata);
 
-        // custom reports
-        if ($CFG->is_siuaps_rennes){
+        // Custom reports.
+        if ($CFG->is_siuaps_rennes) {
             $model->reports = array_merge($model->reports, $model->reportsCustomRennes);
         }
 
@@ -73,8 +66,8 @@ class report {
             }
             return null;
         } else {
-            foreach($model->reports as $property => $value) {
-                // ne pas inclure les rapports masqués
+            foreach ($model->reports as $property => $value) {
+                // Ne pas inclure les rapports masqués.
                 if (property_exists($value, 'hidden')) {
                     unset($model->reports[$property]);
                 }
@@ -94,12 +87,12 @@ class report {
     public function getFilters(int $datatype = 1) {
         global $CFG, $DB;
 
-        $jsonConfigPath = $CFG->dirroot.$this->configFilePath;
-        $jsonModeldata = file_get_contents($jsonConfigPath);
-        $model = json_decode($jsonModeldata);
+        $jsonconfigpath = $CFG->dirroot.$this->configFilePath;
+        $jsonmodeldata = file_get_contents($jsonconfigpath);
+        $model = json_decode($jsonmodeldata);
 
         // Custom filter.
-        if ($CFG->is_siuaps_rennes){
+        if ($CFG->is_siuaps_rennes) {
             $model->filters = array_merge($model->filters, $model->filtersCustomRennes);
         }
 
@@ -120,20 +113,22 @@ class report {
             $filter = $model->filters[$i];
             if (property_exists($filter, "input")) {
 
-                if (property_exists($filter->values, "table")){
+                if (property_exists($filter->values, "table")) {
                     $where = "";
-                    if (property_exists($filter->values, "conditions")){
+                    if (property_exists($filter->values, "conditions")) {
                         $where = "WHERE ".$filter->values->conditions;
                     }
-                    $records = $DB->get_records_sql('SELECT DISTINCT '.$filter->values->fields.' FROM {'.$filter->values->table.'} ' .$where.' ORDER BY '.$filter->values->sort);
+                    $records = $DB->get_records_sql('SELECT DISTINCT '.$filter->values->fields.
+                        ' FROM {'.$filter->values->table.'} ' .$where.' ORDER BY '.$filter->values->sort);
                     $records = json_decode(json_encode($records), true);
                     $fields = explode(",", $filter->values->fields);
                     $values = [];
-                    foreach($records as $record){
-                        if (sizeof($fields) > 1) {
+                    foreach ($records as $record) {
+                        if (count($fields) > 1) {
                             $values[] = [$record[$fields[0]] => ($record[$fields[1]] == "" ? "(Vide)" : $record[$fields[1]])];
                         } else {
-                            $values[] = [($record[$fields[0]] == "" ? " " : $record[$fields[0]]) => ($record[$fields[0]] == "" ? "(Vide)" : $record[$fields[0]])];
+                            $values[] = [($record[$fields[0]] == "" ? " " : $record[$fields[0]]) =>
+                                ($record[$fields[0]] == "" ? "(Vide)" : $record[$fields[0]])];
                         }
                     }
                     $model->filters[$i]->values = $values;
@@ -142,7 +137,6 @@ class report {
         }
 
         return json_encode($model->filters);
-
     }
 
     /**

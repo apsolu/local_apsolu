@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe gérant les carnets de notes.
- *
- * @package    local_apsolu
- * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace local_apsolu\core;
 
 use context_course;
@@ -63,7 +55,8 @@ class gradebook {
      */
     const SOURCE = 'apsolu-gradebook';
 
-    /** @var array $caneditgrades Contient un tableau indexé par identifiant de cours, indiquant si l'utilisateur pour éditer les notes du cours. */
+    /** @var array $caneditgrades Contient un tableau indexé par identifiant de cours, indiquant si l'utilisateur pour
+                                  éditer les notes du cours. */
     public static $caneditgrades = [];
 
     /**
@@ -101,7 +94,8 @@ class gradebook {
     /**
      * Retourne les cours où des évaluations sont en cours.
      *
-     * @param int $contextlevel Si le contextlevel correspond à la constante CONTEXT_SYSTEM, tous les cours sont renvoyés aux gestionnaires. Sinon, seuls les cours de l'enseignant sont renvoyés.
+     * @param int $contextlevel Si le contextlevel correspond à la constante CONTEXT_SYSTEM, tous les cours sont renvoyés
+     *                          aux gestionnaires. Sinon, seuls les cours de l'enseignant sont renvoyés.
      *
      * @return array
      */
@@ -158,7 +152,10 @@ class gradebook {
                 " JOIN {role_assignments} ra ON ctx.id = ra.contextid AND ra.roleid IN (".implode(',', $gradableroles).")".
                 " WHERE e.enrol = 'select'".
                 " AND e.status = 0".
-                " AND ctx.id IN (SELECT contextid FROM {role_assignments} WHERE userid = :userid AND roleid IN (".implode(',', $graderroles)."))".
+                " AND ctx.id IN (SELECT contextid
+                                   FROM {role_assignments}
+                                  WHERE userid = :userid
+                                    AND roleid IN (".implode(',', $graderroles)."))".
                 " ORDER BY cc.name, ac.numweekday, ac.starttime";
             $params['userid'] = $USER->id;
         }
@@ -184,7 +181,8 @@ class gradebook {
     /**
      * Retourne un tableau contenant l'intégralité du carnet de notes.
      *
-     * @param array $options Liste des options d'affichage du carnet de notes (seulement les évalués en option, seulement certaines activités, etc).
+     * @param array $options Liste des options d'affichage du carnet de notes (seulement les évalués en option, seulement
+     *                       certaines activités, etc).
      * @param array $fields  Liste des champs à retourner.
      *
      * @return array
@@ -228,7 +226,8 @@ class gradebook {
             }
 
             // Vérifie que l'édition des notes n'est pas hors-délai.
-            $canedit = ((empty($calendar->gradestartdate) || $now > $calendar->gradestartdate) && (empty($calendar->gradeenddate) || $now < $calendar->gradeenddate));
+            $canedit = ((empty($calendar->gradestartdate) || $now > $calendar->gradestartdate) &&
+                (empty($calendar->gradeenddate) || $now < $calendar->gradeenddate));
             $calendar->locked = ($canedit === false);
 
             $options['calendars'][] = $calendar->id;
@@ -452,9 +451,11 @@ class gradebook {
             $conditions[] = sprintf(" AND %s LIKE ? ", $DB->sql_fullname('u.firstname', 'u.lastname'));
         }
 
-        $sql = "SELECT u.id, u.lastname, u.firstname, u.email, u.idnumber, uid3.data AS sex, act.name AS city, u.institution, uid1.data AS ufr, u.department,".
-            " u.lastnamephonetic, u.firstnamephonetic, u.middlename, u.alternatename, u.picture, u.imagealt,".
-            " uid2.data AS cycle, aca.id AS calendarid, aca.name AS calendar, c.id AS courseid, c.fullname AS course, cc.name AS category, cc2.name AS grouping, ra.roleid".
+        $sql = "SELECT u.id, u.lastname, u.firstname, u.email, u.idnumber, uid3.data AS sex, act.name AS city,
+                       u.institution, uid1.data AS ufr, u.department,
+                       u.lastnamephonetic, u.firstnamephonetic, u.middlename, u.alternatename, u.picture, u.imagealt,
+                       uid2.data AS cycle, aca.id AS calendarid, aca.name AS calendar, c.id AS courseid, c.fullname AS course,
+                       cc.name AS category, cc2.name AS grouping, ra.roleid".
             " FROM {user} u".
             " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = ?".
             " LEFT JOIN {user_info_data} uid2 ON u.id = uid2.userid AND uid2.fieldid = ?".
@@ -529,7 +530,8 @@ class gradebook {
 
         $gradebooks->users = [];
         foreach ($recordset as $user) {
-            if (isset($options['institutions']) === true && in_array($user->institution, $options['institutions'], $strict = true) === false) {
+            if (isset($options['institutions']) === true &&
+                in_array($user->institution, $options['institutions'], $strict = true) === false) {
                 continue;
             }
 
@@ -537,7 +539,8 @@ class gradebook {
                 continue;
             }
 
-            if (isset($options['departments']) === true && in_array($user->department, $options['departments'], $strict = true) === false) {
+            if (isset($options['departments']) === true &&
+                in_array($user->department, $options['departments'], $strict = true) === false) {
                 continue;
             }
 
@@ -806,13 +809,14 @@ class gradebook {
             }
 
             $currentgrade = grade_grade::fetch(['itemid' => $item->id, 'userid' => $userid]);
-            if ($currentgrade !== false && grade_floats_different($currentgrade->finalgrade, $grade->finalgrade) === false && $currentgrade->feedback === $grade->feedback) {
+            if ($currentgrade !== false && grade_floats_different($currentgrade->finalgrade, $grade->finalgrade) === false &&
+                $currentgrade->feedback === $grade->feedback) {
                 // La note n'a pas changé, on continue.
                 continue;
             }
 
             // On met à jour la note.
-            if ($item->update_final_grade($grade->userid, $grade->finalgrade, $source = 'local_apsolu', $grade->feedback) === false) {
+            if ($item->update_final_grade($grade->userid, $grade->finalgrade, $src = 'local_apsolu', $grade->feedback) === false) {
                 $transaction->rollback(new Exception(get_string('an_error_occurred_while_saving_your_grades', 'local_apsolu')));
                 return false;
             }

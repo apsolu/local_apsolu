@@ -14,19 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Teste la classe local_apsolu\observer\course
- *
- * @package    local_apsolu
- * @category   test
- * @copyright  2021 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace local_apsolu\observer;
 
 use local_apsolu\core\course;
 use stdClass;
+
+defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 
@@ -40,8 +33,8 @@ require_once($CFG->dirroot.'/course/lib.php');
  * @copyright  2021 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class course_test extends \advanced_testcase {
-    protected function setUp() : void {
+final class course_test extends \advanced_testcase {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->setAdminUser();
@@ -50,7 +43,12 @@ class course_test extends \advanced_testcase {
         $this->resetAfterTest();
     }
 
-    public function test_deleted() {
+    /**
+     * Teste deleted().
+     *
+     * @covers ::deleted()
+     */
+    public function test_deleted(): void {
         global $DB;
 
         // Teste le bon fonctionnement lors de la suppression d'un cours non APSOLU.
@@ -76,7 +74,12 @@ class course_test extends \advanced_testcase {
         $this->assertFalse($apsolucourse);
     }
 
-    public function test_updated() {
+    /**
+     * Teste updated().
+     *
+     * @covers ::updated()
+     */
+    public function test_updated(): void {
         global $DB;
 
         $moodlecategory1 = $this->getDataGenerator()->create_category();

@@ -14,17 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe pour les statistiques APSOLU.
- *
- * @package    local_apsolu
- * @copyright  2019 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace local_apsolu\local\statistics\programme;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Classe pour les statistiques APSOLU.
@@ -52,9 +42,9 @@ class chart {
     public static function groupslots($options) {
         if (isset($options['criterias'])) {
             $criterias = [];
-            // Get selected city
+            // Get selected city.
             if (isset($options['criterias']['cities'])) {
-                foreach ($options['criterias']['cities'] as $city){
+                foreach ($options['criterias']['cities'] as $city) {
                     $city = (object)$city;
                     if (property_exists($city, 'active')) {
                         $criterias["cityid"] = $city->id;
@@ -62,9 +52,9 @@ class chart {
                 }
             }
 
-            // Get selected calendar type
+            // Get selected calendar type.
             if (isset($options['criterias']['calendarstypes'])) {
-                foreach ($options['criterias']['calendarstypes'] as $calendarstype){
+                foreach ($options['criterias']['calendarstypes'] as $calendarstype) {
                     $calendarstype = (object)$calendarstype;
                     if (property_exists($calendarstype, 'active')) {
                         $criterias["calendarstypeid"] = $calendarstype->id;
@@ -78,7 +68,7 @@ class chart {
 
         $programmes = json_decode($result['data']);
 
-        if (!empty($programmes)){
+        if (!empty($programmes)) {
             $count = 0;
             $data = [];
             foreach ($programmes as $programme) {
@@ -108,9 +98,9 @@ class chart {
     public static function activityslots($options) {
         if (isset($options['criterias'])) {
             $criterias = [];
-            // Get selected city
+            // Get selected city.
             if (isset($options['criterias']['cities'])) {
-                foreach ($options['criterias']['cities'] as $city){
+                foreach ($options['criterias']['cities'] as $city) {
                     $city = (object)$city;
                     if (property_exists($city, 'active')) {
                         $criterias["cityid"] = $city->id;
@@ -118,9 +108,9 @@ class chart {
                 }
             }
 
-            // Get selected calendar type
+            // Get selected calendar type.
             if (isset($options['criterias']['calendarstypes'])) {
-                foreach ($options['criterias']['calendarstypes'] as $calendarstype){
+                foreach ($options['criterias']['calendarstypes'] as $calendarstype) {
                     $calendarstype = (object)$calendarstype;
                     if (property_exists($calendarstype, 'active')) {
                         $criterias["calendarstypeid"] = $calendarstype->id;
@@ -134,7 +124,7 @@ class chart {
 
         $programmes = json_decode($result['data']);
 
-        if (!empty($programmes)){
+        if (!empty($programmes)) {
             $count = 0;
             $data = [];
             foreach ($programmes as $programme) {
@@ -164,9 +154,9 @@ class chart {
     public static function countslotsmainlist($options) {
         if (isset($options['criterias'])) {
             $criterias = [];
-            // Get selected city
+            // Get selected city.
             if (isset($options['criterias']['cities'])) {
-                foreach ($options['criterias']['cities'] as $city){
+                foreach ($options['criterias']['cities'] as $city) {
                     $city = (object)$city;
                     if (property_exists($city, 'active')) {
                         $criterias["cityid"] = $city->id;
@@ -174,9 +164,9 @@ class chart {
                 }
             }
 
-            // Get selected calendar type
+            // Get selected calendar type.
             if (isset($options['criterias']['calendarstypes'])) {
-                foreach ($options['criterias']['calendarstypes'] as $calendarstype){
+                foreach ($options['criterias']['calendarstypes'] as $calendarstype) {
                     $calendarstype = (object)$calendarstype;
                     if (property_exists($calendarstype, 'active')) {
                         $criterias["calendarstypeid"] = $calendarstype->id;
@@ -190,7 +180,7 @@ class chart {
 
         $programmes = json_decode($result['data']);
 
-        if (!empty($programmes)){
+        if (!empty($programmes)) {
             $count = 0;
             $data = [];
             foreach ($programmes as $programme) {

@@ -27,6 +27,8 @@ use UniversiteRennes2\Apsolu;
 require(__DIR__ . '/../../../config.php');
 require_once($CFG->dirroot.'/enrol/select/locallib.php');
 
+require_course_login($SITE);
+
 $activityid = optional_param('id', 0, PARAM_INT);
 $activityname = optional_param('name', '', PARAM_TAG);
 
@@ -46,7 +48,6 @@ $title = current($activities)->sport;
 
 $PAGE->set_context(context_system::instance());
 $PAGE->set_title($title);
-// $PAGE->set_heading($SITE->fullname);
 $PAGE->navbar->add(get_string('courses', 'local_apsolu'), new moodle_url('/local/apsolu/presentation/summary.php'));
 $PAGE->navbar->add($title);
 
@@ -62,7 +63,7 @@ echo $OUTPUT->heading($title);
 $roles = enrol_select_get_activities_roles();
 $teachers = enrol_select_get_activities_teachers();
 
-// category, site, activity, period, jour, start, end, level, zone geo, zone, enroltype, enseignant
+// Category, site, activity, period, jour, start, end, level, zone geo, zone, enroltype, enseignant.
 $courses = [];
 foreach ($activities as $activity) {
     if (isset($courses[$activity->sport]) === false) {

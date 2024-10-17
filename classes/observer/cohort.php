@@ -14,19 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe permettant d'écouter les évènements diffusés par Moodle.
- *
- * @package   local_apsolu
- * @copyright 2022 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace local_apsolu\observer;
 
 use core\event\cohort_deleted;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Classe permettant d'écouter les évènements diffusés par Moodle.

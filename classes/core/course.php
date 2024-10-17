@@ -14,13 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe gérant les créneaux horaires APSOLU (cours Moodle).
- *
- * @package    local_apsolu
- * @copyright  2019 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+// phpcs:disable moodle.NamingConventions.ValidFunctionName.LowercaseMethod
+// phpcs:disable moodle.NamingConventions.ValidVariableName.MemberNameUnderscore
 
 namespace local_apsolu\core;
 
@@ -58,13 +53,15 @@ class course extends record {
     /** @var int|string $category Entier représentant l'identifiant de l'activité sportive. */
     public $category = '';
 
-    /** @var string $event Précision sur la discipline ou la spécificité de ce créneau (ex: 100m, 110m haies, football en salle, etc). */
+    /** @var string $event Précision sur la discipline ou la spécificité de
+                           ce créneau (ex: 100m, 110m haies, football en salle, etc). */
     public $event = '';
 
     /** @var int|string $numweekday Ordre du jour (ex: 1 = lundi, 2 = mardi, etc). Facilite le tri dans la requête SQL. */
     public $numweekday = '';
 
-    /** @var string $weekday Jour de la semaine en anglais. Champ à utiliser avec la fonction Moodle get_string($weekday, 'calendar'). */
+    /** @var string $weekday Jour de la semaine en anglais. Champ à utiliser avec
+                             la fonction Moodle get_string($weekday, 'calendar'). */
     public $weekday = '';
 
     /** @var string $starttime Heure de début du créneau au format HH:MM. */
@@ -73,13 +70,13 @@ class course extends record {
     /** @var string $endtime Heure de fin du créneau au format HH:MM. */
     public $endtime = '';
 
-    /** @var boolean $license Indique si le créneau nécessite l'adhésion à la FFSU. */
+    /** @var bool $license Indique si le créneau nécessite l'adhésion à la FFSU. */
     public $license = 0;
 
-    /** @var boolean $on_homepage Indique si le créneau doit être affiché sur la homepage. */
+    /** @var bool $on_homepage Indique si le créneau doit être affiché sur la homepage. */
     public $on_homepage = '';
 
-    /** @var boolean $showpolicy Indique si les recommandations médicales doivent être acceptées lors de l'inscription. */
+    /** @var bool $showpolicy Indique si les recommandations médicales doivent être acceptées lors de l'inscription. */
     public $showpolicy = '';
 
     /** @var int|string $locationid Identifiant numérique du lieu de pratique. */
@@ -102,7 +99,7 @@ class course extends record {
      *
      * @return string.
      */
-    public function __tostring() {
+    public function __toString() {
         return $this->fullname;
     }
 
@@ -164,13 +161,13 @@ class course extends record {
     public static function get_federation_courseid() {
         debugging('Use of '.__METHOD__.' is deprecated. Use local_apsolu\core\federation\course::get_courseid().', DEBUG_DEVELOPER);
 
-        $federation_course = get_config('local_apsolu', 'federation_course');
+        $federationcourse = get_config('local_apsolu', 'federation_course');
 
-        if (empty($federation_course) === true) {
+        if (empty($federationcourse) === true) {
             return false;
         }
 
-        return $federation_course;
+        return $federationcourse;
     }
 
     /**
@@ -200,13 +197,13 @@ class course extends record {
             $skill = $record->name;
         }
 
-        $str_time = get_string($weekday, 'calendar').' '.$starttime.' '.$endtime;
+        $strtime = get_string($weekday, 'calendar').' '.$starttime.' '.$endtime;
 
         if (empty($event) === false) {
-            return sprintf('%s %s %s %s', $category, $event, $str_time, $skill);
+            return sprintf('%s %s %s %s', $category, $event, $strtime, $skill);
         }
 
-        return sprintf('%s %s %s', $category, $str_time, $skill);
+        return sprintf('%s %s %s', $category, $strtime, $skill);
     }
 
     /**
@@ -299,7 +296,8 @@ class course extends record {
      *
      * @return array Un tableau d'objets instanciés.
      */
-    public static function get_records(array $conditions = null, string $sort = '', string $fields = '*', int $limitfrom = 0, int $limitnum = 0) {
+    public static function get_records(?array $conditions = null, string $sort = '', string $fields = '*',
+                                       int $limitfrom = 0, int $limitnum = 0) {
         global $DB;
 
         $classname = __CLASS__;
@@ -408,7 +406,8 @@ class course extends record {
      * Charge un objet à partir de son identifiant.
      *
      * @param int|string $recordid Identifiant de l'objet à charger.
-     * @param bool       $required Si true, lève une exception lorsque l'objet n'existe pas. Valeur par défaut: false (pas d'exception levée).
+     * @param bool       $required Si true, lève une exception lorsque l'objet n'existe pas.
+                                   Valeur par défaut: false (pas d'exception levée).
      *
      * @return void
      */
@@ -420,11 +419,12 @@ class course extends record {
             $strictness = MUST_EXIST;
         }
 
-        $sql = "SELECT c.id, c.shortname, c.fullname, c.category, ac.event, ac.skillid, ac.locationid,".
-            " ac.numweekday, ac.weekday, ac.starttime, ac.endtime, ac.periodid, ac.license, ac.on_homepage, ac.showpolicy, ac.information, ac.informationformat".
-            " FROM {course} c".
-            " JOIN {apsolu_courses} ac ON ac.id=c.id".
-            " WHERE c.id = :id";
+        $sql = "SELECT c.id, c.shortname, c.fullname, c.category, ac.event, ac.skillid, ac.locationid,
+                       ac.numweekday, ac.weekday, ac.starttime, ac.endtime, ac.periodid,
+                       ac.license, ac.on_homepage, ac.showpolicy, ac.information, ac.informationformat
+                  FROM {course} c
+                  JOIN {apsolu_courses} ac ON ac.id=c.id
+                 WHERE c.id = :id";
         $record = $DB->get_record_sql($sql, ['id' => $recordid], $strictness);
 
         if ($record === false) {
@@ -445,7 +445,7 @@ class course extends record {
      *
      * @return void
      */
-    public function save(object $data = null, object $mform = null) {
+    public function save(?object $data = null, ?object $mform = null) {
         global $DB;
 
         if ($data === null) {
@@ -456,7 +456,8 @@ class course extends record {
         $this->numweekday = self::get_numweekdays($this->weekday);
 
         // Set fullname.
-        $this->fullname = self::get_fullname($data->str_category, $this->event, $this->weekday, $this->starttime, $this->endtime, $data->str_skill);
+        $this->fullname = self::get_fullname($data->str_category, $this->event, $this->weekday,
+            $this->starttime, $this->endtime, $data->str_skill);
 
         // Set shortname.
         $this->shortname = self::get_shortname($this->id, $this->fullname);
@@ -475,8 +476,10 @@ class course extends record {
 
             // Créé l'instance apsolu_courses.
             // Note: insert_record() exige l'absence d'un id.
-            $sql = "INSERT INTO {apsolu_courses} (id, event, skillid, locationid, weekday, numweekday, starttime, endtime, periodid, license, on_homepage, showpolicy, information, informationformat)".
-                " VALUES(:id, :event, :skillid, :locationid, :weekday, :numweekday, :starttime, :endtime, :periodid, :license, :on_homepage, :showpolicy, :information, :informationformat)";
+            $sql = "INSERT INTO {apsolu_courses} (id, event, skillid, locationid, weekday, numweekday, starttime, endtime,
+                                                  periodid, license, on_homepage, showpolicy, information, informationformat)
+                                          VALUES (:id, :event, :skillid, :locationid, :weekday, :numweekday, :starttime, :endtime,
+                                                  :periodid, :license, :onhomepage, :showpolicy, :information, :informationformat)";
             $params = [];
             $params['id'] = $this->id;
             $params['event'] = $this->event;
@@ -488,7 +491,7 @@ class course extends record {
             $params['endtime'] = $this->endtime;
             $params['periodid'] = $this->periodid;
             $params['license'] = $this->license;
-            $params['on_homepage'] = $this->on_homepage;
+            $params['onhomepage'] = $this->on_homepage;
             $params['showpolicy'] = $this->showpolicy;
             $params['information'] = $this->information;
             $params['informationformat'] = $this->informationformat;
@@ -525,7 +528,7 @@ class course extends record {
             // Ensure the block context is created.
             context_block::instance($blockinstance->id);
 
-            // If the new instance was created, allow it to do additional setup
+            // If the new instance was created, allow it to do additional setup.
             $block = block_instance($blocktype, $blockinstance);
             $block->instance_create();
 
@@ -691,7 +694,8 @@ class course extends record {
             }
 
             $session->courseid = $this->id;
-            $session->activityid = $this->category; // TODO: supprimer ce champ. Note: category ne semble pas être défini, provoquant une initialisation à 0 en base de données.
+            $session->activityid = $this->category; // TODO: supprimer ce champ. Note: category ne semble pas être défini,
+                                                    // provoquant une initialisation à 0 en base de données.
             $session->locationid = $this->locationid;
             if ($sessionid === 0) {
                 $session->timecreated = time();

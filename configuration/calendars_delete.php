@@ -29,7 +29,8 @@ use local_apsolu\core\gradeitem;
 $calendarid = required_param('calendarid', PARAM_INT);
 $confirm = optional_param('confirm', '', PARAM_ALPHANUM); // Confirmation hash.
 
-$url = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'calendars', 'action' => 'delete', 'calendarid' => $calendarid]);
+$url = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'calendars',
+    'action' => 'delete', 'calendarid' => $calendarid]);
 
 $calendar = $DB->get_record('apsolu_calendars', ['id' => $calendarid], $fields = '*', MUST_EXIST);
 
@@ -59,10 +60,9 @@ if ($confirm === $deletehash) {
 
         $transaction->allow_commit();
     } catch (Exception $exception) {
-        // Avec un rollback explicite, Moodle redirige vers la homepage.
-        // $transaction->rollback($exception);
-
-        redirect($returnurl, get_string('an_error_occurred_while_deleting_record', 'local_apsolu'), null, \core\output\notification::NOTIFY_ERROR);
+        // Exécuter $transaction->rollback($exception), implique une redirection vers la homepage de Moodle.
+        redirect($returnurl, get_string('an_error_occurred_while_deleting_record', 'local_apsolu'),
+            null, \core\output\notification::NOTIFY_ERROR);
     }
 
     redirect($returnurl, get_string('calendar_deleted', 'local_apsolu'), null, \core\output\notification::NOTIFY_SUCCESS);

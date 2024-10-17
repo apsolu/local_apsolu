@@ -100,7 +100,7 @@ class local_apsolu_federation_activities_edit_form extends moodleform {
                 " AND afa.id != :id";
             $record = $DB->get_record_sql($sql, ['categoryid' => $data['categoryid'], 'id' => $data['activityid']]);
             if ($record !== false) {
-                $errors['categoryid'] = get_string('this_activity_is_already_associated_with_activity_X', 'local_apsolu', $record->name);
+                $errors['categoryid'] = get_string('this_activity_is_already_associated_with_activity_X', 'local_apsolu', $record->name); // phpcs:ignore
             }
         }
 

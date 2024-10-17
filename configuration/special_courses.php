@@ -40,16 +40,16 @@ foreach ($attributes as $attribute) {
     $defaults->{$attribute} = get_config('local_apsolu', $attribute);
 }
 
-$collaborative_courses = [0 => get_string('none')];
+$collaborativecourses = [0 => get_string('none')];
 $sql = "SELECT c.id, c.fullname".
     " FROM {course} c".
     " WHERE c.id NOT IN (SELECT ac.id FROM {apsolu_courses} ac)".
     " ORDER BY c.fullname";
 foreach ($DB->get_records_sql($sql) as $course) {
-    $collaborative_courses[$course->id] = $course->fullname;
+    $collaborativecourses[$course->id] = $course->fullname;
 }
 
-$federation_courses = [0 => get_string('none')];
+$federationcourses = [0 => get_string('none')];
 $sql = "SELECT c.id, c.fullname".
     " FROM {course} c".
     " JOIN {enrol} e ON c.id = e.courseid".
@@ -57,10 +57,10 @@ $sql = "SELECT c.id, c.fullname".
     " AND e.enrol = 'select'".
     " ORDER BY c.fullname";
 foreach ($DB->get_records_sql($sql) as $course) {
-    $federation_courses[$course->id] = $course->fullname;
+    $federationcourses[$course->id] = $course->fullname;
 }
 
-$customdata = [$defaults, $collaborative_courses, $federation_courses];
+$customdata = [$defaults, $collaborativecourses, $federationcourses];
 
 $mform = new local_apsolu_special_courses_form(null, $customdata);
 

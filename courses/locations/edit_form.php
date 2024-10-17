@@ -78,8 +78,9 @@ class local_apsolu_courses_locations_edit_form extends moodleform {
         $mform->setType('latitude', PARAM_FLOAT);
 
         // OpenStreetMap link.
-        $anchor = '<a href="http://www.openstreetmap.org/way/81587209#map=13/48.1168/-1.6349" target="_blank">Obtenir les coordonnées d\'un lieu</a>';
-        $mform->addElement('html', '<p id="apsolu-osm-link" class="text-center">'.$anchor.'</p>');
+        $mform->addElement('html', '<p id="apsolu-osm-link" class="text-center">
+            <a href="http://www.openstreetmap.org/way/81587209#map=13/48.1168/-1.6349" target="_blank">Obtenir les coordonnées d’un
+            lieu</a></p>');
 
         // Wifi access field.
         $mform->addElement('selectyesno', 'wifi_access', get_string('wifi_access', 'local_apsolu'));

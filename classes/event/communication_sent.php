@@ -32,7 +32,7 @@ class communication_sent extends \core\event\base {
      * @return void
      */
     protected function init() {
-        // Values: c(reate), r(ead), u(pdate) or d(elete).
+        // Values: c (create), r (read), u (update) or d (delete).
         $this->data['crud'] = 'c';
 
         // Values: LEVEL_TEACHING, LEVEL_PARTICIPATING or LEVEL_OTHER.

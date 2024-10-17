@@ -14,19 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Teste la classe local_apsolu\apsolu\payment
- *
- * @package    local_apsolu
- * @category   test
- * @copyright  2022 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-namespace local_apsolu\core;
+namespace local_apsolu;
 
 use stdClass;
 use UniversiteRennes2\Apsolu\Payment;
+
+defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../classes/apsolu/payment.php');
 
@@ -34,13 +27,12 @@ require_once(__DIR__ . '/../classes/apsolu/payment.php');
  * Classe de tests pour local_apsolu\apsolu\payment
  *
  * @package    local_apsolu
- * @category   test
  * @copyright  2022 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @coversDefaultClass \local_apsolu\core\payment
  */
-class payment_test extends \advanced_testcase {
-
-    protected function setUp() : void {
+final class payment_test extends \advanced_testcase {
+    protected function setUp(): void {
         global $DB;
 
         parent::setUp();
@@ -48,7 +40,12 @@ class payment_test extends \advanced_testcase {
         $this->resetAfterTest();
     }
 
-    public function test_is_open() {
+    /**
+     * Teste is_open().
+     *
+     * @covers ::is_open()
+     */
+    public function test_is_open(): void {
         $year = date('Y');
 
         // Les paiements n'ont pas commencé.

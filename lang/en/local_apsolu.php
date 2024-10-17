@@ -22,6 +22,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// phpcs:disable moodle.Files.LangFilesOrdering.IncorrectOrder
+// phpcs:disable moodle.Files.LangFilesOrdering.UnexpectedComment
+
 $string['pluginname'] = 'APSOLU';
 $string['apsolu:configpaybox'] = 'Configurer les comptes PayBox';
 $string['apsolu:editgradesafterdeadline'] = 'Saisir les notes en dehors des périodes de saisie';
@@ -155,7 +158,7 @@ $string['carboncopy'] = 'Copie carbone';
 $string['carboncopy_help'] = 'Envoyer une copie de ce message sur votre adresse';
 $string['carboncopy_to'] = 'Copie carbone à {$a}';
 $string['certificates_validation'] = 'Validation de certificats';
-// $string['course_cannot_be_deleted'] = 'Le créneau horaire « {$a} » ne peut pas être supprimé, car il est rattaché aux lieux suivants :';
+// TODO: course_cannot_be_deleted = 'Le créneau horaire « {$a} » ne peut pas être supprimé, car il est rattaché aux lieux suivants :'.
 $string['collaborative_course'] = 'Cours collaboratif';
 $string['college_deleted'] = 'Population supprimée';
 $string['color'] = 'Couleur';
@@ -390,7 +393,7 @@ $string['location_has_been_deleted'] = 'Le lieu a été supprimé.';
 $string['location_saved'] = 'Lieu enregistré.';
 $string['location_updated'] = 'Lieu modifié.';
 $string['locations_manager_cannot_be_deleted'] = 'Le gestionnaire de lieux « {$a} » ne peut pas être supprimé, car il est rattaché aux lieux suivants :';
-// $string['locations_manager_deletion_will_also_remove_the_following_locations'] = 'La suppression de ce gestionnaire de lieux entrainera également la suppression des lieux suivants :';
+// TODO: locations_manager_deletion_will_also_remove_the_following_locations = 'La suppression de ce gestionnaire de lieux entrainera également la suppression des lieux suivants :'.
 $string['locations_manager_has_been_deleted'] = 'Le gestionnaire de lieux a été supprimé.';
 $string['locations_manager_saved'] = 'Gestionnaire de lieux enregistré.';
 $string['locations_manager_updated'] = 'Gestionnaire de lieux modifié.';
@@ -1330,7 +1333,7 @@ $string['ws_value_userid'] = 'identifiant de l’utilisateur';
 $string['ws_value_validity'] = 'validation de l’inscription';
 $string['ws_value_weekday'] = 'jour de la semaine';
 
-// Statistics
+// Statistics.
 $string['statistics'] = 'Statistiques';
 $string['statistics_population'] = 'Population';
 $string['statistics_programme'] = 'Programmation';
@@ -1340,15 +1343,15 @@ $string['statistics_select_reports'] = 'Sélectionnez un rapport existant';
 $string['statistics_custom'] = 'Recherche personnalisée';
 $string['statistics_clean'] = 'Effacer';
 $string['statistics_apply'] = 'Appliquer';
-// Statistics - Webservices
+// Statistics - Webservices.
 $string['ws_local_apsolu_get_chartdataset_description'] = 'Retourne le jeu de données pour un graphique';
 $string['ws_local_apsolu_get_reportdataset_description'] = 'Retourne le jeu de données pour un rapport';
 $string['ws_local_apsolu_get_reportfilters_description'] = 'Retourne le jeu de filtres pour un type de population';
-// Statistics - charts
+// Statistics - charts.
 $string['statistics_chart_criteria_cities'] = 'Sites';
 $string['statistics_chart_criteria_calendarstypes'] = 'Types de calendriers';
 $string['statistics_chart_criteria_complementaries'] = 'Activités complémentaires';
-// Statistics - Reports
+// Statistics - Reports.
 $string['statistics_all'] = 'Tous';
 $string['statistics_noavailabledata'] = 'Aucune information disponible';
 $string['statistics_keynumbers'] = 'Chiffres-clés';

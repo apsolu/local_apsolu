@@ -46,33 +46,24 @@ $content = '';
 if ($data = $mform->get_data()) {
     $parameters = [];
     $conditions = [];
-    $url_options = ['page' => 'certificates_validation'];
 
     if (empty($data->fullnameuser) === false) {
         $parameters['fullnameuser'] = '%'.$data->fullnameuser.'%';
         $conditions[] = sprintf("AND %s LIKE :fullnameuser ", $DB->sql_fullname('u.firstname', 'u.lastname'));
-
-        $url_options['fullnameuser'] = $parameters['fullnameuser'];
     }
 
     if (empty($data->idnumber) === false) {
         $parameters['idnumber'] = '%'.$data->idnumber.'%';
         $conditions[] = "AND u.idnumber LIKE :idnumber ";
-
-        $url_options['idnumber'] = $parameters['idnumber'];
     }
 
-    // État du certificat médical.
+    // Etat du certificat médical.
     if ($data->medical_certificate_status === APSOLU_SELECT_YES) {
         $parameters['status'] = Adhesion::MEDICAL_CERTIFICATE_STATUS_VALIDATED;
         $conditions[] = "AND afa.medicalcertificatestatus = :status";
-
-        $url_options['medical_certificate_status'] = $parameters['status'];
     } else if ($data->medical_certificate_status === APSOLU_SELECT_NO) {
         $parameters['status'] = Adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING;
         $conditions[] = "AND afa.medicalcertificatestatus = :status";
-
-        $url_options['medical_certificate_status'] = $parameters['status'];
     }
 
     $federationactivities = $DB->get_records('apsolu_federation_activities');
@@ -190,7 +181,8 @@ if ($data = $mform->get_data()) {
             } else {
                 $items = [];
                 foreach ($files as $file) {
-                    $url = moodle_url::make_pluginfile_url($context->id, $component, $filearea, $itemid, '/', $file->get_filename(), $forcedownload = false, $includetoken = false);
+                    $url = moodle_url::make_pluginfile_url($context->id, $component, $filearea, $itemid, '/',
+                        $file->get_filename(), $forcedownload = false, $includetoken = false);
                     $helpstr = get_string('help');
                     $date = userdate($file->get_timemodified(), get_string('strftimedateshort', 'local_apsolu'));
                     $datacontent = format_string(get_string('uploaded_date', 'local_apsolu', $date));
@@ -226,26 +218,29 @@ if ($data = $mform->get_data()) {
                 $attributes['data-target-validation'] = Adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING;
                 $attributes['data-target-validation-color'] = 'table-warning';
                 $attributes['data-target-validation-text'] = get_string('medical_certificate_not_validated', 'local_apsolu');
+                $reason = strtolower(get_string('more_than_one_year', 'local_apsolu'));
                 $menuoptions[] = [
                     'attributes' => $attributes,
                     'icon' => 'i/grade_incorrect',
-                    'label' => get_string('refuse_with_reasons_X', 'local_apsolu', strtolower(get_string('more_than_one_year', 'local_apsolu'))),
+                    'label' => get_string('refuse_with_reasons_X', 'local_apsolu', $reason),
                 ];
 
                 // Option permettant le refus du certificat (raison: plus de 6 mois).
                 $attributes['data-stringid'] = 'medical_certificate_refusal_message_for_six_months_expiration';
+                $reason = strtolower(get_string('more_than_six_months', 'local_apsolu'));
                 $menuoptions[] = [
                     'attributes' => $attributes,
                     'icon' => 'i/grade_incorrect',
-                    'label' => get_string('refuse_with_reasons_X', 'local_apsolu', strtolower(get_string('more_than_six_months', 'local_apsolu'))),
+                    'label' => get_string('refuse_with_reasons_X', 'local_apsolu', $reason),
                 ];
 
                 // Option permettant le refus du certificat (raison: mention du sport manquante).
                 $attributes['data-stringid'] = 'medical_certificate_refusal_message_for_mention_missing';
+                $reason = strtolower(get_string('mention_missing', 'local_apsolu'));
                 $menuoptions[] = [
                     'attributes' => $attributes,
                     'icon' => 'i/grade_incorrect',
-                    'label' => get_string('refuse_with_reasons_X', 'local_apsolu', strtolower(get_string('mention_missing', 'local_apsolu'))),
+                    'label' => get_string('refuse_with_reasons_X', 'local_apsolu', $reason),
                 ];
 
                 if ($record->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING) {

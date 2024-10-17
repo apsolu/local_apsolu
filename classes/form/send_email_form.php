@@ -41,7 +41,7 @@ class send_email_form extends dynamic_form {
     /**
      * Definition of the form
      */
-    public function definition () {
+    public function definition() {
         global $DB, $USER;
 
         $mform =& $this->_form;

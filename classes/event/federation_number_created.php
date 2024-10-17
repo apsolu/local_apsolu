@@ -16,8 +16,6 @@
 
 namespace local_apsolu\event;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Enregistre le numéro de licence FFSU.
  *
@@ -32,7 +30,7 @@ class federation_number_created extends \core\event\base {
      * @return void
      */
     protected function init() {
-        // Values: c(reate), r(ead), u(pdate) or d(elete).
+        // Values: c (create), r (read), u (update) or d (delete).
         $this->data['crud'] = 'c';
 
         // Values: LEVEL_TEACHING, LEVEL_PARTICIPATING or LEVEL_OTHER.

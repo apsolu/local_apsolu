@@ -14,13 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe gérant les lieux de pratique.
- *
- * @package    local_apsolu
- * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+// phpcs:disable moodle.NamingConventions.ValidVariableName.MemberNameUnderscore
 
 namespace local_apsolu\core;
 
@@ -58,13 +52,13 @@ class location extends record {
     /** @var string $latitude du lieu. */
     public $latitude = '';
 
-    /** @var boolean $wifi_access Témoin indiquant la présence du WiFi sur le lieu de pratique. */
+    /** @var bool $wifi_access Témoin indiquant la présence du WiFi sur le lieu de pratique. */
     public $wifi_access = '';
 
-    /** @var boolean $indoor Témoin indiquant si le lieu est couvert. */
+    /** @var bool $indoor Témoin indiquant si le lieu est couvert. */
     public $indoor = '';
 
-    /** @var boolean $restricted_access Témoin indiquant si le lieu est à accès restreint. */
+    /** @var bool $restricted_access Témoin indiquant si le lieu est à accès restreint. */
     public $restricted_access = '';
 
     /** @var int|string $areaid Identifiant numérique de la zone géographique. */

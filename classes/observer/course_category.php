@@ -14,19 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe permettant d'écouter les évènements diffusés par Moodle.
- *
- * @package   local_apsolu
- * @copyright 2021 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace local_apsolu\observer;
 
 use stdClass;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Classe permettant d'écouter les évènements diffusés par Moodle.
@@ -81,10 +71,12 @@ class course_category {
             " WHERE cc.id = :categoryid";
         $category = $DB->get_record_sql($sql, ['categoryid' => $context->instanceid]);
         if ($category !== false) {
-            // C'est une catégorie d'activité sportive APSOLU. Le parent doit être une catégorie de groupement d'activités sportives APSOLU.
+            // C'est une catégorie d'activité sportive APSOLU.
+            // Le parent doit être une catégorie de groupement d'activités sportives APSOLU.
             $parent = $DB->get_record(\local_apsolu\core\grouping::TABLENAME, ['id' => $category->parent]);
             if ($parent === false) {
-                $message = get_string('category_must_be_parent_of_a_grouping_of_sports_activities', 'local_apsolu', $category->name);
+                $message = get_string('category_must_be_parent_of_a_grouping_of_sports_activities',
+                    'local_apsolu', $category->name);
                 \core\notification::add($message, \core\notification::WARNING);
 
                 $sql = "SELECT cc.*".

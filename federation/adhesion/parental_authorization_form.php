@@ -65,7 +65,8 @@ class local_apsolu_federation_parental_authorization extends moodleform {
             $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
             $items = [];
             foreach ($files as $file) {
-                $url = moodle_url::make_pluginfile_url($context->id, $component, $filearea, $itemid, '/', $file->get_filename(), $forcedownload = false, $includetoken = false);
+                $url = moodle_url::make_pluginfile_url($context->id, $component, $filearea, $itemid, '/',
+                    $file->get_filename(), $forcedownload = false, $includetoken = false);
                 $items[] = html_writer::link($url, $file->get_filename());
             }
 

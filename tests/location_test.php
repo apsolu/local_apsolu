@@ -14,36 +14,33 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Teste la classe local_apsolu\core\location
- *
- * @package    local_apsolu
- * @category   test
- * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-namespace local_apsolu\core;
+namespace local_apsolu;
 
 use dml_write_exception;
+use local_apsolu\core\location;
 use stdClass;
 
 /**
  * Classe de tests pour local_apsolu\core\location
  *
  * @package    local_apsolu
- * @category   test
  * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @coversDefaultClass \local_apsolu\core\location
  */
-class location_test extends \advanced_testcase {
-    protected function setUp() : void {
+final class location_test extends \advanced_testcase {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->resetAfterTest();
     }
 
-    public function test_delete() {
+    /**
+     * Teste delete().
+     *
+     * @covers ::delete()
+     */
+    public function test_delete(): void {
         global $DB;
 
         $location = new location();
@@ -66,7 +63,12 @@ class location_test extends \advanced_testcase {
         $this->assertSame(0, $countrecords);
     }
 
-    public function test_get_records() {
+    /**
+     * Teste get_records().
+     *
+     * @covers ::get_records()
+     */
+    public function test_get_records(): void {
         global $DB;
 
         $location = new location();
@@ -90,7 +92,12 @@ class location_test extends \advanced_testcase {
         $this->assertSame(2, $countrecords);
     }
 
-    public function test_load() {
+    /**
+     * Teste load().
+     *
+     * @covers ::load()
+     */
+    public function test_load(): void {
         // Charge un objet inexistant.
         $location = new location();
         $location->load(1);
@@ -109,7 +116,12 @@ class location_test extends \advanced_testcase {
         $this->assertSame($location->name, $test->name);
     }
 
-    public function test_save() {
+    /**
+     * Teste save().
+     *
+     * @covers ::save()
+     */
+    public function test_save(): void {
         global $DB;
 
         $location = new location();

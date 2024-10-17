@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe pour le formulaire permettant de notifier les utilisateurs.
- *
- * @package    local_apsolu
- * @copyright  2021 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 use local_apsolu\core\messaging;
 
 defined('MOODLE_INTERNAL') || die;
@@ -114,9 +106,9 @@ class local_apsolu_notification_form extends moodleform {
         $mform->setType('carboncopy', PARAM_INT);
 
         // Notifier le contact fonctionnel.
-        $functional_contact = get_config('local_apsolu', 'functional_contact');
-        if (empty($functional_contact) === false) {
-            $label = get_string('notify_functional_contact', 'local_apsolu', $functional_contact);
+        $functionalcontact = get_config('local_apsolu', 'functional_contact');
+        if (empty($functionalcontact) === false) {
+            $label = get_string('notify_functional_contact', 'local_apsolu', $functionalcontact);
             $mform->addElement('checkbox', 'notify_functional_contact', $label);
             $mform->setType('notify_functional_contact', PARAM_INT);
         }
@@ -203,15 +195,16 @@ class local_apsolu_notification_form extends moodleform {
         }
 
         // Gestion de la copie à l'adresse de contact fonctionnel.
-        $functional_contact = get_config('local_apsolu', 'functional_contact');
-        if (!empty($functional_contact) && isset($data->notify_functional_contact)) {
+        $functionalcontact = get_config('local_apsolu', 'functional_contact');
+        if (!empty($functionalcontact) && isset($data->notify_functional_contact)) {
             $messagetext = $data->message['text'];
             $messagehtml = $data->message['text'];
 
-            // Solution de contournement pour pouvoir envoyer un message à une adresse mail n'appartenant pas à un utilisateur Moodle.
+            // Solution de contournement pour pouvoir envoyer un message à une adresse mail n'appartenant pas
+            // à un utilisateur Moodle.
             $admin = get_admin();
-            $admin->auth = 'manual'; // Force l'authentification en manual, car la fonction email_to_user() ignore les comptes en nologin.
-            $admin->email = $functional_contact;
+            $admin->auth = 'manual'; // Force l'auth. en manual, car email_to_user() ignore le traitement des comptes en nologin.
+            $admin->email = $functionalcontact;
 
             if (isset($replyto) === true) {
                 email_to_user($admin, $USER, $data->subject, $messagetext, $messagehtml, $attachment = '', $attachname = '',

@@ -28,9 +28,9 @@ use local_apsolu\core\federation\course as FederationCourse;
 defined('MOODLE_INTERNAL') || die;
 
 // Génère la liste des activités FFSU.
-$federation_activities = [];
+$federationactivities = [];
 foreach (Activity::get_records() as $activity) {
-    $federation_activities[$activity->categoryid] = $activity->categoryid;
+    $federationactivities[$activity->categoryid] = $activity->categoryid;
 }
 
 // Génère la liste des activités APSOLU.
@@ -42,7 +42,7 @@ $sql = "SELECT acc.id, cc.name, ccc.name AS grouping".
 $categories = [];
 foreach ($DB->get_records_sql($sql) as $categoryid => $category) {
     // Positionne le témoin FFSU.
-    $category->federation = isset($federation_activities[$categoryid]);
+    $category->federation = isset($federationactivities[$categoryid]);
 
     $categories[$categoryid] = $category;
 }

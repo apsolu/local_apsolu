@@ -14,17 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe pour les statistiques APSOLU.
- *
- * @package    local_apsolu
- * @copyright  2019 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+// phpcs:disable moodle.NamingConventions.ValidFunctionName.LowercaseMethod
+// phpcs:disable moodle.NamingConventions.ValidVariableName.MemberNameUnderscore
 
 namespace local_apsolu\local\statistics\programme;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Classe pour les statistiques APSOLU.
@@ -49,7 +42,7 @@ class report extends \local_apsolu\local\statistics\report {
     public function __construct() {
         $this->configFilePath = '/local/apsolu/statistics/programme/config.json';
 
-        // SET lc_time_names = 'fr_FR';
+        // Note: SET lc_time_names = 'fr_FR'.
         $this->WithProgramme = 'WITH programme AS (
       	SELECT
       		Grouping.id as groupid, Grouping.name as groupname,
@@ -57,14 +50,20 @@ class report extends \local_apsolu\local\statistics\report {
       		AC.id as calendarid, AC.name as calendarname,
       		ACT.id as calendartypeid,ACT.name as calendartypename,
       		ACI.id as cityid,ACI.name as cityname,
-      		APSOLU_C.id as slotid, APSOLU_C.event as slotevent,APSOLU_C.numweekday as slotnumweekday,DAYNAME(CONCAT("1970-09-2", APSOLU_C.numweekday)) as slotweekday, APSOLU_C.starttime as slotstart,	APSOLU_C.endtime as slotend,
+            APSOLU_C.id as slotid, APSOLU_C.event as slotevent,APSOLU_C.numweekday as slotnumweekday,
+                DAYNAME(CONCAT("1970-09-2", APSOLU_C.numweekday)) as slotweekday,
+                APSOLU_C.starttime as slotstart,	APSOLU_C.endtime as slotend,
       		CASE WHEN E.customint3 THEN \'Oui\' ELSE \'Non\' END AS \'actifQuota\',
       		E.customint1 AS \'mainQuota\',
       	 	E.customint2 AS \'waitQuota\',
-      		CASE WHEN E.customint4 = 0 THEN \'\' ELSE DATE_FORMAT(FROM_UNIXTIME(E.customint4),\'%d/%m/%Y %H:%i\') END AS \'reenrolstartdate\',
-				  CASE WHEN E.customint5 = 0 THEN \'\' ELSE DATE_FORMAT(FROM_UNIXTIME(E.customint5),\'%d/%m/%Y %H:%i\') END AS \'reenrolenddate\',
-				  CASE WHEN E.customint7 = 0 THEN \'\' ELSE DATE_FORMAT(FROM_UNIXTIME(E.customint7),\'%d/%m/%Y\') END AS \'coursestartdate\',
-				  CASE WHEN E.customint8 = 0 THEN \'\' ELSE DATE_FORMAT(FROM_UNIXTIME(E.customint8),\'%d/%m/%Y\') END AS \'courseenddate\',
+            CASE WHEN E.customint4 = 0 THEN \'\'
+                    ELSE DATE_FORMAT(FROM_UNIXTIME(E.customint4),\'%d/%m/%Y %H:%i\') END AS \'reenrolstartdate\',
+                  CASE WHEN E.customint5 = 0 THEN \'\'
+                    ELSE DATE_FORMAT(FROM_UNIXTIME(E.customint5),\'%d/%m/%Y %H:%i\') END AS \'reenrolenddate\',
+                  CASE WHEN E.customint7 = 0 THEN \'\'
+                    ELSE DATE_FORMAT(FROM_UNIXTIME(E.customint7),\'%d/%m/%Y\') END AS \'coursestartdate\',
+                  CASE WHEN E.customint8 = 0 THEN \'\'
+                    ELSE DATE_FORMAT(FROM_UNIXTIME(E.customint8),\'%d/%m/%Y\') END AS \'courseenddate\',
           AL.id as placeid, AL.name as placename, AL.address as placeaddress
       	FROM {course} C
       	INNER JOIN {enrol} E ON E.courseid = C.id AND E.enrol = \'select\'
@@ -95,7 +94,8 @@ class report extends \local_apsolu\local\statistics\report {
           [ 'data' => "cityname", 'title' => get_string("city", 'local_apsolu')] ,
           [ 'data' => "placename", 'title' => get_string("locations", 'local_apsolu')] ,
           [ 'data' => "placeaddress", 'title' => get_string("address", 'local_apsolu')] ,
-          [ 'data' => "slotnumweekday", 'title' => get_string("weekday", 'local_apsolu'), "render" => "function ( data, type, row ) {return moment.weekdays()[(data==7) ? 0 : data];}"],
+          [ 'data' => "slotnumweekday", 'title' => get_string("weekday", 'local_apsolu'),
+            "render" => "function ( data, type, row ) {return moment.weekdays()[(data==7) ? 0 : data];}"],
           [ 'data' => "slotstart", 'title' => get_string("coursestartdate", 'local_apsolu')] ,
           [ 'data' => "slotend", 'title' => get_string("courseenddate", 'local_apsolu')] ,
           [ 'data' => "actifquota", 'title' => get_string("statistics_active_quota", 'local_apsolu')] ,
@@ -119,15 +119,15 @@ class report extends \local_apsolu\local\statistics\report {
     /**
      * Retourne les résultats en fonction de la vue choisie et des critères de recherche.
      *
-     * @param string     $queryBuilder Chaine de caractères au format JSON.
+     * @param string     $querybuilder Chaine de caractères au format JSON.
      * @param null|array $criterias
      *
      * @return array
      */
-    public function getReportData($queryBuilder, $criterias=null) {
+    public function getReportData($querybuilder, $criterias=null) {
         global $DB;
 
-        $condition = json_decode($queryBuilder);
+        $condition = json_decode($querybuilder);
 
         $with = $this->WithProgramme;
         $select = 'SELECT ROW_NUMBER() OVER (ORDER BY p.groupid,p.activityid,p.calendartypeid,p.cityid ASC) AS row_num, p.* ';
@@ -137,7 +137,7 @@ class report extends \local_apsolu\local\statistics\report {
         $orderby = "";
         $from = 'FROM programme p ';
 
-        if(property_exists($condition, "sql")) {
+        if (property_exists($condition, "sql")) {
             $where .= " AND ". $condition->sql;
         }
         if (!is_null($criterias)) {
@@ -149,17 +149,17 @@ class report extends \local_apsolu\local\statistics\report {
             }
         }
 
-        if(property_exists($condition, "having")) {
+        if (property_exists($condition, "having")) {
             $having = 'HAVING '.$condition->having;
         }
 
-        if(property_exists($condition, "order")) {
+        if (property_exists($condition, "order")) {
             $orderby = 'ORDER BY '.$condition->order;
         }
 
         $sql = $with. $select . $from . $where . $groupby . $having . $orderby;
 
-        if(property_exists($condition, "params")) {
+        if (property_exists($condition, "params")) {
             return $DB->get_records_sql($sql, $condition->params);
         } else {
             return $DB->get_records_sql($sql);

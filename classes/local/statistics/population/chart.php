@@ -14,17 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe pour les statistiques APSOLU.
- *
- * @package    local_apsolu
- * @copyright  2019 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace local_apsolu\local\statistics\population;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Classe pour les statistiques APSOLU.
@@ -53,9 +43,9 @@ class chart {
 
         if (isset($options['criterias'])) {
             $criterias = [];
-            // Get selected city
+            // Get selected city.
             if (isset($options['criterias']['cities'])) {
-                foreach ($options['criterias']['cities'] as $city){
+                foreach ($options['criterias']['cities'] as $city) {
                     $city = (object)$city;
                     if (property_exists($city, 'active')) {
                         $criterias["cityid"] = $city->id;
@@ -63,9 +53,9 @@ class chart {
                 }
             }
 
-            // Get selected calendar type
+            // Get selected calendar type.
             if (isset($options['criterias']['calendarstypes'])) {
-                foreach ($options['criterias']['calendarstypes'] as $calendarstype){
+                foreach ($options['criterias']['calendarstypes'] as $calendarstype) {
                     $calendarstype = (object)$calendarstype;
                     if (property_exists($calendarstype, 'active')) {
                         $criterias["calendarstypeid"] = $calendarstype->id;
@@ -77,17 +67,18 @@ class chart {
             $result = \local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid']);
         }
 
-        $Enrolments = json_decode($result['data']);
-        if (!empty($Enrolments)){
+        $enrolments = json_decode($result['data']);
+        if (!empty($enrolments)) {
             $count = 0;
             $data = [];
-            foreach ($Enrolments as $enrol) {
+            foreach ($enrolments as $enrol) {
                 $data['labels'][$count] = $enrol->institution;
                 $data['series_accepted'][$count] = $enrol->accepted;
                 $data['series_refused'][$count] = $enrol->refused;
                 $count++;
             }
-            $accepted = new \core\chart_series(get_string("statistics_accepted_atleastonce", "local_apsolu"), $data['series_accepted']);
+            $accepted = new \core\chart_series(get_string("statistics_accepted_atleastonce", "local_apsolu"),
+                $data['series_accepted']);
             $refused = new \core\chart_series(get_string("statistics_refused_anywhere", "local_apsolu"), $data['series_refused']);
             $chart = new \core\chart_bar();
             $chart->set_stacked(true);
@@ -113,7 +104,7 @@ class chart {
             $criterias = [];
 
             if (isset($options['criterias']['complementaries'])) {
-                foreach ($options['criterias']['complementaries'] as $activity){
+                foreach ($options['criterias']['complementaries'] as $activity) {
                     $activity = (object)$activity;
                     if (property_exists($activity, 'active')) {
                         $criterias["activityid"] = $activity->id;
@@ -125,13 +116,13 @@ class chart {
             $result = \local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid']);
         }
 
-        $Enrolments = json_decode($result['data']);
+        $enrolments = json_decode($result['data']);
 
-        if (!empty($Enrolments)){
+        if (!empty($enrolments)) {
             $data = [];
             $data['labels'] = [];
             $data['serie'] = [];
-            foreach ($Enrolments as $enrol) {
+            foreach ($enrolments as $enrol) {
 
                 if (!array_key_exists($enrol->institution, $data['labels'])) {
                     $data['labels'][$enrol->institution] = $enrol->institution;
@@ -160,13 +151,13 @@ class chart {
      */
     public static function custom_apsoluhighlevelathlete($options) {
         $result = \local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid']);
-        $Enrolments = json_decode($result['data']);
+        $enrolments = json_decode($result['data']);
 
-        if (!empty($Enrolments)){
+        if (!empty($enrolments)) {
             $data = [];
             $data['labels'] = [];
             $data['serie'] = [];
-            foreach ($Enrolments as $enrol) {
+            foreach ($enrolments as $enrol) {
                 $label = $enrol->institution . " - " . $enrol->ufr;
                 if (!array_key_exists($label, $data['labels'])) {
                     $data['labels'][$label] = $label;
@@ -199,9 +190,9 @@ class chart {
 
         if (isset($options['criterias'])) {
             $criterias = [];
-            // Get selected city
+            // Get selected city.
             if (isset($options['criterias']['cities'])) {
-                foreach ($options['criterias']['cities'] as $city){
+                foreach ($options['criterias']['cities'] as $city) {
                     $city = (object)$city;
                     if (property_exists($city, 'active')) {
                         $criterias["cityid"] = $city->id;
@@ -209,9 +200,9 @@ class chart {
                 }
             }
 
-            // Get selected calendar type
+            // Get selected calendar type.
             if (isset($options['criterias']['calendarstypes'])) {
-                foreach ($options['criterias']['calendarstypes'] as $calendarstype){
+                foreach ($options['criterias']['calendarstypes'] as $calendarstype) {
                     $calendarstype = (object)$calendarstype;
                     if (property_exists($calendarstype, 'active')) {
                         $criterias["calendarstypeid"] = $calendarstype->id;
@@ -223,16 +214,16 @@ class chart {
             $result = \local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid']);
         }
 
-        $Enrolments = json_decode($result['data']);
+        $enrolments = json_decode($result['data']);
 
-        if (!empty($Enrolments)){
+        if (!empty($enrolments)) {
             $count = -1;
             $data = [];
             $institution = "";
             $userprofiles = [];
-            foreach ($Enrolments as $enrol) {
+            foreach ($enrolments as $enrol) {
 
-                if (!in_array ($enrol->userprofile, $userprofiles )){
+                if (!in_array ($enrol->userprofile, $userprofiles)) {
                     $userprofiles[] = $enrol->userprofile;
                 }
 
@@ -253,7 +244,7 @@ class chart {
             foreach ($userprofiles as $userprofile) {
                 $dataserie = $data['series'][$userprofile];
                 foreach ($data['labels'] as $key => $institution) {
-                    if (!array_key_exists ( $key , $dataserie )){
+                    if (!array_key_exists($key, $dataserie)) {
                         $dataserie[$key] = 0;
                     }
                 }
@@ -291,9 +282,9 @@ class chart {
 
         if (isset($options['criterias'])) {
             $criterias = [];
-            // Get selected city
+            // Get selected city.
             if (isset($options['criterias']['cities'])) {
-                foreach ($options['criterias']['cities'] as $city){
+                foreach ($options['criterias']['cities'] as $city) {
                     $city = (object)$city;
                     if (property_exists($city, 'active')) {
                         $criterias["cityid"] = $city->id;
@@ -301,9 +292,9 @@ class chart {
                 }
             }
 
-            // Get selected calendar type
+            // Get selected calendar type.
             if (isset($options['criterias']['calendarstypes'])) {
-                foreach ($options['criterias']['calendarstypes'] as $calendarstype){
+                foreach ($options['criterias']['calendarstypes'] as $calendarstype) {
                     $calendarstype = (object)$calendarstype;
                     if (property_exists($calendarstype, 'active')) {
                         $criterias["calendarstypeid"] = $calendarstype->id;
@@ -315,16 +306,16 @@ class chart {
             $result = \local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid']);
         }
 
-        $Enrolments = json_decode($result['data']);
+        $enrolments = json_decode($result['data']);
 
-        if (!empty($Enrolments)){
+        if (!empty($enrolments)) {
             $count = -1;
             $data = [];
             $institution = "";
             $genders = [];
-            foreach ($Enrolments as $enrol) {
+            foreach ($enrolments as $enrol) {
 
-                if (!in_array ( ($enrol->gender == "" ? "Inconnu" : $enrol->gender) , $genders )){
+                if (!in_array ( ($enrol->gender == "" ? "Inconnu" : $enrol->gender) , $genders )) {
                     $genders[] = ($enrol->gender == "" ? "Inconnu" : $enrol->gender);
                 }
 
@@ -345,7 +336,7 @@ class chart {
             foreach ($genders as $gender) {
                 $dataserie = $data['series'][$gender];
                 foreach ($data['labels'] as $key => $institution) {
-                    if (!array_key_exists ( $key , $dataserie )){
+                    if (!array_key_exists ( $key , $dataserie )) {
                         $dataserie[$key] = 0;
                     }
                 }
@@ -381,18 +372,18 @@ class chart {
     public static function enrol_roles($options) {
         if (isset($options['criterias'])) {
             $criterias = [];
-            // Get selected city
+            // Get selected city.
             if (isset($options['criterias']['cities'])) {
-                foreach ($options['criterias']['cities'] as $city){
+                foreach ($options['criterias']['cities'] as $city) {
                     $city = (object)$city;
                     if (property_exists($city, 'active')) {
                         $criterias["cityid"] = $city->id;
                     }
                 }
             }
-            // Get selected calendar type
+            // Get selected calendar type.
             if (isset($options['criterias']['calendarstypes'])) {
-                foreach ($options['criterias']['calendarstypes'] as $calendarstype){
+                foreach ($options['criterias']['calendarstypes'] as $calendarstype) {
                     $calendarstype = (object)$calendarstype;
                     if (property_exists($calendarstype, 'active')) {
                         $criterias["calendarstypeid"] = $calendarstype->id;
@@ -404,17 +395,17 @@ class chart {
             $result = \local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid']);
         }
 
-        $Enrolments = json_decode($result['data']);
+        $enrolments = json_decode($result['data']);
 
-        if (!empty($Enrolments)){
+        if (!empty($enrolments)) {
             $count = -1;
             $data = [];
             $institution = "";
             $roles = [];
 
-            foreach ($Enrolments as $enrol) {
+            foreach ($enrolments as $enrol) {
 
-                if (!in_array ( $enrol->roleshortname , $roles )){
+                if (!in_array ( $enrol->roleshortname , $roles )) {
                     $roles[] = $enrol->roleshortname;
                 }
 
@@ -435,7 +426,7 @@ class chart {
             foreach ($roles as $role) {
                 $dataserie = $data['series'][$role];
                 foreach ($data['labels'] as $key => $institution) {
-                    if (!array_key_exists ( $key , $dataserie )){
+                    if (!array_key_exists ( $key , $dataserie )) {
                         $dataserie[$key] = 0;
                     }
                 }

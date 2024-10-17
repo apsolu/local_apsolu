@@ -14,17 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe de rendu.
- *
- * @package    local_apsolu
- * @copyright  2019 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
+// phpcs:disable moodle.NamingConventions.ValidFunctionName.LowercaseMethod
 namespace local_apsolu\output;
-
-defined('MOODLE_INTERNAL') || die;
 
 use plugin_renderer_base;
 
@@ -48,29 +39,28 @@ class renderer extends plugin_renderer_base {
         $result = (object)\local_apsolu_webservices::get_chartdataset($options);
 
         if ($result->success) {
-            $htmlId = uniqid();
+            $htmlid = uniqid();
 
-            // filtres
-            $htmlChartfilter = "";
+            // Filtres.
+            $htmlchartfilter = "";
             if (isset($options['criterias'])) {
-                $htmlChartfilter = $this->render_from_template('local_apsolu/statistics_chart_filters',  (object) [
-                  'uniqid' => $htmlId,
+                $htmlchartfilter = $this->render_from_template('local_apsolu/statistics_chart_filters',  (object) [
+                  'uniqid' => $htmlid,
                   'options' => json_encode($options),
                 ]);
             }
 
-            // Rendu graphique
-            $htmlChart = $this->render_from_template('core/chart', (object) [
-            'uniqid' => $htmlId,
+            // Rendu graphique.
+            $htmlchart = $this->render_from_template('core/chart', (object) [
+            'uniqid' => $htmlid,
             'chartdata' => $result->chartdata,
             'withtable' => true,
             ]);
 
-            return $htmlChartfilter.$htmlChart;
+            return $htmlchartfilter.$htmlchart;
         } else {
             return get_string("statistics_noavailabledata", "local_apsolu");
         }
-
     }
 
     /**
@@ -82,14 +72,15 @@ class renderer extends plugin_renderer_base {
      */
     public function render_reportCounter($options=[]) {
         if (isset($options['criterias'])) {
-            $result = (object)\local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid'], null, $options['criterias']);
+            $result = (object)\local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid'],
+                null, $options['criterias']);
         } else {
             $result = (object)\local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid']);
         }
 
         if ($result->success) {
-            $Enrolments = json_decode($result->data);
-            return count($Enrolments);
+            $enrolments = json_decode($result->data);
+            return count($enrolments);
         } else {
             return get_string("statistics_noavailabledata", "local_apsolu");
         }
@@ -104,14 +95,15 @@ class renderer extends plugin_renderer_base {
      */
     public function render_reportCounterSum($options=[]) {
         if (isset($options['criterias'])) {
-            $result = (object)\local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid'], null, $options['criterias']);
+            $result = (object)\local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid'],
+                null, $options['criterias']);
         } else {
             $result = (object)\local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid']);
         }
 
         if ($result->success) {
-            $Enrolments = json_decode($result->data);
-            return $Enrolments[0]->total;
+            $enrolments = json_decode($result->data);
+            return $enrolments[0]->total;
         } else {
             return get_string("statistics_noavailabledata", "local_apsolu");
         }
@@ -126,14 +118,15 @@ class renderer extends plugin_renderer_base {
      */
     public function render_reportData($options=[]) {
         if (isset($options['criterias'])) {
-            $result = (object)\local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid'], null, $options['criterias']);
+            $result = (object)\local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid'],
+                null, $options['criterias']);
         } else {
             $result = (object)\local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid']);
         }
 
         if ($result->success) {
-            $Enrolments = json_decode($result->data);
-            return $Enrolments;
+            $enrolments = json_decode($result->data);
+            return $enrolments;
         } else {
             return get_string("statistics_noavailabledata", "local_apsolu");
         }

@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe gérant les rôles.
- *
- * @package   local_apsolu
- * @copyright 2023 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace local_apsolu\core;
 
 use stdClass;
@@ -94,8 +86,8 @@ class role extends record {
      *
      * @return array Un tableau d'objets instanciés.
      */
-    public static function get_records(array $conditions = null, string $sort = '', string $fields = '*',
-        int $limitfrom = 0, int $limitnum = 0) {
+    public static function get_records(?array $conditions = null, string $sort = '', string $fields = '*',
+                                       int $limitfrom = 0, int $limitnum = 0) {
         global $DB;
 
         $sql = "SELECT r.id, r.name, r.shortname, r.description, r.sortorder, r.archetype, ar.color, ar.fontawesomeid
@@ -159,7 +151,7 @@ class role extends record {
      *
      * @return void
      */
-    public function save(object $data = null, object $mform = null) {
+    public function save(?object $data = null, ?object $mform = null) {
         global $DB;
 
         if ($data !== null) {

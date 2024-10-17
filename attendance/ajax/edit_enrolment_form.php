@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe pour le formulaire permettant de prendre les présences.
- *
- * @package    local_apsolu
- * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir.'/formslib.php');
@@ -75,7 +67,7 @@ class edit_enrolment_form extends moodleform {
 
         $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
-        // Finally set the current form data
+        // Finally set the current form data.
         $this->set_data($data);
     }
 }

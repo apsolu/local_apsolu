@@ -35,7 +35,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \core_message\external\email
  */
-class email_test extends externallib_advanced_testcase {
+final class email_test extends externallib_advanced_testcase {
     /**
      * Setup testcase.
      */
@@ -56,9 +56,10 @@ class email_test extends externallib_advanced_testcase {
     /**
      * Test send_instant_emails.
      *
+     * @covers ::send_instant_emails()
      * @runInSeparateProcess
      */
-    public function test_send_instant_emails() {
+    public function test_send_instant_emails(): void {
         global $CFG, $DB;
 
         $this->resetAfterTest();
@@ -116,9 +117,10 @@ class email_test extends externallib_advanced_testcase {
     /**
      * Test send_instant_emails with no capabilities.
      *
+     * @covers ::send_instant_emails_no_capability()
      * @runInSeparateProcess
      */
-    public function test_send_instant_emails_no_capability() {
+    public function test_send_instant_emails_no_capability(): void {
         global $CFG, $DB;
 
         $this->resetAfterTest(true);
@@ -153,8 +155,10 @@ class email_test extends externallib_advanced_testcase {
 
     /**
      * Test send_instant_emails when emailbulkmessaging is disabled.
+     *
+     * @covers ::send_instant_emails_emailbulkmessaging_disabled()
      */
-    public function test_send_instant_emails_emailbulkmessaging_disabled() {
+    public function test_send_instant_emails_emailbulkmessaging_disabled(): void {
         global $CFG;
 
         $this->resetAfterTest(true);

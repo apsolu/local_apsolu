@@ -21,21 +21,22 @@
  * @copyright  2019 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use local_apsolu\local\statistics\population\report;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once('../../externallib.php');
-
-use local_apsolu\local\statistics\population\report;
 
 $report = new report();
 $data = new stdClass();
 
 // Output.
 $PAGE->requires->jquery();
-$PAGE->requires->css( new moodle_url($CFG->wwwroot . '/local/apsolu/lib/jquery/jQuery-QueryBuilder/css/query-builder.default.min.css'));
-$PAGE->requires->css('/local/apsolu/lib/jquery/DataTables/datatables.min.css');
+$PAGE->requires->css(new moodle_url('/local/apsolu/lib/jquery/jQuery-QueryBuilder/css/query-builder.default.min.css'));
+$PAGE->requires->css(new moodle_url('/local/apsolu/lib/jquery/DataTables/datatables.min.css'));
 
-if ($CFG->is_siuaps_rennes){
+if ($CFG->is_siuaps_rennes) {
     $data->is_siuaps_rennes = $CFG->is_siuaps_rennes;
 }
 $data->Filters = $report->getFilters();

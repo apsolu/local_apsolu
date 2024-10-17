@@ -45,7 +45,8 @@ require_capability('moodle/course:update', $context);
 
 $PAGE->set_context($context);
 
-$data = (object) ['userid' => $userid, 'courseid' => $courseid, 'enrolid' => $enrolid, 'statusid' => $statusid, 'roleid' => $roleid];
+$data = (object) ['userid' => $userid, 'courseid' => $courseid,
+    'enrolid' => $enrolid, 'statusid' => $statusid, 'roleid' => $roleid];
 $statuses = [];
 foreach (enrol_select_plugin::$states as $stateid => $state) {
     $statuses[$stateid] = enrol_select_plugin::get_enrolment_list_name($stateid);
@@ -72,7 +73,8 @@ if ($data = $mform->get_data()) {
         $instance = $DB->get_record('enrol', ['id' => $enrolid, 'enrol' => 'select'], '*', MUST_EXIST);
 
         $enrolselectplugin = new enrol_select_plugin();
-        $enrolselectplugin->enrol_user($instance, $student->id, $data->roleid, $timestart = 0, $timeend = 0, $status = $data->statusid, $recovergrades = null);
+        $enrolselectplugin->enrol_user($instance, $student->id, $data->roleid, $timestart = 0, $timeend = 0,
+            $status = $data->statusid, $recovergrades = null);
 
         $json->status = $statuses[$data->statusid];
         $json->statusid = $data->statusid;

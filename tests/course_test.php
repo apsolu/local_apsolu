@@ -14,19 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Teste la classe local_apsolu\core\course
- *
- * @package    local_apsolu
- * @category   test
- * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-namespace local_apsolu\core;
+namespace local_apsolu;
 
 use coding_exception;
+use local_apsolu\core\attendancesession;
+use local_apsolu\core\category;
+use local_apsolu\core\course;
+use local_apsolu\core\period;
 use moodle_exception;
+
+defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 
@@ -36,12 +33,12 @@ require_once($CFG->dirroot.'/course/lib.php');
  * Classe de tests pour local_apsolu\core\course
  *
  * @package    local_apsolu
- * @category   test
  * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @coversDefaultClass \local_apsolu\core\course
  */
-class course_test extends \advanced_testcase {
-    protected function setUp() : void {
+final class course_test extends \advanced_testcase {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->setAdminUser();
@@ -49,7 +46,12 @@ class course_test extends \advanced_testcase {
         $this->resetAfterTest();
     }
 
-    public function test_delete() {
+    /**
+     * Teste delete().
+     *
+     * @covers ::delete()
+     */
+    public function test_delete(): void {
         global $DB;
 
         $course = new course();
@@ -76,7 +78,12 @@ class course_test extends \advanced_testcase {
         $this->assertSame(0, $countrecords);
     }
 
-    public function test_get_session_offset() {
+    /**
+     * Teste get_session_offset().
+     *
+     * @covers ::get_session_offset()
+     */
+    public function test_get_session_offset(): void {
         $course = new course();
         $course->numweekday = 3; // Mercredi.
         $course->starttime = '16:35';
@@ -96,7 +103,12 @@ class course_test extends \advanced_testcase {
         }
     }
 
-    public function test_get_records() {
+    /**
+     * Teste get_records().
+     *
+     * @covers ::get_records()
+     */
+    public function test_get_records(): void {
         global $DB;
 
         $course = new course();
@@ -120,7 +132,12 @@ class course_test extends \advanced_testcase {
         $this->assertSame(2, $countrecords);
     }
 
-    public function test_load() {
+    /**
+     * Teste load().
+     *
+     * @covers ::load()
+     */
+    public function test_load(): void {
         // Charge un objet inexistant.
         $course = new course();
         $course->load(1);
@@ -139,7 +156,12 @@ class course_test extends \advanced_testcase {
         $this->assertSame($course->fullname, $test->fullname);
     }
 
-    public function test_save() {
+    /**
+     * Teste save().
+     *
+     * @covers ::save()
+     */
+    public function test_save(): void {
         global $DB;
 
         $course = new course();
@@ -203,8 +225,14 @@ class course_test extends \advanced_testcase {
         $this->assertSame($countsessions, count($course->get_sessions()));
     }
 
-    public function test_set_sessions() {
-        // TODO: tester que les sessions crées à la main en dehors de la période ne sont pas supprimées lors d'un changement de période.
+    /**
+     * Teste set_sessions().
+     *
+     * @covers ::set_sessions()
+     */
+    public function test_set_sessions(): void {
+        // TODO: tester que les sessions crées à la main en dehors de la période ne sont pas supprimées lors
+        // d'un changement de période.
 
         // Période incluant les 2 prochaines semaines à venir.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_period_data('p1');
@@ -303,7 +331,12 @@ class course_test extends \advanced_testcase {
         }
     }
 
-    public function test_toggle_visibility() {
+    /**
+     * Teste toggle_visibility().
+     *
+     * @covers ::toggle_visibility()
+     */
+    public function test_toggle_visibility(): void {
         global $DB;
 
         $this->setAdminUser();

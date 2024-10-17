@@ -96,7 +96,8 @@ if (has_capability('local/apsolu:editgradesafterdeadline', context_system::insta
     $calendar = $DB->get_record('apsolu_calendars', ['id' => $apsolugradeitem->calendarid], '*', MUST_EXIST);
 
     $now = time();
-    $canedit = ((empty($calendar->gradestartdate) || $now > $calendar->gradestartdate) && (empty($calendar->gradeenddate) || $now < $calendar->gradeenddate));
+    $canedit = ((empty($calendar->gradestartdate) || $now > $calendar->gradestartdate) &&
+        (empty($calendar->gradeenddate) || $now < $calendar->gradeenddate));
     if ($canedit === false) {
         throw new moodle_exception('nopermissions', 'error', '', get_capability_string('local/apsolu:editgradesafterdeadline'));
     }

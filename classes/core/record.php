@@ -14,16 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe faisant le lien entre les classes PHP apsolu et la base de données Moodle.
- *
- * Elle regroupe les méthodes de base communes à tous les objets apsolu.
- *
- * @package    local_apsolu
- * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace local_apsolu\core;
 
 /**
@@ -41,7 +31,7 @@ abstract class record {
      *
      * @return string
      */
-    public function __tostring() {
+    public function __toString() {
         return $this->name;
     }
 
@@ -73,7 +63,8 @@ abstract class record {
      *
      * @return array Un tableau d'objets instanciés.
      */
-    public static function get_records(array $conditions = null, string $sort = '', string $fields = '*', int $limitfrom = 0, int $limitnum = 0) {
+    public static function get_records(?array $conditions = null, string $sort = '', string $fields = '*',
+                                       int $limitfrom = 0, int $limitnum = 0) {
         global $DB;
 
         $classname = get_called_class();
@@ -93,7 +84,8 @@ abstract class record {
      * Charge un objet à partir de son identifiant.
      *
      * @param int|string $recordid Identifiant de l'objet à charger.
-     * @param bool       $required Si true, lève une exception lorsque l'objet n'existe pas. Valeur par défaut: false (pas d'exception levée).
+     * @param bool       $required Si true, lève une exception lorsque l'objet n'existe pas.
+     *                             Valeur par défaut: false (pas d'exception levée).
      *
      * @return void
      */
@@ -124,7 +116,7 @@ abstract class record {
      *
      * @return void
      */
-    public function save(object $data = null, object $mform = null) {
+    public function save(?object $data = null, ?object $mform = null) {
         global $DB;
 
         if ($data !== null) {

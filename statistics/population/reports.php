@@ -28,21 +28,20 @@ require_once($CFG->dirroot.'/local/apsolu/statistics/population/report_form.php'
 
 use local_apsolu\local\statistics\population\report;
 
-
-// Output
+// Output.
 $PAGE->requires->js_call_amd('local_apsolu/population_reports', 'init', [".report-enrolList-table"]);
 $PAGE->requires->css('/local/apsolu/lib/jquery/DataTables/datatables.min.css');
 
-// Data
+// Data.
 $data = new stdClass();
-if ($CFG->is_siuaps_rennes){
+if ($CFG->is_siuaps_rennes) {
     $data->is_siuaps_rennes = $CFG->is_siuaps_rennes;
 }
 
 $report = new report();
 $reportid = optional_param('reportid', null, PARAM_TEXT);
 $reportdata = [$report->getReport(), $reportid];
-$mform = new local_apsolu_statistics_report_form(null, $reportdata);
+$mform = new local_apsolu_statistics_population_report_form(null, $reportdata);
 
 echo $OUTPUT->header();
 echo $OUTPUT->tabtree($tabtree, $page);

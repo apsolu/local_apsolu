@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe pour gérer un formulaire Moodle.
- *
- * @package    local_apsolu
- * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/formslib.php');
@@ -33,7 +25,7 @@ require_once($CFG->libdir . '/formslib.php');
  * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_apsolu_statistics_report_form extends moodleform {
+class local_apsolu_statistics_programme_report_form extends moodleform {
     /**
      * Définit les champs du formulaire.
      *

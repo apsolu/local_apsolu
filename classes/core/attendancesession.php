@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe gérant les sessions/séances de cours.
- *
- * @package    local_apsolu
- * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace local_apsolu\core;
 
 use context_course;
@@ -125,7 +117,7 @@ class attendancesession extends record {
      *
      * @return void
      */
-    public function save(object $data = null, object $mform = null) {
+    public function save(?object $data = null, ?object $mform = null) {
         global $DB;
 
         if ($data !== null) {
@@ -170,6 +162,7 @@ class attendancesession extends record {
         $params->count = $count;
         $params->strdatetime = userdate($this->sessiontime, get_string('strftimedaydatetime'));
 
-        $this->name = get_string('session_:count:_of_the_:strdatetime:', 'local_apsolu', $params); // Exemple: Cours n°2 du mercredi 12 septembre à 18h30.
+        // Exemple de format utilisé : Cours n°2 du mercredi 12 septembre à 18h30.
+        $this->name = get_string('session_:count:_of_the_:strdatetime:', 'local_apsolu', $params);
     }
 }

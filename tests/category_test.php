@@ -14,29 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Teste la classe local_apsolu\core\category
- *
- * @package    local_apsolu
- * @category   test
- * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace local_apsolu;
 
-namespace local_apsolu\core;
-
+use local_apsolu\core\category;
+use local_apsolu\core\course;
 use moodle_exception;
 
 /**
  * Classe de tests pour local_apsolu\core\category
  *
  * @package    local_apsolu
- * @category   test
  * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @coversDefaultClass \local_apsolu\core\category
  */
-class category_test extends \advanced_testcase {
-    protected function setUp() : void {
+final class category_test extends \advanced_testcase {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->setAdminUser();
@@ -44,7 +37,12 @@ class category_test extends \advanced_testcase {
         $this->resetAfterTest();
     }
 
-    public function test_delete() {
+    /**
+     * Teste delete().
+     *
+     * @covers ::delete()
+     */
+    public function test_delete(): void {
         global $DB;
 
         $category = new category();
@@ -73,7 +71,12 @@ class category_test extends \advanced_testcase {
         $this->assertSame(0, $countrecords);
     }
 
-    public function test_get_records() {
+    /**
+     * Teste get_records().
+     *
+     * @covers ::get_records()
+     */
+    public function test_get_records(): void {
         global $DB;
 
         $category = new category();
@@ -97,7 +100,12 @@ class category_test extends \advanced_testcase {
         $this->assertSame(2, $countrecords);
     }
 
-    public function test_load() {
+    /**
+     * Teste delete().
+     *
+     * @covers ::delete()
+     */
+    public function test_load(): void {
         // Charge un objet inexistant.
         $category = new category();
         $category->load(1);
@@ -116,7 +124,12 @@ class category_test extends \advanced_testcase {
         $this->assertSame($category->name, $test->name);
     }
 
-    public function test_save() {
+    /**
+     * Teste save().
+     *
+     * @covers ::save()
+     */
+    public function test_save(): void {
         global $DB;
 
         $category = new category();

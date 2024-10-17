@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// phpcs:disable moodle.NamingConventions.ValidVariableName.VariableNameUnderscore
+
 use UniversiteRennes2\Apsolu\Payment;
 use local_apsolu\core\attendance;
 use local_apsolu\core\customfields;
@@ -156,8 +158,9 @@ if ($session === false) {
 $customfields = customfields::getCustomFields();
 
 // Récupérer tous les inscrits.
-// TODO: jointure avec colleges
-$sql = "SELECT u.*, ue.id AS ueid, ue.status, ue.timestart, ue.timeend, ue.enrolid, e.enrol, ra.id AS raid, ra.roleid, uid1.data AS apsolusesame".
+// TODO: jointure avec colleges.
+$sql = "SELECT u.*, ue.id AS ueid, ue.status, ue.timestart, ue.timeend, ue.enrolid,
+               e.enrol, ra.id AS raid, ra.roleid, uid1.data AS apsolusesame".
     " FROM {user} u".
     " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = :apsolusesame".
     " JOIN {user_enrolments} ue ON u.id = ue.userid".
@@ -244,15 +247,12 @@ $args = [
 
 // TODO: à revoir...
 $url = new moodle_url('/local/apsolu/attendance/edit.php', ['courseid' => $courseid]);
-/*
-$mform = new edit_form($url, $args);
-$mform->display();
-*/
 
 $course_presences = attendance::getCoursePresences($courseid);
 $activity_presences = attendance::getActivityPresences($course->category);
 
-$presences = $DB->get_records('apsolu_attendance_presences', ['sessionid' => $sessionid], $sort = '', $fields = 'studentid, statusid, description, id');
+$presences = $DB->get_records('apsolu_attendance_presences', ['sessionid' => $sessionid],
+    $sort = '', $fields = 'studentid, statusid, description, id');
 
 $roles = role_fix_names($DB->get_records('role'));
 
@@ -349,7 +349,7 @@ $table->data = [];
 
 $statuses = $DB->get_records('apsolu_attendance_statuses', $conditions = null, $sort = 'sortorder');
 
-$authorizedUsers = enrol_select_plugin::get_authorized_registred_users($courseid, $session->sessiontime, $session->sessiontime);
+$authorizedusers = enrol_select_plugin::get_authorized_registred_users($courseid, $session->sessiontime, $session->sessiontime);
 
 $payments = Payment::get_users_cards_status_per_course($courseid);
 $paymentsimages = Payment::get_statuses_images();
@@ -383,13 +383,11 @@ foreach ($students as $student) {
             $found = true;
             $checked = 'checked="checked" ';
         }
-        $radios .= '<label><input type="radio" name="presences['.$student->id.']" value="'.$status->id.'" '.$checked.'/> '.$status->longlabel.'</label>';
+        $radios .= '<label><input type="radio" name="presences['.$student->id.']"
+            value="'.$status->id.'" '.$checked.'/> '.$status->longlabel.'</label>';
     }
 
     $status_style = '';
-    if ($found === false) {
-        // $status_style = ' class="table-warning"';
-    }
 
     if (isset($presences[$student->id]->description) === false) {
         $presences[$student->id] = new stdClass();
@@ -442,7 +440,7 @@ foreach ($students as $student) {
         }
     }
 
-    if (isset($authorizedUsers[$student->id]) === false) {
+    if (isset($authorizedusers[$student->id]) === false) {
         $informations[] = get_string('attendance_forbidden_enrolment', 'local_apsolu');
         $informations_style = 'table-danger';
     }
@@ -465,7 +463,7 @@ foreach ($students as $student) {
     }
 
     if (isset($student->enrolid) === true) {
-        $enrolment_link = '<a class="btn btn-default btn-secondary apsolu-attendance-edit-enrolments" data-userid="'.$student->id.'" data-courseid="'.$courseid.'" data-enrolid="'.$student->enrolid.'" data-statusid="'.$student->status.'" data-roleid="'.$student->roleid.'" href="'.$CFG->wwwroot.'/enrol/'.$student->enrol.'/manage.php?enrolid='.$student->enrolid.'">'.get_string('attendance_edit_enrolment', 'local_apsolu').'</a>';
+        $enrolment_link = '<a class="btn btn-default btn-secondary apsolu-attendance-edit-enrolments" data-userid="'.$student->id.'" data-courseid="'.$courseid.'" data-enrolid="'.$student->enrolid.'" data-statusid="'.$student->status.'" data-roleid="'.$student->roleid.'" href="'.$CFG->wwwroot.'/enrol/'.$student->enrol.'/manage.php?enrolid='.$student->enrolid.'">'.get_string('attendance_edit_enrolment', 'local_apsolu').'</a>'; // phpcs:ignore
     } else {
         $enrolment_link = get_string('attendance_ontime_enrolment', 'local_apsolu');
     }
@@ -487,7 +485,8 @@ foreach ($students as $student) {
         $cell->style = 'table-warning';
     }
     $cols[] = $cell;
-    $cols[] = '<textarea name="comment['.$student->id.']">'.htmlentities($presences[$student->id]->description, ENT_COMPAT, 'UTF-8').'</textarea>';
+    $cols[] = '<textarea name="comment['.$student->id.']">'.
+        htmlentities($presences[$student->id]->description, ENT_COMPAT, 'UTF-8').'</textarea>';
     $cols[] = '<ul><li>'.implode('</li><li>', $coursepresences[$student->id]).'</li></ul>';
     $cols[] = '<ul><li>'.implode('</li><li>', $activitypresences[$student->id]).'</li></ul>';
     $cell = new html_table_cell();
@@ -519,7 +518,8 @@ foreach ($students as $student) {
 
 $table->caption = get_string('attendance_table_caption', 'local_apsolu', (object) ['count_students' => count($table->data)]);
 
-echo '<form method="post" action="'.$CFG->wwwroot.'/local/apsolu/attendance/edit.php?courseid='.$courseid.'&amp;sessionid='.$sessionid.'" />';
+echo '<form method="post" action="'.$CFG->wwwroot.
+    '/local/apsolu/attendance/edit.php?courseid='.$courseid.'&amp;sessionid='.$sessionid.'" />';
 echo html_writer::table($table);
 echo '<p class="text-right">'.
     '<input class="btn btn-primary" type="submit" name="apsolu" value="'.get_string('savechanges').'" />';

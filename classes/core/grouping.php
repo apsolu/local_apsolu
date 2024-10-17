@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe gérant les groupements d'activités sportives (sous-catégories de cours Moodle).
- *
- * @package    local_apsolu
- * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace local_apsolu\core;
 
 use core_course_category;
@@ -92,8 +84,8 @@ class grouping extends record {
      *
      * @return array Un tableau d'objets instanciés.
      */
-    public static function get_records(array $conditions = null, string $sort = '', string $fields = '*',
-        int $limitfrom = 0, int $limitnum = 0) {
+    public static function get_records(?array $conditions = null, string $sort = '', string $fields = '*',
+                                       int $limitfrom = 0, int $limitnum = 0) {
         global $DB;
 
         if ($conditions !== null) {
@@ -134,7 +126,8 @@ class grouping extends record {
      * Charge un objet à partir de son identifiant.
      *
      * @param int|string $recordid Identifiant de l'objet à charger.
-     * @param bool       $required Si true, lève une exception lorsque l'objet n'existe pas. Valeur par défaut: false (pas d'exception levée).
+     * @param bool       $required Si true, lève une exception lorsque l'objet n'existe pas.
+     *                             Valeur par défaut: false (pas d'exception levée).
      *
      * @return void
      */
@@ -169,7 +162,7 @@ class grouping extends record {
      *
      * @return void
      */
-    public function save(object $data = null, object $mform = null) {
+    public function save(?object $data = null, ?object $mform = null) {
         global $DB;
 
         if ($data !== null) {

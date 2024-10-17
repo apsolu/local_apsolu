@@ -62,7 +62,7 @@ class status extends record {
      *
      * @return string
      */
-    public function __tostring() {
+    public function __toString() {
         return $this->longlabel;
     }
 
@@ -110,7 +110,7 @@ class status extends record {
      *
      * @return void
      */
-    public function save(object $data = null, object $mform = null) {
+    public function save(?object $data = null, ?object $mform = null) {
         global $DB;
 
         // TODO: implémenter le tri via l'interface web.

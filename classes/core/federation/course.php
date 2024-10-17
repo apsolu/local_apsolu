@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe gérant le cours FFSU.
- *
- * @package    local_apsolu
- * @copyright  2023 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace local_apsolu\core\federation;
 
 /**
@@ -80,14 +72,14 @@ class course {
             return $this->id;
         }
 
-        $federation_course = get_config('local_apsolu', 'federation_course');
+        $federationcourse = get_config('local_apsolu', 'federation_course');
 
-        if (empty($federation_course) === true) {
+        if (empty($federationcourse) === true) {
             $this->id = false;
             return $this->id;
         }
 
-        $this->id = $federation_course;
+        $this->id = $federationcourse;
         return $this->id;
     }
 }

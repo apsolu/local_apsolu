@@ -14,20 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Teste la classe local_apsolu\observer\course_category
- *
- * @package    local_apsolu
- * @category   test
- * @copyright  2021 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace local_apsolu\observer;
 
 use core_course_category;
 use local_apsolu\core\category;
 use local_apsolu\core\grouping;
+use local_apsolu\observer\course_category;
+
+defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 
@@ -41,8 +35,8 @@ require_once($CFG->dirroot.'/course/lib.php');
  * @copyright  2021 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class course_category_test extends \advanced_testcase {
-    protected function setUp() : void {
+final class course_category_test extends \advanced_testcase {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->setAdminUser();
@@ -51,7 +45,12 @@ class course_category_test extends \advanced_testcase {
         $this->resetAfterTest();
     }
 
-    public function test_deleted() {
+    /**
+     * Teste deleted().
+     *
+     * @covers ::deleted()
+     */
+    public function test_deleted(): void {
         global $DB;
 
         // Prépare les données.
@@ -110,7 +109,8 @@ class course_category_test extends \advanced_testcase {
         $this->assertSame(--$countapsolugroupings, $DB->count_records(grouping::TABLENAME));
         $this->assertSame(--$countapsolucategories, $DB->count_records(category::TABLENAME));
 
-        // Teste la suppression du catégorie de groupement d'activités APSOLU contenant une catégorie d'activité, en déplaçant la catégorie d'activité.
+        // Teste la suppression du catégorie de groupement d'activités APSOLU contenant une catégorie d'activité,
+        // en déplaçant la catégorie d'activité.
         $coursecat = core_course_category::get($category5->parent);
         $coursecat->delete_move($newparentid = 1, $showfeedback = false);
 
@@ -119,7 +119,12 @@ class course_category_test extends \advanced_testcase {
         $this->assertSame($countapsolucategories, $DB->count_records(category::TABLENAME));
     }
 
-    public function test_updated() {
+    /**
+     * Teste updated().
+     *
+     * @covers ::updated()
+     */
+    public function test_updated(): void {
         global $DB;
 
         $parent = $this->getDataGenerator()->create_category();

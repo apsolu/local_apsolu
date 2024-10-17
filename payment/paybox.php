@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// phpcs:disable moodle.Files.RequireLogin.Missing
+
 require(__DIR__.'/../../../config.php');
 require_once($CFG->dirroot.'/local/apsolu/locallib.php');
 require_once($CFG->dirroot.'/user/profile/lib.php');

@@ -22,11 +22,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace UniversiteRennes2\Apsolu;
+use local_apsolu\core\federation\course as FederationCourse;
 
 defined('MOODLE_INTERNAL') || die;
-
-use local_apsolu\core\federation\course as FederationCourse;
 
 require_once(__DIR__.'/../../locallib.php');
 
@@ -70,7 +68,7 @@ foreach ($DB->get_records_sql($sql) as $course) {
     $course->schedule = $course->starttime.'-'.$course->endtime;
 
 
-    $teachers = get_teachers($course->id);
+    $teachers = UniversiteRennes2\Apsolu\get_teachers($course->id);
     sort($teachers);
 
     $course->teachers = $teachers;
@@ -81,7 +79,7 @@ foreach ($DB->get_records_sql($sql) as $course) {
 
 $federationcourse = new FederationCourse();
 
-$data = new \stdClass();
+$data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
 $data->courses = array_values($courses);
 $data->count_courses = count($courses);
@@ -101,10 +99,11 @@ foreach ($attributes as $attribute) {
         continue;
     }
 
-    $parameters = new \stdClass();
+    $parameters = new stdClass();
     $parameters->url = $CFG->wwwroot.'/local/apsolu/configuration/index.php?page=messaging';
     $parameters->page = get_string('messaging', 'local_apsolu');
-    $data->notification = '<div class="alert alert-danger">'.get_string('the_fields_of_X_page_have_to_be_completed', 'local_apsolu', $parameters).'</div>';
+    $data->notification = html_writer::div(get_string('the_fields_of_X_page_have_to_be_completed', 'local_apsolu', $parameters),
+        'alert alert-danger');
     break;
 }
 

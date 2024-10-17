@@ -14,36 +14,34 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Teste la classe local_apsolu\core\period
- *
- * @package    local_apsolu
- * @category   test
- * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-namespace local_apsolu\core;
+namespace local_apsolu;
 
 use dml_write_exception;
+use local_apsolu\core\holiday;
+use local_apsolu\core\period;
 use stdClass;
 
 /**
  * Classe de tests pour local_apsolu\core\period
  *
  * @package    local_apsolu
- * @category   test
  * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @coversDefaultClass \local_apsolu\core\period
  */
-class period_test extends \advanced_testcase {
-    protected function setUp() : void {
+final class period_test extends \advanced_testcase {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->resetAfterTest();
     }
 
-    public function test_delete() {
+    /**
+     * Teste delete().
+     *
+     * @covers ::delete()
+     */
+    public function test_delete(): void {
         global $DB;
 
         $period = new period();
@@ -66,7 +64,12 @@ class period_test extends \advanced_testcase {
         $this->assertSame(0, $countrecords);
     }
 
-    public function test_get_records() {
+    /**
+     * Teste get_records().
+     *
+     * @covers ::get_records()
+     */
+    public function test_get_records(): void {
         global $DB;
 
         $period = new period();
@@ -90,7 +93,12 @@ class period_test extends \advanced_testcase {
         $this->assertSame(2, $countrecords);
     }
 
-    public function test_load() {
+    /**
+     * Teste load().
+     *
+     * @covers ::load()
+     */
+    public function test_load(): void {
         // Charge un objet inexistant.
         $period = new period();
         $period->load(1);
@@ -109,7 +117,12 @@ class period_test extends \advanced_testcase {
         $this->assertSame($period->name, $test->name);
     }
 
-    public function test_get_sessions() {
+    /**
+     * Teste get_sessions().
+     *
+     * @covers ::get_sessions()
+     */
+    public function test_get_sessions(): void {
         // Génère les jours fériés.
         foreach (holiday::get_holidays(2020) as $holidaytimestamp) {
             $holiday = new holiday();
@@ -133,7 +146,12 @@ class period_test extends \advanced_testcase {
         $this->assertArrayNotHasKey(mktime(15, 0, 0, 7, 14, 2020), $sessions);
     }
 
-    public function test_save() {
+    /**
+     * Teste save().
+     *
+     * @covers ::save()
+     */
+    public function test_save(): void {
         global $DB;
 
         $period = new period();

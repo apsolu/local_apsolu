@@ -1,4 +1,6 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -11,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Web service local plugin template external functions and service definitions.
  *
@@ -19,9 +22,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 // We defined the web service functions to install.
 $functions = [
-    // Function get_users().
+    // Fonction get_users().
     'local_apsolu_get_users' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_users',
@@ -31,7 +36,7 @@ $functions = [
         'loginrequired' => true,
         'ajax' => true,
     ],
-    // Function get_activities().
+    // Fonction get_activities().
     'local_apsolu_get_activities' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_activities',
@@ -41,7 +46,7 @@ $functions = [
         'loginrequired' => true,
         'ajax' => true,
     ],
-    // Function get_courses().
+    // Fonction get_courses().
     'local_apsolu_get_courses' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_courses',
@@ -51,7 +56,7 @@ $functions = [
         'loginrequired' => true,
         'ajax' => true,
     ],
-    // Function get_courses_list().
+    // Fonction get_courses_list().
     'local_apsolu_get_courses_list' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_courses_list',
@@ -61,7 +66,7 @@ $functions = [
         'loginrequired' => false,
         'ajax' => true,
     ],
-    // Function get_groupings().
+    // Fonction get_groupings().
     'local_apsolu_get_groupings' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_groupings',
@@ -71,7 +76,7 @@ $functions = [
         'loginrequired' => false,
         'ajax' => true,
     ],
-    // Function get_registrations().
+    // Fonction get_registrations().
     'local_apsolu_get_registrations' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_registrations',
@@ -81,7 +86,7 @@ $functions = [
         'loginrequired' => true,
         'ajax' => true,
     ],
-    // Function get_sports().
+    // Fonction get_sports().
     'local_apsolu_get_sports' => [
         'classname'     => 'local_apsolu_webservices',
         'methodname'    => 'get_sports',
@@ -91,7 +96,7 @@ $functions = [
         'loginrequired' => false,
         'ajax'          => true,
     ],
-    // Function get_unenrolments().
+    // Fonction get_unenrolments().
     'local_apsolu_get_unenrolments' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_unenrolments',
@@ -101,7 +106,7 @@ $functions = [
         'loginrequired' => true,
         'ajax' => true,
     ],
-    // Function get_teachers().
+    // Fonction get_teachers().
     'local_apsolu_get_teachers' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_teachers',
@@ -111,7 +116,7 @@ $functions = [
         'loginrequired' => true,
         'ajax' => true,
     ],
-    // Function get_attendances().
+    // Fonction get_attendances().
     'local_apsolu_get_attendances' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_attendances',
@@ -121,7 +126,7 @@ $functions = [
         'loginrequired' => true,
         'ajax' => true,
     ],
-    // Function set_card().
+    // Fonction set_card().
     'local_apsolu_set_card' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'set_card',
@@ -131,7 +136,7 @@ $functions = [
         'loginrequired' => true,
         'ajax' => true,
     ],
-    // Function set_presence().
+    // Fonction set_presence().
     'local_apsolu_set_presence' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'set_presence',
@@ -141,7 +146,7 @@ $functions = [
         'loginrequired' => true,
         'ajax' => true,
     ],
-    // Function debugging().
+    // Fonction debugging().
     'local_apsolu_debugging' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'debugging',
@@ -151,7 +156,7 @@ $functions = [
         'loginrequired' => true,
         'ajax' => true,
     ],
-    // Function get_chartdataset().
+    // Fonction get_chartdataset().
     'local_apsolu_get_chartdataset' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_chartdataset',
@@ -161,7 +166,7 @@ $functions = [
         'loginrequired' => true,
         'ajax' => true,
     ],
-    // Function get_reportdataset().
+    // Fonction get_reportdataset().
     'local_apsolu_get_reportdataset' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_reportdataset',
@@ -171,7 +176,7 @@ $functions = [
         'loginrequired' => true,
         'ajax' => true,
     ],
-    // Function get_reportfilters().
+    // Fonction get_reportfilters().
     'local_apsolu_get_reportfilters' => [
         'classname'   => 'local_apsolu_webservices',
         'methodname'  => 'get_reportfilters',

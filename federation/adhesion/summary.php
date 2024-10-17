@@ -138,8 +138,8 @@ if (empty($adhesion->federationnumber) === true) {
         $adhesion->save(null, null, $check = false);
 
         // Notifie l'adresse du contact fonctionnel pour valider l'adhésion.
-        $functional_contact = get_config('local_apsolu', 'functional_contact');
-        if (!empty($functional_contact)) {
+        $functionalcontact = get_config('local_apsolu', 'functional_contact');
+        if (!empty($functionalcontact)) {
             $subject = get_string('request_of_federation_number', 'local_apsolu');
 
             $parameters = [];
@@ -147,16 +147,20 @@ if (empty($adhesion->federationnumber) === true) {
             $parameters['export_url'] = (string) new moodle_url('/local/apsolu/federation/index.php', ['page' => 'export']);
             if ($adhesion->have_to_upload_medical_certificate() === true && empty($adhesion->medicalcertificatestatus) === true) {
                 // Le certificat médical doit être validé.
-                $parameters['validation_url'] = (string) new moodle_url('/local/apsolu/federation/index.php', ['page' => 'certificates_validation']);
-                $messagetext = get_string('request_of_federation_number_with_medical_certificate_message', 'local_apsolu', $parameters);
+                $parameters['validation_url'] = (string) new moodle_url('/local/apsolu/federation/index.php',
+                    ['page' => 'certificates_validation']);
+                $messagetext = get_string('request_of_federation_number_with_medical_certificate_message',
+                    'local_apsolu', $parameters);
             } else {
-                $messagetext = get_string('request_of_federation_number_without_medical_certificate_message', 'local_apsolu', $parameters);
+                $messagetext = get_string('request_of_federation_number_without_medical_certificate_message',
+                    'local_apsolu', $parameters);
             }
 
-            // Solution de contournement pour pouvoir envoyer un message à une adresse mail n'appartenant pas à un utilisateur Moodle.
+            // Solution de contournement pour pouvoir envoyer un message à une adresse mail n'appartenant pas
+            // à un utilisateur Moodle.
             $admin = get_admin();
-            $admin->auth = 'manual'; // Force l'authentification en manual, car la fonction email_to_user() ignore les comptes en nologin.
-            $admin->email = $functional_contact;
+            $admin->auth = 'manual'; // Force l'auth. en manual, car email_to_user() ignore le traitement des comptes en nologin.
+            $admin->email = $functionalcontact;
 
             email_to_user($admin, $USER, $subject, $messagetext);
 
@@ -190,7 +194,8 @@ if (empty($adhesion->federationnumber) === true) {
     $data->fields[] = ['label' => get_string('firstname'), 'value' => $USER->firstname];
     $data->fields[] = ['label' => get_string('email'), 'value' => $USER->email];
     $data->fields[] = ['label' => get_string('sex', 'local_apsolu'), 'value' => $adhesion->sex];
-    $data->fields[] = ['label' => get_string('birthday', 'local_apsolu'), 'value' => userdate($adhesion->birthday, get_string('strftimedate'))];
+    $data->fields[] = ['label' => get_string('birthday', 'local_apsolu'),
+        'value' => userdate($adhesion->birthday, get_string('strftimedate'))];
     $data->fields[] = ['label' => get_string('address1', 'local_apsolu'), 'value' => $adhesion->address1];
     $data->fields[] = ['label' => get_string('address2', 'local_apsolu'), 'value' => $adhesion->address2];
     $data->fields[] = ['label' => get_string('postal_code', 'local_apsolu'), 'value' => $adhesion->postalcode];
@@ -295,7 +300,8 @@ if (empty($adhesion->federationnumber) === true) {
 
     $items = [];
     foreach ($files as $file) {
-        $url = moodle_url::make_pluginfile_url($context->id, $component, $filearea, $itemid, '/', $file->get_filename(), $forcedownload = false, $includetoken = false);
+        $url = moodle_url::make_pluginfile_url($context->id, $component, $filearea, $itemid, '/',
+            $file->get_filename(), $forcedownload = false, $includetoken = false);
         $items[] = html_writer::link($url, $file->get_filename());
     }
 

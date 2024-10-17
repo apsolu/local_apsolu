@@ -87,9 +87,9 @@ if ($adhesion->have_to_upload_medical_certificate() === false) {
 
         if (isset($sportswithconstraints[$adhesion->mainsport]) === true) {
             $mainsport = $sportswithconstraints[$adhesion->mainsport];
-            $message = get_string('i_wish_to_practice_this_activity_with_particular_constraints_and_certify_that_i_have_presented_a_medical_certificate', 'local_apsolu', $mainsport);
+            $message = get_string('i_wish_to_practice_this_activity_with_particular_constraints_and_certify_that_i_have_presented_a_medical_certificate', 'local_apsolu', $mainsport); // phpcs:ignore
         } else {
-            $message = get_string('i_wish_to_practice_an_complementary_activity_with_particular_constraints_and_certify_that_i_have_presented_a_medical_certificate', 'local_apsolu');
+            $message = get_string('i_wish_to_practice_an_complementary_activity_with_particular_constraints_and_certify_that_i_have_presented_a_medical_certificate', 'local_apsolu'); // phpcs:ignore
         }
 
         $data->notifications[] = $message;
@@ -98,12 +98,13 @@ if ($adhesion->have_to_upload_medical_certificate() === false) {
     // L'étudiant a répondu OUI à au moins une question du questionnaire médical.
     if ($adhesion->questionnairestatus === $adhesion::HEALTH_QUESTIONNAIRE_ANSWERED_YES_ONCE) {
         $validityperiod = 6;
-        $message = get_string('i_answered_yes_to_a_section_of_the_health_questionnaire_and_attest_to_having_presented_a_medical_certificate', 'local_apsolu');
+        $message = get_string('i_answered_yes_to_a_section_of_the_health_questionnaire_and_attest_to_having_presented_a_medical_certificate', 'local_apsolu'); // phpcs:ignore
         $data->notifications[] = $message;
     }
 
     // Construit le formulaire.
-    $customdata = [$adhesion, $course, $context, $validityperiod, $sportswithoutconstraint, $sportswithconstraints, $freeze = false];
+    $customdata = [$adhesion, $course, $context, $validityperiod, $sportswithoutconstraint,
+        $sportswithconstraints, $freeze = false];
     $mform = new local_apsolu_federation_medical_certificate(null, $customdata);
 
     // Charge les fichiers éventuellement déposés précédemment.

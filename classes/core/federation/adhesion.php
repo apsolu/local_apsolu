@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe gérant les adhésions.
- *
- * @package    local_apsolu
- * @copyright  2022 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace local_apsolu\core\federation;
 
 use context_course;
@@ -33,6 +25,8 @@ use local_apsolu\core\federation\number as Number;
 use local_apsolu\core\record;
 use local_apsolu\event\federation_adhesion_updated;
 use UniversiteRennes2\Apsolu\Payment;
+
+defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/cohort/lib.php');
 
@@ -145,7 +139,8 @@ class adhesion extends record {
     /** @var int|string $mainsport Identifiant numérique du sport principal. */
     public $mainsport = '';
 
-    /** @var int|string $complementaryconstraintsport Témoin booléen de pratique complémentaire de sports à contraintes (1: oui, 0: non). */
+    /** @var int|string $complementaryconstraintsport Témoin booléen de pratique complémentaire
+                                                      de sports à contraintes (1: oui, 0: non). */
     public $complementaryconstraintsport = 0;
 
     /** @var int|string $sportlicense Booléen indiquant si l'adhésion comprend une licence sport (1: oui, 0: non). */
@@ -161,7 +156,8 @@ class adhesion extends record {
         dirigeants (1: oui, 0: non). */
     public $honorabilityagreement = 0;
 
-    /** @var int|string $managerlicensetype Pour licence dirigeant pour Non-étudiant/Etudiant (1: pour étudiant, 0: pour non-étudiant). */
+    /** @var int|string $managerlicensetype Pour licence dirigeant pour Non-étudiant/Etudiant
+                                            (1: pour étudiant, 0: pour non-étudiant). */
     public $managerlicensetype = 0;
 
     /** @var string $starlicense Licence étoile (O: oui, N: non). */
@@ -369,7 +365,8 @@ class adhesion extends record {
     }
 
     /**
-     * Retourne un tableau de chaînes indiquant que le certificat a été validé. Ajoute éventuellement l'adresse du contact fonctionnel.
+     * Retourne un tableau de chaînes indiquant que le certificat a été validé. Ajoute éventuellement l'adresse du
+     * contact fonctionnel.
      *
      * @return array
      */
@@ -377,9 +374,9 @@ class adhesion extends record {
         $messages = [];
         $messages[] = get_string('your_request_is_being_processed', 'local_apsolu').'.';
 
-        $functional_contact_mail = get_config('local_apsolu', 'functional_contact');
-        if (filter_var($functional_contact_mail, FILTER_VALIDATE_EMAIL) !== false) {
-            $messages[] = get_string('if_you_want_to_make_a_change_please_contact_X', 'local_apsolu', $functional_contact_mail);
+        $functionalcontactmail = get_config('local_apsolu', 'functional_contact');
+        if (filter_var($functionalcontactmail, FILTER_VALIDATE_EMAIL) !== false) {
+            $messages[] = get_string('if_you_want_to_make_a_change_please_contact_X', 'local_apsolu', $functionalcontactmail);
         }
 
         return $messages;
@@ -570,11 +567,11 @@ class adhesion extends record {
             'sport3', // Champ AD : Certificat médical - activité 3 sans contrainte particulière [ 1 nombre entre 1 et 62(***)].
             'sport4', // Champ AE : Certificat médical - activité 4 sans contrainte particulière [ 1 nombre entre 1 et 62(***)].
             'sport5', // Champ AF : Certificat médical - activité 5 sans contrainte particulière [ 1 nombre entre 1 et 62(***)].
-            'constraintsport1', // Champ AG:Certificat médical-activité 1 à contraintes particulières [1 nombre entre 1 et 63(****)].
-            'constraintsport2', // Champ AH:Certificat médical-activité 2 à contraintes particulières [1 nombre entre 1 et 63(****)].
-            'constraintsport3', // Champ AI:Certificat médical-activité 3 à contraintes particulières [1 nombre entre 1 et 63(****)].
-            'constraintsport4', // Champ AJ:Certificat médical-activité 4 à contraintes particulières [1 nombre entre 1 et 63(****)].
-            'constraintsport5', // Champ AK:Certificat médical-activité 5 à contraintes particulières [1 nombre entre 1 et 63(****)].
+            'constraintsport1', // Champ AG:Certificat médical-activité 1 à contraintes particulières[1 nombre entre 1 et 63(****)].
+            'constraintsport2', // Champ AH:Certificat médical-activité 2 à contraintes particulières[1 nombre entre 1 et 63(****)].
+            'constraintsport3', // Champ AI:Certificat médical-activité 3 à contraintes particulières[1 nombre entre 1 et 63(****)].
+            'constraintsport4', // Champ AJ:Certificat médical-activité 4 à contraintes particulières[1 nombre entre 1 et 63(****)].
+            'constraintsport5', // Champ AK:Certificat médical-activité 5 à contraintes particulières[1 nombre entre 1 et 63(****)].
             'medicalcertificatedateformat', // Champ AL : Date du certificat médical [ au format AAAA-MM-JJ ].
             'questionnairestatusno', // Champ AM : J’ai répondu NON à toutes les questions du questionnaire de santé (je peux
                 // pratiquer TOUTES les activités sans contrainte particulière sans fournir de
@@ -585,9 +582,9 @@ class adhesion extends record {
             'medicalcertificatestatus', // Champ AO : Je souhaite pratiquer une activité à contraintes particulières
                 // (Rugby(s), Boxe(s) combat plein contact, Tir sportif, Biathlon, Karting, Pentathlon, Taekwondo combat)
                 // et atteste avoir présenté un certificat médical de non-contre-indication à la pratique des sports de
-                // compétition de moins d’un an [ 1 chiffre : 1 pour oui ou 0 pour non ]
+                // compétition de moins d’un an [ 1 chiffre : 1 pour oui ou 0 pour non ].
             'honorabilityagreement', // Champ AP : J'atteste avoir compris l'objet du contrôle d'honorabilité pour arbitres
-                // et dirigeants [ 1 chiffre : 1 pour oui ou 0 pour non ]
+                // et dirigeants [ 1 chiffre : 1 pour oui ou 0 pour non ].
         ];
     }
 
@@ -637,9 +634,9 @@ class adhesion extends record {
             get_string('medical_certificate_X_with_specific_constraints', 'local_apsolu', 5),
             get_string('medical_certificate_date', 'local_apsolu'),
             get_string('i_answered_no_to_all_the_questions_in_the_health_questionnaire_short', 'local_apsolu'),
-            get_string('i_answered_yes_to_a_section_of_the_health_questionnaire_and_attest_to_having_presented_a_medical_certificate_short', 'local_apsolu'),
-            get_string('i_wish_to_practice_an_activity_with_particular_constraints_and_certify_that_i_have_presented_a_medical_certificate_short', 'local_apsolu'),
-            get_string('i_certify_that_i_understand_the_purpose_of_the_integrity_check_for_arbitrators_and_managers', 'local_apsolu'),
+            get_string('i_answered_yes_to_a_section_of_the_health_questionnaire_and_attest_to_having_presented_a_medical_certificate_short', 'local_apsolu'), // phpcs:ignore
+            get_string('i_wish_to_practice_an_activity_with_particular_constraints_and_certify_that_i_have_presented_a_medical_certificate_short', 'local_apsolu'), // phpcs:ignore
+            get_string('i_certify_that_i_understand_the_purpose_of_the_integrity_check_for_arbitrators_and_managers', 'local_apsolu'), // phpcs:ignore
         ];
     }
 
@@ -825,7 +822,7 @@ class adhesion extends record {
      *
      * @return void
      */
-    public function save(object $data = null, object $mform = null, bool $check = true) {
+    public function save(?object $data = null, ?object $mform = null, bool $check = true) {
         global $DB, $USER;
 
         $federationcourse = new FederationCourse();
@@ -876,12 +873,14 @@ class adhesion extends record {
             } else {
                 // Recalcule les valeurs sportN et constraintsportN.
                 if ($this->has_constraint_sports() === true) {
-                    $sportkeeped = ['constraintsport1', 'constraintsport2', 'constraintsport3', 'constraintsport4', 'constraintsport5'];
+                    $sportkeeped = ['constraintsport1', 'constraintsport2', 'constraintsport3', 'constraintsport4',
+                        'constraintsport5'];
                     $sportremoved = ['sport1', 'sport2', 'sport3', 'sport4', 'sport5'];
                     $constraint = 1;
                 } else {
                     $sportkeeped = ['sport1', 'sport2', 'sport3', 'sport4', 'sport5'];
-                    $sportremoved = ['constraintsport1', 'constraintsport2', 'constraintsport3', 'constraintsport4', 'constraintsport5'];
+                    $sportremoved = ['constraintsport1', 'constraintsport2', 'constraintsport3', 'constraintsport4',
+                        'constraintsport5'];
                     $constraint = 0;
                 }
 

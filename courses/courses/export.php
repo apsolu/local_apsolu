@@ -24,6 +24,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// phpcs:disable moodle.NamingConventions.ValidVariableName.VariableNameUnderscore
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/csvlib.class.php');
@@ -119,7 +121,8 @@ foreach ($DB->get_records('enrol', ['enrol' => 'select'], $sort = 'enrolstartdat
     }
 
     $index = 'enrol'.$enrol->id;
-    $courses[$enrol->courseid]->{$index} = sprintf('Déb. ins.: %s, fin ins.: %s, LP: %s, LC: %s, rôles: %s, cartes: %s', $enrolstartdate, $enrolenddate, $main_quota, $wait_quota, $roles, $cards);
+    $courses[$enrol->courseid]->{$index} = sprintf('Déb. ins.: %s, fin ins.: %s, LP: %s, LC: %s, rôles: %s, cartes: %s',
+        $enrolstartdate, $enrolenddate, $main_quota, $wait_quota, $roles, $cards);
 }
 
 // Génération du fichier csv.

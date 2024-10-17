@@ -14,13 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe gérant les périodes.
- *
- * @package    local_apsolu
- * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+// phpcs:disable moodle.NamingConventions.ValidVariableName.MemberNameUnderscore
 
 namespace local_apsolu\core;
 
@@ -56,7 +50,7 @@ class period extends record {
      *
      * @return string.
      */
-    public function __tostring() {
+    public function __toString() {
         return $this->generic_name;
     }
 
@@ -115,7 +109,7 @@ class period extends record {
      *
      * @return void
      */
-    public function save(object $data = null, object $mform = null) {
+    public function save(?object $data = null, ?object $mform = null) {
         global $DB;
 
         // Démarre une transaction, si ce n'est pas déjà fait.

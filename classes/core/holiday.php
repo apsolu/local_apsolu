@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe gérant les jours fériés.
- *
- * @package   local_apsolu
- * @copyright 2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace local_apsolu\core;
 
 use core_date;
@@ -50,7 +42,7 @@ class holiday extends record {
      *
      * @return string.
      */
-    public function __tostring() {
+    public function __toString() {
         return userdate($this->day, get_string('strftimedaydate'));
     }
 
@@ -61,7 +53,7 @@ class holiday extends record {
      *
      * @return array Retourne un tableau de timestampp Unix.
      */
-    public static function get_holidays(int $year = null) {
+    public static function get_holidays(?int $year = null) {
         if ($year === null) {
             // Récupère l'année courante.
             $year = core_date::strftime('%Y');

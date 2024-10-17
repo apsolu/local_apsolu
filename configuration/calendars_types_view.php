@@ -27,14 +27,14 @@ defined('MOODLE_INTERNAL') || die;
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('calendars_types', 'local_apsolu'));
 
-$calendars_types = $DB->get_records('apsolu_calendars_types', $conditions = [], $sort = 'name');
+$calendarstypes = $DB->get_records('apsolu_calendars_types', $conditions = [], $sort = 'name');
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
 $data->calendars_types = [];
 $data->count_calendars_types = 0;
 
-foreach ($calendars_types as $calendar) {
+foreach ($calendarstypes as $calendar) {
     $data->calendars_types[] = $calendar;
     $data->count_calendars_types++;
 }

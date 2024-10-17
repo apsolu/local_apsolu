@@ -38,7 +38,7 @@ if ($sessionid != 0) {
 }
 
 if ($session === false) {
-    $apsolu_course = $DB->get_record('apsolu_courses', ['id' => $courseid]);
+    $apsolucourse = $DB->get_record('apsolu_courses', ['id' => $courseid]);
 
     $sessions = $DB->get_records('apsolu_attendance_sessions', ['courseid' => $courseid]);
     $name = 'Cours n°'.(count($sessions) + 1);
@@ -49,7 +49,7 @@ if ($session === false) {
     $instance->sessiontime = 0;
     $instance->courseid = $course->id;
     $instance->activityid = $course->category;
-    $instance->locationid = $apsolu_course->locationid;
+    $instance->locationid = $apsolucourse->locationid;
 } else {
     $instance = clone $session;
     $instance->sessionid = $session->id;
@@ -90,19 +90,23 @@ if ($mdata = $mform->get_data()) {
     $changed = ($instance->sessiontime != $session->sessiontime || $instance->locationid != $session->locationid);
 
     // Prépare les variables pour les notifications.
-    $variables = (object) ['datetime' => userdate($session->sessiontime, get_string('strftimedatetime', 'local_apsolu')), 'location' => $locations[$session->locationid]];
+    $variables = (object) ['datetime' => userdate($session->sessiontime, get_string('strftimedatetime', 'local_apsolu')),
+        'location' => $locations[$session->locationid]];
     if ($instance->sessionid === 0) {
-        $subject = get_string('attendance_forum_create_session_subject', 'local_apsolu', userdate($session->sessiontime, get_string('strftimedate', 'local_apsolu')));
+        $subject = get_string('attendance_forum_create_session_subject', 'local_apsolu',
+            userdate($session->sessiontime, get_string('strftimedate', 'local_apsolu')));
         $message = get_string('attendance_forum_create_session_message', 'local_apsolu', $variables);
     } else {
-        $subject = get_string('attendance_forum_edit_session_subject', 'local_apsolu', userdate($session->sessiontime, get_string('strftimedate', 'local_apsolu')));
+        $subject = get_string('attendance_forum_edit_session_subject', 'local_apsolu',
+            userdate($session->sessiontime, get_string('strftimedate', 'local_apsolu')));
         $message = get_string('attendance_forum_edit_session_message', 'local_apsolu', $variables);
     }
 
     // Notifie le forum.
     if (empty($mdata->notify) === false) {
         if ($changed === false) {
-            $notifications[] = $OUTPUT->notification(get_string('attendance_error_no_modification', 'local_apsolu'), 'notifymessage');
+            $notifications[] = $OUTPUT->notification(get_string('attendance_error_no_modification', 'local_apsolu'),
+                'notifymessage');
         }
 
         $forum = $DB->get_record('forum', ['type' => 'news', 'course' => $course->id]);
@@ -134,29 +138,32 @@ if ($mdata = $mform->get_data()) {
             $discussion->pinned = FORUM_DISCUSSION_UNPINNED;
             $fakemform = [];
             if ($discussionid = forum_add_discussion($discussion, $fakemform)) {
-                $notifications[] = $OUTPUT->notification(get_string('attendance_success_message_forum', 'local_apsolu'), 'notifysuccess');
+                $notifications[] = $OUTPUT->notification(get_string('attendance_success_message_forum', 'local_apsolu'),
+                    'notifysuccess');
             } else {
-                $notifications[] = $OUTPUT->notification(get_string('attendance_error_message_forum', 'local_apsolu'), 'notifyproblem');
+                $notifications[] = $OUTPUT->notification(get_string('attendance_error_message_forum', 'local_apsolu'),
+                    'notifyproblem');
             }
         }
     }
 
     // Notifie le secrétariat.
     if ($changed === true) {
-        $functional_contact_mail = get_config('local_apsolu', 'functional_contact');
-        if (filter_var($functional_contact_mail, FILTER_VALIDATE_EMAIL) !== false) {
+        $functionalcontactmail = get_config('local_apsolu', 'functional_contact');
+        if (filter_var($functionalcontactmail, FILTER_VALIDATE_EMAIL) !== false) {
             if (isset($CFG->divertallemailsto) === true && filter_var($CFG->divertallemailsto, FILTER_VALIDATE_EMAIL) !== false) {
-                $functional_contact_mail = $CFG->divertallemailsto;
+                $functionalcontactmail = $CFG->divertallemailsto;
             }
 
             require_once($CFG->libdir . '/phpmailer/moodle_phpmailer.php');
 
             $mailer = new moodle_phpmailer();
-            $mailer->AddAddress($functional_contact_mail);
+            $mailer->AddAddress($functionalcontactmail);
             $mailer->Subject = $subject.' ('.$course->fullname.')';
             $mailer->Body = $message;
             if (isset($cm->id) === true) {
-                $mailer->Body .= '<p><a href="'.$CFG->wwwroot.'/mod/forum/view.php?id='.$cm->id.'">'.get_string('postincontext', 'forum').'</a></p>';
+                $mailer->Body .= '<p><a href="'.$CFG->wwwroot.'/mod/forum/view.php?id='.$cm->id.'">'.
+                    get_string('postincontext', 'forum').'</a></p>';
             } else {
                 $mailer->Body .= '<p><strong>'.get_string('no_messages_sent_to_forum', 'local_apsolu').'</strong></p>';
             }

@@ -74,7 +74,7 @@ if ($formdata = $mform->get_data()) {
         $result = [];
     }
 
-    // init csv import helper
+    // Init csv import helper.
     $cir->init();
 
     $columns = $cir->get_columns();
@@ -100,7 +100,7 @@ if ($formdata = $mform->get_data()) {
             }
 
             $adhesion = $users[$email];
-            $profile_url = new moodle_url('/user/profile.php', ['id' => $adhesion->userid]);
+            $profileurl = new moodle_url('/user/profile.php', ['id' => $adhesion->userid]);
 
             $licenseid = trim($line[$federationnumbercolumnindex]);
             if (empty($licenseid) === true) {
@@ -112,7 +112,7 @@ if ($formdata = $mform->get_data()) {
                 // Numéro de licence invalide.
                 $params = new stdClass();
                 $params->licenseid = $licenseid;
-                $params->profile = html_writer::link($profile_url, $adhesion->firstname.' '.$adhesion->lastname);
+                $params->profile = html_writer::link($profileurl, $adhesion->firstname.' '.$adhesion->lastname);
                 $result[] = get_string('the_license_number_X_associated_to_Y_is_invalid', 'local_apsolu', $params);
                 continue;
             }
@@ -123,12 +123,15 @@ if ($formdata = $mform->get_data()) {
 
             $oldlicenseid = $adhesion->federationnumber;
 
-            $sql = "UPDATE {apsolu_federation_adhesions} SET federationnumber = :federationnumber WHERE id = :id AND userid = :userid";
+            $sql = "UPDATE {apsolu_federation_adhesions}
+                       SET federationnumber = :federationnumber
+                     WHERE id = :id
+                       AND userid = :userid";
             $DB->execute($sql, ['federationnumber' => $licenseid, 'id' => $adhesion->id, 'userid' => $adhesion->userid]);
 
             $params = new stdClass();
             $params->licenseid = $licenseid;
-            $params->profile = html_writer::link($profile_url, $adhesion->firstname.' '.$adhesion->lastname);
+            $params->profile = html_writer::link($profileurl, $adhesion->firstname.' '.$adhesion->lastname);
 
             if (empty($oldlicenseid) === true) {
                 // Création d'un numéro AS.

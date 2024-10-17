@@ -32,13 +32,13 @@ if (in_array($action, $actions, $strict = true) === false) {
 
 // Création d'un sous-menu.
 $tabsbar2 = [];
-foreach ($actions as $action_) {
-    if ($action_ === 'posts') {
+foreach ($actions as $key) {
+    if ($key === 'posts') {
         continue;
     }
 
-    $url = new moodle_url('/local/apsolu/payment/admin.php', ['tab' => 'notifications', 'action' => $action_]);
-    $tabsbar2[] = new tabobject($action_, $url, get_string($action_, 'local_apsolu'));
+    $url = new moodle_url('/local/apsolu/payment/admin.php', ['tab' => 'notifications', 'action' => $key]);
+    $tabsbar2[] = new tabobject($key, $url, get_string($key, 'local_apsolu'));
 }
 
 // Affichage du sous-menu.

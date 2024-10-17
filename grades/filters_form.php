@@ -42,7 +42,8 @@ class local_apsolu_grades_gradebooks_filters_form extends moodleform {
     protected function definition() {
         $mform = $this->_form;
 
-        list($defaults, $courses, $roles, $calendarstypes, $gradeitems, $cities, $institutions, $ufrs, $departments, $cycles, $teachers) = $this->_customdata;
+        list($defaults, $courses, $roles, $calendarstypes, $gradeitems, $cities,
+            $institutions, $ufrs, $departments, $cycles, $teachers) = $this->_customdata;
 
         $fields = [];
         $fields['emails'] = get_string('email');
@@ -71,11 +72,12 @@ class local_apsolu_grades_gradebooks_filters_form extends moodleform {
         $mform->addRule('roles', get_string('required'), 'required', null, 'client');
 
         // Calendriers.
-        $mform->addElement('autocomplete', 'calendarstypes', get_string('calendars_types', 'local_apsolu'), $calendarstypes, $multiple);
+        $label = get_string('calendars_types', 'local_apsolu');
+        $mform->addElement('autocomplete', 'calendarstypes', $label, $calendarstypes, $multiple);
         $mform->setType('calendarstypes', PARAM_INT);
         $mform->addRule('calendarstypes', get_string('required'), 'required', null, 'client');
 
-        // Élements de notations.
+        // Elements de notations.
         $mform->addElement('autocomplete', 'gradeitems', get_string('gradeitems', 'local_apsolu'), $gradeitems, $multiple);
         $mform->setType('gradeitems', PARAM_INT);
 
@@ -90,9 +92,10 @@ class local_apsolu_grades_gradebooks_filters_form extends moodleform {
             $fields['cities'] = get_string('city', 'local_apsolu');
         }
 
-        // Établissements.
+        // Etablissements.
         if (count($institutions) > 1) {
-            $select = $mform->addElement('autocomplete', 'institutions', get_string('institutions', 'local_apsolu'), $institutions, $multiple);
+            $label = get_string('institutions', 'local_apsolu');
+            $select = $mform->addElement('autocomplete', 'institutions', $label, $institutions, $multiple);
             $mform->setType('institutions', PARAM_TEXT);
 
             $fields['institutions'] = get_string('institution', 'local_apsolu');

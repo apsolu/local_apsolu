@@ -28,6 +28,8 @@ use local_apsolu\core\course;
 use local_apsolu\core\grouping;
 use local_apsolu\core\skill;
 
+defined('MOODLE_INTERNAL') || die();
+
 global $CFG;
 
 require_once($CFG->dirroot.'/local/apsolu/courses/categories/edit_form.php');
@@ -143,7 +145,8 @@ class local_apsolu_generator extends testing_module_generator {
         $customdata = ['category' => $category, 'groupings' => $groupings, 'context' => $context, 'itemid' => $itemid];
         $mform = new local_apsolu_courses_categories_edit_form(null, $customdata);
 
-        $editor = file_prepare_standard_editor($category, 'description', $mform->get_description_editor_options(), $context, 'coursecat', 'description', $itemid);
+        $editor = file_prepare_standard_editor($category, 'description', $mform->get_description_editor_options(), $context,
+            'coursecat', 'description', $itemid);
         $mform->set_data($editor);
 
         return [$category, $mform];
@@ -183,7 +186,7 @@ class local_apsolu_generator extends testing_module_generator {
      *
      * @return stdClass period object
      */
-    public function get_period_data(string $name, string $type = null) {
+    public function get_period_data(string $name, ?string $type = null) {
         $monday = strtotime('monday this week');
 
         $weeks = [];

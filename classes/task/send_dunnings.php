@@ -62,7 +62,8 @@ class send_dunnings extends \core\task\scheduled_task {
         }
 
         foreach ($dunnings as $dunning) {
-            mtrace('relance du '.userdate($dunning->timecreated, get_string('strftimedatetime', 'local_apsolu')).' intitulée '.$dunning->subject);
+            mtrace('relance du '.
+                userdate($dunning->timecreated, get_string('strftimedatetime', 'local_apsolu')).' intitulée '.$dunning->subject);
 
             $dunning->timestarted = time();
             $DB->update_record('apsolu_dunnings', $dunning);
@@ -92,7 +93,8 @@ class send_dunnings extends \core\task\scheduled_task {
                             if ($simulation === false) {
                                 email_to_user($user, $sender, $dunning->subject, $dunning->messagetext, $dunning->message);
 
-                                mtrace('   - relance envoyée à '.$user->email.' (#'.$user->id.' '.$user->firstname.' '.$user->lastname.')');
+                                mtrace('   - relance envoyée à '.$user->email.
+                                    ' (#'.$user->id.' '.$user->firstname.' '.$user->lastname.')');
                             }
 
                             $post = new stdClass();

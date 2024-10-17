@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Fonctions pour le module apsolu.
- *
- * @package    local_apsolu
- * @copyright  2018 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace UniversiteRennes2\Apsolu;
 
 use SimpleXMLElement;
@@ -243,7 +235,7 @@ class Payment {
         $payment = $DB->get_record_sql($sql, ['cardid' => $card->id, 'userid' => $userid]);
         if ($payment !== false) {
             debugging('Carte '.$card->fullname.' payée !', $level = DEBUG_DEVELOPER);
-            return $payment->status; // self::PAID or self::GIFT.
+            return $payment->status; // Valeur possible : self::PAID or self::GIFT.
         }
 
         $enrols = self::get_user_enrols_by_card($card->id, $userid);
@@ -269,7 +261,8 @@ class Payment {
         $enrolcalendars = [];
         foreach ($enrols as $enrol) {
             if (isset($calendars[$enrol->customchar1]) === false) {
-                debugging('Aucun calendrier pour l\'inscription #'.$enrol->id.' (course #'.$enrol->courseid.')', $level = DEBUG_DEVELOPER);
+                debugging('Aucun calendrier pour l\'inscription #'.$enrol->id.' (course #'.$enrol->courseid.')',
+                    $level = DEBUG_DEVELOPER);
                 continue;
             }
 
@@ -280,7 +273,8 @@ class Payment {
             $enrolcalendars[$calendartypeid]++;
         }
 
-        $calendars = $DB->get_records('apsolu_payments_cards_cals', ['cardid' => $card->id], $sort = '', $fields = 'calendartypeid, value');
+        $calendars = $DB->get_records('apsolu_payments_cards_cals', ['cardid' => $card->id],
+            $sort = '', $fields = 'calendartypeid, value');
         foreach ($calendars as $calendar) {
             if (isset($enrolcalendars[$calendar->calendartypeid]) === false) {
                 continue;
@@ -352,7 +346,8 @@ class Payment {
         $paybox->PBX_TYPECARTE = 'CB';
 
         // Nombre d'éléments dans le panier.
-        $paybox->PBX_SHOPPINGCART = '<?xml version="1.0" encoding="utf-8"?><shoppingcart><total><totalQuantity>'.$payment->quantity.'</totalQuantity></total></shoppingcart>';
+        $paybox->PBX_SHOPPINGCART = '<?xml version="1.0" encoding="utf-8"?><shoppingcart><total><totalQuantity>'.
+            $payment->quantity.'</totalQuantity></total></shoppingcart>';
 
         // Adresse postale.
         $address = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><Billing><Address></Address></Billing>');
@@ -518,7 +513,8 @@ class Payment {
             $definition = 'definition_'.$statusname;
 
             $images[$statusid] = new stdClass();
-            $images[$statusid]->image = $OUTPUT->pix_icon('t/'.$statusname, get_string($alt, 'local_apsolu'), 'local_apsolu', ['title' => get_string($alt, 'local_apsolu'), 'width' => '12px', 'height' => '12px']);
+            $images[$statusid]->image = $OUTPUT->pix_icon('t/'.$statusname, get_string($alt, 'local_apsolu'),
+                'local_apsolu', ['title' => get_string($alt, 'local_apsolu'), 'width' => '12px', 'height' => '12px']);
             $images[$statusid]->definition = get_string($definition, 'local_apsolu');
         }
 
@@ -533,14 +529,14 @@ class Payment {
     public static function is_open() {
         $time = time();
 
-        $payments_startdate = get_config('local_apsolu', 'payments_startdate');
-        if ($time < $payments_startdate) {
+        $paymentsstartdate = get_config('local_apsolu', 'payments_startdate');
+        if ($time < $paymentsstartdate) {
             // Les paiements n'ont pas démarré.
             return false;
         }
 
-        $payments_enddate = get_config('local_apsolu', 'payments_enddate');
-        if ($time > $payments_enddate) {
+        $paymentsenddate = get_config('local_apsolu', 'payments_enddate');
+        if ($time > $paymentsenddate) {
             // Les paiements sont terminés.
             return false;
         }

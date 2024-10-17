@@ -28,7 +28,8 @@ defined('MOODLE_INTERNAL') || die;
 $sessionid = required_param('sessionid', PARAM_INT);
 $delete = optional_param('delete', 0, PARAM_INT); // Confirmation hash.
 
-$url = new moodle_url('/local/apsolu/attendance/sessions/index.php', ['action' => 'delete', 'courseid' => $courseid, 'sessionid' => $sessionid]);
+$url = new moodle_url('/local/apsolu/attendance/sessions/index.php',
+    ['action' => 'delete', 'courseid' => $courseid, 'sessionid' => $sessionid]);
 
 $session = $DB->get_record('apsolu_attendance_sessions', ['id' => $sessionid, 'courseid' => $courseid], '*', MUST_EXIST);
 $presences = $DB->get_records('apsolu_attendance_presences', ['sessionid' => $session->id]);
@@ -36,7 +37,8 @@ $presences = $DB->get_records('apsolu_attendance_presences', ['sessionid' => $se
 $template = 'local_apsolu/attendance_sessions_form';
 
 if (count($presences) > 0) {
-    $notifications[] = $OUTPUT->notification(get_string('attendance_undeletable_session', 'local_apsolu', $session->name), 'notifyproblem');
+    $notifications[] = $OUTPUT->notification(get_string('attendance_undeletable_session', 'local_apsolu', $session->name),
+        'notifyproblem');
 
     require(__DIR__ . '/view.php');
 } else if ($delete === 1) {
@@ -68,7 +70,8 @@ if (count($presences) > 0) {
             $context = context_module::instance($cm->id);
 
             $sessiontime = userdate($session->sessiontime, get_string('strftimedate', 'local_apsolu'));
-            $variables = (object) ['datetime' => userdate($session->sessiontime, get_string('strftimedatetime', 'local_apsolu')), 'location' => $locations[$session->locationid]];
+            $variables = (object) ['datetime' => userdate($session->sessiontime, get_string('strftimedatetime', 'local_apsolu')),
+                'location' => $locations[$session->locationid]];
 
             $subject = get_string('attendance_forum_delete_session_subject', 'local_apsolu', $sessiontime);
             $message = get_string('attendance_forum_delete_session_message', 'local_apsolu', $variables);
@@ -91,24 +94,28 @@ if (count($presences) > 0) {
             $discussion->pinned = FORUM_DISCUSSION_UNPINNED;
             $fakemform = [];
             if ($discussionid = forum_add_discussion($discussion, $fakemform)) {
-                $notifications[] = $OUTPUT->notification(get_string('attendance_success_message_forum', 'local_apsolu'), 'notifysuccess');
+                $notifications[] = $OUTPUT->notification(get_string('attendance_success_message_forum', 'local_apsolu'),
+                    'notifysuccess');
             } else {
-                $notifications[] = $OUTPUT->notification(get_string('attendance_error_message_forum', 'local_apsolu'), 'notifyproblem');
+                $notifications[] = $OUTPUT->notification(get_string('attendance_error_message_forum', 'local_apsolu'),
+                    'notifyproblem');
             }
 
             // Notifie le secrétariat.
-            $functional_contact_mail = get_config('local_apsolu', 'functional_contact');
-            if (filter_var($functional_contact_mail, FILTER_VALIDATE_EMAIL) !== false) {
-                if (isset($CFG->divertallemailsto) === true && filter_var($CFG->divertallemailsto, FILTER_VALIDATE_EMAIL) !== false) {
-                    $functional_contact_mail = $CFG->divertallemailsto;
+            $functionalcontactmail = get_config('local_apsolu', 'functional_contact');
+            if (filter_var($functionalcontactmail, FILTER_VALIDATE_EMAIL) !== false) {
+                if (isset($CFG->divertallemailsto) === true &&
+                    filter_var($CFG->divertallemailsto, FILTER_VALIDATE_EMAIL) !== false) {
+                    $functionalcontactmail = $CFG->divertallemailsto;
                 }
 
                 require_once($CFG->libdir . '/phpmailer/moodle_phpmailer.php');
 
                 $mailer = new moodle_phpmailer();
-                $mailer->AddAddress($functional_contact_mail);
+                $mailer->AddAddress($functionalcontactmail);
                 $mailer->Subject = $subject.' ('.$course->fullname.')';
-                $mailer->Body = $message.'<p><a href="'.$CFG->wwwroot.'/mod/forum/view.php?id='.$cm->id.'">'.get_string('postincontext', 'forum').'</a></p>';
+                $mailer->Body = $message.'<p><a href="'.$CFG->wwwroot.'/mod/forum/view.php?id='.$cm->id.'">'.
+                    get_string('postincontext', 'forum').'</a></p>';
                 $mailer->From = $CFG->noreplyaddress;
                 $mailer->FromName = '';
                 $mailer->CharSet = 'UTF-8';

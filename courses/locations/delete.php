@@ -65,7 +65,7 @@ if (count($courses) !== 0) {
 }
 
 // Vérifie si ce lieu n'est pas associé à une session.
-/*
+/* phpcs:ignore
 $locations = Location::get_records(array('locationid' => $location->id), 'name');
 if (count($locations) !== 0) {
     $datatemplate = array();

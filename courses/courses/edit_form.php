@@ -80,7 +80,8 @@ class local_apsolu_courses_courses_edit_form extends moodleform {
         $mform->addRule('weekday', get_string('required'), 'required', null, 'client');
 
         // Starttime field.
-        $attributes = ['size' => '8', 'maxlength' => 5, 'pattern' => '(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9])', 'placeholder' => 'hh:mm'];
+        $attributes = ['size' => '8', 'maxlength' => 5,
+            'pattern' => '(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9])', 'placeholder' => 'hh:mm'];
         $mform->addElement('text', 'starttime', get_string('starttime', 'local_apsolu'), $attributes);
         $mform->setType('starttime', PARAM_TEXT);
         $mform->addRule('starttime', get_string('required'), 'required', null, 'client');

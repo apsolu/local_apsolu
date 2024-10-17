@@ -26,8 +26,6 @@ namespace local_apsolu\event;
 
 use stdClass;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Event to log user notifications.
  *
@@ -42,7 +40,7 @@ class notification_sent extends \core\event\base {
      * @return void
      */
     protected function init() {
-        // Values: c(reate), r(ead), u(pdate) or d(elete).
+        // Values: c (create), r (read), u (update) or d (delete).
         $this->data['crud'] = 'c';
 
         // Values: LEVEL_TEACHING, LEVEL_PARTICIPATING or LEVEL_OTHER.
@@ -71,7 +69,8 @@ class notification_sent extends \core\event\base {
             // Si on a l'identifiant du destinaire, on va chercher son nom dans la table des utilisateurs.
             $user = $DB->get_record('user', ['id' => $other->receiver]);
             if ($this->contextlevel == CONTEXT_COURSE) {
-                $receiver = sprintf('<a href="%s/user/view.php?course=%s&id=%s">%s</a>', $CFG->wwwroot, $this->contextinstanceid, $user->id, fullname($user));
+                $receiver = sprintf('<a href="%s/user/view.php?course=%s&id=%s">%s</a>', $CFG->wwwroot,
+                    $this->contextinstanceid, $user->id, fullname($user));
             } else {
                 $receiver = sprintf('<a href="%s/user/view.php?id=%s">%s</a>', $CFG->wwwroot, $user->id, fullname($user));
             }

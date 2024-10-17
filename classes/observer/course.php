@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe permettant d'écouter les évènements diffusés par Moodle.
- *
- * @package   local_apsolu
- * @copyright 2021 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace local_apsolu\observer;
 
 use Exception;
@@ -32,8 +24,6 @@ use local_apsolu\core\attendancesession;
 use local_apsolu\core\course as apsolu_course;
 use moodle_url;
 use stdClass;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Classe permettant d'écouter les évènements diffusés par Moodle.

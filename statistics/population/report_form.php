@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe pour gérer un formulaire Moodle.
- *
- * @package    local_apsolu
- * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/formslib.php');
@@ -33,7 +25,7 @@ require_once($CFG->libdir . '/formslib.php');
  * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_apsolu_statistics_report_form extends moodleform {
+class local_apsolu_statistics_population_report_form extends moodleform {
     /**
      * Définit les champs du formulaire.
      *
@@ -52,7 +44,7 @@ class local_apsolu_statistics_report_form extends moodleform {
 
         $group = get_string('statistics_enrollments', 'local_apsolu');
         $options[$group] = [];
-        foreach($reports as $property => $value) {
+        foreach ($reports as $property => $value) {
             if (property_exists($value, 'group') && $value->group == "statistics_enrollments") {
                 $options[$group][$value->id] = $value->label;
             }
@@ -60,7 +52,7 @@ class local_apsolu_statistics_report_form extends moodleform {
 
         $group = get_string('statistics_enrollees', 'local_apsolu');
         $options[$group] = [];
-        foreach($reports as $property => $value) {
+        foreach ($reports as $property => $value) {
             if (property_exists($value, 'group') && $value->group == "statistics_enrollees") {
                 $options[$group][$value->id] = $value->label;
             }
@@ -68,13 +60,14 @@ class local_apsolu_statistics_report_form extends moodleform {
 
         $group = get_string('other');
         $options[$group] = [];
-        foreach($reports as $property => $value) {
+        foreach ($reports as $property => $value) {
             if (!property_exists($value, 'group')) {
                 $options[$group][$value->id] = $value->label;
             }
         }
 
-        $reportselect = $mform->addElement('selectgroups', 'reportid', get_string('statistics_select_reports', 'local_apsolu'), $options);
+        $reportselect = $mform->addElement('selectgroups', 'reportid',
+            get_string('statistics_select_reports', 'local_apsolu'), $options);
 
         if (!is_null ($reportid)) {
             $reportselect->setSelected($reportid);

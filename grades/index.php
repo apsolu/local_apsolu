@@ -22,10 +22,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// phpcs:disable moodle.Files.RequireLogin.Missing
+
 // Redirection vers le nouveau carnet de notes pour les enseignants. Supprimer cette redirection un jour.
 require(__DIR__ . '/../../../config.php');
 
 $redirection = $CFG->wwwroot.'/local/apsolu/grades/grade/index.php';
 
-header('Location: '.$redirection, $repalce = true, $http_response_code = 301);
+header('Location: '.$redirection, $repalce = true, $httpresponsecode = 301);
 exit();

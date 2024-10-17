@@ -56,7 +56,8 @@ class local_apsolu_courses_holidays_generate_form extends moodleform {
         $mform->addRule('until', get_string('required'), 'required', null, 'client');
 
         // Supprime les sessions positionnées sur ce jour férié.
-        $mform->addElement('checkbox', 'regensessions', get_string('delete_sessions_already_scheduled_for_those_days', 'local_apsolu'));
+        $label = get_string('delete_sessions_already_scheduled_for_those_days', 'local_apsolu');
+        $mform->addElement('checkbox', 'regensessions', $label);
         $mform->setType('regensessions', PARAM_BOOL);
 
         // Submit buttons.

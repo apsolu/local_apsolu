@@ -76,7 +76,8 @@ class local_apsolu_federation_membership extends moodleform {
 
         // Sport complémentaire.
         $list = html_writer::alist($sportswithconstraints);
-        $mform->addElement('selectyesno', 'complementaryconstraintsport', get_string('do_i_plan_to_practice_one_of_the_following_sports_in_addition', 'local_apsolu', $list));
+        $label = get_string('do_i_plan_to_practice_one_of_the_following_sports_in_addition', 'local_apsolu', $list);
+        $mform->addElement('selectyesno', 'complementaryconstraintsport', $label);
         $mform->setType('complementaryconstraintsport', PARAM_INT);
 
         // Autre fédération.

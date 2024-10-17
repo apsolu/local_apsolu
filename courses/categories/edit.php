@@ -59,7 +59,8 @@ $itemid = 0;
 $customdata = ['category' => $category, 'groupings' => $groupings, 'context' => $context, 'itemid' => $itemid];
 $mform = new local_apsolu_courses_categories_edit_form(null, $customdata);
 
-$editor = file_prepare_standard_editor($category, 'description', $mform->get_description_editor_options(), $context, 'coursecat', 'description', $itemid);
+$editor = file_prepare_standard_editor($category, 'description', $mform->get_description_editor_options(), $context,
+    'coursecat', 'description', $itemid);
 $mform->set_data($editor);
 
 if ($data = $mform->get_data()) {

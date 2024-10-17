@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe pour le formulaire permettant d'exporter les licences FFSU.
- *
- * @package    local_apsolu
- * @copyright  2022 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/formslib.php');
@@ -58,26 +50,27 @@ class local_apsolu_federation_export_licenses extends moodleform {
 
         // Numéro de l'association.
         $attributes = ['size' => 10, 'style' => 'width:6em'];
-        $select = $mform->addElement('select', 'numbers', get_string('association_number_prefix', 'local_apsolu'), $numbers, $attributes);
+        $select = $mform->addElement('select', 'numbers',
+            get_string('association_number_prefix', 'local_apsolu'), $numbers, $attributes);
         $select->setMultiple(true);
         $mform->setType('numbers', PARAM_INT);
 
-        // État du paiement.
+        // Etat du paiement.
         $mform->addElement('select', 'payment', get_string('license_payment_status', 'local_apsolu'), $payments);
         $mform->setType('payment', PARAM_INT);
         $mform->setDefault('payment', APSOLU_SELECT_YES);
 
-        // État du certificat médical.
+        // Etat du certificat médical.
         $mform->addElement('select', 'medical', get_string('medical_certificate_status', 'local_apsolu'), $certificates);
         $mform->setType('medical', PARAM_INT);
         $mform->setDefault('medical', APSOLU_SELECT_YES);
 
-        // État du numéro de licence.
+        // Etat du numéro de licence.
         $mform->addElement('select', 'license', get_string('license_number_status', 'local_apsolu'), $licenses);
         $mform->setType('license', PARAM_INT);
         $mform->setDefault('license', APSOLU_SELECT_NO);
 
-        // État de l'inscription.
+        // Etat de l'inscription.
         $mform->addElement('select', 'status', get_string('registration_status', 'local_apsolu'), $statuses);
         $mform->setType('status', PARAM_INT);
         $mform->setDefault('status', APSOLU_SELECT_YES);

@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe gérant la correspondance entre le nom des activités FFSU et le nom des activités APSOLU.
- *
- * @package    local_apsolu
- * @copyright  2022 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace local_apsolu\core\federation;
 
 use local_apsolu\core\record;
@@ -66,7 +58,7 @@ class questionnaire {
         $category->name = 'À ce jour';
         $category->questions = [];
         $category->questions[] = (object) ['id' => 'q9', 'label' => 'Un membre de votre famille a-t-il présenté une maladie
-            cardiaque grave avant l’âge de 50 ans ? (Arrêt cardiaque, infarctus, stent, pontage, pose déﬁbrillateur, pacemaker).'];
+            cardiaque grave avant l’âge de 50 ans ? (Arrêt cardiaque, infarctus, stent, pontage, pose défibrillateur, pacemaker).'];
         $category->questions[] = (object) ['id' => 'q10', 'label' => 'Présentez-vous une myopie supérieure à 6 dioptries, une
             fragilisation acquise du globe oculaire ou un œil unique ?'];
         $category->questions[] = (object) ['id' => 'q11', 'label' => 'Ressentez-vous une douleur, un manque de force ou une raideur

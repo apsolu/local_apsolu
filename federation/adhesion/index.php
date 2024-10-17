@@ -137,7 +137,7 @@ if ($count === 0) {
     if ($adhesion->federationnumberprefix === false) {
         throw new moodle_exception('cannot_attribute_federation_number_prefix', $module = 'local_apsolu');
     }
-} else if($count === 1) {
+} else if ($count === 1) {
     $adhesion = current($records);
 } else {
     // Sauf bug énorme, ça ne devrait jamais arriver.

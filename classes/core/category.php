@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe gérant les activités sportives (catégories de cours Moodle).
- *
- * @package    local_apsolu
- * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace local_apsolu\core;
 
 use coding_exception;
@@ -102,7 +94,8 @@ class category extends record {
      * Charge un objet à partir de son identifiant.
      *
      * @param int|string $recordid Identifiant de l'objet à charger.
-     * @param bool       $required Si true, lève une exception lorsque l'objet n'existe pas. Valeur par défaut: false (pas d'exception levée).
+     * @param bool       $required Si true, lève une exception lorsque l'objet n'existe pas.
+     *                             Valeur par défaut: false (pas d'exception levée).
      *
      * @return void
      */
@@ -138,7 +131,7 @@ class category extends record {
      *
      * @return void
      */
-    public function save(object $data = null, object $mform = null) {
+    public function save(?object $data = null, ?object $mform = null) {
         global $DB;
 
         if ($data === null) {

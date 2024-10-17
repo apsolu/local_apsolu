@@ -22,9 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-// MoodleQuickForm::registerElementType('time', __DIR__.'/classes/time_form_element.php', 'local_apsolu_time_form_element');
+// phpcs:ignore MoodleQuickForm::registerElementType('time', __DIR__.'/classes/time_form_element.php', 'local_apsolu_time_form_element');
 
 /**
  * Fonction spéciale gérée par Moodle, permettant d'étendre un menu dans un cours.

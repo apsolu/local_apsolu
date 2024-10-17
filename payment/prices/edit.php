@@ -30,7 +30,8 @@ require_once($CFG->dirroot.'/enrol/select/locallib.php');
 // Vérifie qu'il existe au moins un type de calendrier.
 $calendarstypes = $DB->get_records('apsolu_calendars_types', $conditions = [], $sort = 'name');
 if (count($calendarstypes) === 0) {
-    redirect($CFG->wwwroot.'/local/apsolu/configuration/index.php?page=calendarstypes', get_string('needcalendarstypefirst', 'local_apsolu'), null, \core\output\notification::NOTIFY_ERROR);
+    redirect($CFG->wwwroot.'/local/apsolu/configuration/index.php?page=calendarstypes',
+        get_string('needcalendarstypefirst', 'local_apsolu'), null, \core\output\notification::NOTIFY_ERROR);
 }
 
 // Get card id.
@@ -58,7 +59,8 @@ if ($instance === false) {
 
     $instance->cohorts = array_keys($DB->get_records('apsolu_payments_cards_cohort', ['cardid' => $instance->id], '', 'cohortid'));
     $instance->roles = array_keys($DB->get_records('apsolu_payments_cards_roles', ['cardid' => $instance->id], '', 'roleid'));
-    $instance->calendarstypes = $DB->get_records('apsolu_payments_cards_cals', ['cardid' => $instance->id], '', 'calendartypeid, value');
+    $instance->calendarstypes = $DB->get_records('apsolu_payments_cards_cals',
+        ['cardid' => $instance->id], '', 'calendartypeid, value');
 }
 
 foreach ($calendarstypes as $type) {
@@ -115,7 +117,8 @@ if ($data = $mform->get_data()) {
     $DB->delete_records('apsolu_payments_cards_cals', ['cardid' => $instance->id]);
     if (isset($data->types) === true) {
         foreach ($data->types as $calendartypeid => $value) {
-            $DB->execute('INSERT INTO {apsolu_payments_cards_cals}(cardid, calendartypeid, value) VALUES(?, ?, ?)', [$instance->id, $calendartypeid, $value]);
+            $DB->execute('INSERT INTO {apsolu_payments_cards_cals} (cardid, calendartypeid, value)
+                               VALUES (?, ?, ?)', [$instance->id, $calendartypeid, $value]);
         }
     }
 

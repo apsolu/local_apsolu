@@ -39,7 +39,7 @@ if ($numberid !== 0) {
 
 // Build form.
 $customdata = ['number' => $number, 'fields' => Number::get_default_fields()];
-$mform = new local_apsolu_federation_activities_edit_form(null, $customdata);
+$mform = new local_apsolu_federation_numbers_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
     // Message à afficher à la fin de l'enregistrement.

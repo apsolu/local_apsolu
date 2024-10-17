@@ -44,15 +44,17 @@ class local_apsolu_special_courses_form extends moodleform {
 
         $mform = $this->_form;
 
-        list($defaults, $collaborative_courses, $federation_courses) = $this->_customdata;
+        list($defaults, $collaborativecourses, $federationcourses) = $this->_customdata;
 
         // Cours collaboratif pour les enseignants du SUAPS.
-        $mform->addElement('autocomplete', 'collaborative_course', get_string('internal_collaborative_course', 'local_apsolu'), $collaborative_courses);
+        $label = get_string('internal_collaborative_course', 'local_apsolu');
+        $mform->addElement('autocomplete', 'collaborative_course', $label, $collaborativecourses);
         $mform->addHelpButton('collaborative_course', 'internal_collaborative_course', 'local_apsolu');
         $mform->setType('collaborative_course', PARAM_TEXT);
 
         // Cours de la fédération sportive de sports universitaires.
-        $mform->addElement('autocomplete', 'federation_course', get_string('federation_course', 'local_apsolu'), $federation_courses);
+        $label = get_string('federation_course', 'local_apsolu');
+        $mform->addElement('autocomplete', 'federation_course', $label, $federationcourses);
         $mform->addHelpButton('federation_course', 'federation_course', 'local_apsolu');
         $mform->setType('federation_course', PARAM_TEXT);
 

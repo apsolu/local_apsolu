@@ -14,19 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Teste la classe local_apsolu\core\holiday
- *
- * @package   local_apsolu
- * @category  test
- * @copyright 2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-namespace local_apsolu\core;
+namespace local_apsolu;
 
 use core_date;
 use dml_write_exception;
+use local_apsolu\core\course;
+use local_apsolu\core\holiday;
+use local_apsolu\core\period;
 use stdClass;
 
 /**
@@ -36,15 +30,21 @@ use stdClass;
  * @category  test
  * @copyright 2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @coversDefaultClass \local_apsolu\core\holiday
  */
-class holiday_test extends \advanced_testcase {
-    protected function setUp() : void {
+final class holiday_test extends \advanced_testcase {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->resetAfterTest();
     }
 
-    public function test_delete() {
+    /**
+     * Teste delete().
+     *
+     * @covers ::delete()
+     */
+    public function test_delete(): void {
         global $DB;
 
         $holiday = new holiday();
@@ -67,7 +67,12 @@ class holiday_test extends \advanced_testcase {
         $this->assertSame(0, $countrecords);
     }
 
-    public function test_get_records() {
+    /**
+     * Teste get_records().
+     *
+     * @covers ::get_records()
+     */
+    public function test_get_records(): void {
         global $DB;
 
         $holiday = new holiday();
@@ -91,7 +96,12 @@ class holiday_test extends \advanced_testcase {
         $this->assertSame(2, $countrecords);
     }
 
-    public function test_get_holidays() {
+    /**
+     * Teste get_holidays().
+     *
+     * @covers ::get_holidays()
+     */
+    public function test_get_holidays(): void {
         // Teste les jours fériés de l'année 2019.
         $holidays2019 = [
             '2019-01-01',
@@ -137,7 +147,12 @@ class holiday_test extends \advanced_testcase {
         }
     }
 
-    public function test_regenerate_sessions() {
+    /**
+     * Teste regenerate_sessions().
+     *
+     * @covers ::regenerate_sessions()
+     */
+    public function test_regenerate_sessions(): void {
         // Génère une période.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_period_data('p1');
         $period1 = new period();
@@ -170,7 +185,12 @@ class holiday_test extends \advanced_testcase {
         }
     }
 
-    public function test_save() {
+    /**
+     * Teste save().
+     *
+     * @covers ::save()
+     */
+    public function test_save(): void {
         global $DB;
 
         $holiday = new holiday();

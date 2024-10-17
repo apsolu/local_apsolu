@@ -59,14 +59,17 @@ class local_apsolu_messaging_form extends moodleform {
         $mform->addRule('technical_contact', get_string('required'), 'required', null, 'client');
 
         // Préférence pour l'adresse de réponse.
-        $mform->addElement('select', 'replytoaddresspreference', get_string('replyto_address_preference', 'local_apsolu'), messaging::get_replyto_options());
+        $label = get_string('replyto_address_preference', 'local_apsolu');
+        $mform->addElement('select', 'replytoaddresspreference', $label, messaging::get_replyto_options());
         $mform->addHelpButton('replytoaddresspreference', 'replyto_address_preference', 'local_apsolu');
         $mform->setType('replytoaddresspreference', PARAM_INT);
 
         // Choix par défaut pour la préférence de l'adresse d'expédition.
-        $mform->addElement('select', 'defaultreplytoaddresspreference', get_string('default_replyto_address', 'local_apsolu'), messaging::get_default_replyto_options());
+        $label = get_string('default_replyto_address', 'local_apsolu');
+        $mform->addElement('select', 'defaultreplytoaddresspreference', $label, messaging::get_default_replyto_options());
         $mform->setType('defaultreplytoaddresspreference', PARAM_INT);
-        $mform->hideIf('defaultreplytoaddresspreference', 'replytoaddresspreference', 'neq', messaging::ALLOW_REPLYTO_ADDRESS_CHOICE);
+        $mform->hideIf('defaultreplytoaddresspreference', 'replytoaddresspreference',
+            'neq', messaging::ALLOW_REPLYTO_ADDRESS_CHOICE);
 
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));

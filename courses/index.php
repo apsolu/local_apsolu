@@ -81,6 +81,5 @@ $content = ob_get_contents();
 ob_end_clean();
 
 echo $OUTPUT->header();
-// echo $OUTPUT->tabtree($tabsbar, $tab);
 echo $content;
 echo $OUTPUT->footer();

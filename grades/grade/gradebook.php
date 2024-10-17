@@ -75,7 +75,8 @@ foreach (Gradebook::get_courses(APSOLU_GRADES_COURSE_SCOPE) as $course) {
 if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_COURSE && $courses === []) {
     // Cet utilisateur n'a pas de cours à évaluer.
     throw new moodle_exception('no_courses_to_grade', 'local_apsolu');
-} else if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_SYSTEM && has_capability('local/apsolu:viewallgrades', context_system::instance()) === false) {
+} else if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_SYSTEM &&
+    has_capability('local/apsolu:viewallgrades', context_system::instance()) === false) {
     // Cet utilisateur n'a pas les droits de gestionnaires.
     throw new moodle_exception('nopermissions', 'error', '', get_capability_string('local/apsolu:viewallgrades'));
 }
@@ -138,7 +139,8 @@ foreach ($DB->get_records_sql($sql, ['fieldid' => $customfields['apsolucycle']->
 
 // Liste des enseignants.
 $teachers = null;
-if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_SYSTEM && has_capability('local/apsolu:viewallgrades', context_system::instance()) === true) {
+if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_SYSTEM &&
+    has_capability('local/apsolu:viewallgrades', context_system::instance()) === true) {
     $teachers = [];
     $sql = "SELECT DISTINCT u.*".
         " FROM {user} u".
@@ -176,7 +178,8 @@ if ($filters === null) {
         $filters->fields = ['teachers'];
     }
 }
-$customdata = [$filters, $courses, $roles, $calendarstypes, $gradeitems, $cities, $institutions, $ufrs, $departments, $cycles, $teachers];
+$customdata = [$filters, $courses, $roles, $calendarstypes, $gradeitems, $cities,
+    $institutions, $ufrs, $departments, $cycles, $teachers];
 $mform = new local_apsolu_grades_gradebooks_filters_form(null, $customdata);
 
 if (($formdata = $mform->get_data()) || ($data = data_submitted())) {
@@ -186,7 +189,8 @@ if (($formdata = $mform->get_data()) || ($data = data_submitted())) {
 
     if (is_object($filtersdata) === true) {
         // Filtre les options.
-        $acceptedoptions = ['courses', 'roles', 'calendarstypes', 'gradeitems', 'cities', 'institutions', 'ufrs', 'departments', 'cycles', 'teachers', 'fullnameuser', 'idnumber'];
+        $acceptedoptions = ['courses', 'roles', 'calendarstypes', 'gradeitems', 'cities',
+            'institutions', 'ufrs', 'departments', 'cycles', 'teachers', 'fullnameuser', 'idnumber'];
         foreach ($acceptedoptions as $option) {
             if (isset($filtersdata->$option) === true && empty($filtersdata->$option) === false) {
                 $options[$option] = $filtersdata->$option;
@@ -208,9 +212,11 @@ if (($formdata = $mform->get_data()) || ($data = data_submitted())) {
         $filtersdata->fields = [];
     }
 
-    if (isset($options['courses']) === false || count($options['courses']) > 1 || substr(current($options['courses']), -2) === '-0') {
+    if (isset($options['courses']) === false || count($options['courses']) > 1 ||
+        substr(current($options['courses']), -2) === '-0') {
         // Active par défaut le champ "cours" dès que la recherche ne porte pas sur un seul cours précis.
-        // Soit l'utilisateur n'a pas sélectionné de cours, soit il y a plus d'un cours, soit le seul cours sélectionné est une catégorie d'activités.
+        // Soit l'utilisateur n'a pas sélectionné de cours, soit il y a plus d'un cours,
+        // soit le seul cours sélectionné est une catégorie d'activités.
         if (in_array('courses', $filtersdata->fields, $strict = true) === false) {
             $filtersdata->fields[] = 'courses';
         }

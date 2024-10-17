@@ -27,6 +27,8 @@ use UniversiteRennes2\Apsolu;
 require(__DIR__.'/../../../config.php');
 require_once($CFG->dirroot.'/enrol/select/locallib.php');
 
+require_course_login($SITE);
+
 $cityid = optional_param('siteid', 0, PARAM_INT); // Garder pour rétro-compatibilité.
 if (empty($cityid) === true) {
     $cityid = optional_param('cityid', 0, PARAM_INT);
@@ -45,7 +47,6 @@ $title = get_string('course_offerings', 'local_apsolu');
 
 $PAGE->set_context(context_system::instance());
 $PAGE->set_title($title);
-// $PAGE->set_heading($SITE->fullname);
 $PAGE->navbar->add($title);
 
 $PAGE->requires->css(new moodle_url($CFG->wwwroot.'/enrol/select/styles/select2.min.css'));
@@ -124,7 +125,7 @@ $filters['teachers']->values = [];
 $jsondata = get_config('local_apsolu', 'json_course_offerings_ranges');
 $ranges = json_decode($jsondata);
 
-// category, site, activity, period, jour, start, end, level, zone geo, zone, enroltype, enseignant
+// Category, site, activity, period, jour, start, end, level, zone geo, zone, enroltype, enseignant.
 $courses = [];
 foreach (enrol_select_get_activities($cityid) as $activity) {
     // TODO: la méthode enrol_select_get_activities() ne retourne pas le nom "officiel" de ces 3 champs.

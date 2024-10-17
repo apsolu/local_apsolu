@@ -46,7 +46,8 @@ class local_apsolu_payment_notifications_export_form extends moodleform {
         $mform->addElement('header', 'header_cards', get_string('cards', 'local_apsolu'));
 
         // Notice explicative.
-        $mform->addElement('html', sprintf('<div class="bg-light card card-body my-4">%s</div>', get_string('this_form_allows_you_to_export_list_of_pending_payments', 'local_apsolu')));
+        $mform->addElement('html', sprintf('<div class="bg-light card card-body my-4">%s</div>',
+            get_string('this_form_allows_you_to_export_list_of_pending_payments', 'local_apsolu')));
 
         // Liste des cartes.
         foreach ($cards as $cardid => $card) {

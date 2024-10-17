@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe pour le formulaire permettant de sélectionner les sessions.
- *
- * @package    local_apsolu
- * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir.'/formslib.php');
@@ -43,7 +35,7 @@ class edit_select_form extends moodleform {
         $mform = $this->_form;
 
         $data = new stdClass();
-        $data->courseid = $this->_customdata['courseid']; // this contains the data of this form
+        $data->courseid = $this->_customdata['courseid']; // This contains the data of this form.
         $data->sessionid = $this->_customdata['sessionid'];
 
         if (isset($this->_customdata['invalid_enrolments']) == true) {
@@ -78,7 +70,7 @@ class edit_select_form extends moodleform {
         // Submit buttons.
         $mform->addElement('submit', 'submitbutton', get_string('show'));
 
-        // Finally set the current form data
+        // Finally set the current form data.
         $this->set_data($data);
     }
 }

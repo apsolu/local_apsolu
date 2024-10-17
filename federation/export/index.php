@@ -80,7 +80,8 @@ foreach (FederationActivity::get_records(null, $sort = 'name') as $record) {
 
 $constraintactivities = FederationActivity::get_records(['restriction' => 1], $sort = 'name');
 
-$customdata = ['numbers' => $numbers, 'payments' => $payments, 'certificates' => $certificates, 'licenses' => $licenses, 'statuses' => $statuses, 'activities' => $activities];
+$customdata = ['numbers' => $numbers, 'payments' => $payments, 'certificates' => $certificates,
+    'licenses' => $licenses, 'statuses' => $statuses, 'activities' => $activities];
 $mform = new local_apsolu_federation_export_licenses(null, $customdata);
 
 $content = '';
@@ -140,7 +141,7 @@ if ($data = $mform->get_data()) {
             $record->medicalcertificatedateformat = userdate($record->medicalcertificatedate, '%F');
         }
 
-        // Numéro AS
+        // Numéro AS.
         if (empty($data->numbers) === false) {
             $found = false;
             foreach ($data->numbers as $number) {
@@ -159,7 +160,7 @@ if ($data = $mform->get_data()) {
             }
         }
 
-        // État du paiement de licence.
+        // Etat du paiement de licence.
         if (empty($data->payment) === false) {
             if (isset($payments[$record->userid]) === false) {
                 $payments[$record->userid] = [];
@@ -190,7 +191,7 @@ if ($data = $mform->get_data()) {
             }
         }
 
-        // État du certificat médical.
+        // Etat du certificat médical.
         if (empty($data->medical) === false) {
             if ($data->medical === APSOLU_SELECT_YES && empty($record->medicalcertificatestatus) === true) {
                 continue;
@@ -199,7 +200,7 @@ if ($data = $mform->get_data()) {
             }
         }
 
-        // État du numéro de licence.
+        // Etat du numéro de licence.
         if (empty($data->license) === false) {
             if ($data->license === APSOLU_SELECT_YES && empty($record->federationnumber) === true) {
                 continue;
@@ -208,7 +209,7 @@ if ($data = $mform->get_data()) {
             }
         }
 
-        // État de l'inscription.
+        // Etat de l'inscription.
         if (empty($data->status) === false) {
             // Rappel: APSOLU_SELECT_YES = en attende d'attribution d'un numéro, APSOLU_SELECT_NO = inscription en cours.
             if ($data->status === APSOLU_SELECT_YES && empty($record->federationnumberrequestdate) === true) {

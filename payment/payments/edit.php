@@ -114,7 +114,8 @@ foreach ($DB->get_records('apsolu_payments_cards', $conditions = [], $sort = 'fu
     $cards[$card->id] = $card->fullname;
 }
 
-$customdata = ['payment' => $payment, 'methods' => $methods, 'sources' => $sources, 'statuses' => $statuses, 'centers' => $centers, 'cards' => $cards];
+$customdata = ['payment' => $payment, 'methods' => $methods, 'sources' => $sources,
+    'statuses' => $statuses, 'centers' => $centers, 'cards' => $cards];
 $mform = new local_apsolu_payment_payments_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {

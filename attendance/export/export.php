@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// phpcs:disable moodle.NamingConventions.ValidVariableName.VariableNameUnderscore
+
 require_once(__DIR__.'/../../../../config.php');
 require_once(__DIR__.'/export_form.php');
 require_once($CFG->libdir . '/csvlib.class.php');

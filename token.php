@@ -27,8 +27,7 @@ define('NO_MOODLE_COOKIES', true);
 
 require(__DIR__ . '/../../config.php');
 
-// Allow CORS requests.
-// header('Access-Control-Allow-Origin: *');
+// Allow CORS requests: header('Access-Control-Allow-Origin: *').
 
 $cardnumber = required_param('idcardnumber', PARAM_ALPHANUM);
 

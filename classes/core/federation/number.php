@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe gérant les numéros d'association.
- *
- * @package    local_apsolu
- * @copyright  2022 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace local_apsolu\core\federation;
 
 use local_apsolu\core\record;
@@ -51,7 +43,8 @@ class number extends record {
     /** @var string $value Valeur recherchée. */
     public $value = '';
 
-    /** @var int|string $sortorder Identifiant numérique de la catégorie APSOLU décrivant une activité sportive (table {apsolu_categories}). */
+    /** @var int|string $sortorder Identifiant numérique de la catégorie APSOLU décrivant
+                                   une activité sportive (table {apsolu_categories}). */
     public $sortorder = '';
 
     /**

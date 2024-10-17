@@ -86,11 +86,11 @@ if (Payment::is_open() === false) {
     // Display page.
     echo $OUTPUT->header();
 
-    $payments_startdate = get_config('local_apsolu', 'payments_startdate');
+    $paymentsstartdate = get_config('local_apsolu', 'payments_startdate');
 
     $data = new stdClass();
-    if (time() < $payments_startdate) {
-        $date = userdate($payments_startdate, get_string('strftimedaydatetime', 'langconfig'));
+    if (time() < $paymentsstartdate) {
+        $date = userdate($paymentsstartdate, get_string('strftimedaydatetime', 'langconfig'));
         $data->complement = get_string('opened_period', 'local_apsolu', (object) ['date' => $date]);
     }
 

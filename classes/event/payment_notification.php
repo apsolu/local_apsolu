@@ -14,17 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Event to log user notifications.
- *
- * @package    local_apsolu
- * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace local_apsolu\event;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Event to log user notifications.
@@ -40,7 +30,7 @@ class payment_notification extends \core\event\base {
      * @return void
      */
     protected function init() {
-        // Values: c(reate), r(ead), u(pdate) or d(elete).
+        // Values: c (create), r (read), u (update) or d (delete).
         $this->data['crud'] = 'c';
 
         // Values: LEVEL_TEACHING, LEVEL_PARTICIPATING or LEVEL_OTHER.

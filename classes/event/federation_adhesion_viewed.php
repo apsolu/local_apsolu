@@ -16,8 +16,6 @@
 
 namespace local_apsolu\event;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Enregistre lorsque le formulaire d'adhésion FFSU est affiché.
  *
@@ -32,7 +30,7 @@ class federation_adhesion_viewed extends \core\event\base {
      * @return void
      */
     protected function init() {
-        // Values: c(reate), r(ead), u(pdate) or d(elete).
+        // Values: c (create), r (read), u (update) or d (delete).
         $this->data['crud'] = 'r';
 
         // Values: LEVEL_TEACHING, LEVEL_PARTICIPATING or LEVEL_OTHER.

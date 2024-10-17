@@ -14,17 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Teste la classe local_apsolu\core\role
- *
- * @package   local_apsolu
- * @category  test
- * @copyright 2023 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace local_apsolu;
 
-namespace local_apsolu\core;
-
+use local_apsolu\core\role;
 use stdClass;
 
 /**
@@ -34,15 +26,21 @@ use stdClass;
  * @category  test
  * @copyright 2023 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @coversDefaultClass \local_apsolu\core\role
  */
-class role_test extends \advanced_testcase {
-    protected function setUp() : void {
+final class role_test extends \advanced_testcase {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->resetAfterTest();
     }
 
-    public function test_save() {
+    /**
+     * Teste delete().
+     *
+     * @covers ::delete()
+     */
+    public function test_save(): void {
         global $DB;
 
         $role = new role();

@@ -14,19 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Teste la classe local_apsolu\core\attendance\status
- *
- * @package    local_apsolu
- * @category   test
- * @copyright  2023 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-namespace local_apsolu\core\attendance;
+namespace local_apsolu\attendance;
 
 use local_apsolu\core\attendancepresence;
 use local_apsolu\core\attendancesession;
+use local_apsolu\core\attendance\status;
 use local_apsolu\core\course;
 
 /**
@@ -36,15 +28,21 @@ use local_apsolu\core\course;
  * @category   test
  * @copyright  2023 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @coversDefaultClass \local_apsolu\core\attendance\status
  */
-class status_test extends \advanced_testcase {
-    protected function setUp() : void {
+final class status_test extends \advanced_testcase {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->resetAfterTest();
     }
 
-    public function test_delete() {
+    /**
+     * Teste delete().
+     *
+     * @covers ::delete()
+     */
+    public function test_delete(): void {
         global $DB;
 
         // Génère un nouveau cours.
@@ -93,7 +91,12 @@ class status_test extends \advanced_testcase {
         $this->assertSame(0, $countrecords);
     }
 
-    public function test_save() {
+    /**
+     * Teste save().
+     *
+     * @covers ::save()
+     */
+    public function test_save(): void {
         global $DB;
 
         $status = new status();

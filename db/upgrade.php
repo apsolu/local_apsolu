@@ -22,6 +22,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// phpcs:disable moodle.Files.LineLength.MaxExceeded
+// phpcs:disable moodle.Files.LineLength.TooLong
+
 use local_apsolu\core\course as Course;
 use local_apsolu\core\federation\activity as Activity;
 use local_apsolu\core\federation\adhesion as Adhesion;
@@ -162,7 +165,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
 
-        $field = new xmldb_field('paymentcenterid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $not_null = false, null, null, null);
+        $field = new xmldb_field('paymentcenterid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $notnull = false, null, null, null);
 
         foreach (['apsolu_courses', 'apsolu_complements'] as $tablename) {
             $table = new xmldb_table($tablename);
@@ -172,7 +175,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             }
         }
 
-        $field = new xmldb_field('generic_name', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, $not_null = false, null, null, null);
+        $field = new xmldb_field('generic_name', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, $notnull = false, null, null, null);
 
         $table = new xmldb_table('apsolu_periods');
 
@@ -180,7 +183,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $dbman->add_field($table, $field);
         }
 
-        $field = new xmldb_field('federation', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $not_null = false, null, $default = 0, null);
+        $field = new xmldb_field('federation', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $notnull = false, null, $default = 0, null);
 
         $table = new xmldb_table('apsolu_courses_categories');
 
@@ -188,7 +191,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $dbman->add_field($table, $field);
         }
 
-        $field = new xmldb_field('license', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $not_null = false, null, $default = 0, null);
+        $field = new xmldb_field('license', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $notnull = false, null, $default = 0, null);
 
         $table = new xmldb_table('apsolu_courses');
 
@@ -196,7 +199,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $dbman->add_field($table, $field);
         }
 
-        $field = new xmldb_field('federation', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $not_null = false, null, $default = 0, null);
+        $field = new xmldb_field('federation', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $notnull = false, null, $default = 0, null);
 
         $table = new xmldb_table('apsolu_complements');
 
@@ -221,7 +224,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             }
         }
 
-        $field = new xmldb_field('on_homepage', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $not_null = false, null, $default = 1, null);
+        $field = new xmldb_field('on_homepage', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $notnull = false, null, $default = 1, null);
 
         $table = new xmldb_table('apsolu_courses');
 
@@ -246,7 +249,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         }
 
         // Add cityid field to areas table.
-        $field = new xmldb_field('cityid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $not_null = false, null, $default = 1, null);
+        $field = new xmldb_field('cityid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $notnull = false, null, $default = 1, null);
 
         $table = new xmldb_table('apsolu_areas');
 
@@ -331,19 +334,19 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         $customs['apsoludoublecursus'] = (object) ['shortname' => 'apsoludoublecursus', 'datatype' => 'checkbox', 'param1' => null, 'param2' => null, 'param3' => null, 'visible' => 0];
 
         foreach ($customs as $oldname => $custom) {
-            $field_ = $DB->get_record('user_info_field', ['shortname' => $oldname]);
-            if ($field_ !== false) {
+            $oldfield = $DB->get_record('user_info_field', ['shortname' => $oldname]);
+            if ($oldfield !== false) {
                 // Renomme le champ.
-                $field_->shortname = $custom->shortname;
-                $field_->name = get_string('fields_'.$field_->shortname, 'local_apsolu');
+                $oldfield->shortname = $custom->shortname;
+                $oldfield->name = get_string('fields_'.$oldfield->shortname, 'local_apsolu');
 
-                $DB->update_record('user_info_field', $field_);
+                $DB->update_record('user_info_field', $oldfield);
 
                 continue;
             }
 
-            $field_ = $DB->get_record('user_info_field', ['shortname' => $custom->shortname]);
-            if ($field_ === false) {
+            $oldfield = $DB->get_record('user_info_field', ['shortname' => $custom->shortname]);
+            if ($oldfield === false) {
                 // Insert les nouveaux champs.
                 $field->shortname = $custom->shortname;
                 $field->name = get_string('fields_'.$field->shortname, 'local_apsolu');

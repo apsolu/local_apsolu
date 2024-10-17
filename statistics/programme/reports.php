@@ -21,28 +21,28 @@
  * @copyright  2019 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once('../../externallib.php');
-require_once($CFG->dirroot.'/local/apsolu/statistics/population/report_form.php');
+require_once($CFG->dirroot.'/local/apsolu/statistics/programme/report_form.php');
 
 use local_apsolu\local\statistics\programme\report;
 
-
-// Output
+// Output.
 $PAGE->requires->js_call_amd('local_apsolu/programme_reports', 'init', [".report-enrolList-table"]);
 $PAGE->requires->css('/local/apsolu/lib/jquery/DataTables/datatables.min.css');
 
-// Data
+// Data.
 $data = new stdClass();
-if ($CFG->is_siuaps_rennes){
+if ($CFG->is_siuaps_rennes) {
     $data->is_siuaps_rennes = $CFG->is_siuaps_rennes;
 }
 
 $report = new report();
 $reportid = optional_param('reportid', null, PARAM_TEXT);
 $reportdata = [$report->getReport(), $reportid];
-$mform = new local_apsolu_statistics_report_form(null, $reportdata);
+$mform = new local_apsolu_statistics_programme_report_form(null, $reportdata);
 
 echo $OUTPUT->header();
 echo $OUTPUT->tabtree($tabtree, $page);

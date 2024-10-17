@@ -70,7 +70,8 @@ if (isset($userid)) {
                 $timepaid = new DateTime($payment->timepaid);
                 $payment->timepaid = core_date::strftime('%c', $timepaid->getTimestamp());
             } catch (Exception $exception) {
-
+                // Logiquement, ça ne devrait pas arriver...
+                $payment->timepaid = null;
             }
         } else if ($showalltransactions === 0) {
             // On ne traite pas ce paiement si la date de paiement n'est pas définie et qu'on n'affiche pas toutes les transactions.
