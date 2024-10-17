@@ -1397,5 +1397,18 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         }
     }
 
+    // Modification à appliquer lors de la prochaine mise à jour.
+    if (false) {
+        // Change le type du champ "departmentofbirth" de la table "apsolu_federation_adhesions" de bigint à varchar.
+        $table = new xmldb_table('apsolu_federation_adhesions');
+        $field = new xmldb_field('departmentofbirth', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL,
+            $sequence = null, $default = null, null);
+
+        $dbman->change_field_type($table, $field);
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
     return $result;
 }

@@ -165,7 +165,7 @@
             <FIELD NAME="insurance" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="birthday" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="nativecountry" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
-            <FIELD NAME="departmentofbirth" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="departmentofbirth" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
             <FIELD NAME="cityofbirth" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
             <FIELD NAME="address1" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
             <FIELD NAME="address2" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />

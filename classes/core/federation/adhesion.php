@@ -112,7 +112,7 @@ class adhesion extends record {
     /** @var string $nativecountry Pays de naissance de l'adhérent. */
     public $nativecountry = '';
 
-    /** @var int|string $departmentofbirth Identifiant numérique du département de naissance de l'adhérent. */
+    /** @var string $departmentofbirth Identifiant numérique du département de naissance de l'adhérent. */
     public $departmentofbirth = '0';
 
     /** @var string $cityofbirth Ville de naissance de l'adhérent. */
