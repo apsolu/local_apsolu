@@ -50,7 +50,7 @@ class local_apsolu_federation_import_licences extends moodleform {
 
         $mform->addElement('header', 'upload', get_string('upload'));
 
-        $mform->addElement('filepicker', 'userfile', get_string('file'));
+        $mform->addElement('filepicker', 'userfile', get_string('file'), null, ['accepted_types' => '.csv']);
         $mform->addRule('userfile', null, 'required');
 
         $mform->addElement('header', 'settings', get_string('settings'));
