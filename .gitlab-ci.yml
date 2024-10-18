@@ -3,7 +3,6 @@
 
 variables:
   ALLOW_FAILURE_GRUNT: "true"  # Beaucoup d'erreurs javascript.
-  ALLOW_FAILURE_MUSTACHE: "true"  # Principalement à cause de code JS intégré dans le HTML.
   ALLOW_FAILURE_PHPCPD: "true"  # Problème de code dupliqué.
   ALLOW_FAILURE_VALIDATE: "true"  # Manque une table local_apsolu.
 
