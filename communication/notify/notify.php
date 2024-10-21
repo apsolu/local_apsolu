@@ -96,7 +96,7 @@ if ($data = $mform->get_data()) {
 
         $notification = $OUTPUT->notification($message, $status);
     } else {
-        if (isset($data->exportcsv) === true || isset($data->exportxls) === true) {
+        if (isset($data->exportcsv) === true || isset($data->exportexcel) === true) {
             // Gestion des exports CSV et Excel.
             $filename = get_string('exporting_users', 'local_apsolu');
             $headers = [];
