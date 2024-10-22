@@ -47,10 +47,13 @@ foreach ($recordset as $record) {
         $messages[$communicationid] = new stdClass();
         $messages[$communicationid]->id = $other->communicationid;
         $messages[$communicationid]->subject = '';
+        $messages[$communicationid]->template = 0;
         if (isset($templates[$other->template]) === true) {
             $messages[$communicationid]->subject = $templates[$other->template]->subject;
+            $messages[$communicationid]->template = $other->template;
         }
         $messages[$communicationid]->date = userdate($record->timecreated, get_string('strftimedaydatetime'));
+        $messages[$communicationid]->timestamp = $record->timecreated;
         $messages[$communicationid]->countmessages = 0;
     }
 

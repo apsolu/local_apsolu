@@ -61,4 +61,14 @@ class template extends notify {
 
         $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
     }
+
+    /**
+     * Verrouille le formulaire et supprime les boutons de validation pour permettre une relecture.
+     *
+     * @return void
+     */
+    public function freeze_for_review(): void {
+        $this->_form->removeElement('buttonar');
+        $this->_form->hardFreeze();
+    }
 }
