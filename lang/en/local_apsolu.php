@@ -687,6 +687,7 @@ $string['taking_attendance_is_only_possible_on_a_course'] = 'La prise de présen
 $string['teacher'] = 'Enseignant';
 $string['teachers'] = 'Enseignants';
 $string['template'] = 'Modèle';
+$string['template_created'] = 'Modèle de message créé.';
 $string['template_has_been_deleted'] = 'Le modèle de message a été supprimé.';
 $string['template_has_been_duplicated'] = 'Le modèle de message a été dupliqué.';
 $string['template_updated'] = 'Modèle de message modifié.';

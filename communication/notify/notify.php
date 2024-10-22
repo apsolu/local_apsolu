@@ -88,6 +88,20 @@ if ($data = $mform->get_data()) {
         $template->filters = json_encode($template->filters);
 
         $template->id = $DB->insert_record('apsolu_communication_templates', $template);
+
+        // Ajoute une trace des changements dans les logs.
+        $other = [];
+        foreach (get_object_vars($template) as $property => $value) {
+            $other[$property] = ['old' => '', 'new' => (string) $value];
+        }
+        $other['hidden'] = ['old' => '', 'new' => (string) $template->hidden];
+
+        $event = \local_apsolu\event\template_created::create([
+            'objectid' => $template->id,
+            'context' => context_system::instance(),
+            'other' => json_encode($other),
+        ]);
+        $event->trigger();
     }
 
     $count = count($users);
