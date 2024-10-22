@@ -387,6 +387,7 @@ $string['license_payment_status'] = 'État du paiement de licence';
 $string['list_of_due_payments'] = 'Liste des paiements dûs';
 $string['list_of_my_students'] = 'Liste de mes étudiants';
 $string['list_of_payments'] = 'Liste des paiements';
+$string['list_of_receivers'] = 'Liste des destinataires';
 $string['location'] = 'Lieu';
 $string['location_cannot_be_deleted'] = 'Le lieu « {$a} » ne peut pas être supprimé, car il est rattaché aux lieux suivants :';
 $string['location_has_been_deleted'] = 'Le lieu a été supprimé.';

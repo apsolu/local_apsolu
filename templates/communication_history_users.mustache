@@ -1,0 +1,66 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_apsolu/communication_history_users
+
+    Template Moodle pour afficher les utilisateurs notifiés
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * wwwroot
+    * count_receivers
+    * receivers
+        * id
+        * firstname
+        * lastname
+        * idnumber
+        * email
+
+    Example context (json):
+    {
+        "wwwroot": "",
+        "count_receivers": 0,
+        "receivers": []
+    }
+}}
+{{^count_receivers}}
+    <p class="alert alert-info">{{#str}}no_users, local_apsolu{{/str}}</p>
+{{/count_receivers}}
+
+{{#count_receivers}}
+<table class="table table-striped">
+    <tr>
+        <th>{{#str}}lastname{{/str}}</th>
+        <th>{{#str}}firstname{{/str}}</th>
+        <th>{{#str}}idnumber{{/str}}</th>
+        <th>{{#str}}email{{/str}}</th>
+    </tr>
+    {{#receivers}}
+    <tr>
+        <td>{{ lastname }}</td>
+        <td>{{ firstname }}</td>
+        <td>{{ idnumber }}</td>
+        <td>{{ email }}</td>
+    </tr>
+    {{/receivers}}
+</table>
+{{/count_receivers}}
