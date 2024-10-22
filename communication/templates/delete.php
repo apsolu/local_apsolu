@@ -39,6 +39,13 @@ if ($delete === $deletehash) {
     $template->hidden = 1;
     $DB->update_record('apsolu_communication_templates', $template);
 
+    // Ajoute une trace des changements dans les logs.
+    $event = \local_apsolu\event\template_deleted::create([
+        'objectid' => $template->id,
+        'context' => context_system::instance(),
+    ]);
+    $event->trigger();
+
     $message = get_string('template_has_been_deleted', 'local_apsolu');
     redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
