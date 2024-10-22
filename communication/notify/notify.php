@@ -71,6 +71,7 @@ if ($data = $mform->get_data()) {
         $filters = ['groupings', 'categories', 'courses', 'teachers', 'enrollists', 'calendars', 'roles', 'cohorts', 'locations'];
 
         $template = new stdClass();
+        $template->subject = $data->subject;
         $template->body = $data->message['text'];
         $template->carboncopy = isset($data->carboncopy);
         $template->functionalcontact = isset($data->notify_functional_contact);
