@@ -28,8 +28,14 @@ $templates = $DB->get_records('apsolu_communication_templates');
 
 $messages = [];
 $countmessages = 0;
-$params = ['component' => 'local_apsolu', 'eventname' => '\local_apsolu\event\communication_sent'];
-foreach ($DB->get_records('logstore_standard_log', $params, $sort = 'timecreated DESC') as $record) {
+
+$params = ['component' => 'local_apsolu', 'contextlevel' => CONTEXT_SYSTEM];
+$recordset = $DB->get_recordset('logstore_standard_log', $params, $sort = 'timecreated DESC');
+foreach ($recordset as $record) {
+    if ($record->eventname !== '\local_apsolu\event\communication_sent') {
+        continue;
+    }
+
     $other = json_decode(unserialize($record->other));
     if (empty($other) === true) {
         continue;
@@ -51,6 +57,7 @@ foreach ($DB->get_records('logstore_standard_log', $params, $sort = 'timecreated
     $messages[$communicationid]->countmessages++;
     $countmessages++;
 }
+$recordset->close();
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
