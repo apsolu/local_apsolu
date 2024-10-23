@@ -99,7 +99,7 @@ if ($data = $mform->get_data()) {
         $event = \local_apsolu\event\template_created::create([
             'objectid' => $template->id,
             'context' => context_system::instance(),
-            'other' => json_encode($other),
+            'other' => $other,
         ]);
         $event->trigger();
     }

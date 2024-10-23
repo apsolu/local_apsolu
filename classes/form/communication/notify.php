@@ -355,8 +355,8 @@ class notify extends \local_apsolu_notification_form {
 
             if (message_send($eventdata) !== false) {
                 // Ajoute une trace dans les logs.
-                $other = json_encode(['communicationid' => $communicationid, 'sender' => $USER->id, 'receiver' => $userid,
-                    'template' => $templateid]);
+                $other = ['communicationid' => $communicationid, 'sender' => $USER->id, 'receiver' => $userid,
+                    'template' => $templateid];
 
                 $event = \local_apsolu\event\communication_sent::create([
                     'relateduserid' => $userid,
@@ -385,8 +385,8 @@ class notify extends \local_apsolu_notification_form {
                 email_to_user($admin, $USER, $data->subject, $messagetext, $messagehtml);
             }
 
-            $other = json_encode(['communicationid' => $communicationid, 'sender' => $USER->id, 'receiver' => $admin->email,
-                'template' => $templateid]);
+            $other = ['communicationid' => $communicationid, 'sender' => $USER->id, 'receiver' => $admin->email,
+                'template' => $templateid];
 
             $event = \local_apsolu\event\communication_sent::create([
                 'relateduserid' => $admin->id,

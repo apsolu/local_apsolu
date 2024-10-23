@@ -188,7 +188,7 @@ class local_apsolu_notification_form extends moodleform {
                 $event = \local_apsolu\event\notification_sent::create([
                     'relateduserid' => $userid,
                     'context' => $context,
-                    'other' => json_encode(['sender' => $USER->id, 'receiver' => $userid, 'subject' => $eventdata->subject]),
+                    'other' => ['sender' => $USER->id, 'receiver' => $userid, 'subject' => $eventdata->subject],
                 ]);
                 $event->trigger();
             }
@@ -216,7 +216,7 @@ class local_apsolu_notification_form extends moodleform {
             $event = \local_apsolu\event\notification_sent::create([
                 'relateduserid' => $admin->id,
                 'context' => $context,
-                'other' => json_encode(['sender' => $USER->id, 'receiver' => $admin->email, 'subject' => $eventdata->subject]),
+                'other' => ['sender' => $USER->id, 'receiver' => $admin->email, 'subject' => $eventdata->subject],
                 ]);
             $event->trigger();
         }

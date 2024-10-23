@@ -224,7 +224,7 @@ ob_end_clean();
 $event = federation_adhesion_viewed::create([
     'objectid' => $adhesion->id,
     'context' => $context,
-    'other' => json_encode(['step' => $stepid]),
+    'other' => ['step' => $stepid],
     ]);
 $event->trigger();
 

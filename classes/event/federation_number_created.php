@@ -54,7 +54,11 @@ class federation_number_created extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        $other = json_decode($this->other);
+        $other = $this->other;
+        if (is_string($other) === true) {
+            // Ligne pour assurer la rétrocompatibilité, lorsqu'on encodait nous même les données other en JSON.
+            $other = json_decode($other);
+        }
 
         return 'The user with id '.$this->userid.' created a federation number '.$other->federationnumber.
             ' for adhesion with id '.$this->objectid;

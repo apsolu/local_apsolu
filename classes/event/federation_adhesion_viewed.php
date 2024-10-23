@@ -64,7 +64,11 @@ class federation_adhesion_viewed extends \core\event\base {
      * @return \moodle_url
      */
     public function get_url() {
-        $other = json_decode($this->other);
+        $other = $this->other;
+        if (is_string($other) === true) {
+            // Ligne pour assurer la rétrocompatibilité, lorsqu'on encodait nous même les données other en JSON.
+            $other = json_decode($other);
+        }
 
         return new \moodle_url('/local/apsolu/federation/adhesion/index.php', ['step' => $other->step]);
     }

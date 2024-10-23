@@ -142,7 +142,7 @@ if ($formdata = $mform->get_data()) {
                     'objectid' => $adhesion->id,
                     'context' => $context,
                     'relateduserid' => $adhesion->userid,
-                    'other' => json_encode(['federationnumber' => $licenseid]),
+                    'other' => ['federationnumber' => $licenseid],
                     ]);
                 $event->trigger();
             } else {
@@ -155,7 +155,7 @@ if ($formdata = $mform->get_data()) {
                     'objectid' => $adhesion->id,
                     'context' => $context,
                     'relateduserid' => $adhesion->userid,
-                    'other' => json_encode(['federationnumber' => $licenseid, 'oldfederationnumber' => $oldlicenseid]),
+                    'other' => ['federationnumber' => $licenseid, 'oldfederationnumber' => $oldlicenseid],
                     ]);
                 $event->trigger();
             }

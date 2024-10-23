@@ -54,7 +54,11 @@ foreach ($recordset as $record) {
         continue;
     }
 
-    $other = json_encode(logstore::decode_other($record->other));
+    $other = logstore::decode_other($record->other);
+    if (is_string($other) === true) {
+        // Ligne pour assurer la rétrocompatibilité, lorsqu'on encodait nous même les données other en JSON.
+        $other = json_decode($other);
+    }
 
     if (empty($other) === true) {
         continue;

@@ -167,7 +167,7 @@ if (empty($adhesion->federationnumber) === true) {
             $event = \local_apsolu\event\notification_sent::create([
                 'relateduserid' => $USER->id,
                 'context' => $context,
-                'other' => json_encode(['sender' => $USER->id, 'receiver' => $admin->email, 'subject' => $subject]),
+                'other' => ['sender' => $USER->id, 'receiver' => $admin->email, 'subject' => $subject],
                 ]);
             $event->trigger();
         }

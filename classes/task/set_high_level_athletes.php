@@ -158,7 +158,7 @@ class set_high_level_athletes extends \core\task\scheduled_task {
                     $event = \local_apsolu\event\update_user_payment::create([
                         'relateduserid' => $member->userid,
                         'context' => context_system::instance(),
-                        'other' => json_encode(['payment' => $payment, 'items' => $cardsid]),
+                        'other' => ['payment' => $payment, 'items' => $cardsid],
                     ]);
                     $event->trigger();
 

@@ -64,7 +64,12 @@ class notification_sent extends \core\event\base {
     public function get_description() {
         global $CFG, $DB;
 
-        $other = json_decode($this->other);
+        $other = $this->other;
+        if (is_string($other) === true) {
+            // Ligne pour assurer la rétrocompatibilité, lorsqu'on encodait nous même les données other en JSON.
+            $other = json_decode($other);
+        }
+
         if (ctype_digit($other->receiver) === true) {
             // Si on a l'identifiant du destinaire, on va chercher son nom dans la table des utilisateurs.
             $user = $DB->get_record('user', ['id' => $other->receiver]);
