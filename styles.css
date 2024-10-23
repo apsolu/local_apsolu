@@ -315,3 +315,8 @@ select[data-apsolu=fontawesome] option {
 #page-admin-local-apsolu-statistics-programme-index .chart-area .chart-image {
     width: auto;
 }
+
+/* Administration > communication > historique > Message envoyé. */
+#page-admin-local-apsolu-communication-index #fitem_id_message div[data-fieldtype="editor"] {
+    display: block !important; /* stylelint-disable-line declaration-no-important */
+}
