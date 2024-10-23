@@ -23,6 +23,7 @@
  */
 
 use local_apsolu\form\communication\template as form;
+use logstore_standard\log\store as logstore;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -62,7 +63,8 @@ foreach ($recordset as $record) {
     }
 
     // Récupère les anciennes données du template.
-    $other = json_decode(unserialize($record->other));
+    $other = json_decode(logstore::decode_other($record->other));
+
     if (empty($other) === true) {
         continue;
     }

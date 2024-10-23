@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use logstore_standard\log\store as logstore;
+
 defined('MOODLE_INTERNAL') || die;
 
 $id = required_param('id', PARAM_ALPHANUM);
@@ -52,7 +54,8 @@ foreach ($recordset as $record) {
         continue;
     }
 
-    $other = json_decode(unserialize($record->other));
+    $other = json_encode(logstore::decode_other($record->other));
+
     if (empty($other) === true) {
         continue;
     }

@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use logstore_standard\log\store as logstore;
+
 defined('MOODLE_INTERNAL') || die;
 
 $templates = $DB->get_records('apsolu_communication_templates');
@@ -36,7 +38,8 @@ foreach ($recordset as $record) {
         continue;
     }
 
-    $other = json_decode(unserialize($record->other));
+    $other = json_decode(logstore::decode_other($record->other));
+
     if (empty($other) === true) {
         continue;
     }
