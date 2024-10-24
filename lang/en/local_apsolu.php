@@ -743,6 +743,7 @@ $string['until'] = 'Jusqu’au';
 $string['upload_a_medical_certificate'] = 'Déposer un certificat médical';
 $string['upload_a_parental_authorization'] = 'Déposer une autorisation parentale';
 $string['uploaded_date'] = 'Déposé le {$a}';
+$string['use'] = 'Utiliser';
 $string['use_apsolu_homepage'] = 'Utiliser la page d’accueil APSOLU';
 $string['use_personal_data'] = 'Utilisation des données personnelles';
 $string['use_personal_image'] = 'Droit à l’image';

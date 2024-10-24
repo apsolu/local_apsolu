@@ -53,10 +53,13 @@
     </tr>
     {{#templates}}
     <tr>
-        <td><a href="{{wwwroot}}/local/apsolu/communication/index.php?page=notify&template={{id}}" aria-label="{{#str}}sendmessage, message{{/str}}"><i class="icon fa fa-envelope-open-o fa-fw" aria-hidden="true"></i>{{ subject }}</a></td>
+        <td>{{ subject }}</td>
         <td>
             <ul class="list-inline">
                 <li class="list-inline-item mr-3">
+                    <a href="{{wwwroot}}/local/apsolu/communication/index.php?page=notify&template={{id}}"><i class="icon fa fa-envelope-open-o fa-fw" aria-hidden="true"></i>{{#str}}use, local_apsolu{{/str}}</a>
+                </li>
+                <li class="list-inline-item mx-3">
                     <a href="{{wwwroot}}/local/apsolu/communication/index.php?page=templates&action=edit&id={{id}}"><i class="icon fa fa-cog fa-fw" aria-hidden="true"></i>{{#str}}edit{{/str}}</a>
                 </li>
                 <li class="list-inline-item mx-3">
