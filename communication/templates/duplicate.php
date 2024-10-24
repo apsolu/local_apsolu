@@ -37,7 +37,18 @@ if ($duplicate === $duplicatehash) {
     require_sesskey();
 
     unset($template->id);
-    $DB->insert_record('apsolu_communication_templates', $template);
+    $template->id = $DB->insert_record('apsolu_communication_templates', $template);
+
+    // Ajoute une trace des changements dans les logs.
+    $other = ['newid' => $template->id];
+
+    $event = \local_apsolu\event\template_duplicated::create([
+        'objectid' => $templateid,
+        'context' => context_system::instance(),
+        'other' => $other,
+    ]);
+
+    $event->trigger();
 
     $message = get_string('template_has_been_duplicated', 'local_apsolu');
     redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);

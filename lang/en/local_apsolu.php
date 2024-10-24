@@ -690,6 +690,7 @@ $string['teachers'] = 'Enseignants';
 $string['template'] = 'Modèle';
 $string['template_created'] = 'Modèle de message créé.';
 $string['template_deleted'] = 'Modèle de message supprimé.';
+$string['template_duplicated'] = 'Modèle de message dupliqué.';
 $string['template_has_been_deleted'] = 'Le modèle de message a été supprimé.';
 $string['template_has_been_duplicated'] = 'Le modèle de message a été dupliqué.';
 $string['template_updated'] = 'Modèle de message modifié.';
