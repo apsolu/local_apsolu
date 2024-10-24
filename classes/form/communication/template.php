@@ -39,6 +39,12 @@ class template extends notify {
         $mform = $this->_form;
 
         $mform->removeElement('sender');
+        foreach (['replyto', 'replytolabel'] as $key) {
+            if ($mform->elementExists($key) === false) {
+                continue;
+            }
+            $mform->removeElement($key);
+        }
         $mform->removeElement('buttonar');
         $mform->setExpanded('filters', true);
 
