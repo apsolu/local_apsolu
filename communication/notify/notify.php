@@ -56,6 +56,9 @@ if (isset($template) === true) {
             $defaultdata->{$key} = $value;
         }
     }
+} else {
+    // Démarre avec un champ vide, plutôt qu'une zone de texte restaurée d'une session précédente.
+    $defaultdata->message = ['format' => FORMAT_HTML, 'text' => ' '];
 }
 
 $recipients = [];
