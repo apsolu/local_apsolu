@@ -241,6 +241,10 @@ if ($data = $mform->get_data()) {
         }
         $recordset->close();
 
+        // MDL-83543: positionne un cookie pour qu'un script js déverrouille le bouton submit après le téléchargement.
+        setcookie('moodledownload_' . sesskey(), time());
+
+        // Transmet le fichier au navigateur.
         $workbook->close();
         exit(0);
     }
