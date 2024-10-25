@@ -80,7 +80,13 @@ if ($data = $mform->get_data()) {
     }
 
     // Display notification and display elements list.
-    $notificationform = $OUTPUT->notification(get_string('dunningsaved', 'local_apsolu'), 'notifysuccess');
+    if (empty($data->simulation) === false) {
+        $message = get_string('simulationdunningsaved', 'local_apsolu');
+    } else {
+        $message = get_string('dunningsaved', 'local_apsolu');
+    }
+
+    $notificationform = $OUTPUT->notification($message, 'notifysuccess');
 }
 
 $data = new stdClass();

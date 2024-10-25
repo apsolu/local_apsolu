@@ -813,6 +813,7 @@ $string['timecreated'] = 'Date de création';
 $string['countposts'] = 'Nombre de messages envoyés';
 $string['nohistory'] = 'Aucun historique';
 $string['dunningsaved'] = 'La relance de paiement a été enregistrée. Les notifications seront envoyées au plus tard dans une heure.';
+$string['simulationdunningsaved'] = 'La relance de paiement a été enregistrée. La simulation calculera les notifications à envoyer au plus tard dans une heure.';
 $string['state'] = 'État';
 $string['waiting'] = 'En attente';
 $string['running'] = 'En cours';
