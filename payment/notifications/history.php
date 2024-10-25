@@ -46,6 +46,11 @@ $sql = "SELECT ".$DB->sql_concat('dc.dunningid', '" "', 'c.id').", c.*, dc.dunni
 $cards = $DB->get_records_sql($sql);
 
 foreach ($dunnings as $dunning) {
+    $dunning->simulation = null;
+    if (substr($dunning->subject, 0, 4) === '[x] ') {
+        $dunning->subject = substr($dunning->subject, 4);
+        $dunning->simulation = strtolower(get_string('simulation', 'local_apsolu'));
+    }
     $dunning->message = nl2br($dunning->message);
     $dunning->timecreated = userdate($dunning->timecreated, get_string('strftimedatetime', 'local_apsolu'));
 

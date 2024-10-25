@@ -65,7 +65,7 @@
 		<td><details><summary>{{#str}}show{{/str}}</summary><div class="well">{{{message}}}</div></details></td>
 		<td>{{#count_cards}}<ul>{{#cards}}<li>{{fullname}}</li>{{/cards}}</ul>{{/count_cards}}</td>
 		<td>{{^count_posts}}0{{/count_posts}}{{#count_posts}}<a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=notifications&action=posts&dunningid={{id}}">{{count_posts}}</a>{{/count_posts}}</td>
-		<td class="{{status_style}}">{{status}}</td>
+		<td class="{{status_style}}">{{status}}{{#simulation}} (<span class="text-info">{{ simulation }}</span>){{/simulation}}</td>
 	</tr>
 {{/dunnings}}
 </tbody>
