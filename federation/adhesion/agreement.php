@@ -61,4 +61,4 @@ if ($data = $mform->get_data()) {
 }
 
 // Affiche le formulaire.
-echo $mform->display();
+$mform->display();

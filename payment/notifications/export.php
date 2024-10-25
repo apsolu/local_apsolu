@@ -93,4 +93,4 @@ if ($data = $mform->get_data()) {
 
 echo $submenu;
 echo $notificationform;
-echo $mform->display();
+echo $mform->render();

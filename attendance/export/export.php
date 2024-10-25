@@ -251,5 +251,5 @@ if ($data = $mform->get_data()) {
 echo $OUTPUT->header();
 echo $OUTPUT->tabtree($tabsbar, 'export');
 echo $OUTPUT->heading($pagedesc);
-echo $mform->display();
+echo $mform->render();
 echo $OUTPUT->footer();

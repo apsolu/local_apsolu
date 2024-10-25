@@ -99,5 +99,5 @@ if ($data = $mform->get_data()) {
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('templates', 'local_apsolu'));
 echo $OUTPUT->tabtree($tabtree, $page);
-echo $mform->display();
+echo $mform->render();
 echo $OUTPUT->footer();
