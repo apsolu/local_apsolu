@@ -86,15 +86,8 @@ if ($data = $mform->get_data()) {
         $message = get_string('dunningsaved', 'local_apsolu');
     }
 
-    $notificationform = $OUTPUT->notification($message, 'notifysuccess');
+    redirect(new moodle_url('/local/apsolu/payment/admin.php', ['tab' => 'notifications', 'action' => 'history']),
+        $message, 5, \core\output\notification::NOTIFY_SUCCESS);
 }
 
-$data = new stdClass();
-$data->wwwroot = $CFG->wwwroot;
-$data->form = $mform->render();
-$data->notificationform = '';
-if (isset($notificationform) === true) {
-    $data->notificationform = $notificationform;
-}
-
-echo $OUTPUT->render_from_template('local_apsolu/payment_notifications_compose', $data);
+echo $mform->render();
