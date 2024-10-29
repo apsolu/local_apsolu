@@ -39,10 +39,10 @@ define([], function() {
          *
          * @returns {void}
          */
-        initialise : function(inputSelector, targetSelector, closestSelector = '', displayStyle = 'block') {
+        initialise: function(inputSelector, targetSelector, closestSelector = '', displayStyle = 'block') {
             // Vérifie l'existence de l'élément inputSelector.
             var element = document.querySelector(inputSelector);
-            if (element == null) {
+            if (element === null) {
                 return;
             }
 
@@ -57,7 +57,7 @@ define([], function() {
                 let parentNode;
                 let style;
 
-                for (let i = 0 ; i < elements.length ; i++) {
+                for (let i = 0; i < elements.length; i++) {
                     // Si le champ de recherche inputSelector est vide ou que le texte recherché correspond à l'élement parcouru.
                     if (searchString == '' || elements[i].textContent.trim().toLowerCase().includes(searchString)) {
                         style = displayStyle;
@@ -68,7 +68,7 @@ define([], function() {
                     // Remonte à l'élément parent pour masquer le bloc complet.
                     if (closestSelector != '') {
                         parentNode = elements[i].closest(closestSelector);
-                        if (parentNode == null) {
+                        if (parentNode === null) {
                             continue;
                         }
                     } else {

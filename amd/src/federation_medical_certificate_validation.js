@@ -1,6 +1,6 @@
 define(['jquery', 'core_form/modalform', 'core/str', 'core/toast'], function($, ModalForm, Str, notifyUser) {
     return {
-        initialise : function() {
+        initialise: function() {
             $('.local-apsolu-federation-medical-certificate-validation').click(function(event) {
                 event.preventDefault();
 
@@ -35,7 +35,8 @@ define(['jquery', 'core_form/modalform', 'core/str', 'core/toast'], function($, 
 
                     const modalForm = new ModalForm({
                         formClass: "local_apsolu\\form\\send_email_form",
-                        args: {users: users, contextid: contextid, targetvalidation: targetvalidation, subject: subject, body: body},
+                        args: {users: users, contextid: contextid,
+                            targetvalidation: targetvalidation, subject: subject, body: body},
                         modalConfig: {title: title, large: true, buttons: {save: Str.get_string('send', 'message')}},
                     });
 
@@ -60,23 +61,23 @@ define(['jquery', 'core_form/modalform', 'core/str', 'core/toast'], function($, 
                             if (countnotifications == 1) {
                                 Str.get_string('message_sent', 'local_apsolu')
                                     .then(message => {
-                                        console.log(message);
+                                        console.log(message); // eslint-disable-line no-console
                                         return notifyUser.add(message);
                                     })
-                                    .fail(Notification.exception);
+                                    .fail(Notification.exception); // eslint-disable-line no-restricted-globals
                             } else {
                                 Str.get_string('messages_sent_to_X_users', 'local_apsolu', countnotifications)
                                     .then(message => {
-                                        console.log(message);
+                                        console.log(message); // eslint-disable-line no-console
                                         return notifyUser.add(message);
                                     })
-                                    .fail(Notification.exception);
+                                    .fail(Notification.exception); // eslint-disable-line no-restricted-globals
                             }
                         }
 
                         if (errors.length > 0) {
                             for (i = 0; i < errors.length; i++) {
-                                console.log(message);
+                                console.log(message); // eslint-disable-line no-console
                                 notifyUser.add(errors[i]);
                             }
                         } else {
@@ -107,5 +108,5 @@ define(['jquery', 'core_form/modalform', 'core/str', 'core/toast'], function($, 
                 });
             });
         }
-    }
+    };
 });
