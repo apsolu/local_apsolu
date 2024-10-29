@@ -89,8 +89,12 @@ class local_apsolu_roles_edit_form extends moodleform {
         $icons['users'] = '&#xf0c0; users';
         $icons['user'] = '&#xf007; user';
 
-        $attributes = ['data-apsolu' => 'fontawesome', 'size' => count($icons)];
-        $mform->addElement('select', 'fontawesomeid', get_string('icon'), $icons, $attributes);
+        $radios = [];
+        foreach ($icons as $value => $label) {
+            $label = $value.' <i aria-hidden="true" class="fa fa-'.$value.' ml-2"></i>';
+            $radios[] = $mform->createElement('radio', 'fontawesomeid', '', $label, $value);
+        }
+        $mform->addGroup($radios, 'radios', get_string('icon'), html_writer::empty_tag('br'), false);
         $mform->setType('fontawesomeid', PARAM_TEXT);
 
         // Submit buttons.
