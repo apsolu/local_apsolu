@@ -26,7 +26,11 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot.'/enrol/select/locallib.php');
 
-$cards = $DB->get_records('apsolu_payments_cards', $conditions = [], $sort = 'name');
+$sql = "SELECT apc.*
+          FROM {apsolu_payments_cards} apc
+          JOIN {apsolu_payments_centers} apcc ON apcc.id = apc.centerid
+      ORDER BY apcc.name, apc.name";
+$cards = $DB->get_records_sql($sql);
 
 $cohorts = $DB->get_records('cohort', $conditions = [], $sort = 'name');
 $roles = enrol_select_get_custom_student_roles();
@@ -91,5 +95,8 @@ foreach ($cards as $card) {
 if (isset($notificationform)) {
     $data->notification = $notificationform;
 }
+
+$options = ['sortLocaleCompare' => true];
+$PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise', [$options]);
 
 echo $OUTPUT->render_from_template('local_apsolu/payment_cards', $data);

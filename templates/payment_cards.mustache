@@ -61,27 +61,27 @@
 {{/cards}}
 
 {{#count_cards}}
-<table class="table table-striped">
+<table class="table table-striped table-sortable">
 <thead>
 	<tr>
+		<th>{{#str}}center, local_apsolu{{/str}}</th>
 		<th>{{#str}}shortname{{/str}}</th>
 		<th>{{#str}}fullname{{/str}}</th>
 		<th>{{#str}}price, local_apsolu{{/str}}</th>
-		<th>{{#str}}center, local_apsolu{{/str}}</th>
 		<th>{{#str}}freetrial, local_apsolu{{/str}}</th>
-		<th>{{#str}}shortfreecourses, local_apsolu{{/str}}</th>
-		<th>{{#str}}cohorts, cohort{{/str}}</th>
-		<th>{{#str}}roles{{/str}}</th>
-		<th>{{#str}}actions{{/str}}</th>
+		<th class="sorter-false">{{#str}}shortfreecourses, local_apsolu{{/str}}</th>
+		<th class="sorter-false">{{#str}}cohorts, cohort{{/str}}</th>
+		<th class="sorter-false">{{#str}}roles{{/str}}</th>
+		<th class="sorter-false">{{#str}}actions{{/str}}</th>
 	</tr>
 </thead>
 <tbody>
 	{{#cards}}
 	<tr>
+		<td>{{center}}</td>
 		<td>{{name}}</td>
 		<td>{{fullname}}</td>
 		<td>{{price}}</td>
-		<td>{{center}}</td>
 		<td>{{trial}}</td>
 
 		{{^count_calendars_types}}
