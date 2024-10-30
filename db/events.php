@@ -65,6 +65,14 @@ $observers = [
         'internal'    => true,
         'priority'    => 9999,
     ],
+    // Gère la suppression des rôles depuis l'interface Administration du site > Utilisateurs > Permissions > Définition des roles.
+    [
+        'eventname'   => '\core\event\role_deleted',
+        'callback'    => '\local_apsolu\observer\role::deleted',
+        'includefile' => null,
+        'internal'    => true,
+        'priority'    => 9999,
+    ],
     // Gère la suppression des cartes depuis l'interface Administration du site > APSOLU > Paiements > Tarifs.
     [
         'eventname'   => '\local_apsolu\event\card_deleted',
