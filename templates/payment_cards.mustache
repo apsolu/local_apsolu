@@ -120,7 +120,12 @@
 		</td>
 		{{/count_roles}}
 
-		<td><a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=prices&action=edit&cardid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></td>
+		<td>
+			<ul class="list-unstyled">
+				<li><a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=prices&action=edit&cardid={{id}}"><i class="icon fa fa-cog fa-fw" aria-hidden="true"></i>{{#str}}edit{{/str}}</a></li>
+				<li><a href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=prices&action=delete&cardid={{id}}"><i class="icon fa fa-trash fa-fw" aria-hidden="true"></i>{{#str}}delete{{/str}}</a></li>
+			</ul>
+		</td>
 	</tr>
 	{{/cards}}
 </tbody>

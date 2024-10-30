@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$actions = ['view', 'edit', 'extract'];
+$actions = ['view', 'edit', 'extract', 'delete'];
 
 if (!in_array($action, $actions, true)) {
     $action = 'view';
