@@ -44,7 +44,7 @@ $PAGE->set_title(get_string('membership_of_the_sports_association', 'local_apsol
 require_login($courseorid = null, $autologinguest = false);
 
 // Vérifie que l'utilsateur est bien inscrit au cours.
-if (is_enrolled($context, $user = null, $withcapability = '', $onlyactive = true) === false) {
+if (is_enrolled($context, $user = null, $withcapability = '', $onlyactive = false) === false) {
     throw new moodle_exception('you_are_not_enrolled_in_this_course', 'local_apsolu');
 }
 
@@ -71,33 +71,9 @@ if ($confirm === $confirmhash) {
         $conditions = ['enrol' => 'select', 'status' => 0, 'courseid' => $federationcourse->get_courseid()];
         $instance = $DB->get_record('enrol', $conditions, '*', MUST_EXIST);
 
+        // Note : les données relatives à l'adhésion sont supprimées via le hook \enrol_select\observer\user_enrolment::deleted().
         $enrolselectplugin = new enrol_select_plugin();
         $enrolselectplugin->unenrol_user($instance, $USER->id);
-
-        // Supprime les données de l'adhésion FFSU.
-        $DB->delete_records('apsolu_federation_adhesions', ['userid' => $USER->id]);
-
-        // Supprime les fichiers déposés.
-        $context = context_course::instance($federationcourse->get_courseid(), MUST_EXIST);
-
-        $where = "contextid = :contextid
-                AND component = :component
-                AND filearea = :filearea
-                AND userid = :userid";
-        $params['contextid'] = $context->id;
-        $params['component'] = 'local_apsolu';
-        $params['userid'] = $USER->id;
-
-        $fs = get_file_storage();
-        foreach (['parentalauthorization', 'medicalcertificate'] as $filearea) {
-            $params['filearea'] = $filearea;
-
-            $filerecords = $DB->get_recordset_select('files', $where, $params);
-            foreach ($filerecords as $filerecord) {
-                $fs->get_file_instance($filerecord)->delete();
-            }
-            $filerecords->close();
-        }
     } catch (Exception $exception) {
         debugging($exception->getMessage(), $level = DEBUG_DEVELOPER);
 
