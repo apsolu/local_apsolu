@@ -87,14 +87,14 @@ $string['an_error_occurred_while_saving_data'] = 'Une erreur est survenue lors d
 $string['an_error_occurred_while_saving_your_grades'] = 'Une erreur est survenue lors de l’enregistrement des notes.';
 $string['an_error_occurred_while_updating_record'] = 'Une erreur est survenue lors de la mise à jour de l’enregistrement.';
 $string['answer_the_medical_questionnaire'] = 'Répondre au questionnaire médical';
-$string['area_cannot_be_deleted'] = 'La zone géographique « {$a} » ne peut pas être supprimée, car elle est rattachée aux lieux suivants :';
+$string['area_cannot_be_deleted'] = 'La zone géographique « {$a} » ne peut pas être supprimée, car elle est rattachée aux lieux suivants :';
 $string['area_has_been_deleted'] = 'La zone géographique a été supprimée.';
 $string['area_saved'] = 'Zone géographique enregistrée.';
 $string['areas'] = 'Zones géographiques';
 $string['area_updated'] = 'Zone géographique modifiée.';
 $string['area'] = 'Zone géographique';
-$string['are_you_sure_you_want_to_cancel_your_federation_registration'] = 'Voulez-vous vraiment annuler votre inscription à la FFSU ?';
-$string['are_you_sure_you_want_to_delete_this_calendar'] = 'Voulez-vous vraiment supprimer le calendrier « {$a} » ?';
+$string['are_you_sure_you_want_to_cancel_your_federation_registration'] = 'Voulez-vous vraiment annuler votre inscription à la FFSU ?';
+$string['are_you_sure_you_want_to_delete_this_calendar'] = 'Voulez-vous vraiment supprimer le calendrier « {$a} » ?';
 $string['associationdescription'] = 'Pour participer aux compétitions, aux rencontres';
 $string['association'] = 'Licence FFSU';
 $string['association_number_has_been_deleted'] = 'Le numéro d’association a été supprimé.';
@@ -117,7 +117,7 @@ $string['attendance_status_has_been_deleted'] = 'Le type de présence a été su
 $string['attendance_status_saved'] = 'Type de présence enregistré.';
 $string['attendance_status'] = 'Type de présence';
 $string['attendance_status_updated'] = 'Type de présence modifié.';
-$string['attendances_total'] = '{$a->name} : {$a->total}';
+$string['attendances_total'] = '{$a->name} : {$a->total}';
 $string['author_credit'] = 'Crédit d’auteurs';
 $string['authorization'] = 'Autorisation';
 $string['background_image'] = 'Image de fond';
@@ -126,7 +126,7 @@ $string['birthname'] = 'Nom de naissance';
 $string['blue'] = 'Bleu';
 $string['by_checking_the_box_i_declare_to_accept_the_agreement_above'] = 'En cochant la case, je déclare accepter la charte ci-dessus.';
 $string['calendar_deleted'] = 'Calendrier supprimé';
-$string['calendar_modification_warning'] = '<p><strong>Attention : </strong> l’enregistrement de cette page entraînera la modification automatique des dates de toutes les méthodes d’inscription associées à ce calendrier.</p>';
+$string['calendar_modification_warning'] = '<p><strong>Attention : </strong> l’enregistrement de cette page entraînera la modification automatique des dates de toutes les méthodes d’inscription associées à ce calendrier.</p>';
 $string['calendars'] = 'Calendriers';
 $string['calendars_types'] = 'Types de calendriers';
 $string['cancel_and_unenrol'] = 'Annuler et se désinscrire';
@@ -147,7 +147,7 @@ $string['cardholder_firstname'] = 'Prénom du porteur de carte';
 $string['cardholder_lastname'] = 'Nom du porteur de carte';
 $string['cardholder_postal_address'] = 'Adresse postale du porteur de carte';
 $string['cardholder_zipcode'] = 'Code postal du porteur de carte';
-$string['category_cannot_be_deleted'] = 'L’activité physique « {$a} » ne peut pas être supprimée, car elle est rattachée aux créneaux horaires suivants :';
+$string['category_cannot_be_deleted'] = 'L’activité physique « {$a} » ne peut pas être supprimée, car elle est rattachée aux créneaux horaires suivants :';
 $string['category_cannot_be_moved'] = 'La catégorie « {$a} » ne peut pas être déplacée.';
 $string['category_has_been_deleted'] = 'L’activité physique a été supprimée.';
 $string['category_has_been_moved_into'] = 'La catégorie « {$a->name} » a été déplacée dans la catégorie « {$a->parentname} ».';
@@ -160,7 +160,7 @@ $string['carboncopy'] = 'Copie carbone';
 $string['carboncopy_help'] = 'Envoyer une copie de ce message sur votre adresse';
 $string['carboncopy_to'] = 'Copie carbone à {$a}';
 $string['certificates_validation'] = 'Validation de certificats';
-// TODO: course_cannot_be_deleted = 'Le créneau horaire « {$a} » ne peut pas être supprimé, car il est rattaché aux lieux suivants :'.
+// TODO: course_cannot_be_deleted = 'Le créneau horaire « {$a} » ne peut pas être supprimé, car il est rattaché aux lieux suivants :'.
 $string['collaborative_course'] = 'Cours collaboratif';
 $string['college_deleted'] = 'Population supprimée';
 $string['color'] = 'Couleur';
@@ -184,7 +184,7 @@ $string['course_saved'] = 'Créneau horaire enregistré.';
 $string['course_updated'] = 'Créneau horaire modifié.';
 $string['cities'] = 'Sites';
 $string['city'] = 'Site';
-$string['city_cannot_be_deleted'] = 'Le site « {$a} » ne peut pas être supprimé, car il est rattaché aux lieux suivants :';
+$string['city_cannot_be_deleted'] = 'Le site « {$a} » ne peut pas être supprimé, car il est rattaché aux lieux suivants :';
 $string['city_has_been_deleted'] = 'Le site a été supprimé.';
 $string['city_of_birth'] = 'Ville de naissance';
 $string['city_saved'] = 'Site enregistré.';
@@ -214,25 +214,25 @@ $string['disable_replyto'] = 'Désactiver la possibilité de définir une adress
 $string['discipline'] = 'Discipline';
 $string['discipline_cursus'] = 'Discipline / cursus';
 $string['disclaimer_dsp2'] = 'Afin de satisfaire aux obligations européennes liées à la <a href="https://fr.wikipedia.org/wiki/Directive_sur_les_services_de_paiement#La_Directive_sur_les_services_de_paiements_(DSP_2)" target="_blank">directive sur les services de paiements (DSP 2)</a>, notre prestataire de paiement doit récupérer les coordonnées postales du porteur de la carte de paiement.';
-$string['do_i_plan_to_practice_one_of_the_following_sports_in_addition'] = 'Est-ce que j’envisage de pratiquer en complément un des sports suivants ?{$a}';
+$string['do_i_plan_to_practice_one_of_the_following_sports_in_addition'] = 'Est-ce que j’envisage de pratiquer en complément un des sports suivants ?{$a}';
 $string['do_not_use_replyto_address'] = 'Ne pas utiliser d’adresse de « réponse à »';
-$string['do_you_want_to_delete_attendance_status'] = 'Voulez-vous supprimer le type de présence « {$a} » ?';
-$string['do_you_want_to_delete_area'] = 'Voulez-vous supprimer la zone géographique « {$a} » ?';
-$string['do_you_want_to_delete_association_number'] = 'Voulez-vous supprimer le numéro d’association « {$a} » ?';
-$string['do_you_want_to_delete_card'] = 'Voulez-vous supprimer le tarif « {$a} » ?';
-$string['do_you_want_to_delete_category'] = 'Voulez-vous supprimer l’activité physique « {$a} » ?';
-$string['do_you_want_to_delete_city'] = 'Voulez-vous supprimer le site « {$a} » ?';
-$string['do_you_want_to_delete_college'] = 'Voulez-vous supprimer la population « {$a} » ?';
-$string['do_you_want_to_delete_course'] = 'Voulez-vous supprimer le créneau horaire « {$a} » ?';
-$string['do_you_want_to_delete_gradeitem'] = 'Voulez-vous supprimer l’élément d’évaluation « {$a} » ?';
-$string['do_you_want_to_delete_grouping'] = 'Voulez-vous supprimer le groupement d’activités « {$a} » ?';
-$string['do_you_want_to_delete_holiday'] = 'Voulez-vous supprimer le jour férié « {$a} » ?';
-$string['do_you_want_to_delete_location'] = 'Voulez-vous supprimer le lieu « {$a} » ?';
-$string['do_you_want_to_delete_locations_manager'] = 'Voulez-vous supprimer le gestionnaire de lieux « {$a} » ?';
-$string['do_you_want_to_delete_period'] = 'Voulez-vous supprimer la période « {$a} » ?';
-$string['do_you_want_to_delete_skill'] = 'Voulez-vous supprimer le niveau de pratique « {$a} » ?';
-$string['do_you_want_to_delete_template'] = 'Voulez-vous supprimer le modèle de message « {$a} » ?';
-$string['do_you_want_to_duplicate_template'] = 'Voulez-vous dupliquer le modèle de message « {$a} » ?';
+$string['do_you_want_to_delete_attendance_status'] = 'Voulez-vous supprimer le type de présence « {$a} » ?';
+$string['do_you_want_to_delete_area'] = 'Voulez-vous supprimer la zone géographique « {$a} » ?';
+$string['do_you_want_to_delete_association_number'] = 'Voulez-vous supprimer le numéro d’association « {$a} » ?';
+$string['do_you_want_to_delete_card'] = 'Voulez-vous supprimer le tarif « {$a} » ?';
+$string['do_you_want_to_delete_category'] = 'Voulez-vous supprimer l’activité physique « {$a} » ?';
+$string['do_you_want_to_delete_city'] = 'Voulez-vous supprimer le site « {$a} » ?';
+$string['do_you_want_to_delete_college'] = 'Voulez-vous supprimer la population « {$a} » ?';
+$string['do_you_want_to_delete_course'] = 'Voulez-vous supprimer le créneau horaire « {$a} » ?';
+$string['do_you_want_to_delete_gradeitem'] = 'Voulez-vous supprimer l’élément d’évaluation « {$a} » ?';
+$string['do_you_want_to_delete_grouping'] = 'Voulez-vous supprimer le groupement d’activités « {$a} » ?';
+$string['do_you_want_to_delete_holiday'] = 'Voulez-vous supprimer le jour férié « {$a} » ?';
+$string['do_you_want_to_delete_location'] = 'Voulez-vous supprimer le lieu « {$a} » ?';
+$string['do_you_want_to_delete_locations_manager'] = 'Voulez-vous supprimer le gestionnaire de lieux « {$a} » ?';
+$string['do_you_want_to_delete_period'] = 'Voulez-vous supprimer la période « {$a} » ?';
+$string['do_you_want_to_delete_skill'] = 'Voulez-vous supprimer le niveau de pratique « {$a} » ?';
+$string['do_you_want_to_delete_template'] = 'Voulez-vous supprimer le modèle de message « {$a} » ?';
+$string['do_you_want_to_duplicate_template'] = 'Voulez-vous dupliquer le modèle de message « {$a} » ?';
 $string['edit_attendance_status'] = 'Modifier un type de présence';
 $string['edit_area'] = 'Modifier une zone géographique';
 $string['edit_association_number'] = 'Modifier un numéro d’association';
@@ -252,11 +252,11 @@ $string['employee'] = 'Personnel';
 $string['enable_parental_authorization_control'] = 'Activer le contrôle des autorisations parentales';
 $string['enable_dates_if_you_do_not_want_to_export_the_entire_data'] = 'Activer les dates si vous ne souhaitez pas exporter l’intégralité des données.';
 $string['end_date'] = 'Date de fin';
-$string['end_time_for_range_1'] = 'Première période : horaire de fin';
+$string['end_time_for_range_1'] = 'Première période : horaire de fin';
 $string['end_time_for_range_1_help'] = 'Détermine jusqu’à quel horaire une activité appartient au groupe de la première période.';
-$string['end_time_for_range_2'] = 'Deuxième période : horaire de fin';
+$string['end_time_for_range_2'] = 'Deuxième période : horaire de fin';
 $string['end_time_for_range_2_help'] = 'Détermine jusqu’à quel horaire une activité appartient au groupe de la deuxième période.';
-$string['end_time_for_range_3'] = 'Troisième période : horaire de fin';
+$string['end_time_for_range_3'] = 'Troisième période : horaire de fin';
 $string['end_time_for_range_3_help'] = 'Détermine jusqu’à quel horaire une activité appartient au groupe de la troisième période.';
 $string['enrolment'] = 'Inscription';
 $string['enrolment_per_semester'] = 'Inscription (semestre)';
@@ -266,7 +266,7 @@ $string['enrolments'] = 'Inscriptions';
 $string['error_name_is_already_used_for_another_context'] = 'Ce nom est déjà utilisé pour un autre contexte.';
 $string['evening'] = 'Soirée';
 $string['excel_format'] = 'Format Excel';
-$string['expected_time_format'] = 'Format attendu : HH:MM.';
+$string['expected_time_format'] = 'Format attendu : HH:MM.';
 $string['export'] = 'Exporter';
 $string['export_format'] = 'Format d’exportation';
 $string['exporting_license'] = 'Exportation des licences FFSU';
@@ -294,7 +294,7 @@ $string['filter'] = 'Filtrer';
 $string['follow_up_incomplete_federation_adhesions_message'] = '<p>Bonjour {$a->firstname} {$a->lastname},</p>
 <p>Vous semblez avoir réalisé toutes les étapes de la procédure d’adhésion à l’Association Sportive / Licence FFSU.</p>
 <p>Cependant vous n’avez pas confirmé votre demande de numéro de licence.</p>
-<p>Vous pouvez le faire en vous connectant sur votre tableau de bord ou en cliquant directement sur ce lien :</p>
+<p>Vous pouvez le faire en vous connectant sur votre tableau de bord ou en cliquant directement sur ce lien :</p>
 <p><a href="{$a->url}">{$a->url}</a></p>
 <p>Cordialement,</p>';
 $string['force_replyto'] = 'Utiliser l’adresse de courriel de l’utilisateur en adresse de « réponse à »';
@@ -319,7 +319,7 @@ $string['grader'] = 'Évaluateur';
 $string['grades_have_been_saved'] = 'Les notes ont été enregistrées.';
 $string['grades_have_not_been_saved'] = 'Les notes n’ont pas été enregistrées.';
 $string['green'] = 'Vert';
-$string['grouping_cannot_be_deleted'] = 'Le groupement d’activités « {$a} » ne peut pas être supprimé, car il est rattaché aux activités physiques suivantes :';
+$string['grouping_cannot_be_deleted'] = 'Le groupement d’activités « {$a} » ne peut pas être supprimé, car il est rattaché aux activités physiques suivantes :';
 $string['grouping_has_been_deleted'] = 'Le groupement d’activités a été supprimé.';
 $string['grouping_saved'] = 'Groupement d’activités enregistré.';
 $string['grouping_updated'] = 'Groupement d’activités modifié.';
@@ -339,7 +339,7 @@ $string['holidays_have_been_generated'] = 'Les jours fériés ont été génér�
 $string['holidays_have_been_purged'] = 'La liste des jours fériés a été vidée.';
 $string['holidays_list'] = 'Liste des jours fériés';
 $string['home'] = 'Accueil';
-$string['honorability'] = 'Concerne seulement la prise d’une licence arbitre ou dirigeante.<br />J’atteste avoir compris l’objet du contrôle d’honorabilité :';
+$string['honorability'] = 'Concerne seulement la prise d’une licence arbitre ou dirigeante.<br />J’atteste avoir compris l’objet du contrôle d’honorabilité :';
 $string['honorability_description'] = 'La licence que je sollicite me permet d’accéder aux fonctions d’éducateur sportif et/ou d’exploitant d’établissement d’activités physiques et sportives au sens des articles L.212-1 et L. 322-1 du code du sport et/ou aux fonctions d’arbitre au sens de l’article L.223-1 du code du sport.<br />
 À ce titre, les éléments constitutifs de mon identité seront transmis par la fédération aux services de l’État afin qu’un contrôle automatisé de mon honorabilité au sens de l’article L.212-9 du code du sport soit effectué.<br />
 Dans l’hypothèse où le contrôle mettrait en évidence une condamnation incompatible avec les fonctions exercées, une notification me sera adressée, ainsi qu’à la fédération et au club au sein duquel j’exerce comme éducateur ou exploitant.<br />
@@ -392,12 +392,12 @@ $string['list_of_my_students'] = 'Liste de mes étudiants';
 $string['list_of_payments'] = 'Liste des paiements';
 $string['list_of_receivers'] = 'Liste des destinataires';
 $string['location'] = 'Lieu';
-$string['location_cannot_be_deleted'] = 'Le lieu « {$a} » ne peut pas être supprimé, car il est rattaché aux lieux suivants :';
+$string['location_cannot_be_deleted'] = 'Le lieu « {$a} » ne peut pas être supprimé, car il est rattaché aux lieux suivants :';
 $string['location_has_been_deleted'] = 'Le lieu a été supprimé.';
 $string['location_saved'] = 'Lieu enregistré.';
 $string['location_updated'] = 'Lieu modifié.';
-$string['locations_manager_cannot_be_deleted'] = 'Le gestionnaire de lieux « {$a} » ne peut pas être supprimé, car il est rattaché aux lieux suivants :';
-// TODO: locations_manager_deletion_will_also_remove_the_following_locations = 'La suppression de ce gestionnaire de lieux entrainera également la suppression des lieux suivants :'.
+$string['locations_manager_cannot_be_deleted'] = 'Le gestionnaire de lieux « {$a} » ne peut pas être supprimé, car il est rattaché aux lieux suivants :';
+// TODO: locations_manager_deletion_will_also_remove_the_following_locations = 'La suppression de ce gestionnaire de lieux entrainera également la suppression des lieux suivants :'.
 $string['locations_manager_has_been_deleted'] = 'Le gestionnaire de lieux a été supprimé.';
 $string['locations_manager_saved'] = 'Gestionnaire de lieux enregistré.';
 $string['locations_manager_updated'] = 'Gestionnaire de lieux modifié.';
@@ -463,7 +463,7 @@ $string['native_country'] = 'Pays de naissance';
 $string['new_message'] = 'Nouveau message';
 $string['next'] = 'Continuer';
 $string['no_attendance_statuses'] = 'Aucun type de présence';
-$string['no_club_medical_certificate_will_be_accepted'] = '<strong>Important :</strong> aucune licence <u>fédérale</u> ne sera acceptée.';
+$string['no_club_medical_certificate_will_be_accepted'] = '<strong>Important :</strong> aucune licence <u>fédérale</u> ne sera acceptée.';
 $string['no_course_sessions_found'] = 'Aucune session de cours trouvée';
 $string['no_course_sessions_found_please_check_the_period_settings'] = 'Aucune session de cours trouvée. Merci de contrôler le paramétrage de la période de pratique.';
 $string['no_courses_to_grade'] = 'Aucun créneau à évaluer';
@@ -506,16 +506,16 @@ $string['overview_of_using_payments'] = 'Vue d’ensemble tarifs et usages';
 $string['parental_authorization'] = 'Autorisation parentale';
 $string['parental_authorization_description'] = 'Texte de présentation pour les autorisations parentales';
 $string['parental_authorization_description_help'] = 'Texte de présentation afficher aux utilisateurs ayant besoin d’une autorisation parentale.';
-$string['paybox_administration_description'] = 'Quelques informations concernant le paramétrage PayBox :
+$string['paybox_administration_description'] = 'Quelques informations concernant le paramétrage PayBox :
 
 * la variable **paybox_servers_incoming** correspond à la liste des adresses IP des serveurs de Paybox appelant la page APSOLU de confirmation de paiements
-  * Exemples : *195.101.99.76* ou *194.2.122.190,195.25.67.22*
+  * Exemples : *195.101.99.76* ou *194.2.122.190,195.25.67.22*
 * la variable **paybox_servers_outgoing** correspond à la liste des noms de domaine de Paybox vers lesquels seront redirigés les utilisateurs pour effectuer leur paiement
-  * Exemples : *preprod-tpeweb.paybox.com* ou *tpeweb.paybox.com,tpeweb1.paybox.com*
+  * Exemples : *preprod-tpeweb.paybox.com* ou *tpeweb.paybox.com,tpeweb1.paybox.com*
 
 Les valeurs sont rappelées dans [la documentation Paybox](https://www.paybox.com/espace-integrateur-documentation/la-solution-paybox-system/urls-dappels-et-adresses-ip/).
 
-Il n’est pas nécessaire de définir les URL de retours dans l’interface Paybox. À chaque transaction, APSOLU communique les adresses de retours à Paybox. Il s’agit des URL suivantes :
+Il n’est pas nécessaire de définir les URL de retours dans l’interface Paybox. À chaque transaction, APSOLU communique les adresses de retours à Paybox. Il s’agit des URL suivantes :
 
 * [{$a}/local/apsolu/payment/index.php?status=accepted]({$a}/local/apsolu/payment/index.php?status=accepted)
 * [{$a}/local/apsolu/payment/index.php?status=refused]({$a}/local/apsolu/payment/index.php?status=refused)
@@ -547,7 +547,7 @@ $string['payments_extraction'] = 'Extraction des paiements';
 $string['payments_extraction_in_csv_format'] = 'Extraction des paiements au format CSV';
 $string['payments_extraction_in_excel_format'] = 'Extraction des paiements au format Excel';
 $string['pending_approval'] = 'En attente de validation';
-$string['period_cannot_be_deleted'] = 'La période « {$a} » ne peut pas être supprimée, car elle est rattachée aux créneaux suivants :';
+$string['period_cannot_be_deleted'] = 'La période « {$a} » ne peut pas être supprimée, car elle est rattachée aux créneaux suivants :';
 $string['period'] = 'Période';
 $string['period_has_been_deleted'] = 'La période a été supprimée.';
 $string['period_saved'] = 'Période enregistrée.';
@@ -558,14 +558,14 @@ $string['permission_to_use_my_personal_data'] = 'Autorisation d’utilisation de
 $string['permission_to_use_my_personal_data_description'] = '<u>Loi Informatique & Libertés (Loi du 6 janvier 1978):</u><br />
 Je suis informé du fait que des données à caractère personnel me concernant seront collectées et traitées informatiquement par l’A.S. ainsi que par la FF Sport U et ses organes déconcentrés.<br />
 Ces données seront stockées sur les serveurs informatiques de la Fédération et pourront être publiées sur le site internet de la FF Sport U et de ses organes déconcentrés (résultats sportifs).<br />
-Je suis informé de mon droit d’accès, de communication et de rectification, en cas d’inexactitude avérée, sur les données le concernant, ainsi que de son droit de s’opposer au traitement et/ou à la publication de ses données pour des motifs légitimes. À cet effet, il suffit d’adresser un courrier électronique à l’adresse suivante : federation@sport-u.com.<br />
+Je suis informé de mon droit d’accès, de communication et de rectification, en cas d’inexactitude avérée, sur les données le concernant, ainsi que de son droit de s’opposer au traitement et/ou à la publication de ses données pour des motifs légitimes. À cet effet, il suffit d’adresser un courrier électronique à l’adresse suivante : federation@sport-u.com.<br />
 Par ailleurs, ces données peuvent être transmises à des partenaires commerciaux.<br />
-J’autorise :';
+J’autorise :';
 $string['permission_to_use_my_personal_image'] = 'Autorisation de mon image';
-$string['permission_to_use_my_personal_image_description'] = '<u>Droit à l’image :</u><br />
+$string['permission_to_use_my_personal_image_description'] = '<u>Droit à l’image :</u><br />
 J’autorise l’A.S., la Fédération et ses organes déconcentrés à utiliser mon image sur tout support destiné à la promotion des activités de l’A.S. et de la Fédération, à l’exclusion de toute utilisation à titre commercial.<br />
 Cette autorisation est donnée à titre gracieux pour une durée de 5 ans et pour l’international.<br />
-J’autorise :';
+J’autorise :';
 $string['postal_code'] = 'Code postal';
 $string['preview'] = 'Aperçu';
 $string['publication_date'] = 'Date de publication';
@@ -596,11 +596,11 @@ $string['role'] = 'Type d’inscription';
 $string['role_updated'] = 'Type d’inscription modifié.';
 $string['save_as_new_template'] = 'Enregistrer comme nouveau modèle de messsage';
 $string['start_date'] = 'Date de début';
-$string['start_time_for_range_2'] = 'Deuxième période : horaire de début';
+$string['start_time_for_range_2'] = 'Deuxième période : horaire de début';
 $string['start_time_for_range_2_help'] = 'Détermine à partir de quel horaire une activité appartient au groupe de la deuxième période.';
-$string['start_time_for_range_3'] = 'Troisième période : horaire de début';
+$string['start_time_for_range_3'] = 'Troisième période : horaire de début';
 $string['start_time_for_range_3_help'] = 'Détermine à partir de quel horaire une activité appartient au groupe de la troisième période.';
-$string['start_time_for_range_4'] = 'Quatrième période : horaire de début';
+$string['start_time_for_range_4'] = 'Quatrième période : horaire de début';
 $string['start_time_for_range_4_help'] = 'Détermine à partir de quel horaire une activité appartient au groupe de la quatrième période.';
 $string['section_text'] = 'Texte de la section';
 $string['section2_text'] = '<div class="alert alert-info">Le tableau des activités est généré automatiquement.</div>';
@@ -669,7 +669,7 @@ $string['simulation'] = 'Simulation';
 $string['simulation_help'] = 'Si la valeur est positionnée à « oui », les notifications ne seront pas envoyées aux utilisateurs.';
 $string['siuaps'] = 'Service interuniversitaire des activités physiques et sportives';
 $string['skill'] = 'Niveau';
-$string['skill_cannot_be_deleted'] = 'Le niveau de pratique « {$a} » ne peut pas être supprimé, car il est rattaché aux créneaux suivants :';
+$string['skill_cannot_be_deleted'] = 'Le niveau de pratique « {$a} » ne peut pas être supprimé, car il est rattaché aux créneaux suivants :';
 $string['skill_has_been_deleted'] = 'Le niveau de pratique a été supprimé.';
 $string['skill_saved'] = 'Niveau de pratique enregistré.';
 $string['skill_updated'] = 'Niveau de pratique modifié.';
@@ -761,7 +761,7 @@ $string['value_X_is_already_in_use_by_another_record'] = 'La valeur « {$a} »
 $string['visibility_of_fields'] = 'Visibilité des champs';
 $string['visibility_of_field_X'] = 'Visibilité du champ « {$a} »';
 $string['visible'] = 'Visible';
-$string['warning_this_card_is_currently_used_in_X_enrolments'] = 'Attention ! Cette carte est actuellement utilisée dans {$a} méthodes d’inscription.';
+$string['warning_this_card_is_currently_used_in_X_enrolments'] = 'Attention ! Cette carte est actuellement utilisée dans {$a} méthodes d’inscription.';
 $string['whatever'] = 'Peu importe';
 $string['woman'] = 'Femme';
 $string['you_are_not_enrolled_in_this_course'] = 'Vous n’êtes pas inscrit à ce cours.';
@@ -1023,7 +1023,7 @@ $string['error_no_center'] = 'Aucun centre de paiement trouvé. Merci d’ajoute
 
 // Federation.
 $string['federation_importation'] = 'Importation des licences FFSU';
-$string['federation_importation_help'] = 'Pour importer des licences FFSU, vous devez renseigner un fichier csv comportant 2 colonnes :
+$string['federation_importation_help'] = 'Pour importer des licences FFSU, vous devez renseigner un fichier csv comportant 2 colonnes :
 
 - la première colonne doit contenir les numéros de licence
 - la seconde colonne doit contenir l’adresse du licencié
@@ -1060,7 +1060,7 @@ $string['attendance_no_periods'] = 'Aucune période de cours définie.';
 $string['attendance_no_sessions'] = 'Aucune session de cours définie.';
 $string['attendance_add_session'] = 'Ajouter une nouvelle session';
 $string['attendance_undeletable_session'] = 'La session « {$a} » ne peut pas être supprimée car des présences ont déjà été prises.';
-$string['attendance_delete_session'] = 'Supprimer la session « {$a} » ?';
+$string['attendance_delete_session'] = 'Supprimer la session « {$a} » ?';
 $string['attendance_presences_summary'] = 'Résumé des présences';
 $string['attendance_select_session'] = 'Sélectionner une session';
 $string['attendance_present'] = 'Présent';
@@ -1088,7 +1088,7 @@ $string['attendance_undefined_short'] = '-';
 $string['attendance_undefined_style'] = 'left';
 $string['attendance_display_inactive_enrolments'] = 'Afficher les inscriptions inactives (semestres précédents)';
 $string['attendance_display_invalid_enrolments'] = 'Afficher les inscriptions non validées (liste principale et liste complémentaire)';
-$string['attendance_table_caption'] = 'Nombre d’inscrits potentiels : {$a->count_students} étudiant(s)';
+$string['attendance_table_caption'] = 'Nombre d’inscrits potentiels : {$a->count_students} étudiant(s)';
 $string['attendance_enrolment_state'] = 'État de l’inscription';
 $string['attendance_presence'] = 'Présence';
 $string['attendance_comment'] = 'Commentaire';
@@ -1113,7 +1113,7 @@ $string['attendance_success_message_forum'] = 'La notification a été publiée 
 $string['attendance_error_message_forum'] = 'La notification n’a pas pu être publiée dans le forum des annonces.';
 $string['attendance_forum_create_session_subject'] = 'ajout d’une session le {$a}';
 $string['attendance_forum_create_session_message'] = '<p>Bonjour,</p>'.
-    '<p>Une session de cours a été ajoutée :</p>'.
+    '<p>Une session de cours a été ajoutée :</p>'.
     '<dl class="dl-horizontal">'.
         '<dt>Jour</dt>'.
         '<dd>{$a->datetime}</dd>'.
@@ -1124,7 +1124,7 @@ $string['attendance_forum_create_session_message'] = '<p>Bonjour,</p>'.
     '<p>Cordialement</p>';
 $string['attendance_forum_edit_session_subject'] = 'modification de la session du {$a}';
 $string['attendance_forum_edit_session_message'] = '<p>Bonjour,</p>'.
-    '<p>Une session de cours a été modifiée :</p>'.
+    '<p>Une session de cours a été modifiée :</p>'.
     '<dl class="dl-horizontal">'.
         '<dt>Jour</dt>'.
         '<dd>{$a->datetime}</dd>'.
@@ -1135,7 +1135,7 @@ $string['attendance_forum_edit_session_message'] = '<p>Bonjour,</p>'.
     '<p>Cordialement</p>';
 $string['attendance_forum_delete_session_subject'] = 'suppression de la session du {$a}';
 $string['attendance_forum_delete_session_message'] = '<p>Bonjour,</p>'.
-    '<p>Une session de cours a été supprimée :</p>'.
+    '<p>Une session de cours a été supprimée :</p>'.
     '<dl class="dl-horizontal">'.
         '<dt>Jour</dt>'.
         '<dd>{$a->datetime}</dd>'.
@@ -1159,8 +1159,8 @@ $string['no_courses'] = 'Vous ne pouvez pas payer car vous n’avez aucune inscr
 $string['no_courses_complements'] = 'Pour les cours du SIUAPS, si vous êtes inscrit en évaluation, vérifier avec votre enseignant que vous êtes autorisé à l’être.<br />'.
 ' Pour l’accès aux salles de musculation, vous devez avoir validé votre séance gratuite avant de pouvoir payer.';
 $string['no_paybox'] = 'Notre prestataire de paiement semble rencontrer des difficultés techniques. Merci de réessayer ultérieurement.';
-$string['warning_payment'] = '<div class="alert alert-info col-md-12"><p><strong>Attention</strong> : vérifiez les cours qui vous sont facturés. Si vous ne souhaitez plus suivre une activité, merci de contacter votre enseignant.</p>'.
-    '<p>Aucun remboursement ne sera effectué ; si vous constatez une erreur dans le montant à payer, merci d’envoyer un mail à l’adresse <a href="mailto:{$a}">{$a}</a>.</p></div>';
+$string['warning_payment'] = '<div class="alert alert-info col-md-12"><p><strong>Attention</strong> : vérifiez les cours qui vous sont facturés. Si vous ne souhaitez plus suivre une activité, merci de contacter votre enseignant.</p>'.
+    '<p>Aucun remboursement ne sera effectué ; si vous constatez une erreur dans le montant à payer, merci d’envoyer un mail à l’adresse <a href="mailto:{$a}">{$a}</a>.</p></div>';
 $string['status_accepted'] = 'Paiement accepté.';
 $string['status_refused'] = 'Paiement refusé.';
 $string['status_wait'] = 'Paiement en attente.';
