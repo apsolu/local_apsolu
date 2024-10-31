@@ -73,6 +73,14 @@ $observers = [
         'internal'    => true,
         'priority'    => 9999,
     ],
+    // Gère la suppression des calendriers depuis l'interface Administration du site > APSOLU > Configuration > Calendriers.
+    [
+        'eventname'   => '\local_apsolu\event\calendar_deleted',
+        'callback'    => '\local_apsolu\observer\calendar::deleted',
+        'includefile' => null,
+        'internal'    => true,
+        'priority'    => 9999,
+    ],
     // Gère la suppression des cartes depuis l'interface Administration du site > APSOLU > Paiements > Tarifs.
     [
         'eventname'   => '\local_apsolu\event\card_deleted',
