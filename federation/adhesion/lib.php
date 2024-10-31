@@ -22,6 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+define('APSOLU_PAGE_INTRODUCTION', -1);
 define('APSOLU_PAGE_HEALTH_QUIZ', 0);
 define('APSOLU_PAGE_AGREEMENT', 1);
 define('APSOLU_PAGE_MEMBERSHIP', 2);

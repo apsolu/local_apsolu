@@ -49,6 +49,10 @@ class local_apsolu_settings_form extends moodleform {
         // Partie formulaire d'adhésion.
         $mform->addElement('header', 'agreement', get_string('setup_the_text_of_the_agreement', 'local_apsolu'));
 
+        // Configuration de la présentation.
+        $mform->addElement('editor', 'ffsu_introduction', get_string('introduction', 'local_apsolu'));
+        $mform->setType('ffsu_introduction', PARAM_RAW);
+
         // Configuration de la charte.
         $mform->addElement('editor', 'ffsu_agreement', get_string('agreement', 'local_apsolu'));
         $mform->setType('ffsu_agreement', PARAM_RAW);

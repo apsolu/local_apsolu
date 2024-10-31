@@ -56,6 +56,13 @@ foreach ($attributes as $attribute) {
 $defaults->ffsu_agreement['text'] = get_config('local_apsolu', 'ffsu_agreement');
 $defaults->ffsu_agreement['format'] = FORMAT_HTML;
 
+$introduction = get_config('local_apsolu', 'ffsu_introduction');
+if (empty($introduction) === true) {
+    $introduction = get_string('federation_introduction', 'local_apsolu');
+}
+$defaults->ffsu_introduction['text'] = $introduction;
+$defaults->ffsu_introduction['format'] = FORMAT_HTML;
+
 $defaults->parental_authorization_description['text'] = get_config('local_apsolu', 'parental_authorization_description');
 $defaults->parental_authorization_description['format'] = FORMAT_HTML;
 
@@ -88,7 +95,7 @@ if ($data = $mform->get_data()) {
         set_config($attribute, $data->{$attribute}, 'local_apsolu');
     }
 
-    foreach (['ffsu_agreement', 'parental_authorization_description'] as $key) {
+    foreach (['ffsu_agreement', 'ffsu_introduction', 'parental_authorization_description'] as $key) {
         if (isset($data->{$key}['text']) === false) {
             continue;
         }

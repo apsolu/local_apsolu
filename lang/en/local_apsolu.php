@@ -279,6 +279,12 @@ $string['federation_course'] = 'Cours FFSU';
 $string['federation_course_help'] = 'Espace-cours permettant de gérer les étudiants inscrits à la Fédération Française des Sports Universitaires.
 
 Ce cours doit être un cours « normal » au sens Moodle. Il ne doit pas être créé via le menu « créneau horaire ». De plus, une méthode d’inscription par voeux doit y être configurée.';
+$string['federation_introduction'] = '<p>La <strong>Fédération Française du Sport Universitaire (FFSU)</strong> a pour objet d’organiser et de promouvoir la compétition sportive pour les étudiants des établissements d’enseignement supérieur (Universités et Ecoles), du niveau régional au niveau international.</p>
+<p>Sous tutelle du <a href="https://www.enseignementsup-recherche.gouv.fr/">Ministère de l’Enseignement Supérieur et de la Recherche</a> en convention avec le <a href="https://www.sports.gouv.fr/">Ministère des Sports et des Jeux Olympiques et Paralympiques</a>, elle est membre de la <a href="https://www.fisu.net/">Fédération Internationale du Sport Universitaire</a> (FISU), de l’<a href="https://www.eusa.eu/">Association Européenne du Sport Universitaire</a> (EUSA) et du <a href="https://cnosf.franceolympique.com/">Comité National Olympique et Sportif Français</a> (CNOSF).</p>
+<p>La FFSU compte 121 000 licenciés (saison 2018-2019) et 720 associations sportives affiliées.</p>
+<p>Au niveau national, elle organise chaque saison, 23 000 matches de sports collectifs, 1 500 événements en sports individuels, 800 championnats d’académies et 120 championnats de France.</p>
+<p>Au niveau international, elle représente la France aux Jeux Mondiaux Universitaires d’été et aux Jeux Mondiaux Universitaires d’hiver, plus grands événements multisports au monde après les Jeux Olympiques, organisées tous les deux ans les années impaires, ainsi qu’à plus de 30 championnats du monde universitaires (organisées tous les deux ans les années paires</p>
+<p>Source : <a href="https://sport-u.com/la-ff-sport-u/">La FF Sport U</a></p>';
 $string['federation_list'] = 'Liste FFSU';
 $string['federation_module_is_not_configured'] = 'Le module FFSU n’est pas configuré.';
 $string['federation_number_created'] = 'Numéro de licence créé';
@@ -377,6 +383,7 @@ $string['internal_collaborative_course'] = 'Espace collaboratif interne';
 $string['internal_collaborative_course_help'] = 'Cours mis en avant dans un onglet dédié sur le tableau de bord pour toutes les personnes inscrites dans ce cours. Cette option est pensée pour positionner un espace collaboratif dédié aux échanges entre enseignants.
 
 Ce cours doit être un cours « normal » au sens Moodle. Il ne doit pas être créé via le menu « créneau horaire ».';
+$string['introduction'] = 'Présentation';
 $string['invalidate'] = 'Invalider';
 $string['join_the_sports_association'] = 'Adhérer à l’AS (Licence FFSU)';
 $string['justified_absence'] = 'Absence justifiée';

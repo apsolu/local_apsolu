@@ -33,7 +33,7 @@ require_once($CFG->dirroot.'/enrol/select/lib.php');
 require_once($CFG->dirroot.'/group/lib.php');
 require_once($CFG->dirroot.'/user/profile/lib.php');
 
-$stepid = optional_param('step', APSOLU_PAGE_MEMBERSHIP, PARAM_INT);
+$stepid = optional_param('step', null, PARAM_INT);
 
 $federationcourse = new FederationCourse();
 $course = $federationcourse->get_course();
@@ -45,7 +45,11 @@ if ($course === false) {
 $context = context_course::instance($course->id, MUST_EXIST);
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('base');
-$PAGE->set_url(new moodle_url('/local/apsolu/federation/adhesion/index.php', ['step' => $stepid]));
+if ($stepid === null) {
+    $PAGE->set_url(new moodle_url('/local/apsolu/federation/adhesion/index.php'));
+} else {
+    $PAGE->set_url(new moodle_url('/local/apsolu/federation/adhesion/index.php', ['step' => $stepid]));
+}
 $PAGE->set_title(get_string('membership_of_the_sports_association', 'local_apsolu'));
 
 require_login($courseorid = null, $autologinguest = false);
@@ -148,6 +152,7 @@ if ($count === 0) {
 $baseurl = '/local/apsolu/federation/adhesion/index.php';
 
 $steps = [];
+$steps[APSOLU_PAGE_INTRODUCTION] = 'introduction';
 $steps[APSOLU_PAGE_HEALTH_QUIZ] = 'health_quiz';
 $steps[APSOLU_PAGE_AGREEMENT] = 'agreement';
 $steps[APSOLU_PAGE_MEMBERSHIP] = 'membership';
@@ -157,6 +162,7 @@ $steps[APSOLU_PAGE_PAYMENT] = 'payment';
 $steps[APSOLU_PAGE_SUMMARY] = 'summary';
 
 $pages = [];
+$pages['introduction'] = new moodle_url($baseurl, ['step' => APSOLU_PAGE_INTRODUCTION]);
 $pages['health_quiz'] = new moodle_url($baseurl, ['step' => APSOLU_PAGE_HEALTH_QUIZ]);
 $pages['agreement'] = new moodle_url($baseurl, ['step' => APSOLU_PAGE_AGREEMENT]);
 $pages['membership'] = new moodle_url($baseurl, ['step' => APSOLU_PAGE_MEMBERSHIP]);
@@ -174,7 +180,11 @@ if ($adhesion->questionnairestatus === null) {
     $pages['medical_certificate'] = null;
     $pages['payment'] = null;
     $pages['summary'] = null;
-    $stepid = APSOLU_PAGE_HEALTH_QUIZ;
+    if ($stepid === null) {
+        $stepid = APSOLU_PAGE_INTRODUCTION;
+    } else if ($stepid !== APSOLU_PAGE_INTRODUCTION) {
+        $stepid = APSOLU_PAGE_HEALTH_QUIZ;
+    }
 } else if (empty($adhesion->agreementaccepted) === true) {
     $pages['membership'] = null;
     $pages['medical_certificate'] = null;
@@ -199,8 +209,8 @@ if ($adhesion->questionnairestatus === null) {
     $pages = [];
 }
 
-if (isset($steps[$stepid]) === false) {
-    $stepid = APSOLU_PAGE_HEALTH_QUIZ;
+if ($stepid === null || isset($steps[$stepid]) === false) {
+    $stepid = APSOLU_PAGE_INTRODUCTION;
 }
 
 $tabtree = [];
