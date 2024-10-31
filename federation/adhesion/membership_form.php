@@ -85,7 +85,9 @@ class local_apsolu_federation_membership extends moodleform {
         if ($visibility !== Adhesion::FIELD_HIDDEN) {
             $mform->addElement('text', 'otherfederation', get_string('other_federation', 'local_apsolu'), ['size' => 50]);
             $mform->setType('otherfederation', PARAM_TEXT);
-            if ($visibility === Adhesion::FIELD_LOCKED) {
+            if ($visibility === Adhesion::FIELD_LOCKED && $readonly === false) {
+                // Note : on teste la variable $readonly afin de ne pas freeze() le champ d'un formulaire hardFreeze().
+                // Si c'est le cas, moodleform lève un warning PHP.
                 $mform->freeze('otherfederation');
             }
         }
@@ -96,7 +98,9 @@ class local_apsolu_federation_membership extends moodleform {
             $mform->addElement('select', 'managerlicensetype', get_string('i_am', 'local_apsolu'), $managertypes);
             $mform->setType('managerlicensetype', PARAM_INT);
 
-            if ($visibility === Adhesion::FIELD_LOCKED) {
+            if ($visibility === Adhesion::FIELD_LOCKED && $readonly === false) {
+                // Note : on teste la variable $readonly afin de ne pas freeze() le champ d'un formulaire hardFreeze().
+                // Si c'est le cas, moodleform lève un warning PHP.
                 $mform->freeze('managerlicensetype');
             }
         }
@@ -107,7 +111,9 @@ class local_apsolu_federation_membership extends moodleform {
             $mform->addElement('selectyesno', 'sportlicense', get_string('sport_license', 'local_apsolu'));
             $mform->setType('sportlicense', PARAM_INT);
 
-            if ($visibility === Adhesion::FIELD_LOCKED) {
+            if ($visibility === Adhesion::FIELD_LOCKED && $readonly === false) {
+                // Note : on teste la variable $readonly afin de ne pas freeze() le champ d'un formulaire hardFreeze().
+                // Si c'est le cas, moodleform lève un warning PHP.
                 $mform->freeze('sportlicense');
             }
         }
@@ -120,7 +126,9 @@ class local_apsolu_federation_membership extends moodleform {
             $mform->addElement('selectyesno', 'managerlicense', get_string('manager_license', 'local_apsolu'));
             $mform->setType('managerlicense', PARAM_INT);
 
-            if ($visibility === Adhesion::FIELD_LOCKED) {
+            if ($visibility === Adhesion::FIELD_LOCKED && $readonly === false) {
+                // Note : on teste la variable $readonly afin de ne pas freeze() le champ d'un formulaire hardFreeze().
+                // Si c'est le cas, moodleform lève un warning PHP.
                 $mform->freeze('managerlicense');
             }
         }
@@ -133,7 +141,9 @@ class local_apsolu_federation_membership extends moodleform {
             $mform->addElement('selectyesno', 'refereelicense', get_string('referee_license', 'local_apsolu'));
             $mform->setType('refereelicense', PARAM_INT);
 
-            if ($visibility === Adhesion::FIELD_LOCKED) {
+            if ($visibility === Adhesion::FIELD_LOCKED && $readonly === false) {
+                // Note : on teste la variable $readonly afin de ne pas freeze() le champ d'un formulaire hardFreeze().
+                // Si c'est le cas, moodleform lève un warning PHP.
                 $mform->freeze('refereelicense');
             }
         }
@@ -151,7 +161,9 @@ class local_apsolu_federation_membership extends moodleform {
             $mform->addElement('select', 'starlicense', get_string('star_license', 'local_apsolu'), $starlicensevalues);
             $mform->setType('starlicense', PARAM_TEXT);
 
-            if ($visibility === Adhesion::FIELD_LOCKED) {
+            if ($visibility === Adhesion::FIELD_LOCKED && $readonly === false) {
+                // Note : on teste la variable $readonly afin de ne pas freeze() le champ d'un formulaire hardFreeze().
+                // Si c'est le cas, moodleform lève un warning PHP.
                 $mform->freeze('starlicense');
             }
         }
@@ -162,7 +174,9 @@ class local_apsolu_federation_membership extends moodleform {
             $mform->addElement('selectyesno', 'insurance', get_string('insurance', 'local_apsolu'));
             $mform->setType('insurance', PARAM_INT);
 
-            if ($visibility === Adhesion::FIELD_LOCKED) {
+            if ($visibility === Adhesion::FIELD_LOCKED && $readonly === false) {
+                // Note : on teste la variable $readonly afin de ne pas freeze() le champ d'un formulaire hardFreeze().
+                // Si c'est le cas, moodleform lève un warning PHP.
                 $mform->freeze('insurance');
             }
         }
@@ -225,7 +239,9 @@ class local_apsolu_federation_membership extends moodleform {
         if ($visibility !== Adhesion::FIELD_HIDDEN) {
             $mform->addElement('text', 'instagram', get_string('instagram', 'local_apsolu'));
             $mform->setType('instagram', PARAM_TEXT);
-            if ($visibility === Adhesion::FIELD_LOCKED) {
+            if ($visibility === Adhesion::FIELD_LOCKED && $readonly === false) {
+                // Note : on teste la variable $readonly afin de ne pas freeze() le champ d'un formulaire hardFreeze().
+                // Si c'est le cas, moodleform lève un warning PHP.
                 $mform->freeze('instagram');
             }
         }
