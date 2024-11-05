@@ -191,7 +191,7 @@ if ($adhesion->questionnairestatus === null) {
     $pages['payment'] = null;
     $pages['summary'] = null;
 
-    if (in_array($stepid, [APSOLU_PAGE_HEALTH_QUIZ, APSOLU_PAGE_AGREEMENT], $strict = true) === false) {
+    if (in_array($stepid, [APSOLU_PAGE_INTRODUCTION, APSOLU_PAGE_HEALTH_QUIZ, APSOLU_PAGE_AGREEMENT], $strict = true) === false) {
         $stepid = APSOLU_PAGE_AGREEMENT;
     }
 } else if ($adhesion->usepersonaldata === null) {
@@ -200,7 +200,8 @@ if ($adhesion->questionnairestatus === null) {
     $pages['payment'] = null;
     $pages['summary'] = null;
 
-    if (in_array($stepid, [APSOLU_PAGE_HEALTH_QUIZ, APSOLU_PAGE_AGREEMENT, APSOLU_PAGE_MEMBERSHIP], $strict = true) === false) {
+    if (in_array($stepid, [APSOLU_PAGE_INTRODUCTION, APSOLU_PAGE_HEALTH_QUIZ, APSOLU_PAGE_AGREEMENT, APSOLU_PAGE_MEMBERSHIP],
+            $strict = true) === false) {
         $stepid = APSOLU_PAGE_MEMBERSHIP;
     }
 } else if (empty($adhesion->federationnumber) === false) {
