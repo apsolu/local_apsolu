@@ -98,4 +98,13 @@ $capabilities = [
             'manager' => CAP_ALLOW,
         ],
     ],
+    // Capacité à voir les champs définis dans la variable local_apsolu | userhiddenfields.
+    'local/apsolu:viewuserhiddendetails' => [
+        'riskbitmask' => RISK_PERSONAL,
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+        ],
+    ],
 ];

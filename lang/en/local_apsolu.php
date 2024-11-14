@@ -34,6 +34,7 @@ $string['apsolu:viewallgrades'] = 'Voir toutes les notes';
 $string['apsolu:viewallmedicalcertificates'] = 'Voir tous les certificats médicaux';
 $string['apsolu:viewallownstudentsgrades'] = 'Voir toutes les notes de ses propres étudiants';
 $string['apsolu:viewgrades'] = 'Voir les notes';
+$string['apsolu:viewuserhiddendetails'] = 'Voir les données cachées dans le profil des utilisateurs';
 $string['messageprovider:notification'] = 'Notification des enseignants';
 $string['messageprovider:payment_notification'] = 'Notification de paiements';
 
