@@ -106,6 +106,11 @@ if ($hassiteconfig || has_any_capability($capabilities, context_system::instance
     $ADMIN->add('local_apsolu_configuration',
         new admin_externalpage('local_apsolu_configuration_messaging', $str, $url, $capabilities));
 
+    $str = get_string('user_profile', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'userprofile']);
+    $ADMIN->add('local_apsolu_configuration',
+        new admin_externalpage('local_apsolu_configuration_user_profile', $str, $url, $capabilities));
+
     // Configuration > Type d'inscription.
     $str = get_string('roles', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'roles']);

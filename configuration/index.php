@@ -35,6 +35,7 @@ $pages['courseofferings'] = 'course_offerings';
 $pages['dates'] = 'dates';
 $pages['headermessage'] = 'header_message';
 $pages['messaging'] = 'messaging';
+$pages['userprofile'] = 'user_profile';
 $pages['attendancestatuses'] = 'attendance_statuses';
 $pages['roles'] = 'roles';
 $pages['specialcourses'] = 'special_courses';

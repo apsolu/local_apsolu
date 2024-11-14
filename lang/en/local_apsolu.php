@@ -373,6 +373,8 @@ $string['importing_license_help'] = 'Importe les licences FFSU dans APSOLU.
 
 Le fichier doit être au format csv. La première ligne du fichier ne sera pas traitée.';
 $string['in_progress'] = 'En cours';
+$string['information_to_hide_in_user_profile'] = 'Information à cacher dans le profil utilisateur';
+$string['information_to_hide_in_user_profile_help'] = 'Les informations sélectionnées dans ce menu ne seront visibles que pour les utilisateurs ayant la permission « {$a} ».';
 $string['instagram'] = 'Compte Instagram';
 $string['institutional_account_authentification_url'] = 'URL d’authentification des comptes institutionnels';
 $string['institutional_address'] = 'Adresse institutionnelle';
@@ -760,6 +762,7 @@ $string['use_personal_data'] = 'Utilisation des données personnelles';
 $string['use_personal_image'] = 'Droit à l’image';
 $string['use_replyto_address'] = 'Utiliser une adresse de « réponse à »';
 $string['userid'] = 'Identifiant APSOLU';
+$string['user_profile'] = 'Profil utilisateur';
 $string['validate'] = 'Valider';
 $string['validated_by_the_student'] = 'Validé (par l’étudiant)';
 $string['validation'] = 'Validation';

@@ -49,6 +49,8 @@ function xmldb_local_apsolu_install() {
     set_config('replytoaddresspreference', messaging::DISABLE_REPLYTO_ADDRESS, 'local_apsolu');
     set_config('defaultreplytoaddresspreference', messaging::USE_REPLYTO_ADDRESS, 'local_apsolu');
 
+    set_config('userhiddenfields', 'address,apsolupostalcode,apsolubirthday,country,phone1,phone2,city', 'local_apsolu');
+
     set_config('ffsu_acceptedfiles', '.pdf .odt .doc .docx .jpe .jpeg .jpg .png', 'local_apsolu');
     set_config('ffsu_maxfiles', 1, 'local_apsolu');
     set_config('ffsu_agreement', get_string('default_federation_agreement', 'local_apsolu'), 'local_apsolu');

@@ -1412,6 +1412,9 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
         $dbman->change_field_type($table, $field);
 
+        // Définit la liste des champs à masquer par défaut dans le profil utilisateur.
+        set_config('userhiddenfields', 'address,apsolupostalcode,apsolubirthday,country,phone1,phone2,city', 'local_apsolu');
+
         // Savepoint reached.
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
