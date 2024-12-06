@@ -1412,6 +1412,11 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
         $dbman->change_field_type($table, $field);
 
+        // Initialise la variable ffsu_introduction.
+        if (empty(get_config('local_apsolu', 'ffsu_introduction')) === true) {
+            set_config('ffsu_introduction', get_string('federation_introduction', 'local_apsolu'), 'local_apsolu');
+        }
+
         // Définit la liste des champs à masquer par défaut dans le profil utilisateur.
         set_config('userhiddenfields', 'address,apsolupostalcode,apsolubirthday,country,phone1,phone2,city', 'local_apsolu');
 

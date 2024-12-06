@@ -29,10 +29,6 @@ defined('MOODLE_INTERNAL') || die();
 $quizstatus = optional_param('quizstatus', null, PARAM_INT);
 
 $introduction = get_config('local_apsolu', 'ffsu_introduction');
-if (empty($introduction) === true) {
-    $introduction = get_string('federation_introduction', 'local_apsolu');
-    set_config('ffsu_introduction', $introduction, 'local_apsolu');
-}
 
 // Texte de présentation de la FFSU.
 echo html_writer::div($introduction, 'mx-auto my-5 w-75');
