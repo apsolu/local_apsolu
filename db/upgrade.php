@@ -1400,8 +1400,8 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         }
     }
 
-    // Modification à appliquer lors de la prochaine mise à jour.
-    if (false) {
+    $version = 2024121100;
+    if ($result && $oldversion < $version) {
         // Synchronise la table `apsolu_federation_activities` avec le référentiel FFSU.
         Activity::synchronize_database();
 
