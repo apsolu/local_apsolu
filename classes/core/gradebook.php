@@ -719,7 +719,11 @@ class gradebook {
                             $value = get_string('not_applicable', 'local_apsolu');
                         }
 
-                        $myxls->write_string($line, $column++, $value, $excelformat);
+                        if (is_numeric($value) === true) {
+                            $myxls->write_number($line, $column++, $value, ['num_format' => '0.00']);
+                        } else {
+                            $myxls->write_string($line, $column++, $value, $excelformat);
+                        }
                     }
                     $line++;
                 }
