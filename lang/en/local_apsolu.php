@@ -605,6 +605,7 @@ $string['roles'] = 'Types d’inscription';
 $string['role'] = 'Type d’inscription';
 $string['role_updated'] = 'Type d’inscription modifié.';
 $string['save_as_new_template'] = 'Enregistrer comme nouveau modèle de messsage';
+$string['save_grades'] = 'Enregistrer les notes';
 $string['start_date'] = 'Date de début';
 $string['start_time_for_range_2'] = 'Deuxième période : horaire de début';
 $string['start_time_for_range_2_help'] = 'Détermine à partir de quel horaire une activité appartient au groupe de la deuxième période.';
