@@ -870,6 +870,10 @@ class adhesion extends record {
                         $this->{$property} = self::SPORT_NONE;
                     }
                 }
+
+                // Modification début 2025, suite au changement de la FFSU qui souhaite avoir une information différente de 1 pour
+                // ce champ, même si l'adhérent n'a pas eu à déposer de certificat médical.
+                $this->sport1 = $this->mainsport;
             } else {
                 // Recalcule les valeurs sportN et constraintsportN.
                 if ($this->has_constraint_sports() === true) {
