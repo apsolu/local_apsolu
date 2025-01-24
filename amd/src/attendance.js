@@ -5,7 +5,7 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
             let selector = '#apsolu-attendance-table tbody tr:first-child .apsolu-attendance-status-form input';
             let attendancestatus = document.querySelectorAll(selector);
 
-            if (attendancestatus) {
+            if (attendancestatus.length) {
                 // Génère le bouton dropdown avec la liste des motifs de présences disponibles.
                 let dropdown = '<div class="dropdown">' +
                     '<button class="btn btn-primary dropdown-toggle" type="button" id="apsolu-dropdown-status-selector"' +
