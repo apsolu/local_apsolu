@@ -6,7 +6,7 @@ variables:
   MOODLE_REPOSITORY: https://github.com/moodle/moodle.git
   MOODLE_BRANCH: MOODLE_404_STABLE
   MARIADB_VERSION: 10.11
-  NODE_VERSION: 20.12.1
+  NODE_VERSION: 22.11.0
   SELENIUM_VERSION: 3
   # Configuration des autorisations d'échecs des tests.
   ALLOW_FAILURE_BEHAT: "false"
