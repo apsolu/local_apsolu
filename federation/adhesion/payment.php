@@ -28,32 +28,80 @@ use UniversiteRennes2\Apsolu\Payment;
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
+require_once($CFG->dirroot.'/local/apsolu/federation/adhesion/payment_form.php');
 
-$data = new stdClass();
-$data->wwwroot = $CFG->wwwroot;
-$data->due = false;
-$data->count_cards = 0;
-$data->cards = [];
-$data->nextstep = APSOLU_PAGE_SUMMARY;
-$data->payment_url = (string) new moodle_url('/local/apsolu/payment/index.php');
-$data->can_edit = $adhesion->can_edit();
+$havetosubmitdocuments = [];
 
-if ($data->can_edit === false) {
-    $data->contacts = Adhesion::get_contacts();
+// Contrôle si des documents ont été déposés pour l'autorisation parentale.
+if ($adhesion->have_to_upload_parental_authorization() === true) {
+    // On récupère les autorisations.
+    $fs = get_file_storage();
+    $context = context_course::instance($federationcourse->id, MUST_EXIST);
+    list($component, $filearea, $itemid) = ['local_apsolu', 'parentalauthorization', $USER->id];
+    $sort = 'itemid, filepath, filename';
+    $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
+
+    if (count($files) === 0) {
+        // L'utilisateur doit déposer une autorisation parentale.
+        $havetosubmitdocuments[] = get_string('upload_a_parental_authorization', 'local_apsolu');
+    }
 }
 
+// Contrôle si des documents ont été déposés pour le certificat médical.
+if ($adhesion->have_to_upload_medical_certificate() === true) {
+    // On récupère les certificats.
+    $fs = get_file_storage();
+    $context = context_course::instance($federationcourse->id, MUST_EXIST);
+    list($component, $filearea, $itemid) = ['local_apsolu', 'medicalcertificate', $USER->id];
+    $sort = 'itemid, filepath, filename';
+    $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
+
+    if (count($files) === 0) {
+        // L'utilisateur doit déposer un certificat médical.
+        $havetosubmitdocuments[] = get_string('upload_a_medical_certificate', 'local_apsolu');
+    }
+}
+
+$cards = [];
+$due = false;
 $images = Payment::get_statuses_images();
 foreach (Payment::get_user_cards_status_per_course($federationcourse->id, $USER->id) as $card) {
     $card->image = $images[$card->status]->image;
 
-    $data->cards[] = $card;
-    $data->count_cards++;
+    $cards[] = sprintf('%s %s', $card->image, $card->name);
 
     if ($card->status !== Payment::DUE) {
         continue;
     }
 
-    $data->due = true;
+    $due = true;
 }
 
-echo $OUTPUT->render_from_template('local_apsolu/federation_adhesion_payment', $data);
+// Initialise le formulaire.
+$readonly = ($adhesion->can_edit() === false);
+
+$contacts = [];
+if ($readonly === true) {
+    $contacts = implode(' ', Adhesion::get_contacts());
+}
+
+$customdata = [$contacts, $cards, $havetosubmitdocuments, $due, $readonly];
+$mform = new local_apsolu_federation_payment(null, $customdata);
+if ($data = $mform->get_data()) {
+    // On traite les données envoyées au formulaire.
+    $adhesion->federationnumberrequestdate = time();
+    $adhesion->save(null, null, $check = false);
+
+    if ($due === true) {
+        // Si un paiement est dû, l'utilisateur est redirigé vers la page des paiements.
+        $paymenturl = new moodle_url('/local/apsolu/payment/index.php');
+        redirect($paymenturl);
+    }
+
+    // Si aucun paiement est dû, on notifie le contact fonctionnel.
+    $adhesion->notify_functional_contact();
+
+    redirect(new moodle_url('/local/apsolu/federation/adhesion/index.php', ['step' => APSOLU_PAGE_SUMMARY]));
+}
+
+$mform->display();

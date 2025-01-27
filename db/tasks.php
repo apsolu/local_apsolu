@@ -65,4 +65,14 @@ $tasks = [
         'dayofweek' => '*',
         'month' => '*',
     ],
+    [
+        // Tâche exécutée toutes les heures.
+        'classname' => 'local_apsolu\task\notify_new_federation_adhesions',
+        'blocking' => 0,
+        'minute' => '15',
+        'hour' => '*',
+        'day' => '*',
+        'dayofweek' => '*',
+        'month' => '*',
+    ],
 ];

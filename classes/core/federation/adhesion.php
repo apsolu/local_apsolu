@@ -24,6 +24,8 @@ use local_apsolu\core\federation\activity as Activity;
 use local_apsolu\core\federation\number as Number;
 use local_apsolu\core\record;
 use local_apsolu\event\federation_adhesion_updated;
+use local_apsolu\event\notification_sent;
+use moodle_url;
 use UniversiteRennes2\Apsolu\Payment;
 
 defined('MOODLE_INTERNAL') || die();
@@ -809,6 +811,59 @@ class adhesion extends record {
         $major = new DateTime('-18 years');
 
         return $datetime >= $major;
+    }
+
+    /**
+     * Notifie les contacts fonctionnels pour signaler les nouvelles demandes de licence FFSU.
+     *
+     * @return bool Retourne false lorsque l'adresse de contact fonctionnel est vide.
+     */
+    public function notify_functional_contact() {
+        global $USER;
+
+        // Notifie l'adresse du contact fonctionnel pour valider l'adhésion.
+        $functionalcontact = get_config('local_apsolu', 'functional_contact');
+        if (empty($functionalcontact) === true) {
+            return false;
+        }
+
+        $subject = get_string('request_of_federation_number', 'local_apsolu');
+
+        $parameters = [];
+        $parameters['fullname'] = fullname($USER);
+        $parameters['export_url'] = (string) new moodle_url('/local/apsolu/federation/index.php', ['page' => 'export']);
+        if ($this->have_to_upload_medical_certificate() === true && empty($this->medicalcertificatestatus) === true) {
+            // Le certificat médical doit être validé.
+            $parameters['validation_url'] = (string) new moodle_url('/local/apsolu/federation/index.php',
+                ['page' => 'certificates_validation']);
+            $messagetext = get_string('request_of_federation_number_with_medical_certificate_message',
+                'local_apsolu', $parameters);
+        } else {
+            $messagetext = get_string('request_of_federation_number_without_medical_certificate_message',
+                'local_apsolu', $parameters);
+        }
+
+        // Solution de contournement pour pouvoir envoyer un message à une adresse mail n'appartenant pas
+        // à un utilisateur Moodle.
+        $admin = get_admin();
+        $admin->auth = 'manual'; // Force l'auth. en manual, car email_to_user() ignore le traitement des comptes en nologin.
+        $admin->email = $functionalcontact;
+
+        email_to_user($admin, $USER, $subject, $messagetext);
+
+        // Enregistre un évènement.
+        $federationcourse = new FederationCourse();
+        $federationcourse->id = $federationcourse->get_courseid();
+        $context = context_course::instance($federationcourse->id, MUST_EXIST);
+
+        $event = notification_sent::create([
+            'relateduserid' => $USER->id,
+            'context' => $context,
+            'other' => ['sender' => $USER->id, 'receiver' => $admin->email, 'subject' => $subject],
+            ]);
+        $event->trigger();
+
+        return true;
     }
 
     /**

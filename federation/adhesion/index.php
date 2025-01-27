@@ -171,7 +171,6 @@ if ($adhesion->have_to_upload_parental_authorization() === true) {
 }
 $pages['medical_certificate'] = new moodle_url($baseurl, ['step' => APSOLU_PAGE_MEDICAL_CERTIFICATE]);
 $pages['payment'] = new moodle_url($baseurl, ['step' => APSOLU_PAGE_PAYMENT]);
-$pages['summary'] = new moodle_url($baseurl, ['step' => APSOLU_PAGE_SUMMARY]);
 
 if ($adhesion->questionnairestatus === null) {
     // Le questionnaire de santé n'a pas été rempli.
@@ -179,7 +178,6 @@ if ($adhesion->questionnairestatus === null) {
     $pages['membership'] = null;
     $pages['medical_certificate'] = null;
     $pages['payment'] = null;
-    $pages['summary'] = null;
     if ($stepid === null) {
         $stepid = APSOLU_PAGE_INTRODUCTION;
     } else if ($stepid !== APSOLU_PAGE_INTRODUCTION) {
@@ -189,7 +187,6 @@ if ($adhesion->questionnairestatus === null) {
     $pages['membership'] = null;
     $pages['medical_certificate'] = null;
     $pages['payment'] = null;
-    $pages['summary'] = null;
 
     if (in_array($stepid, [APSOLU_PAGE_INTRODUCTION, APSOLU_PAGE_HEALTH_QUIZ, APSOLU_PAGE_AGREEMENT], $strict = true) === false) {
         $stepid = APSOLU_PAGE_AGREEMENT;
@@ -198,12 +195,13 @@ if ($adhesion->questionnairestatus === null) {
     // Le formulaire d'adhésion n'a jamais été rempli.
     $pages['medical_certificate'] = null;
     $pages['payment'] = null;
-    $pages['summary'] = null;
 
     if (in_array($stepid, [APSOLU_PAGE_INTRODUCTION, APSOLU_PAGE_HEALTH_QUIZ, APSOLU_PAGE_AGREEMENT, APSOLU_PAGE_MEMBERSHIP],
             $strict = true) === false) {
         $stepid = APSOLU_PAGE_MEMBERSHIP;
     }
+} else if (empty($adhesion->federationnumber) === true && $stepid === APSOLU_PAGE_SUMMARY) {
+    $stepid = APSOLU_PAGE_PAYMENT;
 } else if (empty($adhesion->federationnumber) === false) {
     // Le numéro FFSU a été attribué.
     $stepid = APSOLU_PAGE_SUMMARY;
@@ -217,9 +215,6 @@ if ($stepid === null || isset($steps[$stepid]) === false) {
 $tabtree = [];
 foreach ($pages as $name => $url) {
     $label = get_string($name, 'local_apsolu');
-    if ($name === 'summary' && empty($adhesion->federationnumberrequestdate) === true) {
-        $label = get_string('confirm', 'local_apsolu');
-    }
     $tabobject = new tabobject($name, $url, $label);
     $tabobject->inactive = empty($url);
     $tabtree[] = $tabobject;

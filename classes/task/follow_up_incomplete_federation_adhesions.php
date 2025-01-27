@@ -18,6 +18,7 @@ namespace local_apsolu\task;
 
 use core_user;
 use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\core\federation\course as FederationCourse;
 
 /**
  * Classe représentant la tâche pour relancer inscriptions incomplètes à la FFSU.
@@ -51,16 +52,15 @@ class follow_up_incomplete_federation_adhesions extends \core\task\scheduled_tas
      * @return void
      */
     public function execute() {
-        global $CFG, $DB, $SITE;
+        global $CFG, $DB;
 
-        // Calcule le jour de prochaine relance.
-        $nextnotificationday = date('w') - 2;
-        if ($nextnotificationday < 0) {
-            $nextnotificationday += 7;
+        $federationcourse = new FederationCourse();
+        $federationcourseid = $federationcourse->get_course();
+        if ($federationcourseid === false) {
+            return;
         }
 
-        $subject = $SITE->shortname.' : '.get_string('membership_of_the_sports_association', 'local_apsolu');
-
+        // Traite le système précedent, où les utilisateurs devaient faire une demande explicite de leur licence, après le paiement.
         $namefields = 'u.' . implode(', u.', core_user\fields::get_name_fields());
         $sql = "SELECT u.id, {$namefields}, u.email, afa.id AS adhesionid
                   FROM {user} u
@@ -78,11 +78,6 @@ class follow_up_incomplete_federation_adhesions extends \core\task\scheduled_tas
 
             if (empty($adhesion->id) === true) {
                 // Ne devrait jamais arriver...
-                continue;
-            }
-
-            if (intval(date('w', $adhesion->timemodified)) !== $nextnotificationday) {
-                // L'utilisateur ne remplit pas le critère temporel.
                 continue;
             }
 
