@@ -68,7 +68,8 @@ if ($data = $mform->get_data()) {
 
     $federationactivities = $DB->get_records('apsolu_federation_activities');
 
-    $sql = "SELECT u.id, u.lastname, u.firstname, u.idnumber, u.email, u.institution, afa.questionnairestatus,
+    $fullnamefields = core_user\fields::get_name_fields();
+    $sql = "SELECT u.id, ".implode(', ', $fullnamefields).", u.idnumber, u.email, u.institution, afa.questionnairestatus,
                    afa.mainsport, afa.sport1, afa.sport2, afa.sport3, afa.sport4, afa.sport5,
                    afa.constraintsport1, afa.constraintsport2, afa.constraintsport3, afa.constraintsport4, afa.constraintsport5,
                    afa.medicalcertificatedate, afa.medicalcertificatestatus, afa.federationnumber, afa.federationnumberrequestdate
@@ -91,8 +92,7 @@ if ($data = $mform->get_data()) {
             $text = userdate($record->federationnumberrequestdate, get_string('strftimedatetimesortable', 'local_apsolu'));
             $row[] = '<span class="apsolu-cursor-help" title="'.s($title).'">'.s(substr($text, 0, -3)).'</span>';
         }
-        $row[] = html_writer::link($profileurl, $record->lastname);
-        $row[] = html_writer::link($profileurl, $record->firstname);
+        $row[] = html_writer::link($profileurl, fullname($record));
         $row[] = $record->idnumber;
         $row[] = $record->institution;
 
@@ -315,8 +315,7 @@ if ($data = $mform->get_data()) {
 
         $headers = [
             get_string('federation_number_request_date', 'local_apsolu'),
-            get_string('lastname'),
-            get_string('firstname'),
+            get_string('fullname'),
             get_string('idnumber'),
             get_string('institution'),
             get_string('activities'),
