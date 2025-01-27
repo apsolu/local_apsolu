@@ -48,6 +48,10 @@ class local_apsolu_federation_parental_authorization extends moodleform {
 
         list($adhesion, $course, $context, $freeze) = $this->_customdata;
 
+        if ($freeze === true) {
+            $mform->freeze();
+        }
+
         // Texte de présentation pour l'autorisation parentale.
         $description = get_config('local_apsolu', 'parental_authorization_description');
         $html = '<div class="bg-light card mx-auto my-3 w-75"><div class="card-body">%s</div></div>';
@@ -56,8 +60,6 @@ class local_apsolu_federation_parental_authorization extends moodleform {
         // Autorisation parentale.
         $label = get_string('parental_authorization', 'local_apsolu');
         if ($freeze === true) {
-            $mform->freeze();
-
             $fs = get_file_storage();
             $context = context_course::instance($course->id, MUST_EXIST);
             list($component, $filearea, $itemid) = ['local_apsolu', 'parentalauthorization', $USER->id];
