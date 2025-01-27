@@ -159,9 +159,14 @@ if ($data = $mform->get_data()) {
         } else {
             // Récupère les fichiers déposés.
             $fs = get_file_storage();
-            list($component, $filearea, $itemid) = ['local_apsolu', 'medicalcertificate', $record->id];
+            list($component, $itemid) = ['local_apsolu', $record->id];
             $sort = 'itemid, filepath, filename';
-            $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
+            $files = [];
+            foreach (['medicalcertificate', 'parentalauthorization'] as $filearea) {
+                $files = array_merge($files, $fs->get_area_files($context->id, $component, $filearea,
+                    $itemid, $sort, $includedirs = false));
+            }
+
             if (count($files) === 0) {
                 $row[] = get_string('no_files', 'local_apsolu');
                 if ($record->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING) {
@@ -181,7 +186,7 @@ if ($data = $mform->get_data()) {
             } else {
                 $items = [];
                 foreach ($files as $file) {
-                    $url = moodle_url::make_pluginfile_url($context->id, $component, $filearea, $itemid, '/',
+                    $url = moodle_url::make_pluginfile_url($context->id, $component, $file->get_filearea(), $itemid, '/',
                         $file->get_filename(), $forcedownload = false, $includetoken = false);
                     $helpstr = get_string('help');
                     $date = userdate($file->get_timemodified(), get_string('strftimedateshort', 'local_apsolu'));
