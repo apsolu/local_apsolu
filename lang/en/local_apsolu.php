@@ -99,7 +99,6 @@ $string['are_you_sure_you_want_to_delete_this_calendar'] = 'Voulez-vous vraiment
 $string['associationdescription'] = 'Pour participer aux compétitions, aux rencontres';
 $string['association'] = 'Licence FFSU';
 $string['association_number_has_been_deleted'] = 'Le numéro d’association a été supprimé.';
-$string['association_number'] = 'N° A.S.';
 $string['association_number'] = 'Numéro d’association';
 $string['association_number_prefix'] = 'Préfixe de numéro d’association';
 $string['association_number_saved'] = 'Numéro d’association enregistré';
@@ -110,7 +109,6 @@ Les critères sont testés dans l’ordre d’affichage.
 Dès qu’un critère correspond à un utilisateur, le préfixe est associé à l’utilisateur. ';
 $string['association_numbers'] = 'Numéros d’association';
 $string['association_number_updated'] = 'Numéro d’association modifié';
-$string['attendance'] = 'Présence';
 $string['attendances'] = 'Présences';
 $string['attendance_status_add'] = 'Ajouter un type de présence';
 $string['attendance_statuses'] = 'Types de présences';
@@ -261,7 +259,6 @@ $string['end_time_for_range_2_help'] = 'Détermine jusqu’à quel horaire une a
 $string['end_time_for_range_3'] = 'Troisième période : horaire de fin';
 $string['end_time_for_range_3_help'] = 'Détermine jusqu’à quel horaire une activité appartient au groupe de la troisième période.';
 $string['enrolment'] = 'Inscription';
-$string['enrolment_per_semester'] = 'Inscription (semestre)';
 $string['enrolment_per_semester'] = 'Inscription (semestre)';
 $string['enrolment_status'] = 'Liste (statut inscription)';
 $string['enrolments'] = 'Inscriptions';
@@ -722,7 +719,6 @@ $string['the_course_end_date_must_be_after_to_the_enrol_end_date'] = 'La date de
 $string['the_courses'] = 'Les créneaux';
 $string['the_enrol_start_date_must_be_prior_to_the_course_start_date'] = 'La date de début des inscriptions doit être antérieure à la date de début des cours.';
 $string['the_course_start_date_must_be_after_to_the_enrol_start_date'] = 'La date de début des cours doit être postérieure à la date de début des inscriptions.';
-$string['the_course_end_date_must_be_after_to_the_enrol_end_date'] = 'La date de fin des cours doit être postérieure à la date de fin des inscriptions.';
 $string['the_enrol_end_date_must_be_prior_to_the_course_end_date'] = 'La date de fin des inscriptions doit être antérieure à la date de fin des cours.';
 $string['the_date_of_the_medical_certificate_cannot_be_later_than_today'] = 'La date de réalisation du certificat médical ne peut pas être postérieure à aujourd’hui.';
 $string['the_details_of_the_responses_are_neither_saved_nor_sent_back_to_the_server'] = 'Le détail des réponses n’est ni enregistré, ni renvoyé au serveur.';
@@ -795,8 +791,6 @@ $string['your_request_is_being_processed'] = 'Votre demande est en cours de trai
 // Général.
 $string['close_link'] = '<a id="apsolu-cancel-a" href="{$a->href}" class="{$a->class}">Fermer</a>';
 $string['display'] = 'Afficher';
-$string['export'] = 'Exporter au format Excel';
-$string['notify'] = 'Notifier';
 $string['paid'] = 'Payé';
 $string['male'] = 'Garçon';
 $string['female'] = 'Fille';
@@ -812,7 +806,6 @@ $string['calendar_add'] = 'Ajouter un calendrier';
 $string['calendar_type_add'] = 'Ajouter un type de calendrier';
 $string['no_calendar'] = 'Aucun calendrier';
 $string['no_calendar_type'] = 'Aucun type de calendrier';
-$string['calendars'] = 'Calendriers';
 $string['reenrolments'] = 'Réinscriptions';
 $string['enrolstartdate'] = 'Date de début des inscriptions';
 $string['enrolenddate'] = 'Date de fin des inscriptions';
@@ -843,13 +836,11 @@ $string['paymentpaid'] = 'Payé';
 $string['paymentfree'] = 'Non dû';
 $string['paymentgift'] = 'Offert';
 
-$string['accessdenied'] = 'Vous n’avez pas le droit d’accéder à cette page.';
 $string['departmentslist'] = 'Liste des départements';
 
 $string['studentname'] = 'Nom de famille';
 $string['studentname_help'] = 'Noms de famille partiels d’une ou plusieurs personnnes séparés par des virgules.<br />Exemple: neveu,niece';
 
-$string['departments'] = 'Départements';
 $string['departments_help'] = 'Noms partiels d’un ou plusieurs départements séparés par des virgules.<br />Exemple: pharma,ondo';
 
 // Configuration.
@@ -875,10 +866,6 @@ $string['technical_contact'] = 'Contact technique';
 $string['technical_contact_help'] = 'Adresse non utilisée pour l’instant.';
 
 // Courses (ex: local/apsolu_course).
-$string['settings_root'] = 'Gestion du SIUAPS';
-$string['settings_activities'] = 'Activités physiques';
-$string['settings_complements'] = 'Activités complémentaires';
-$string['settings_federations'] = 'FFSU';
 $string['federations'] = 'FFSU';
 $string['receivers_list'] = 'Liste des {$a->count} destinataires';
 $string['nobody_to_notify'] = 'Aucune personne à notifier';
@@ -888,7 +875,6 @@ $string['event_payment_notification'] = 'Évènement pour la notification des pa
 // Overview.
 $string['overview'] = 'Vue d’ensemble';
 $string['no_enrols'] = 'Pas de méthode d’inscription';
-$string['back'] = 'Revenir';
 
 // Courses (Slots).
 $string['courses'] = 'Créneaux horaires';
@@ -997,7 +983,6 @@ $string['empty_field'] = 'Le champ « {$a} » ne peut pas être vide.';
 $string['bad_url'] = 'Le champ « {$a} » ne contient pas une URL.';
 
 $string['category'] = 'Domaine';
-$string['sport'] = 'Activité';
 $string['event'] = 'Libellé complémentaire';
 $string['weekday'] = 'Jour';
 $string['weekdays'] = 'Jours';
@@ -1015,14 +1000,9 @@ $string['enrol_teachers'] = 'Inscrire un enseignant';
 // Grades.
 $string['grades'] = 'Notations';
 $string['configure'] = 'Configurer';
-$string['export'] = 'Exporter';
 $string['grades_extraction'] = 'Extraction des notes';
 $string['extraction'] = 'Extraction';
 $string['semesters'] = 'Semestres';
-$string['semester1'] = 'Semestre 1';
-$string['semester2'] = 'Semestre 2';
-$string['semester1_grading_deadline'] = 'Date limite pour rendre les notes du S1';
-$string['semester2_grading_deadline'] = 'Date limite pour rendre les notes du S2';
 
 // Error.
 $string['error_no_grouping'] = 'Aucun groupement d’activités trouvé. Merci d’ajouter un groupement d’activités avant de créer une activité.';
@@ -1053,7 +1033,6 @@ $string['federation_no_import'] = 'Aucune donnée insérée ou modifiée.';
 
 // Grades.
 $string['mygradedstudents'] = 'Mes étudiants à évaluer';
-$string['mystudents'] = 'Liste de mes étudiants';
 $string['grade1'] = 'Note pratique S1';
 $string['grade2'] = 'Note théorique S1';
 $string['grade3'] = 'Note pratique S2';
@@ -1165,8 +1144,6 @@ $string['strftimedate'] = '%A %d %B';
 // Payments.
 $string['paymentsiuaps'] = 'Paiement auprès du SIUAPS';
 $string['paymentasso'] = 'Paiement auprès de l’Association Sportive';
-$string['opened_period'] = 'L’ouverture des paiements aura lieu le {$a->date}.';
-$string['closed_period'] = 'Le module des paiements est actuellement fermé.';
 $string['no_sesame'] = 'L’utilisateur n’a pas de compte Université valide ou n’est plus présent dans le référentiel de son établissement.';
 $string['invalid_user'] = '<p>Vous n’êtes pas autorisé à payer.</p>';
 $string['no_courses'] = 'Vous ne pouvez pas payer car vous n’avez aucune inscription validée ou valide pour le moment.';
@@ -1189,7 +1166,6 @@ $string['configurations'] = 'Configurations';
 $string['configuration_edit'] = 'Modifier une configuration';
 $string['names'] = 'Noms';
 $string['value'] = 'Valeur';
-$string['values'] = 'Valeurs';
 $string['payment_centers'] = 'Centres de paiement';
 $string['centers'] = $string['payment_centers'];
 $string['no_center'] = 'Aucun centre de paiement';
@@ -1259,7 +1235,6 @@ $string['fields_apsolusex'] = 'Sexe';
 $string['fields_apsoluusertype'] = 'Type d’utilisateur';
 $string['fields_apsolubirthday'] = 'Date de naissance';
 $string['fields_apsoluufr'] = 'UFR';
-$string['ufrs_help'] = 'Noms partiels d’une ou plusieurs UFR séparées par des virgules.<br />Exemple: math,langue';
 $string['fields_apsolucycle'] = 'Cycle LMD';
 $string['fields_apsolusesame'] = 'Compte Université validé';
 $string['fields_apsoluhighlevelathlete'] = 'Sportif de haut niveau';
