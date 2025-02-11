@@ -1,4 +1,4 @@
-@local_apsolu
+@local @local_apsolu
 Feature: Teste la procédure d'adhésion à la FFSU.
   Selon les réponses données dans le formulaire d'adhésion, APSOLU peut lui demander des documents.
 
@@ -7,8 +7,7 @@ Feature: Teste la procédure d'adhésion à la FFSU.
       | username  | firstname  | lastname  | email                | department  |
       | student1  | Student1   | STUDENT1  | student1@example.com | sciences    |
       | student2  | Student2   | STUDENT2  | student2@example.com | mathematics |
-    And I setup APSOLU blocks and theme
-    And I setup a federation environment
+    And I setup an environment for APSOLU
 
   Scenario: Sur mon tableau de bord, je n'ai pas le bouton pour m'inscrire à la FFSU.
     Given I am on the "Homepage" page logged in as "student1"
