@@ -971,6 +971,10 @@ class dataset_provider {
             }
 
             foreach ($cohorts as $cohort) {
+                if ($cohort->idnumber === null) {
+                    continue;
+                }
+
                 if (str_ends_with($cohort->idnumber, $sex) === false) {
                     continue;
                 }
