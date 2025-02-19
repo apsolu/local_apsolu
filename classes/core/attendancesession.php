@@ -80,12 +80,16 @@ class attendancesession extends record {
         // Supprime l'objet en base de données.
         $DB->delete_records(self::TABLENAME, ['id' => $this->id]);
 
-        // Enregistre un évènement dans les logs.
-        $event = \local_apsolu\event\session_deleted::create([
-            'objectid' => $this->id,
-            'context' => context_course::instance($this->courseid),
-            ]);
-        $event->trigger();
+        // Enregistre un évènement dans les logs, sauf lorsque le cours est en cours de suppression. Dans ce cas, le contexte
+        // de cours n'existe plus.
+        $coursecontext = context_course::instance($this->courseid, IGNORE_MISSING);
+        if ($coursecontext !== false) {
+            $event = \local_apsolu\event\session_deleted::create([
+                'objectid' => $this->id,
+                'context' => $coursecontext,
+                ]);
+            $event->trigger();
+        }
 
         // Valide la transaction en cours.
         if (isset($transaction) === true) {
