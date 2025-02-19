@@ -929,12 +929,14 @@ class dataset_provider {
         $users = [];
         $users[] = ['username' => 'lenseignante', 'password' => $password, 'firstname' => 'Marguerite', 'lastname' => 'Broquedis'];
         for ($i = 1; $i < 15; $i++) {
-            $users[] = ['username' => sprintf('enseignant%s', $i), 'password' => $password];
+            $value = sprintf('enseignant%s', $i);
+            $users[] = ['username' => $value, 'password' => $value];
         }
 
         $users[] = ['username' => 'letudiant', 'password' => $password];
         for ($i = 1; $i < 60; $i++) {
-            $users[] = ['username' => sprintf('etudiant%s', $i), 'password' => $password];
+            $value = sprintf('etudiant%s', $i);
+            $users[] = ['username' => $value, 'password' => $value];
         }
 
         $generator = new testing_data_generator();
