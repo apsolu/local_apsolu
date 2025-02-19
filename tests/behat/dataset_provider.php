@@ -600,27 +600,36 @@ class dataset_provider {
         $calendar->id = $DB->insert_record('apsolu_calendars', $calendar);
 
         // Crée une cohorte.
-        $cohort = new stdClass();
-        $cohort->name = 'FFSU';
-        $cohort->contextid = 1;
-        $cohort->id = cohort_add_cohort($cohort);
+        $cohort = $DB->get_record('cohort', ['idnumber' => 'FFSU']);
+        if ($cohort === false) {
+            $cohort = new stdClass();
+            $cohort->name = 'FFSU';
+            $cohort->idnumber = 'FFSU';
+            $cohort->contextid = 1;
+            $cohort->id = cohort_add_cohort($cohort);
+        }
 
         // Crée un rôle.
-        $archetype = 'student';
-        $roleid = create_role('Pratique FFSU', 'ffsu', '', $archetype);
-        $contextlevels = array_keys(context_helper::get_all_levels());
-        $archetyperoleid = $DB->get_field('role', 'id', ['shortname' => $archetype, 'archetype' => $archetype]);
-        $contextlevels = get_role_contextlevels($archetyperoleid);
-        set_role_contextlevels($roleid, $contextlevels);
-        foreach (['assign', 'override', 'switch', 'view'] as $type) {
-            $rolestocopy = get_default_role_archetype_allows($type, $archetype);
-            foreach ($rolestocopy as $tocopy) {
-                $functionname = "core_role_set_{$type}_allowed";
-                $functionname($roleid, $tocopy);
+        $role = $DB->get_record('role', ['shortname' => 'ffsu']);
+        if ($role !== false) {
+            $roleid = $role->id;
+        } else {
+            $archetype = 'student';
+            $roleid = create_role('Pratique FFSU', 'ffsu', '', $archetype);
+            $contextlevels = array_keys(context_helper::get_all_levels());
+            $archetyperoleid = $DB->get_field('role', 'id', ['shortname' => $archetype, 'archetype' => $archetype]);
+            $contextlevels = get_role_contextlevels($archetyperoleid);
+            set_role_contextlevels($roleid, $contextlevels);
+            foreach (['assign', 'override', 'switch', 'view'] as $type) {
+                $rolestocopy = get_default_role_archetype_allows($type, $archetype);
+                foreach ($rolestocopy as $tocopy) {
+                    $functionname = "core_role_set_{$type}_allowed";
+                    $functionname($roleid, $tocopy);
+                }
             }
+            $sourcerole = $DB->get_record('role', ['id' => $archetyperoleid], $fields = '*', MUST_EXIST);
+            role_cap_duplicate($sourcerole, $roleid);
         }
-        $sourcerole = $DB->get_record('role', ['id' => $archetyperoleid], $fields = '*', MUST_EXIST);
-        role_cap_duplicate($sourcerole, $roleid);
 
         // Crée un centre de paiement.
         $center = new stdClass();
