@@ -216,6 +216,7 @@ $string['discipline_cursus'] = 'Discipline / cursus';
 $string['disclaimer_dsp2'] = 'Afin de satisfaire aux obligations européennes liées à la <a href="https://fr.wikipedia.org/wiki/Directive_sur_les_services_de_paiement#La_Directive_sur_les_services_de_paiements_(DSP_2)" target="_blank">directive sur les services de paiements (DSP 2)</a>, notre prestataire de paiement doit récupérer les coordonnées postales du porteur de la carte de paiement.';
 $string['do_i_plan_to_practice_one_of_the_following_sports_in_addition'] = 'Est-ce que j’envisage de pratiquer en complément un des sports suivants ?{$a}';
 $string['do_not_use_replyto_address'] = 'Ne pas utiliser d’adresse de « réponse à »';
+$string['do_you_really_want_to_initialize_the_demo_dataset'] = 'Voulez-vous vraiment initialiser le jeu de données de démonstration ?';
 $string['do_you_want_to_delete_attendance_status'] = 'Voulez-vous supprimer le type de présence « {$a} » ?';
 $string['do_you_want_to_delete_area'] = 'Voulez-vous supprimer la zone géographique « {$a} » ?';
 $string['do_you_want_to_delete_association_number'] = 'Voulez-vous supprimer le numéro d’association « {$a} » ?';
@@ -373,6 +374,7 @@ Le fichier doit être au format csv. La première ligne du fichier ne sera pas t
 $string['in_progress'] = 'En cours';
 $string['information_to_hide_in_user_profile'] = 'Information à cacher dans le profil utilisateur';
 $string['information_to_hide_in_user_profile_help'] = 'Les informations sélectionnées dans ce menu ne seront visibles que pour les utilisateurs ayant la permission « {$a} ».';
+$string['initializing_the_demo_dataset'] = 'Initialisation du jeu de données de démonstration';
 $string['instagram'] = 'Compte Instagram';
 $string['institutional_account_authentification_url'] = 'URL d’authentification des comptes institutionnels';
 $string['institutional_address'] = 'Adresse institutionnelle';
@@ -506,6 +508,7 @@ $string['notify'] = 'Notifier';
 $string['notify_functional_contact'] = 'Mettre en copie l’adresse <em>{$a}</em>';
 $string['number_of_notifications'] = 'Nombre de notifications';
 $string['obtain_a_license_number'] = 'Obtenir un numéro de licence';
+$string['once_you_do_this_you_can_not_go_back_again'] = 'Une fois cette action démarrée, il sera impossible de revenir en arrière !';
 $string['orange'] = 'Orange';
 $string['other_federation'] = 'Autre fédération';
 $string['other_filters'] = 'Autres filtres';
@@ -574,6 +577,7 @@ $string['permission_to_use_my_personal_image_description'] = '<u>Droit à l’im
 J’autorise l’A.S., la Fédération et ses organes déconcentrés à utiliser mon image sur tout support destiné à la promotion des activités de l’A.S. et de la Fédération, à l’exclusion de toute utilisation à titre commercial.<br />
 Cette autorisation est donnée à titre gracieux pour une durée de 5 ans et pour l’international.<br />
 J’autorise :';
+$string['please_note_that_this_process_can_take_a_long_time'] = 'Veuillez noter que le processus peut durer assez longtemps.';
 $string['postal_code'] = 'Code postal';
 $string['preview'] = 'Aperçu';
 $string['publication_date'] = 'Date de publication';
@@ -721,6 +725,7 @@ $string['the_enrol_start_date_must_be_prior_to_the_course_start_date'] = 'La dat
 $string['the_course_start_date_must_be_after_to_the_enrol_start_date'] = 'La date de début des cours doit être postérieure à la date de début des inscriptions.';
 $string['the_enrol_end_date_must_be_prior_to_the_course_end_date'] = 'La date de fin des inscriptions doit être antérieure à la date de fin des cours.';
 $string['the_date_of_the_medical_certificate_cannot_be_later_than_today'] = 'La date de réalisation du certificat médical ne peut pas être postérieure à aujourd’hui.';
+$string['the_demo_dataset_has_been_successfully_initialized'] = 'Le jeu de données de démonstration a été initialisé avec succès.';
 $string['the_details_of_the_responses_are_neither_saved_nor_sent_back_to_the_server'] = 'Le détail des réponses n’est ni enregistré, ni renvoyé au serveur.';
 $string['the_directory_X_is_not_writable'] = 'Le répertoire « {$a} » n’est pas accessible en écriture.';
 $string['the_field_X_cannot_have_the_same_value_as_the_field_Y'] = 'Le champ « {$a->field1} » ne peut pas avoir la même valeur que le champ « {$a->field2} ».';
@@ -772,6 +777,7 @@ $string['visibility_of_fields'] = 'Visibilité des champs';
 $string['visibility_of_field_X'] = 'Visibilité du champ « {$a} »';
 $string['visible'] = 'Visible';
 $string['warning_this_card_is_currently_used_in_X_enrolments'] = 'Attention ! Cette carte est actuellement utilisée dans {$a} méthodes d’inscription.';
+$string['warning_this_operation_will_destroy_data'] = 'Attention ! Cette opération DÉTRUIRA vos données (cours, catégories, utilisateurs, etc).';
 $string['whatever'] = 'Peu importe';
 $string['woman'] = 'Femme';
 $string['you_are_not_enrolled_in_this_course'] = 'Vous n’êtes pas inscrit à ce cours.';
