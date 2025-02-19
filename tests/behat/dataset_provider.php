@@ -71,7 +71,7 @@ class dataset_provider {
      *
      * @return void
      */
-    private function setup_blocks_and_theme() {
+    private static function setup_blocks_and_theme() {
         global $CFG, $DB;
 
         // Note: ne pas déplacer cette inclusion au début du fichier. Sinon, la CI indique que la variable $CFG n'existe pas lors de
@@ -100,7 +100,7 @@ class dataset_provider {
                 throw new Exception(get_string('unknownblockregion', 'error', $defaultregion));
             }
 
-            $blockinstance = new \stdClass();
+            $blockinstance = new stdClass();
             $blockinstance->blockname = $blockname;
             $blockinstance->parentcontextid = 1;
             $blockinstance->showinsubcontexts = 0;
@@ -135,7 +135,7 @@ class dataset_provider {
      *
      * @return void
      */
-    private function setup_calendars() {
+    private static function setup_calendars() {
         global $DB;
 
         $periods = [];
@@ -193,7 +193,7 @@ class dataset_provider {
      *
      * @return void
      */
-    private function setup_cohorts() {
+    private static function setup_cohorts() {
         global $DB;
 
         $roles = $DB->get_records('role', ['archetype' => 'student']);
@@ -240,7 +240,7 @@ class dataset_provider {
      *
      * @return void
      */
-    private function setup_config() {
+    private static function setup_config() {
         global $DB;
 
         set_config('debug', '30719');
@@ -282,7 +282,7 @@ class dataset_provider {
      *
      * @return void
      */
-    private function setup_courses() {
+    private static function setup_courses() {
         global $CFG, $DB;
 
         // Note: ne pas déplacer cette inclusion au début du fichier. Sinon, la CI indique que la variable $CFG n'existe pas lors de
@@ -294,7 +294,7 @@ class dataset_provider {
 
         $handle = fopen($file, 'r');
         if ($handle === false) {
-            throw new exception(sprintf('File "%s" not found', $file));
+            throw new Exception(sprintf('File "%s" not found', $file));
         }
 
         // Charge toutes les données présentes en base de données.
@@ -478,7 +478,7 @@ class dataset_provider {
      *
      * @return void
      */
-    private function setup_enrolments(Apsolu\course $apsolucourse, string $period, string $teachers, string $students): void {
+    private static function setup_enrolments(Apsolu\course $apsolucourse, string $period, string $teachers, string $students): void {
         global $DB;
 
         $course = $DB->get_record('course', ['id' => $apsolucourse->id], $fields = '*', MUST_EXIST);
@@ -577,7 +577,7 @@ class dataset_provider {
      *
      * @return void
      */
-    public function setup_federation_course() {
+    private static function setup_federation_course() {
         global $CFG, $DB;
 
         // Crée un type de calendrier APSOLU.
@@ -708,7 +708,7 @@ class dataset_provider {
      *
      * @return void
      */
-    private function setup_periods() {
+    private static function setup_periods() {
         // Calcule l'année universitaire en cours.
         $academicyear = date('Y');
         if (date('m') < 8) {
@@ -769,7 +769,7 @@ class dataset_provider {
      *
      * @return void
      */
-    private function setup_roles() {
+    private static function setup_roles() {
         global $DB;
 
         // Génère les rôles.
@@ -921,7 +921,7 @@ class dataset_provider {
      *
      * @return void
      */
-    private function setup_users() {
+    private static function setup_users() {
         global $DB;
 
         $password = 'apsolu';
