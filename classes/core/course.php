@@ -651,7 +651,7 @@ class course extends record {
         $period = new period();
         $period->load($this->periodid);
         foreach ($period->get_sessions($offset) as $sessiontime => $session) {
-            if ($session->is_expired() === true) {
+            if ($session->is_expired() === true && defined('APSOLU_DEMO') === false) {
                 // On retire de la sélection toutes les sessions déjà passées.
                 continue;
             }
@@ -685,7 +685,7 @@ class course extends record {
         foreach ($sessions as $sessiontime => $session) {
             $count++;
 
-            if ($session->is_expired() === true) {
+            if ($session->is_expired() === true && defined('APSOLU_DEMO') === false) {
                 // On ne modifie jamais les sessions passées.
                 continue;
             }

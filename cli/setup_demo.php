@@ -28,6 +28,7 @@
 use local_apsolu\tests\behat\dataset_provider;
 
 define('CLI_SCRIPT', true);
+define('APSOLU_DEMO', true);
 
 require(__DIR__.'/../../../config.php');
 require_once($CFG->libdir . '/clilib.php');
