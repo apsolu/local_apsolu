@@ -200,7 +200,7 @@ class dataset_provider {
 
         $roles = $DB->get_records('role', ['archetype' => 'student']);
         foreach ($roles as $role) {
-            if (empty($role->name) === true) {
+            if (empty($role->name) === true || $role->shortname === 'ffsu') {
                 continue;
             }
 
