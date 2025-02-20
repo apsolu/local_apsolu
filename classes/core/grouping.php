@@ -194,6 +194,12 @@ class grouping extends record {
             }
         }
 
+        // Trie la catégorie parent.
+        $category = core_course_category::get((int) $this->parent);
+        if ($category->can_resort_subcategories()) {
+            \core_course\management\helper::action_category_resort_subcategories($category, $sort = 'name');
+        }
+
         // Valide la transaction en cours.
         if (isset($transaction) === true) {
             $transaction->allow_commit();

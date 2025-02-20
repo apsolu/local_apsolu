@@ -22,6 +22,7 @@ namespace local_apsolu\core;
 use coding_exception;
 use context_block;
 use context_course;
+use core_course_category;
 use core_php_time_limit;
 use grade_item;
 use moodle_exception;
@@ -553,6 +554,12 @@ class course extends record {
                 $this->set_sessions();
                 break;
             }
+        }
+
+        // Trie les cours de la catégorie.
+        $category = core_course_category::get((int) $this->category);
+        if ($category->can_resort_courses()) {
+            \core_course\management\helper::action_category_resort_courses($category, $sort = 'fullname');
         }
 
         // Valide la transaction en cours.
