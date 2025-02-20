@@ -509,7 +509,8 @@ class dataset_provider {
         $course = $DB->get_record('course', ['id' => $apsolucourse->id], $fields = '*', MUST_EXIST);
         $users = $DB->get_records('user', $conditions = null, $sort = '', $fields = 'username, id');
         $roles = $DB->get_records('role', $conditions = null, $sort = '', $fields = 'shortname, id');
-        $calendars = $DB->get_records('apsolu_calendars', $conditions = null, $sort = '', $fields = 'name, id');
+        $calendars = $DB->get_records('apsolu_calendars', $conditions = null, $sort = '', $fields = 'name, id, enrolstartdate,
+            enrolenddate, coursestartdate, courseenddate');
         $enrolinstances = enrol_get_instances($course->id, $enabled = null);
         $cohorts = [];
         foreach ($DB->get_records('cohort') as $cohort) {
@@ -562,6 +563,10 @@ class dataset_provider {
             $data = $selectplugin->get_instance_defaults();
             $data['name'] = $instancename;
             $data['customchar1'] = $calendars[$instancename]->id; // CalendarID.
+            $data['enrolstartdate'] = $calendars[$instancename]->enrolstartdate;
+            $data['enrolenddate'] = $calendars[$instancename]->enrolenddate;
+            $data['customint7'] = $calendars[$instancename]->coursestartdate;
+            $data['customint8'] = $calendars[$instancename]->courseenddate;
             $instanceid = $selectplugin->add_instance($course, $data);
             $selectinstances[$instanceid] = $DB->get_record('enrol', ['id' => $instanceid]);
 
