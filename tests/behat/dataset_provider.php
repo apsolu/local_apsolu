@@ -509,9 +509,15 @@ class dataset_provider {
         $course = $DB->get_record('course', ['id' => $apsolucourse->id], $fields = '*', MUST_EXIST);
         $users = $DB->get_records('user', $conditions = null, $sort = '', $fields = 'username, id');
         $roles = $DB->get_records('role', $conditions = null, $sort = '', $fields = 'shortname, id');
-        $cohorts = $DB->get_records('cohort');
         $calendars = $DB->get_records('apsolu_calendars', $conditions = null, $sort = '', $fields = 'name, id');
         $enrolinstances = enrol_get_instances($course->id, $enabled = null);
+        $cohorts = [];
+        foreach ($DB->get_records('cohort') as $cohort) {
+            if (str_starts_with($cohort->name, 'Ensemble ') === false) {
+                continue;
+            }
+            $cohorts[$cohort->id] = $cohort;
+        }
 
         // Récupère les méthodes d'inscription manuelle et par voeux.
         $manualinstance = null;
