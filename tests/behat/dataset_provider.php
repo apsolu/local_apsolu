@@ -67,6 +67,21 @@ class dataset_provider {
     }
 
     /**
+     * Retourne l'année universtaire en cours.
+     *
+     * @return int Une année sur 4 chiffres. Ex: 2024 pour l'année 2024-2025.
+     */
+    private static function get_academic_year() {
+        $academicyear = date('Y');
+
+        if (date('m') < 8) {
+            $academicyear--;
+        }
+
+        return $academicyear;
+    }
+
+    /**
      * Configure les blocs, les méthodes d'inscription et le thème APSOLU.
      *
      * @return void
@@ -727,11 +742,8 @@ class dataset_provider {
      * @return void
      */
     private static function setup_periods() {
-        // Calcule l'année universitaire en cours.
-        $academicyear = date('Y');
-        if (date('m') < 8) {
-            $academicyear--;
-        }
+        // Récupère l'année universitaire en cours.
+        $academicyear = self::get_academic_year();
 
         // Génère les jours fériés.
         for ($i = 0; $i < 1; $i++) {
