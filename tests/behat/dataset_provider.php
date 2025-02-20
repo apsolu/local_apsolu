@@ -194,17 +194,17 @@ class dataset_provider {
      * Configure les cohortes et les populations.
      *
      * 6 cohortes :
-     *  - Évalué (bonification/sport facultatif) Femme
-     *  - Évalué (bonification/sport facultatif) Homme
-     *  - Évalué (option) Femme
-     *  - Évalué (option) Homme
-     *  - Libre Femme
-     *  - Libre Homme
+     *  - Ensemble Évalué (bonification) Femme
+     *  - Ensemble Évalué (bonification) Homme
+     *  - Ensemble Évalué (option) Femme
+     *  - Ensemble Évalué (option) Homme
+     *  - Ensemble Non évalué Femme
+     *  - Ensemble Non évalue Homme
      *
      * 3 populations :
-     *  - Population Évalué (bonification/sport facultatif)
+     *  - Population Évalué (bonification)
      *  - Population Évalué (option)
-     *  - Population Libre
+     *  - Population Non évalué
      *
      * @return void
      */
@@ -230,7 +230,7 @@ class dataset_provider {
 
                 $cohort = new stdClass();
                 $cohort->idnumber = $idnumber;
-                $cohort->name = sprintf('%s %s', $role->name, $sex);
+                $cohort->name = sprintf('Ensemble %s %s', $role->name, $sex);
                 $cohort->contextid = 1;
 
                 $cohort->id = cohort_add_cohort($cohort);
@@ -799,7 +799,7 @@ class dataset_provider {
     }
 
     /**
-     * Configure 3 rôles : Évalué (option), Évalué (bonification/sport facultatif) et Libre.
+     * Configure 3 rôles : Évalué (option), Évalué (bonification) et Non évalué.
      *
      * @return void
      */
@@ -810,9 +810,9 @@ class dataset_provider {
         $roles = [];
         $roles[] = (object) ['name' => 'Évalué (option)', 'shortname' => 'option', 'color' => 'green', 'archetype' => 'student',
             'description' => 'Étudiants en formation qualifiante.'];
-        $roles[] = (object) ['name' => 'Évalué (bonification/sport facultatif)', 'shortname' => 'bonification', 'color' => 'orange',
+        $roles[] = (object) ['name' => 'Évalué (bonification)', 'shortname' => 'bonification', 'color' => 'orange',
             'archetype' => 'student', 'description' => 'Étudiants en formation qualif. Seules comptent les notes au dessus de 10.'];
-        $roles[] = (object) ['name' => 'Libre', 'shortname' => 'libre', 'color' => 'purple', 'archetype' => 'student',
+        $roles[] = (object) ['name' => 'Non évalué', 'shortname' => 'libre', 'color' => 'purple', 'archetype' => 'student',
             'description' => 'Étudiants en formation personnelle. Aucune évaluation n\'est attendue.'];
 
         foreach ($roles as $role) {
