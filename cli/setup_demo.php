@@ -33,6 +33,28 @@ require(__DIR__.'/../../../config.php');
 require_once($CFG->libdir . '/clilib.php');
 require_once($CFG->dirroot.'/local/apsolu/tests/behat/dataset_provider.php');
 
+list($options, $unrecognized) = cli_get_params(
+    [
+        'help'                      => false,
+        'non-interactive'           => false,
+    ],
+    [
+        'h' => 'help',
+    ]
+);
+
+$interactive = empty($options['non-interactive']);
+
+if ($unrecognized) {
+    $unrecognized = implode("\n  ", $unrecognized);
+    cli_error(get_string('cliunknowoption', 'admin', $unrecognized));
+}
+
+if ($options['help'] === true) {
+    cli_writeln(get_string('cli_setup_behat_help', 'local_apsolu'));
+    exit(0);
+}
+
 cli_heading(get_string('initializing_the_demo_dataset', 'local_apsolu'));
 
 cli_writeln('');
@@ -44,13 +66,19 @@ cli_separator();
 
 cli_writeln('');
 cli_writeln(get_string('please_note_that_this_process_can_take_a_long_time', 'local_apsolu'));
-cli_writeln(get_string('do_you_really_want_to_initialize_the_demo_dataset', 'local_apsolu'));
 cli_writeln('');
 
-$prompt = get_string('cliyesnoprompt', 'admin');
-$input = cli_input($prompt, '', [get_string('clianswerno', 'admin'), get_string('cliansweryes', 'admin')]);
-if ($input == get_string('clianswerno', 'admin')) {
-    exit(1);
+if ($interactive) {
+    cli_writeln(get_string('do_you_really_want_to_initialize_the_demo_dataset', 'local_apsolu'));
+    cli_writeln('');
+
+    $prompt = get_string('cliyesnoprompt', 'admin');
+    $input = cli_input($prompt, '', [get_string('clianswerno', 'admin'), get_string('cliansweryes', 'admin')]);
+    if ($input == get_string('clianswerno', 'admin')) {
+        exit(1);
+    }
+
+    cli_writeln('');
 }
 
 // Supprime toutes les catégories (sauf la 1ère).

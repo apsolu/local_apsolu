@@ -189,6 +189,15 @@ $string['city_has_been_deleted'] = 'Le site a été supprimé.';
 $string['city_of_birth'] = 'Ville de naissance';
 $string['city_saved'] = 'Site enregistré.';
 $string['city_updated'] = 'Site modifié.';
+$string['cli_setup_behat_help'] = 'Script permettant d’injecter un jeu de données de démonstration pour APSOLU.
+
+Options:
+-h, --help                  Affiche cette aide.
+--non-interactive           Éxécute le script sans question interaction ou confirmation.
+
+Exemple:
+$sudo -u www-data /usr/bin/php local/apsolu/cli/setup_demo.php --non-interactive
+';
 $string['csv_format'] = 'Format CSV';
 $string['cycle'] = 'Cycle LMD';
 $string['cycles'] = 'Cycles LMD';
