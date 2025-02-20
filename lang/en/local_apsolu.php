@@ -198,6 +198,10 @@ Options:
 Exemple:
 $sudo -u www-data /usr/bin/php local/apsolu/cli/setup_demo.php --non-interactive
 ';
+$string['cli_step_deletes_all_apsolu_table_data'] = '* Supprime toutes les données des tables APSOLU…';
+$string['cli_step_deletes_all_categories_and_courses'] = '* Supprime toutes les catégories et tous les cours…';
+$string['cli_step_deletes_all_users'] = '* Supprime tous les utilisateurs…';
+$string['cli_step_initialize_a_new_dataset'] = '* Initialise un nouveau jeu de données…';
 $string['csv_format'] = 'Format CSV';
 $string['cycle'] = 'Cycle LMD';
 $string['cycles'] = 'Cycles LMD';

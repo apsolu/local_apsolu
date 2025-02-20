@@ -83,6 +83,7 @@ if ($interactive) {
 }
 
 // Supprime toutes les catégories (sauf la 1ère).
+cli_writeln(get_string('cli_step_deletes_all_categories_and_courses', 'local_apsolu'));
 foreach ($DB->get_records('course_categories', ['parent' => 0]) as $category) {
     if ($category->id == 1) {
         continue;
@@ -98,6 +99,7 @@ foreach ($DB->get_records('course', ['category' => 1]) as $course) {
 }
 
 // Supprime tous les utilisateurs.
+cli_writeln(get_string('cli_step_deletes_all_users', 'local_apsolu'));
 foreach ($DB->get_records('user') as $user) {
     if ($user->id < 3) {
         continue;
@@ -107,6 +109,7 @@ foreach ($DB->get_records('user') as $user) {
 }
 
 // Supprime toutes les données des tables APSOLU.
+cli_writeln(get_string('cli_step_deletes_all_apsolu_table_data', 'local_apsolu'));
 $queries = [];
 $queries[] = 'TRUNCATE {apsolu_areas}';
 $queries[] = 'TRUNCATE {apsolu_attendance_presences}';
@@ -151,6 +154,8 @@ foreach ($queries as $query) {
 }
 
 // Initialise un nouveau jeu de données.
+cli_writeln(get_string('cli_step_initialize_a_new_dataset', 'local_apsolu'));
 dataset_provider::execute();
+cli_writeln('');
 
 cli_writeln(get_string('the_demo_dataset_has_been_successfully_initialized', 'local_apsolu'));
