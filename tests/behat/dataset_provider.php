@@ -673,12 +673,12 @@ class dataset_provider {
         // Crée un centre de paiement.
         $center = new stdClass();
         $center->name = 'Association des étudiants';
-        $center->prefix = '';
-        $center->idnumber = '';
-        $center->sitenumber = '';
-        $center->rank = '';
-        $center->hmac = '';
-        $center->id = $DB->insert_record('apsolu_payments_cards', $center);
+        $center->prefix = 'ffsu-';
+        $center->idnumber = '107975626';
+        $center->sitenumber = '1999888';
+        $center->rank = '43';
+        $center->hmac = str_repeat('0123456789ABCDEF', 8);
+        $center->id = $DB->insert_record('apsolu_payments_centers', $center);
 
         // Crée un tarif de paiement.
         $card = new stdClass();
