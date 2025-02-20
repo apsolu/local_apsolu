@@ -28,6 +28,7 @@ use local_apsolu\core as Apsolu;
 use local_apsolu\core\federation as Federation;
 use local_apsolu_courses_categories_edit_form;
 use stdClass;
+use tool_langimport\controller as langimport;
 use tool_usertours\local\filter\theme;
 use tool_usertours\tour;
 use testing_data_generator;
@@ -54,6 +55,11 @@ class dataset_provider {
 
         session_manager::init_empty_session();
         session_manager::set_user(get_admin());
+
+        // Force l'utilisation du français, notamment pour avoir le bon jour de la semaine dans le nom des cours.
+        $langimport = new langimport();
+        $langimport->install_languagepacks('fr', $updating = false);
+        force_current_language('fr');
 
         self::setup_blocks_and_theme();
         self::setup_config();
