@@ -604,6 +604,9 @@ class dataset_provider {
     private static function setup_federation_course() {
         global $CFG, $DB;
 
+        // Récupère l'année universitaire en cours.
+        $academicyear = self::get_academic_year();
+
         // Crée un type de calendrier APSOLU.
         $calendartype = new stdClass();
         $calendartype->name = 'Général';
@@ -612,10 +615,10 @@ class dataset_provider {
         // Crée un calendrier APSOLU.
         $calendar = new stdClass();
         $calendar->name = 'Calendrier FFSU';
-        $calendar->enrolstartdate = time() - 24 * 60 * 60;
-        $calendar->enrolenddate = time() + 24 * 60 * 60;
+        $calendar->enrolstartdate = make_timestamp($academicyear, 8, 1); // 1er août N.
+        $calendar->enrolenddate = make_timestamp($academicyear + 1, 8, 1);; // 1er août N+1.
         $calendar->coursestartdate = $calendar->enrolstartdate;
-        $calendar->courseenddate = time() + 48 * 60 * 60;
+        $calendar->courseenddate = $calendar->enrolenddate;
         $calendar->reenrolstartdate = 0;
         $calendar->reenrolenddate = 0;
         $calendar->gradestartdate = 0;
