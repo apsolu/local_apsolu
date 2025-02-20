@@ -513,7 +513,7 @@ class dataset_provider {
         global $DB;
 
         $course = $DB->get_record('course', ['id' => $apsolucourse->id], $fields = '*', MUST_EXIST);
-        $users = $DB->get_records('user', $conditions = null, $sort = '', $fields = 'username, id');
+        $users = $DB->get_records('user', ['deleted' => 0], $sort = '', $fields = 'username, id');
         $roles = $DB->get_records('role', $conditions = null, $sort = '', $fields = 'shortname, id');
         $calendars = $DB->get_records('apsolu_calendars', $conditions = null, $sort = '', $fields = 'name, id, enrolstartdate,
             enrolenddate, coursestartdate, courseenddate');
@@ -745,7 +745,7 @@ class dataset_provider {
         $number->save();
 
         // Ajoute les utilisateurs "etudiant" dans la cohorte FFSU.
-        foreach ($DB->get_records('user') as $user) {
+        foreach ($DB->get_records('user', ['deleted' => 0]) as $user) {
             if (str_starts_with($user->username, 'etudiant') === false && $user->username !== 'letudiant') {
                 continue;
             }
@@ -1005,7 +1005,7 @@ class dataset_provider {
 
         // Affectation aux cohortes.
         $cohorts = $DB->get_records('cohort');
-        foreach ($DB->get_records('user') as $user) {
+        foreach ($DB->get_records('user', ['deleted' => 0]) as $user) {
             if (str_starts_with($user->username, 'etudiant') === false && $user->username !== 'letudiant') {
                 continue;
             }
