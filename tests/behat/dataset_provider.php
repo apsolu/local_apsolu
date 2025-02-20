@@ -196,22 +196,31 @@ class dataset_provider {
     private static function setup_cohorts() {
         global $DB;
 
+        $cohorts = $DB->get_records('cohort', $conditions = null, $sort = '', $fields = 'idnumber, id');
+
         $roles = $DB->get_records('role', ['archetype' => 'student']);
         foreach ($roles as $role) {
             if (empty($role->name) === true) {
                 continue;
             }
 
-            $cohorts = [];
+            $newcohorts = [];
             foreach (['Homme', 'Femme'] as $sex) {
+                $idnumber = sprintf('%s_%s', $role->shortname, strtolower($sex));
+
+                if (isset($cohorts[$idnumber]) === true) {
+                    $newcohorts[] = $cohorts[$idnumber];
+                    continue;
+                }
+
                 $cohort = new stdClass();
-                $cohort->idnumber = sprintf('%s_%s', $role->shortname, strtolower($sex));
+                $cohort->idnumber = $idnumber;
                 $cohort->name = sprintf('%s %s', $role->name, $sex);
                 $cohort->contextid = 1;
 
                 $cohort->id = cohort_add_cohort($cohort);
 
-                $cohorts[] = $cohort;
+                $newcohorts[] = $cohort;
             }
 
             // Définit une population.
@@ -228,7 +237,7 @@ class dataset_provider {
             $college->id = $DB->insert_record('apsolu_colleges', $college);
 
             $DB->delete_records('apsolu_colleges_members', ['collegeid' => $college->id]);
-            foreach ($cohorts as $cohort) {
+            foreach ($newcohorts as $cohort) {
                 $sql = "INSERT INTO {apsolu_colleges_members}(collegeid, cohortid) VALUES(?, ?)";
                 $DB->execute($sql, [$college->id, $cohort->id]);
             }
