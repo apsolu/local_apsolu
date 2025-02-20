@@ -100,7 +100,7 @@ foreach ($DB->get_records('course', ['category' => 1]) as $course) {
 
 // Supprime tous les utilisateurs.
 cli_writeln(get_string('cli_step_deletes_all_users', 'local_apsolu'));
-foreach ($DB->get_records('user') as $user) {
+foreach ($DB->get_records('user', ['deleted' => 0]) as $user) {
     if ($user->id < 3) {
         continue;
     }
