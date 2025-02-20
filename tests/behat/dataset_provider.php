@@ -502,7 +502,8 @@ class dataset_provider {
      *
      * @return void
      */
-    private static function setup_enrolments(Apsolu\course $apsolucourse, string $period, string $teachers, string $students): void {
+    private static function setup_enrolments(Apsolu\course $apsolucourse, string $period, string $teachers,
+            string $students): void {
         global $DB;
 
         $course = $DB->get_record('course', ['id' => $apsolucourse->id], $fields = '*', MUST_EXIST);
