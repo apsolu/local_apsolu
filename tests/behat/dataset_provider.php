@@ -879,20 +879,8 @@ class dataset_provider {
         $sql = "INSERT INTO {apsolu_complements} (id, price, federation) VALUES(:id, 0, 1)";
         $DB->execute($sql, ['id' => $federationcourse->id]);
 
-        // Génère les groupes correspondant aux activités FFSU.
-        $groups = $DB->get_records('groups', ['courseid' => $federationcourse->id], $sort = '', $fields = 'name');
-        foreach (Federation\activity::get_records() as $activity) {
-            if (isset($groups[$activity->name]) === true) {
-                continue;
-            }
-
-            $group = new stdClass();
-            $group->name = $activity->name;
-            $group->courseid = $federationcourse->id;
-            $group->timecreated = time();
-            $group->timemodified = $group->timecreated;
-            groups_create_group($group);
-        }
+        // Génère les activités FFSU et les groupes de cours correspondant.
+        Federation\activity::synchronize_database();
 
         // Définit un numéro d'association.
         $numbers = ['AB00' => 'ENC Paris', 'AC01' => 'IUT Paris', 'AD03' => 'U. Paris'];
