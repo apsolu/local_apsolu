@@ -656,25 +656,29 @@ class dataset_provider {
 
         // Crée un rôle.
         $role = $DB->get_record('role', ['shortname' => 'ffsu']);
-        if ($role !== false) {
-            $roleid = $role->id;
-        } else {
+        if ($role === false) {
             $archetype = 'student';
-            $roleid = create_role('Pratique FFSU', 'ffsu', '', $archetype);
+            $role->id = create_role('Pratique FFSU', 'ffsu', '', $archetype);
             $contextlevels = array_keys(context_helper::get_all_levels());
             $archetyperoleid = $DB->get_field('role', 'id', ['shortname' => $archetype, 'archetype' => $archetype]);
             $contextlevels = get_role_contextlevels($archetyperoleid);
-            set_role_contextlevels($roleid, $contextlevels);
+            set_role_contextlevels($role->id, $contextlevels);
             foreach (['assign', 'override', 'switch', 'view'] as $type) {
                 $rolestocopy = get_default_role_archetype_allows($type, $archetype);
                 foreach ($rolestocopy as $tocopy) {
                     $functionname = "core_role_set_{$type}_allowed";
-                    $functionname($roleid, $tocopy);
+                    $functionname($role->id, $tocopy);
                 }
             }
             $sourcerole = $DB->get_record('role', ['id' => $archetyperoleid], $fields = '*', MUST_EXIST);
-            role_cap_duplicate($sourcerole, $roleid);
+            role_cap_duplicate($sourcerole, $role->id);
         }
+
+        $apsolurole = new Apsolu\role();
+        $apsolurole->id = $role->id;
+        $apsolurole->color = 'cornflowerblue';
+        $apsolurole->fontawesomeid = 'star';
+        $apsolurole->save();
 
         // Crée un centre de paiement.
         $center = new stdClass();
@@ -695,7 +699,7 @@ class dataset_provider {
         $card->centerid = $center->id;
         $card->id = $DB->insert_record('apsolu_payments_cards', $card);
         $DB->execute('INSERT INTO {apsolu_payments_cards_cohort}(cardid, cohortid) VALUES(?, ?)', [$card->id, $cohort->id]);
-        $DB->execute('INSERT INTO {apsolu_payments_cards_roles}(cardid, roleid) VALUES(?, ?)', [$card->id, $roleid]);
+        $DB->execute('INSERT INTO {apsolu_payments_cards_roles}(cardid, roleid) VALUES(?, ?)', [$card->id, $role->id]);
         $DB->execute('INSERT INTO {apsolu_payments_cards_cals}(cardid, calendartypeid, value) VALUES(?, ?, 0)',
             [$card->id, $calendartype->id]);
 
@@ -714,7 +718,7 @@ class dataset_provider {
         $enrol->customint3 = 0; // Désactive les quotas.
         $enrol->customchar3 = $plugin::ACCEPTED;
         $DB->execute('INSERT INTO {enrol_select_cohorts}(enrolid, cohortid) VALUES(?, ?)', [$enrol->id, $cohort->id]);
-        $DB->execute('INSERT INTO {enrol_select_roles}(enrolid, roleid) VALUES(?, ?)', [$enrol->id, $roleid]);
+        $DB->execute('INSERT INTO {enrol_select_roles}(enrolid, roleid) VALUES(?, ?)', [$enrol->id, $role->id]);
         $DB->execute('INSERT INTO {enrol_select_cards}(enrolid, cardid) VALUES(?, ?)', [$enrol->id, $card->id]);
 
         set_config('federation_course', $federationcourse->id, 'local_apsolu');
@@ -825,20 +829,23 @@ class dataset_provider {
 
         // Génère les rôles.
         $roles = [];
-        $roles[] = (object) ['name' => 'Évalué (option)', 'shortname' => 'option', 'color' => 'green', 'archetype' => 'student',
-            'description' => 'Étudiants en formation qualifiante.'];
+        $roles[] = (object) ['name' => 'Évalué (option)', 'shortname' => 'option', 'color' => 'green', 'shape' => 'certificate',
+            'archetype' => 'student', 'description' => 'Étudiants en formation qualifiante.'];
         $roles[] = (object) ['name' => 'Évalué (bonification)', 'shortname' => 'bonification', 'color' => 'orange',
-            'archetype' => 'student', 'description' => 'Étudiants en formation qualif. Seules comptent les notes au dessus de 10.'];
-        $roles[] = (object) ['name' => 'Non évalué', 'shortname' => 'libre', 'color' => 'purple', 'archetype' => 'student',
-            'description' => 'Étudiants en formation personnelle. Aucune évaluation n\'est attendue.'];
+            'shape' => 'certificate',  'archetype' => 'student',
+            'description' => 'Étudiants en formation qualif. Seules comptent les notes au dessus de 10.'];
+        $roles[] = (object) ['name' => 'Non évalué', 'shortname' => 'libre', 'color' => 'purple', 'shape' => 'circle',
+            'archetype' => 'student', 'description' => 'Étudiants en formation personnelle. Aucune évaluation n\'est attendue.'];
 
         foreach ($roles as $role) {
-            if ($DB->get_record('role', ['shortname' => $role->shortname]) !== false) {
+            $record = $DB->get_record('role', ['shortname' => $role->shortname]);
+            if ($record !== false) {
+                $role->id = $record->id;
                 continue;
             }
 
             // Procédure recopiée de la méthode create_role() du fichier lib/testing/generator/data_generator.php.
-            $newroleid = create_role($role->name, $role->shortname, $role->description, $role->archetype);
+            $role->id = create_role($role->name, $role->shortname, $role->description, $role->archetype);
 
             $contextlevels = array_keys(context_helper::get_all_levels());
 
@@ -847,7 +854,7 @@ class dataset_provider {
                 $archetyperoleid = $DB->get_field('role', 'id', ['shortname' => $role->archetype, 'archetype' => $role->archetype]);
                 $contextlevels = get_role_contextlevels($archetyperoleid);
             }
-            set_role_contextlevels($newroleid, $contextlevels);
+            set_role_contextlevels($role->id, $contextlevels);
 
             if (empty($role->archetype) === false) {
                 // We copy all the roles the archetype can assign, override, switch to and view.
@@ -856,18 +863,21 @@ class dataset_provider {
                     $rolestocopy = get_default_role_archetype_allows($type, $role->archetype);
                     foreach ($rolestocopy as $tocopy) {
                         $functionname = "core_role_set_{$type}_allowed";
-                        $functionname($newroleid, $tocopy);
+                        $functionname($role->id, $tocopy);
                     }
                 }
 
                 // Copying the archetype capabilities.
                 $sourcerole = $DB->get_record('role', ['id' => $archetyperoleid]);
-                role_cap_duplicate($sourcerole, $newroleid);
+                role_cap_duplicate($sourcerole, $role->id);
             }
+        }
 
+        foreach ($roles as $role) {
             $apsolurole = new Apsolu\role();
-            $apsolurole->id = $newroleid;
+            $apsolurole->id = $role->id;
             $apsolurole->color = $role->color;
+            $apsolurole->fontawesomeid = $role->shape;
             $apsolurole->save();
         }
 
