@@ -50,6 +50,7 @@ class dataset_provider {
         require_once($CFG->dirroot.'/cohort/lib.php');
         require_once($CFG->dirroot.'/course/lib.php');
         require_once($CFG->dirroot.'/group/lib.php');
+        require_once($CFG->dirroot.'/user/profile/lib.php');
         require_once($CFG->dirroot.'/lib/blocklib.php');
         require_once($CFG->dirroot.'/lib/testing/generator/data_generator.php');
 
@@ -1000,47 +1001,107 @@ class dataset_provider {
     private static function setup_users() {
         global $DB;
 
+        // Cycles d'études.
+        $cycles = ['L1', 'L2', 'L3', 'M1', 'M2'];
+        // UFR -> Départements.
+        $ufrs = [];
+        $ufrs['Arts'] = ['Arts plastiques', 'Arts du spectacle', 'Histoire de l’art et archéologie', 'Musique'];
+        $ufrs['Langues'] = ['Allemand', 'Anglais', 'Espagnol', 'Italien', 'Langues celtiques'];
+        $ufrs['Mathématiques'] = ['Mathématiques'];
+        $ufrs['Sciences de la vie et de l’environnement'] = ['Biologie', 'Écologie', 'Santé'];
+        $ufrs['Sciences et techniques des activités physiques et sportives'] = ['STAPS'];
+        $ufrs['Sciences Humaines'] = ['Psychologie', 'Sciences de l’éducation', 'Sociologie'];
+        $ufrkeys = array_keys($ufrs);
+        // Institutions (avec un poid fort pour la valeur U. Paris).
+        $institutions = ['ENC Paris', 'IUT Paris', 'U. Paris', 'U. Paris', 'U. Paris', 'U. Paris', 'U. Paris'];
+        // Types de profil.
+        $types = ['student' => get_string('defaultcoursestudent'), 'employee' => get_string('employee', 'local_apsolu')];
+        // Liste des prénoms par genre.
+        $i = 0;
+        $firstnames = [];
+        $generator = new testing_data_generator();
+        foreach ($generator->firstnames as $firstname) {
+            if (intval($i / 5) % 2 === 0) {
+                $firstnames[$firstname] = 'M';
+            } else {
+                $firstnames[$firstname] = 'F';
+            }
+            $i++;
+        }
+
+        // Génère des données pour les 3 utilisateurs de démonstration.
         $password = 'apsolu';
 
         $users = [];
-        $users[] = ['username' => 'lenseignante', 'password' => $password, 'firstname' => 'Marguerite', 'lastname' => 'Broquedis'];
+        $users[] = ['username' => 'letudiant', 'password' => $password, 'institution' => 'U. Paris', 'type' => 'student'];
+        $users[] = ['username' => 'lenseignante', 'password' => $password, 'firstname' => 'Marguerite', 'lastname' => 'Broquedis',
+            'institution' => 'U. Paris', 'sex' => 'F', 'type' => 'employee'];
+        $users[] = ['username' => 'legestionnaire', 'password' => $password, 'firstname' => 'Bernard', 'lastname' => 'Moquette',
+            'institution' => 'U. Paris', 'sex' => 'M', 'type' => 'employee'];
+
+        // Génère des données avec un profil enseignant.
         for ($i = 1; $i < 15; $i++) {
-            $value = sprintf('enseignant%s', $i);
-            $users[] = ['username' => $value, 'password' => $value];
+            $id = sprintf('enseignant%s', $i);
+            $users[] = ['username' => $id, 'password' => $id, 'institution' => 'U. Paris', 'type' => 'employee'];
         }
 
-        $users[] = ['username' => 'letudiant', 'password' => $password];
+        // Génère des données avec un profil étudiant.
         for ($i = 1; $i < 60; $i++) {
-            $value = sprintf('etudiant%s', $i);
-            $users[] = ['username' => $value, 'password' => $value];
+            $id = sprintf('etudiant%s', $i);
+            $users[] = ['username' => $id, 'password' => $id, 'type' => 'student'];
         }
 
-        $generator = new testing_data_generator();
+        // Crée les comptes des utilisateurs.
         foreach ($users as $user) {
-            $generator->create_user($user);
+            $customfields = [];
+
+            if ($user['type'] === 'student') {
+                $ufr = $ufrkeys[array_rand($ufrkeys)];
+                $department = $ufrs[$ufr][array_rand($ufrs[$ufr])];
+
+                $user['department'] = $department;
+            }
+
+            if (isset($user['institution']) === false) {
+                $user['institution'] = $institutions[array_rand($institutions)];
+            }
+
+            // Enregistre le compte.
+            $record = $generator->create_user($user);
+
+            // Enregistre les champs de profil.
+            if ($user['type'] === 'student') {
+                $customfields[] = (object) ['id' => $record->id, 'profile_field_apsolucycle' => $cycles[array_rand($cycles)]];
+                $customfields[] = (object) ['id' => $record->id, 'profile_field_apsoluufr' => $ufr];
+            }
+
+            if (isset($user['sex']) === false) {
+                $user['sex'] = $firstnames[$record->firstname];
+            }
+
+            $customfields[] = (object) ['id' => $record->id, 'profile_field_apsolusex' => $user['sex']];
+            $customfields[] = (object) ['id' => $record->id, 'profile_field_apsolusesame' => 1];
+            $customfields[] = (object) ['id' => $record->id, 'profile_field_apsoluusertype' => $types[$user['type']]];
+
+            foreach ($customfields as $customfield) {
+                profile_save_data($customfield);
+            }
         }
 
-        $manager = ['username' => 'legestionnaire', 'password' => $password, 'firstname' => 'Bernard', 'lastname' => 'Moquette'];
-        $generator->create_user($manager);
-
+        // Attribue le rôle gestionnaire.
         $role = $DB->get_record('role', ['shortname' => 'manager'], $fields = '*', MUST_EXIST);
-        $manager = $DB->get_record('user', ['username' => 'legestionnaire'], $fields = '*', MUST_EXIST);
+        $manager = $DB->get_record('user', ['username' => 'legestionnaire', 'deleted' => 0], $fields = '*', MUST_EXIST);
         $context = context_system::instance();
         role_assign($role->id, $manager->id, $context->id);
 
-        // Affectation aux cohortes.
+        // Affecte les étudiants dans les cohortes.
         $cohorts = $DB->get_records('cohort');
         foreach ($DB->get_records('user', ['deleted' => 0]) as $user) {
             if (str_starts_with($user->username, 'etudiant') === false && $user->username !== 'letudiant') {
                 continue;
             }
 
-            $index = array_search($user->firstname, $generator->firstnames, $strict = true);
-            if ($index === false) {
-                continue;
-            }
-
-            if (intval($index / 5) % 2 === 0) {
+            if ($firstnames[$user->firstname] === 'M') {
                 $sex = 'homme';
             } else {
                 $sex = 'femme';
