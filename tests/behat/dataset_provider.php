@@ -576,7 +576,22 @@ class dataset_provider {
             $instanceid = $selectplugin->add_instance($course, $data);
             $selectinstances[$instanceid] = $DB->get_record('enrol', ['id' => $instanceid]);
 
-            foreach (array_keys($cohorts) as $cohortid) {
+            foreach ($cohorts as $cohortid => $cohort) {
+                $filter = null;
+                if (str_contains($course->fullname, 'Masculin') === true || str_contains($course->fullname, '(H)') === true) {
+                    $filter = 'homme';
+                } else if (str_contains($course->fullname, 'Féminin') === true || str_contains($course->fullname, '(F)') === true) {
+                    $filter = 'femme';
+                }
+
+                if ($filter !== null) {
+                    $parts = explode('_', $cohort->idnumber);
+                    $sex = end($parts);
+                    if ($filter !== $sex) {
+                        continue;
+                    }
+                }
+
                 $DB->execute('INSERT INTO {enrol_select_cohorts}(enrolid, cohortid) VALUES(?, ?)', [$instanceid, $cohortid]);
             }
 
