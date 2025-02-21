@@ -1071,7 +1071,10 @@ class dataset_provider {
         }
 
         // Génère des données pour les 3 utilisateurs de démonstration.
-        $password = 'apsolu';
+        $password = null;
+        if (defined('APSOLU_DEMO') === true) {
+            $password = 'apsolu';
+        }
 
         $users = [];
         $users[] = ['username' => 'letudiant', 'password' => $password, 'institution' => 'U. Paris', 'type' => 'student'];
@@ -1082,14 +1085,12 @@ class dataset_provider {
 
         // Génère des données avec un profil enseignant.
         for ($i = 1; $i < 15; $i++) {
-            $id = sprintf('enseignant%s', $i);
-            $users[] = ['username' => $id, 'password' => $id, 'institution' => 'U. Paris', 'type' => 'employee'];
+            $users[] = ['username' => sprintf('enseignant%s', $i), 'institution' => 'U. Paris', 'type' => 'employee'];
         }
 
         // Génère des données avec un profil étudiant.
         for ($i = 1; $i < 60; $i++) {
-            $id = sprintf('etudiant%s', $i);
-            $users[] = ['username' => $id, 'password' => $id, 'type' => 'student'];
+            $users[] = ['username' => sprintf('etudiant%s', $i), 'type' => 'student'];
         }
 
         // Crée les comptes des utilisateurs.
@@ -1105,6 +1106,10 @@ class dataset_provider {
 
             if (isset($user['institution']) === false) {
                 $user['institution'] = $institutions[array_rand($institutions)];
+            }
+
+            if (isset($user['password']) === false) {
+                $user['password'] = $user['username'];
             }
 
             // Enregistre le compte.
