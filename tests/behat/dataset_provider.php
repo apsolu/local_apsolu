@@ -759,20 +759,20 @@ class dataset_provider {
         }
 
         // Définit un numéro d'association.
-        $number = new Federation\number();
-        $number->number = 'AB00';
-        $number->field = 'department';
-        $number->value = 'mathematics';
-        $number->save();
+        $numbers = ['AB00' => 'ENC Paris', 'AC01' => 'IUT Paris', 'AD03' => 'U. Paris'];
+        foreach ($numbers as $id => $value) {
+            $number = new Federation\number();
+            $number->number = $id;
+            $number->field = 'institution';
+            $number->value = $value;
+            $number->save();
+        }
 
         // Ajoute les utilisateurs "etudiant" dans la cohorte FFSU.
         foreach ($DB->get_records('user', ['deleted' => 0]) as $user) {
             if (str_starts_with($user->username, 'etudiant') === false && $user->username !== 'letudiant') {
                 continue;
             }
-
-            $user->department = 'mathematics';
-            $DB->update_record('user', $user);
 
             cohort_add_member($cohort->id, $user->id);
         }
