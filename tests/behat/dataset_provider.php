@@ -674,6 +674,7 @@ class dataset_provider {
         $role = $DB->get_record('role', ['shortname' => 'ffsu']);
         if ($role === false) {
             $archetype = 'student';
+            $role = new stdClass();
             $role->id = create_role('Pratique FFSU', 'ffsu', '', $archetype);
             $contextlevels = array_keys(context_helper::get_all_levels());
             $archetyperoleid = $DB->get_field('role', 'id', ['shortname' => $archetype, 'archetype' => $archetype]);
