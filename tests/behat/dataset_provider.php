@@ -372,7 +372,7 @@ class dataset_provider {
             $data = array_map('trim', $data);
 
             list($city, $area, $location, $manager, $category, $event, $grouping, $skill,
-                $weekday, $starttime, $endtime, $period, $paymentcenter, $teachers, $students) = $data;
+                $weekday, $starttime, $endtime, $period, $paymentcenter, $teachers) = $data;
 
             if (isset($weekdays[$weekday]) === true) {
                 $weekday = $weekdays[$weekday];
@@ -486,7 +486,7 @@ class dataset_provider {
             $course->save($coursedata);
             $courses[$fullname] = $course;
 
-            self::setup_enrolments($course, $period, $teachers, $students);
+            self::setup_enrolments($course, $period, $teachers);
         }
 
         // Renomme la catégorie par défaut.
@@ -504,13 +504,10 @@ class dataset_provider {
      * @param string        $period       Valeur possible: "Annuelle", "Semestre 1" ou "Semestre 2".
      * @param string        $teachers     Liste des identifiants des utilisateurs devant avoir le rôle "enseignant éditeur",
      *                                    séparés par une virgule.
-     * @param string        $students     Liste des identifiants des utilisateurs devant avoir le rôle "évalué (option)", séparés
-     *                                    par une virgule.
      *
      * @return void
      */
-    private static function setup_enrolments(Apsolu\course $apsolucourse, string $period, string $teachers,
-            string $students): void {
+    private static function setup_enrolments(Apsolu\course $apsolucourse, string $period, string $teachers): void {
         global $DB;
 
         $course = $DB->get_record('course', ['id' => $apsolucourse->id], $fields = '*', MUST_EXIST);
@@ -574,6 +571,9 @@ class dataset_provider {
             $data['enrolenddate'] = $calendars[$instancename]->enrolenddate;
             $data['customint7'] = $calendars[$instancename]->coursestartdate;
             $data['customint8'] = $calendars[$instancename]->courseenddate;
+            $data['customint3'] = 1; // Active les quotas.
+            $data['customint1'] = 15; // Quota sur liste principale.
+            $data['customint2'] = 10; // Quota sur liste complémentaire.
             $instanceid = $selectplugin->add_instance($course, $data);
             $selectinstances[$instanceid] = $DB->get_record('enrol', ['id' => $instanceid]);
 
@@ -605,7 +605,7 @@ class dataset_provider {
             }
         }
 
-        // Attribue les droits enseignants.
+        // Attribue les droits enseignants selon les informations du fichier csv.
         foreach (explode(',', $teachers) as $teacher) {
             if (isset($users[$teacher]) === false) {
                 continue;
@@ -616,16 +616,56 @@ class dataset_provider {
                 $timestart = 0, $timeend = 0, $status = ENROL_USER_ACTIVE);
         }
 
-        // Attribue les droits étudiants.
-        foreach (explode(',', $students) as $student) {
-            if (isset($users[$student]) === false) {
-                continue;
+        // Attribue les droits étudiants sur les cours de l'utilisateur "lenseignante".
+        if ($teachers !== 'lenseignante') {
+            return;
+        }
+
+        foreach ($selectinstances as $instance) {
+            $i = 0;
+            $enroled = [];
+
+            if (str_contains($course->fullname, 'Tennis') === true) {
+                $instance->customint2 -= 5; // On laisse 5 places vacantes.
             }
 
-            $user = $users[$student];
-            foreach ($selectinstances as $instance) {
-                $selectplugin->enrol_user($instance, $user->id, $roles['option']->id,
-                    $timestart = 0, $timeend = 0, $status = ENROL_USER_ACTIVE);
+            $sql = "SELECT cm.*, c.idnumber
+                      FROM {cohort_members} cm
+                      JOIN {cohort} c ON c.id = cm.cohortid
+                      JOIN {enrol_select_cohorts} esc ON cm.cohortid = esc.cohortid
+                     WHERE esc.enrolid = :enrolid";
+            $records = $DB->get_records_sql($sql, ['enrolid' => $instance->id]);
+            shuffle($records);
+            foreach ($records as $record) {
+                if (isset($enroled[$record->userid]) === true) {
+                    continue;
+                }
+
+                if ($record->userid === $users['letudiant']->id) {
+                    // Bloque toutes inscriptions pour l'utilisateur "letudiant".
+                    continue;
+                }
+
+                if ($DB->count_records('user_enrolments', ['userid' => $record->userid]) > 2) {
+                    // Empêche un même étudiant d'être inscrit sur 20 créneaux.
+                    continue;
+                }
+
+                $role = explode('_', $record->idnumber)[0];
+
+                if ($i < $instance->customint1) {
+                    $status = $selectplugin::ACCEPTED;
+                } else if ($i < ($instance->customint1 + $instance->customint2)) {
+                    $status = $selectplugin::WAIT;
+                } else {
+                    break;
+                }
+
+                $selectplugin->enrol_user($instance, $record->userid, $roles[$role]->id,
+                    $timestart = 0, $timeend = 0, $status);
+                $i++;
+
+                $enroled[$record->userid] = $record->userid;
             }
         }
     }
