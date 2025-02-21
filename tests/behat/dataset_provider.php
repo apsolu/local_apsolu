@@ -71,6 +71,7 @@ class dataset_provider {
         self::setup_calendars();
         self::setup_courses();
         self::setup_federation_course();
+        self::setup_attendances();
     }
 
     /**
@@ -86,6 +87,101 @@ class dataset_provider {
         }
 
         return $academicyear;
+    }
+
+    /**
+     * Ajoute aléatoirement des présences.
+     *
+     * @return void
+     */
+    private static function setup_attendances() {
+        global $DB;
+
+        // Récupère l'utilisateur "lenseignante".
+        $teacher = $DB->get_record('user', ['username' => 'lenseignante', 'deleted' => 0], $fields = '*', MUST_EXIST);
+
+        // Génère les motifs de présence.
+        Apsolu\attendance\status::generate_default_values();
+        $statuses = Apsolu\attendance\status::get_records();
+
+        $present = reset($statuses);
+        for ($i = 0; $i < 20; $i++) {
+            // Ajoute artificiellement un poid fort sur le motif "présent".
+            $statuses[] = clone $present;
+        }
+
+        // Récupère la liste des cours de l'utilisateur "lenseignante".
+        $sql = "SELECT DISTINCT e.courseid
+                  FROM {enrol} e
+                  JOIN {user_enrolments} ue ON e.id = ue.enrolid
+                  WHERE ue.userid = :teacherid";
+        $courses = $DB->get_records_sql($sql, ['teacherid' => $teacher->id]);
+        foreach ($courses as $course) {
+            // Récupère les méthodes d'inscription par voeux du cours.
+            $enrolments = $DB->get_records('enrol', ['courseid' => $course->courseid, 'enrol' => 'select']);
+            foreach ($enrolments as $enrolment) {
+                // Récupère les utilisateurs inscrits avec cette méthode d'inscription.
+                $enrolment->users = $DB->get_records('user_enrolments',
+                    ['enrolid' => $enrolment->id, 'status' => ENROL_USER_ACTIVE], $fields = 'userid');
+            }
+
+            // Récupère tous les sessions du cours.
+            $sessions = Apsolu\attendancesession::get_records(['courseid' => $course->courseid]);
+            foreach ($sessions as $session) {
+                if ($session->is_expired() === false) {
+                    // Rappel: ne pas mettre une présence à une session future.
+                    continue;
+                }
+
+                // Détermine à quelle méthode d'inscription correspond la session.
+                $found = false;
+                foreach ($enrolments as $enrolment) {
+                    if ($session->sessiontime > $enrolment->customint8) {
+                        continue;
+                    }
+
+                    $found = true;
+                    break;
+                }
+
+                if ($found === false) {
+                    // Ne devrait jamais arriver.
+                    continue;
+                }
+
+                // Attribue une présence à chaque étudiant.
+                foreach ($enrolment->users as $user) {
+                    $status = $statuses[array_rand($statuses)];
+
+                    $descriptions = array_fill(0, 10, '');
+                    switch ($status->shortlabel) {
+                        case 'R':
+                            $descriptions[] = 'panne de réveil';
+                            $descriptions[] = 'grève de bus';
+                            $descriptions[] = 'pb de bus';
+                            break;
+                        case 'A':
+                            $descriptions[] = 'affaires oubliées';
+                            break;
+                        case 'D':
+                            $descriptions[] = 'départ en stage';
+                            $descriptions[] = 'justificatif médical';
+                            $descriptions[] = 'rdv médecin';
+                            break;
+                    }
+
+                    $presence = new Apsolu\attendancepresence();
+                    $presence->studentid = $user->userid;
+                    $presence->teacherid = $teacher->id;
+                    $presence->statusid = $status->id;
+                    $presence->description = $descriptions[array_rand($descriptions)];
+                    $presence->timecreated = $session->sessiontime;
+                    $presence->timemodified = $session->sessiontime;
+                    $presence->sessionid = $session->id;
+                    $presence->save();
+                }
+            }
+        }
     }
 
     /**
