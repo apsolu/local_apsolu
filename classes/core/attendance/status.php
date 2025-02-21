@@ -101,6 +101,37 @@ class status extends record {
     }
 
     /**
+     * Génère les motifs de présence par défaut (présent, en retard, dispensé et absent).
+     *
+     * @return void
+     */
+    public static function generate_default_values() {
+        global $DB;
+
+        $statuses = [];
+        $statuses['attendance_present'] = 'success';
+        $statuses['attendance_late'] = 'warning';
+        $statuses['attendance_excused'] = 'info';
+        $statuses['attendance_absent'] = 'danger';
+
+        $sortorder = 1;
+        foreach ($statuses as $code => $color) {
+            $data = [];
+            $data['shortlabel'] = get_string(sprintf('%s_short', $code), 'local_apsolu');
+            $data['longlabel'] = get_string($code, 'local_apsolu');
+            $data['sumlabel'] = get_string(sprintf('%s_total', $code), 'local_apsolu');
+            $data['color'] = $color;
+            $data['sortorder'] = $sortorder;
+
+            $sql = "INSERT INTO {apsolu_attendance_statuses} (shortlabel, longlabel, sumlabel, color, sortorder)".
+                " VALUES(:shortlabel, :longlabel, :sumlabel, :color, :sortorder)";
+            $DB->execute($sql, $data);
+
+            $sortorder++;
+        }
+    }
+
+    /**
      * Enregistre un objet en base de données.
      *
      * @throws dml_exception A DML specific exception is thrown for any errors.

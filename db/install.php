@@ -22,6 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\attendance\status as AttendanceStatus;
 use local_apsolu\core\federation\activity as Activity;
 use local_apsolu\core\federation\adhesion as Adhesion;
 use local_apsolu\core\messaging;
@@ -155,27 +156,7 @@ function xmldb_local_apsolu_install() {
     }
 
     // Initialise les données dans la table apsolu_attendance_statuses.
-    $statuses = [];
-    $statuses['attendance_present'] = 'success';
-    $statuses['attendance_late'] = 'warning';
-    $statuses['attendance_excused'] = 'info';
-    $statuses['attendance_absent'] = 'danger';
-
-    $sortorder = 1;
-    foreach ($statuses as $code => $color) {
-        $data = [];
-        $data['shortlabel'] = get_string(sprintf('%s_short', $code), 'local_apsolu');
-        $data['longlabel'] = get_string($code, 'local_apsolu');
-        $data['sumlabel'] = get_string(sprintf('%s_total', $code), 'local_apsolu');
-        $data['color'] = $color;
-        $data['sortorder'] = $sortorder;
-
-        $sql = "INSERT INTO {apsolu_attendance_statuses} (shortlabel, longlabel, sumlabel, color, sortorder)".
-            " VALUES(:shortlabel, :longlabel, :sumlabel, :color, :sortorder)";
-        $DB->execute($sql, $data);
-
-        $sortorder++;
-    }
+    AttendanceStatus::generate_default_values();
 
     return true;
 }
