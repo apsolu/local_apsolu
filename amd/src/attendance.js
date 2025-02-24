@@ -4,7 +4,6 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
             // Créé un bouton dropdown pour cocher toutes les présences non définies.
             let selector = '#apsolu-attendance-table tbody tr:first-child .apsolu-attendance-status-form input';
             let attendancestatus = document.querySelectorAll(selector);
-
             if (attendancestatus.length) {
                 // Génère le bouton dropdown avec la liste des motifs de présences disponibles.
                 let dropdown = '<div class="dropdown">' +
@@ -60,6 +59,8 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
                         });
                     });
                 });
+
+
             }
 
             // Ajoute un évènement pour permettre de désélectionner un bouton radio.
@@ -115,6 +116,18 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
                 popup.css({backgroundColor: '#EEEEEE', padding: '.5em', cursor: 'default', maxWidth: '50%', textAlign: 'justify'});
                 popup.popup('show');
             });
+
+            $('.btn-apsolu-attendance-comment').click(function(event) {
+                event.preventDefault();
+                $(this).siblings('textarea').show();
+                $(this).siblings('.apsolu-attendance-comment').hide();
+                $(this).hide();
+
+                let comment = $(this).siblings('textarea').val();
+                $(this).siblings('textarea').trigger("focus").val('').val(comment);
+            });
+
+            $('.btn-apsolu-attendance-comment').siblings('textarea').hide();
 
             function apsolu_attendance_handle_edit_enrolments_form() { // eslint-disable-line
                 // Submit data.

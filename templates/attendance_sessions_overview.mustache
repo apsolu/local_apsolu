@@ -107,35 +107,34 @@
 
 {{! Tableau de vue d'ensemble des présences. }}
 <div class="table-responsive">
-<table class="table table-sortable table-striped">
+<table class="table table-sortable table-striped" >
     <thead class="thead-light">
-    <tr>
-        <th class="sorter-false" rowspan="2">{{#str}}pictureofuser{{/str}}</th>
-        <th rowspan="2">{{#str}}lastname{{/str}}</th>
-        <th rowspan="2">{{#str}}firstname{{/str}}</th>
-        <th rowspan="2"><span class="sr-only">{{#str}}guest, local_apsolu{{/str}}</span></th>
+    <tr class="apsolu-condensed-line">
+        <th class="sorter-false table-column-shrink" rowspan="2"></th>
+        <th class ="text-nowrap tablesorter-header-condensed" rowspan="2">{{#str}}fullname, local_apsolu{{/str}}</th>
+        <th rowspan="2" class="text-center tablesorter-header-condensed"><i class="fa fa-fw fa-user-plus icon iconsmall mr-0" title="{{#str}}guest, local_apsolu{{/str}}" role="img" aria-label="{{#str}}guest, local_apsolu{{/str}}"></i></th>
         {{#sessions}}
-        <th rowspan="2" class="text-center">{{ . }}</th>
+        <th rowspan="2" class="text-center tablesorter-header-condensed">{{ . }}</th>
         {{/sessions}}
-        <th colspan="{{ count_statuses }}" class="text-center">{{#str}}attendance_presences_summary, local_apsolu{{/str}}</th>
+        <th colspan="{{ count_statuses }}" class="text-center sorter-false">{{#str}}attendance_presences_summary, local_apsolu{{/str}}</th>
     </tr>
-    <tr>
+    <tr class="apsolu-condensed-line">
         {{#statuses}}
         <th>{{ . }}</th>
         {{/statuses}}
     </tr>
     </thead>
-    <tbody>
+    <tbody class="align-children-middle">
     {{#users}}
     <tr>
         <td>{{{ picture }}}</td>
-        <td>{{ lastname }}</td>
-        <td>{{ firstname }}</td>
-        <td>{{#guest}}<i class="fa fa-fw fa-user-plus icon iconsmall" title="{{#str}}guest, local_apsolu{{/str}}" role="img" aria-label="{{#str}}guest, local_apsolu{{/str}}"></i>{{/guest}}</td>
+        <td>{{ lastname }} {{ firstname }}</td>
+        <td class="text-center">{{#guest}}<span class="d-none">1</span><i class="fa fa-fw fa-user-plus icon iconsmall mr-0" title="{{#str}}guest, local_apsolu{{/str}}" role="img" aria-label="{{#str}}guest, local_apsolu{{/str}}"></i>{{/guest}}{{^guest}}<span class="d-none">0</span>{{/guest}}</td>
         {{#presences_per_sessions}}
             {{#abbr}}
             {{! Étudiant avec une présence saisie pour cette session. }}
             <td class="table-{{ style }} text-center">
+                <span class="d-none">{{ sortorder }}</span>
                 <abbr title="{{ label }}">{{ abbr }}</abbr>
                 {{#description}}
                 <details class="apsolu-comments-details">
@@ -165,11 +164,11 @@
     <tfoot>
     {{#total_per_statuses}}
     <tr>
-        <th colspan="4">{{ label }}</th>
+        <th colspan="3">{{ label }}</th>
         {{#sessions}}
         <th class="text-center">{{ . }}</th>
         {{/sessions}}
-        <th colspan="4"></th>
+        <th colspan="{{ count_statuses }}"></th>
     </tr>
     {{/total_per_statuses}}
     </tfoot>

@@ -1,0 +1,188 @@
+{{!
+    @template local_apsolu/attendance_edit
+
+    Template Moodle pour afficher le récapitulatif des présences.
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * wwwroot
+    * courseid
+    * sessionid
+    * notification
+    * invalid_enrolments
+    * inactive_enrolments
+    * student_count
+    * calendar
+    * students
+        * id = $stud
+        * enrolid
+        * status
+        * roleid
+        * enrol
+        * enrolment_status
+        * enrolment_type
+        * enrolment_list
+        * picture
+        * firstname
+        * lastname
+        * presences_radios
+            * label
+            * statusid
+            * checked
+        * comment
+        * presence_course
+        * presence_activity
+        * informations_alert
+        * informations
+
+    Example context (json):
+    {
+        "wwwroot": "https://apsolu.fr/",
+        "courseid": 25,
+        "sessionid": 1502,
+        "notification": 1,
+        "invalid_enrolments": 1,
+        "inactive_enrolments": 1,
+        "student_count": 3,
+        "calendar": "Semestre 2",
+        "students": [
+            {
+                "id": 42,
+                "enrolid": 51,
+                "status": 1,
+                "roleid": 15,
+                "enrol ": "select",
+                "enrolment_status": 1,
+                "enrolment_type": "Pratique personnelle",
+                "enrolment_list": "Accepté",
+                "picture": "AD",
+                "firstname": "Jean",
+                "lastname": "Martin",
+                "presences_radios":[
+                    {
+                        "label": "Présent",
+                        "statusid": 1,
+                        "checked": 1
+                    },
+                    {
+                        "label": "Absent",
+                        "statusid": 2,
+                        "checked": 0
+                    }
+                ],
+                "comment": "Commentaire",
+                "presence_course": 1,
+                "presence_activity": 2,
+                "informations_alert": 1,
+                "informations": "Inscription non valide"
+            },
+            {
+                "id": 43,
+                "enrolid": 51,
+                "status": 2,
+                "roleid": 16,
+                "enrol ": "select",
+                "enrolment_status": 1,
+                "enrolment_type": "Pratique personnelle",
+                "enrolment_list": "Accepté",
+                "picture": "<span>AD</span>",
+                "firstname": "Jean",
+                "lastname": "Martin",
+                "presences_radios": [
+                    {
+                        "label": "Présent",
+                        "statusid": 1,
+                        "checked": 1
+                    },
+                    {
+                        "label": "Absent",
+                        "statusid": 2,
+                        "checked": 0
+                    }
+                ],
+                "comment": "Commentaire",
+                "presence_course": 1,
+                "presence_activity": 2,
+                "informations_alert": 1,
+                "informations": "Inscription non valide"
+            }
+        ]
+    }
+}}
+
+<h3> {{#str}}attendance, local_apsolu{{/str}}: {{session.name}}</h3>
+
+{{#notification}}<div class="alert alert-success">{{#str}}changessaved{{/str}}</div>{{/notification}}
+
+
+<form action="{{wwwroot}}/local/apsolu/attendance/edit.php?courseid={{courseid}}&sessionid={{sessionid}}" method="post">
+    <div class="apsolu-mask-wrapper table-responsive" data-mask-name="attendance_edit">
+        <table class="table table-striped table-sortable" id="apsolu-attendance-table">
+            <caption>{{#str}}attendance_table_caption, local_apsolu, {{student_count}}{{/str}}</caption>
+            <thead>
+                <tr>
+                    {{#inactive_enrolments}}<th class="table-column-shrink" data-mask-name="enrolment_state">{{#str}}attendance_enrolment_state, local_apsolu{{/str}}</th>{{/inactive_enrolments}}
+                    <th class="no-mask table-column-shrink"><!--User Picture--></th>
+                    <th class="no-mask">{{#str}}fullname, local_apsolu{{/str}}</th>
+                    <th class="no-mask">{{#str}}attendance_presence, local_apsolu{{/str}}</th>
+                    <th class="" data-mask-name="comment">{{#str}}attendance_comment, local_apsolu{{/str}}</th>
+                    <th class="table-column-shrink" data-mask-name="presences_count">{{#str}}attendance_presences_count, local_apsolu{{/str}}{{#calendar}}<br>({{calendar}}){{/calendar}}</th>
+                    <th data-mask-name="enrolment_type">{{#str}}attendance_enrolment_type, local_apsolu{{/str}}</th>
+                    {{#invalid_enrolments}}<th class="text-center" data-mask-name="enrolment_list">{{#str}}attendance_enrolment_list, local_apsolu{{/str}}</th>{{/invalid_enrolments}}
+                    <th data-mask-name="complement">{{#str}}attendance_complement, local_apsolu{{/str}}</th>
+                    <th data-mask-name="enrolments_management">{{#str}}attendance_enrolments_management, local_apsolu{{/str}}</th>
+                </tr>
+            </thead>
+            <tbody class="align-children-middle">
+                {{#students}}
+                <tr>
+                    {{#inactive_enrolments}}
+                        {{#enrolment_status}}<td class="text-center">{{#str}}active{{/str}}</td>{{/enrolment_status}}
+                        {{^enrolment_status}}<td class="text-center table-warning">{{#str}}inactive{{/str}}</td>{{/enrolment_status}}
+                    {{/inactive_enrolments}}
+                    <td>
+                        {{{picture}}}
+                    </td>
+                    <td>
+                        {{lastname}} {{firstname}}
+                    </td>
+                    <td class="apsolu-attendance-status-form">
+                        {{#presences_radios}}
+                            <div><label><input type="radio" name="presences[{{id}}]" value="{{statusid}}" {{#checked}}checked="checked"{{/checked}}> {{label}}</label></div>
+                        {{/presences_radios}}
+                    </td>
+                    <td>
+                        {{#comment}}<div class="apsolu-attendance-comment mb-2">{{comment}}</div>{{/comment}}
+                        <textarea name="comment[{{id}}]">{{comment}}</textarea>
+                        <div class="btn btn-sm btn-info btn-apsolu-attendance-comment">
+                            {{^comment}}{{#pix}} e/insert, core{{/pix}} <span>Ajouter</span>{{/comment}}
+                            {{#comment}}{{#pix}} b/document-edit, core{{/pix}} <span>Modifier</span>{{/comment}}
+                        </div>
+                    </td>
+                    <td>
+                        {{#str}}attendance_course_presences, local_apsolu, {{presence_course}}{{/str}}
+                        {{#presence_activity}}<br>{{#str}}attendance_activity_presences, local_apsolu, {{presence_activity}}{{/str}}{{/presence_activity}}
+                    </td>
+                    <td class="text-center">{{enrolment_type}}</td>
+                    {{#invalid_enrolments}}<td class="text-center">{{enrolment_list}}</td>{{/invalid_enrolments}}
+                    <td class="{{#informations_alert}}table-danger{{/informations_alert}}">{{#informations}}<div>{{{.}}}</div>{{/informations}}</td>
+                    <td class="text-center">
+                        {{#enrolid}}<a class="btn btn-sm btn-info apsolu-attendance-edit-enrolments" data-userid="{{id}}" data-courseid="{{courseid}}" data-enrolid="{{enrolid}}" data-statusid="{{status}}" data-roleid="{{roleid}}" href="{{wwwroot}}/enrol/{{enrol}}/manage.php?enrolid={{enrolid}}">{{#str}}attendance_edit_enrolment, local_apsolu{{/str}}</a>{{/enrolid}}
+                        {{^enrolid}}{{#str}}attendance_ontime_enrolment, local_apsolu{{/str}}{{/enrolid}}
+                    </td>
+                </tr>
+                {{/students}}
+            </tbody>
+        </table>
+    </div>
+    <p class="text-right">
+        <input class="btn btn-primary" type="submit" name="apsolu" value="{{#str}}savechanges{{/str}}">
+        {{#invalid_enrolments}}<input type="hidden" name="invalid_enrolments" value="1">{{/invalid_enrolments}}
+        {{#inactive_enrolments}}<input type="hidden" name="inactive_enrolments" value="1">{{/inactive_enrolments}}
+    </p>
+</form>

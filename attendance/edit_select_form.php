@@ -43,7 +43,7 @@ class edit_select_form extends moodleform {
         }
 
         if (isset($this->_customdata['inactive_enrolments']) == true) {
-            $data->unactive_enrolments = $this->_customdata['inactive_enrolments'];
+            $data->inactive_enrolments = $this->_customdata['inactive_enrolments'];
         }
 
         // Sessions.

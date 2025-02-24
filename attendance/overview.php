@@ -206,7 +206,7 @@ ksort($users);
 $data->users = [];
 foreach ($users as $user) {
     $picture = new user_picture($user);
-    $picture->size = 50;
+    $picture->size = 40;
 
     $student = new stdClass();
     $student->picture = $OUTPUT->render($picture);
@@ -236,6 +236,7 @@ foreach ($users as $user) {
             // Récupère les informations à afficher sur le template.
             $presence->description = $presences[$session->id]->description;
             $presence->abbr = $statuses[$id]->shortlabel;
+            $presence->sortorder = $statuses[$id]->sortorder;
             $presence->label = $statuses[$id]->longlabel;
             $presence->style = $statuses[$id]->color;
         }

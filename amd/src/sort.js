@@ -1,4 +1,4 @@
-define(["jquery", "local_apsolu/jquery.tablesorter"], function($) {
+define(["jquery", "local_apsolu/table-mask", "local_apsolu/jquery.tablesorter"], function($, tableMask) {
     return {
         initialise: function(options = {}) {
             if (options.hasOwnProperty("widgets") && options.widgets.includes("stickyHeaders")) {
@@ -10,6 +10,8 @@ define(["jquery", "local_apsolu/jquery.tablesorter"], function($) {
             }
 
             $(".table-sortable").tablesorter(options);
+            tableMask.initialise();
+
         }
     };
 });
