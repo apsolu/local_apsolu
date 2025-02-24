@@ -166,6 +166,48 @@ class attendance {
     }
 
     /**
+     * Méthode permettant de récupérer le compte de toutes les présences d'un semestre par étudiant à partir d'un ID de session.
+     * Le semestre correspond au semestre à laquelle la session est rattachée.
+     * Les présences récupérées sont celles de l'activity et du cours
+     *
+     * @param int|string $sessionid ID de la session.
+     *
+     * @return array Tableau sous la forme
+     * array[userid] = (object) ['studentid' => '123', 'name' => 'Sem. 1', 'total_activity' => '4', 'total_course' => '2']
+     */
+    public static function getAllCalendarPresences($sessionid) {
+        global $DB;
+
+        $params = [];
+        $params['sessionid'] = $sessionid;
+
+        $sql = "SELECT aap.studentid, act.name, COUNT(*) AS total_activity,".
+            " SUM( CASE WHEN aas.courseid = aas_c.courseid THEN 1 ELSE 0 END) AS total_course".
+            " FROM {apsolu_attendance_sessions} aas_c".
+            " JOIN {course} c_cur ON c_cur.id = aas_c.courseid".
+            " JOIN {course} c ON (c.category = c_cur.category)".
+            " JOIN {apsolu_attendance_sessions} aas ON aas.courseid = c.id".
+            " JOIN {apsolu_attendance_presences} aap ON aap.sessionid = aas.id".
+            " JOIN {enrol} e ON e.courseid = aas.courseid".
+            " JOIN {apsolu_calendars} ac ON e.customchar1 = ac.id".
+            " JOIN {apsolu_calendars_types} act ON act.id = ac.typeid".
+            " WHERE aas_c.id = :sessionid".
+            " AND ac.coursestartdate < aas_c.sessiontime AND ac.courseenddate > aas_c.sessiontime".
+            " AND e.enrol = 'select'".
+            " AND aas.sessiontime BETWEEN ac.coursestartdate AND ac.courseenddate".
+            " AND aap.statusid != 4". // Exclus les absences.
+            " GROUP BY aap.studentid";
+        $presences = [];
+        $recordset = $DB->get_recordset_sql($sql, $params);
+        foreach ($recordset as $record) {
+            $presences[$record->studentid] = $record;
+        }
+        $recordset->close();
+
+        return $presences;
+    }
+
+    /**
      * Méthode renvoyant la classe boostrap 4 correspondant au code du statut.
      *
      * Ex: présent en vert, en retard en orange, absence en rouge, etc.
@@ -244,5 +286,28 @@ class attendance {
             " GROUP BY e.id";
 
         return $DB->get_records_sql($sql, ['userid' => $userid]);
+    }
+    /**
+     * Récupère le calendrier associé à la session.
+     *
+     * @param int|string $sessionid Identifiant de la session.
+     *
+     * @return string Nom du calendrier.
+     */
+    public static function getCalendarFromSession($sessionid) {
+        global $DB;
+
+        $params = [];
+        $params['sessionid'] = $sessionid;
+        $sql = "SELECT act.name".
+            " FROM {apsolu_attendance_sessions} aas".
+            " JOIN {enrol} e ON e.courseid = aas.courseid".
+            " JOIN {apsolu_calendars} ac ON e.customchar1 = ac.id".
+            " JOIN {apsolu_calendars_types} act ON act.id = ac.typeid".
+            " WHERE aas.id = :sessionid ".
+            " AND e.enrol = 'select'".
+            " AND aas.sessiontime BETWEEN ac.coursestartdate AND ac.courseenddate";
+
+        return $DB->get_field_sql($sql, $params);
     }
 }

@@ -125,3 +125,19 @@ function local_apsolu_pluginfile($course, $cm, $context, $filearea, $args, $forc
     // Finally send the file.
     send_stored_file($file, 0, 0, true, $options); // Download MUST be forced - security!
 }
+
+/**
+ * Return a list of all the user preferences used by local_apsolu.
+ *
+ * @return array
+ */
+function local_apsolu_user_preferences() {
+    $preferences = [];
+    $preferences['apsolu_maskable_config'] = [
+        'type' => PARAM_RAW,
+        'null' => NULL_NOT_ALLOWED,
+        'default' => '{}',
+    ];
+
+    return $preferences;
+}

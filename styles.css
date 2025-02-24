@@ -3,6 +3,20 @@
     cursor: help;
 }
 
+.userinitials.size-40 {
+    width: 40px;
+    height: 40px;
+}
+
+.table .align-children-middle td,
+.table .align-children-middle th {
+    vertical-align: middle;
+}
+
+.apsolu-condensed-line {
+    line-height: 1.1;
+}
+
 /* Attendance */
 #apsolu-attendance-check-javascript-helper {
     background-color: #e9e9e9;
@@ -21,6 +35,13 @@
 .apsolu-comments-div {
     background-color: #ddd;
     padding: .5em;
+}
+
+.btn-apsolu-attendance-comment i.icon {
+    width: unset;
+    height: unset;
+    font-size: unset;
+    margin: unset;
 }
 
 /* Courses */
@@ -109,7 +130,7 @@
 .table-sortable thead tr .tablesorter-header:not(.sorter-false) {
     background-image: url([[pix:core|t/sort]]);
     background-repeat: no-repeat;
-    background-position: 95% center;
+    background-position: right 15px center;
     cursor: pointer;
 }
 
@@ -127,6 +148,10 @@
     display: none;
 }
 
+.table-sortable .filter-false .tablesorter-header-inner {
+    padding: 4px;
+}
+
 .tablesorter-filter-row .disabled {
     visibility: hidden;
 }
@@ -134,6 +159,10 @@
 select.tablesorter-filter {
     background-color: #fff;
     padding: .2em;
+}
+
+.tablesorter-header-condensed .tablesorter-header-inner {
+    padding-right: 4px;
 }
 
 /* Réduit les marges verticales sur la page des créneaux et des notes. */
@@ -313,4 +342,41 @@ select.tablesorter-filter {
 /* Administration > communication > historique > Message envoyé. */
 #page-admin-local-apsolu-communication-index #fitem_id_message div[data-fieldtype="editor"] {
     display: block !important; /* stylelint-disable-line declaration-no-important */
+}
+
+/* Styles pour masquer des colonnes de tableau */
+.table thead th.table-column-shrink {
+    width: 0.1%;
+    white-space: nowrap;
+}
+
+.apsolu-mask-wrapper th:not(.no-mask) .tablesorter-header-inner {
+    padding-right: 6px;
+}
+
+.apsolu-mask-wrapper .hide-column {
+    font-size: 13px;
+}
+
+
+.apsolu-mask-wrapper .hide-column-container {
+    margin-top: auto;
+    padding-bottom: 4px;
+}
+
+.apsolu-mask-wrapper .tablesorter-headerUnSorted:not(.sorter-false) .hide-column,
+.apsolu-mask-wrapper .tablesorter-headerAsc:not(.sorter-false) .hide-column,
+.apsolu-mask-wrapper .tablesorter-headerDesc:not(.sorter-false) .hide-column {
+    margin-right: 20px;
+}
+
+.apsolu-mask-wrapper .hide-col {
+    display: none !important; /* stylelint-disable-line declaration-no-important */
+}
+
+.apsolu-mask-wrapper .btn.restore-columns {
+    padding: 5px 1px;
+    color: #b50;
+    text-align: left;
+    font-size: 0.95rem;
 }
