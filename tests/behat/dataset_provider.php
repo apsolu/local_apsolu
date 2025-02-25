@@ -72,6 +72,7 @@ class dataset_provider {
         self::setup_courses();
         self::setup_federation_course();
         self::setup_attendances();
+        self::setup_gradebooks();
     }
 
     /**
@@ -285,8 +286,8 @@ class dataset_provider {
             $instance->courseenddate = $enddate->getTimestamp();
             $instance->reenrolstartdate = 0;
             $instance->reenrolenddate = 0;
-            $instance->gradestartdate = 0;
-            $instance->gradeenddate = 0;
+            $instance->gradestartdate = $startdate->getTimestamp();
+            $instance->gradeenddate = $enddate->getTimestamp();
             $instance->typeid = $calendartype->id;
 
             $DB->insert_record('apsolu_calendars', $instance);
@@ -382,16 +383,6 @@ class dataset_provider {
 
         // Désactive toutes les visites guidées.
         $DB->set_field('tool_usertours_tours', 'enabled', '0');
-
-        // Change la configuration de $CFG->gradepointmax.
-        $oldvalue = get_config('core', 'gradepointmax');
-        add_to_config_log('gradepointmax', $oldvalue, '20', 'core');
-        set_config('gradepointmax', '20');
-
-        // Change la configuration de $CFG->gradepointdefault.
-        $oldvalue = get_config('core', 'gradepointdefault');
-        add_to_config_log('gradepointdefault', $oldvalue, '20', 'core');
-        set_config('gradepointdefault', '20');
 
         // Change la configuration de $CFG->enrol_plugins_enabled.
         $oldvalue = get_config('core', 'enrol_plugins_enabled');
@@ -900,6 +891,93 @@ class dataset_provider {
 
             cohort_add_member($cohort->id, $user->id);
         }
+    }
+
+    /**
+     * Ajoute aléatoirement des notes aux étudiants.
+     *
+     * @return void
+     */
+    private static function setup_gradebooks() {
+        global $DB;
+
+        // Rend les étudiants en rôle "libre" non évaluables.
+        $context = context_system::instance();
+        foreach (['student', 'libre', 'ffsu'] as $shortname) {
+            $role = $DB->get_record('role', ['shortname' => $shortname], '*', MUST_EXIST);
+            role_change_permission($role->id, $context, 'local/apsolu:gradable', CAP_PROHIBIT);
+        }
+
+        // Change la configuration de $CFG->gradepointmax.
+        $oldvalue = get_config('core', 'gradepointmax');
+        add_to_config_log('gradepointmax', $oldvalue, '20', 'core');
+        set_config('gradepointmax', '20');
+
+        // Change la configuration de $CFG->gradepointdefault.
+        $oldvalue = get_config('core', 'gradepointdefault');
+        add_to_config_log('gradepointdefault', $oldvalue, '20', 'core');
+        set_config('gradepointdefault', '20');
+
+        // Charge les différentes options.
+        $options = ['calendarstypes' => [], 'roles' => []];
+
+        foreach ($DB->get_records('apsolu_calendars_types') as $record) {
+            $options['calendarstypes'][] = $record->id;
+            $calendartypes[$record->name] = $record->id;
+        }
+
+        $roles = [];
+        foreach (Apsolu\gradebook::get_gradable_roles() as $record) {
+            $options['roles'][] = $record->id;
+            $roles[$record->shortname] = $record->id;
+        }
+
+        // Ajoute des éléments de notation.
+        $elements = ['option' => ['Pratique', 'Théorie'], 'bonification' => ['Pratique']];
+        foreach ($elements as $rolename => $items) {
+            foreach ($items as $itemname) {
+                foreach ($calendartypes as $calendartype => $calendartypeid) {
+                    if (str_starts_with($calendartype, 'Semestre') === false) {
+                        continue;
+                    }
+
+                    $data = new stdClass();
+                    $data->name = $itemname;
+                    $data->roleid = $roles[$rolename];
+                    $data->calendarid = $calendartypeid;
+                    $data->grademax = get_config('core', 'gradepointmax');
+                    $data->publicationdate = 1;
+
+                    $gradeitem = new Apsolu\gradeitem();
+                    $gradeitem->save($data);
+                }
+            }
+        }
+
+        // Génère une plage de notes possibles avec un poid plus fort pour les notes entre 10 et 15.
+        $availablegrades = array_merge(range(0, 20), range(5, 17), range(10, 15), ['ABI', 'ABJ', '', '', '']);
+
+        // Charge le carnet de notes.
+        $grades = [];
+        $gradebook = Apsolu\gradebook::get_gradebook($options);
+        foreach ($gradebook->users as $user) {
+            foreach ($user->grades as $grade) {
+                if ($grade === null) {
+                    continue;
+                }
+
+                $finalgrade = $availablegrades[array_rand($availablegrades)];
+                if (empty($finalgrade) === true) {
+                    // Valeur utilisée pour afficher des notes manquantes dans le carnet de notes.
+                    continue;
+                }
+
+                $grades[$grade->inputname] = $finalgrade;
+            }
+        }
+
+        // Enregistre les notes.
+        Apsolu\gradebook::set_grades($grades);
     }
 
     /**
