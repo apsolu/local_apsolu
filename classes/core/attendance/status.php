@@ -108,6 +108,8 @@ class status extends record {
     public static function generate_default_values() {
         global $DB;
 
+        $existingrecords = $DB->get_records('apsolu_attendance_statuses', $conditions = null, $sort = '', $fields = 'shortlabel');
+
         $statuses = [];
         $statuses['attendance_present'] = 'success';
         $statuses['attendance_late'] = 'warning';
@@ -122,6 +124,11 @@ class status extends record {
             $data['sumlabel'] = get_string(sprintf('%s_total', $code), 'local_apsolu');
             $data['color'] = $color;
             $data['sortorder'] = $sortorder;
+
+            if (isset($existingrecords[$data['shortlabel']]) === true) {
+                // Empêche la création de doublons.
+                continue;
+            }
 
             $sql = "INSERT INTO {apsolu_attendance_statuses} (shortlabel, longlabel, sumlabel, color, sortorder)".
                 " VALUES(:shortlabel, :longlabel, :sumlabel, :color, :sortorder)";
