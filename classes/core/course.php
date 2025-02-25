@@ -24,6 +24,7 @@ use context_block;
 use context_course;
 use core_course_category;
 use core_php_time_limit;
+use grade_category;
 use grade_item;
 use moodle_exception;
 use moodle_url;
@@ -622,7 +623,7 @@ class course extends record {
         }
 
         // Enregistre les nouveaux éléments dans le carnet de notes.
-        $rootcategory = $DB->get_record('grade_categories', ['courseid' => $this->id, 'parent' => null]);
+        $rootcategory = grade_category::fetch_course_category($this->id);
 
         foreach ($coursegradeitems as $item) {
             $gradeitem = new grade_item(['id' => 0, 'courseid' => $this->id]);
