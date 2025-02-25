@@ -1161,7 +1161,8 @@ class dataset_provider {
         }
 
         $users = [];
-        $users[] = ['username' => 'letudiant', 'password' => $password, 'institution' => 'U. Paris', 'type' => 'student'];
+        $users[] = ['username' => 'letudiant', 'password' => $password, 'idnumber' => '20160001',
+            'institution' => 'U. Paris', 'type' => 'student'];
         $users[] = ['username' => 'lenseignante', 'password' => $password, 'firstname' => 'Marguerite', 'lastname' => 'Broquedis',
             'institution' => 'U. Paris', 'sex' => 'F', 'type' => 'employee'];
         $users[] = ['username' => 'legestionnaire', 'password' => $password, 'firstname' => 'Bernard', 'lastname' => 'Moquette',
@@ -1173,8 +1174,14 @@ class dataset_provider {
         }
 
         // Génère des données avec un profil étudiant.
+        $idnumbers = [];
         for ($i = 1; $i < 60; $i++) {
-            $users[] = ['username' => sprintf('etudiant%s', $i), 'type' => 'student'];
+            do {
+                $idnumber = date('Y').str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
+            } while (isset($idnumbers[$idnumber]) === true);
+            $idnumbers[$idnumber] = $idnumber;
+
+            $users[] = ['username' => sprintf('etudiant%s', $i), 'idnumber' => $idnumber, 'type' => 'student'];
         }
 
         // Crée les comptes des utilisateurs.
