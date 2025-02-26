@@ -158,10 +158,11 @@ $totalpresencespersessions = [];
 $users = [];
 
 // Récupère la liste des utilisateurs inscrits aux cours.
-$sql = "SELECT DISTINCT u.*, '0' AS guest
+$sql = "SELECT DISTINCT u.*, '0' AS guest, ra.roleid
           FROM {user} u
           JOIN {user_enrolments} ue ON u.id = ue.userid
           JOIN {enrol} e ON e.id = ue.enrolid
+          JOIN {role_assignments} ra ON u.id = ra.userid AND ((e.id = ra.itemid) OR (e.enrol = 'manual' AND ra.itemid = 0))
          WHERE ue.status = 0
            AND e.status = 0
            AND e.courseid = :courseid";
@@ -200,6 +201,8 @@ foreach ($DB->get_records_sql($sql, $params) as $user) {
 
     $users[$id] = $user;
 }
+
+$roles = role_fix_names($DB->get_records('role'));
 
 ksort($users);
 
@@ -243,6 +246,21 @@ foreach ($users as $user) {
         $student->presences_per_sessions[] = $presence;
     }
 
+    // Type d'inscription.
+    if (isset($roles[$user->roleid]) === true) {
+        $rolename = $roles[$user->roleid]->name;
+        $rolenameshort = $roles[$user->roleid]->shortname;
+        $roleorder = $roles[$user->roleid]->sortorder;
+    } else {
+        $rolename = '';
+        $rolenameshort = '';
+        $roleorder = 999;
+    }
+
+    $student->enrolment_type = $rolename;
+    $student->enrolment_type_short = $rolenameshort;
+    $student->enrolment_type_order = $roleorder;
+
     $student->total_presences_per_statuses = array_values($student->total_presences_per_statuses);
     $data->users[] = $student;
 }
@@ -257,6 +275,10 @@ foreach ($totalpresences as $id => $value) {
     }
 
     $data->total_per_statuses[] = $status;
+}
+
+if (isset($calendars[$calendarid])) {
+    $data->show_enrolment_type = 1;
 }
 
 // Affichage de la page.

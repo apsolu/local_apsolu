@@ -1115,6 +1115,7 @@ $string['attendance_invalid_account'] = 'Compte Université non valide';
 $string['attendance_sport_card'] = 'Carte sport';
 $string['attendance_no_sport_card'] = 'Carte sport absente';
 $string['attendance_enrolment_type'] = 'Type d’inscription';
+$string['attendance_enrolment_type_short'] = '<abbr title="Type d’inscription">Type</abbr>';
 $string['attendance_complement'] = 'Information';
 $string['attendance_allowed_enrolment'] = 'Inscription autorisée';
 $string['attendance_forbidden_enrolment'] = 'Type d’inscription non autorisée';
