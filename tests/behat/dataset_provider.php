@@ -547,6 +547,8 @@ class dataset_provider {
                 $periods[$period] = $record;
             }
 
+            $paymentcenters[$paymentcenter] = $paymentcenter;
+
             // Génère le créneau.
             $fullname = Apsolu\course::get_fullname($categories[$category]->name, $event,
                 $weekday, $starttime, $endtime, $skills[$skill]->name);
@@ -575,6 +577,9 @@ class dataset_provider {
 
             self::setup_enrolments($course, $period, $teachers);
         }
+
+        // Définit les centres de paiements.
+        self::setup_payments($courses, $paymentcenters);
 
         // Renomme la catégorie par défaut.
         $category = $DB->get_record('course_categories', ['id' => 1]);
@@ -978,6 +983,102 @@ class dataset_provider {
 
         // Enregistre les notes.
         Apsolu\gradebook::set_grades($grades);
+    }
+
+    /**
+     * Configure les centres de paiement et les tarifs.
+     *
+     * @param array $courses Un tableau contenant des objets Apsolu\course.
+     * @param array $centers Un tableau contenant le nom des centres de paiements à créer.
+     *
+     * @return void
+     */
+    private static function setup_payments(array $courses, array $centers) {
+        global $DB;
+
+        // Configure les dates d'ouverture de paiements.
+        $academicyear = self::get_academic_year();
+
+        set_config('payments_startdate', mktime(0, 0, 0, 8, 1, $academicyear), 'local_apsolu');
+        set_config('payments_enddate', mktime(0, 0, 0, 7, 31, $academicyear + 1), 'local_apsolu');
+
+        // Configure les adresses des serveurs Paybox de préproduction.
+        set_config('paybox_servers_incoming', '195.101.99.76', 'local_apsolu');
+        set_config('paybox_servers_outgoing', 'preprod-tpeweb.paybox.com', 'local_apsolu');
+
+        // Configure les centres de paiements.
+        $paymentcenters = $DB->get_records('apsolu_payments_centers', $conditions = null, $sort = '', $fields = 'name, id');
+        foreach ($centers as $centername) {
+            if (isset($paymentcenters[$centername]) === true) {
+                continue;
+            }
+
+            $record = new stdClass();
+            $record->name = $centername;
+            $record->prefix = '';
+            $record->idnumber = '107975626';
+            $record->sitenumber = '1999888';
+            $record->rank = '43';
+            $record->hmac = str_repeat('0123456789ABCDEF', 8);
+            $record->id = $DB->insert_record('apsolu_payments_centers', $record);
+
+            $paymentcenters[$centername] = $record->id;
+        }
+
+        // Applique un tarif pour le rôle libre et les cohortes associées.
+        $role = $DB->get_record('role', ['shortname' => 'libre'], '*', MUST_EXIST);
+
+        $cohorts = [];
+        foreach ($DB->get_records('cohort') as $cohort) {
+            if (str_starts_with($cohort->idnumber, 'libre_') === false) {
+                continue;
+            }
+
+            $cohorts[] = $cohort;
+        }
+
+        $calendartypes = $DB->get_records('apsolu_calendars_types');
+
+        // Configure les tarifs.
+        $cards = [];
+        foreach ($paymentcenters as $centerid) {
+            $card = new stdClass();
+            $card->name = 'Carte pratique personnelle';
+            $card->fullname = 'Carte SPORT';
+            $card->trial = 0;
+            $card->price = '15.00';
+            $card->centerid = $centerid;
+            $card->id = $DB->insert_record('apsolu_payments_cards', $card);
+            $cards[$card->id] = $card;
+
+            $DB->execute('INSERT INTO {apsolu_payments_cards_roles}(cardid, roleid) VALUES(?, ?)', [$card->id, $role->id]);
+
+            foreach ($cohorts as $cohort) {
+                $DB->execute('INSERT INTO {apsolu_payments_cards_cohort}(cardid, cohortid) VALUES(?, ?)', [$card->id, $cohort->id]);
+            }
+
+            foreach ($calendartypes as $calendartype) {
+                $DB->execute('INSERT INTO {apsolu_payments_cards_cals}(cardid, calendartypeid, value) VALUES(?, ?, 0)',
+                    [$card->id, $calendartype->id]);
+            }
+        }
+
+        // Applique les tarifs sur tous les cours.
+        $courseids = [];
+        foreach ($courses as $course) {
+            $courseids[$course->id] = $course->id;
+        }
+
+        $enrolments = $DB->get_records('enrol', ['enrol' => 'select']);
+        foreach ($enrolments as $enrolment) {
+            if (isset($courseids[$enrolment->courseid]) === false) {
+                continue;
+            }
+
+            foreach ($cards as $card) {
+                $DB->execute('INSERT INTO {enrol_select_cards}(enrolid, cardid) VALUES(?, ?)', [$enrolment->id, $card->id]);
+            }
+        }
     }
 
     /**
