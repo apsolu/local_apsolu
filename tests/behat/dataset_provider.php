@@ -1105,10 +1105,10 @@ class dataset_provider {
         $weeks['Semestre 2'] = [];
         $weeks['Annuelle'] = [];
 
-        // Semestre 1: du 2nd lundi de septembre au 2nd lundi de décembre.
+        // Semestre 1: du dernier lundi de juillet au 4ème lundi de décembre.
         $interval = new DateInterval('P7D');
-        $start = (new DateTime(sprintf('%s-09-01 00:00:00', $academicyear)))->modify('second monday');
-        $end = (new DateTime(sprintf('%s-12-01 00:00:00', $academicyear)))->modify('second monday');
+        $start = new DateTime(sprintf('last monday of july %s', $academicyear));
+        $end = new DateTime(sprintf('fourth monday of december %s', $academicyear));
 
         $period = new DatePeriod($start, $interval, $end);
         foreach ($period as $datetime) {
@@ -1117,9 +1117,9 @@ class dataset_provider {
             $weeks['Annuelle'][] = $week;
         }
 
-        // Semestre 2: du 2nd lundi de janvier au 2nd lundi de juillet.
-        $start = (new DateTime(sprintf('%s-01-01 00:00:00', $academicyear + 1)))->modify('second monday');
-        $end = (new DateTime(sprintf('%s-07-01 00:00:00', $academicyear + 1)))->modify('second monday');
+        // Semestre 2: du dernier lundi de décembre au dernier lundi de juillet n+1.
+        $start = new DateTime(sprintf('last monday of december %s', $academicyear));
+        $end = new DateTime(sprintf('last monday of july %s', $academicyear + 1));
 
         $period = new DatePeriod($start, $interval, $end);
         foreach ($period as $datetime) {
