@@ -1341,15 +1341,16 @@ class dataset_provider {
 
         $users = [];
         $users[] = ['username' => 'letudiant', 'password' => $password, 'idnumber' => '20160001',
-            'institution' => 'U. Paris', 'type' => 'student'];
+            'institution' => 'U. Paris', 'policyagreed' => 0, 'type' => 'student'];
         $users[] = ['username' => 'lenseignante', 'password' => $password, 'firstname' => 'Marguerite', 'lastname' => 'Broquedis',
-            'institution' => 'U. Paris', 'sex' => 'F', 'type' => 'employee'];
+            'institution' => 'U. Paris', 'sex' => 'F', 'policyagreed' => 1, 'type' => 'employee'];
         $users[] = ['username' => 'legestionnaire', 'password' => $password, 'firstname' => 'Bernard', 'lastname' => 'Moquette',
-            'institution' => 'U. Paris', 'sex' => 'M', 'type' => 'employee'];
+            'institution' => 'U. Paris', 'sex' => 'M', 'policyagreed' => 1, 'type' => 'employee'];
 
         // Génère des données avec un profil enseignant.
         for ($i = 1; $i < 15; $i++) {
-            $users[] = ['username' => sprintf('enseignant%s', $i), 'institution' => 'U. Paris', 'type' => 'employee'];
+            $users[] = ['username' => sprintf('enseignant%s', $i), 'institution' => 'U. Paris', 'policyagreed' => 1,
+                'type' => 'employee'];
         }
 
         // Génère des données avec un profil étudiant.
@@ -1360,7 +1361,7 @@ class dataset_provider {
             } while (isset($idnumbers[$idnumber]) === true);
             $idnumbers[$idnumber] = $idnumber;
 
-            $users[] = ['username' => sprintf('etudiant%s', $i), 'idnumber' => $idnumber, 'type' => 'student'];
+            $users[] = ['username' => sprintf('etudiant%s', $i), 'idnumber' => $idnumber, 'policyagreed' => 0, 'type' => 'student'];
         }
 
         // Crée les comptes des utilisateurs.
