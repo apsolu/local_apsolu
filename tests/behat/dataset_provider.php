@@ -1091,7 +1091,7 @@ class dataset_provider {
         $academicyear = self::get_academic_year();
 
         // Génère les jours fériés.
-        for ($i = 0; $i < 1; $i++) {
+        for ($i = 0; $i < 2; $i++) {
             foreach (Apsolu\holiday::get_holidays($academicyear + $i) as $timestamp) {
                 $holiday = new Apsolu\holiday();
                 $holiday->day = $timestamp;
