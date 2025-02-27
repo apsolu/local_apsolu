@@ -15,6 +15,12 @@ define(['jquery', "local_apsolu/preference", 'core/notification'], function($, U
             // If table mask was already initialized, return.
             if(typeof apsolu_table_mask_preferences !== 'undefined' && !force) { return; }
 
+            // N'exécute pas ce script si l'utilisateur n'est pas authentifié (sinon l'appel à getUserPreferences() redirige vers la
+            // page d'authentification ; exemple: la page de présentation des créneaux : /local/apsolu/presentation/summary.php).
+            if (document.body.classList.contains("notloggedin") === true) {
+                return;
+            }
+
             var apsolu_table_mask_preferences = {};
 
             let restoreHtml = '<a class="restore-columns btn btn-default btn-condensed">'
