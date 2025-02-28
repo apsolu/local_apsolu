@@ -721,7 +721,7 @@ class dataset_provider {
             $i = 0;
             $enroled = [];
 
-            if (str_contains($course->fullname, 'Tennis') === true) {
+            if (str_contains($course->fullname, 'Athlétisme') === true) {
                 $instance->customint2 -= 5; // On laisse 5 places vacantes.
             }
 
