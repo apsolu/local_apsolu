@@ -1309,8 +1309,11 @@ class dataset_provider {
     private static function setup_users() {
         global $DB;
 
+        $generator = new testing_data_generator();
+
         // Cycles d'études.
         $cycles = ['L1', 'L2', 'L3', 'M1', 'M2'];
+
         // UFR -> Départements.
         $ufrs = [];
         $ufrs['Arts'] = ['Arts plastiques', 'Arts du spectacle', 'Histoire de l’art et archéologie', 'Musique'];
@@ -1320,22 +1323,30 @@ class dataset_provider {
         $ufrs['Sciences et techniques des activités physiques et sportives'] = ['STAPS'];
         $ufrs['Sciences Humaines'] = ['Psychologie', 'Sciences de l’éducation', 'Sociologie'];
         $ufrkeys = array_keys($ufrs);
+
         // Institutions (avec un poid fort pour la valeur U. Paris).
         $institutions = ['ENC Paris', 'IUT Paris', 'U. Paris', 'U. Paris', 'U. Paris', 'U. Paris', 'U. Paris'];
+
         // Types de profil.
         $types = ['student' => get_string('defaultcoursestudent'), 'employee' => get_string('employee', 'local_apsolu')];
-        // Liste des prénoms par genre.
-        $i = 0;
+
+        // Liste de noms.
+        $lastnames = ['Andre', 'Bernard', 'Bertrand', 'Blanc', 'Bonnet', 'Boyer', 'Chevalier', 'Clement', 'David', 'Dubois',
+            'Dupont', 'Faure', 'Fournier', 'Francois', 'Garcia', 'Garnier', 'Gauthier', 'Gautier', 'Girard', 'Guerin', 'Guerin',
+            'Henry', 'Lambert', 'Lefebvre', 'Lefevre', 'Legrand', 'Leroy', 'Martin', 'Masson', 'Mathieu', 'Mercier', 'Michel',
+            'Moreau', 'Morel', 'Morin', 'Muller',  'Perrin', 'Petit', 'Richard', 'Robert', 'Robin', 'Rousseau', 'Roussel', 'Roux',
+            'Thomas', 'Vincent'];
+
+        // Liste de prénoms par genre.
         $firstnames = [];
-        $generator = new testing_data_generator();
-        foreach ($generator->firstnames as $firstname) {
-            if (intval($i / 5) % 2 === 0) {
-                $firstnames[$firstname] = 'M';
-            } else {
-                $firstnames[$firstname] = 'F';
-            }
-            $i++;
-        }
+        $firstnames['F'] = ['Agnès', 'Amandine', 'Ameline', 'Anne-Cécile', 'Béatrice', 'Brigitte', 'Carine', 'Catherine', 'Cécilia',
+            'Céline', 'Chantal', 'Christèle', 'Christine', 'Claire', 'Corinne', 'Émilie', 'Fabienne', 'Gwenaëlle', 'Isabelle',
+            'Juliette', 'Laurianne', 'Lucie', 'Magali', 'Marianne', 'Marie', 'Maud', 'Mireille', 'Mylène', 'Nathalie', 'Nelly',
+            'Nouraya', 'Pascale', 'Patricia', 'Séverine', 'Solenn', 'Sophie', 'Stéphanie', 'Sylvie', 'Valérie'];
+        $firstnames['M'] = ['Abdellah', 'Bruno', 'Christian', 'Christophe', 'Cyril', 'Damien', 'David', 'Denis', 'Dominique',
+            'Édouard', 'Fabien', 'François', 'Frédéric', 'Gilles', 'Guillaume', 'Guy', 'Gwendal', 'Gwenn', 'Jean-Charles',
+            'Jean-Christophe', 'Jean-François', 'Jean-Louis', 'Jefferson', 'Julien', 'Matthieu', 'Maxime', 'Mikaël', 'Olivier',
+            'Pascal', 'Philippe', 'Sébastien', 'Serge', 'Sofiene', 'Stéphane', 'Tanguy', 'Théo', 'Valentin', 'Yann'];
 
         // Génère des données pour les 3 utilisateurs de démonstration.
         $password = null;
@@ -1344,8 +1355,8 @@ class dataset_provider {
         }
 
         $users = [];
-        $users[] = ['username' => 'letudiant', 'password' => $password, 'idnumber' => '20160001',
-            'institution' => 'U. Paris', 'policyagreed' => 0, 'type' => 'student'];
+        $users[] = ['username' => 'letudiant', 'password' => $password, 'idnumber' => '20160001', 'firstname' => 'Léo',
+            'lastname' => 'Bobet', 'institution' => 'U. Paris', 'sex' => 'M', 'policyagreed' => 0, 'type' => 'student'];
         $users[] = ['username' => 'lenseignante', 'password' => $password, 'firstname' => 'Marguerite', 'lastname' => 'Broquedis',
             'institution' => 'U. Paris', 'sex' => 'F', 'policyagreed' => 1, 'type' => 'employee'];
         $users[] = ['username' => 'legestionnaire', 'password' => $password, 'firstname' => 'Bernard', 'lastname' => 'Moquette',
@@ -1353,23 +1364,40 @@ class dataset_provider {
 
         // Génère des données avec un profil enseignant.
         for ($i = 1; $i < 15; $i++) {
-            $users[] = ['username' => sprintf('enseignant%s', $i), 'institution' => 'U. Paris', 'policyagreed' => 1,
-                'type' => 'employee'];
+            if ($i % 2 === 0) {
+                $sex = 'M';
+            } else {
+                $sex = 'F';
+            }
+            $lastname = $lastnames[array_rand($lastnames)];
+            $firstname = $firstnames[$sex][array_rand($firstnames[$sex])];
+
+            $users[] = ['username' => sprintf('enseignant%s', $i), 'firstname' => $firstname, 'lastname' => $lastname,
+                'sex' => $sex, 'institution' => 'U. Paris', 'policyagreed' => 1, 'type' => 'employee'];
         }
 
         // Génère des données avec un profil étudiant.
         $idnumbers = [];
         for ($i = 1; $i < 60; $i++) {
+            if ($i % 2 === 0) {
+                $sex = 'M';
+            } else {
+                $sex = 'F';
+            }
+            $lastname = $lastnames[array_rand($lastnames)];
+            $firstname = $firstnames[$sex][array_rand($firstnames[$sex])];
+
             do {
                 $idnumber = date('Y').str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
             } while (isset($idnumbers[$idnumber]) === true);
             $idnumbers[$idnumber] = $idnumber;
 
-            $users[] = ['username' => sprintf('etudiant%s', $i), 'idnumber' => $idnumber, 'policyagreed' => 0, 'type' => 'student'];
+            $users[] = ['username' => sprintf('etudiant%s', $i), 'firstname' => $firstname, 'lastname' => $lastname,
+                'idnumber' => $idnumber, 'sex' => $sex, 'policyagreed' => 0, 'type' => 'student'];
         }
 
         // Crée les comptes des utilisateurs.
-        foreach ($users as $user) {
+        foreach ($users as $i => $user) {
             $customfields = [];
 
             if ($user['type'] === 'student') {
@@ -1389,15 +1417,12 @@ class dataset_provider {
 
             // Enregistre le compte.
             $record = $generator->create_user($user);
+            $users[$i]['id'] = $record->id;
 
             // Enregistre les champs de profil.
             if ($user['type'] === 'student') {
                 $customfields[] = (object) ['id' => $record->id, 'profile_field_apsolucycle' => $cycles[array_rand($cycles)]];
                 $customfields[] = (object) ['id' => $record->id, 'profile_field_apsoluufr' => $ufr];
-            }
-
-            if (isset($user['sex']) === false) {
-                $user['sex'] = $firstnames[$record->firstname];
             }
 
             $customfields[] = (object) ['id' => $record->id, 'profile_field_apsolusex' => $user['sex']];
@@ -1417,12 +1442,12 @@ class dataset_provider {
 
         // Affecte les étudiants dans les cohortes.
         $cohorts = $DB->get_records('cohort');
-        foreach ($DB->get_records('user', ['deleted' => 0]) as $user) {
-            if (str_starts_with($user->username, 'etudiant') === false && $user->username !== 'letudiant') {
+        foreach ($users as $user) {
+            if (str_starts_with($user['username'], 'etudiant') === false && $user['username'] !== 'letudiant') {
                 continue;
             }
 
-            if ($firstnames[$user->firstname] === 'M') {
+            if ($user['sex'] === 'M') {
                 $sex = 'homme';
             } else {
                 $sex = 'femme';
@@ -1437,7 +1462,7 @@ class dataset_provider {
                     continue;
                 }
 
-                cohort_add_member($cohort->id, $user->id);
+                cohort_add_member($cohort->id, $user['id']);
             }
         }
     }
