@@ -461,6 +461,10 @@ class dataset_provider {
             list($city, $area, $location, $manager, $category, $event, $grouping, $skill,
                 $weekday, $starttime, $endtime, $period, $paymentcenter, $teachers) = $data;
 
+            if (in_array($city, ['Châteauroux', 'Paris', 'Tahiti'], $strict = true) === false) {
+                continue;
+            }
+
             if (isset($weekdays[$weekday]) === true) {
                 $weekday = $weekdays[$weekday];
             } else {
