@@ -48,6 +48,10 @@ foreach ($recordset as $record) {
         continue;
     }
 
+    if (is_array($other) === true) {
+        $other = (object) $other;
+    }
+
     $communicationid = $other->communicationid;
 
     if (isset($messages[$communicationid]) === false) {
