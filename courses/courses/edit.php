@@ -45,10 +45,10 @@ if ($courseid !== 0) {
 $url = new moodle_url('/local/apsolu/courses/courses/edit.php', ['tab' => $tab, 'action' => 'edit', 'courseid' => $courseid]);
 
 // Load categories.
-$sql = "SELECT cc.id, cc.name".
-    " FROM {course_categories} cc".
-    " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id".
-    " ORDER BY cc.name";
+$sql = "SELECT cc.id, cc.name
+          FROM {course_categories} cc
+          JOIN {apsolu_courses_categories} acc ON cc.id = acc.id
+      ORDER BY cc.name";
 $categories = [];
 foreach ($DB->get_records_sql($sql) as $category) {
     $categories[$category->id] = $category->name;

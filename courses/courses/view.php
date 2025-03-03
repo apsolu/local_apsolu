@@ -31,19 +31,19 @@ require_once(__DIR__.'/../../locallib.php');
 $currentactivity = null;
 $currentaltclass = 'odd';
 
-$sql = "SELECT c.id, cc.name AS category, ccc.name AS grouping, ac.event, ac.weekday, ac.starttime, ac.endtime,".
-    " ask.name AS skill, al.name AS location, city.name AS city, ap.name AS period, ac.license, c.visible, c.idnumber".
-    " FROM {course} c".
-    " JOIN {course_categories} cc ON cc.id = c.category".
-    " JOIN {course_categories} ccc ON ccc.id = cc.parent".
-    " JOIN {apsolu_courses} ac ON c.id = ac.id".
-    " JOIN {apsolu_courses_categories} acc ON acc.id = c.category".
-    " JOIN {apsolu_skills} ask ON ask.id = ac.skillid".
-    " JOIN {apsolu_locations} al ON al.id = ac.locationid".
-    " JOIN {apsolu_areas} aa ON aa.id = al.areaid".
-    " JOIN {apsolu_cities} city ON city.id = aa.cityid".
-    " JOIN {apsolu_periods} ap ON ap.id = ac.periodid".
-    " ORDER BY category, ac.numweekday, ac.starttime, city, location, skill";
+$sql = "SELECT c.id, cc.name AS category, ccc.name AS grouping, ac.event, ac.weekday, ac.starttime, ac.endtime,
+               ask.name AS skill, al.name AS location, city.name AS city, ap.name AS period, ac.license, c.visible, c.idnumber
+          FROM {course} c
+          JOIN {course_categories} cc ON cc.id = c.category
+          JOIN {course_categories} ccc ON ccc.id = cc.parent
+          JOIN {apsolu_courses} ac ON c.id = ac.id
+          JOIN {apsolu_courses_categories} acc ON acc.id = c.category
+          JOIN {apsolu_skills} ask ON ask.id = ac.skillid
+          JOIN {apsolu_locations} al ON al.id = ac.locationid
+          JOIN {apsolu_areas} aa ON aa.id = al.areaid
+          JOIN {apsolu_cities} city ON city.id = aa.cityid
+          JOIN {apsolu_periods} ap ON ap.id = ac.periodid
+      ORDER BY category, ac.numweekday, ac.starttime, city, location, skill";
 $cities = [];
 $courses = [];
 foreach ($DB->get_records_sql($sql) as $course) {

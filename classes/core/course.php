@@ -584,11 +584,11 @@ class course extends record {
         global $DB;
 
         // Récupère tous les éléments de notation prévus pour ce cours.
-        $sql = "SELECT agi.*".
-            " FROM {apsolu_grade_items} agi".
-            " JOIN {enrol} e ON agi.calendarid = e.customchar1".
-            " WHERE e.enrol = 'select'".
-            " AND e.courseid = :courseid";
+        $sql = "SELECT agi.*
+                  FROM {apsolu_grade_items} agi
+                  JOIN {enrol} e ON agi.calendarid = e.customchar1
+                 WHERE e.enrol = 'select'
+                   AND e.courseid = :courseid";
         $coursegradeitems = $DB->get_records_sql($sql, ['courseid' => $this->id]);
 
         // Récupère tous les élements de notation actuels de ce cours.
