@@ -53,7 +53,7 @@ phplint:
 phpcs:
   stage: analyses
   script:
-    - moodle-plugin-ci phpcs $PLUGIN_PATH
+    - moodle-plugin-ci phpcs --max-warnings 0 $PLUGIN_PATH
   rules:
     - if: $ENABLE_PHPCS == "false"
       when: never
