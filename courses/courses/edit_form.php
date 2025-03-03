@@ -60,6 +60,12 @@ class local_apsolu_courses_courses_edit_form extends moodleform {
         $mform->setType('event', PARAM_TEXT);
         $mform->setDefault('event', $course->event);
 
+        // Champ "N° d’identification du cours".
+        $mform->addElement('text', 'idnumber', get_string('idnumbercourse'), ['size' => '48']);
+        $mform->addHelpButton('idnumber', 'idnumbercourse');
+        $mform->setType('idnumber', PARAM_TEXT);
+        $mform->setDefault('idnumber', $course->idnumber);
+
         // Skill field.
         $mform->addElement('autocomplete', 'skillid', get_string('skill', 'local_apsolu'), $skills);
         $mform->setType('skillid', PARAM_INT);

@@ -35,6 +35,11 @@ $courseid = optional_param('courseid', 0, PARAM_INT);
 $course = new Course();
 if ($courseid !== 0) {
     $course->load($courseid);
+
+    if (empty($course->id) === false) {
+        $idnumber = $DB->get_record('course', ['id' => $course->id]);
+        $course->idnumber = $idnumber->idnumber;
+    }
 }
 
 $url = new moodle_url('/local/apsolu/courses/courses/edit.php', ['tab' => $tab, 'action' => 'edit', 'courseid' => $courseid]);

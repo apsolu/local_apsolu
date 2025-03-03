@@ -464,6 +464,10 @@ class course extends record {
         // Set shortname.
         $this->shortname = self::get_shortname($this->id, $this->fullname);
 
+        if (isset($data->idnumber) === true) {
+            $this->idnumber = $data->idnumber;
+        }
+
         // TODO: controler que endtime n'est pas inférieur à startime.
 
         // Démarre une transaction, si ce n'est pas déjà fait.

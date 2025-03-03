@@ -32,7 +32,7 @@ $currentactivity = null;
 $currentaltclass = 'odd';
 
 $sql = "SELECT c.id, cc.name AS category, ccc.name AS grouping, ac.event, ac.weekday, ac.starttime, ac.endtime,".
-    " ask.name AS skill, al.name AS location, city.name AS city, ap.name AS period, ac.license, c.visible".
+    " ask.name AS skill, al.name AS location, city.name AS city, ap.name AS period, ac.license, c.visible, c.idnumber".
     " FROM {course} c".
     " JOIN {course_categories} cc ON cc.id = c.category".
     " JOIN {course_categories} ccc ON ccc.id = cc.parent".
