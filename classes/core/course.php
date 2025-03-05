@@ -52,6 +52,9 @@ class course extends record {
     /** @var string $fullname Nom complet du créneau horaire. */
     public $fullname = '';
 
+    /** @var string $idnumber Identifiant du créneau horaire. */
+    public $idnumber = '';
+
     /** @var int|string $category Entier représentant l'identifiant de l'activité sportive. */
     public $category = '';
 

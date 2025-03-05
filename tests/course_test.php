@@ -182,7 +182,7 @@ final class course_test extends \advanced_testcase {
         $this->assertSame(sprintf('%s %s %s %s', $data->str_category, $data->event, $strtime, $data->str_skill), $course->fullname);
         $this->assertSame($countrecords, $initialcount + 1);
 
-        // Mets à jour l'objet.
+        // Met à jour l'objet.
         $data->event = '';
         $course->save($data);
         $countrecords = $DB->count_records($course::TABLENAME);
@@ -223,6 +223,20 @@ final class course_test extends \advanced_testcase {
         $course->save($data);
 
         $this->assertSame($countsessions, count($course->get_sessions()));
+
+        // Teste la saisie d'un numéro d'identification (insertion et mise à jour).
+        $course = new course();
+        $data->idnumber = 'ABC123';
+        $course->save($data);
+
+        $idnumber = $DB->get_record('course', ['id' => $course->id]);
+        $this->assertSame($data->idnumber, $idnumber->idnumber);
+
+        $data->idnumber = 'ABCD12';
+        $course->save($data);
+
+        $idnumber = $DB->get_record('course', ['id' => $course->id]);
+        $this->assertSame($data->idnumber, $idnumber->idnumber);
     }
 
     /**
