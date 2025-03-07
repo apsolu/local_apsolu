@@ -61,9 +61,9 @@ class local_apsolu_courses_courses_edit_form extends moodleform {
         $mform->setDefault('event', $course->event);
 
         // Champ "N° d’identification du cours".
-        $mform->addElement('text', 'idnumber', get_string('idnumbercourse'), ['size' => '48']);
+        $mform->addElement('text', 'idnumber', get_string('idnumbercourse'), ['maxlength' => '100', 'size' => '48']);
         $mform->addHelpButton('idnumber', 'idnumbercourse');
-        $mform->setType('idnumber', PARAM_TEXT);
+        $mform->setType('idnumber', PARAM_RAW);
         $mform->setDefault('idnumber', $course->idnumber);
 
         // Skill field.
