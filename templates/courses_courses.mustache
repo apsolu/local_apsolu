@@ -87,7 +87,7 @@
 <tbody>
     {{#courses}}
     <tr class="apsolu-row-{{alt_class}}{{^visible}} apsolu-row-disabled{{/visible}}">
-        <td><a href="{{wwwroot}}/course/view.php?id={{id}}">{{id}}</a>{{#idnumber}} ({{ idnumber }}){{/idnumber}}</td>
+        <td><a href="{{wwwroot}}/course/view.php?id={{id}}">{{id}}</a>{{#idnumber}} <small>({{ idnumber }})</small>{{/idnumber}}</td>
         <td>{{grouping}}</td>
         <td>{{fullname}}</td>
         <td>{{skill}}</td>
