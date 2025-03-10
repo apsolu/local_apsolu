@@ -47,22 +47,13 @@ if ($hassiteconfig || has_any_capability($capabilities, context_system::instance
     $ADMIN->add('local_apsolu_courses',
         new admin_category('local_apsolu_courses_courses', get_string('activities', 'local_apsolu')));
     $ADMIN->add('local_apsolu_courses',
-        new admin_category('local_apsolu_courses_locations', get_string('locations', 'local_apsolu')));
-    $ADMIN->add('local_apsolu_courses',
-        new admin_category('local_apsolu_courses_periods', get_string('periods', 'local_apsolu')));
-    $ADMIN->add('local_apsolu_courses',
-        new admin_category('local_apsolu_courses_skills', get_string('skills', 'local_apsolu')));
+        new admin_category('local_apsolu_courses_locations', get_string('localizations', 'local_apsolu')));
 
     $items = [];
     $items['courses'] = ['groupings', 'categories', 'courses'];
-    $items['periods'] = ['periods', 'holidays'];
-    if (isset($CFG->is_siuaps_rennes) === true) {
-        $items['skills'] = ['skills', 'skills_descriptions'];
-        unset($items['skills'][1]); // Supprime temporairement l'entrée "skills_descriptions".
-    } else {
-        $items['skills'] = ['skills'];
-    }
     $items['locations'] = ['locations', 'areas', 'cities', 'managers'];
+    $items['periods'] = ['periods', 'holidays'];
+    $items['skills'] = ['skills'];
 
     foreach ($items as $subtype => $tabs) {
         foreach ($tabs as $tab) {
@@ -70,7 +61,12 @@ if ($hassiteconfig || has_any_capability($capabilities, context_system::instance
             $url = new moodle_url('/local/apsolu/courses/index.php', ['tab' => $tab]);
             $page = new admin_externalpage('local_apsolu_courses_'.$subtype.'_'.$tab, $label, $url, $capabilities);
 
-            $ADMIN->add('local_apsolu_courses_'.$subtype, $page);
+            if (in_array($subtype, ['courses', 'locations'], $strict = true) === true) {
+                $ADMIN->add('local_apsolu_courses_'.$subtype, $page);
+            } else {
+                // Rattache l'élement directement à la racine de la catégorie "activités physiques".
+                $ADMIN->add('local_apsolu_courses', $page);
+            }
         }
     }
 
