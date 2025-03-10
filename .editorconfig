@@ -23,6 +23,10 @@ insert_final_newline = true
 # Ref: https://docs.moodle.org/dev/Coding_style#Line_Termination
 trim_trailing_whitespace = true
 
+# Set indentation size for behat scenario files.
+[*.feature]
+indent_size = 2
+
 # Set maximum line length.
 [*.{css,js,php}]
 max_line_length = 132
