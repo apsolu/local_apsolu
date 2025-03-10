@@ -99,6 +99,9 @@ class course extends record {
     /** @var int|string $informationformat Identifiant numérique du format du texte. */
     public $informationformat = FORMAT_HTML;
 
+    /** @var string $information_editor Variable pour le formulaire contenant l'éditeur de texte. */
+    public $information_editor = '';
+
     /**
      * Affiche une représentation textuelle de l'objet.
      *
