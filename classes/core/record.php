@@ -143,7 +143,10 @@ abstract class record {
                 continue;
             }
 
-            $this->{$var} = trim($data->{$var});
+            $this->{$var} = $data->{$var};
+            if (is_string($this->{$var}) === true) {
+                $this->{$var} = trim($this->{$var});
+            }
         }
     }
 }
