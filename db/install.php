@@ -149,11 +149,7 @@ function xmldb_local_apsolu_install() {
     }
 
     // Ajoute les données dans la table des activités de la FFSU.
-    foreach (Activity::get_activity_data() as $data) {
-        $sql = "INSERT INTO {apsolu_federation_activities} (id, name, mainsport, restriction, categoryid)".
-            " VALUES(:id, :name, :mainsport, :restriction, NULL)";
-        $DB->execute($sql, $data);
-    }
+    Activity::synchronize_database();
 
     // Initialise les données dans la table apsolu_attendance_statuses.
     AttendanceStatus::generate_default_values();
