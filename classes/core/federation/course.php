@@ -16,6 +16,8 @@
 
 namespace local_apsolu\core\federation;
 
+use stdClass;
+
 /**
  * Classe gérant le cours FFSU.
  *
@@ -82,4 +84,39 @@ class course {
         $this->id = $federationcourse;
         return $this->id;
     }
+
+    /**
+     * Génère les groupes dans le cours FFSU.
+     *
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     *
+     * @return void
+     */
+    public function set_groups() {
+        global $CFG, $DB;
+
+        $federationcourseid = $this->get_courseid();
+        if ($federationcourseid === false) {
+            // Le cours FFSU n'est pas défini.
+            return;
+        }
+
+        require_once($CFG->dirroot.'/group/lib.php');
+
+        $groups = $DB->get_records('groups', ['courseid' => $federationcourseid], $sort = '', $fields = 'name');
+        foreach (activity::get_records() as $activity) {
+            if (isset($groups[$activity->name]) === true) {
+                // Ce groupe existe déjà dans le cours FFSU.
+                continue;
+            }
+
+            $group = new stdClass();
+            $group->name = $activity->name;
+            $group->courseid = $federationcourseid;
+            $group->timecreated = time();
+            $group->timemodified = $group->timecreated;
+            groups_create_group($group);
+        }
+    }
+
 }

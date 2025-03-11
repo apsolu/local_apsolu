@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\federation\activity as Activity;
+use local_apsolu\core\federation as Federation;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -96,19 +96,8 @@ if ($data = $mform->get_data()) {
                 }
 
                 // Génère les groupes correspondant aux activités FFSU.
-                $groups = $DB->get_records('groups', ['courseid' => $data->{$attribute}], $sort = '', $fields = 'name');
-                foreach (Activity::get_records() as $activity) {
-                    if (isset($groups[$activity->name]) === true) {
-                        continue;
-                    }
-
-                    $group = new stdClass();
-                    $group->name = $activity->name;
-                    $group->courseid = $data->{$attribute};
-                    $group->timecreated = time();
-                    $group->timemodified = $group->timecreated;
-                    groups_create_group($group);
-                }
+                $course = new Federation\course();
+                $course->set_groups();
             }
         }
     }

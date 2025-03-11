@@ -882,6 +882,9 @@ class dataset_provider {
         // Génère les activités FFSU et les groupes de cours correspondant.
         Federation\activity::synchronize_database();
 
+        $course = new Federation\course();
+        $course->set_groups();
+
         // Définit un numéro d'association.
         $numbers = ['AB00' => 'ENC Paris', 'AC01' => 'IUT Paris', 'AD03' => 'U. Paris'];
         foreach ($numbers as $id => $value) {
