@@ -35,6 +35,7 @@
     }
 }}
 
+<form> {{! Note: Les inputs radio doivent être placés dans un <form> pour passer les tests Behat. À priori, avoir une simple balise <form> sans attribut reste syntaxiquement valide. }}
 <div id="healthquizquestionsform">
     <div class="alert alert-info">{{#str}}the_details_of_the_responses_are_neither_saved_nor_sent_back_to_the_server, local_apsolu{{/str}}</div>
     {{#categories}}
@@ -48,6 +49,7 @@
         {{/questions}}
     {{/categories}}
 </div>
+</form>
 
 <form method="post" action="{{wwwroot}}/local/apsolu/federation/adhesion/index.php?step={{step}}">
     <input id="healthquizvalue" name="quizstatus" type="hidden" value="0">
