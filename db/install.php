@@ -22,10 +22,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core\task\manager;
 use local_apsolu\core\attendance\status as AttendanceStatus;
 use local_apsolu\core\federation\activity as Activity;
 use local_apsolu\core\federation\adhesion as Adhesion;
 use local_apsolu\core\messaging;
+use local_apsolu\task\setup_behat_data;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -153,6 +155,14 @@ function xmldb_local_apsolu_install() {
 
     // Initialise les données dans la table apsolu_attendance_statuses.
     AttendanceStatus::generate_default_values();
+
+    // Initialise des données fictives pour les tests Behat.
+    if (defined('BEHAT_UTIL') === true) {
+        // Astuce afin de pouvoir injecter les données de tests lors de l'initialisation de la base de données Behat.
+        $task = new setup_behat_data();
+        manager::queue_adhoc_task($task, $checkforexisting = true);
+        sleep(1);
+    }
 
     return true;
 }

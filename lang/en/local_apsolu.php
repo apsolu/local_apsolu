@@ -639,6 +639,7 @@ $string['session_:count:_of_the_:strdatetime:'] = 'Cours n°{$a->count} du {$a->
 $string['session_created'] = 'Session créée.';
 $string['session_deleted'] = 'Session supprimée.';
 $string['session_updated'] = 'Session modifiée.';
+$string['setup_behat_data'] = 'Configure un jeu de données APSOLU pour Behat';
 $string['setup_cohort_for_federation_insurance_payment'] = 'Configurer une cohorte pour le paiement de l’assurance FFSU';
 $string['setup_the_text_of_the_agreement'] = 'Configurer le texte de la charte';
 $string['sex'] = 'Sexe';
