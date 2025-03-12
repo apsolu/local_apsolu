@@ -30,6 +30,32 @@ require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
  */
 class behat_local_apsolu extends behat_base {
     /**
+     * Simule l'étape d'inscription à un créneau APSOLU.
+     *
+     * @When /^I click on "(?P<activity_string>[^"]*)" "(?P<weekday_string>[^"]*)" "(?P<time_string>[^"]*)" course$/
+     *
+     * @param string $activity Element we look for
+     * @param string $weekday The type of what we look for
+     * @param string $time The type of what we look for
+     * @return void
+     */
+    public function i_click_on_course(string $activity, string $weekday, string $time) {
+        $activityliteral = behat_context_helper::escape($activity);
+        $weekdayliteral = behat_context_helper::escape($weekday);
+        $timeliteral = behat_context_helper::escape($time);
+
+        $tableid = behat_context_helper::escape('apsolu-activities-table');
+
+        $xpathcontains = [];
+        $xpathcontains[] = sprintf('contains(normalize-space(.), %s)', $activityliteral);
+        $xpathcontains[] = sprintf('contains(normalize-space(.), %s)', $weekdayliteral);
+        $xpathcontains[] = sprintf('contains(normalize-space(.), %s)', $timeliteral);
+
+        $xpath = sprintf("//table[@id=%s]//tr[%s]/td[1]/a", $tableid, implode(' and ', $xpathcontains));
+        $this->find('xpath', $xpath)->click();
+    }
+
+    /**
      * Configure un environnement complet APSOLU avec un jeu de données initialisé.
      *
      * @Given /^I setup an environment for APSOLU$/
