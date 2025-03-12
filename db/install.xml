@@ -176,7 +176,7 @@
             <FIELD NAME="disciplineid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="otherfederation" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
             <FIELD NAME="mainsport" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="complementaryconstraintsport" TYPE="int" LENGTH="10" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="complementaryconstraintsport" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="sportlicense" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="managerlicense" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="managerlicensetype" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
