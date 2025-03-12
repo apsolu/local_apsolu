@@ -1424,5 +1424,167 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    // Modification à appliquer lors de la prochaine mise à jour.
+    if (false) {
+        // Ajoute un champ 'id' sur la table 'apsolu_colleges_members'.
+        $tablename = 'apsolu_colleges_members';
+
+        $table = new xmldb_table($tablename);
+        $field = new xmldb_field('id', XMLDB_TYPE_INTEGER, $precision = '10', $unsigned = XMLDB_UNSIGNED, $notnull = XMLDB_NOTNULL,
+            $sequence = XMLDB_SEQUENCE, $default = null, $previous = null);
+
+        if ($dbman->field_exists($table, $field) === false) {
+            // Renomme la table actuelle.
+            $dbman->rename_table($table, $tablename.'tmp');
+
+            // Ajoute la nouvelle table contenant la clé primaire 'id'.
+            $table = new xmldb_table($tablename);
+
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+            $table->add_field('collegeid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+            $table->add_field('cohortid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+            $table->add_index('collegeid', XMLDB_INDEX_NOTUNIQUE, ['collegeid']);
+            $table->add_index('cohortid', XMLDB_INDEX_NOTUNIQUE, ['cohortid']);
+            $table->add_index('collegeidcohortid', XMLDB_INDEX_UNIQUE, ['collegeid', 'cohortid']);
+
+            $dbman->create_table($table);
+
+            // Récupère le contenu de l'ancienne table et l'injecte dans la nouvelle table.
+            $id = 1;
+            $recordset = $DB->get_recordset($tablename.'tmp');
+            foreach ($recordset as $record) {
+                $DB->insert_record($tablename, $record);
+            }
+            $recordset->close();
+
+            // Supprime l'ancienne table.
+            $table = new xmldb_table($tablename.'tmp');
+            $dbman->drop_table($table);
+        }
+
+        // Ajoute un champ 'id' sur la table 'apsolu_payments_cards_cohort'.
+        $tablename = 'apsolu_payments_cards_cohort';
+
+        $table = new xmldb_table($tablename);
+        $field = new xmldb_field('id', XMLDB_TYPE_INTEGER, $precision = '10', $unsigned = XMLDB_UNSIGNED, $notnull = XMLDB_NOTNULL,
+            $sequence = XMLDB_SEQUENCE, $default = null, $previous = null);
+
+        if ($dbman->field_exists($table, $field) === false) {
+            // Renomme la table actuelle.
+            $dbman->rename_table($table, $tablename.'tmp');
+
+            // Ajoute la nouvelle table contenant la clé primaire 'id'.
+            $table = new xmldb_table($tablename);
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+            $table->add_field('cardid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+            $table->add_field('cohortid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+            $table->add_index('cardid', XMLDB_INDEX_NOTUNIQUE, ['cardid']);
+            $table->add_index('cohortid', XMLDB_INDEX_NOTUNIQUE, ['cohortid']);
+            $table->add_index('cardidcohortid', XMLDB_INDEX_UNIQUE, ['cardid', 'cohortid']);
+
+            $dbman->create_table($table);
+
+            // Récupère le contenu de l'ancienne table et l'injecte dans la nouvelle table.
+            $id = 1;
+            $recordset = $DB->get_recordset($tablename.'tmp');
+            foreach ($recordset as $record) {
+                $DB->insert_record($tablename, $record);
+            }
+            $recordset->close();
+
+            // Supprime l'ancienne table.
+            $table = new xmldb_table($tablename.'tmp');
+            $dbman->drop_table($table);
+        }
+
+        // Ajoute un champ 'id' sur la table 'apsolu_payments_cards_roles'.
+        $tablename = 'apsolu_payments_cards_roles';
+
+        $table = new xmldb_table($tablename);
+        $field = new xmldb_field('id', XMLDB_TYPE_INTEGER, $precision = '10', $unsigned = XMLDB_UNSIGNED, $notnull = XMLDB_NOTNULL,
+            $sequence = XMLDB_SEQUENCE, $default = null, $previous = null);
+
+        if ($dbman->field_exists($table, $field) === false) {
+            // Renomme la table actuelle.
+            $dbman->rename_table($table, $tablename.'tmp');
+
+            // Ajoute la nouvelle table contenant la clé primaire 'id'.
+            $table = new xmldb_table($tablename);
+
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+            $table->add_field('cardid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+            $table->add_field('roleid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+            $table->add_index('cardid', XMLDB_INDEX_NOTUNIQUE, ['cardid']);
+            $table->add_index('roleid', XMLDB_INDEX_NOTUNIQUE, ['roleid']);
+            $table->add_index('cardidroleid', XMLDB_INDEX_UNIQUE, ['cardid', 'roleid']);
+
+            $dbman->create_table($table);
+
+            // Récupère le contenu de l'ancienne table et l'injecte dans la nouvelle table.
+            $id = 1;
+            $recordset = $DB->get_recordset($tablename.'tmp');
+            foreach ($recordset as $record) {
+                $DB->insert_record($tablename, $record);
+            }
+            $recordset->close();
+
+            // Supprime l'ancienne table.
+            $table = new xmldb_table($tablename.'tmp');
+            $dbman->drop_table($table);
+        }
+
+        // Ajoute un champ 'id' sur la table 'apsolu_payments_cards_cals'.
+        $tablename = 'apsolu_payments_cards_cals';
+
+        $table = new xmldb_table($tablename);
+        $field = new xmldb_field('id', XMLDB_TYPE_INTEGER, $precision = '10', $unsigned = XMLDB_UNSIGNED, $notnull = XMLDB_NOTNULL,
+            $sequence = XMLDB_SEQUENCE, $default = null, $previous = null);
+
+        if ($dbman->field_exists($table, $field) === false) {
+            // Renomme la table actuelle.
+            $dbman->rename_table($table, $tablename.'tmp');
+
+            // Ajoute la nouvelle table contenant la clé primaire 'id'.
+            $table = new xmldb_table($tablename);
+
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+            $table->add_field('cardid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+            $table->add_field('calendartypeid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+            $table->add_field('value', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+            $table->add_index('cardid', XMLDB_INDEX_NOTUNIQUE, ['cardid']);
+            $table->add_index('calendartypeid', XMLDB_INDEX_NOTUNIQUE, ['calendartypeid']);
+            $table->add_index('cardidcalendartypeid', XMLDB_INDEX_UNIQUE, ['cardid', 'calendartypeid']);
+
+            $dbman->create_table($table);
+
+            // Récupère le contenu de l'ancienne table et l'injecte dans la nouvelle table.
+            $id = 1;
+            $recordset = $DB->get_recordset($tablename.'tmp');
+            foreach ($recordset as $record) {
+                $DB->insert_record($tablename, $record);
+            }
+            $recordset->close();
+
+            // Supprime l'ancienne table.
+            $table = new xmldb_table($tablename.'tmp');
+            $dbman->drop_table($table);
+        }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
     return $result;
 }

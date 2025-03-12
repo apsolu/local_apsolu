@@ -548,35 +548,53 @@
     <!-- PAYMENTS CARDS COHORT -->
     <TABLE NAME="apsolu_payments_cards_cohort" COMMENT="apsolu_payments_cards_cohort table">
         <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" />
             <FIELD NAME="cardid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="cohortid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
         </FIELDS>
         <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="cardid,cohortid" COMMENT="Primary key for apsolu_payments_cards" />
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_payments_cards" />
         </KEYS>
+        <INDEXES>
+            <INDEX NAME="cardid" UNIQUE="false" FIELDS="cardid" />
+            <INDEX NAME="cohortid" UNIQUE="false" FIELDS="cohortid" />
+            <INDEX NAME="cardidcohortid" UNIQUE="true" FIELDS="cardid,cohortid" />
+        </INDEXES>
     </TABLE>
 
     <!-- PAYMENTS CARDS ROLE -->
     <TABLE NAME="apsolu_payments_cards_roles" COMMENT="apsolu_payments_cards_roles table">
         <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" />
             <FIELD NAME="cardid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="roleid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
         </FIELDS>
         <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="cardid,roleid" COMMENT="Primary key for apsolu_payments_cards" />
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_payments_cards" />
         </KEYS>
+        <INDEXES>
+            <INDEX NAME="cardid" UNIQUE="false" FIELDS="cardid" />
+            <INDEX NAME="roleid" UNIQUE="false" FIELDS="roleid" />
+            <INDEX NAME="cardidroleid" UNIQUE="true" FIELDS="cardid,roleid" />
+        </INDEXES>
     </TABLE>
 
     <!-- PAYMENTS CARDS CALS -->
     <TABLE NAME="apsolu_payments_cards_cals" COMMENT="apsolu_payments_cards_cals table">
         <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" />
             <FIELD NAME="cardid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="calendartypeid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="value" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
         </FIELDS>
         <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="cardid,calendartypeid" COMMENT="Primary key for apsolu_payments_cards" />
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_payments_cards" />
         </KEYS>
+        <INDEXES>
+            <INDEX NAME="cardid" UNIQUE="false" FIELDS="cardid" />
+            <INDEX NAME="calendartypeid" UNIQUE="false" FIELDS="calendartypeid" />
+            <INDEX NAME="cardidcalendartypeid" UNIQUE="true" FIELDS="cardid,calendartypeid" />
+        </INDEXES>
     </TABLE>
 
     <!-- DUNNINGS -->
