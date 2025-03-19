@@ -68,6 +68,42 @@
         </INDEXES>
     </TABLE>
 
+    <!-- COLLEGES (population). -->
+    <TABLE NAME="apsolu_colleges" COMMENT="Table apsolu_colleges">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" />
+            <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="maxwish" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="minregister" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="maxregister" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="userprice" TYPE="float" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="institutionprice" TYPE="float" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="roleid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="roleid" UNIQUE="false" FIELDS="roleid" />
+        </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="apsolu_colleges_members" COMMENT="Table apsolu_colleges_members">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" />
+            <FIELD NAME="collegeid" TYPE="int" LENGTH="10" SEQUENCE="false" NOTNULL="true" />
+            <FIELD NAME="cohortid" TYPE="int" LENGTH="10" SEQUENCE="false" NOTNULL="true" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_colleges_members" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="collegeid" UNIQUE="false" FIELDS="collegeid" />
+            <INDEX NAME="cohortid" UNIQUE="false" FIELDS="cohortid" />
+            <INDEX NAME="collegeidcohortid" UNIQUE="true" FIELDS="collegeid,cohortid" />
+        </INDEXES>
+    </TABLE>
+
     <!-- COMMUNICATION -->
     <TABLE NAME="apsolu_communication_templates" COMMENT="apsolu_communication_templates table">
         <FIELDS>

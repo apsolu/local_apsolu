@@ -1424,8 +1424,8 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
-    // Modification à appliquer lors de la prochaine mise à jour.
-    if (false) {
+    $version = 2025031900;
+    if ($oldversion < $version) {
         // Ajoute un champ 'id' sur la table 'apsolu_colleges_members'.
         $tablename = 'apsolu_colleges_members';
 
@@ -1582,6 +1582,12 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $dbman->drop_table($table);
         }
 
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
+    // Modification à appliquer lors de la prochaine mise à jour.
+    if (false) {
         // Savepoint reached.
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
