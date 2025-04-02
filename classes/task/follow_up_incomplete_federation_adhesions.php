@@ -60,6 +60,8 @@ class follow_up_incomplete_federation_adhesions extends \core\task\scheduled_tas
             return;
         }
 
+        $subject = $SITE->shortname.' : '.get_string('membership_of_the_sports_association', 'local_apsolu');
+
         // Traite le système précedent, où les utilisateurs devaient faire une demande explicite de leur licence, après le paiement.
         $namefields = 'u.' . implode(', u.', core_user\fields::get_name_fields());
         $sql = "SELECT u.id, {$namefields}, u.email, afa.id AS adhesionid
