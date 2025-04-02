@@ -819,7 +819,13 @@ class adhesion extends record {
      * @return bool Retourne false lorsque l'adresse de contact fonctionnel est vide.
      */
     public function notify_functional_contact() {
-        global $USER;
+        global $DB;
+
+        $user = $DB->get_record('user', ['id' => $this->userid]);
+        if ($user === false) {
+            // L'utilisateur n'existe plus.
+            return false;
+        }
 
         // Notifie l'adresse du contact fonctionnel pour valider l'adhésion.
         $functionalcontact = get_config('local_apsolu', 'functional_contact');
@@ -830,7 +836,7 @@ class adhesion extends record {
         $subject = get_string('request_of_federation_number', 'local_apsolu');
 
         $parameters = [];
-        $parameters['fullname'] = fullname($USER);
+        $parameters['fullname'] = fullname($user);
         $parameters['export_url'] = (string) new moodle_url('/local/apsolu/federation/index.php', ['page' => 'export']);
         if ($this->have_to_upload_medical_certificate() === true && empty($this->medicalcertificatestatus) === true) {
             // Le certificat médical doit être validé.
@@ -849,7 +855,7 @@ class adhesion extends record {
         $admin->auth = 'manual'; // Force l'auth. en manual, car email_to_user() ignore le traitement des comptes en nologin.
         $admin->email = $functionalcontact;
 
-        email_to_user($admin, $USER, $subject, $messagetext);
+        email_to_user($admin, $user, $subject, $messagetext);
 
         // Enregistre un évènement.
         $federationcourse = new FederationCourse();
@@ -857,9 +863,9 @@ class adhesion extends record {
         $context = context_course::instance($federationcourse->id, MUST_EXIST);
 
         $event = notification_sent::create([
-            'relateduserid' => $USER->id,
+            'relateduserid' => $user->id,
             'context' => $context,
-            'other' => ['sender' => $USER->id, 'receiver' => $admin->email, 'subject' => $subject],
+            'other' => ['sender' => $user->id, 'receiver' => $admin->email, 'subject' => $subject],
             ]);
         $event->trigger();
 
