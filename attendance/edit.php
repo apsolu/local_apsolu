@@ -89,6 +89,7 @@ $customfields = customfields::getCustomFields();
 
 // Récupérer tous les inscrits.
 // TODO: jointure avec colleges.
+// TODO: retrouver pourquoi on affiche les utilisateurs inscrits manuellement.
 $sql = "SELECT u.*, ue.id AS ueid, ue.status, ue.timestart, ue.timeend, ue.enrolid,
                e.enrol, ra.id AS raid, ra.roleid, uid1.data AS apsolusesame".
     " FROM {user} u".

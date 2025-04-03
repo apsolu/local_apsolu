@@ -158,13 +158,16 @@ $totalpresencespersessions = [];
 $users = [];
 
 // Récupère la liste des utilisateurs inscrits aux cours.
+// TODO: retrouver pourquoi on affiche les utilisateurs inscrits manuellement.
 $sql = "SELECT DISTINCT u.*, '0' AS guest, ra.roleid
           FROM {user} u
           JOIN {user_enrolments} ue ON u.id = ue.userid
           JOIN {enrol} e ON e.id = ue.enrolid
           JOIN {role_assignments} ra ON u.id = ra.userid AND ((e.id = ra.itemid) OR (e.enrol = 'manual' AND ra.itemid = 0))
+          JOIN {role} r ON r.id = ra.roleid
          WHERE ue.status = 0
            AND e.status = 0
+           AND r.archetype = 'student'
            AND e.courseid = :courseid";
 $params = ['courseid' => $courseid];
 
