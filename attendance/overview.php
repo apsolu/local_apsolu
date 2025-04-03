@@ -90,7 +90,8 @@ $sql = "SELECT DISTINCT ac.id, ac.coursestartdate, ac.courseenddate, ac.name
           JOIN {enrol} e ON e.customchar1 = ac.id
          WHERE e.enrol = 'select'
            AND e.courseid = :courseid
-           AND e.status = 0";
+           AND e.status = 0
+      ORDER BY ac.coursestartdate, ac.courseenddate";
 foreach ($DB->get_records_sql($sql, ['courseid' => $courseid]) as $calendar) {
     $params = ['courseid' => $courseid, 'calendarid' => $calendar->id];
     $url = new moodle_url('/local/apsolu/attendance/overview.php', $params);
