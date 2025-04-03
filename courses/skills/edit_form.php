@@ -54,6 +54,7 @@ class local_apsolu_courses_skills_edit_form extends moodleform {
         $mform->addElement('text', 'shortname', get_string('skill_shortname', 'local_apsolu'), ['size' => '48']);
         $mform->setType('shortname', PARAM_TEXT);
         $mform->addRule('shortname', get_string('required'), 'required', null, 'client');
+        $mform->addHelpButton('shortname', 'not_used', 'local_apsolu');
 
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
