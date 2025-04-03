@@ -947,7 +947,7 @@ class dataset_provider {
         }
 
         // Ajoute des éléments de notation.
-        $elements = ['option' => ['Pratique', 'Théorie'], 'bonification' => ['Pratique']];
+        $elements = ['option' => ['Pratique (option)', 'Théorie (option)'], 'bonification' => ['Pratique (bonification)']];
         foreach ($elements as $rolename => $items) {
             foreach ($items as $itemname) {
                 foreach ($calendartypes as $calendartype => $calendartypeid) {
