@@ -540,6 +540,7 @@ class dataset_provider {
             if (isset($skills[$skill]) === false) {
                 $record = new Apsolu\skill();
                 $record->name = $skill;
+                $record->shortname = $skill;
                 $record->save();
                 $skills[$skill] = $record;
             }
