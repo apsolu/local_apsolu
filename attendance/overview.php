@@ -176,10 +176,12 @@ if (isset($calendars[$calendarid]) === true) {
     $params['calendarid'] = $calendarid;
 }
 
-foreach ($DB->get_records_sql($sql, $params) as $user) {
+$recordset = $DB->get_recordset_sql($sql, $params);
+foreach ($recordset as $user) {
     $id = $user->lastname.' '.$user->firstname.' '.$user->institution.' '.$user->id;
     $users[$id] = $user;
 }
+$recordset->close();
 
 // Récupère la liste des utilisateurs ayant une présence dans ce cours.
 $sql = "SELECT DISTINCT u.*, '1' AS guest
