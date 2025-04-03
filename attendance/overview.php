@@ -111,6 +111,19 @@ if ($calendarid === null || isset($calendars[$calendarid]) === false) {
     $calendarid = 0;
 }
 
+// Supprime l'affichage complet si il n'y a qu'un semestre dans le cours.
+// Note: 1 calendrier fictif "affichage complet" + 1 calendrier === 2.
+if (count($calendars) === 2) {
+    // Supprime l'affichage complet.
+    unset($calendars[0]);
+
+    // Rend le calendrier restant actif.
+    foreach ($calendars as $key => $value) {
+        $calendarid = $key;
+        $calendars[$key]->active = true;
+    }
+}
+
 if ($calendarid !== 0) {
     // Récupère toutes les sessions disponibles correspondant au semestre sélectionné.
     $starttime = $calendars[$calendarid]->coursestartdate;
