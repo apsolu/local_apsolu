@@ -871,6 +871,7 @@ class dataset_provider {
         $enrol->customchar1 = $calendar->id;
         $enrol->customint3 = 0; // Désactive les quotas.
         $enrol->customchar3 = $plugin::ACCEPTED;
+        $DB->update_record('enrol', $enrol);
         $DB->execute('INSERT INTO {enrol_select_cohorts}(enrolid, cohortid) VALUES(?, ?)', [$enrol->id, $cohort->id]);
         $DB->execute('INSERT INTO {enrol_select_roles}(enrolid, roleid) VALUES(?, ?)', [$enrol->id, $role->id]);
         $DB->execute('INSERT INTO {enrol_select_cards}(enrolid, cardid) VALUES(?, ?)', [$enrol->id, $card->id]);
