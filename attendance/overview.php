@@ -80,6 +80,10 @@ $tabsbar[] = new tabobject('sessions_edit', $url, get_string('attendance_session
 $url = new moodle_url('/local/apsolu/attendance/export/export.php', ['courseid' => $courseid]);
 $tabsbar[] = new tabobject('export', $url, get_string('export', 'local_apsolu'));
 
+// Ajoute le lien pour afficher la vue complète.
+$url = new moodle_url('/local/apsolu/attendance/overview.php', ['courseid' => $courseid, 'calendarid' => 0]);
+$calendars = [0 => (object) ['active' => false, 'name' => get_string('fullview', 'local_apsolu'), 'url' => $url]];
+
 // Affiche des onglets pour choisir son semestre.
 $sql = "SELECT DISTINCT ac.id, ac.coursestartdate, ac.courseenddate, ac.name
           FROM {apsolu_calendars} ac
@@ -87,20 +91,12 @@ $sql = "SELECT DISTINCT ac.id, ac.coursestartdate, ac.courseenddate, ac.name
          WHERE e.enrol = 'select'
            AND e.courseid = :courseid
            AND e.status = 0";
-$calendars = [];
 foreach ($DB->get_records_sql($sql, ['courseid' => $courseid]) as $calendar) {
-    if (isset($calendars[0]) === false) {
-        // Ajoute le lien pour afficher la vue complète.
-        $url = new moodle_url('/local/apsolu/attendance/overview.php', ['courseid' => $courseid]);
-        $calendars[0] = (object) ['active' => false, 'name' => get_string('fullview', 'local_apsolu'), 'url' => $url];
-    }
-
     $params = ['courseid' => $courseid, 'calendarid' => $calendar->id];
     $url = new moodle_url('/local/apsolu/attendance/overview.php', $params);
 
     $calendar->url = $url;
     $calendar->active = ((int) $calendar->id === $calendarid);
-
     if ($calendarid === null && $calendar->coursestartdate > time() && $calendar->courseenddate < time()) {
         $calendarid = $calendar->id;
         $calendar->active = true;
@@ -109,7 +105,12 @@ foreach ($DB->get_records_sql($sql, ['courseid' => $courseid]) as $calendar) {
     $calendars[$calendar->id] = $calendar;
 }
 
-if (isset($calendars[$calendarid]) === true) {
+// Définit un calendrier par défaut, si ce n'est pas déjà fait.
+if ($calendarid === null || isset($calendars[$calendarid]) === false) {
+    $calendarid = 0;
+}
+
+if ($calendarid !== 0) {
     // Récupère toutes les sessions disponibles correspondant au semestre sélectionné.
     $starttime = $calendars[$calendarid]->coursestartdate;
     $endtime = $calendars[$calendarid]->courseenddate;
@@ -171,7 +172,7 @@ $sql = "SELECT DISTINCT u.*, '0' AS guest, ra.roleid
            AND e.courseid = :courseid";
 $params = ['courseid' => $courseid];
 
-if (isset($calendars[$calendarid]) === true) {
+if ($calendarid !== 0) {
     $sql .= " AND e.customchar1 = :calendarid";
     $params['calendarid'] = $calendarid;
 }
@@ -191,7 +192,7 @@ $sql = "SELECT DISTINCT u.*, '1' AS guest
          WHERE aas.courseid = :courseid";
 $params = ['courseid' => $courseid];
 
-if (isset($calendars[$calendarid]) === true) {
+if ($calendarid !== 0) {
     $sql .= " AND aas.sessiontime BETWEEN :starttime AND :endtime";
     $params['starttime'] = $calendars[$calendarid]->coursestartdate;
     $params['endtime'] = $calendars[$calendarid]->courseenddate;
@@ -282,7 +283,7 @@ foreach ($totalpresences as $id => $value) {
     $data->total_per_statuses[] = $status;
 }
 
-if (isset($calendars[$calendarid])) {
+if ($calendarid !== 0) {
     $data->show_enrolment_type = 1;
 }
 
