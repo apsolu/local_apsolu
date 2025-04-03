@@ -97,7 +97,7 @@ foreach ($DB->get_records_sql($sql, ['courseid' => $courseid]) as $calendar) {
 
     $calendar->url = $url;
     $calendar->active = ((int) $calendar->id === $calendarid);
-    if ($calendarid === null && $calendar->coursestartdate > time() && $calendar->courseenddate < time()) {
+    if ($calendarid === null && $calendar->coursestartdate < time() && $calendar->courseenddate > time()) {
         $calendarid = $calendar->id;
         $calendar->active = true;
     }
