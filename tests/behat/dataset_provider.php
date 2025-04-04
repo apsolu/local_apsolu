@@ -874,7 +874,10 @@ class dataset_provider {
         $DB->update_record('enrol', $enrol);
         $DB->execute('INSERT INTO {enrol_select_cohorts}(enrolid, cohortid) VALUES(?, ?)', [$enrol->id, $cohort->id]);
         $DB->execute('INSERT INTO {enrol_select_roles}(enrolid, roleid) VALUES(?, ?)', [$enrol->id, $role->id]);
-        $DB->execute('INSERT INTO {enrol_select_cards}(enrolid, cardid) VALUES(?, ?)', [$enrol->id, $card->id]);
+        if (defined('APSOLU_DEMO') === true) {
+            // Active les paiements sur l'instance de démo. Lors de tests Behat, ils ne sont pas activés par défaut.
+            $DB->execute('INSERT INTO {enrol_select_cards}(enrolid, cardid) VALUES(?, ?)', [$enrol->id, $card->id]);
+        }
 
         set_config('federation_course', $federationcourse->id, 'local_apsolu');
 
