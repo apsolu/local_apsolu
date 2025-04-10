@@ -88,14 +88,15 @@ final class email_test extends externallib_advanced_testcase {
         // Test email sending.
         $sentemails = email::send_instant_emails($messages);
         $sentemails = external_api::clean_returnvalue(email::send_instant_emails_returns(), $sentemails);
-        $this->assertDebuggingCalled($noemaildebugmessage, DEBUG_NORMAL);
+        $this->assertDebuggingCalled($noemaildebugmessage, DEBUG_DEVELOPER);
 
         // Test carbon copy.
         $count = 2;
         $messages[0]['carboncopy'] = true;
         $sentemails = email::send_instant_emails($messages);
         $sentemails = external_api::clean_returnvalue(email::send_instant_emails_returns(), $sentemails);
-        $this->assertDebuggingCalledCount($count, array_fill(0, $count, $noemaildebugmessage), array_fill(0, $count, DEBUG_NORMAL));
+        $this->assertDebuggingCalledCount($count, array_fill(0, $count, $noemaildebugmessage),
+            array_fill(0, $count, DEBUG_DEVELOPER));
 
         // Test on deleted user.
         $user2->deleted = 1;
@@ -111,7 +112,7 @@ final class email_test extends externallib_advanced_testcase {
         $messages[0]['receivers'] = [$user1->id];
         $sentemails = email::send_instant_emails($messages);
         $sentemails = external_api::clean_returnvalue(email::send_instant_emails_returns(), $sentemails);
-        $this->assertDebuggingCalled($noemaildebugmessage, DEBUG_NORMAL);
+        $this->assertDebuggingCalled($noemaildebugmessage, DEBUG_DEVELOPER);
     }
 
     /**
