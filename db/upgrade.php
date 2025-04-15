@@ -32,13 +32,6 @@ use local_apsolu\core\federation\course as FederationCourse;
 use local_apsolu\core\gradebook as Gradebook;
 use local_apsolu\core\messaging;
 
-defined('MOODLE_INTERNAL') || die;
-
-require_once($CFG->dirroot.'/group/lib.php');
-require_once($CFG->dirroot.'/lib/gradelib.php');
-require_once($CFG->dirroot.'/local/apsolu/locallib.php');
-require_once($CFG->dirroot.'/user/profile/definelib.php');
-
 /**
  * Procédure de mise à jour.
  *
@@ -49,17 +42,20 @@ require_once($CFG->dirroot.'/user/profile/definelib.php');
 function xmldb_local_apsolu_upgrade($oldversion = 0) {
     global $CFG, $DB;
 
+    require_once($CFG->dirroot.'/group/lib.php');
+    require_once($CFG->dirroot.'/lib/gradelib.php');
+    require_once($CFG->dirroot.'/local/apsolu/locallib.php');
+    require_once($CFG->dirroot.'/user/profile/definelib.php');
+
     $dbman = $DB->get_manager();
 
-    $result = true;
-
     $version = 2017120600;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         // Create cache directory for homepage.
         $cachedir = $CFG->dataroot.'/apsolu/local_apsolu/cache/homepage';
 
         if (is_dir($cachedir) === false) {
-            $result = mkdir($cachedir, $CFG->directorypermissions, $recursive = true);
+            mkdir($cachedir, $CFG->directorypermissions, $recursive = true);
         }
 
         // Create attendance tables.
@@ -149,7 +145,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2018042500;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         $table = new xmldb_table('apsolu_complements');
 
         // If the table does not exist, create it along with its fields.
@@ -280,7 +276,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2018071704;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         $fields = $DB->get_records('user_info_field', [], $sort = 'sortorder DESC');
         if (count($fields) === 0) {
             // Ajoute une sous-catégorie de champs complémentaires.
@@ -366,7 +362,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2018071801;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         // Create skills descriptions tables.
         $table = new xmldb_table('apsolu_skills_descriptions');
 
@@ -390,7 +386,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2018092000;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         $table = new xmldb_table('apsolu_calendars');
         if ($dbman->table_exists($table) === false) {
             // Adding fields.
@@ -510,7 +506,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2018102500;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         $table = new xmldb_table('apsolu_dunnings');
         if ($dbman->table_exists($table) === false) {
             // Adding fields.
@@ -565,7 +561,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2019030700;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         // Corrige tous les indexes manquants en base de données.
         $tables = [];
         $tables['apsolu_areas'] = ['cityid'];
@@ -598,7 +594,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2019041200;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         // Augmente la taille du champ weeks de la table apsolu_periods à 1024 caractères.
         $table = new xmldb_table('apsolu_periods');
         $field = new xmldb_field('weeks', XMLDB_TYPE_CHAR, '1024', null, null, null, null);
@@ -610,7 +606,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2020021800;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         // Ajoute une colonne 'prefix' sur la table 'apsolu_payments_centers'.
         $table = new xmldb_table('apsolu_payments_centers');
         $field = new xmldb_field('prefix', XMLDB_TYPE_TEXT, $precision = null, $unsigned = null, $notnull = null, $sequence = null, $default = null, $previous = 'name');
@@ -624,7 +620,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2020030300;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         $table = new xmldb_table('apsolu_dunnings');
 
         // Renomme le champ 'timeend' de la table 'apsolu_dunnings'.
@@ -665,7 +661,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2020050700;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         $field = new xmldb_field('paymentcenterid');
 
         foreach (['apsolu_courses', 'apsolu_complements'] as $tablename) {
@@ -686,7 +682,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2020060300;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         // Initialise les paramètres de l'offre de formations.
         UniversiteRennes2\Apsolu\set_initial_course_offerings_settings();
 
@@ -695,7 +691,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2020071000;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         // Ajoute la table `apsolu_holidays`.
         $table = new xmldb_table('apsolu_holidays');
 
@@ -723,7 +719,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2020092300;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         $field = $DB->get_record('user_info_field', ['shortname' => 'apsoluusertype']);
         if ($field === false) {
             // Ajoute un champ de profil "type d'utilisateur".
@@ -778,7 +774,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2020121800;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         $table = new xmldb_table('apsolu_grade_items');
         if ($dbman->table_exists($table) === false) {
             // Adding fields.
@@ -827,7 +823,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2021072300;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         // Vérifie et corrige les valeurs des adresses de contact.
         $settings = [];
         $settings[] = 'functional_contact';
@@ -848,7 +844,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2022011200;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         // Ajoute la table apsolu_payments_addresses.
         $table = new xmldb_table('apsolu_payments_addresses');
         if ($dbman->table_exists($table) === false) {
@@ -880,7 +876,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2022031800;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         // Ajoute 2 champs `information` et `informationformat` dans la table `apsolu_courses`.
         $table = new xmldb_table('apsolu_courses');
 
@@ -899,7 +895,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2022091600;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         // Ajoute 1 champ `showpolicy` dans la table `apsolu_courses`.
         $table = new xmldb_table('apsolu_courses');
 
@@ -917,7 +913,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2022111800;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         // Nettoie la table `apsolu_payments_cards_cohort`.
         $sql = "DELETE FROM {apsolu_payments_cards_cohort} WHERE cohortid NOT IN (SELECT id FROM {cohort})";
         $DB->execute($sql);
@@ -927,7 +923,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2022111801;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         set_config('replytoaddresspreference', messaging::DISABLE_REPLYTO_ADDRESS, 'local_apsolu');
         set_config('defaultreplytoaddresspreference', messaging::USE_REPLYTO_ADDRESS, 'local_apsolu');
 
@@ -936,7 +932,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2023012400;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         // Ajoute la table apsolu_federation_activities.
         $table = new xmldb_table('apsolu_federation_activities');
         if ($dbman->table_exists($table) === false) {
@@ -1075,7 +1071,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2023061400;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         // Ajoute les champs sur la table apsolu_attendance_statuses.
         $statuses = $DB->get_records('apsolu_attendance_statuses');
 
@@ -1138,7 +1134,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2023061401;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         // Ajoute la table apsolu_roles.
         $table = new xmldb_table('apsolu_roles');
         if ($dbman->table_exists($table) === false) {
@@ -1182,7 +1178,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2023061600;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         $fields = [];
         $fields[] = 'apsolucardpaid';
         $fields[] = 'apsolufederationnumber';
@@ -1207,7 +1203,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2023061900;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         // Ajoute 1 champ `agreementaccepted` dans la table `apsolu_federation_adhesions`.
         $table = new xmldb_table('apsolu_federation_adhesions');
         $field = new xmldb_field('agreementaccepted', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $nullable = null, $sequence = null, null, null);
@@ -1224,7 +1220,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2023091300;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         // Ajoute les nouveaux champs dans la table `apsolu_federation_adhesions`.
         $fields = [];
         $fields[] = new xmldb_field('birthname', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL);
@@ -1290,7 +1286,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2023090000;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         // Supprime la contrainte d'unicité sur le champ 'number' de la table 'apsolu_federation_numbers'.
         $table = new xmldb_table('apsolu_federation_numbers');
         $index = new xmldb_index($indexname = 'unique_number', XMLDB_INDEX_NOTUNIQUE, $fields = ['number']);
@@ -1312,7 +1308,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2023110400;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         // Ajoute 2 nouveaux champs à la table 'apsolu_grade_items'.
         $table = new xmldb_table('apsolu_grade_items');
 
@@ -1364,7 +1360,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2024100900;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         // Ajoute la table apsolu_communication_templates.
         $table = new xmldb_table('apsolu_communication_templates');
         if ($dbman->table_exists($table) === false) {
@@ -1401,7 +1397,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     $version = 2024121100;
-    if ($result && $oldversion < $version) {
+    if ($oldversion < $version) {
         // Synchronise la table `apsolu_federation_activities` avec le référentiel FFSU.
         Activity::synchronize_database();
 
@@ -1592,5 +1588,5 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
-    return $result;
+    return true;
 }
