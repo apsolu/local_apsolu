@@ -1,23 +1,11 @@
 ---
 # yamllint disable rule:line-length
 
-default:
-  cache:
-    key: cache-$MOODLE_BRANCH
-    paths:
-      - $CI_PROJECT_DIR/.cache/apt
-      - $CI_PROJECT_DIR/.cache/composer
-      - $CI_PROJECT_DIR/.cache/npm
-      - $CI_PROJECT_DIR/.cache/nvm
-    policy: pull
-  after_script:
-    - rm -rf "$CI_PROJECT_DIR/.cache/moodle"*
-
 # Job savepoints : Validate your plugin’s upgrade steps.
 savepoints:
   stage: validations
   script:
-    - moodle-plugin-ci savepoints $PLUGIN_PATH
+    - moodle-plugin-ci savepoints "$PLUGIN_PATH"
   rules:
     - if: $ENABLE_SAVEPOINTS == "false"
       when: never
@@ -29,7 +17,7 @@ savepoints:
 validate:
   stage: validations
   script:
-    - moodle-plugin-ci validate $PLUGIN_PATH
+    - moodle-plugin-ci validate --moodle "$WWWMOODLE_PATH" -- "$PLUGIN_PATH"
   rules:
     - if: $ENABLE_VALIDATE == "false"
       when: never
@@ -41,7 +29,7 @@ validate:
 phplint:
   stage: analyses
   script:
-    - moodle-plugin-ci phplint $PLUGIN_PATH
+    - moodle-plugin-ci phplint "$PLUGIN_PATH"
   rules:
     - if: $ENABLE_PHPLINT == "false"
       when: never
@@ -53,7 +41,7 @@ phplint:
 phpcs:
   stage: analyses
   script:
-    - moodle-plugin-ci phpcs --max-warnings 0 $PLUGIN_PATH
+    - moodle-plugin-ci phpcs --max-warnings 0 "$PLUGIN_PATH"
   rules:
     - if: $ENABLE_PHPCS == "false"
       when: never
@@ -65,7 +53,7 @@ phpcs:
 phpdoc:
   stage: analyses
   script:
-    - moodle-plugin-ci phpdoc --moodle=$CI_PROJECT_DIR/.cache/moodle --max-warnings 0 $PLUGIN_PATH
+    - moodle-plugin-ci phpdoc --moodle "$WWWMOODLE_PATH" --max-warnings 0 -- "$PLUGIN_PATH"
   rules:
     - if: $ENABLE_PHPDOC == "false"
       when: never
@@ -77,7 +65,14 @@ phpdoc:
 grunt:
   stage: analyses
   script:
-    - moodle-plugin-ci grunt --moodle=$CI_PROJECT_DIR/.cache/moodle $PLUGIN_PATH
+    # Installe NVM (Node Version Manager).
+    - test -d "$NVM_DIR" || git clone https://github.com/nvm-sh/nvm.git "$NVM_DIR"
+    - git -C "$NVM_DIR" pull --ff-only origin master
+    - source "$NVM_DIR/nvm.sh"
+    - nvm install "$NODE_VERSION"
+    - npm --prefix "$WWWMOODLE_PATH" install
+
+    - moodle-plugin-ci grunt --moodle "$WWWMOODLE_PATH" -- "$PLUGIN_PATH"
   rules:
     - if: $ENABLE_GRUNT == "false"
       when: never
@@ -89,7 +84,7 @@ grunt:
 phpcpd:
   stage: analyses
   script:
-    - moodle-plugin-ci phpcpd $PLUGIN_PATH
+    - moodle-plugin-ci phpcpd "$PLUGIN_PATH"
   rules:
     - if: $ENABLE_PHPCPD == "false"
       when: never
@@ -101,7 +96,7 @@ phpcpd:
 phpmd:
   stage: analyses
   script:
-    - moodle-plugin-ci phpmd $PLUGIN_PATH
+    - moodle-plugin-ci phpmd "$PLUGIN_PATH"
   rules:
     - if: $ENABLE_PHPMD == "false"
       when: never
@@ -112,13 +107,28 @@ phpmd:
 # Job phpunit : Run PHPUnit on a plugin.
 phpunit:
   stage: tests
+  services:
+    - name: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/mariadb:${MARIADB_VERSION}
+      alias: docker-mariadb
+      command:
+        - "--character-set-server=utf8mb4"
+        - "--collation-server=utf8mb4_unicode_ci"
+        - "--innodb_file_per_table=On"
+        - "--wait-timeout=28800"
+        - "--skip-log-bin"
+      variables:
+        MARIADB_DATABASE: moodle
+        MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "yes"
   script:
-    # La commande moodle-plugin-ci phpunit doit initier la DB... ça fonctionne sur ma machine, mais pas en CI. À creuser...
-    - cd "$CI_PROJECT_DIR/.cache/moodle/"
-    - php admin/tool/phpunit/cli/util.php --install
-    - php admin/tool/phpunit/cli/init.php
-    - cd -
-    - moodle-plugin-ci phpunit --moodle $CI_PROJECT_DIR/.cache/moodle $PLUGIN_PATH
+    - apt $apt_options install mariadb-client 1> /dev/null
+    # Si un dump SQL existe, on le restaure.
+    - test -f "$CACHE_SQLDUMP_PHPUNIT" && { zstdcat "$CACHE_SQLDUMP_PHPUNIT" | mysql --host=docker-mariadb --user=root moodle ; }
+    # Si l'environnement initialisé de PHPUnit n'est pas viable, on supprime le dump existant.
+    - php "$WWWMOODLE_PATH"/admin/tool/phpunit/cli/util.php --diag || rm -f "$CACHE_SQLDUMP_PHPUNIT"
+    - php "$WWWMOODLE_PATH"/admin/tool/phpunit/cli/init.php --disable-composer
+    # Si aucun dump SQL existe, on en fait un.
+    - test -f "$CACHE_SQLDUMP_PHPUNIT" || { mysqldump --host=docker-mariadb --user=root moodle | zstd --force --quiet -o "$CACHE_SQLDUMP_PHPUNIT" ; }
+    - moodle-plugin-ci phpunit --moodle "$WWWMOODLE_PATH" -- "$PLUGIN_PATH"
   rules:
     - if: $ENABLE_PHPUNIT == "false"
       when: never
@@ -130,7 +140,14 @@ phpunit:
 mustache:
   stage: tests
   script:
-    - moodle-plugin-ci mustache $PLUGIN_PATH
+    # Installe NVM (Node Version Manager).
+    - apt $apt_options install default-jre-headless 1> /dev/null
+    - test -d "$NVM_DIR" || git clone https://github.com/nvm-sh/nvm.git "$NVM_DIR"
+    - git -C "$NVM_DIR" pull --ff-only origin master
+    - source "$NVM_DIR/nvm.sh"
+    - nvm install "$NODE_VERSION"
+    - npm --prefix "$CACHE_MOODLE_PLUGIN_CI/vendor/moodlehq/moodle-local_ci" install
+    - moodle-plugin-ci mustache --moodle "$WWWMOODLE_PATH" -- "$PLUGIN_PATH"
   rules:
     - if: $ENABLE_MUSTACHE == "false"
       when: never

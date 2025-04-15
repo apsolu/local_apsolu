@@ -7,11 +7,13 @@ variables:
 
   ENABLE_BEHAT: "false"  # Non implémenté.
 
+  MOODLE_PLUGIN_INSTALL_PATH: local/apsolu
+
   MOODLE_EXTRA_PLUGINS: >
-    https://github.com/apsolu/block_apsolu_course.git
-    https://github.com/apsolu/block_apsolu_dashboard.git
-    https://github.com/apsolu/enrol_select.git
-    https://github.com/apsolu/theme_apsolu.git
+    https://github.com/apsolu/block_apsolu_course.git;blocks/apsolu_course
+    https://github.com/apsolu/block_apsolu_dashboard.git;blocks/apsolu_dashboard
+    https://github.com/apsolu/enrol_select.git;enrol/select
+    https://github.com/apsolu/theme_apsolu.git;theme/apsolu
 
 include:
   # - local: "/.gitlab/moodle401.yml"
