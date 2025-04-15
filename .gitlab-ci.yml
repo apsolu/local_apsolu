@@ -5,8 +5,6 @@ variables:
   ALLOW_FAILURE_PHPCPD: "true"  # Problème de code dupliqué.
   ALLOW_FAILURE_VALIDATE: "true"  # Manque une table local_apsolu.
 
-  ENABLE_BEHAT: "false"  # Non implémenté.
-
   MOODLE_PLUGIN_INSTALL_PATH: local/apsolu
 
   MOODLE_EXTRA_PLUGINS: >

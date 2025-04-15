@@ -5,9 +5,11 @@ variables:
   # Configuration de Moodle.
   MOODLE_REPOSITORY: https://github.com/moodle/moodle.git
   MOODLE_BRANCH: MOODLE_404_STABLE
+  MOODLE_EXTRA_CONFIG: >
+    @include_once(__DIR__.'/moodle-browser-config/init.php');
   MARIADB_VERSION: 10.11
   NODE_VERSION: 22.11.0
-  SELENIUM_VERSION: 3
+  SELENIUM_VERSION: 4.29.0
   # Configuration des autorisations d'échecs des tests.
   ALLOW_FAILURE_BEHAT: "false"
   ALLOW_FAILURE_GRUNT: "false"
@@ -21,7 +23,7 @@ variables:
   ALLOW_FAILURE_SAVEPOINTS: "false"
   ALLOW_FAILURE_VALIDATE: "false"
   # Configuration des tests à réaliser.
-  ENABLE_BEHAT: "false"  # Non implémenté.
+  ENABLE_BEHAT: "true"
   ENABLE_GRUNT: "true"
   ENABLE_MUSTACHE: "true"
   ENABLE_PHPCPD: "true"
@@ -71,11 +73,14 @@ default:
     # Définit les variables.
     - CACHE_APT="$CI_PROJECT_DIR/.cache/apt"
     - CACHE_MOODLE="$CI_PROJECT_DIR/.cache/moodle/$MOODLE_BRANCH"
+    - CACHE_MOODLE_BROWSER_CONFIG="$CACHE_MOODLE_PLUGINS/moodle-browser-config"
     - CACHE_MOODLE_DATA="$CI_PROJECT_DIR/.cache/datamoodle/moodle-$MOODLE_BRANCH"
+    - CACHE_MOODLE_DATA_BEHAT="$CI_PROJECT_DIR/.cache/datamoodle/behat-$MOODLE_BRANCH"
     - CACHE_MOODLE_DATA_PHPUNIT="$CI_PROJECT_DIR/.cache/datamoodle/phpunit-$MOODLE_BRANCH"
     - CACHE_MOODLE_PLUGIN_CI="$CI_PROJECT_DIR/.cache/moodle-plugin-ci"
     - CACHE_MOODLE_PLUGINS="$CI_PROJECT_DIR/.cache/moodle-plugins"
     - CACHE_NVM="$CI_PROJECT_DIR/.cache/nvm"
+    - CACHE_SQLDUMP_BEHAT="$CI_PROJECT_DIR/.cache/sqldump/behat-$MOODLE_BRANCH.sql.zst"
     - CACHE_SQLDUMP_PHPUNIT="$CI_PROJECT_DIR/.cache/sqldump/phpunit-$MOODLE_BRANCH.sql.zst"
     - WWWMOODLE_PATH="/var/www/html/moodle"
     - PLUGIN_PATH="$WWWMOODLE_PATH/$MOODLE_PLUGIN_INSTALL_PATH"
@@ -85,11 +90,12 @@ default:
     - export npm_config_cache="$CI_PROJECT_DIR/.cache/npm"
     - export NVM_DIR="$CI_PROJECT_DIR/.cache/nvm"
     - export PATH="$CI_PROJECT_DIR/.cache/moodle-plugin-ci/bin:/usr/local/nvm/versions/node/v$NODE_VERSION/bin:$PATH"
+    - export MOODLE_START_BEHAT_SERVERS="NO"
 
     # Définit les variables pour le proxy.
-    - export http_proxy=$HTTP_PROXY
-    - export https_proxy=$HTTPS_PROXY
-    - export no_proxy=$NO_PROXY
+    - export http_proxy="$HTTP_PROXY"
+    - export https_proxy="$HTTPS_PROXY"
+    - export no_proxy="$(echo "$HOSTNAME,$NO_PROXY" | sed "s/,$//")"
 
     # Utilise des mirroirs debian spécifiques si la variable BULLSEYE_DEBIAN_MIRRORS n'est pas vide.
     - test -z "$BULLSEYE_DEBIAN_MIRRORS" || echo "$BULLSEYE_DEBIAN_MIRRORS" > /etc/apt/sources.list
@@ -124,7 +130,7 @@ default:
     - composer --working-dir="$CACHE_MOODLE_PLUGIN_CI" --no-scripts install
 
     # Déploie moodle.
-    - mkdir -p "$CACHE_MOODLE_DATA" "$CACHE_MOODLE_DATA_PHPUNIT" "$CACHE_MOODLE_PLUGINS" "$(dirname $CACHE_SQLDUMP_PHPUNIT)" "$WWWMOODLE_PATH"
+    - mkdir -p "$CACHE_MOODLE_DATA" "$CACHE_MOODLE_DATA_BEHAT" "$CACHE_MOODLE_DATA_PHPUNIT" "$CACHE_MOODLE_PLUGINS" "$(dirname $CACHE_SQLDUMP_PHPUNIT)" "$WWWMOODLE_PATH"
     - test -d "$CACHE_MOODLE" || git clone "$MOODLE_REPOSITORY" --single-branch --branch "$MOODLE_BRANCH" "$CACHE_MOODLE"
     - git -C "$CACHE_MOODLE" pull --ff-only origin "$MOODLE_BRANCH"
     - rsync -a "$CACHE_MOODLE/" "$WWWMOODLE_PATH"
@@ -147,6 +153,15 @@ default:
     - sed -i "s#\$CFG->dataroot  = '/home/example/moodledata';#\$CFG->dataroot = '$CACHE_MOODLE_DATA';#" "$WWWMOODLE_PATH/config.php"
     - sed -i "s#// \$CFG->phpunit_prefix = 'phpu_';#\$CFG->phpunit_prefix = 'phpu_';#" "$WWWMOODLE_PATH/config.php"
     - sed -i "s#// \$CFG->phpunit_dataroot = '/home/example/phpu_moodledata';#\$CFG->phpunit_dataroot = '$CACHE_MOODLE_DATA_PHPUNIT';#" "$WWWMOODLE_PATH/config.php"
+    - sed -i "s#// \$CFG->behat_wwwroot = 'http://127.0.0.1/moodle';#\$CFG->behat_wwwroot = 'http://$HOSTNAME:8000';#" "$WWWMOODLE_PATH/config.php"
+    - sed -i "s#// \$CFG->behat_prefix = 'bht_';#\$CFG->behat_prefix = 'bht_';#" "$WWWMOODLE_PATH/config.php"
+    - sed -i "s#// \$CFG->behat_dataroot = '/home/example/bht_moodledata';#\$CFG->behat_dataroot = '$CACHE_MOODLE_DATA_BEHAT';#" "$WWWMOODLE_PATH/config.php"
+    - sed -i "s#//   \$CFG->behat_increasetimeout = 3;#\$CFG->behat_increasetimeout = 6;#" "$WWWMOODLE_PATH/config.php"
+    - |+
+      while IFS= read -r extra
+      do
+        sed -i "s#require_once(__DIR__ \. '/lib/setup\.php');#\n$extra\n\nrequire_once(__DIR__ . '/lib/setup.php');#" "$WWWMOODLE_PATH/config.php"
+      done <<< $MOODLE_EXTRA_CONFIG
     - composer --working-dir="$WWWMOODLE_PATH" install
 
 include:

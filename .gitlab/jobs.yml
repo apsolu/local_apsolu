@@ -156,18 +156,44 @@ mustache:
     - when: on_success
 
 # Job behat : Run Behat on a plugin.
-# TODO: Non implémenté.
-# behat:
-#   stage: tests
-#   script:
-#     - moodle-plugin-ci behat --profile chrome $PLUGIN_PATH
-#     # Alternative:
-#     - cd "$CI_PROJECT_DIR/.cache/moodle/"
-#     - vendor/bin/behat --config /builds/applis-fir-siuaps/local_apsolu/.cache/moodledata/behat_moodledata/behatrun/behat/behat.yml
-#     - cd -
-#   rules:
-#     - if: $ENABLE_BEHAT == "false"
-#       when: never
-#     - if: $ALLOW_FAILURE_BEHAT == "true"
-#       allow_failure: true
-#     - when: on_success
+behat:
+  stage: tests
+  services:
+    - name: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/selenium/standalone-chrome:${SELENIUM_VERSION}
+      alias: docker-selenium-chrome
+    - name: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/mariadb:${MARIADB_VERSION}
+      alias: docker-mariadb
+      command:
+        - "--character-set-server=utf8mb4"
+        - "--collation-server=utf8mb4_unicode_ci"
+        - "--innodb_file_per_table=On"
+        - "--wait-timeout=28800"
+        - "--skip-log-bin"
+      variables:
+        MARIADB_DATABASE: moodle
+        MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "yes"
+  variables:
+    FF_NETWORK_PER_BUILD: 1
+    SELENIUM_HOST: "http://docker-selenium-chrome:4444/wd/hub"
+  script:
+    - /usr/bin/php -S 0.0.0.0:8000 -t /var/www/html/moodle 2> /var/log/phpserver.log &
+    - apt $apt_options install mariadb-client 1> /dev/null
+    - test -d "$CACHE_MOODLE_BROWSER_CONFIG" || git clone https://github.com/andrewnicols/moodle-browser-config "$CACHE_MOODLE_BROWSER_CONFIG"
+    - git -C "$CACHE_MOODLE_BROWSER_CONFIG" pull --ff-only origin main
+    - rsync -a "$CACHE_MOODLE_BROWSER_CONFIG" "$WWWMOODLE_PATH/"
+    # Si un dump SQL existe, on le restaure.
+    - test -f "$CACHE_SQLDUMP_BEHAT" && { zstdcat "$CACHE_SQLDUMP_BEHAT" | mysql --host=docker-mariadb --user=root moodle ; }
+    # Si l'environnement initialisé de Behat n'est pas viable, on supprime le dump existant.
+    - php "$WWWMOODLE_PATH"/admin/tool/behat/cli/util.php --diag || rm -f "$CACHE_SQLDUMP_BEHAT"
+    - php "$WWWMOODLE_PATH"/admin/tool/behat/cli/init.php --disable-composer
+    # Si aucun dump SQL existe, on en fait un.
+    - test -f "$CACHE_SQLDUMP_BEHAT" || { mysqldump --host=docker-mariadb --user=root moodle | zstd --force --quiet -o "$CACHE_SQLDUMP_BEHAT" ; }
+    - >  # Astuce pour échapper proprement le caractère ':' sans avoir à écrire la chaîne encadrée de double quotes.
+      sed -i 's#localhost:4444#docker-selenium-chrome:4444#' "$CACHE_MOODLE_DATA_BEHAT/behatrun/behat/behat.yml"
+    - /usr/bin/php "$WWWMOODLE_PATH"/vendor/bin/behat --config "$CACHE_MOODLE_DATA_BEHAT/behatrun/behat/behat.yml" --profile=chrome --stop-on-failure --tags=~@javascript --verbose=2 -- "$WWWMOODLE_PATH/$MOODLE_PLUGIN_INSTALL_PATH"
+  rules:
+    - if: $ENABLE_BEHAT == "false"
+      when: never
+    - if: $ALLOW_FAILURE_BEHAT == "true"
+      allow_failure: true
+    - when: on_success
