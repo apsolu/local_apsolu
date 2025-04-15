@@ -236,6 +236,13 @@ if (is_readable($CFG->dirroot.'/mod/scheduler/version.php') === true) {
     $selectplugin = enrol_get_plugin('select');
     $users = $DB->get_records('user', ['deleted' => 0], $sort = '', $fields = 'username, id');
 
+    // Inscrit l'utilisateur "letudiant".
+    $status = $selectplugin::ACCEPTED;
+    $userid = $users['letudiant']->id;
+    $selectplugin->enrol_user($enrol, $userid, $role->id, $timestart = 0, $timeend = 0, $status);
+    $enroled[$userid] = $userid;
+
+    // Inscrit aléatoirement d'autres étudiants.
     $sql = "SELECT cm.*, c.idnumber
               FROM {cohort_members} cm
               JOIN {cohort} c ON c.id = cm.cohortid
@@ -245,11 +252,6 @@ if (is_readable($CFG->dirroot.'/mod/scheduler/version.php') === true) {
     shuffle($records);
     foreach ($records as $record) {
         if (isset($enroled[$record->userid]) === true) {
-            continue;
-        }
-
-        if ($record->userid === $users['letudiant']->id) {
-            // Bloque toutes inscriptions pour l'utilisateur "letudiant".
             continue;
         }
 
