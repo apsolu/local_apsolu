@@ -163,6 +163,8 @@ if (is_readable($CFG->dirroot.'/mod/scheduler/version.php') === true) {
     // Récupère les droits admin.
     $USER = get_admin();
 
+    $teacher = $DB->get_record('user', ['username' => 'lenseignante', 'deleted' => 0], $fields = '*', MUST_EXIST);
+
     $category = $DB->get_record('course_categories', ['name' => 'Badminton'], $fields = '*', MUST_EXIST);
 
     // Crée l'espace-cours.
@@ -208,6 +210,31 @@ if (is_readable($CFG->dirroot.'/mod/scheduler/version.php') === true) {
 
     $moduleinfo = add_moduleinfo($data, $course, null);
 
+    // Génère des créneaux dans l'activité Rendez-vous.
+    $cm = $DB->get_record('course_modules', ['id' => $moduleinfo->coursemodule]);
+    $scheduler = \mod_scheduler\model\scheduler::load_by_coursemodule_id($cm->id);
+
+    $lastwednesday = strtotime('Wednesday this week') + (14 * HOURSECS); // Mercredi, 14h00.
+    for ($weeks = 0; $weeks < 12; $weeks++) {
+        for ($hours = 0; $hours < 6; $hours++) {
+            $data = new stdClass();
+            $data->schedulerid = $scheduler->id;
+            $data->starttime = $lastwednesday + ($hours * HOURSECS) + ($weeks * WEEKSECS);
+            $data->duration = 45;
+            $data->teacherid = $teacher->id;
+            $data->appointmentlocation = '';
+            $data->reuse = 0;
+            $data->timemodified = time();
+            $data->notes = '';
+            $data->notesformat = '';
+            $data->exclusivity = 10;
+            $data->emaildate = '-1';
+            $data->hideuntil = 0;
+
+            $DB->insert_record('scheduler_slots', $data);
+        }
+    }
+
     // Ajoute l'utilisateur "lenseignante".
     $manualplugin = enrol_get_plugin('manual');
     $enrol = $DB->get_record('enrol', ['courseid' => $course->id, 'enrol' => 'manual']);
@@ -215,7 +242,6 @@ if (is_readable($CFG->dirroot.'/mod/scheduler/version.php') === true) {
         $enrolid = $manualplugin->add_instance($course, $manualplugin->get_instance_defaults());
         $enrol = $DB->get_record('enrol', ['id' => $enrolid]);
     }
-    $teacher = $DB->get_record('user', ['username' => 'lenseignante', 'deleted' => 0], $fields = '*', MUST_EXIST);
     $manualplugin->enrol_user($enrol, $teacher->id, $teacherroleid = 3, $timestart = 0, $timeend = 0, $status = ENROL_USER_ACTIVE);
 
     // Ajoute une méthode d'inscription par voeux.
