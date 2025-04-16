@@ -4,6 +4,7 @@
 # Job savepoints : Validate your plugin’s upgrade steps.
 savepoints:
   stage: validations
+  needs: []  # Permet l'exécution en parallèle de différents stages.
   script:
     - moodle-plugin-ci savepoints "$PLUGIN_PATH"
   rules:
@@ -16,6 +17,7 @@ savepoints:
 # Job validate : Run some light validation on the plugin file structure and code.
 validate:
   stage: validations
+  needs: []  # Permet l'exécution en parallèle de différents stages.
   script:
     - moodle-plugin-ci validate --moodle "$WWWMOODLE_PATH" -- "$PLUGIN_PATH"
   rules:
@@ -28,6 +30,7 @@ validate:
 # Job phplint : Run PHP Lint on a plugin.
 phplint:
   stage: analyses
+  needs: []  # Permet l'exécution en parallèle de différents stages.
   script:
     - moodle-plugin-ci phplint "$PLUGIN_PATH"
   rules:
@@ -40,6 +43,7 @@ phplint:
 # Job phpcs : Run Moodle CodeSniffer standard on a plugin.
 phpcs:
   stage: analyses
+  needs: []  # Permet l'exécution en parallèle de différents stages.
   script:
     - moodle-plugin-ci phpcs --max-warnings 0 "$PLUGIN_PATH"
   rules:
@@ -52,6 +56,7 @@ phpcs:
 # Job phpdoc : Run Moodle PHPDoc Checker on a plugin.
 phpdoc:
   stage: analyses
+  needs: []  # Permet l'exécution en parallèle de différents stages.
   script:
     - moodle-plugin-ci phpdoc --moodle "$WWWMOODLE_PATH" --max-warnings 0 -- "$PLUGIN_PATH"
   rules:
@@ -64,6 +69,7 @@ phpdoc:
 # Job grunt : Run Grunt task on a plugin.
 grunt:
   stage: analyses
+  needs: []  # Permet l'exécution en parallèle de différents stages.
   script:
     # Installe NVM (Node Version Manager).
     - test -d "$NVM_DIR" || git clone https://github.com/nvm-sh/nvm.git "$NVM_DIR"
@@ -83,6 +89,7 @@ grunt:
 # Job phpcpd : Run PHP Copy/Paste Detector on a plugin.
 phpcpd:
   stage: analyses
+  needs: []  # Permet l'exécution en parallèle de différents stages.
   script:
     - moodle-plugin-ci phpcpd "$PLUGIN_PATH"
   rules:
@@ -95,6 +102,7 @@ phpcpd:
 # Job phpmd : Run PHP Mess Detector on a plugin.
 phpmd:
   stage: analyses
+  needs: []  # Permet l'exécution en parallèle de différents stages.
   script:
     - moodle-plugin-ci phpmd "$PLUGIN_PATH"
   rules:
@@ -107,6 +115,7 @@ phpmd:
 # Job phpunit : Run PHPUnit on a plugin.
 phpunit:
   stage: tests
+  needs: []  # Permet l'exécution en parallèle de différents stages.
   services:
     - name: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/mariadb:${MARIADB_VERSION}
       alias: docker-mariadb
@@ -139,6 +148,7 @@ phpunit:
 # Job mustache : Run Mustache Lint on a plugin.
 mustache:
   stage: tests
+  needs: []  # Permet l'exécution en parallèle de différents stages.
   script:
     # Installe NVM (Node Version Manager).
     - apt $apt_options install default-jre-headless 1> /dev/null
@@ -158,6 +168,7 @@ mustache:
 # Job behat : Run Behat on a plugin.
 behat:
   stage: tests
+  needs: []  # Permet l'exécution en parallèle de différents stages.
   services:
     - name: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/selenium/standalone-chrome:${SELENIUM_VERSION}
       alias: docker-selenium-chrome
