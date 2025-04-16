@@ -38,6 +38,7 @@ if ($instance === false) {
     $instance = new stdClass();
     $instance->id = 0;
     $instance->name = '';
+    $instance->shortname = '';
 }
 
 // Build form.
@@ -49,6 +50,7 @@ if ($data = $mform->get_data()) {
     $instance = new stdClass();
     $instance->id = $data->typeid;
     $instance->name = trim($data->name);
+    $instance->shortname = trim($data->shortname);
 
     if ($instance->id === 0) {
         $DB->insert_record('apsolu_calendars_types', $instance);

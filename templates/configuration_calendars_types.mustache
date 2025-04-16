@@ -58,6 +58,7 @@
 <thead>
 	<tr>
 		<th>{{#str}}name{{/str}}</th>
+		<th>{{#str}}shortname{{/str}}</th>
 		<th>{{#str}}actions{{/str}}</th>
 	</tr>
 </thead>
@@ -65,6 +66,7 @@
 	{{#calendars_types}}
 	<tr>
 		<td>{{name}}</td>
+		<td>{{shortname}}</td>
 		<td><a href="{{wwwroot}}/local/apsolu/configuration/index.php?page=calendarstypes&action=edit&typeid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></td>
 	</tr>
 	{{/calendars_types}}

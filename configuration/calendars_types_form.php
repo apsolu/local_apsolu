@@ -48,6 +48,13 @@ class local_apsolu_calendars_types_edit_form extends moodleform {
         $mform->addElement('text', 'name', get_string('calendartypename', 'local_apsolu'), $attributes);
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'server');
+        $mform->addRule('name', get_string('required'), 'required', null, 'client');
+
+        $attributes = ['size' => '20', 'maxlength' => '100'];
+        $mform->addElement('text', 'shortname', get_string('shortname'), $attributes);
+        $mform->setType('shortname', PARAM_TEXT);
+        $mform->addRule('shortname', get_string('maximumchars', '', 100), 'maxlength', 100, 'server');
+        $mform->addRule('shortname', get_string('required'), 'required', null, 'client');
 
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
