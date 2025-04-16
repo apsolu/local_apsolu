@@ -1582,8 +1582,8 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
-    // Modification à appliquer lors de la prochaine mise à jour.
-    if (false) {
+    $version = 2025041600;
+    if ($oldversion < $version) {
         // Ajoute un champ 'shortname' sur la table 'apsolu_calendars_types'.
         $table = new xmldb_table('apsolu_calendars_types');
         $field = new xmldb_field('shortname', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null, 'name');
@@ -1607,6 +1607,12 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $DB->update_record('apsolu_calendars_types', $calendartype);
         }
 
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
+    // Modification à appliquer lors de la prochaine mise à jour.
+    if (false) {
         // Savepoint reached.
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
