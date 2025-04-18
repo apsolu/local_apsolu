@@ -49,7 +49,7 @@ $PAGE->set_context(context_system::instance());
 $PAGE->set_title($title);
 $PAGE->navbar->add($title);
 
-$PAGE->requires->css(new moodle_url($CFG->wwwroot.'/enrol/select/styles/select2.min.css'));
+$PAGE->requires->css('/enrol/select/styles/select2.min.css');
 
 $options = [];
 $options['widthFixed'] = true;
