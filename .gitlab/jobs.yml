@@ -201,7 +201,13 @@ behat:
     - test -f "$CACHE_SQLDUMP_BEHAT" || { mysqldump --host=docker-mariadb --user=root moodle | zstd --force --quiet -o "$CACHE_SQLDUMP_BEHAT" ; }
     - >  # Astuce pour échapper proprement le caractère ':' sans avoir à écrire la chaîne encadrée de double quotes.
       sed -i 's#localhost:4444#docker-selenium-chrome:4444#' "$CACHE_MOODLE_DATA_BEHAT/behatrun/behat/behat.yml"
-    - /usr/bin/php "$WWWMOODLE_PATH"/vendor/bin/behat --config "$CACHE_MOODLE_DATA_BEHAT/behatrun/behat/behat.yml" --profile=chrome --stop-on-failure --tags=~@javascript --verbose=2 -- "$WWWMOODLE_PATH/$MOODLE_PLUGIN_INSTALL_PATH"
+    - |+
+      if [ -z "$MOODLE_BEHAT_TAGS" ]
+      then
+        /usr/bin/php "$WWWMOODLE_PATH"/vendor/bin/behat --config "$CACHE_MOODLE_DATA_BEHAT/behatrun/behat/behat.yml" --profile=chrome --stop-on-failure --tags=~@javascript --verbose=2 -- "$WWWMOODLE_PATH/$MOODLE_PLUGIN_INSTALL_PATH"
+      else
+        /usr/bin/php "$WWWMOODLE_PATH"/vendor/bin/behat --config "$CACHE_MOODLE_DATA_BEHAT/behatrun/behat/behat.yml" --profile=chrome --stop-on-failure --tags="$MOODLE_BEHAT_TAGS" --verbose=2
+      fi
   rules:
     - if: $ENABLE_BEHAT == "false"
       when: never
