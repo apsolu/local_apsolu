@@ -42,6 +42,8 @@ final class email_test extends externallib_advanced_testcase {
     public function setUp(): void {
         global $CFG;
 
+        parent::setUp();
+
         require_once($CFG->dirroot . '/message/lib.php');
     }
 
@@ -49,6 +51,8 @@ final class email_test extends externallib_advanced_testcase {
      * Test tearDown.
      */
     public function tearDown(): void {
+        parent::tearDown();
+
         unset($this->sections);
         unset($this->activities);
     }
