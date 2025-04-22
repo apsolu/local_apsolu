@@ -1,4 +1,4 @@
-@local @local_apsolu
+@apsolu @local @local_apsolu
 Feature: Teste la présentation réalisée lors de démonstration de l'application auprès des autres services de sports.
   En tant qu'étudiant, nous testons le processus d'inscription, de paiement et d'adhésion à la FFSU.
   En tant qu'enseignant, nous testons la validation d'inscription, la gestion de présence et la saisie des notes.

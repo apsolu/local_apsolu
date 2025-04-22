@@ -1,4 +1,4 @@
-@local @local_apsolu
+@apsolu @local @local_apsolu
 Feature: Teste la procédure d'adhésion à la FFSU.
   Selon les réponses données dans le formulaire d'adhésion, APSOLU peut lui demander des documents.
 
