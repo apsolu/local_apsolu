@@ -122,7 +122,7 @@ final class email_test extends externallib_advanced_testcase {
     /**
      * Test send_instant_emails with no capabilities.
      *
-     * @covers ::send_instant_emails_no_capability()
+     * @covers ::send_instant_emails()
      * @runInSeparateProcess
      */
     public function test_send_instant_emails_no_capability(): void {
@@ -161,7 +161,8 @@ final class email_test extends externallib_advanced_testcase {
     /**
      * Test send_instant_emails when emailbulkmessaging is disabled.
      *
-     * @covers ::send_instant_emails_emailbulkmessaging_disabled()
+     * @covers ::send_instant_emails()
+     * @runInSeparateProcess
      */
     public function test_send_instant_emails_emailbulkmessaging_disabled(): void {
         global $CFG;
