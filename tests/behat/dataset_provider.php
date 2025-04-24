@@ -371,8 +371,6 @@ class dataset_provider {
     private static function setup_config() {
         global $DB;
 
-        set_config('debug', '30719');
-
         // Supprime le bouton de connexion anonyme.
         $oldvalue = get_config('core', 'guestloginbutton');
         add_to_config_log('guestloginbutton', $oldvalue, '0', 'core');
