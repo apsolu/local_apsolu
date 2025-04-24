@@ -32,6 +32,7 @@ require_once($CFG->dirroot.'/course/lib.php');
  * @category   test
  * @copyright  2021 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @coversDefaultClass \local_apsolu\observer\course
  */
 final class course_test extends \advanced_testcase {
     protected function setUp(): void {

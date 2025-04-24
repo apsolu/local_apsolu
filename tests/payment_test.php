@@ -29,7 +29,7 @@ require_once(__DIR__ . '/../classes/apsolu/payment.php');
  * @package    local_apsolu
  * @copyright  2022 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \local_apsolu\core\payment
+ * @coversDefaultClass \UniversiteRennes2\Apsolu\Payment
  */
 final class payment_test extends \advanced_testcase {
     protected function setUp(): void {

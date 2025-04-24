@@ -33,7 +33,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @category  test
  * @copyright 2023 Université Rennes 2 {@link https://www.univ-rennes2.fr}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core_message\external\email
+ * @coversDefaultClass \local_apsolu\external\email
  */
 final class email_test extends externallib_advanced_testcase {
     /**
