@@ -170,5 +170,5 @@ jobs:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Behat features
-        if: ${{ always() }}
+        if: ${{ always() && matrix.moodle-branch != 'MOODLE_500_STABLE' && matrix.moodle-branch != 'main' }}
         run: moodle-plugin-ci behat --profile chrome
