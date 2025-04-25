@@ -162,6 +162,7 @@ final class email_test extends externallib_advanced_testcase {
      * Test send_instant_emails when emailbulkmessaging is disabled.
      *
      * @covers ::send_instant_emails()
+     * @runInSeparateProcess
      */
     public function test_send_instant_emails_emailbulkmessaging_disabled(): void {
         global $CFG;
