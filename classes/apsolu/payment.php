@@ -234,7 +234,9 @@ class Payment {
             " AND ap.timepaid IS NOT NULL";
         $payment = $DB->get_record_sql($sql, ['cardid' => $card->id, 'userid' => $userid]);
         if ($payment !== false) {
-            debugging('Carte '.$card->fullname.' payée !', $level = DEBUG_DEVELOPER);
+            if (defined('BEHAT_SITE_RUNNING') === false) {
+                debugging('Carte '.$card->fullname.' payée !', $level = DEBUG_DEVELOPER);
+            }
             return $payment->status; // Valeur possible : self::PAID or self::GIFT.
         }
 
@@ -247,7 +249,9 @@ class Payment {
                 // TODO: n'utilise pas un champ indexé ! ÇA RAME !
                 $conditions = ['component' => 'local_apsolu_presence', 'courseid' => $enrol->courseid, 'relateduserid' => $userid];
                 if ($DB->count_records('logstore_standard_log', $conditions) >= $card->trial) {
-                    debugging('Carte '.$card->fullname.' due (fin des séances d\'essais).', $level = DEBUG_DEVELOPER);
+                    if (defined('BEHAT_SITE_RUNNING') === false) {
+                        debugging('Carte '.$card->fullname.' due (fin des séances d\'essais).', $level = DEBUG_DEVELOPER);
+                    }
                     return self::DUE;
                 }
             }
@@ -261,8 +265,10 @@ class Payment {
         $enrolcalendars = [];
         foreach ($enrols as $enrol) {
             if (isset($calendars[$enrol->customchar1]) === false) {
-                debugging('Aucun calendrier pour l\'inscription #'.$enrol->id.' (course #'.$enrol->courseid.')',
-                    $level = DEBUG_DEVELOPER);
+                if (defined('BEHAT_SITE_RUNNING') === false) {
+                    debugging('Aucun calendrier pour l\'inscription #'.$enrol->id.' (course #'.$enrol->courseid.')',
+                        $level = DEBUG_DEVELOPER);
+                }
                 continue;
             }
 
@@ -281,7 +287,10 @@ class Payment {
             }
 
             if ($enrolcalendars[$calendar->calendartypeid] > $calendar->value) {
-                debugging('Carte '.$card->fullname.' due (nombre d\'inscriptions offertes dépasées).', $level = DEBUG_DEVELOPER);
+                if (defined('BEHAT_SITE_RUNNING') === false) {
+                    debugging('Carte '.$card->fullname.' due (nombre d\'inscriptions offertes dépasées).',
+                        $level = DEBUG_DEVELOPER);
+                }
                 return self::DUE;
             }
         }
