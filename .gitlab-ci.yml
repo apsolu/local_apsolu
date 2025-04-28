@@ -6,7 +6,6 @@ variables:
   ALLOW_FAILURE_VALIDATE: "true"  # Manque une table local_apsolu.
 
   MOODLE_PLUGIN_INSTALL_PATH: local/apsolu
-  MOODLE_BEHAT_TAGS: "@apsolu,~@javascript"
 
   MOODLE_EXTRA_PLUGINS: >
     https://github.com/apsolu/block_apsolu_course.git;blocks/apsolu_course
