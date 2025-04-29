@@ -48,6 +48,21 @@ class local_apsolu_header_form extends moodleform {
         $mform->addElement('checkbox', 'apsoluheaderactive', 'Afficher le message');
         $mform->setType('apsoluheaderactive', PARAM_INT);
 
+        // Stylage de l'entete.
+        $stylearray = [
+            'secondary' => "Normal",
+            'primary' => "Primaire",
+            'success' => "Succès",
+            'danger' => "Alerte",
+            'warning' => "Avertissement",
+            'info' => "Information",
+            'dark' => "Sombre",
+            'none' => "Aucun",
+        ];
+
+        $select = $mform->addElement('select', 'apsoluheaderstyle', 'Style de l\'entête', $stylearray);
+        $mform->setType('apsoluheaderstyle', PARAM_TEXT);
+
         // Message.
         $mform->addElement('editor', 'apsoluheadercontent', get_string('message', 'local_apsolu'));
         $mform->setType('apsoluheadercontent', PARAM_RAW);

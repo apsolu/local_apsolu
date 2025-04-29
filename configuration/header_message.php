@@ -29,6 +29,7 @@ require_once($CFG->dirroot.'/local/apsolu/configuration/header_message_form.php'
 // Build form.
 $defaults = new stdClass();
 $defaults->apsoluheaderactive = get_config('local_apsolu', 'apsoluheaderactive');
+$defaults->apsoluheaderstyle = get_config('local_apsolu', 'apsoluheaderstyle');
 $defaults->apsoluheadercontent = ['text' => get_config('local_apsolu', 'apsoluheadercontent'), 'format' => 1];
 
 $customdata = [$defaults];
@@ -45,6 +46,11 @@ if ($data = $mform->get_data()) {
         set_config('apsoluheaderactive', $data->apsoluheaderactive, 'local_apsolu');
     }
 
+    if ($data->apsoluheaderstyle != $defaults->apsoluheaderstyle) {
+        add_to_config_log('apsoluheaderstyle', $defaults->apsoluheaderstyle, $data->apsoluheaderstyle, 'local_apsolu');
+        set_config('apsoluheaderstyle', $data->apsoluheaderstyle, 'local_apsolu');
+    }
+
     if ($data->apsoluheadercontent['text'] != $defaults->apsoluheadercontent['text']) {
         $oldvalue = $defaults->apsoluheadercontent['text'];
         $newvalue = $data->apsoluheadercontent['text'];
@@ -56,8 +62,15 @@ if ($data = $mform->get_data()) {
     if (empty($data->apsoluheaderactive) === true) {
         $newvalue = '';
     } else {
+        $style = "";
+
+        if ($data->apsoluheaderstyle && $data->apsoluheaderstyle != 'none') {
+            $style = "alert alert-" . $data->apsoluheaderstyle;
+        }
+
         // Encapsule le HTML dans une div afin de pouvoir masquer le contenu sur la page d'accueil du site.
-        $newvalue = sprintf('<div id="apsolu-topofbody">%s</div>', $data->apsoluheadercontent['text']);
+        $newvalue = sprintf('<div id="apsolu-topofbody"><div class="%s">%s</div></div>',
+            $style, $data->apsoluheadercontent['text']);
     }
 
     if ($oldvalue !== $newvalue) {
