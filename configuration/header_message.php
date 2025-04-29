@@ -65,7 +65,7 @@ if ($data = $mform->get_data()) {
         $style = "";
 
         if ($data->apsoluheaderstyle && $data->apsoluheaderstyle != 'none') {
-            $style = "alert alert-" . $data->apsoluheaderstyle;
+            $style = "mb-0 alert alert-" . $data->apsoluheaderstyle;
         }
 
         // Encapsule le HTML dans une div afin de pouvoir masquer le contenu sur la page d'accueil du site.
