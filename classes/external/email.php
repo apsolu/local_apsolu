@@ -60,6 +60,8 @@ class email extends external_api {
                             'subject' => new external_value(PARAM_TEXT, 'the subject of the email'),
                             'carboncopy' => new external_value(PARAM_BOOL,
                                     'Send a copy of the email to sender', VALUE_DEFAULT, true),
+                            'carboncopysubject' => new external_value(PARAM_TEXT, 'the subject of the email for carbon copy ; if
+                                    empty, the main subject will be used.'),
                             'body' => new external_value(PARAM_RAW, 'the text of the email'),
                             'receivers' => new external_multiple_structure(
                                     new external_value(PARAM_INT, 'id of the user to send the private email')
@@ -119,7 +121,12 @@ class email extends external_api {
 
                 // Now we can send the message (at least try).
                 if ($success) {
-                    $success = email_to_user($tousers[$receiver], $USER, $subject, $body);
+                    if ($message['carboncopy'] && $receiver === $USER->id && empty($message['carboncopysubject']) === false) {
+                        // Message avec un sujet spécial pour la copie carbone.
+                        $success = email_to_user($tousers[$receiver], $USER, $message['carboncopysubject'], $body);
+                    } else {
+                        $success = email_to_user($tousers[$receiver], $USER, $subject, $body);
+                    }
                 }
 
                 // Build the resultmsg.

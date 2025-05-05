@@ -138,13 +138,18 @@ class send_email_form extends dynamic_form {
      * @return array
      */
     public function process_dynamic_submission() {
+        global $DB;
+
         $data = $this->get_data();
 
+        // Note: le tableau ne contient qu'un seul utilisateur.
         $receivers = explode(',', $data->users);
 
         // Validation du certificat.
         $validation = $data->validation;
         foreach ($receivers as $userid) {
+            $user = $DB->get_record('user', ['id' => $userid]);
+
             if ($validation === (int) Adhesion::MEDICAL_CERTIFICATE_STATUS_VALIDATED) {
                 foreach (Adhesion::get_records(['userid' => $userid]) as $adhesion) {
                     $adhesion->medicalcertificatestatus = $validation;
@@ -174,6 +179,12 @@ class send_email_form extends dynamic_form {
         $message = [];
         $message['subject'] = $data->subject;
         $message['carboncopy'] = isset($data->carboncopy);
+        $message['carboncopysubject'] = '';
+        if ($message['carboncopy'] === true) {
+            if ($user !== false) {
+                $message['carboncopysubject'] = '['.$user->firstname.' '.$user->lastname.'] '.$message['subject'];
+            }
+        }
         $message['body'] = $data->message['text'];
         $message['receivers'] = $receivers;
 

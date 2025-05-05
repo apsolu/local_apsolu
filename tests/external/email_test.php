@@ -85,6 +85,7 @@ final class email_test extends externallib_advanced_testcase {
         $message = [];
         $message['subject'] = 'the subject';
         $message['carboncopy'] = false;
+        $message['carboncopysubject'] = '';
         $message['body'] = 'the message';
         $message['receivers'] = [$user2->id];
         $messages = [$message];
@@ -150,6 +151,7 @@ final class email_test extends externallib_advanced_testcase {
         $message = [];
         $message['subject'] = 'the subject';
         $message['carboncopy'] = false;
+        $message['carboncopysubject'] = '';
         $message['text'] = 'the message';
         $message['receivers'] = [$user2->id];
         $messages = [$message];
@@ -184,6 +186,7 @@ final class email_test extends externallib_advanced_testcase {
         $message = [];
         $message['subject'] = 'the subject';
         $message['carboncopy'] = false;
+        $message['carboncopysubject'] = '';
         $message['text'] = 'the message';
         $message['receivers'] = [$user2->id];
         $messages = [$message];
