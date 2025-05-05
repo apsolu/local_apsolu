@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\messaging;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/formslib.php');
@@ -65,6 +67,18 @@ class local_apsolu_attendance_sessions_edit_form extends moodleform {
         $mform->addElement('selectyesno', 'notify', get_string('attendance_forum_notify', 'local_apsolu'));
         $mform->setType('notify', PARAM_INT);
         $mform->addRule('notify', get_string('required'), 'required', null, 'client');
+
+        // Notifier le contact fonctionnel.
+        $functionalcontact = get_config('local_apsolu', 'functional_contact');
+        if (empty($functionalcontact) === false) {
+            $label = get_string('notify_functional_contact', 'local_apsolu', $functionalcontact);
+            $checkbox = $mform->addElement('checkbox', 'notify_functional_contact', $label);
+            $mform->setType('notify_functional_contact', PARAM_INT);
+
+            // Force la notification auprès de l'adresse de contact fonctionnel.
+            $session->notify_functional_contact = 1;
+            $checkbox->freeze();
+        }
 
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));

@@ -58,6 +58,12 @@ class local_apsolu_messaging_form extends moodleform {
         $mform->setType('technical_contact', PARAM_TEXT);
         $mform->addRule('technical_contact', get_string('required'), 'required', null, 'client');
 
+        // Préférence pour la mise en copie de l'adresse de contact fonctionnel.
+        $label = get_string('by_default_copy_functional_contact', 'local_apsolu');
+        $mform->addElement('select', 'functional_contact_preference', $label, messaging::get_functional_contact_options());
+        $mform->addHelpButton('functional_contact_preference', 'functional_contact_preference', 'local_apsolu');
+        $mform->setType('functional_contact_preference', PARAM_INT);
+
         // Préférence pour l'adresse de réponse.
         $label = get_string('replyto_address_preference', 'local_apsolu');
         $mform->addElement('select', 'replytoaddresspreference', $label, messaging::get_replyto_options());

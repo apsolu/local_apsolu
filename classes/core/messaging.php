@@ -25,6 +25,21 @@ namespace local_apsolu\core;
  */
 class messaging {
     /**
+     * Option pour exprimer le "non".
+     */
+    const DEFAULT_NO = '0';
+
+    /**
+     * Option pour exprimer le "oui".
+     */
+    const DEFAULT_YES = '1';
+
+    /**
+     * Option pour exprimer le "toujours".
+     */
+    const DEFAULT_ALWAYS = '-1';
+
+    /**
      * Option désactivant l'adresse de réponse.
      */
     const DISABLE_REPLYTO_ADDRESS = '0';
@@ -48,6 +63,20 @@ class messaging {
      * Option forçant l'utilisation de l'adresse de réponse.
      */
     const USE_REPLYTO_ADDRESS = '1';
+
+    /**
+     * Retourne la liste des options possible dans le choix de mise en copie de l'adresse de contact fonctionnel.
+     *
+     * @return array
+     */
+    public static function get_functional_contact_options() {
+        $options = [];
+        $options[self::DEFAULT_NO] = get_string('no');
+        $options[self::DEFAULT_YES] = get_string('yes');
+        $options[self::DEFAULT_ALWAYS] = get_string('always');
+
+        return $options;
+    }
 
     /**
      * Retourne la liste des options possible dans le choix d'adresse de réponse.

@@ -109,8 +109,16 @@ class local_apsolu_notification_form extends moodleform {
         $functionalcontact = get_config('local_apsolu', 'functional_contact');
         if (empty($functionalcontact) === false) {
             $label = get_string('notify_functional_contact', 'local_apsolu', $functionalcontact);
-            $mform->addElement('checkbox', 'notify_functional_contact', $label);
+            $checkbox = $mform->addElement('checkbox', 'notify_functional_contact', $label);
             $mform->setType('notify_functional_contact', PARAM_INT);
+
+            $functionalcontactdefault = get_config('local_apsolu', 'functional_contact_preference');
+            if (in_array($functionalcontactdefault, [messaging::DEFAULT_YES, messaging::DEFAULT_ALWAYS], $strict = true) === true) {
+                $defaultdata->notify_functional_contact = 1;
+            }
+            if ($functionalcontactdefault === messaging::DEFAULT_ALWAYS) {
+                $checkbox->freeze();
+            }
         }
 
         // Submit buttons.

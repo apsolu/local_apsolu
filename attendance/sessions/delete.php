@@ -134,7 +134,17 @@ if (count($presences) > 0) {
     require(__DIR__ . '/view.php');
 } else {
     // Affichage du formulaire de confirmation.
-    $message = $OUTPUT->notification(get_string('attendance_delete_session', 'local_apsolu', $session->name), 'notifyproblem');
+    $stringid = 'attendance_delete_session';
+
+    $params = [];
+    $params['name'] = $session->name;
+
+    $functionalcontact = get_config('local_apsolu', 'functional_contact');
+    if (empty($functionalcontact) === false) {
+        $params['email'] = $functionalcontact;
+        $stringid = 'attendance_delete_session_with_functional_address';
+    }
+    $message = $OUTPUT->notification(get_string($stringid, 'local_apsolu', $params), 'notifyproblem');
 
     $urlarguments = ['action' => 'delete', 'courseid' => $course->id, 'sessionid' => $sessionid, 'delete' => 1];
     $confirmurl = new moodle_url('/local/apsolu/attendance/sessions/index.php', $urlarguments);
