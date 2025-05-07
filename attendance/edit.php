@@ -263,6 +263,8 @@ foreach ($students as $student) {
     $processed_student->picture = $OUTPUT->user_picture($student, ['size' => 50]);
     $processed_student->firstname = $student->firstname;
     $processed_student->lastname = $student->lastname;
+    $processed_student->idnumber = $student->idnumber;
+    $processed_student->email = $student->email;
 
     // Contruction des infos des radio parce que mustache veut ZERO logique.
     $presences_radios = [];
@@ -357,6 +359,128 @@ $data->inactive_enrolments = $inactive_enrolments;
 $data->students = $processed_sudents;
 $data->student_count = count($processed_sudents);
 $data->calendar = attendance::getCalendarFromSession($sessionid);
+
+if (isset($_POST['exportcsv']) === true || isset($_POST['exportexcel']) === true) {
+
+    $filename = 'extraction de la session '.$session->name;
+
+    // Définit les entêtes.
+    $headers = [];
+    $headers[] = get_string('name');
+    $headers[] = get_string('date');
+    if (empty($data->inactive_enrolments) === false) {
+        $headers[] = get_string('attendance_enrolment_state', 'local_apsolu');
+    }
+    $headers[] = get_string('firstname');
+    $headers[] = get_string('lastname');
+    $headers[] = get_string('idnumber');
+    $headers[] = get_string('email');
+    $headers[] = get_string('attendance_presence', 'local_apsolu');
+    $headers[] = get_string('attendance_comment', 'local_apsolu');
+    $headers[] = sprintf('%s (%s)', strip_tags(get_string('attendance_presences_count', 'local_apsolu')), get_string('course',
+        'local_apsolu'));
+    $headers[] = sprintf('%s (%s)', strip_tags(get_string('attendance_presences_count', 'local_apsolu')), get_string('activity',
+        'local_apsolu'));
+    $headers[] = get_string('attendance_enrolment_type', 'local_apsolu');
+    if (empty($data->invalid_enrolments) === false) {
+        $headers[] = get_string('attendance_enrolment_list', 'local_apsolu');
+    }
+
+    // Définit le contenu principal.
+    $rows = [];
+    foreach ($data->students as $student) {
+        $row = [];
+        $row[] = $session->name;
+        $row[] = userdate($session->sessiontime, get_string('strftimedatetime'));
+        if (empty($data->inactive_enrolments) === false) {
+            if (empty($student->enrolment_status) === true) {
+                $row[] = get_string('inactive');
+            } else {
+                $row[] = get_string('active');
+            }
+        }
+
+        $row[] = $student->firstname;
+        $row[] = $student->lastname;
+        $row[] = $student->idnumber;
+        $row[] = $student->email;
+
+        $status = '';
+        foreach ($student->presences_radios as $radio) {
+            if (empty($radio->checked) === true) {
+                continue;
+            }
+            $status = $radio->label;
+            break;
+        }
+        $row[] = $status;
+
+        $row[] = $student->comment;
+        $row[] = $student->presence_course;
+        $row[] = $student->presence_activity;
+        $row[] = $student->enrolment_type;
+        if (empty($data->invalid_enrolments) === false) {
+            $row[] = $student->enrolment_list;
+        }
+
+        $rows[] = $row;
+    }
+
+    if (isset($_POST['exportcsv']) === true) {
+        // Exporte les données au format CSV.
+        require_once($CFG->libdir . '/csvlib.class.php');
+
+        $csvexport = new csv_export_writer();
+        $csvexport->set_filename($filename);
+
+        $csvexport->add_data($headers);
+
+        foreach ($rows as $row) {
+            $csvexport->add_data($row);
+        }
+
+        $csvexport->download_file();
+        exit();
+    }
+
+    // Export au format excel.
+    require_once($CFG->libdir.'/excellib.class.php');
+
+    $workbook = new MoodleExcelWorkbook("-");
+    $workbook->send($filename);
+    $myxls = $workbook->add_worksheet();
+
+    if (class_exists('PHPExcel_Style_Border') === true) {
+        // Jusqu'à Moodle 3.7.x.
+        $properties = ['border' => PHPExcel_Style_Border::BORDER_THIN];
+    } else {
+        // Depuis Moodle 3.8.x.
+        $properties = ['border' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN];
+    }
+
+    $excelformat = new MoodleExcelFormat($properties);
+
+    foreach ($headers as $position => $value) {
+        $myxls->write_string(0, $position, $value, $excelformat);
+    }
+
+    // Définit le contenu principal.
+    $line = 1;
+    foreach ($rows as $row) {
+        foreach ($row as $i => $col) {
+            $myxls->write_string($line, $i, $col, $excelformat);
+        }
+
+        $line++;
+    }
+
+    // MDL-83543: positionne un cookie pour qu'un script js déverrouille le bouton submit après le téléchargement.
+    setcookie('moodledownload_' . sesskey(), time());
+
+    // Transmet le fichier au navigateur.
+    $workbook->close();
+    exit(0);
+}
 
 /*** Construction de la page ***/
 
