@@ -323,9 +323,11 @@ $string['fullname'] = 'Nom complet';
 $string['fullname_course_has_been_renamed_to'] = 'Le nom complet du cours « {$a->oldname} » a été renommé en « {$a->newname} ».';
 $string['fullview'] = 'Affichage complet';
 $string['functional_contact_preference'] = 'Contact fonctionnel';
-$string['functional_contact_preference_help'] = 'Si la valeur est positionné à « non », l’enseignant devra cocher explicitement la case pour mettre en copie le contact fonctionnel.
-Si la valeur est positionné à « oui », la case sera automatique cochée.
-Si la valeur est positionné à « toujours », l’enseignant ne pourra pas décocher la case.';
+$string['functional_contact_preference_help'] = 'Si la valeur est positionnée à « non », l’enseignant devra cocher explicitement la case pour mettre en copie le contact fonctionnel.
+
+Si la valeur est positionnée à « oui », la case sera automatiquement cochée.
+
+Si la valeur est positionnée à « toujours », l’enseignant ne pourra pas décocher la case pour mettre en copie le contact fonctionnel.';
 $string['further_information'] = 'Informations complémentaires';
 $string['gender'] = 'Genre';
 $string['generate_holidays'] = 'Générer les jours fériés';
