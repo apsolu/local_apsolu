@@ -96,7 +96,11 @@ if (isset($notificationform)) {
     $data->notification = $notificationform;
 }
 
-$options = ['sortLocaleCompare' => true];
+$options = [];
+$options['sortLocaleCompare'] = true;
+$options['widgets'] = ['stickyHeaders'];
+$options['widgetOptions'] = ['stickyHeaders_filteredToTop' => true, 'stickyHeaders_offset' => '50px'];
+
 $PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise', [$options]);
 
 echo $OUTPUT->render_from_template('local_apsolu/payment_cards', $data);
