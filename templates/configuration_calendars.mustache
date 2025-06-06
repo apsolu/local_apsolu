@@ -61,7 +61,7 @@
 {{/calendars}}
 
 {{#count_calendars}}
-<table class="table table-striped">
+<table class="table table-striped table-sortable">
 <thead>
     <tr>
         <th>{{#str}}name{{/str}}</th>
@@ -74,7 +74,7 @@
         <th>{{#str}}gradestartdate, local_apsolu{{/str}}</th>
         <th>{{#str}}gradeenddate, local_apsolu{{/str}}</th>
         <th>{{#str}}calendartype, local_apsolu{{/str}}</th>
-        <th>{{#str}}actions{{/str}}</th>
+        <th class="sorter-false">{{#str}}actions{{/str}}</th>
     </tr>
 </thead>
 <tbody>
