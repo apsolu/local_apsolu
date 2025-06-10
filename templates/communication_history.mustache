@@ -31,6 +31,9 @@
     * messages
         * id
         * date
+        * userid
+        * firstname
+        * lastname
         * subject
         * countmessages
 
@@ -49,6 +52,7 @@
 <table class="table table-striped">
     <tr>
         <th>{{#str}}date{{/str}}</th>
+        <th>{{#str}}author, local_apsolu{{/str}}</th>
         <th>{{#str}}subject{{/str}}</th>
         <th>{{#str}}number_of_notifications, local_apsolu{{/str}}</th>
         <th>{{#str}}actions{{/str}}</th>
@@ -56,6 +60,7 @@
     {{#messages}}
     <tr>
         <td>{{ date }}</td>
+        <td>{{#userid}}<a href="{{wwwroot}}/user/profile.php?id={{userid}}">{{firstname}} {{lastname}}</a>{{/userid}}</td>
         <td>{{ subject }}</td>
         <td>{{ countmessages }}</td>
         <td>

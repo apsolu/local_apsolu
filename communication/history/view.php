@@ -28,6 +28,7 @@ defined('MOODLE_INTERNAL') || die;
 
 $templates = $DB->get_records('apsolu_communication_templates');
 
+$users = [];
 $messages = [];
 $countmessages = 0;
 
@@ -57,6 +58,17 @@ foreach ($recordset as $record) {
     if (isset($messages[$communicationid]) === false) {
         $messages[$communicationid] = new stdClass();
         $messages[$communicationid]->id = $other->communicationid;
+
+        if (isset($users[$record->userid]) === false) {
+            $users[$record->userid] = $DB->get_record('user', ['id' => $record->userid]);
+        }
+
+        if ($users[$record->userid] !== false) {
+            $messages[$communicationid]->userid = $record->userid;
+            $messages[$communicationid]->firstname = $users[$record->userid]->firstname;
+            $messages[$communicationid]->lastname = $users[$record->userid]->lastname;
+        }
+
         $messages[$communicationid]->subject = '';
         $messages[$communicationid]->template = 0;
         if (isset($templates[$other->template]) === true) {
