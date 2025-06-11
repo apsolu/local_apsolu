@@ -618,6 +618,7 @@ $string['replyto_address_preference'] = 'Préférence pour l’adresse « répo
 $string['replyto'] = 'Répondre à';
 $string['request_a_federation_number'] = 'Demander un numéro de licence';
 $string['request_of_federation_number'] = 'Demande de numéro de licence';
+$string['request_of_federation_number_subject'] = '[FFSU] Demande de numéro de licence ({$a})';
 $string['request_of_federation_number_with_medical_certificate_message'] = '<p>Bonjour,</p>
 <p>L’étudiant {$a->fullname} a fait une <a href="{$a->export_url}">demande de numéro de licence</a>.</p>
 <p>Un certificat médical est en attente de validation à <a href="{$a->validation_url}">cette adresse</a>.</p>
