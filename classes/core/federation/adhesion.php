@@ -833,7 +833,8 @@ class adhesion extends record {
             return false;
         }
 
-        $subject = get_string('request_of_federation_number_subject', 'local_apsolu', $this->federationnumberprefix);
+        $strarguments = ['federationnumberprefix' => $this->federationnumberprefix, 'institution' => $user->institution];
+        $subject = get_string('request_of_federation_number_subject', 'local_apsolu', $strarguments);
 
         $parameters = [];
         $parameters['fullname'] = fullname($user);
