@@ -31,26 +31,26 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/csvlib.class.php');
 
 // Liste des cours.
-$sql = "SELECT c.id, c.idnumber, ccc.name AS grouping, cc.name AS category, ask.name AS skill,".
-    " ac.weekday, ac.starttime, ac.endtime, ac.license, al.name AS location, ap.name AS period, '-' AS teachers".
-    " FROM {course} c".
-    " JOIN {course_categories} cc ON cc.id = c.category".
-    " JOIN {course_categories} ccc ON ccc.id = cc.parent".
-    " JOIN {apsolu_courses} ac ON c.id = ac.id".
-    " JOIN {apsolu_courses_categories} acc ON acc.id = c.category".
-    " JOIN {apsolu_skills} ask ON ask.id = ac.skillid".
-    " JOIN {apsolu_locations} al ON al.id = ac.locationid".
-    " JOIN {apsolu_periods} ap ON ap.id = ac.periodid".
-    " ORDER BY category, ac.numweekday, ac.starttime, location, skill";
+$sql = "SELECT c.id, c.idnumber, ccc.name AS grouping, cc.name AS category, ask.name AS skill,
+               ac.weekday, ac.starttime, ac.endtime, ac.license, al.name AS location, ap.name AS period, '-' AS teachers
+          FROM {course} c
+          JOIN {course_categories} cc ON cc.id = c.category
+          JOIN {course_categories} ccc ON ccc.id = cc.parent
+          JOIN {apsolu_courses} ac ON c.id = ac.id
+          JOIN {apsolu_courses_categories} acc ON acc.id = c.category
+          JOIN {apsolu_skills} ask ON ask.id = ac.skillid
+          JOIN {apsolu_locations} al ON al.id = ac.locationid
+          JOIN {apsolu_periods} ap ON ap.id = ac.periodid
+      ORDER BY category, ac.numweekday, ac.starttime, location, skill";
 $courses = $DB->get_records_sql($sql);
 
 // Liste des enseignants.
-$sql = "SELECT ctx.instanceid, u.firstname, u.lastname, u.email".
-    " FROM {user} u".
-    " JOIN {role_assignments} ra ON u.id = ra.userid".
-    " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50".
-    " WHERE ra.roleid = 3".
-    " ORDER BY u.lastname, u.firstname";
+$sql = "SELECT ctx.instanceid, u.firstname, u.lastname, u.email
+          FROM {user} u
+          JOIN {role_assignments} ra ON u.id = ra.userid
+          JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50
+         WHERE ra.roleid = 3
+      ORDER BY u.lastname, u.firstname";
 $recordset = $DB->get_recordset_sql($sql);
 foreach ($recordset as $teacher) {
     if (!isset($courses[$teacher->instanceid])) {
