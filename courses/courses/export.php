@@ -31,7 +31,7 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/csvlib.class.php');
 
 // Liste des cours.
-$sql = "SELECT c.id, ccc.name AS grouping, cc.name AS category, ask.name AS skill,".
+$sql = "SELECT c.id, c.idnumber, ccc.name AS grouping, cc.name AS category, ask.name AS skill,".
     " ac.weekday, ac.starttime, ac.endtime, ac.license, al.name AS location, ap.name AS period, '-' AS teachers".
     " FROM {course} c".
     " JOIN {course_categories} cc ON cc.id = c.category".
@@ -129,6 +129,7 @@ foreach ($DB->get_records('enrol', ['enrol' => 'select'], $sort = 'enrolstartdat
 $filename = str_replace(' ', '_', strtolower(get_string('courses', 'local_apsolu')));
 
 $headers = [
+    get_string('course_number', 'local_apsolu'),
     get_string('idnumbercourse'),
     get_string('groupings', 'local_apsolu'),
     get_string('categories', 'local_apsolu'),
