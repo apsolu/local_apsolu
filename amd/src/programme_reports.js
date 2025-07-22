@@ -45,6 +45,10 @@ define(
               args: {'classname': 'programme', 'reportid': this.value}
             }]);
 
+            // Change le titre du document, afin que DataTable l'utilise comme nom de fichier à l'exportation.
+            // Exemple: "Rapports | Population | Statistiques | APSOLU" devient "Rapports | Libellé menu déroulant | APSOLU".
+            document.title = document.title.replace(/([^\|]+)\| .* \|(.*)$/, "\$1- " + $(this).find(':selected').text() + " -\$2");
+
             requests[0].done(function(enrols) {
               // Display tooltip
               if (enrols.tooltip) {
