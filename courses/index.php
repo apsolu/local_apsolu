@@ -67,6 +67,11 @@ if (in_array($tab, ['courses', 'locations'], $strict = true) === true) {
     if ($tab === 'courses') {
         // Workaround pour éviter un bug avec tablesorter (ref: https://github.com/Mottie/tablesorter/issues/1806).
         $options['widgetOptions']['filter_defaultFilter'] = [7 => '{q}='];
+
+        // On enregistre les recherches par filtre.
+        $options['widgetOptions']['filter_saveFilters'] = true;
+        // On enregistre le filtre dans un cookie, car le filtre en localStorage était effacé au rechargement de la page.
+        $options['widgetOptions']['storage_storageType'] = 'c';
     }
 }
 $PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise', [$options]);
