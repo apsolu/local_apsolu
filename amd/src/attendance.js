@@ -26,7 +26,7 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
 
                 let quickform = document.createElement('div');
                 quickform.id = 'apsolu-attendance-check-javascript-helper';
-                quickform.classList = 'text-right';
+                quickform.classList = 'text-end';
                 quickform.innerHTML = dropdown;
 
                 // Ajoute le bouton dropdown au dessus du tableau des présences.
