@@ -29,8 +29,8 @@ $plugin->version = 2025061100;
 
 $plugin->release = '4.4.9';
 
-// Requires Moodle 4.4.0.
-$plugin->requires = 2024042200;
+// Requires Moodle 5.0.0.
+$plugin->requires = 2025041400;
 
 // Full name of the plugin (used for diagnostics).
 $plugin->component = 'local_apsolu';
@@ -38,5 +38,5 @@ $plugin->component = 'local_apsolu';
 // The plugin is a stable version.
 $plugin->maturity = MATURITY_STABLE;
 
-// Support Moodle from 4.4.0 to 4.4.x.
-$plugin->supported = [440, 440];
+// Support Moodle from 5.0.0 to 5.0.x.
+$plugin->supported = [500, 500];
