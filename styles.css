@@ -77,6 +77,7 @@
 .table-sortable thead .tablesorter-header {
     background-position: right 5px center;
     background-repeat: no-repeat;
+    background-size: 1em;
     white-space: normal;
 }
 
@@ -131,16 +132,19 @@
     background-image: url([[pix:core|t/sort]]);
     background-repeat: no-repeat;
     background-position: right 15px center;
+    background-size: .6em;
     cursor: pointer;
 }
 
 .table-sortable thead tr .tablesorter-headerAsc:not(.sorter-false) {
     background-image: url([[pix:core|t/sort_asc]]);
+    background-size: 1em;
     color: #b50;
 }
 
 .table-sortable thead tr .tablesorter-headerDesc:not(.sorter-false) {
     background-image: url([[pix:core|t/sort_desc]]);
+    background-size: 1em;
     color: #b50;
 }
 
