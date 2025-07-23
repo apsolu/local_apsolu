@@ -91,7 +91,7 @@ class local_apsolu_roles_edit_form extends moodleform {
 
         $radios = [];
         foreach ($icons as $value => $label) {
-            $label = $value.' <i aria-hidden="true" class="fa fa-'.$value.' ml-2"></i>';
+            $label = $value.' <i aria-hidden="true" class="fa fa-'.$value.' ms-2"></i>';
             $radios[] = $mform->createElement('radio', 'fontawesomeid', '', $label, $value);
         }
         $mform->addGroup($radios, 'radios', get_string('icon'), html_writer::empty_tag('br'), false);
