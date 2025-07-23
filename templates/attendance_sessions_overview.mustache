@@ -112,7 +112,7 @@
     <tr class="apsolu-condensed-line">
         <th class="sorter-false table-column-shrink" rowspan="2"></th>
         <th class ="text-nowrap tablesorter-header-condensed" rowspan="2">{{#str}}fullname, local_apsolu{{/str}}</th>
-        <th rowspan="2" class="text-center tablesorter-header-condensed"><i class="fa fa-fw fa-user-plus icon iconsmall mr-0" title="{{#str}}guest, local_apsolu{{/str}}{{#show_enrolment_type}}/{{#str}}attendance_enrolment_type, local_apsolu{{/str}}{{/show_enrolment_type}}" role="img" aria-label="{{#str}}guest, local_apsolu{{/str}}"></i></th>
+        <th rowspan="2" class="text-center tablesorter-header-condensed"><i class="fa fa-fw fa-user-plus icon iconsmall me-0" title="{{#str}}guest, local_apsolu{{/str}}{{#show_enrolment_type}}/{{#str}}attendance_enrolment_type, local_apsolu{{/str}}{{/show_enrolment_type}}" role="img" aria-label="{{#str}}guest, local_apsolu{{/str}}"></i></th>
         {{#sessions}}
         <th rowspan="2" class="text-center tablesorter-header-condensed">{{ . }}</th>
         {{/sessions}}
@@ -131,7 +131,7 @@
         <td>{{ lastname }} {{ firstname }}</td>
         <td class="text-center">
             <span class="d-none">{{enrolment_type_order}}</span>
-            {{#guest}}<i class="fa fa-fw fa-user-plus icon iconsmall mr-0" title="{{#str}}guest, local_apsolu{{/str}}" role="img" aria-label="{{#str}}guest, local_apsolu{{/str}}"></i>{{/guest}}
+            {{#guest}}<i class="fa fa-fw fa-user-plus icon iconsmall me-0" title="{{#str}}guest, local_apsolu{{/str}}" role="img" aria-label="{{#str}}guest, local_apsolu{{/str}}"></i>{{/guest}}
             {{#show_enrolment_type}}<abbr class="text-capitalize" title="{{enrolment_type}}">{{enrolment_type_short}}</abbr>{{/show_enrolment_type}}
         </td>
         {{#presences_per_sessions}}
