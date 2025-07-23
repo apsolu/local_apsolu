@@ -70,6 +70,7 @@ if (in_array($tab, ['courses', 'locations'], $strict = true) === true) {
 
         // On enregistre les recherches par filtre.
         $options['widgetOptions']['filter_saveFilters'] = true;
+        $options['widgetOptions']['filter_reset'] = '#apsolu-reset-table-filters';
         // On enregistre le filtre dans un cookie, car le filtre en localStorage était effacé au rechargement de la page.
         $options['widgetOptions']['storage_storageType'] = 'c';
     }
