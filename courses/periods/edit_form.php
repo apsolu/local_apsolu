@@ -77,7 +77,7 @@ class local_apsolu_courses_periods_edit_form extends moodleform {
             <span class="sr-only">'.s($str).'</span>';
 
         // Construit le menu permettant de changer d'année universitaire.
-        $label = sprintf('<a class="mr-3" href="%s">%s</a> %s-%s <a class="ms-3" href="%s">%s</a>', $lastyearurl, $previcon, $year,
+        $label = sprintf('<a class="me-3" href="%s">%s</a> %s-%s <a class="ms-3" href="%s">%s</a>', $lastyearurl, $previcon, $year,
             $year + 1, $nextyearurl, $nexticon);
         $mform->addElement('static', 'yearselector', get_string('year', 'form'), $label);
 
