@@ -193,7 +193,7 @@ if ($data = $mform->get_data()) {
                     $datacontent = format_string(get_string('uploaded_date', 'local_apsolu', $date));
                     $link = '<a class="btn btn-link p-0" role="button" data-container="body" data-bs-toggle="popover"
                         data-placement="right" data-content="'.$datacontent.'" data-bs-html="false" tabindex="0"
-                        data-trigger="focus" aria-label="'.$helpstr.'" data-original-title=""
+                        data-bs-trigger="focus" aria-label="'.$helpstr.'" data-original-title=""
                         title=""><i class="icon fa fa-clock-o fa-fw" role="img"></i></a>';
                     $items[] = html_writer::link($url, mb_strimwidth($file->get_filename(), 0, 16, '...')).' '.$link;
                 }
