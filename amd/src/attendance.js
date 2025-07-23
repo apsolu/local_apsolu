@@ -8,7 +8,7 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
                 // Génère le bouton dropdown avec la liste des motifs de présences disponibles.
                 let dropdown = '<div class="dropdown">' +
                     '<button class="btn btn-primary dropdown-toggle" type="button" id="apsolu-dropdown-status-selector"' +
-                    ' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+                    ' data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
                     'Pour les présences <u>non saisies</u> :' +
                     '</button>' +
                     '<div class="dropdown-menu" aria-labelledby="apsolu-dropdown-status-selector">';
