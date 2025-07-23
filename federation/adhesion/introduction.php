@@ -42,7 +42,7 @@ if ($adhesion->can_edit() === true) {
     // Bouton d'annulation et de désinscription.
     $attributes = new stdClass();
     $attributes->href = (string) new moodle_url('/local/apsolu/federation/adhesion/cancel.php');
-    $attributes->class = 'btn btn-danger ml-2';
+    $attributes->class = 'btn btn-danger ms-2';
     $buttons[] = get_string('cancel_and_unenrol_link', 'local_apsolu', $attributes);
 }
 
