@@ -50,20 +50,12 @@ jobs:
       matrix:
         # Note: les tests avec pgsql ne fonctionnent pas à cause de : "A lock was created but not released".
         database: [mariadb]
-        moodle-branch: ['MOODLE_404_STABLE', 'MOODLE_405_STABLE', 'MOODLE_500_STABLE', 'main']
+        moodle-branch: ['MOODLE_500_STABLE', 'main']
         # php: ['8.1', '8.2', '8.3']
         #
         # There is an alterantive way allowing to define explicitly define which php, moodle-branch
         # and database to use:
         include:
-          - moodle-branch: 'MOODLE_404_STABLE'
-            php: '8.2'
-          - moodle-branch: 'MOODLE_405_STABLE'
-            php: '8.1'
-          - moodle-branch: 'MOODLE_405_STABLE'
-            php: '8.2'
-          - moodle-branch: 'MOODLE_405_STABLE'
-            php: '8.3'
           - moodle-branch: 'MOODLE_500_STABLE'
             php: '8.2'
           - moodle-branch: 'MOODLE_500_STABLE'
@@ -170,5 +162,5 @@ jobs:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Behat features
-        if: ${{ always() && matrix.moodle-branch != 'MOODLE_500_STABLE' && matrix.moodle-branch != 'main' }}
+        if: ${{ always() && matrix.moodle-branch != 'main' }}
         run: moodle-plugin-ci behat --profile chrome
