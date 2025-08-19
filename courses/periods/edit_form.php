@@ -69,12 +69,12 @@ class local_apsolu_courses_periods_edit_form extends moodleform {
         // Contruit l'icône font-awesome pour l'année N-1.
         $str = get_string('previous');
         $previcon = '<i class="fa fa-chevron-circle-left" title="'.s($str).'" aria-hidden="true"></i>
-            <span class="sr-only">'.s($str).'</span>';
+            <span class="visually-hidden">'.s($str).'</span>';
 
         // Contruit l'icône font-awesome pour l'année N+1.
         $str = get_string('next');
         $nexticon = '<i class="fa fa-chevron-circle-right" title="'.s($str).'" aria-hidden="true"></i>
-            <span class="sr-only">'.s($str).'</span>';
+            <span class="visually-hidden">'.s($str).'</span>';
 
         // Construit le menu permettant de changer d'année universitaire.
         $label = sprintf('<a class="me-3" href="%s">%s</a> %s-%s <a class="ms-3" href="%s">%s</a>', $lastyearurl, $previcon, $year,
