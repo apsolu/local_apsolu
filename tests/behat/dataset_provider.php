@@ -1010,7 +1010,7 @@ class dataset_provider {
         $academicyear = self::get_academic_year();
 
         set_config('payments_startdate', mktime(0, 0, 0, 8, 1, $academicyear), 'local_apsolu');
-        set_config('payments_enddate', mktime(0, 0, 0, 7, 31, $academicyear + 1), 'local_apsolu');
+        set_config('payments_enddate', mktime(0, 0, 0, 8, 1, $academicyear + 1), 'local_apsolu');
 
         // Configure les adresses des serveurs Paybox de préproduction.
         set_config('paybox_servers_incoming', '195.101.99.76', 'local_apsolu');
@@ -1116,11 +1116,11 @@ class dataset_provider {
         $weeks['Annuelle'] = [];
 
         // Semestre 1: du dernier lundi de juillet au 4ème lundi de décembre.
-        $interval = new DateInterval('P7D');
+        $oneweekinterval = new DateInterval('P7D');
         $start = new DateTime(sprintf('last monday of july %s', $academicyear));
-        $end = new DateTime(sprintf('fourth monday of december %s', $academicyear));
+        $end = new DateTime(sprintf('last monday of december %s', $academicyear));
 
-        $period = new DatePeriod($start, $interval, $end);
+        $period = new DatePeriod($start, $oneweekinterval, $end);
         foreach ($period as $datetime) {
             $week = $datetime->format('Y-m-d');
             $weeks['Semestre 1'][] = $week;
@@ -1129,9 +1129,10 @@ class dataset_provider {
 
         // Semestre 2: du dernier lundi de décembre au dernier lundi de juillet n+1.
         $start = new DateTime(sprintf('last monday of december %s', $academicyear));
-        $end = new DateTime(sprintf('last monday of july %s', $academicyear + 1));
+        $start->add($oneweekinterval);
+        $end = new DateTime(sprintf('first monday of august %s', $academicyear + 1));
 
-        $period = new DatePeriod($start, $interval, $end);
+        $period = new DatePeriod($start, $oneweekinterval, $end);
         foreach ($period as $datetime) {
             $week = $datetime->format('Y-m-d');
             $weeks['Semestre 2'][] = $week;
