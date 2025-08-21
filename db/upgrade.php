@@ -1613,6 +1613,15 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
     // Modification à appliquer lors de la prochaine mise à jour.
     if (false) {
+        // Ajoute un champ 'passsportnumber' dans la table 'apsolu_federation_adhesions'.
+        $table = new xmldb_table('apsolu_federation_adhesions');
+        $previousfield = 'medicalcertificatestatus';
+        $field = new xmldb_field('passsportnumber', XMLDB_TYPE_CHAR, '255', null, null, null, null, $previousfield);
+
+        if ($dbman->field_exists($table, $field) === false) {
+            $dbman->add_field($table, $field);
+        }
+
         // Savepoint reached.
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
