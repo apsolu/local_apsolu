@@ -162,5 +162,7 @@ jobs:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Behat features
-        if: ${{ always() && matrix.moodle-branch != 'main' }}
+        # Exécute les tests Behat, sauf sur la branche 'main'.
+        # if: ${{ always() && matrix.moodle-branch != 'main' }}
+        if: ${{ always() }}
         run: moodle-plugin-ci behat --profile chrome
