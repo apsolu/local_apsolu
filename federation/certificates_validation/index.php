@@ -191,7 +191,7 @@ if ($data = $mform->get_data()) {
                     $helpstr = get_string('help');
                     $date = userdate($file->get_timemodified(), get_string('strftimedateshort', 'local_apsolu'));
                     $datacontent = format_string(get_string('uploaded_date', 'local_apsolu', $date));
-                    $link = '<a class="btn btn-link p-0" role="button" data-container="body" data-bs-toggle="popover"
+                    $link = '<a class="btn btn-link p-0" role="button" data-bs-container="body" data-bs-toggle="popover"
                         data-bs-placement="right" data-content="'.$datacontent.'" data-bs-html="false" tabindex="0"
                         data-bs-trigger="focus" aria-label="'.$helpstr.'" data-original-title=""
                         title=""><i class="icon fa fa-clock-o fa-fw" role="img"></i></a>';
