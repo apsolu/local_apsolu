@@ -171,7 +171,7 @@
                     {{#courses}}
                     <tr{{^show_category_column}}{{#event}} data-category-event="{{event}}"{{/event}}{{/show_category_column}} id="apsolu-tr-course-{{id}}">
                         <td{{^show_city_column}} class="hide"{{/show_city_column}} data-column="city" data-value="{{site}}">{{site}}</td>
-                        <td{{^show_category_column}} class="hide"{{/show_category_column}} data-column="category" data-value="{{sport}}">{{sport}}{{#event}}<br />(<em>{{event}}</em>){{/event}}</td>
+                        <td{{^show_category_column}} class="hide"{{/show_category_column}} data-column="category" data-value="{{sport}}">{{sport}}{{#event}}{{> local_apsolu/presentation_event_popover }}{{/event}}</td>
                         <td{{^show_grouping_column}} class="hide"{{/show_grouping_column}} data-column="grouping" data-value="{{domain}}">{{domain}}</td>
                         <td{{^show_period_column}} class="hide"{{/show_period_column}} data-column="period" data-value="{{generic_name}}">{{generic_name}}</td>
                         <td{{^show_weekday_column}} class="hide"{{/show_weekday_column}} data-column="weekday" data-value="{{weekday}}">{{weekday}}</td>
