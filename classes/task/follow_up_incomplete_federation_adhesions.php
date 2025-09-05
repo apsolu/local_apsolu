@@ -52,7 +52,7 @@ class follow_up_incomplete_federation_adhesions extends \core\task\scheduled_tas
      * @return void
      */
     public function execute() {
-        global $CFG, $DB;
+        global $CFG, $DB, $SITE;
 
         $federationcourse = new FederationCourse();
         $federationcourseid = $federationcourse->get_course();
