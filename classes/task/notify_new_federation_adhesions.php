@@ -114,7 +114,7 @@ class notify_new_federation_adhesions extends \core\task\scheduled_task {
             $params['userid'] = $user->id;
             $payment = $DB->get_record_sql($sql, $params);
 
-            if ($payment === false) {
+            if (isset($payment->timepaid) === false) {
                 // Si il n'y a pas eu de paiement, il n'est pas nécessaire de notifier le référent fonctionnel.
                 continue;
             }
