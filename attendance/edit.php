@@ -166,9 +166,6 @@ uasort($students, function($a, $b) {
     return 0;
 });
 
-// TODO: rendre moins spécifique à Brest.
-$appnvalidations = Payment::get_appn_brest($courseid);
-
 $presences = $DB->get_records('apsolu_attendance_presences', ['sessionid' => $sessionid],
     $sort = '', $fields = 'studentid, statusid, description, id');
 
@@ -332,16 +329,7 @@ foreach ($students as $student) {
         $informations[] = get_string('attendance_forbidden_enrolment', 'local_apsolu');
         $processed_student->informations_alert = 1;
     }
-    // TODO: à supprimer.
-    if (isset($appnvalidations) === true) {
-        // Affiche l'état de la validation du certificat pour les APPN de Brest.
-        if (isset($appnvalidations[$student->id]) === true) {
-            $informations[] = $paymentsimages[Payment::PAID]->image.' Attestation savoir nager';
-        } else {
-            $informations[] = $paymentsimages[Payment::DUE]->image.' Attestation savoir nager';
-            $processed_student->informations_alert = 1;
-        }
-    }
+
     $processed_student->informations = $informations;
 
 

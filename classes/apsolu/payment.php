@@ -50,6 +50,8 @@ class Payment {
     /**
      * Retourne la liste des attestations de natations validées pour Brest.
      *
+     * TODO: Cette méthode peut maintenant être supprimée.
+     *
      * @param int|string $courseid Identifiant numérique du cours.
      *
      * @return array|null Le tableau est au format [userid => note].
