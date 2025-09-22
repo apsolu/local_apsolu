@@ -41,22 +41,22 @@ foreach ($attributes as $attribute) {
 }
 
 $collaborativecourses = [0 => get_string('none')];
-$sql = "SELECT c.id, c.fullname".
-    " FROM {course} c".
-    " WHERE c.id NOT IN (SELECT ac.id FROM {apsolu_courses} ac)".
-    " AND c.id != :siteid".
-    " ORDER BY c.fullname";
+$sql = "SELECT c.id, c.fullname
+          FROM {course} c
+         WHERE c.id NOT IN (SELECT ac.id FROM {apsolu_courses} ac)
+           AND c.id != :siteid
+      ORDER BY c.fullname";
 foreach ($DB->get_records_sql($sql, ['siteid' => SITEID]) as $course) {
     $collaborativecourses[$course->id] = $course->fullname;
 }
 
 $federationcourses = [0 => get_string('none')];
-$sql = "SELECT c.id, c.fullname".
-    " FROM {course} c".
-    " JOIN {enrol} e ON c.id = e.courseid".
-    " WHERE c.id NOT IN (SELECT ac.id FROM {apsolu_courses} ac)".
-    " AND e.enrol = 'select'".
-    " ORDER BY c.fullname";
+$sql = "SELECT c.id, c.fullname
+          FROM {course} c
+          JOIN {enrol} e ON c.id = e.courseid
+         WHERE c.id NOT IN (SELECT ac.id FROM {apsolu_courses} ac)
+           AND e.enrol = 'select'
+      ORDER BY c.fullname";
 foreach ($DB->get_records_sql($sql) as $course) {
     $federationcourses[$course->id] = $course->fullname;
 }
