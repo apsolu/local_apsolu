@@ -52,11 +52,25 @@ class local_apsolu_special_courses_form extends moodleform {
         $mform->addHelpButton('collaborative_course', 'internal_collaborative_course', 'local_apsolu');
         $mform->setType('collaborative_course', PARAM_TEXT);
 
+        // Affiche un lien statique vers le cours collaboratif, si il existe.
+        if (empty($defaults->collaborative_course) === false && is_numeric($defaults->collaborative_course) === true) {
+            $label = get_string('course_link', 'local_apsolu');
+            $url = new moodle_url('/course/view.php', ['id' => $defaults->collaborative_course]);
+            $mform->addElement('static', 'collaborative_course_link', $label, html_writer::link($url, $url));
+        }
+
         // Cours de la fédération sportive de sports universitaires.
         $label = get_string('federation_course', 'local_apsolu');
         $mform->addElement('autocomplete', 'federation_course', $label, $federationcourses);
         $mform->addHelpButton('federation_course', 'federation_course', 'local_apsolu');
         $mform->setType('federation_course', PARAM_TEXT);
+
+        // Affiche un lien statique vers le cours FFSU, si il existe.
+        if (empty($defaults->federation_course) === false && is_numeric($defaults->federation_course) === true) {
+            $label = get_string('course_link', 'local_apsolu');
+            $url = new moodle_url('/course/view.php', ['id' => $defaults->federation_course]);
+            $mform->addElement('static', 'federation_course_link', $label, html_writer::link($url, $url));
+        }
 
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));

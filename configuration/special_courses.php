@@ -64,9 +64,6 @@ $customdata = [$defaults, $collaborativecourses, $federationcourses];
 
 $mform = new local_apsolu_special_courses_form(null, $customdata);
 
-echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('special_courses', 'local_apsolu'));
-
 if ($data = $mform->get_data()) {
     foreach ($attributes as $attribute) {
         if (isset($data->{$attribute}) === false) {
@@ -102,8 +99,11 @@ if ($data = $mform->get_data()) {
         }
     }
 
-    echo $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
+    $returnurl = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'specialcourses']);
+    redirect($returnurl, $message = get_string('changessaved'), $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
 
+echo $OUTPUT->header();
+echo $OUTPUT->heading(get_string('special_courses', 'local_apsolu'));
 $mform->display();
 echo $OUTPUT->footer();

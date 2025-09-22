@@ -179,6 +179,7 @@ $string['course_has_been_moved_to_because_selected_category_did_not_match_to_gro
 $string['course_has_been_renamed_to'] = 'Le cours « {$a->oldname} » a été renommé « {$a->newname} ».';
 $string['course_is_now_hidden'] = 'Le créneau est maintenant caché.';
 $string['course_is_now_visible'] = 'Le créneau est maintenant visible.';
+$string['course_link'] = 'Lien du cours';
 $string['course_number'] = 'N° du cours';
 $string['course_offerings'] = 'Offre de formations';
 $string['course_saved'] = 'Créneau horaire enregistré.';
