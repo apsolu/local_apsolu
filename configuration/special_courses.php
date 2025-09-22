@@ -44,8 +44,9 @@ $collaborativecourses = [0 => get_string('none')];
 $sql = "SELECT c.id, c.fullname".
     " FROM {course} c".
     " WHERE c.id NOT IN (SELECT ac.id FROM {apsolu_courses} ac)".
+    " AND c.id != :siteid".
     " ORDER BY c.fullname";
-foreach ($DB->get_records_sql($sql) as $course) {
+foreach ($DB->get_records_sql($sql, ['siteid' => SITEID]) as $course) {
     $collaborativecourses[$course->id] = $course->fullname;
 }
 
