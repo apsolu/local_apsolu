@@ -263,7 +263,7 @@ Feature: Teste la présentation réalisée lors de démonstration de l'applicati
       | Activité                                                           | Football        |
       | Lieu                                                               | Stade de France |
       | Niveau                                                             | Expert          |
-      | Jour                                                               | Saturday        |
+      | Jour                                                               | Samedi          |
       | Heure de début                                                     | 09:09           |
       | Heure de fin                                                       | 13:37           |
       | Afficher sur la page d’accueil                                     | 0               |
