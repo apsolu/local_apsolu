@@ -46,6 +46,7 @@ if ($cardid != 0) {
 if ($instance === false) {
     $instance = new stdClass();
     $instance->id = 0;
+    $instance->code = '';
     $instance->name = '';
     $instance->fullname = '';
     $instance->trial = 0;
@@ -85,6 +86,7 @@ if ($data = $mform->get_data()) {
 
     $instance = new stdClass();
     $instance->id = $data->cardid;
+    $instance->code = trim($data->code);
     $instance->name = trim($data->name);
     $instance->fullname = trim($data->fullname);
     $instance->trial = trim($data->trial);

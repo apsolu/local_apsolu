@@ -32,12 +32,60 @@ require_once(__DIR__ . '/../classes/apsolu/payment.php');
  * @coversDefaultClass \UniversiteRennes2\Apsolu\Payment
  */
 final class payment_test extends \advanced_testcase {
+    /**
+     * Data provider for test_get_id_from_refid.
+     *
+     * @return array
+     */
+    public static function get_id_from_refid_provider(): array {
+        return [
+            ['123', '123'],
+            ['prefixe-123', '123'],
+            ['123:code tarifs', '123'],
+            ['prefixe-123:code tarifs', '123'],
+            ['prefixe-123:code tarif 1,code tarif 2', '123'],
+            ['APSOLU132', false],
+            ['APSOLU!132', false],
+            ['prefixe-123-code tarifs', false],
+            ['prefixe:123:code tarifs', false],
+        ];
+    }
+
+    /**
+     * Data provider for test_make_refid.
+     *
+     * @return array
+     */
+    public static function make_refid_provider(): array {
+        return [
+            ['', '123', [],  '123'],
+            ['prefixe', '123', [], 'prefixe-123'],
+            ['', '123', ['code tarifs'], '123:code tarifs'],
+            ['', '123', ['code tarif 1', 'code tarif 2'], '123:code tarif 1,code tarif 2'],
+            ['prefixe', '123', ['code tarifs'], 'prefixe-123:code tarifs'],
+            ['prefixe', '123', ['code tarif 1', 'code tarif 2'], 'prefixe-123:code tarif 1,code tarif 2'],
+        ];
+    }
+
     protected function setUp(): void {
         global $DB;
 
         parent::setUp();
 
         $this->resetAfterTest();
+    }
+
+    /**
+     * Teste get_id_from_refid().
+     *
+     * @param string $refid
+     * @param string|false $result
+     *
+     * @covers ::get_id_from_refid()
+     * @dataProvider get_id_from_refid_provider
+     */
+    public function test_get_id_from_refid(string $refid, string|false $result): void {
+        $this->assertEquals($result, Payment::get_id_from_refid($refid));
     }
 
     /**
@@ -65,5 +113,20 @@ final class payment_test extends \advanced_testcase {
         set_config('payments_enddate', mktime(0, 0, 0, 1, 1, $year + 1), 'local_apsolu');
 
         $this->assertTrue(Payment::is_open());
+    }
+
+    /**
+     * Teste make_refid().
+     *
+     * @param string $prefix
+     * @param string $id
+     * @param array $codes
+     * @param string $result
+     *
+     * @covers ::make_refid()
+     * @dataProvider make_refid_provider
+     */
+    public function test_make_refid(string $prefix, string $id, array $codes, string $result): void {
+        $this->assertEquals($result, Payment::make_refid($prefix, $id, $codes));
     }
 }

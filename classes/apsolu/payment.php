@@ -48,6 +48,11 @@ class Payment {
     const GIFT = 3;
 
     /**
+     * Pattern pour valider une chaîne représentant un refid.
+     */
+    const REFID_PATTERN = '/^([^-]+-)?([0-9]+)(:.*)?$/';
+
+    /**
      * Retourne la liste des attestations de natations validées pour Brest.
      *
      * TODO: Cette méthode peut maintenant être supprimée.
@@ -93,6 +98,27 @@ class Payment {
     }
 
     /**
+     * Extrait l'identifiant de l'enregistrement de la table apsolu_payments à partir du refid Paybox.
+     *
+     * @param string $refid RefId Paybox.
+     *
+     * @return string|false Retourne l'id de la table apsolu_payments ou false en cas d'erreur.
+     */
+    public static function get_id_from_refid(string $refid) {
+        if (preg_match(self::REFID_PATTERN, $refid, $matches, PREG_UNMATCHED_AS_NULL) !== 1) {
+            return false;
+        }
+
+        if (count($matches) === 4) {
+            // Parfait. $matches contient les 4 éléments : la chaine refid, le préfixe, l'id et les codes de cartes.
+            return $matches[2];
+        }
+
+        // Ce cas ne devrait pas arriver.
+        return false;
+    }
+
+    /**
      * Retourne pour un utilisateur donné, les cartes qui le concerne potentiellement.
      * Attention ! Ce ne sont pas les cartes dûes.
      *
@@ -107,7 +133,7 @@ class Payment {
             $userid = $USER->id;
         }
 
-        $sql = "SELECT DISTINCT apc.id, apc.name, apc.fullname, apc.trial, apc.price, apc.centerid".
+        $sql = "SELECT DISTINCT apc.id, apc.code, apc.name, apc.fullname, apc.trial, apc.price, apc.centerid".
             " FROM {apsolu_payments_cards} apc".
             " JOIN {enrol_select_cards} esc ON esc.cardid = apc.id".
             " JOIN {enrol} e ON e.id = esc.enrolid".
@@ -331,7 +357,7 @@ class Payment {
         $paybox->PBX_DEVISE = 978;
 
         // Référence commande côté commerçant.
-        $paybox->PBX_CMD = $payment->prefix.$payment->id;
+        $paybox->PBX_CMD = self::make_refid($payment->prefix, $payment->id, $payment->codes);
 
         // Adresse Email de l’acheteur.
         $paybox->PBX_PORTEUR = $USER->email;
@@ -399,7 +425,7 @@ class Payment {
     public static function get_course_cards($courseid) {
         global $DB;
 
-        $sql = "SELECT DISTINCT apc.id, apc.name, apc.fullname, apc.trial, apc.price, apc.centerid".
+        $sql = "SELECT DISTINCT apc.id, apc.code, apc.name, apc.fullname, apc.trial, apc.price, apc.centerid".
             " FROM {apsolu_payments_cards} apc".
             " JOIN {enrol_select_cards} esc ON esc.cardid = apc.id".
             " JOIN {enrol} e ON e.id = esc.enrolid".
@@ -553,5 +579,29 @@ class Payment {
         }
 
         return true;
+    }
+
+    /**
+     * Génère un refid Paybox.
+     *
+     * @param string $prefix Préfixe du centre de paiement.
+     * @param string $id Identifiant du paiement dans la table apsolu_payments.
+     * @param array $codes Liste des codes des cartes associés à ce paiement.
+     *
+     * @return string
+     */
+    public static function make_refid(string $prefix, string $id, array $codes): string {
+        $refid = '';
+
+        if ($prefix !== '') {
+            $prefix .= '-';
+        }
+
+        $suffix = '';
+        if (isset($codes[0]) === true) {
+            $suffix = ':'.implode(',', $codes);
+        }
+
+        return sprintf('%s%s%s', $prefix, $id, $suffix);
     }
 }

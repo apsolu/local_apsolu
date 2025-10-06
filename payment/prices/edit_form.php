@@ -45,6 +45,12 @@ class local_apsolu_payment_cards_edit_form extends moodleform {
         $mform = $this->_form;
         list($instance, $cohorts, $roles, $centers, $calendarstypes) = $this->_customdata;
 
+        // Code du tarif.
+        $mform->addElement('text', 'code', get_string('card_code', 'local_apsolu'), ['size' => '48']);
+        $mform->setType('code', PARAM_ALPHANUM);
+        $mform->addRule('code', get_string('required'), 'required', null, 'client');
+        $mform->addHelpButton('code', 'card_code', 'local_apsolu');
+
         // Libellé du tarif.
         $mform->addElement('text', 'name', get_string('card_shortname', 'local_apsolu'), ['size' => '48']);
         $mform->setType('name', PARAM_TEXT);

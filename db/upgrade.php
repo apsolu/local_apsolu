@@ -1628,6 +1628,28 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
     // Modification à appliquer lors de la prochaine mise à jour.
     if (false) {
+        // Supprime tout ce qui n'est pas alphanum dans le champ 'prefix' de la table 'apsolu_payments_centers'.
+        $table = 'apsolu_payments_centers';
+        foreach ($DB->get_records($table) as $center) {
+            $prefix = preg_replace('/[^A-Za-z0-9]/', '', $center->prefix);
+
+            if ($prefix === $center->prefix) {
+                // Le préfixe n'a pas besoin d'être modifié.
+                continue;
+            }
+
+            $center->prefix = $prefix;
+            $DB->update_record($table, $center);
+        }
+
+        // Ajoute un champ 'code' dans ma table 'apsolu_payments_cards'.
+        $table = new xmldb_table('apsolu_payments_cards');
+        $field = new xmldb_field('code', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null, 'id');
+
+        if ($dbman->field_exists($table, $field) === false) {
+            $dbman->add_field($table, $field);
+        }
+
         // Savepoint reached.
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }

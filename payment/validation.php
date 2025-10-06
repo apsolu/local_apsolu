@@ -147,6 +147,7 @@ foreach ($paymentcenters as $centerid => $paymentcenter) {
         $payment->paymentcenterid = $paymentcenter->id;
         $payment->id = $DB->insert_record('apsolu_payments', $payment);
         $payment->prefix = $paymentcenter->prefix;
+        $payment->codes = [];
 
         $quantity = 0;
         foreach ($paymentcenter->cards as $card) {
@@ -154,6 +155,10 @@ foreach ($paymentcenters as $centerid => $paymentcenter) {
                 $item = new \stdClass();
                 $item->paymentid = $payment->id;
                 $item->cardid = $card->id;
+
+                if ($card->code !== '') {
+                    $payment->codes[] = $card->code;
+                }
 
                 $itemid = $DB->insert_record('apsolu_payments_items', $item);
                 $quantity++;

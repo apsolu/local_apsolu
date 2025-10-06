@@ -53,7 +53,7 @@ class local_apsolu_payment_centers_edit_form extends moodleform {
 
         // Prefix field.
         $mform->addElement('text', 'prefix', get_string('payment_prefix', 'local_apsolu'), ['size' => '48']);
-        $mform->setType('prefix', PARAM_ALPHANUMEXT);
+        $mform->setType('prefix', PARAM_ALPHANUM);
         $mform->addHelpButton('prefix', 'payment_prefix', 'local_apsolu');
 
         // Idnumber field.

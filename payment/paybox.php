@@ -24,7 +24,10 @@
 
 // phpcs:disable moodle.Files.RequireLogin.Missing
 
+use UniversiteRennes2\Apsolu\Payment;
+
 require(__DIR__.'/../../../config.php');
+require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
 require_once($CFG->dirroot.'/local/apsolu/locallib.php');
 require_once($CFG->dirroot.'/user/profile/lib.php');
 
@@ -55,12 +58,13 @@ try {
         throw new Exception('Invalid args: '.var_export($_GET, true));
     }
 
-    // Gère les préfixes de paiement dans les numéros de commande.
-    if (preg_match('/([0-9]+)$/', $_GET['Ref'], $matches) === false) {
+    // Récupère l'id dans le numéro de commande.
+    $id = Payment::get_id_from_refid($_GET['Ref']);
+    if ($id === false) {
         throw new Exception('Unknown payment (cannot parse id): '.$_GET['Ref']);
     }
 
-    $payment = $DB->get_record('apsolu_payments', ['id' => $matches[1]]);
+    $payment = $DB->get_record('apsolu_payments', ['id' => $id]);
     if (!$payment) {
         throw new Exception('Unknown payment (not found): '.$_GET['Ref']);
     }
