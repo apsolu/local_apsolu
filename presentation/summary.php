@@ -98,13 +98,13 @@ $filters['times']->values[] = get_string('evening', 'local_apsolu');
 $filters['weekday'] = new \stdClass();
 $filters['weekday']->label = get_string('day_of_the_week', 'local_apsolu');
 $filters['weekday']->values = [];
-$filters['weekday']->values[] = get_string('monday', 'calendar');
-$filters['weekday']->values[] = get_string('tuesday', 'calendar');
-$filters['weekday']->values[] = get_string('wednesday', 'calendar');
-$filters['weekday']->values[] = get_string('thursday', 'calendar');
-$filters['weekday']->values[] = get_string('friday', 'calendar');
-$filters['weekday']->values[] = get_string('saturday', 'calendar');
-$filters['weekday']->values[] = get_string('sunday', 'calendar');
+$filters['weekday']->values[] = get_string('monday', 'local_apsolu');
+$filters['weekday']->values[] = get_string('tuesday', 'local_apsolu');
+$filters['weekday']->values[] = get_string('wednesday', 'local_apsolu');
+$filters['weekday']->values[] = get_string('thursday', 'local_apsolu');
+$filters['weekday']->values[] = get_string('friday', 'local_apsolu');
+$filters['weekday']->values[] = get_string('saturday', 'local_apsolu');
+$filters['weekday']->values[] = get_string('sunday', 'local_apsolu');
 
 $filters['location'] = new \stdClass();
 $filters['location']->label = get_string('location', 'local_apsolu');
@@ -145,7 +145,7 @@ foreach (enrol_select_get_activities($cityid) as $activity) {
         $filters['grouping']->values[$activity->domainid] = $activity->domain;
     }
 
-    $activity->weekday = get_string($activity->weekday, 'calendar');
+    $activity->weekday = get_string($activity->weekday, 'local_apsolu');
 
     $activity->roles = [];
     if (isset($roles[$activity->id]) === true) {

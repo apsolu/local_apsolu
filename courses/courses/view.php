@@ -64,7 +64,7 @@ foreach ($DB->get_records_sql($sql) as $course) {
     }
 
     $course->alt_class = $currentaltclass;
-    $course->weekday = get_string($course->weekday, 'calendar');
+    $course->weekday = get_string($course->weekday, 'local_apsolu');
     $course->schedule = $course->starttime.'-'.$course->endtime;
 
 

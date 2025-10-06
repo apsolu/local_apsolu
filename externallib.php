@@ -437,7 +437,7 @@ class local_apsolu_webservices extends external_api {
              ORDER BY domain, sport, numweekday, starttime, event";
         foreach ($DB->get_records_sql($sql) as $course) {
             $course->courseid = $course->id;
-            $course->weekday = get_string($course->weekday, 'calendar');
+            $course->weekday = get_string($course->weekday, 'local_apsolu');
 
             $course->roles = [];
             if (isset($roles[$course->id]) === true) {

@@ -178,7 +178,7 @@ final class course_test extends \advanced_testcase {
         $countsessions = count($sessions);
 
         // Vérifie l'objet inséré.
-        $strtime = get_string($data->weekday, 'calendar').' '.$data->starttime.' '.$data->endtime;
+        $strtime = get_string($data->weekday, 'local_apsolu').' '.$data->starttime.' '.$data->endtime;
         $this->assertSame(sprintf('%s %s %s %s', $data->str_category, $data->event, $strtime, $data->str_skill), $course->fullname);
         $this->assertSame($countrecords, $initialcount + 1);
 

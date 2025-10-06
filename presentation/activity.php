@@ -74,7 +74,7 @@ foreach ($activities as $activity) {
         $courses[$activity->sport]->courses = [];
     }
 
-    $activity->weekday = get_string($activity->weekday, 'calendar');
+    $activity->weekday = get_string($activity->weekday, 'local_apsolu');
 
     $activity->roles = [];
     if (isset($roles[$activity->id]) === true) {

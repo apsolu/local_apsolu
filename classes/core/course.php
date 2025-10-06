@@ -66,7 +66,7 @@ class course extends record {
     public $numweekday = '';
 
     /** @var string $weekday Jour de la semaine en anglais. Champ à utiliser avec
-                             la fonction Moodle get_string($weekday, 'calendar'). */
+                             la fonction Moodle get_string($weekday, 'local_apsolu'). */
     public $weekday = '';
 
     /** @var string $starttime Heure de début du créneau au format HH:MM. */
@@ -205,7 +205,7 @@ class course extends record {
             $skill = $record->name;
         }
 
-        $strtime = get_string($weekday, 'calendar').' '.$starttime.' '.$endtime;
+        $strtime = get_string($weekday, 'local_apsolu').' '.$starttime.' '.$endtime;
 
         if (empty($event) === false) {
             return sprintf('%s %s %s %s', $category, $event, $strtime, $skill);
@@ -273,19 +273,19 @@ class course extends record {
         }
 
         switch ($day) {
-            case get_string('monday', 'calendar'):
+            case get_string('monday', 'local_apsolu'):
                 return 1;
-            case get_string('tuesday', 'calendar'):
+            case get_string('tuesday', 'local_apsolu'):
                 return 2;
-            case get_string('wednesday', 'calendar'):
+            case get_string('wednesday', 'local_apsolu'):
                 return 3;
-            case get_string('thursday', 'calendar'):
+            case get_string('thursday', 'local_apsolu'):
                 return 4;
-            case get_string('friday', 'calendar'):
+            case get_string('friday', 'local_apsolu'):
                 return 5;
-            case get_string('saturday', 'calendar'):
+            case get_string('saturday', 'local_apsolu'):
                 return 6;
-            case get_string('sunday', 'calendar'):
+            case get_string('sunday', 'local_apsolu'):
                 return 7;
         }
 
@@ -359,13 +359,13 @@ class course extends record {
      */
     public static function get_weekdays() {
         $weekdays = [];
-        $weekdays['monday'] = get_string('monday', 'calendar');
-        $weekdays['tuesday'] = get_string('tuesday', 'calendar');
-        $weekdays['wednesday'] = get_string('wednesday', 'calendar');
-        $weekdays['thursday'] = get_string('thursday', 'calendar');
-        $weekdays['friday'] = get_string('friday', 'calendar');
-        $weekdays['saturday'] = get_string('saturday', 'calendar');
-        $weekdays['sunday'] = get_string('sunday', 'calendar');
+        $weekdays['monday'] = get_string('monday', 'local_apsolu');
+        $weekdays['tuesday'] = get_string('tuesday', 'local_apsolu');
+        $weekdays['wednesday'] = get_string('wednesday', 'local_apsolu');
+        $weekdays['thursday'] = get_string('thursday', 'local_apsolu');
+        $weekdays['friday'] = get_string('friday', 'local_apsolu');
+        $weekdays['saturday'] = get_string('saturday', 'local_apsolu');
+        $weekdays['sunday'] = get_string('sunday', 'local_apsolu');
 
         return $weekdays;
     }

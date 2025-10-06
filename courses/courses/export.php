@@ -148,7 +148,7 @@ $csvexport->set_filename($filename);
 $csvexport->add_data($headers);
 
 foreach ($courses as $course) {
-    $course->weekday = get_string($course->weekday, 'calendar');
+    $course->weekday = get_string($course->weekday, 'local_apsolu');
     $csvexport->add_data((array) $course);
 }
 
