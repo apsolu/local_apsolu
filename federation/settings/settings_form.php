@@ -63,11 +63,8 @@ class local_apsolu_settings_form extends moodleform {
 
         // Positionnement des valeurs par défaut.
         $fields = [];
-        $fields['managerlicensetype'] = get_string('manager_license_type', 'local_apsolu');
-        $fields['sportlicense'] = get_string('sport_license', 'local_apsolu');
-        $fields['managerlicense'] = get_string('manager_license', 'local_apsolu');
-        $fields['refereelicense'] = get_string('referee_license', 'local_apsolu');
-        $fields['starlicense'] = get_string('star_license', 'local_apsolu');
+        $fields['licensetype'] = get_string('license_type', 'local_apsolu');
+        $fields['licenseetype'] = get_string('licensee_type', 'local_apsolu');
         $fields['insurance'] = get_string('insurance', 'local_apsolu');
 
         $mform->addElement('html', sprintf('<h4>%s</h4>', get_string('default_value_of_fields', 'local_apsolu')));
@@ -76,15 +73,15 @@ class local_apsolu_settings_form extends moodleform {
             $label = get_string('default_value_of_field_X', 'local_apsolu', $labelname);
 
             switch ($field) {
-                case 'managerlicensetype':
-                    $managertypes = Adhesion::get_manager_types();
-                    $mform->addElement('select', $name, $label, $managertypes);
-                    $mform->setType($name, PARAM_INT);
-                    break;
-                case 'starlicense':
-                    $starlicensevalues = Adhesion::get_star_license_values();
-                    $mform->addElement('select', $name, $label, $starlicensevalues);
+                case 'licensetype':
+                    $types = Adhesion::get_license_types();
+                    $mform->addElement('autocomplete', $name, $label, $types, ['multiple' => true]);
                     $mform->setType($name, PARAM_TEXT);
+                    break;
+                case 'licenseetype':
+                    $types = Adhesion::get_licensee_types();
+                    $mform->addElement('select', $name, $label, $types);
+                    $mform->setType($name, PARAM_INT);
                     break;
                 default:
                     $mform->addElement('selectyesno', $name, $label);
@@ -94,14 +91,10 @@ class local_apsolu_settings_form extends moodleform {
 
         // Positionnement de la visibilité par défaut.
         $fields = [];
-        $fields['managerlicensetype'] = get_string('manager_license_type', 'local_apsolu');
-        $fields['sportlicense'] = get_string('sport_license', 'local_apsolu');
-        $fields['managerlicense'] = get_string('manager_license', 'local_apsolu');
-        $fields['refereelicense'] = get_string('referee_license', 'local_apsolu');
-        $fields['starlicense'] = get_string('star_license', 'local_apsolu');
+        $fields['licensetype'] = get_string('license_type', 'local_apsolu');
+        $fields['licenseetype'] = get_string('licensee_type', 'local_apsolu');
         $fields['insurance'] = get_string('insurance', 'local_apsolu');
         $fields['otherfederation'] = get_string('other_federation', 'local_apsolu');
-        $fields['instagram'] = get_string('instagram', 'local_apsolu');
 
         $options = [];
         $options[Adhesion::FIELD_VISIBLE] = get_string('visible', 'local_apsolu');

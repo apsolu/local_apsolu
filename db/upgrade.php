@@ -31,6 +31,7 @@ use local_apsolu\core\federation\adhesion as Adhesion;
 use local_apsolu\core\federation\course as FederationCourse;
 use local_apsolu\core\gradebook as Gradebook;
 use local_apsolu\core\messaging;
+use local_apsolu\core\municipality as Municipality;
 
 /**
  * Procédure de mise à jour.
@@ -1648,6 +1649,125 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
         if ($dbman->field_exists($table, $field) === false) {
             $dbman->add_field($table, $field);
+        }
+
+        // Ajoute un champ locationid dans la table apsolu_attendance_sessions.
+        $table = new xmldb_table('apsolu_federation_adhesions');
+        $field = new xmldb_field('data', XMLDB_TYPE_TEXT, $precision = null, $unsigned = null, $notnull = null,
+            $sequence = null, $default = null, $previous = 'federationnumberrequestdate');
+
+        if ($dbman->field_exists($table, $field) === false) {
+            $dbman->add_field($table, $field);
+        }
+
+        $index = new xmldb_index('idx_mainsport', XMLDB_INDEX_NOTUNIQUE, ['mainsport']);
+        if ($dbman->index_exists($table, $index) === true) {
+            $dbman->drop_index($table, $index);
+        }
+
+        $fields = [];
+        $fields[] = new xmldb_field('sex');
+        $fields[] = new xmldb_field('insurance');
+        $fields[] = new xmldb_field('address1');
+        $fields[] = new xmldb_field('address2');
+        $fields[] = new xmldb_field('postalcode');
+        $fields[] = new xmldb_field('city');
+        $fields[] = new xmldb_field('phone');
+        $fields[] = new xmldb_field('instagram');
+        $fields[] = new xmldb_field('disciplineid');
+        $fields[] = new xmldb_field('otherfederation');
+        $fields[] = new xmldb_field('mainsport');
+        $fields[] = new xmldb_field('complementaryconstraintsport');
+        $fields[] = new xmldb_field('sportlicense');
+        $fields[] = new xmldb_field('managerlicense');
+        $fields[] = new xmldb_field('managerlicensetype');
+        $fields[] = new xmldb_field('refereelicense');
+        $fields[] = new xmldb_field('starlicense');
+        $fields[] = new xmldb_field('usepersonaldata');
+        $fields[] = new xmldb_field('sport1');
+        $fields[] = new xmldb_field('sport2');
+        $fields[] = new xmldb_field('sport3');
+        $fields[] = new xmldb_field('sport4');
+        $fields[] = new xmldb_field('sport5');
+        $fields[] = new xmldb_field('constraintsport1');
+        $fields[] = new xmldb_field('constraintsport2');
+        $fields[] = new xmldb_field('constraintsport3');
+        $fields[] = new xmldb_field('constraintsport4');
+        $fields[] = new xmldb_field('constraintsport5');
+        $fields[] = new xmldb_field('medicalcertificatedate');
+        $fields[] = new xmldb_field('birthname');
+        $fields[] = new xmldb_field('nativecountry');
+        $fields[] = new xmldb_field('departmentofbirth');
+        $fields[] = new xmldb_field('cityofbirth');
+        $fields[] = new xmldb_field('honorabilityagreement');
+        $fields[] = new xmldb_field('usepersonalimage');
+        foreach ($fields as $field) {
+            if ($dbman->field_exists($table, $field) === true) {
+                $dbman->drop_field($table, $field);
+            }
+        }
+
+        // Met à jour la table apsolu_federation_activities.
+        $table = new xmldb_table('apsolu_federation_activities');
+        $field = new xmldb_field('code', XMLDB_TYPE_CHAR, '255', $unsigned = null, $notnull = null,
+            $sequence = null, $default = null, $previous = 'id');
+
+        if ($dbman->field_exists($table, $field) === false) {
+            $dbman->add_field($table, $field);
+        }
+
+        $index = new xmldb_index('idx_mainsport', XMLDB_INDEX_NOTUNIQUE, ['mainsport']);
+        if ($dbman->index_exists($table, $index) === true) {
+            $dbman->drop_index($table, $index);
+        }
+
+        $field = new xmldb_field('mainsport');
+        if ($dbman->field_exists($table, $field) === true) {
+            $dbman->drop_field($table, $field);
+        }
+
+        Activity::synchronize_database();
+
+        // Définit les nouvelles variables.
+        set_config('licenseetype_field_default', '1', 'local_apsolu');
+        set_config('licenseetype_field_visibility', Adhesion::FIELD_VISIBLE, 'local_apsolu');
+        set_config('licensetype_field_default', '["S"]', 'local_apsolu');
+        set_config('licensetype_field_visibility', Adhesion::FIELD_LOCKED, 'local_apsolu');
+
+        // Supprime les variables obsolètes.
+        unset_config('instagram_field_visibility', 'local_apsolu');
+        unset_config('managerlicense_field_default', 'local_apsolu');
+        unset_config('managerlicense_field_visibility', 'local_apsolu');
+        unset_config('managerlicensetype_field_default', 'local_apsolu');
+        unset_config('managerlicensetype_field_visibility', 'local_apsolu');
+        unset_config('refereelicense_field_default', 'local_apsolu');
+        unset_config('refereelicense_field_visibility', 'local_apsolu');
+        unset_config('sportlicense_field_default', 'local_apsolu');
+        unset_config('sportlicense_field_visibility', 'local_apsolu');
+        unset_config('starlicense_field_default', 'local_apsolu');
+        unset_config('starlicense_field_visibility', 'local_apsolu');
+
+        // Ajoute une table apsolu_municipalities.
+        $table = new xmldb_table('apsolu_municipalities');
+        if ($dbman->table_exists($table) === false) {
+            // Adding fields.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+            $table->add_field('name', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('postalcode', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('inseecode', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('departmentid', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+            $table->add_field('regionid', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null);
+
+            // Adding key.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+            $table->add_index($indexname = 'postalcode', XMLDB_INDEX_NOTUNIQUE, $fields = ['postalcode']);
+
+            // Create table.
+            $dbman->create_table($table);
+
+            // Insert data.
+            Municipality::initialize_dataset();
         }
 
         // Savepoint reached.

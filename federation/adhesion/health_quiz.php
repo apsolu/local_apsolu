@@ -66,5 +66,6 @@ if ($adhesion->can_edit() === false) {
     $data->categories = Questionnaire::get_questions();
     $data->step = APSOLU_PAGE_HEALTH_QUIZ;
     $data->wwwroot = $CFG->wwwroot;
+    $data->behat = defined('BEHAT_SITE_RUNNING') && BEHAT_SITE_RUNNING;
     echo $OUTPUT->render_from_template('local_apsolu/federation_adhesion_health_quiz', $data);
 }

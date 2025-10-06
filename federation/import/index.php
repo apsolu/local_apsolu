@@ -108,7 +108,7 @@ if ($formdata = $mform->get_data()) {
                 continue;
             }
 
-            if (ctype_alnum($licenseid) === false || strlen($licenseid) !== 10) {
+            if (ctype_alnum($licenseid) === false) {
                 // Numéro de licence invalide.
                 $params = new stdClass();
                 $params->licenseid = $licenseid;

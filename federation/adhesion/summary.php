@@ -33,107 +33,70 @@ require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
 
 $getconfig = get_config('local_apsolu');
 
-$data = new stdClass();
-$data->fields = [];
-$data->fields[] = ['label' => get_string('federation_number', 'local_apsolu'), 'value' => $adhesion->federationnumber];
-$data->fields[] = ['label' => get_string('lastname'), 'value' => $USER->lastname];
-$data->fields[] = ['label' => get_string('firstname'), 'value' => $USER->firstname];
-$data->fields[] = ['label' => get_string('email'), 'value' => $USER->email];
-$data->fields[] = ['label' => get_string('sex', 'local_apsolu'), 'value' => $adhesion->sex];
-$data->fields[] = ['label' => get_string('birthday', 'local_apsolu'),
-    'value' => userdate($adhesion->birthday, get_string('strftimedate'))];
-$data->fields[] = ['label' => get_string('address1', 'local_apsolu'), 'value' => $adhesion->address1];
-$data->fields[] = ['label' => get_string('address2', 'local_apsolu'), 'value' => $adhesion->address2];
-$data->fields[] = ['label' => get_string('postal_code', 'local_apsolu'), 'value' => $adhesion->postalcode];
-$data->fields[] = ['label' => get_string('city'), 'value' => $adhesion->city];
-$data->fields[] = ['label' => get_string('phone', 'local_apsolu'), 'value' => $adhesion->phone];
-
-// On récupère la discipline.
-$value = '';
-$disciplines = Adhesion::get_disciplines();
-if (isset($disciplines[$adhesion->disciplineid]) === true) {
-    $value = $disciplines[$adhesion->disciplineid];
-}
-$data->fields[] = ['label' => get_string('discipline', 'local_apsolu'), 'value' => $value];
-
-// On récupère le champ autre fédération.
-if (empty($getconfig->otherfederation) === false) {
-    $data->fields[] = ['label' => get_string('other_federation', 'local_apsolu'), 'value' => $adhesion->otherfederation];
+$adhesion->data = json_decode($adhesion->data);
+if ($adhesion->data === false) {
+    // Ce cas ne devrait jamais arriver.
+    throw new moodle_exception('error');
 }
 
-// On récupère le champ sport principal.
-$value = '';
-$activities = $DB->get_records('apsolu_federation_activities');
-if (isset($activities[$adhesion->mainsport]) === true) {
-    $value = $activities[$adhesion->mainsport]->name;
-}
-$data->fields[] = ['label' => get_string('main_sport', 'local_apsolu'), 'value' => $value];
-
-// On récupère la liste des champs oui/non.
-$yesnofields = [];
-$yesnofields['sportlicense'] = get_string('sport_license', 'local_apsolu');
-$yesnofields['managerlicense'] = get_string('manager_license', 'local_apsolu');
-$yesnofields['managerlicensetype'] = get_string('manager_license_type', 'local_apsolu');
-$yesnofields['refereelicense'] = get_string('referee_license', 'local_apsolu');
-$yesnofields['starlicense'] = get_string('star_license', 'local_apsolu');
-$yesnofields['insurance'] = get_string('insurance', 'local_apsolu');
-$yesnofields['instagram'] = get_string('instagram', 'local_apsolu');
-$yesnofields['usepersonaldata'] = get_string('use_personal_data', 'local_apsolu');
-foreach ($yesnofields as $field => $label) {
-    $visibilitystrname = sprintf('%s_field_visibility', $field);
-    if (empty($getconfig->$visibilitystrname) === true) {
+$licenses = [];
+$licensetypes = Adhesion::get_license_types();
+foreach ($adhesion->data->licensetype as $license) {
+    if (isset($licensetypes[$license]) === false) {
         continue;
     }
 
-    if ($field === 'managerlicensetype') {
-        if (empty($adhesion->managerlicense) === true || empty($getconfig->managerlicense) === true) {
-            // N'affiche pas la licence dirigeante si elle est positionnée à Non et/ou non visible.
-            continue;
-        }
-        $value = get_string('not_student', 'local_apsolu');
-    } else {
-        $value = get_string('no');
+    $licenses[] = $licensetypes[$license];
+}
+
+$data = new stdClass();
+$data->fields = [];
+$data->fields[] = ['label' => get_string('federation_number', 'local_apsolu'), 'value' => $adhesion->federationnumber];
+$data->fields[] = ['label' => get_string('license_type', 'local_apsolu'), 'value' => implode(', ', $licenses)];
+$data->fields[] = ['label' => get_string('user_title', 'local_apsolu'), 'value' => $adhesion->data->title];
+$data->fields[] = ['label' => get_string('lastname'), 'value' => $USER->lastname];
+$data->fields[] = ['label' => get_string('firstname'), 'value' => $USER->firstname];
+$data->fields[] = ['label' => get_string('birthday', 'local_apsolu'),
+    'value' => userdate($adhesion->birthday, get_string('strftimedate'))];
+$data->fields[] = ['label' => get_string('nationality', 'local_apsolu'), 'value' => $adhesion->data->nationality];
+$data->fields[] = ['label' => get_string('mail', 'local_apsolu'), 'value' => $USER->email];
+$data->fields[] = ['label' => get_string('phone2', 'local_apsolu'), 'value' => $adhesion->data->phone2];
+$data->fields[] = ['label' => get_string('discipline', 'local_apsolu'), 'value' => implode(', ', $adhesion->data->activity)];
+
+// On récupère le champ autre fédération.
+if (empty($getconfig->otherfederation) === false) {
+    $data->fields[] = ['label' => get_string('other_federation', 'local_apsolu'), 'value' => $adhesion->data->otherfederation];
+}
+
+// On récupère la liste des champs oui/non.
+$yesnofields = [];
+$yesnofields['federaltexts'] = get_string('federal_texts', 'local_apsolu');
+$yesnofields['policyagreed'] = get_string('terms_of_use_for_data', 'local_apsolu');
+$yesnofields['commercialoffers'] = get_string('commercial_offers', 'local_apsolu');
+$yesnofields['usepersonalimage'] = get_string('image_rights', 'local_apsolu');
+$yesnofields['newsletter'] = get_string('newsletter', 'local_apsolu');
+$yesnofields['insurance'] = get_string('insurance', 'local_apsolu');
+foreach ($yesnofields as $field => $label) {
+    $visibilitystrname = sprintf('%s_field_visibility', $field);
+    if (isset($getconfig->$visibilitystrname) === true && empty($getconfig->$visibilitystrname) === true) {
+        continue;
     }
 
-    if ($field === 'starlicense') {
-        if ($adhesion->starlicense === 'O') {
-            $value = get_string('yes');
-        }
-    } else if (empty($adhesion->{$field}) === false) {
-        if ($field === 'managerlicensetype') {
-            $value = get_string('student');
-        } else {
-            $value = get_string('yes');
-        }
+    if (empty($adhesion->data->{$field}) === false) {
+        $value = get_string('yes');
+    } else {
+        $value = get_string('no');
     }
 
     $data->fields[] = ['label' => $label, 'value' => $value];
 }
 
-// On récupère la liste des sports autorisés par le certificat médical.
-$fieldname = 'sport';
-$label = get_string('activity_without_constraint', 'local_apsolu');
-if ($adhesion->sport1 === Adhesion::SPORT_NONE) {
-    $fieldname = 'constraintsport';
-    $label = get_string('activity_with_specific_constraints', 'local_apsolu');
-}
-
-for ($i = 1; $i <= 5; $i++) {
-    $field = $fieldname.$i;
-    if ($adhesion->$field === Adhesion::SPORT_NONE) {
-        break;
-    }
-
-    if (isset($activities[$adhesion->$field]->name) === false) {
-        break;
-    }
-
-    $data->fields[] = ['label' => $label, 'value' => $activities[$adhesion->$field]->name];
-}
-
 // On récupère la date du certificat médical.
-if (empty($adhesion->medicalcertificatedate) === false) {
-    $value = userdate($adhesion->medicalcertificatedate, get_string('strftimedate'));
+if (empty($adhesion->data->medicalcertificatedate) === false) {
+    $data->fields[] = ['label' => get_string('doctor_name', 'local_apsolu'), 'value' => $adhesion->data->doctorname];
+    $data->fields[] = ['label' => get_string('doctor_rpps', 'local_apsolu'), 'value' => $adhesion->data->doctorrpps];
+
+    $value = userdate($adhesion->data->medicalcertificatedate, get_string('strftimedate'));
     $data->fields[] = ['label' => get_string('medical_certificate_date', 'local_apsolu'), 'value' => $value];
 }
 

@@ -38,6 +38,7 @@ class local_apsolu_federation_export_licenses extends moodleform {
         $certificates = $this->_customdata['certificates'];
         $licenses = $this->_customdata['licenses'];
         $statuses = $this->_customdata['statuses'];
+        $licensetypes = $this->_customdata['licensetypes'];
         $activities = $this->_customdata['activities'];
 
         // Nom de l'étudiant.
@@ -66,18 +67,22 @@ class local_apsolu_federation_export_licenses extends moodleform {
         $mform->setDefault('medical', APSOLU_SELECT_YES);
 
         // Etat du numéro de licence.
-        $mform->addElement('select', 'license', get_string('license_number_status', 'local_apsolu'), $licenses);
-        $mform->setType('license', PARAM_INT);
-        $mform->setDefault('license', APSOLU_SELECT_NO);
+        $mform->addElement('select', 'licensenumber', get_string('license_number_status', 'local_apsolu'), $licenses);
+        $mform->setType('licensenumber', PARAM_INT);
+        $mform->setDefault('licensenumber', APSOLU_SELECT_NO);
 
         // Etat de l'inscription.
         $mform->addElement('select', 'status', get_string('registration_status', 'local_apsolu'), $statuses);
         $mform->setType('status', PARAM_INT);
         $mform->setDefault('status', APSOLU_SELECT_YES);
 
+        // Type d'inscription.
+        $mform->addElement('select', 'licensetype', get_string('license_type', 'local_apsolu'), $licensetypes);
+        $mform->setType('licensetype', PARAM_ALPHA);
+
         // Activité.
         $mform->addElement('autocomplete', 'activity', get_string('activities', 'local_apsolu'), $activities);
-        $mform->setType('activity', PARAM_INT);
+        $mform->setType('activity', PARAM_TEXT);
 
         // Submit buttons.
         $attributes = ['class' => 'btn btn-default'];

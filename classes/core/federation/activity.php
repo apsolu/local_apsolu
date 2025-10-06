@@ -36,11 +36,11 @@ class activity extends record {
     /** @var int|string $id Identifiant numérique de la correspondance d'activités. */
     public $id = 0;
 
+    /** @var string $code Code officiel de l'activité sportive côté FFSU. */
+    public $code = '';
+
     /** @var string $name Nom officiel de l'activité sportive côté FFSU. */
     public $name = '';
-
-    /** @var int|string $mainsport Indique si le sport peut-être sélectionné en tant que sport principal (1: oui, 0: non). */
-    public $mainsport = '';
 
     /** @var int|string $restriction Indique si le sport est à contrainte (1: oui, 0: non). */
     public $restriction = '';
@@ -56,73 +56,72 @@ class activity extends record {
      */
     public static function get_activity_data() {
         $data = [];
-        $data[] = ['id' => 2, 'name' => 'Athlétisme - Courses hors stade', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 3, 'name' => 'Aviron (en ligne,longue distance, de mer, indoor)', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 4, 'name' => 'Badminton', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 5, 'name' => 'Baseball - Softball', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 6, 'name' => 'Basket - Basket 3x3', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 7, 'name' => 'Biathlon', 'mainsport' => 1, 'restriction' => 1];
-        $data[] = ['id' => 8, 'name' => 'Bowling', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 9, 'name' => 'Boxe éducative Assaut', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 10, 'name' => 'Boxe(s) Combat, plein contact (Anglaise, Kick Boxing K1 rules, Savate BF)',
-            'mainsport' => 1, 'restriction' => 1];
-        $data[] = ['id' => 11, 'name' => 'Bridge', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 12, 'name' => 'Canoë-kayak', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 13, 'name' => 'Cheerleading', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 14, 'name' => 'Course d\'orientation', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 15, 'name' => 'Cyclisme - VTT - BMX', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 16, 'name' => 'Danse (toutes formes)', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 17, 'name' => 'Echecs', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 18, 'name' => 'Equitation', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 19, 'name' => 'Escalade', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 20, 'name' => 'Escrime', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 21, 'name' => 'Fitness', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 22, 'name' => 'Football - Futsal', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 23, 'name' => 'Football américain', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 24, 'name' => 'Force Athlétique', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 25, 'name' => 'Golf', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 26, 'name' => 'Gymnastiques : Artistique, GR, Team Gym, Trampoline, Parkour Gym',
-            'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 27, 'name' => 'Haltérophilie - Musculation', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 28, 'name' => 'Handball - Beach Handball', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 29, 'name' => 'Hockey', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 30, 'name' => 'Judo - Ju-Jitsu - Ne Waza', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 31, 'name' => 'Karaté', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 32, 'name' => 'Karting', 'mainsport' => 1, 'restriction' => 1];
-        $data[] = ['id' => 33, 'name' => 'Kick Boxing - Muay-Thaï Light et Pré combat', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 34, 'name' => 'Lutte - Sambo sportif - Beach Wrestling', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 35, 'name' => 'Nage avec palmes', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 36, 'name' => 'Natation - Natation synchronisée - Natation en eau libre',
-            'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 37, 'name' => 'Patinage artistique et de vitesse', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 38, 'name' => 'Pelote basque', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 39, 'name' => 'Pentathlon', 'mainsport' => 1, 'restriction' => 1];
-        $data[] = ['id' => 40, 'name' => 'Pétanque', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 41, 'name' => 'Roller hockey', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 42, 'name' => 'Rugby(s) (XV, X, 7, XIII)', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 43, 'name' => 'Sauvetage sportif', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 44, 'name' => 'Savate Boxe Française en assaut', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 45, 'name' => 'Skateboard - Trottinette', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 46, 'name' => 'Ski - Snowboard (toutes formes)', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 47, 'name' => 'Squash', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 48, 'name' => 'Surf - Stand Up Paddle', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 49, 'name' => 'Taekwondo', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 50, 'name' => 'Tennis de table', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 51, 'name' => 'Tennis - Padel - Beach Tennis', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 52, 'name' => 'Tir à l\'arc', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 53, 'name' => 'Tir sportif', 'mainsport' => 1, 'restriction' => 1];
-        $data[] = ['id' => 54, 'name' => 'Triathlon et Disciplines enchainées : [Bike & Run, Duathlon, Raids multisports, Swimrun]',
-            'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 55, 'name' => 'Ultimate - Beach Ultimate', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 56, 'name' => 'Voile - Kite Surf', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 57, 'name' => 'Volley - Beach Volley', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 58, 'name' => 'Water-polo', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 59, 'name' => 'Multisports', 'mainsport' => 0, 'restriction' => 0];
-        $data[] = ['id' => 60, 'name' => 'E-sport', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 61, 'name' => 'Pancrace assaut', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 62, 'name' => 'Fléchettes', 'mainsport' => 1, 'restriction' => 0];
-        $data[] = ['id' => 63, 'name' => 'Taekwondo combat', 'mainsport' => 0, 'restriction' => 1];
-        $data[] = ['id' => 64, 'name' => 'Rugby sans contact', 'mainsport' => 0, 'restriction' => 0];
+        $data[] = ['id' => 2, 'code' => 'ATHLETISME', 'name' => 'ATHLÉTISME', 'restriction' => 0];
+        $data[] = ['id' => 3, 'code' => 'AVIRON', 'name' => 'AVIRON', 'restriction' => 0];
+        $data[] = ['id' => 4, 'code' => 'BADMINTON', 'name' => 'BADMINTON', 'restriction' => 0];
+        $data[] = ['id' => 5, 'code' => 'BASEBALL', 'name' => 'BASEBALL / SOFTBALL', 'restriction' => 0];
+        $data[] = ['id' => 6, 'code' => 'BASKET', 'name' => 'BASKET-BALL / BASKET 3X3', 'restriction' => 0];
+        $data[] = ['id' => 7, 'code' => 'BIATHLON', 'name' => 'BIATHLON', 'restriction' => 1];
+        $data[] = ['id' => 8, 'code' => 'BOWLING', 'name' => 'BOWLING', 'restriction' => 0];
+        $data[] = ['id' => 9, 'code' => 'BOXEEDU', 'name' => 'BOXE ÉDUCATIVE ASSAUT', 'restriction' => 0];
+        $data[] = ['id' => 10, 'code' => 'BOXE', 'name' => 'BOXE COMBAT', 'restriction' => 1];
+        $data[] = ['id' => 11, 'code' => 'BRIDGE', 'name' => 'BRIDGE', 'restriction' => 0];
+        $data[] = ['id' => 12, 'code' => 'CANOE', 'name' => 'CANOË-KAYAK', 'restriction' => 0];
+        $data[] = ['id' => 13, 'code' => 'CHEERLEADING', 'name' => 'CHEERLEADING', 'restriction' => 0];
+        $data[] = ['id' => 14, 'code' => 'COURSE', 'name' => 'COURSE D\'ORIENTATION', 'restriction' => 0];
+        $data[] = ['id' => 15, 'code' => 'CYCLISME', 'name' => 'CYCLISME', 'restriction' => 0];
+        $data[] = ['id' => 16, 'code' => 'DANSE', 'name' => 'DANSE', 'restriction' => 0];
+        $data[] = ['id' => 17, 'code' => 'ECHECS', 'name' => 'ÉCHECS', 'restriction' => 0];
+        $data[] = ['id' => 18, 'code' => 'EQUITATION', 'name' => 'ÉQUITATION', 'restriction' => 0];
+        $data[] = ['id' => 19, 'code' => 'ESCALADE', 'name' => 'ESCALADE', 'restriction' => 0];
+        $data[] = ['id' => 20, 'code' => 'ESCRIME', 'name' => 'ESCRIME', 'restriction' => 0];
+        $data[] = ['id' => 21, 'code' => 'FITNESS', 'name' => 'FITNESS', 'restriction' => 0];
+        $data[] = ['id' => 22, 'code' => 'FOOT', 'name' => 'FOOTBALL / FUTSAL', 'restriction' => 0];
+        $data[] = ['id' => 23, 'code' => 'FOOTAME', 'name' => 'FOOTBALL AMÉRICAIN', 'restriction' => 0];
+        $data[] = ['id' => 24, 'code' => 'FORCE', 'name' => 'FORCE ATHLÉTIQUE', 'restriction' => 0];
+        $data[] = ['id' => 25, 'code' => 'GOLF', 'name' => 'GOLF', 'restriction' => 0];
+        $data[] = ['id' => 26, 'code' => 'GYM', 'name' => 'GYMNASTIQUE', 'restriction' => 0];
+        $data[] = ['id' => 27, 'code' => 'HALTERO', 'name' => 'HALTÉROPHILIE / MUSCULATION', 'restriction' => 0];
+        $data[] = ['id' => 28, 'code' => 'HANDBALL', 'name' => 'HANDBALL', 'restriction' => 0];
+        $data[] = ['id' => 29, 'code' => 'HOCKEY', 'name' => 'HOCKEY', 'restriction' => 0];
+        $data[] = ['id' => 30, 'code' => 'JUDO', 'name' => 'JUDO', 'restriction' => 0];
+        $data[] = ['id' => 31, 'code' => 'KARATE', 'name' => 'KARATÉ', 'restriction' => 0];
+        $data[] = ['id' => 33, 'code' => 'KICKBOXING', 'name' => 'KICKBOXING COMBAT', 'restriction' => 1];
+        $data[] = ['id' => 34, 'code' => 'LUTTE', 'name' => 'LUTTE / SAMBO', 'restriction' => 0];
+        $data[] = ['id' => 35, 'code' => 'NAGE', 'name' => 'NAGE AVEC PALMES', 'restriction' => 0];
+        $data[] = ['id' => 36, 'code' => 'NATATION', 'name' => 'NATATION', 'restriction' => 0];
+        $data[] = ['id' => 37, 'code' => 'PATINAGE', 'name' => 'PATINAGE', 'restriction' => 0];
+        $data[] = ['id' => 38, 'code' => 'PELOTE', 'name' => 'PELOTE BASQUE', 'restriction' => 0];
+        $data[] = ['id' => 39, 'code' => 'PENTATHLON', 'name' => 'PENTATHLON MODERNE AVEC TIR', 'restriction' => 1];
+        $data[] = ['id' => 40, 'code' => 'PETANQUE', 'name' => 'PÉTANQUE', 'restriction' => 0];
+        $data[] = ['id' => 41, 'code' => 'ROLLERHOCKEY', 'name' => 'ROLLER HOCKEY', 'restriction' => 0];
+        $data[] = ['id' => 42, 'code' => 'RUGBY', 'name' => 'RUGBY', 'restriction' => 0];
+        $data[] = ['id' => 43, 'code' => 'SAUVETAGE', 'name' => 'SAUVETAGE SPORTIF', 'restriction' => 0];
+        $data[] = ['id' => 44, 'code' => 'SAVATEBOXE', 'name' => 'SAVATE BOXE FRANÇAISE', 'restriction' => 0];
+        $data[] = ['id' => 45, 'code' => 'SKATEBOARD', 'name' => 'SKATEBOARD / TROTTINETTE', 'restriction' => 0];
+        $data[] = ['id' => 46, 'code' => 'SKI', 'name' => 'SKI ALPIN', 'restriction' => 0];
+        $data[] = ['id' => 47, 'code' => 'SQUASH', 'name' => 'SQUASH', 'restriction' => 0];
+        $data[] = ['id' => 48, 'code' => 'SURF', 'name' => 'SURF / STAND UP PADDLE', 'restriction' => 0];
+        $data[] = ['id' => 49, 'code' => 'TAEKWONDO', 'name' => 'TAEKWONDO POOMSAE', 'restriction' => 0];
+        $data[] = ['id' => 50, 'code' => 'TENNISTABLE', 'name' => 'TENNIS DE TABLE', 'restriction' => 0];
+        $data[] = ['id' => 51, 'code' => 'TENNIS', 'name' => 'TENNIS / PADEL', 'restriction' => 0];
+        $data[] = ['id' => 52, 'code' => 'TIRARC', 'name' => 'TIR À L\'ARC', 'restriction' => 0];
+        $data[] = ['id' => 53, 'code' => 'TIRSPORTIF', 'name' => 'TIR SPORTIF', 'restriction' => 1];
+        $data[] = ['id' => 54, 'code' => 'TRIATHLON', 'name' => 'TRIATHLON ET DISCIPLINES ENCHAINÉES', 'restriction' => 0];
+        $data[] = ['id' => 55, 'code' => 'ULTIMATE', 'name' => 'ULTIMATE', 'restriction' => 0];
+        $data[] = ['id' => 56, 'code' => 'VOILE', 'name' => 'VOILE / KITE SURF', 'restriction' => 0];
+        $data[] = ['id' => 57, 'code' => 'VOLLEY', 'name' => 'VOLLEY', 'restriction' => 0];
+        $data[] = ['id' => 58, 'code' => 'WATERPOLO', 'name' => 'WATER-POLO', 'restriction' => 0];
+        $data[] = ['id' => 60, 'code' => 'ESPORT', 'name' => 'ESPORT', 'restriction' => 0];
+        $data[] = ['id' => 61, 'code' => 'KICKBOXINGLIGHT', 'name' => 'KICKBOXING LIGHT / PANCRACE', 'restriction' => 0];
+        $data[] = ['id' => 62, 'code' => 'FLECHETTES', 'name' => 'FLÉCHETTES', 'restriction' => 0];
+        $data[] = ['id' => 63, 'code' => 'TAEKWONDOCOMBAT', 'name' => 'TAEKWONDO COMBAT', 'restriction' => 1];
+        $data[] = ['id' => 64, 'code' => 'RUGBYXIII', 'name' => 'RUGBY À XIII', 'restriction' => 0];
+        $data[] = ['id' => 2501, 'code' => 'BABYFOOT', 'name' => 'BABY-FOOT', 'restriction' => 0];
+        $data[] = ['id' => 2502, 'code' => 'BILLARD', 'name' => 'BILLARD', 'restriction' => 0];
+        $data[] = ['id' => 2503, 'code' => 'PENTATHLON_LASER', 'name' => 'PENTATHLON MODERNE AVEC LASER RUN', 'restriction' => 0];
+        $data[] = ['id' => 2504, 'code' => 'SKINORDIQUE', 'name' => 'SKI NORDIQUE', 'restriction' => 0];
+        $data[] = ['id' => 2055, 'code' => 'SNOWBOARD', 'name' => 'SNOWBOARD', 'restriction' => 0];
 
         return $data;
     }
@@ -193,11 +192,10 @@ class activity extends record {
                 $activity = $activities[$data['id']];
 
                 if ($activity->name !== $data['name'] ||
-                    $activity->mainsport != $data['mainsport'] ||
                     $activity->restriction != $data['restriction']) {
                     // Met à jour l'enregistrement dans la table apsolu_federation_activities.
                     $sql = "UPDATE {apsolu_federation_activities}
-                               SET name = :name, mainsport = :mainsport, restriction = :restriction
+                               SET code = :code, name = :name, restriction = :restriction
                              WHERE id = :id";
                     $DB->execute($sql, $data);
 
@@ -208,12 +206,14 @@ class activity extends record {
                         $DB->update_record('groups', $federationgroups[$activity->name]);
                     }
                 }
+
+                unset($activities[$data['id']]);
                 continue;
             }
 
             // Insère une nouvelle activité FFSU.
-            $sql = "INSERT INTO {apsolu_federation_activities} (id, name, mainsport, restriction, categoryid)
-                                                        VALUES (:id, :name, :mainsport, :restriction, NULL)";
+            $sql = "INSERT INTO {apsolu_federation_activities} (id, code, name, restriction, categoryid)
+                                                        VALUES (:id, :code, :name, :restriction, NULL)";
             $DB->execute($sql, $data);
 
             // Ajoute le groupe dans le cours FFSU.
@@ -224,6 +224,15 @@ class activity extends record {
                 $group->timecreated = time();
                 $group->timemodified = $group->timecreated;
                 groups_create_group($group);
+            }
+        }
+
+        // Supprime les activités FFSU obsolètes.
+        foreach ($activities as $activity) {
+            $DB->delete_records('apsolu_federation_activities', ['id' => $activity->id]);
+
+            if (isset($federationgroups[$activity->name]) === true) {
+                groups_delete_group($federationgroups[$activity->name]->id);
             }
         }
     }

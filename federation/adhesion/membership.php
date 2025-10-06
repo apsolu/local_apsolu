@@ -29,34 +29,11 @@ defined('MOODLE_INTERNAL') || die();
 
 require(__DIR__ . '/membership_form.php');
 
-// Prépare les données du formulaire.
-$sexes = ['' => ''];
-foreach (Adhesion::get_sexes() as $id => $label) {
-    $sexes[$id] = $label;
-}
-
-$disciplines = ['' => ''];
-foreach (Adhesion::get_disciplines() as $id => $label) {
-    $disciplines[$id] = $label;
-}
-
-$managertypes = Adhesion::get_manager_types();
-$starlicensevalues = Adhesion::get_star_license_values();
-
-$mainsports = [];
-foreach (Activity::get_records(['mainsport' => 1], $sort = 'name') as $record) {
-    $mainsports[$record->id] = $record->name;
-}
-
-$sportswithconstraints = [];
-foreach (Activity::get_records(['restriction' => 1], $sort = 'name') as $record) {
-    $sportswithconstraints[$record->id] = $record->name;
-}
+$PAGE->requires->js_call_amd('local_apsolu/federation_adhesion_membership', 'initialise');
 
 // Initialise le formulaire.
 $readonly = ($adhesion->can_edit() === false);
-$customdata = [$adhesion, $sexes, $disciplines, $mainsports, $managertypes, $starlicensevalues,
-    $sportswithconstraints, $readonly, ];
+$customdata = [$adhesion, $readonly];
 $mform = new local_apsolu_federation_membership(null, $customdata);
 
 // Traite les données renvoyées.

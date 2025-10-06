@@ -90,55 +90,36 @@ $count = count($records);
 if ($count === 0) {
     $customfields = profile_user_record($USER->id);
 
-    $adhesion = new Adhesion();
-    $adhesion->address1 = $USER->address;
-    $adhesion->city = $USER->city;
-    $adhesion->phone = $USER->phone1;
-    $adhesion->userid = $USER->id;
-
-    // Définit le sport principal.
-    $adhesion->mainsport = Adhesion::get_mainsportid_from_user_group($course->id, $USER->id);
-
-    if (empty($adhesion->mainsport) === true) {
-        // TODO: bidouille temporaire. Ça ne devrait jamais arriver à ce stade. L'étudiant doit appartenir à un groupe.
-        $adhesion->mainsport = null;
-        $groups = $DB->get_records('groups', ['courseid' => $course->id], $sort = 'name');
-        foreach ($groups as $group) {
-            foreach (Activity::get_records(['name' => $group->name]) as $activity) {
-                $adhesion->mainsport = $activity->id;
-                break 2;
-            }
-        }
-
-        if (empty($adhesion->mainsport) === true) {
-            throw new moodle_exception('cannot_attribute_group', $module = 'local_apsolu');
-        }
-    }
-
-    $adhesion->insurance = get_config('local_apsolu', 'insurance_field_default');
-    $adhesion->managerlicense = get_config('local_apsolu', 'managerlicense_field_default');
-    $adhesion->managerlicensetype = get_config('local_apsolu', 'managerlicensetype_field_default');
-    $adhesion->refereelicense = get_config('local_apsolu', 'refereelicense_field_default');
-    $adhesion->sportlicense = get_config('local_apsolu', 'sportlicense_field_default');
-    $adhesion->starlicense = get_config('local_apsolu', 'starlicense_field_default');
+    $json = new stdClass();
+    $json->activity = [];
+    $json->phone2 = $USER->phone2;
 
     if (isset($customfields->apsolusex) === true) {
-        $adhesion->sex = $customfields->apsolusex;
+        if ($customfields->apsolusex === 'M') {
+            $json->title = 'M';
+        } else if ($customfields->apsolusex === 'F') {
+            $json->title = 'Mme';
+        }
     }
 
     if (isset($customfields->apsolubirthday) === true) {
         $timestamp = strtotime($customfields->apsolubirthday);
         if ($timestamp !== false) {
-            $adhesion->birthday = $timestamp;
+            $json->birthday = $timestamp;
         }
     }
 
-    if (isset($customfields->apsolupostalcode) === true) {
-        $adhesion->postalcode = $customfields->apsolupostalcode;
-    }
+    $json->licensetype = json_decode(get_config('local_apsolu', 'licensetype_field_default'));
+    $json->licenseetype = get_config('local_apsolu', 'licenseetype_field_default');
+    $json->insurance = get_config('local_apsolu', 'insurance_field_default');
+
+    $adhesion = new Adhesion();
+    $adhesion->data = json_encode($json);
+    $adhesion->userid = $USER->id;
 
     $adhesion->federationnumberprefix = $adhesion->get_federation_number_prefix();
     if ($adhesion->federationnumberprefix === false) {
+        // TODO: unenrol l'utilisateur ?
         throw new moodle_exception('cannot_attribute_federation_number_prefix', $module = 'local_apsolu');
     }
 } else if ($count === 1) {
@@ -191,7 +172,7 @@ if ($adhesion->questionnairestatus === null) {
     if (in_array($stepid, [APSOLU_PAGE_INTRODUCTION, APSOLU_PAGE_HEALTH_QUIZ, APSOLU_PAGE_AGREEMENT], $strict = true) === false) {
         $stepid = APSOLU_PAGE_AGREEMENT;
     }
-} else if ($adhesion->usepersonaldata === null) {
+} else if (empty($adhesion->data) === true) {
     // Le formulaire d'adhésion n'a jamais été rempli.
     $pages['medical_certificate'] = null;
     $pages['payment'] = null;

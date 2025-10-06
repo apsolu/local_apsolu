@@ -23,6 +23,7 @@
  */
 
 use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\core\federation\activity as Activity;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -45,10 +46,7 @@ class local_apsolu_federation_membership extends moodleform {
         global $USER;
 
         $mform = $this->_form;
-        list($adhesion, $sexes, $disciplines, $mainsports, $managertypes, $starlicensevalues,
-            $sportswithconstraints, $readonly) = $this->_customdata;
-
-        $honorability = false;
+        list($adhesion, $readonly) = $this->_customdata;
 
         if ($readonly === true) {
             $messages = $adhesion::get_contacts();
@@ -56,123 +54,208 @@ class local_apsolu_federation_membership extends moodleform {
             $mform->hardFreeze();
         }
 
-        // Prénom.
-        $mform->addElement('text', 'firstname', get_string('firstname'), $attributes = ['readonly' => 1]);
-        $mform->setType('firstname', PARAM_TEXT);
-        $mform->setDefault('firstname', $USER->firstname);
+        // IDENTITÉ.
+        $mform->addElement('header', 'identity', get_string('identity', 'local_apsolu'));
+
+        // Civilité.
+        $mform->addElement('select', 'title', get_string('user_title', 'local_apsolu'), Adhesion::get_user_titles());
+        $mform->setType('title', PARAM_TEXT);
+        $mform->addRule('title', get_string('required'), 'required', null, 'client');
 
         // Nom.
-        $mform->addElement('text', 'lastname', get_string('lastname'), $attributes = ['readonly' => 1]);
+        $mform->addElement('text', 'lastname', get_string('lastname'), $attributes = ['disabled' => 1]);
         $mform->setType('lastname', PARAM_TEXT);
         $mform->setDefault('lastname', $USER->lastname);
 
-        // Birthname.
+        // Prénom.
+        $mform->addElement('text', 'firstname', get_string('firstname'), $attributes = ['disabled' => 1]);
+        $mform->setType('firstname', PARAM_TEXT);
+        $mform->setDefault('firstname', $USER->firstname);
+
+        // Date de naissance.
+        $mform->addElement('date_selector', 'birthday', get_string('birthday', 'local_apsolu'));
+        $mform->setType('birthday', PARAM_TEXT);
+        $mform->addRule('birthday', get_string('required'), 'required', null, 'client');
+
+        // Nationalité.
+        $values = array_merge(['' => ''], Adhesion::get_nationalities());
+        $mform->addElement('autocomplete', 'nationality', get_string('nationality', 'local_apsolu'), $values);
+        $mform->setType('nationality', PARAM_TEXT);
+
+        // COORDONNÉES PERSONNELLES.
+        $mform->addElement('header', 'personal_address', get_string('personal_address', 'local_apsolu'));
+
+        if (false) {
+            // N° de voie.
+            $mform->addElement('text', 'tracknumber', get_string('track_number', 'local_apsolu'));
+            $mform->setType('tracknumber', PARAM_TEXT);
+
+            // Type de voie.
+            $mform->addElement('select', 'tracktype', get_string('track_type', 'local_apsolu'), Adhesion::get_track_type());
+            $mform->setType('tracktype', PARAM_TEXT);
+
+            // Nom de voie.
+            $mform->addElement('text', 'trackname', get_string('track_name', 'local_apsolu'));
+            $mform->setType('trackname', PARAM_TEXT);
+
+            // Bâtiment.
+            $mform->addElement('text', 'building', get_string('building', 'local_apsolu'));
+            $mform->setType('building', PARAM_TEXT);
+
+            // Escalier.
+            $mform->addElement('text', 'staircase', get_string('staircase', 'local_apsolu'));
+            $mform->setType('staircase', PARAM_TEXT);
+
+            // Lieu dit.
+            $mform->addElement('text', 'lieudit', get_string('lieudit', 'local_apsolu'));
+            $mform->setType('lieudit', PARAM_TEXT);
+
+            // Code postal.
+            $mform->addElement('text', 'postalcode', get_string('postal_code', 'local_apsolu'));
+            $mform->setType('postalcode', PARAM_TEXT);
+
+            // Ville.
+            $mform->addElement('text', 'city', get_string('city'));
+            $mform->setType('city', PARAM_TEXT);
+
+            // Pays.
+            $mform->addElement('autocomplete', 'country', get_string('country'), Adhesion::get_countries());
+            $mform->setType('country', PARAM_TEXT);
+        }
+
+        // Mail.
+        $mform->addElement('text', 'mail', get_string('mail', 'local_apsolu'), $attributes = ['disabled' => 1, 'size' => '50']);
+        $mform->setType('mail', PARAM_TEXT);
+        $mform->setDefault('mail', $USER->email);
+
+        if (false) {
+            // Mail pro.
+            $mform->addElement('text', 'workmail', get_string('work_mail', 'local_apsolu'), $attributes = ['size' => '50']);
+            $mform->setType('workmail', PARAM_TEXT);
+            $mform->setDefault('workmail', $USER->eworkmail);
+            $mform->addRule('workmail', get_string('required'), 'required', null, 'client');
+        }
+
+        if (false) {
+            // Téléphone fixe.
+            $mform->addElement('text', 'phone1', get_string('phone1', 'local_apsolu'));
+            $mform->setType('phone1', PARAM_TEXT);
+            $mform->addRule('phone1', get_string('required'), 'required', null, 'client');
+            $mform->addHelpButton('phone1', 'phone', 'local_apsolu');
+        }
+
+        // Téléphone mobile.
+        $mform->addElement('text', 'phone2', get_string('phone2', 'local_apsolu'));
+        $mform->setType('phone2', PARAM_TEXT);
+        $mform->addRule('phone2', get_string('required'), 'required', null, 'client');
+        $mform->addHelpButton('phone2', 'phone', 'local_apsolu');
+
+        // INSCRIPTION.
+        $mform->addElement('header', 'federation', get_string('federation', 'local_apsolu'));
+
+        // Etudiant.
+        $visibility = get_config('local_apsolu', 'licenseetype_field_visibility');
+        if ($visibility !== Adhesion::FIELD_HIDDEN) {
+            $mform->addElement('select', 'licenseetype', get_string('i_am', 'local_apsolu'), Adhesion::get_licensee_types());
+            $mform->setType('licenseetype', PARAM_INT);
+            $mform->addRule('licenseetype', get_string('required'), 'required', null, 'client');
+
+            if ($visibility === Adhesion::FIELD_LOCKED && $readonly === false) {
+                // Note : on teste la variable $readonly afin de ne pas freeze() le champ d'un formulaire hardFreeze().
+                // Si c'est le cas, moodleform lève un warning PHP.
+                $mform->freeze('licenseetype');
+            }
+        }
+
+        // Handicap.
+        $mform->addElement('selectyesno', 'handicap', get_string('do_you_have_a_disability', 'local_apsolu'));
+        $mform->addRule('handicap', get_string('required'), 'required', null, 'client');
+
+        // Type de licence.
+        $visibility = get_config('local_apsolu', 'licensetype_field_visibility');
+        if ($visibility !== Adhesion::FIELD_HIDDEN) {
+            $options = ['multiple' => true];
+            $mform->addElement('autocomplete', 'licensetype', get_string('license_type', 'local_apsolu'),
+                Adhesion::get_license_types(), $options);
+            $mform->setType('licensetype', PARAM_TEXT);
+            $mform->addRule('licensetype', get_string('required'), 'required', null, 'client');
+
+            if ($visibility === Adhesion::FIELD_LOCKED && $readonly === false) {
+                // Note : on teste la variable $readonly afin de ne pas freeze() le champ d'un formulaire hardFreeze().
+                // Si c'est le cas, moodleform lève un warning PHP.
+                $mform->freeze('licensetype');
+            }
+        }
+
+        // Honorability.
+        $mform->addElement('hidden', 'honorability', 0);
+        $mform->setType('honorability', PARAM_INT);
+
+        // Nom de naissance.
         $mform->addElement('text', 'birthname', get_string('birthname', 'local_apsolu'));
         $mform->setType('birthname', PARAM_TEXT);
+        $mform->hideIf('birthname', 'honorability', 'eq', '0');
 
-        // Sport principal.
-        $mform->addElement('select', 'mainsport', get_string('main_sport', 'local_apsolu'), $mainsports);
-        $mform->setType('mainsport', PARAM_INT);
+        // Pays de naissance.
+        $values = array_merge(['' => ''], Adhesion::get_countries());
+        $mform->addElement('autocomplete', 'birthcountry', get_string('birthcountry', 'local_apsolu'), $values);
+        $mform->setType('birthcountry', PARAM_TEXT);
+        $mform->hideIf('birthcountry', 'honorability', 'eq', '0');
 
-        // Sport complémentaire.
-        $list = html_writer::alist($sportswithconstraints);
-        $label = get_string('do_i_plan_to_practice_one_of_the_following_sports_in_addition', 'local_apsolu', $list);
-        $mform->addElement('selectyesno', 'complementaryconstraintsport', $label);
-        $mform->setType('complementaryconstraintsport', PARAM_INT);
+        // Commune de naissance (pour les français).
+        $options = [
+            'ajax' => 'local_apsolu/federation_adhesion_municipalities_form',
+            'multiple' => false,
+            'valuehtmlcallback' => function($value) {
+                global $DB;
 
-        // Autre fédération.
-        $visibility = get_config('local_apsolu', 'otherfederation_field_visibility');
-        if ($visibility !== Adhesion::FIELD_HIDDEN) {
-            $mform->addElement('text', 'otherfederation', get_string('other_federation', 'local_apsolu'), ['size' => 50]);
-            $mform->setType('otherfederation', PARAM_TEXT);
-            if ($visibility === Adhesion::FIELD_LOCKED && $readonly === false) {
-                // Note : on teste la variable $readonly afin de ne pas freeze() le champ d'un formulaire hardFreeze().
-                // Si c'est le cas, moodleform lève un warning PHP.
-                $mform->freeze('otherfederation');
+                $municipalities = $DB->get_records('apsolu_municipalities', ['inseecode' => $value]);
+                if (count($municipalities) === 0) {
+                    return false;
+                }
+
+                $municipality = current($municipalities);
+
+                return sprintf('%s (%s)', $municipality->name, $municipality->departmentid);
+            },
+        ];
+        $mform->addElement('autocomplete', 'birthtown', get_string('birthtown', 'local_apsolu'), [], $options);
+        $mform->setType('birthtown', PARAM_TEXT);
+        $mform->hideIf('birthtown', 'honorability', 'eq', '0');
+        $mform->hideIf('birthtown', 'birthcountry', 'neq', 'FR');
+
+        // Lieu de naissance (pour les non français).
+        $mform->addElement('text', 'birthplace', get_string('birthplace', 'local_apsolu'));
+        $mform->setType('birthplace', PARAM_TEXT);
+        $mform->hideIf('birthplace', 'honorability', 'eq', '0');
+        $mform->hideIf('birthplace', 'birthcountry', 'eq', 'FR');
+
+        // Activités.
+        $options = ['multiple' => true];
+        $helmetwhitecross = '&#9937;';
+        $heavygreekcross = '&#10010;';
+        $stethoscope = '&#129658;';
+        $values = [];
+        $restrictionactivities = [];
+        foreach (Activity::get_records([], $sort = 'name') as $record) {
+            $values[$record->code] = $record->name;
+
+            if (empty($record->restriction) === false) {
+                $restrictionactivities[] = $record->name;
+                $values[$record->code] .= ' '.$stethoscope;
             }
         }
+        $mform->addElement('autocomplete', 'activity', get_string('discipline', 'local_apsolu'), $values, $options);
+        $mform->addRule('activity', get_string('required'), 'required', null, 'client');
+        $mform->setType('activity', PARAM_TEXT);
+        $label = get_string('discipline_additional_information', 'local_apsolu', implode(', ', $restrictionactivities));
+        $mform->addElement('static', 'activityinfo', '', $label);
 
-        // Type de licencié.
-        $visibility = get_config('local_apsolu', 'managerlicensetype_field_visibility');
-        if ($visibility !== Adhesion::FIELD_HIDDEN) {
-            $mform->addElement('select', 'managerlicensetype', get_string('i_am', 'local_apsolu'), $managertypes);
-            $mform->setType('managerlicensetype', PARAM_INT);
-
-            if ($visibility === Adhesion::FIELD_LOCKED && $readonly === false) {
-                // Note : on teste la variable $readonly afin de ne pas freeze() le champ d'un formulaire hardFreeze().
-                // Si c'est le cas, moodleform lève un warning PHP.
-                $mform->freeze('managerlicensetype');
-            }
-        }
-
-        // Licence sport.
-        $visibility = get_config('local_apsolu', 'sportlicense_field_visibility');
-        if ($visibility !== Adhesion::FIELD_HIDDEN) {
-            $mform->addElement('selectyesno', 'sportlicense', get_string('sport_license', 'local_apsolu'));
-            $mform->setType('sportlicense', PARAM_INT);
-
-            if ($visibility === Adhesion::FIELD_LOCKED && $readonly === false) {
-                // Note : on teste la variable $readonly afin de ne pas freeze() le champ d'un formulaire hardFreeze().
-                // Si c'est le cas, moodleform lève un warning PHP.
-                $mform->freeze('sportlicense');
-            }
-        }
-
-        // Licence dirigeant.
-        $visibility = get_config('local_apsolu', 'managerlicense_field_visibility');
-        if ($visibility !== Adhesion::FIELD_HIDDEN) {
-            $honorability = true;
-
-            $mform->addElement('selectyesno', 'managerlicense', get_string('manager_license', 'local_apsolu'));
-            $mform->setType('managerlicense', PARAM_INT);
-
-            if ($visibility === Adhesion::FIELD_LOCKED && $readonly === false) {
-                // Note : on teste la variable $readonly afin de ne pas freeze() le champ d'un formulaire hardFreeze().
-                // Si c'est le cas, moodleform lève un warning PHP.
-                $mform->freeze('managerlicense');
-            }
-        }
-
-        // Licence arbitre.
-        $visibility = get_config('local_apsolu', 'refereelicense_field_visibility');
-        if ($visibility !== Adhesion::FIELD_HIDDEN) {
-            $honorability = true;
-
-            $mform->addElement('selectyesno', 'refereelicense', get_string('referee_license', 'local_apsolu'));
-            $mform->setType('refereelicense', PARAM_INT);
-
-            if ($visibility === Adhesion::FIELD_LOCKED && $readonly === false) {
-                // Note : on teste la variable $readonly afin de ne pas freeze() le champ d'un formulaire hardFreeze().
-                // Si c'est le cas, moodleform lève un warning PHP.
-                $mform->freeze('refereelicense');
-            }
-        }
-
-        // Contrôle de l'honorabilité.
-        if ($honorability === true) {
-            $label = get_string('honorability', 'local_apsolu');
-            $mform->addElement('checkbox', 'honorabilityagreement', $label, get_string('honorability_description', 'local_apsolu'));
-            $mform->setType('honorabilityagreement', PARAM_INT);
-        }
-
-        // Licence étoile.
-        $visibility = get_config('local_apsolu', 'starlicense_field_visibility');
-        if ($visibility !== Adhesion::FIELD_HIDDEN) {
-            $mform->addElement('select', 'starlicense', get_string('star_license', 'local_apsolu'), $starlicensevalues);
-            $mform->setType('starlicense', PARAM_TEXT);
-
-            if ($visibility === Adhesion::FIELD_LOCKED && $readonly === false) {
-                // Note : on teste la variable $readonly afin de ne pas freeze() le champ d'un formulaire hardFreeze().
-                // Si c'est le cas, moodleform lève un warning PHP.
-                $mform->freeze('starlicense');
-            }
-        }
-
-        // Assurance.
+        // Avec IA (Individuelle Accident).
         $visibility = get_config('local_apsolu', 'insurance_field_visibility');
         if ($visibility !== Adhesion::FIELD_HIDDEN) {
             $mform->addElement('selectyesno', 'insurance', get_string('insurance', 'local_apsolu'));
-            $mform->setType('insurance', PARAM_INT);
+            $mform->addRule('insurance', get_string('required'), 'required', null, 'client');
 
             if ($visibility === Adhesion::FIELD_LOCKED && $readonly === false) {
                 // Note : on teste la variable $readonly afin de ne pas freeze() le champ d'un formulaire hardFreeze().
@@ -181,80 +264,62 @@ class local_apsolu_federation_membership extends moodleform {
             }
         }
 
-        // Date de naissance.
-        $mform->addElement('date_selector', 'birthday', get_string('birthday', 'local_apsolu'));
-        $mform->setType('birthday', PARAM_TEXT);
-
-        // Pays de naissance.
-        $mform->addElement('text', 'nativecountry', get_string('native_country', 'local_apsolu'));
-        $mform->setType('nativecountry', PARAM_TEXT);
-        $mform->addRule('nativecountry', get_string('required'), 'required', null, 'client');
-
-        // Département de naissance.
-        $departements = Adhesion::get_departments();
-        $mform->addElement('select', 'departmentofbirth', get_string('department_of_birth', 'local_apsolu'), $departements);
-        $mform->setType('departmentofbirth', PARAM_ALPHANUM);
-        $mform->addRule('departmentofbirth', get_string('required'), 'required', null, 'client');
-
-        // Ville de naissance.
-        $mform->addElement('text', 'cityofbirth', get_string('city_of_birth', 'local_apsolu'));
-        $mform->setType('cityofbirth', PARAM_TEXT);
-        $mform->addRule('cityofbirth', get_string('required'), 'required', null, 'client');
-
-        // Sexe.
-        $mform->addElement('select', 'sex', get_string('sex', 'local_apsolu'), $sexes);
-        $mform->setType('sex', PARAM_TEXT);
-        $mform->addRule('sex', get_string('required'), 'required', null, 'client');
-
-        // Discipline.
-        $mform->addElement('select', 'disciplineid', get_string('discipline_cursus', 'local_apsolu'), $disciplines);
-        $mform->setType('disciplineid', PARAM_INT);
-        $mform->addRule('disciplineid', get_string('required'), 'required', null, 'client');
-
-        // Adresse postale 1.
-        $mform->addElement('text', 'address1', get_string('address1', 'local_apsolu'));
-        $mform->setType('address1', PARAM_TEXT);
-        $mform->addRule('address1', get_string('required'), 'required', null, 'client');
-
-        // Adresse postale 2.
-        $mform->addElement('text', 'address2', get_string('address2', 'local_apsolu'));
-        $mform->setType('address2', PARAM_TEXT);
-
-        // Code postal.
-        $mform->addElement('text', 'postalcode', get_string('postal_code', 'local_apsolu'));
-        $mform->setType('postalcode', PARAM_TEXT);
-        $mform->addRule('postalcode', get_string('required'), 'required', null, 'client');
-
-        // Ville.
-        $mform->addElement('text', 'city', get_string('city'));
-        $mform->setType('city', PARAM_TEXT);
-        $mform->addRule('city', get_string('required'), 'required', null, 'client');
-
-        // Téléphone.
-        $mform->addElement('text', 'phone', get_string('phone', 'local_apsolu'));
-        $mform->setType('phone', PARAM_TEXT);
-
-        // Instagram.
-        $visibility = get_config('local_apsolu', 'instagram_field_visibility');
+        // Autre fédération.
+        $visibility = get_config('local_apsolu', 'otherfederation_field_visibility');
         if ($visibility !== Adhesion::FIELD_HIDDEN) {
-            $mform->addElement('text', 'instagram', get_string('instagram', 'local_apsolu'));
-            $mform->setType('instagram', PARAM_TEXT);
+            $values = array_merge(['' => ''], Adhesion::get_other_federations());
+            $mform->addElement('select', 'otherfederation', get_string('other_federation', 'local_apsolu'), $values);
+            $mform->setType('otherfederation', PARAM_TEXT);
             if ($visibility === Adhesion::FIELD_LOCKED && $readonly === false) {
                 // Note : on teste la variable $readonly afin de ne pas freeze() le champ d'un formulaire hardFreeze().
                 // Si c'est le cas, moodleform lève un warning PHP.
-                $mform->freeze('instagram');
+                $mform->freeze('otherfederation');
             }
         }
 
+        // ETUDES.
+        $mform->addElement('header', 'studies', get_string('studies', 'local_apsolu'));
+        $mform->setExpanded('studies', $expanded = true);
+
+        // Discipline / Cursus.
+        $values = array_merge(['' => ''], Adhesion::get_disciplines());
+        $mform->addElement('select', 'cursus', get_string('discipline_cursus', 'local_apsolu'), $values);
+        $mform->setType('cursus', PARAM_TEXT);
+
+        // Niveau.
+        $values = array_merge(['' => ''], Adhesion::get_study_cycles());
+        $mform->addElement('select', 'studycycle', get_string('study_cycle', 'local_apsolu'), $values);
+        $mform->setType('studycycle', PARAM_TEXT);
+
+        // AUTORISATIONS.
+        $mform->addElement('header', 'autorization', get_string('authorizations', 'local_apsolu'));
+
+        // Acceptation des textes fédéraux.
+        $mform->addElement('selectyesno', 'federaltexts', get_string('federal_texts', 'local_apsolu'));
+        $mform->setType('federaltexts', PARAM_INT);
+        $mform->addRule('federaltexts', get_string('required'), 'required', null, 'client');
+        $mform->addElement('static', 'federaltextsinfo', '', get_string('federal_texts_help', 'local_apsolu'));
+
+        // Acceptation des conditions d’utilisation des données.
+        $mform->addElement('selectyesno', 'policyagreed', get_string('terms_of_use_for_data', 'local_apsolu'));
+        $mform->setType('policyagreed', PARAM_INT);
+        $mform->addRule('policyagreed', get_string('required'), 'required', null, 'client');
+        $mform->addElement('static', 'policyagreedinfo', '', get_string('terms_of_use_for_data_help', 'local_apsolu'));
+
+        // Autorisation offres commerciales.
+        $mform->addElement('selectyesno', 'commercialoffers', get_string('commercial_offers', 'local_apsolu'));
+        $mform->addHelpButton('commercialoffers', 'commercial_offers', 'local_apsolu');
+        $mform->setType('commercialoffers', PARAM_INT);
+
         // Autorisation / droit à l'image.
-        $label = get_string('permission_to_use_my_personal_image_description', 'local_apsolu');
-        $mform->addElement('selectyesno', 'usepersonalimage', $label);
+        $mform->addElement('selectyesno', 'usepersonalimage', get_string('image_rights', 'local_apsolu'));
+        $mform->addHelpButton('usepersonalimage', 'image_rights', 'local_apsolu');
         $mform->setType('usepersonalimage', PARAM_INT);
 
-        // Autorisation d'utilisation des données personnelles.
-        $label = get_string('permission_to_use_my_personal_data_description', 'local_apsolu');
-        $mform->addElement('selectyesno', 'usepersonaldata', $label);
-        $mform->setType('usepersonaldata', PARAM_INT);
+        // Autorisation newsletter.
+        $mform->addElement('selectyesno', 'newsletter', get_string('newsletter', 'local_apsolu'));
+        $mform->addHelpButton('newsletter', 'newsletter', 'local_apsolu');
+        $mform->setType('newsletter', PARAM_INT);
 
         // Champs cachés.
         $mform->addElement('hidden', 'step', APSOLU_PAGE_MEMBERSHIP);
@@ -276,7 +341,9 @@ class local_apsolu_federation_membership extends moodleform {
         $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Set default values.
-        $this->set_data($adhesion);
+        $data = $adhesion->decode_data();
+        $data->birthday = $adhesion->birthday;
+        $this->set_data($data);
     }
 
     /**
@@ -290,43 +357,58 @@ class local_apsolu_federation_membership extends moodleform {
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
 
-        if (preg_match('#[0-9]/#', $data['birthname']) === 1 || preg_match('#/[0-9]#', $data['birthname']) === 1) {
-            $label = get_string('birthname', 'local_apsolu');
-
-            $errors['birthname'] = get_string('the_field_X_has_an_invalid_value', 'local_apsolu', $label);
-        }
-
+        // Contrôle la validité du champ date de naissance.
         if ($data['birthday'] > (time() - DAYSECS)) {
             $label = get_string('birthday', 'local_apsolu');
 
             $errors['birthday'] = get_string('the_field_X_has_an_invalid_value', 'local_apsolu', $label);
         }
 
-        if (isset($data['managerlicense']) === true && empty($data['managerlicense']) === false) {
-            if (isset($data['honorabilityagreement']) === false) {
-                $errors['honorabilityagreement'] = get_string('you_must_accept_the_honorability_check', 'local_apsolu');
+        // Contrôle que le champ téléphone contient uniquement 10 chiffres.
+        $phone = preg_replace('/[^0-9]/', '', $data['phone2']);
+        if (strlen($phone) !== 10) {
+            $label = get_string('phone2', 'local_apsolu');
+
+            $errors['phone2'] = get_string('the_field_X_has_an_invalid_value', 'local_apsolu', $label);
+        }
+
+        // Si une licence dirigeant, arbitre ou encadrant a été prise...
+        if (Adhesion::require_honorability($data['licensetype']) === true) {
+            // Contrôle que l'utilisateur n'a pas essayé de mettre une date de naissance au lieu d'un nom de naissance.
+            if (preg_match('#[0-9]/#', $data['birthname']) === 1 || empty($data['birthname']) === true) {
+                $label = get_string('birthname', 'local_apsolu');
+
+                $errors['birthname'] = get_string('the_field_X_has_an_invalid_value', 'local_apsolu', $label);
+            }
+
+            // Contrôle que le pays de naissance a été saisi.
+            if (empty($data['birthcountry']) === true) {
+                $label = get_string('birthcountry', 'local_apsolu');
+
+                $errors['birthcountry'] = get_string('the_field_X_has_an_invalid_value', 'local_apsolu', $label);
+            } else if ($data['birthcountry'] === 'FR') {
+                // Contrôle que la commune de naissance a été saisie.
+                if (empty($data['birthtown']) === true) {
+                    $label = get_string('birthtown', 'local_apsolu');
+
+                    $errors['birthtown'] = get_string('the_field_X_has_an_invalid_value', 'local_apsolu', $label);
+                }
+            } else {
+                // Contrôle que le lieu de naissance a été saisi.
+                if (empty($data['birthplace']) === true) {
+                    $label = get_string('birthplace', 'local_apsolu');
+
+                    $errors['birthplace'] = get_string('the_field_X_has_an_invalid_value', 'local_apsolu', $label);
+                }
             }
         }
 
-        if (isset($data['refereelicense']) === true && empty($data['refereelicense']) === false) {
-            if (isset($data['honorabilityagreement']) === false) {
-                $errors['honorabilityagreement'] = get_string('you_must_accept_the_honorability_check', 'local_apsolu');
-            }
+        if (empty($data['federaltexts']) === true) {
+            $errors['federaltexts'] = get_string('you_must_accept_the_federal_texts', 'local_apsolu');
         }
 
-        if (isset($data['nativecountry'], $data['departmentofbirth']) === true) {
-            $nativecountry = strtolower(trim($data['nativecountry']));
-            if ($nativecountry === 'france' && empty($data['departmentofbirth']) === true) {
-                $errors['departmentofbirth'] = get_string('you_must_select_a_department_if_your_native_country_is_france',
-                    'local_apsolu');
-            } else if ($nativecountry !== 'france' && empty($data['departmentofbirth']) === false) {
-                $errors['departmentofbirth'] = get_string('you_must_select_other_department_if_your_native_country_is_not_france',
-                    'local_apsolu');
-            }
-        }
-
-        if (strlen($data['postalcode']) !== 5 || ctype_digit($data['postalcode']) === false) {
-            $errors['postalcode'] = get_string('the_given_postal_code_is_not_valid', 'local_apsolu');
+        if (empty($data['policyagreed']) === true) {
+            $errors['policyagreed'] = get_string('you_must_accept_the_terms_of_use_for_data', 'local_apsolu');
         }
 
         return $errors;

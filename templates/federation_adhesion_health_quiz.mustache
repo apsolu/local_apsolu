@@ -41,10 +41,10 @@
     {{#categories}}
         <h2>{{name}}</h2>
         {{#questions}}
-        <fieldset class="form-row">
+        <fieldset class="form-row my-3">
+            <div class="col-10">{{label}}</div>
             <label class="col-1"><input name="{{id}}" type="radio" value="1"> {{#str}}yes{{/str}}</label>
             <label class="col-1"><input name="{{id}}" type="radio" value="0"> {{#str}}no{{/str}}</label>
-            <div class="col-10">{{label}}</div>
         </fieldset>
         {{/questions}}
     {{/categories}}
@@ -52,7 +52,13 @@
 </form>
 
 <form method="post" action="{{wwwroot}}/local/apsolu/federation/adhesion/index.php?step={{step}}">
+    {{^behat}}
     <input id="healthquizvalue" name="quizstatus" type="hidden" value="0">
-    <input class="btn btn-primary" disabled id="healthquizsubmit" type="submit" value="{{#str}}save{{/str}}">
+    <input class="btn btn-primary my-3" disabled id="healthquizsubmit" type="submit" value="{{#str}}save{{/str}}">
+    {{/behat}}
+    {{#behat}}
+    <input id="healthquizvalue" name="quizstatus" type="text" value="0">
+    <input class="btn btn-primary" id="healthquizsubmit" type="submit" value="{{#str}}save{{/str}}">
+    {{/behat}}
     <a class="btn btn-danger mx-2" href="{{wwwroot}}/local/apsolu/federation/adhesion/cancel.php">{{#str}}cancel_and_unenrol, local_apsolu{{/str}}</a>
 </form>

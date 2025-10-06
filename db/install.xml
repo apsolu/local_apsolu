@@ -177,8 +177,8 @@
     <TABLE NAME="apsolu_federation_activities" COMMENT="federation activities table">
         <FIELDS>
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" />
+            <FIELD NAME="code" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
             <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
-            <FIELD NAME="mainsport" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="restriction" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="categoryid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" />
         </FIELDS>
@@ -186,7 +186,6 @@
             <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_federation_activities" />
         </KEYS>
         <INDEXES>
-            <INDEX NAME="idx_mainsport" UNIQUE="false" FIELDS="mainsport" />
             <INDEX NAME="idx_restriction" UNIQUE="false" FIELDS="restriction" />
             <INDEX NAME="idx_categoryid" UNIQUE="false" FIELDS="categoryid" />
         </INDEXES>
@@ -196,49 +195,15 @@
     <TABLE NAME="apsolu_federation_adhesions" COMMENT="federation adhesions table">
         <FIELDS>
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" />
-            <FIELD NAME="birthname" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
-            <FIELD NAME="sex" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
-            <FIELD NAME="insurance" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="birthday" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="nativecountry" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
-            <FIELD NAME="departmentofbirth" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
-            <FIELD NAME="cityofbirth" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
-            <FIELD NAME="address1" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
-            <FIELD NAME="address2" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
-            <FIELD NAME="postalcode" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
-            <FIELD NAME="city" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
-            <FIELD NAME="phone" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
-            <FIELD NAME="instagram" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
-            <FIELD NAME="disciplineid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="otherfederation" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
-            <FIELD NAME="mainsport" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="complementaryconstraintsport" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="sportlicense" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="managerlicense" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="managerlicensetype" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="refereelicense" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="honorabilityagreement" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="starlicense" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
-            <FIELD NAME="usepersonalimage" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="usepersonaldata" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="sport1" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="sport2" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="sport3" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="sport4" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="sport5" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="constraintsport1" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="constraintsport2" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="constraintsport3" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="constraintsport4" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="constraintsport5" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="questionnairestatus" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="agreementaccepted" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
-            <FIELD NAME="medicalcertificatedate" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="medicalcertificatestatus" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="passsportnumber" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
             <FIELD NAME="federationnumberprefix" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
             <FIELD NAME="federationnumber" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
             <FIELD NAME="federationnumberrequestdate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="data" TYPE="text" NOTNULL="false" SEQUENCE="false" />
             <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
@@ -248,7 +213,6 @@
         </KEYS>
         <INDEXES>
             <INDEX NAME="unique_userid" UNIQUE="true" FIELDS="userid" />
-            <INDEX NAME="idx_mainsport" UNIQUE="false" FIELDS="mainsport" />
         </INDEXES>
     </TABLE>
 
@@ -295,6 +259,24 @@
         </KEYS>
         <INDEXES>
             <INDEX NAME="unique_name" UNIQUE="true" FIELDS="name" />
+        </INDEXES>
+    </TABLE>
+
+    <!-- Municipalities -->
+    <TABLE NAME="apsolu_municipalities" COMMENT="Table apsolu_municipalities">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" />
+            <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="postalcode" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="inseecode" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="departmentid" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="regionid" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_payments" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="postalcode" UNIQUE="false" FIELDS="postalcode"/>
         </INDEXES>
     </TABLE>
 

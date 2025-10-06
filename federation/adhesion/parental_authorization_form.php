@@ -57,8 +57,72 @@ class local_apsolu_federation_parental_authorization extends moodleform {
         $html = '<div class="bg-light card mx-auto my-3 w-75"><div class="card-body">%s</div></div>';
         $mform->addElement('html', sprintf($html, $description));
 
+        $mform->addElement('header', 'primarylegalrepresentative', get_string('primary_legal_representative', 'local_apsolu'));
+        $mform->setExpanded('primarylegalrepresentative', $expanded = true);
+
+        // Civilité du représentant légal.
+        $mform->addElement('text', 'titleprimarylegalrepresentative', get_string('title_primary_legal_representative',
+            'local_apsolu'));
+        $mform->setType('titleprimarylegalrepresentative', PARAM_TEXT);
+        $mform->addRule('titleprimarylegalrepresentative', get_string('required'), 'required', null, 'client');
+
+        // Nom du représentant légal.
+        $mform->addElement('text', 'lastnameprimarylegalrepresentative', get_string('lastname_primary_legal_representative',
+            'local_apsolu'));
+        $mform->setType('lastnameprimarylegalrepresentative', PARAM_TEXT);
+        $mform->addRule('lastnameprimarylegalrepresentative', get_string('required'), 'required', null, 'client');
+
+        // Prénom du représentant légal.
+        $mform->addElement('text', 'firstnameprimarylegalrepresentative', get_string('firstname_primary_legal_representative',
+            'local_apsolu'));
+        $mform->setType('firstnameprimarylegalrepresentative', PARAM_TEXT);
+        $mform->addRule('firstnameprimarylegalrepresentative', get_string('required'), 'required', null, 'client');
+
+        // Tél. du représentant légal.
+        $mform->addElement('text', 'phoneprimarylegalrepresentative', get_string('phone_primary_legal_representative',
+            'local_apsolu'));
+        $mform->setType('phoneprimarylegalrepresentative', PARAM_TEXT);
+        $mform->addRule('phoneprimarylegalrepresentative', get_string('required'), 'required', null, 'client');
+
+        // Mail du représentant légal.
+        $mform->addElement('text', 'emailprimarylegalrepresentative', get_string('email_primary_legal_representative',
+            'local_apsolu'));
+        $mform->setType('emailprimarylegalrepresentative', PARAM_TEXT);
+        $mform->addRule('emailprimarylegalrepresentative', get_string('required'), 'required', null, 'client');
+
+        $mform->addElement('header', 'secondarylegalrepresentative', get_string('secondary_legal_representative', 'local_apsolu'));
+        $mform->setExpanded('secondarylegalrepresentative', $expanded = true);
+
+        // Civilité du représentant légal secondaire.
+        $mform->addElement('text', 'titlesecondarylegalrepresentative', get_string('title_secondary_legal_representative',
+            'local_apsolu'));
+        $mform->setType('titlesecondarylegalrepresentative', PARAM_TEXT);
+
+        // Nom du représentant légal secondaire.
+        $mform->addElement('text', 'lastnamesecondarylegalrepresentative', get_string('lastname_secondary_legal_representative',
+            'local_apsolu'));
+        $mform->setType('lastnamesecondarylegalrepresentative', PARAM_TEXT);
+
+        // Prénom du représentant légal secondaire.
+        $mform->addElement('text', 'firstnamesecondarylegalrepresentative', get_string('firstname_secondary_legal_representative',
+            'local_apsolu'));
+        $mform->setType('firstnamesecondarylegalrepresentative', PARAM_TEXT);
+
+        // Tél. du représentant légal secondaire.
+        $mform->addElement('text', 'phonesecondarylegalrepresentative', get_string('phone_secondary_legal_representative',
+            'local_apsolu'));
+        $mform->setType('phonesecondarylegalrepresentative', PARAM_TEXT);
+
+        // Mail du représentant légal secondaire.
+        $mform->addElement('text', 'emailsecondarylegalrepresentative', get_string('email_secondary_legal_representative',
+            'local_apsolu'));
+        $mform->setType('emailsecondarylegalrepresentative', PARAM_TEXT);
+
         // Autorisation parentale.
         $label = get_string('parental_authorization', 'local_apsolu');
+        $mform->addElement('header', 'authorization', $label);
+        $mform->setExpanded('authorization', $expanded = true);
+
         if ($freeze === true) {
             $fs = get_file_storage();
             $context = context_course::instance($course->id, MUST_EXIST);

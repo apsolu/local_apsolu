@@ -26,6 +26,7 @@ use local_apsolu\core\record;
 use local_apsolu\event\federation_adhesion_updated;
 use local_apsolu\event\notification_sent;
 use moodle_url;
+use stdClass;
 use UniversiteRennes2\Apsolu\Payment;
 
 defined('MOODLE_INTERNAL') || die();
@@ -85,125 +86,11 @@ class adhesion extends record {
      */
     const FIELD_LOCKED = '2';
 
-    /**
-     * Valeur aucun sport des champs sportN et constraintsportN.
-     */
-    const SPORT_NONE = '1';
-
     /** @var int|string $id Identifiant numérique de la correspondance d'activités. */
     public $id = 0;
 
-    /** @var string $birthname Nom de naissance de l'adhérent. */
-    public $birthname = '';
-
-    /** @var string $sex Sexe de l'adhérent (M ou F). */
-    public $sex = '';
-
-    /** @var int|string $insurance Assurance IA FFSU (1: oui, 0: non). */
-    public $insurance = '';
-
     /** @var string $birthday Date de naissance de l'adhérent (AAAA-MM-JJ). */
     public $birthday = '';
-
-    /** @var string $nativecountry Pays de naissance de l'adhérent. */
-    public $nativecountry = '';
-
-    /** @var string $departmentofbirth Identifiant numérique du département de naissance de l'adhérent. */
-    public $departmentofbirth = '0';
-
-    /** @var string $cityofbirth Ville de naissance de l'adhérent. */
-    public $cityofbirth = '';
-
-    /** @var string $address1 Adresse 1 de l'adhérent. */
-    public $address1 = '';
-
-    /** @var string $address2 Adresse 2 de l'adhérent. */
-    public $address2 = '';
-
-    /** @var string $postalcode Code postal de l'adhérent. */
-    public $postalcode = '';
-
-    /** @var string $city Ville de l'adhérent. */
-    public $city = '';
-
-    /** @var string $phone Téléphone de l'adhérent. */
-    public $phone = '';
-
-    /** @var string $instagram Identifiant Instagram. */
-    public $instagram = '';
-
-    /** @var int|string $disciplineid Identifiant numérique du secteur d'étude. */
-    public $disciplineid = '';
-
-    /** @var string $otherfederation Éventuelle licence dans une autre fédération. */
-    public $otherfederation = '';
-
-    /** @var int|string $mainsport Identifiant numérique du sport principal. */
-    public $mainsport = '';
-
-    /** @var int|string $complementaryconstraintsport Témoin booléen de pratique complémentaire
-                                                      de sports à contraintes (1: oui, 0: non). */
-    public $complementaryconstraintsport = 0;
-
-    /** @var int|string $sportlicense Booléen indiquant si l'adhésion comprend une licence sport (1: oui, 0: non). */
-    public $sportlicense = 1;
-
-    /** @var int|string $managerlicense Booléen indiquant si l'adhésion comprend une licence dirigeant (1: oui, 0: non). */
-    public $managerlicense = 0;
-
-    /** @var int|string $refereelicense Booléen indiquant si l'adhésion comprend une licence arbitre (1: oui, 0: non). */
-    public $refereelicense = 0;
-
-    /** @var int|string $honorabilityagreement Booléen indiquant l'acceptation du contrôle d'honorabilité pour arbitres et
-        dirigeants (1: oui, 0: non). */
-    public $honorabilityagreement = 0;
-
-    /** @var int|string $managerlicensetype Pour licence dirigeant pour Non-étudiant/Etudiant
-                                            (1: pour étudiant, 0: pour non-étudiant). */
-    public $managerlicensetype = 0;
-
-    /** @var string $starlicense Licence étoile (O: oui, N: non). */
-    public $starlicense = '';
-
-    /** @var int|string $usepersonalimage Booléen indiquant si le droit à l'image a été donnée (1: oui, 0: non). */
-    public $usepersonalimage = null;
-
-    /** @var int|string $usepersonaldata Booléen indiquant si le consentement d'utilisation des données personnelles
-        a été donnée (1: oui, 0: non). */
-    public $usepersonaldata = null;
-
-    /** @var int|string $sport1 Identifiant numérique de l'activité choisie sans contrainte médicale. */
-    public $sport1 = self::SPORT_NONE;
-
-    /** @var int|string $sport2 Identifiant numérique de l'activité choisie sans contrainte médicale. */
-    public $sport2 = self::SPORT_NONE;
-
-    /** @var int|string $sport3 Identifiant numérique de l'activité choisie sans contrainte médicale. */
-    public $sport3 = self::SPORT_NONE;
-
-    /** @var int|string $sport4 Identifiant numérique de l'activité choisie sans contrainte médicale. */
-    public $sport4 = self::SPORT_NONE;
-
-    /** @var int|string $sport5 Identifiant numérique de l'activité choisie sans contrainte médicale. */
-    public $sport5 = self::SPORT_NONE;
-
-    /** @var int|string $constraintsport1 Identifiant numérique de l'activité choisie avec contrainte médicale. */
-    public $constraintsport1 = self::SPORT_NONE;
-
-    /** @var int|string $constraintsport2 Identifiant numérique de l'activité choisie avec contrainte médicale. */
-    public $constraintsport2 = self::SPORT_NONE;
-
-    /** @var int|string $constraintsport3 Identifiant numérique de l'activité choisie avec contrainte médicale. */
-    public $constraintsport3 = self::SPORT_NONE;
-
-    /** @var int|string $constraintsport4 Identifiant numérique de l'activité choisie avec contrainte médicale. */
-    public $constraintsport4 = self::SPORT_NONE;
-
-    /** @var int|string $constraintsport5 Identifiant numérique de l'activité choisie avec contrainte médicale. */
-    public $constraintsport5 = self::SPORT_NONE;
-
-    /** @var string $medicalcertificatedate Date du certificat médical. */
-    public $medicalcertificatedate = '';
 
     /** @var int|string $medicalcertificatestatus État de validation du certificat médical. */
     public $medicalcertificatestatus = null;
@@ -220,8 +107,11 @@ class adhesion extends record {
     /** @var string $federationnumber Numéro FFSU de l'adhérant. */
     public $federationnumber = null;
 
-    /** @var int|string $timemodified Timestamp Unix de la demande de numéro de licence. */
+    /** @var int|string $federationnumberrequestdate Timestamp Unix de la demande de numéro de licence. */
     public $federationnumberrequestdate = null;
+
+    /** @var string $data Données du formulaire d'adhésion saisies par l'étudiant au format JSON. */
+    public $data = null;
 
     /** @var int|string $timemodified Timestamp Unix de création de l'adhésion. */
     public $timecreated = 0;
@@ -271,7 +161,7 @@ class adhesion extends record {
             return false;
         }
 
-        if (empty($this->mainsport) === true) {
+        if (empty($this->data) === true) {
             // Le formulaire d'adhésion n'a pas été rempli.
             return false;
         }
@@ -317,53 +207,21 @@ class adhesion extends record {
     }
 
     /**
-     * Retourne un tableau d'entiers contenant les identifiants des activités choisies par l'adhérent.
+     * Décode les données JSON du champ data.
      *
-     * @return array
+     * @return object
      */
-    public function get_activities() {
-        $activities = [];
-        foreach (self::get_activity_fields() as $field) {
-            if (isset($this->{$field}) === false) {
-                continue;
-            }
-
-            if ($this->{$field} === self::SPORT_NONE) {
-                // Ignore les champs ne contenant pas une activité.
-                continue;
-            }
-
-            if (in_array($field, $activities, $strict = true) === true) {
-                // Empêche l'ajout de doublons.
-                continue;
-            }
-
-            $activities[] = $this->{$field};
+    public function decode_data() {
+        if (is_string($this->data) === false) {
+            return new stdClass();
         }
 
-        return $activities;
-    }
+        $json = json_decode($this->data);
+        if ($json === false) {
+            return new stdClass();
+        }
 
-    /**
-     * Retourne un tableau de chaines contenant la liste des champs représentant une activité.
-     *
-     * @return array
-     */
-    public static function get_activity_fields() {
-        $fields = [];
-        $fields[] = 'mainsport';
-        $fields[] = 'sport1';
-        $fields[] = 'sport2';
-        $fields[] = 'sport3';
-        $fields[] = 'sport4';
-        $fields[] = 'sport5';
-        $fields[] = 'constraintsport1';
-        $fields[] = 'constraintsport2';
-        $fields[] = 'constraintsport3';
-        $fields[] = 'constraintsport4';
-        $fields[] = 'constraintsport5';
-
-        return $fields;
+        return $json;
     }
 
     /**
@@ -385,13 +243,274 @@ class adhesion extends record {
     }
 
     /**
+     * Retourne la liste des pays.
+     *
+     * @return array
+     */
+    public static function get_countries() {
+        $countries = [];
+        $countries['AF'] = 'AFGHANISTAN';
+        $countries['AL'] = 'ALBANIE';
+        $countries['AQ'] = 'ANTARCTIQUE';
+        $countries['DZ'] = 'ALGERIE';
+        $countries['AS'] = 'SAMOA AMERICAINES';
+        $countries['AD'] = 'ANDORRE';
+        $countries['AO'] = 'ANGOLA';
+        $countries['AG'] = 'ANTIGUA-ET-BARBUDA';
+        $countries['AZ'] = 'AZERBAIDJAN';
+        $countries['AR'] = 'ARGENTINE';
+        $countries['AU'] = 'AUSTRALIE';
+        $countries['AT'] = 'AUTRICHE';
+        $countries['BS'] = 'BAHAMAS';
+        $countries['BH'] = 'BAHREIN';
+        $countries['BD'] = 'BANGLADESH';
+        $countries['AM'] = 'ARMENIE';
+        $countries['BB'] = 'BARBADE';
+        $countries['BE'] = 'BELGIQUE';
+        $countries['BM'] = 'BERMUDES';
+        $countries['BT'] = 'BHOUTAN';
+        $countries['BO'] = 'ETAT PLURINATIONAL DE BOLIVIE';
+        $countries['BA'] = 'BOSNIE-HERZEGOVINE';
+        $countries['BW'] = 'BOTSWANA';
+        $countries['BV'] = 'ILE BOUVET';
+        $countries['BR'] = 'BRESIL';
+        $countries['BZ'] = 'BELIZE';
+        $countries['IO'] = 'OCEAN INDIEN (TERRIT.BRITANNIQ)';
+        $countries['SB'] = 'SALOMON (ILES)';
+        $countries['VG'] = 'ILES VIERGES BRITANNIQUES';
+        $countries['BN'] = 'BRUNEI DARUSSALAM';
+        $countries['BG'] = 'BULGARIE';
+        $countries['MM'] = 'BIRMANIE';
+        $countries['BI'] = 'BURUNDI';
+        $countries['BY'] = 'BIELORUSSIE';
+        $countries['KH'] = 'CAMBODGE';
+        $countries['CM'] = 'CAMEROUN';
+        $countries['CA'] = 'CANADA';
+        $countries['CV'] = 'CAP-VERT';
+        $countries['KY'] = 'ILES CAIMANES';
+        $countries['CF'] = 'REPUBLIQUE CENTRAFRICAINE';
+        $countries['LK'] = 'SRI LANKA';
+        $countries['TD'] = 'TCHAD';
+        $countries['CL'] = 'CHILI';
+        $countries['CN'] = 'CHINE';
+        $countries['TW'] = 'TAIWAN';
+        $countries['CX'] = 'ILE CHRISTMAS';
+        $countries['CC'] = 'ILES COCOS (KEELING)';
+        $countries['CO'] = 'COLOMBIE';
+        $countries['KM'] = 'COMORES';
+        $countries['CG'] = 'CONGO';
+        $countries['CD'] = 'CONGO (REPUBLIQUE DEMOCRATIQUE)';
+        $countries['CK'] = 'ILES COOK';
+        $countries['CR'] = 'COSTA RICA';
+        $countries['HR'] = 'CROATIE';
+        $countries['CU'] = 'CUBA';
+        $countries['CY'] = 'CHYPRE';
+        $countries['CS'] = 'TCHECOSLOVAQUIE';
+        $countries['CZ'] = 'REPUBLIQUE TCHEQUE';
+        $countries['BJ'] = 'BENIN';
+        $countries['DK'] = 'DANEMARK';
+        $countries['DM'] = 'DOMINIQUE';
+        $countries['DO'] = 'REPUBLIQUE DOMINICAINE';
+        $countries['EC'] = 'EQUATEUR';
+        $countries['SV'] = 'SALVADOR';
+        $countries['GQ'] = 'GUINEE EQUATORIALE';
+        $countries['ET'] = 'ETHIOPIE';
+        $countries['ER'] = 'ETAT D\'ERYTHREE';
+        $countries['EE'] = 'ESTONIE';
+        $countries['FO'] = 'ILES FEROE';
+        $countries['FK'] = 'ILES FALKLAND (MALVINAS)';
+        $countries['GS'] = 'GEORGIE DU SUD-ILES SANDWICH SUD';
+        $countries['FJ'] = 'FIDJI';
+        $countries['FI'] = 'FINLANDE';
+        $countries['FR'] = 'FRANCE';
+        $countries['TF'] = 'TERRES AUSTRALES FRANCAISES';
+        $countries['DJ'] = 'DJIBOUTI';
+        $countries['GA'] = 'GABON';
+        $countries['GE'] = 'GEORGIE';
+        $countries['GM'] = 'GAMBIE';
+        $countries['PS'] = 'ETAT DE PALESTINE';
+        $countries['DE'] = 'ALLEMAGNE';
+        $countries['GH'] = 'GHANA';
+        $countries['GI'] = 'GIBRALTAR';
+        $countries['KI'] = 'KIRIBATI';
+        $countries['GR'] = 'GRECE';
+        $countries['GL'] = 'GROENLAND';
+        $countries['GD'] = 'GRENADE';
+        $countries['GU'] = 'GUAM';
+        $countries['GT'] = 'GUATEMALA';
+        $countries['GN'] = 'GUINEE';
+        $countries['GY'] = 'GUYANA';
+        $countries['HT'] = 'HAITI';
+        $countries['HM'] = 'ILES HEARD ET MC DONALD';
+        $countries['VA'] = 'VATICAN (SAINT-SIEGE)';
+        $countries['HN'] = 'HONDURAS';
+        $countries['HK'] = 'HONG-KONG';
+        $countries['HU'] = 'HONGRIE';
+        $countries['IS'] = 'ISLANDE';
+        $countries['IN'] = 'INDE';
+        $countries['ID'] = 'INDONESIE';
+        $countries['IR'] = 'IRAN (REPUBLIQUE ISLAMIQUE D\')';
+        $countries['IQ'] = 'IRAQ';
+        $countries['IE'] = 'IRLANDE';
+        $countries['IL'] = 'ISRAEL';
+        $countries['IT'] = 'ITALIE';
+        $countries['CI'] = 'COTE D\'IVOIRE';
+        $countries['JM'] = 'JAMAIQUE';
+        $countries['JP'] = 'JAPON';
+        $countries['KZ'] = 'KAZAKHSTAN';
+        $countries['JO'] = 'JORDANIE';
+        $countries['KE'] = 'KENYA';
+        $countries['KR'] = 'COREE (REP. POPULAIR. DEMOCRATI)';
+        $countries['KS'] = 'COREE (REPUBLIQUE DE)';
+        $countries['KW'] = 'KOWEIT';
+        $countries['KG'] = 'KIRGHIZISTAN';
+        $countries['LA'] = 'LAOS (REP. DEMOC. POPULAIRE)';
+        $countries['LB'] = 'LIBAN';
+        $countries['LS'] = 'LESOTHO';
+        $countries['LV'] = 'LETTONIE';
+        $countries['LR'] = 'LIBERIA';
+        $countries['LY'] = 'LIBYE';
+        $countries['LI'] = 'LIECHTENSTEIN';
+        $countries['LT'] = 'LITUANIE';
+        $countries['LU'] = 'LUXEMBOURG';
+        $countries['MO'] = 'MACAO';
+        $countries['MG'] = 'MADAGASCAR';
+        $countries['MW'] = 'MALAWI';
+        $countries['MY'] = 'MALAISIE';
+        $countries['MV'] = 'MALDIVES';
+        $countries['ML'] = 'MALI';
+        $countries['MT'] = 'MALTE';
+        $countries['MR'] = 'MAURITANIE';
+        $countries['MU'] = 'MAURICE';
+        $countries['MX'] = 'MEXIQUE';
+        $countries['MC'] = 'MONACO';
+        $countries['MN'] = 'MONGOLIE';
+        $countries['MD'] = 'MOLDAVIE';
+        $countries['ME'] = 'MONTENEGRO';
+        $countries['MS'] = 'MONTSERRAT';
+        $countries['MA'] = 'MAROC';
+        $countries['MZ'] = 'MOZAMBIQUE';
+        $countries['OM'] = 'OMAN';
+        $countries['NA'] = 'NAMIBIE';
+        $countries['NR'] = 'NAURU';
+        $countries['NP'] = 'NEPAL';
+        $countries['NL'] = 'PAYS-BAS';
+        $countries['CW'] = 'CURACAO';
+        $countries['AN'] = 'ANTILLES NEERLANDAISES';
+        $countries['AW'] = 'ARUBA';
+        $countries['SX'] = 'SAINT MARTIN PARTIE NEERLANDAISE';
+        $countries['BQ'] = 'BONAIRE SAINT EUSTACHE ET SABA';
+        $countries['NT'] = 'ZONE NEUTRE';
+        $countries['NC'] = 'NOUVELLE CALEDONIE';
+        $countries['VY'] = 'VANUATU';
+        $countries['NZ'] = 'NOUVELLE-ZELANDE';
+        $countries['NI'] = 'NICARAGUA';
+        $countries['NE'] = 'NIGER';
+        $countries['NG'] = 'NIGERIA';
+        $countries['NU'] = 'NIOUE';
+        $countries['NF'] = 'ILE NORFOLK';
+        $countries['NO'] = 'NORVEGE';
+        $countries['MP'] = 'ILES MARIANNES DU NORD';
+        $countries['UM'] = 'ILES MINEURES ELOIGNEES DES E.U.';
+        $countries['FM'] = 'MICRONESIE (ETATS FEDERES DE)';
+        $countries['MH'] = 'MARSHALL (ILES)';
+        $countries['PW'] = 'PALAOS';
+        $countries['PK'] = 'PAKISTAN';
+        $countries['PA'] = 'PANAMA';
+        $countries['PG'] = 'ET INDT DE PAPOUASIE NLLE GUINEE';
+        $countries['PY'] = 'PARAGUAY';
+        $countries['PE'] = 'PEROU';
+        $countries['PH'] = 'PHILIPPINES';
+        $countries['PN'] = 'PITCAIRN';
+        $countries['PL'] = 'POLOGNE';
+        $countries['PT'] = 'PORTUGAL';
+        $countries['GW'] = 'GUINEE-BISSAO';
+        $countries['TL'] = 'TIMOR ORIENTAL';
+        $countries['PR'] = 'PORTO-RICO';
+        $countries['QA'] = 'QATAR';
+        $countries['RO'] = 'ROUMANIE';
+        $countries['RU'] = 'FEDERATION DE RUSSIE';
+        $countries['RW'] = 'RWANDA';
+        $countries['SH'] = 'SAINTE-HELENE';
+        $countries['KN'] = 'SAINT-CHRISTOPHE-ET-NIEVES';
+        $countries['AI'] = 'ANGUILLA';
+        $countries['LC'] = 'SAINTE-LUCIE';
+        $countries['VC'] = 'SAINT-VINCENT-ET-LES-GRENADINES';
+        $countries['SM'] = 'SAINT-MARIN';
+        $countries['ST'] = 'SAO TOME-ET-PRINCIPE';
+        $countries['SA'] = 'ARABIE SAOUDITE';
+        $countries['SN'] = 'SENEGAL';
+        $countries['RS'] = 'SERBIE';
+        $countries['SC'] = 'SEYCHELLES';
+        $countries['SL'] = 'SIERRA LEONE';
+        $countries['SG'] = 'SINGAPOUR';
+        $countries['SK'] = 'SLOVAQUIE';
+        $countries['VN'] = 'VIET NAM';
+        $countries['SI'] = 'SLOVENIE';
+        $countries['SO'] = 'REPUBLIQUE FEDERALE DE SOMALIE';
+        $countries['ZA'] = 'AFRIQUE DU SUD';
+        $countries['ZW'] = 'ZIMBABWE';
+        $countries['YES'] = 'YEMEN DU SUD';
+        $countries['ES'] = 'ESPAGNE';
+        $countries['SS'] = 'SOUDAN DU SUD';
+        $countries['EH'] = 'SAHARA OCCIDENTAL';
+        $countries['SD'] = 'SOUDAN';
+        $countries['SR'] = 'SURINAME';
+        $countries['SJ'] = 'SVALBARD ET ILE JAN MAYEN';
+        $countries['SZ'] = 'SWAZILAND';
+        $countries['SE'] = 'SUEDE';
+        $countries['CH'] = 'SUISSE';
+        $countries['SY'] = 'SYRIE';
+        $countries['TJ'] = 'TADJIKISTAN';
+        $countries['TH'] = 'THAILANDE';
+        $countries['TG'] = 'TOGO';
+        $countries['TK'] = 'TOKELAU';
+        $countries['TO'] = 'TONGA';
+        $countries['TT'] = 'TRINITE-ET-TOBAGO';
+        $countries['AE'] = 'EMIRATS ARABES UNIS';
+        $countries['TN'] = 'TUNISIE';
+        $countries['TR'] = 'TURQUIE';
+        $countries['TM'] = 'TURKMENISTAN';
+        $countries['TC'] = 'ILES TURKS ET CAIQUES';
+        $countries['TV'] = 'TUVALU';
+        $countries['UG'] = 'OUGANDA';
+        $countries['UA'] = 'UKRAINE';
+        $countries['MK'] = 'EX-REP.YOUGOSLAVE DE MACEDOINE';
+        $countries['SU'] = 'URSS';
+        $countries['EG'] = 'EGYPTE';
+        $countries['GB'] = 'ROYAUME-UNI';
+        $countries['GG'] = 'GUERNESEY';
+        $countries['JE'] = 'JERSEY';
+        $countries['IM'] = 'ILE DE MAN';
+        $countries['TZ'] = 'TANZANIE';
+        $countries['US'] = 'ETATS-UNIS';
+        $countries['VI'] = 'ILES VIERGES DES ETATS-UNIS';
+        $countries['BF'] = 'BURKINA FASO';
+        $countries['UY'] = 'URUGUAY';
+        $countries['UZ'] = 'OUZBEKISTAN';
+        $countries['VE'] = 'VENEZUELA';
+        $countries['WF'] = 'ILES WALLIS ET FUTUNA';
+        $countries['WS'] = 'SAMOA';
+        $countries['YEN'] = 'YEMEN DU NORD';
+        $countries['YE'] = 'YEMEN';
+        $countries['YU'] = 'YOUGOSLAVIE';
+        $countries['RFY'] = 'REPUBLIQUE FEDER. DE YOUGOSLAVIE';
+        $countries['ZM'] = 'ZAMBIE';
+        $countries['ICC'] = 'INCONNU';
+        $countries['XK'] = 'KOSOVO';
+        $countries['APY'] = 'AUTRES PAYS';
+        $countries['MER'] = 'MER';
+
+        return $countries;
+    }
+
+    /**
      * Retourne la liste des départements français.
      *
      * @return array
      */
     public static function get_departments() {
         $departments = [];
-        $departments['0'] = 'Autre';
         $departments['01'] = '01 - Ain';
         $departments['02'] = '02 - Aisne';
         $departments['03'] = '03 - Allier';
@@ -494,6 +613,9 @@ class adhesion extends record {
         $departments['974'] = '974 - La Réunion';
         $departments['975'] = '975 - Saint-Pierre-et-Miquelon';
         $departments['976'] = '976 - Mayotte';
+        $departments['977'] = '977 - St Barthelemy';
+        $departments['978'] = '978 - St Martin';
+        $departments['987'] = '987 - Polynésie Française';
 
         return $departments;
     }
@@ -505,140 +627,89 @@ class adhesion extends record {
      */
     public static function get_disciplines() {
         $disciplines = [];
-        $disciplines[15] = 'Animation';
-        $disciplines[13] = 'Architecture';
-        $disciplines[17] = 'Arts';
-        $disciplines[18] = 'Audiovisuel';
-        $disciplines[4] = 'Commerce';
-        $disciplines[14] = 'Communication';
-        $disciplines[19] = 'Défense';
-        $disciplines[11] = 'Dirigeant';
-        $disciplines[1] = 'Droit / Sciences Po.';
-        $disciplines[9] = 'Enseignement';
-        $disciplines[10] = 'Ingénierie';
-        $disciplines[7] = 'Langues';
-        $disciplines[3] = 'Lettres';
-        $disciplines[8] = 'Médecine / Santé';
-        $disciplines[6] = 'Métiers du Sport';
-        $disciplines[2] = 'Science Eco./Gestion';
-        $disciplines[5] = 'Sciences';
-        $disciplines[16] = 'Sciences Humaines';
-        $disciplines[12] = 'Technique';
+        $disciplines['Animation'] = 'Animation';
+        $disciplines['Architecture'] = 'Architecture';
+        $disciplines['Arts'] = 'Arts';
+        $disciplines['Audiovisuel'] = 'Audiovisuel';
+        $disciplines['Commerce'] = 'Commerce';
+        $disciplines['Communication'] = 'Communication';
+        $disciplines['Défense'] = 'Défense';
+        $disciplines['Droit/Sciences Po'] = 'Droit/Sciences Po';
+        $disciplines['Enseignement'] = 'Enseignement';
+        $disciplines['Ingénierie'] = 'Ingénierie';
+        $disciplines['Langues'] = 'Langues';
+        $disciplines['Lettres'] = 'Lettres';
+        $disciplines['Médecine/santé'] = 'Médecine/santé';
+        $disciplines['Métiers du sport'] = 'Métiers du sport';
+        $disciplines['Sciences Eco/Gestion'] = 'Sciences Eco/Gestion';
+        $disciplines['Sciences'] = 'Sciences';
+        $disciplines['Sciences Humaines'] = 'Sciences Humaines';
+        $disciplines['Technique'] = 'Technique';
 
         return $disciplines;
     }
 
     /**
-     * Retourne la liste des noms officiels des activités FFSU.
+     * Retourne un tableau avec le nom des champs pour l'exportation FFSU.
      *
-     * @return array
+     * @return array Tableau avec pour clé le nom de l'attribut de la valeur et pour valeur la chaîne de caractères.
      */
     public static function get_exportation_fields() {
         return [
-            'federationnumberprefix', // Champ A : N° A.S. [ 4 caractères ].
-            'lastname', // Champ B : Nom [ 25 caractères ].
-            'birthname', // Champ C : Nom de naissance [ 25 caractères ].
-            'firstname', // Champ D : Prénom [ 25 caractères ].
-            'sex', // Champ E : Sexe [ 1 caractère : M ou F ].
-            'birthdayformat', // Champ F : Date de naissance [ au format AAAA-MM-JJ ].
-            'nativecountry', // Champ G : Pays de naissance [ 25 caractères ].
-            'departmentofbirth', // Champ H : Département de naissance [ 3 caractères ] de 01 à 19, 2A, 2B, de 21 à 95, 971, 972,
-                // 973, 974, 975, 976, 0 pour autre.
-            'cityofbirth', // Champ I : Ville de naissance [ 25 caractères ].
-            'address1', // Champ J : Adresse 1 [ 30 caractères ].
-            'address2', // Champ K : Adresse 2 [ 30 caractères ] Vous pouvez laisser vide ce champ.
-            'postalcode', // Champ L : Code postal [ 5 caractères numériques ].
-            'city', // Champ M : Ville [ 25 caractères ].
-            'phone', // Champ N : Téléphone [ 20 caractères ] Vous pouvez laisser vide ce champ.
-            'email', // Champ O : Email [ 50 caractères ].
-            'instagram', // Champ p : Instagram [ 30 caractères ].
-            'disciplineid', // Champ Q : Discipline-Cursus [ 1 chiffre entre 1 et 10 (*) ].
-            'otherfederation', // Champ R : Autre fédé [ 30 caractères ].
-            'mainsportname', // Champ S : Sport [ 20 caractères (**)].
-            'sportlicense', // Champ T : Licence sportive [ 1 chiffre : 1 pour oui ou 0 pour non ].
-            'managerlicense', // Champ U : Licence dirigeant [ 1 chiffre : 1 pour oui ou 0 pour non ].
-            'refereelicense', // Champ V : Licence arbitre [ 1 chiffre : 1 pour oui ou 0 pour non ].
-            'managerlicensetype', // Champ W : Pour licence sportive ou dirigeant : Non-étudiant/Etudiant [ 1 chiffre
-                // : 1 pour Etudiant ou 0 pour Non-étudiant ].
-            'starlicense', // Champ X : Licence étoile [ 1 caractère : O ou N ].
-            'usepersonalimage', // Champ Y : Autorisation Droit à l’image[ 1 chiffre : 1 pour oui ou 0 pour non ].
-            'usepersonaldata', // Champ Z : Autorisation Loi Informatique & Libertés[ 1 chiffre : 1 pour oui ou 0 pour non ].
-            'insurance', // Champ AA : Assurance [ 1 chiffre : 1 pour oui ou 0 pour non ].
-            'sport1', // Champ AB : Certificat médical - activité 1 sans contrainte particulière [ 1 nombre entre 1 et 62(***)].
-            'sport2', // Champ AC : Certificat médical - activité 2 sans contrainte particulière [ 1 nombre entre 1 et 62(***)].
-            'sport3', // Champ AD : Certificat médical - activité 3 sans contrainte particulière [ 1 nombre entre 1 et 62(***)].
-            'sport4', // Champ AE : Certificat médical - activité 4 sans contrainte particulière [ 1 nombre entre 1 et 62(***)].
-            'sport5', // Champ AF : Certificat médical - activité 5 sans contrainte particulière [ 1 nombre entre 1 et 62(***)].
-            'constraintsport1', // Champ AG:Certificat médical-activité 1 à contraintes particulières[1 nombre entre 1 et 63(****)].
-            'constraintsport2', // Champ AH:Certificat médical-activité 2 à contraintes particulières[1 nombre entre 1 et 63(****)].
-            'constraintsport3', // Champ AI:Certificat médical-activité 3 à contraintes particulières[1 nombre entre 1 et 63(****)].
-            'constraintsport4', // Champ AJ:Certificat médical-activité 4 à contraintes particulières[1 nombre entre 1 et 63(****)].
-            'constraintsport5', // Champ AK:Certificat médical-activité 5 à contraintes particulières[1 nombre entre 1 et 63(****)].
-            'medicalcertificatedateformat', // Champ AL : Date du certificat médical [ au format AAAA-MM-JJ ].
-            'questionnairestatusno', // Champ AM : J’ai répondu NON à toutes les questions du questionnaire de santé (je peux
-                // pratiquer TOUTES les activités sans contrainte particulière sans fournir de
-                // certificat médical)[ 1 chiffre : 1 pour oui ou 0 pour non ].
-            'questionnairestatusyes', // Champ AN : J’ai répondu OUI à une rubrique du questionnaire de santé et atteste avoir
-                // présenté un certificat médical de non-contre-indication à la pratique d’un/des sport.s en compétition
-                // de moins de 6 mois [ 1 chiffre : 1 pour oui ou 0 pour non ].
-            'medicalcertificatestatus', // Champ AO : Je souhaite pratiquer une activité à contraintes particulières
-                // (Rugby(s), Boxe(s) combat plein contact, Tir sportif, Biathlon, Karting, Pentathlon, Taekwondo combat)
-                // et atteste avoir présenté un certificat médical de non-contre-indication à la pratique des sports de
-                // compétition de moins d’un an [ 1 chiffre : 1 pour oui ou 0 pour non ].
-            'honorabilityagreement', // Champ AP : J'atteste avoir compris l'objet du contrôle d'honorabilité pour arbitres
-                // et dirigeants [ 1 chiffre : 1 pour oui ou 0 pour non ].
-        ];
-    }
-
-    /**
-     * Retourne la liste des noms officiels des activités FFSU.
-     *
-     * @return array
-     */
-    public static function get_exportation_headers() {
-        return [
-            get_string('association_number', 'local_apsolu'),
-            get_string('lastname'),
-            get_string('birthname', 'local_apsolu'),
-            get_string('firstname'),
-            get_string('sex', 'local_apsolu'),
-            get_string('birthday', 'local_apsolu'),
-            get_string('native_country', 'local_apsolu'),
-            get_string('department_of_birth', 'local_apsolu'),
-            get_string('city_of_birth', 'local_apsolu'),
-            get_string('address1', 'local_apsolu'),
-            get_string('address2', 'local_apsolu'),
-            get_string('postal_code', 'local_apsolu'),
-            get_string('city'),
-            get_string('phone'),
-            get_string('email'),
-            get_string('instagram', 'local_apsolu'),
-            get_string('discipline', 'local_apsolu'),
-            get_string('other_federation', 'local_apsolu'),
-            get_string('sport', 'local_apsolu'),
-            get_string('sport_license', 'local_apsolu'),
-            get_string('manager_license', 'local_apsolu'),
-            get_string('referee_license', 'local_apsolu'),
-            get_string('manager_license_type', 'local_apsolu'),
-            get_string('star_license', 'local_apsolu'),
-            get_string('use_personal_image', 'local_apsolu'),
-            get_string('use_personal_data', 'local_apsolu'),
-            get_string('insurance', 'local_apsolu'),
-            get_string('medical_certificate_X_without_constraint', 'local_apsolu', 1),
-            get_string('medical_certificate_X_without_constraint', 'local_apsolu', 2),
-            get_string('medical_certificate_X_without_constraint', 'local_apsolu', 3),
-            get_string('medical_certificate_X_without_constraint', 'local_apsolu', 4),
-            get_string('medical_certificate_X_without_constraint', 'local_apsolu', 5),
-            get_string('medical_certificate_X_with_specific_constraints', 'local_apsolu', 1),
-            get_string('medical_certificate_X_with_specific_constraints', 'local_apsolu', 2),
-            get_string('medical_certificate_X_with_specific_constraints', 'local_apsolu', 3),
-            get_string('medical_certificate_X_with_specific_constraints', 'local_apsolu', 4),
-            get_string('medical_certificate_X_with_specific_constraints', 'local_apsolu', 5),
-            get_string('medical_certificate_date', 'local_apsolu'),
-            get_string('i_answered_no_to_all_the_questions_in_the_health_questionnaire_short', 'local_apsolu'),
-            get_string('i_answered_yes_to_a_section_of_the_health_questionnaire_and_attest_to_having_presented_a_medical_certificate_short', 'local_apsolu'), // phpcs:ignore
-            get_string('i_wish_to_practice_an_activity_with_particular_constraints_and_certify_that_i_have_presented_a_medical_certificate_short', 'local_apsolu'), // phpcs:ignore
-            get_string('i_certify_that_i_understand_the_purpose_of_the_integrity_check_for_arbitrators_and_managers', 'local_apsolu'), // phpcs:ignore
+            'federationnumber' => get_string('member_code', 'local_apsolu'),
+            'title' => get_string('user_title', 'local_apsolu'),
+            'lastname' => get_string('lastname', 'local_apsolu'),
+            'firstname' => get_string('firstname'),
+            'birthday' => get_string('birthday', 'local_apsolu'),
+            'birthname' => get_string('birthname', 'local_apsolu'),
+            'birthcountry' => get_string('birthcountry', 'local_apsolu'),
+            'nationality' => get_string('nationality', 'local_apsolu'),
+            'birthdepartment' => get_string('department_of_birth', 'local_apsolu'),
+            'birthtown' => get_string('birthtown', 'local_apsolu'),
+            'birthplace' => get_string('birthplace', 'local_apsolu'),
+            'handicap' => get_string('disability', 'local_apsolu'),
+            'licenseetype' => get_string('student_shortened', 'local_apsolu'),
+            'cursus' => get_string('discipline_cursus_shortened', 'local_apsolu'),
+            'studycycle' => get_string('study_cycle', 'local_apsolu'),
+            'otherfederation' => get_string('other_federation', 'local_apsolu'),
+            'commercialoffers' => get_string('authorisation_for_commercial_offers', 'local_apsolu'),
+            'usepersonalimage' => get_string('legal_authorisation', 'local_apsolu'),
+            'policyagreed' => get_string('authorisation_for_data_use', 'local_apsolu'),
+            'newsletter' => get_string('authorisation_for_newsletter', 'local_apsolu'),
+            'federaltexts' => get_string('federal_texts', 'local_apsolu'),
+            'tracknumber' => get_string('track_number', 'local_apsolu'),
+            'tracktype' => get_string('track_type', 'local_apsolu'),
+            'trackname' => get_string('track_name', 'local_apsolu'),
+            'building' => get_string('building', 'local_apsolu'),
+            'staircase' => get_string('staircase', 'local_apsolu'),
+            'lieudit' => get_string('lieudit', 'local_apsolu'),
+            'postalcode' => get_string('postal_code', 'local_apsolu'),
+            'city' => get_string('town', 'local_apsolu'),
+            'country' => get_string('country'),
+            'email' => get_string('mail', 'local_apsolu'),
+            'workmail' => get_string('work_mail', 'local_apsolu'),
+            'phone1' => get_string('phone1', 'local_apsolu'),
+            'phone2' => get_string('phone2', 'local_apsolu'),
+            'titleprimarylegalrepresentative' => get_string('title_primary_legal_representative', 'local_apsolu'),
+            'lastnameprimarylegalrepresentative' => get_string('lastname_primary_legal_representative', 'local_apsolu'),
+            'firstnameprimarylegalrepresentative' => get_string('firstname_primary_legal_representative', 'local_apsolu'),
+            'phoneprimarylegalrepresentative' => get_string('phone_primary_legal_representative_shortened', 'local_apsolu'),
+            'emailprimarylegalrepresentative' => get_string('email_primary_legal_representative_shortened', 'local_apsolu'),
+            'titlesecondarylegalrepresentative' => get_string('title_secondary_legal_representative', 'local_apsolu'),
+            'lastnamesecondarylegalrepresentative' => get_string('lastname_secondary_legal_representative', 'local_apsolu'),
+            'firstnamesecondarylegalrepresentative' => get_string('firstname_secondary_legal_representative', 'local_apsolu'),
+            'phonesecondarylegalrepresentative' => get_string('phone_secondary_legal_representative_shortened', 'local_apsolu'),
+            'emailsecondarylegalrepresentative' => get_string('email_secondary_legal_representative_shortened', 'local_apsolu'),
+            'insurance' => get_string('with_insurance', 'local_apsolu'),
+            'licensetype' => get_string('license_type', 'local_apsolu'),
+            'questionnairestatus' => get_string('negative_health_questionnaire', 'local_apsolu'),
+            'doctorname' => get_string('doctor_name', 'local_apsolu'),
+            'doctorrpps' => get_string('doctor_rpps', 'local_apsolu'),
+            'medicalcertificatedate' => get_string('medical_certificate_date_shortened', 'local_apsolu'),
+            'medicalcertifiatevalidated' => get_string('medical_certificate_validated_shortened', 'local_apsolu'),
+            'schoolcertificatevalidated' => get_string('school_certificate_validated', 'local_apsolu'),
+            'activity' => get_string('disciplines', 'local_apsolu'),
+            'federationnumberprefix' => get_string('section'),
         ];
     }
 
@@ -666,6 +737,10 @@ class adhesion extends record {
                 continue;
             }
 
+            if (ctype_digit($number->number) === false) {
+                return '';
+            }
+
             return $number->number;
         }
 
@@ -689,33 +764,27 @@ class adhesion extends record {
     }
 
     /**
-     * Retourne l'identifiant d'une activité FFSU en fonction du groupe d'appartenance de l'utilisateur.
-     *
-     * @param int $federationcourseid   Identifiant du cours FFSU.
-     * @param int $userid Identifiant de l'utilisateur.
-     *
-     * @return int|null Retourne l'identifiant d'une activité FFSU ou null si le groupe ne correspond à aucune activité.
-     */
-    public static function get_mainsportid_from_user_group($federationcourseid, $userid) {
-        $groups = groups_get_user_groups($federationcourseid, $userid);
-        if (isset($groups[0]) === true) {
-            foreach ($groups[0] as $groupid) {
-                $group = groups_get_group($groupid);
-                foreach (Activity::get_records(['name' => $group->name]) as $activity) {
-                    return $activity->id;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Retourne la liste des noms officiels des activités FFSU.
+     * Retourne la liste des types de licence.
      *
      * @return array
      */
-    public static function get_manager_types() {
+    public static function get_license_types() {
+        $licenses = [];
+        $licenses['S'] = 'SPORTIVE';
+        $licenses['D'] = 'DIRIGEANT.E';
+        $licenses['A'] = 'ARBITRE';
+        $licenses['E'] = 'ENCADRANT.E';
+        $licenses['PSU'] = 'Licence promotionnelle';
+
+        return $licenses;
+    }
+
+    /**
+     * Retourne la liste officielle des types d'utilisateur.
+     *
+     * @return array
+     */
+    public static function get_licensee_types() {
         $types = [];
         $types[1] = get_string('student', 'local_apsolu');
         $types[0] = get_string('not_student', 'local_apsolu');
@@ -724,29 +793,380 @@ class adhesion extends record {
     }
 
     /**
+     * Retourne les licences nécessitant une déclaration d'honorabilité.
+     *
+     * @return array
+     */
+    public static function get_licenses_with_honorability() {
+        return ['A' => 'A', 'D' => 'D', 'E' => 'E'];
+    }
+
+    /**
+     * Retourne la liste des nationalités.
+     *
+     * @return array
+     */
+    public static function get_nationalities() {
+        $countries = [];
+        $countries['AF'] = 'AFGHANISTAN';
+        $countries['ZA'] = 'AFRIQUE DU SUD';
+        $countries['AX'] = 'ÅLAND, ÎLES';
+        $countries['AL'] = 'ALBANIE';
+        $countries['DZ'] = 'ALGÉRIE';
+        $countries['DE'] = 'ALLEMAGNE';
+        $countries['AD'] = 'ANDORRE';
+        $countries['AO'] = 'ANGOLA';
+        $countries['AI'] = 'ANGUILLA';
+        $countries['AQ'] = 'ANTARCTIQUE';
+        $countries['AG'] = 'ANTIGUA-ET-BARBUDA';
+        $countries['SA'] = 'ARABIE SAOUDITE';
+        $countries['AR'] = 'ARGENTINE';
+        $countries['AM'] = 'ARMÉNIE';
+        $countries['AW'] = 'ARUBA';
+        $countries['AU'] = 'AUSTRALIE';
+        $countries['AT'] = 'AUTRICHE';
+        $countries['AZ'] = 'AZERBAÏDJAN';
+        $countries['BS'] = 'BAHAMAS';
+        $countries['BH'] = 'BAHREÏN';
+        $countries['BD'] = 'BANGLADESH';
+        $countries['BB'] = 'BARBADE';
+        $countries['BY'] = 'BÉLARUS';
+        $countries['BE'] = 'BELGIQUE';
+        $countries['BZ'] = 'BELIZE';
+        $countries['BJ'] = 'BÉNIN';
+        $countries['BM'] = 'BERMUDES';
+        $countries['BT'] = 'BHOUTAN';
+        $countries['BO'] = 'BOLIVIE, l\'ÉTAT PLURINATIONAL DE';
+        $countries['BQ'] = 'BONAIRE, SAINT-EUSTACHE ET SABA';
+        $countries['BA'] = 'BOSNIE-HERZÉGOVINE';
+        $countries['BW'] = 'BOTSWANA';
+        $countries['BV'] = 'BOUVET, ÎLE';
+        $countries['BR'] = 'BRÉSIL';
+        $countries['BN'] = 'BRUNEI DARUSSALAM';
+        $countries['BG'] = 'BULGARIE';
+        $countries['BF'] = 'BURKINA FASO';
+        $countries['BI'] = 'BURUNDI';
+        $countries['KY'] = 'CAÏMANS, ÎLES';
+        $countries['KH'] = 'CAMBODGE';
+        $countries['CM'] = 'CAMEROUN';
+        $countries['CA'] = 'CANADA';
+        $countries['CV'] = 'CAP-VERT';
+        $countries['CF'] = 'CENTRAFRICAINE, RÉPUBLIQUE';
+        $countries['CL'] = 'CHILI';
+        $countries['CN'] = 'CHINE';
+        $countries['CX'] = 'CHRISTMAS, ÎLE';
+        $countries['CY'] = 'CHYPRE';
+        $countries['CC'] = 'COCOS (KEELING), ÎLES';
+        $countries['CO'] = 'COLOMBIE';
+        $countries['KM'] = 'COMORES';
+        $countries['CG'] = 'CONGO';
+        $countries['CD'] = 'CONGO, LA RÉPUBLIQUE DÉMOCRATIQUE DU';
+        $countries['CK'] = 'COOK, ÎLES';
+        $countries['KR'] = 'CORÉE, RÉPUBLIQUE DE';
+        $countries['KP'] = 'CORÉE, RÉPUBLIQUE POPULAIRE DÉMOCRATIQUE DE';
+        $countries['CR'] = 'COSTA RICA';
+        $countries['CI'] = 'CÔTE D\'IVOIRE';
+        $countries['HR'] = 'CROATIE';
+        $countries['CU'] = 'CUBA';
+        $countries['CW'] = 'CURAÇAO';
+        $countries['DK'] = 'DANEMARK';
+        $countries['DJ'] = 'DJIBOUTI';
+        $countries['DO'] = 'DOMINICAINE, RÉPUBLIQUE';
+        $countries['DM'] = 'DOMINIQUE';
+        $countries['EG'] = 'ÉGYPTE';
+        $countries['SV'] = 'EL SALVADOR';
+        $countries['AE'] = 'ÉMIRATS ARABES UNIS';
+        $countries['EC'] = 'ÉQUATEUR';
+        $countries['ER'] = 'ÉRYTHRÉE';
+        $countries['ES'] = 'ESPAGNE';
+        $countries['EE'] = 'ESTONIE';
+        $countries['US'] = 'ÉTATS-UNIS';
+        $countries['ET'] = 'ÉTHIOPIE';
+        $countries['FK'] = 'FALKLAND, ÎLES (MALVINAS)';
+        $countries['FO'] = 'FÉROÉ, ÎLES';
+        $countries['FJ'] = 'FIDJI';
+        $countries['FI'] = 'FINLANDE';
+        $countries['FR'] = 'FRANCE';
+        $countries['GA'] = 'GABON';
+        $countries['GM'] = 'GAMBIE';
+        $countries['GE'] = 'GÉORGIE';
+        $countries['GS'] = 'GÉORGIE DU SUD-ET-LES ÎLES SANDWICH DU SUD';
+        $countries['GH'] = 'GHANA';
+        $countries['GI'] = 'GIBRALTAR';
+        $countries['GR'] = 'GRÈCE';
+        $countries['GD'] = 'GRENADE';
+        $countries['GL'] = 'GROENLAND';
+        $countries['GP'] = 'GUADELOUPE';
+        $countries['GU'] = 'GUAM';
+        $countries['GT'] = 'GUATEMALA';
+        $countries['GG'] = 'GUERNESEY';
+        $countries['GN'] = 'GUINÉE';
+        $countries['GQ'] = 'GUINÉE ÉQUATORIALE';
+        $countries['GW'] = 'GUINÉE-BISSAU';
+        $countries['GY'] = 'GUYANA';
+        $countries['GF'] = 'GUYANE FRANÇAISE';
+        $countries['HT'] = 'HAÏTI';
+        $countries['HM'] = 'HEARD-ET-ÎLES MACDONALD, ÎLE';
+        $countries['HN'] = 'HONDURAS';
+        $countries['HK'] = 'HONG KONG';
+        $countries['HU'] = 'HONGRIE';
+        $countries['IM'] = 'ÎLE DE MAN';
+        $countries['UM'] = 'ÎLES MINEURES ÉLOIGNÉES DES ÉTATS-UNIS';
+        $countries['VG'] = 'ÎLES VIERGES BRITANNIQUES';
+        $countries['VI'] = 'ÎLES VIERGES DES ÉTATS-UNIS';
+        $countries['IN'] = 'INDE';
+        $countries['ID'] = 'INDONÉSIE';
+        $countries['IR'] = 'IRAN, RÉPUBLIQUE ISLAMIQUE D\'';
+        $countries['IQ'] = 'IRAQ';
+        $countries['IE'] = 'IRLANDE';
+        $countries['IS'] = 'ISLANDE';
+        $countries['IL'] = 'ISRAËL';
+        $countries['IT'] = 'ITALIE';
+        $countries['JM'] = 'JAMAÏQUE';
+        $countries['JP'] = 'JAPON';
+        $countries['JE'] = 'JERSEY';
+        $countries['JO'] = 'JORDANIE';
+        $countries['KZ'] = 'KAZAKHSTAN';
+        $countries['KE'] = 'KENYA';
+        $countries['KG'] = 'KIRGHIZISTAN';
+        $countries['KI'] = 'KIRIBATI';
+        $countries['KW'] = 'KOWEÏT';
+        $countries['LA'] = 'LAO, RÉPUBLIQUE DÉMOCRATIQUE POPULAIRE';
+        $countries['LS'] = 'LESOTHO';
+        $countries['LV'] = 'LETTONIE';
+        $countries['LB'] = 'LIBAN';
+        $countries['LR'] = 'LIBÉRIA';
+        $countries['LY'] = 'LIBYE';
+        $countries['LI'] = 'LIECHTENSTEIN';
+        $countries['LT'] = 'LITUANIE';
+        $countries['LU'] = 'LUXEMBOURG';
+        $countries['MO'] = 'MACAO';
+        $countries['MK'] = 'MACÉDOINE, L\'EX-RÉPUBLIQUE YOUGOSLAVE DE';
+        $countries['MG'] = 'MADAGASCAR';
+        $countries['MY'] = 'MALAISIE';
+        $countries['MW'] = 'MALAWI';
+        $countries['MV'] = 'MALDIVES';
+        $countries['ML'] = 'MALI';
+        $countries['MT'] = 'MALTE';
+        $countries['MP'] = 'MARIANNES DU NORD, ÎLES';
+        $countries['MA'] = 'MAROC';
+        $countries['MH'] = 'MARSHALL, ÎLES';
+        $countries['MQ'] = 'MARTINIQUE';
+        $countries['MU'] = 'MAURICE';
+        $countries['MR'] = 'MAURITANIE';
+        $countries['YT'] = 'MAYOTTE';
+        $countries['MX'] = 'MEXIQUE';
+        $countries['FM'] = 'MICRONÉSIE, ÉTATS FÉDÉRÉS DE';
+        $countries['MD'] = 'MOLDOVA, RÉPUBLIQUE DE';
+        $countries['MC'] = 'MONACO';
+        $countries['MN'] = 'MONGOLIE';
+        $countries['ME'] = 'MONTÉNÉGRO';
+        $countries['MS'] = 'MONTSERRAT';
+        $countries['MZ'] = 'MOZAMBIQUE';
+        $countries['MM'] = 'MYANMAR';
+        $countries['NA'] = 'NAMIBIE';
+        $countries['NR'] = 'NAURU';
+        $countries['NP'] = 'NÉPAL';
+        $countries['NI'] = 'NICARAGUA';
+        $countries['NE'] = 'NIGER';
+        $countries['NG'] = 'NIGÉRIA';
+        $countries['NU'] = 'NIUÉ';
+        $countries['NF'] = 'NORFOLK, ÎLE';
+        $countries['NO'] = 'NORVÈGE';
+        $countries['NC'] = 'NOUVELLE-CALÉDONIE';
+        $countries['NZ'] = 'NOUVELLE-ZÉLANDE';
+        $countries['IO'] = 'OCÉAN INDIEN, TERRITOIRE BRITANNIQUE DE L\'';
+        $countries['OM'] = 'OMAN';
+        $countries['UG'] = 'OUGANDA';
+        $countries['UZ'] = 'OUZBÉKISTAN';
+        $countries['PK'] = 'PAKISTAN';
+        $countries['PW'] = 'PALAOS';
+        $countries['PS'] = 'PALESTINE, ÉTAT DE';
+        $countries['PA'] = 'PANAMA';
+        $countries['PG'] = 'PAPOUASIE-NOUVELLE-GUINÉE';
+        $countries['PY'] = 'PARAGUAY';
+        $countries['NL'] = 'PAYS-BAS';
+        $countries['PE'] = 'PÉROU';
+        $countries['PH'] = 'PHILIPPINES';
+        $countries['PN'] = 'PITCAIRN';
+        $countries['PL'] = 'POLOGNE';
+        $countries['PF'] = 'POLYNÉSIE FRANÇAISE';
+        $countries['PR'] = 'PORTO RICO';
+        $countries['PT'] = 'PORTUGAL';
+        $countries['QA'] = 'QATAR';
+        $countries['RE'] = 'RÉUNION';
+        $countries['RO'] = 'ROUMANIE';
+        $countries['GB'] = 'ROYAUME-UNI';
+        $countries['RU'] = 'RUSSIE, FÉDÉRATION DE';
+        $countries['RW'] = 'RWANDA';
+        $countries['EH'] = 'SAHARA OCCIDENTAL';
+        $countries['BL'] = 'SAINT-BARTHÉLEMY';
+        $countries['KN'] = 'SAINT-KITTS-ET-NEVIS';
+        $countries['SM'] = 'SAINT-MARIN';
+        $countries['SX'] = 'SAINT-MARTIN (PARTIE NÉERLANDAISE)';
+        $countries['MF'] = 'SAINT-MARTIN(PARTIE FRANÇAISE)';
+        $countries['PM'] = 'SAINT-PIERRE-ET-MIQUELON';
+        $countries['VA'] = 'SAINT-SIÈGE (ÉTAT DE LA CITÉ DU VATICAN)';
+        $countries['VC'] = 'SAINT-VINCENT-ET-LES GRENADINES';
+        $countries['SH'] = 'SAINTE-HÉLÈNE, ASCENSION ET TRISTAN DA CUNHA';
+        $countries['LC'] = 'SAINTE-LUCIE';
+        $countries['SB'] = 'SALOMON, ÎLES';
+        $countries['WS'] = 'SAMOA';
+        $countries['AS'] = 'SAMOA AMÉRICAINES';
+        $countries['ST'] = 'SAO TOMÉ-ET-PRINCIPE';
+        $countries['SN'] = 'SÉNÉGAL';
+        $countries['RS'] = 'SERBIE';
+        $countries['SC'] = 'SEYCHELLES';
+        $countries['SL'] = 'SIERRA LEONE';
+        $countries['SG'] = 'SINGAPOUR';
+        $countries['SK'] = 'SLOVAQUIE';
+        $countries['SI'] = 'SLOVÉNIE';
+        $countries['SO'] = 'SOMALIE';
+        $countries['SD'] = 'SOUDAN';
+        $countries['SS'] = 'SOUDAN DU SUD';
+        $countries['LK'] = 'SRI LANKA';
+        $countries['SE'] = 'SUÈDE';
+        $countries['CH'] = 'SUISSE';
+        $countries['SR'] = 'SURINAME';
+        $countries['SJ'] = 'SVALBARD ET ÎLE JAN MAYEN';
+        $countries['SZ'] = 'SWAZILAND';
+        $countries['SY'] = 'SYRIENNE, RÉPUBLIQUE ARABE';
+        $countries['TJ'] = 'TADJIKISTAN';
+        $countries['TW'] = 'TAÏWAN, PROVINCE DE CHINE';
+        $countries['TZ'] = 'TANZANIE, RÉPUBLIQUE-UNIE DE';
+        $countries['TD'] = 'TCHAD';
+        $countries['CZ'] = 'TCHÈQUE, RÉPUBLIQUE';
+        $countries['TF'] = 'TERRES AUSTRALES FRANÇAISES';
+        $countries['TH'] = 'THAÏLANDE';
+        $countries['TL'] = 'TIMOR-LESTE';
+        $countries['TG'] = 'TOGO';
+        $countries['TK'] = 'TOKELAU';
+        $countries['TO'] = 'TONGA';
+        $countries['TT'] = 'TRINITÉ-ET-TOBAGO';
+        $countries['TN'] = 'TUNISIE';
+        $countries['TM'] = 'TURKMÉNISTAN';
+        $countries['TC'] = 'TURKS-ET-CAÏCOS, ÎLES';
+        $countries['TR'] = 'TURQUIE';
+        $countries['TV'] = 'TUVALU';
+        $countries['UA'] = 'UKRAINE';
+        $countries['UY'] = 'URUGUAY';
+        $countries['VU'] = 'VANUATU';
+        $countries['VE'] = 'VENEZUELA, RÉPUBLIQUE BOLIVARIENNE DU';
+        $countries['VN'] = 'VIET NAM';
+        $countries['WF'] = 'WALLIS ET FUTUNA';
+        $countries['YE'] = 'YÉMEN';
+        $countries['ZM'] = 'ZAMBIE';
+        $countries['ZW'] = 'ZIMBABWE';
+
+        return $countries;
+    }
+
+    /**
+     * Retourne la liste officielle des autres fédérations.
+     *
+     * @return array
+     */
+    public static function get_other_federations() {
+        $federations = [];
+        $federations['Fédération Française d\'Athlétisme'] = 'Fédération Française d\'Athlétisme';
+        $federations['Fédération Française d\'Aviron'] = 'Fédération Française d\'Aviron';
+        $federations['Fédération Française d\'Échecs'] = 'Fédération Française d\'Échecs';
+        $federations['Fédération Française d\'Équitation'] = 'Fédération Française d\'Équitation';
+        $federations['Fédération Française d\'Escrime'] = 'Fédération Française d\'Escrime';
+        $federations['Fédération Française d\'Études et de Sports Sous-Marins'] =
+            'Fédération Française d\'Études et de Sports Sous-Marins';
+        $federations['Fédération Française d\'Haltérophilie, Musculation et Culturisme'] =
+            'Fédération Française d\'Haltérophilie, Musculation et Culturisme';
+        $federations['Fédération Française de Badminton'] = 'Fédération Française de Badminton';
+        $federations['Fédération Française de Baseball et Softball'] = 'Fédération Française de Baseball et Softball';
+        $federations['Fédération Française de Basket-ball'] = 'Fédération Française de Basket-ball';
+        $federations['Fédération Française de Billard'] = 'Fédération Française de Billard';
+        $federations['Fédération Française de Bowling et de Sports de Quilles'] =
+            'Fédération Française de Bowling et de Sports de Quilles';
+        $federations['Fédération Française de Boxe'] = 'Fédération Française de Boxe';
+        $federations['Fédération Française de Bridge'] = 'Fédération Française de Bridge';
+        $federations['Fédération Française de Canoë-Kayak'] = 'Fédération Française de Canoë-Kayak';
+        $federations['Fédération Française de Course d\'Orientation'] = 'Fédération Française de Course d\'Orientation';
+        $federations['Fédération Française de Cyclisme'] = 'Fédération Française de Cyclisme';
+        $federations['Fédération Française de Danse'] = 'Fédération Française de Danse';
+        $federations['Fédération Française de Darts'] = 'Fédération Française de Darts';
+        $federations['Fédération Française de Flying Disc'] = 'Fédération Française de Flying Disc';
+        $federations['Fédération Française de Football'] = 'Fédération Française de Football';
+        $federations['Fédération Française de Football Américain'] = 'Fédération Française de Football Américain';
+        $federations['Fédération Française de Football de Table'] = 'Fédération Française de Football de Table';
+        $federations['Fédération Française de Force Athlétique'] = 'Fédération Française de Force Athlétique';
+        $federations['Fédération Française de Golf'] = 'Fédération Française de Golf';
+        $federations['Fédération Française de Gymnastique'] = 'Fédération Française de Gymnastique';
+        $federations['Fédération Française de Handball'] = 'Fédération Française de Handball';
+        $federations['Fédération Française de Hockey'] = 'Fédération Française de Hockey';
+        $federations['Fédération Française de Hockey sur Glace'] = 'Fédération Française de Hockey sur Glace';
+        $federations['Fédération Française de Judo et Disciplines Associées'] =
+            'Fédération Française de Judo et Disciplines Associées';
+        $federations['Fédération Française de Karaté'] = 'Fédération Française de Karaté';
+        $federations['Fédération Française de Kickboxing, Muaythai et Disciplines Associées'] =
+            'Fédération Française de Kickboxing, Muaythai et Disciplines Associées';
+        $federations['Fédération Française de la Montagne et de l\'Escalade'] =
+            'Fédération Française de la Montagne et de l\'Escalade';
+        $federations['Fédération Française de Lutte et Disciplines Associées'] =
+            'Fédération Française de Lutte et Disciplines Associées';
+        $federations['Fédération Française de Natation'] = 'Fédération Française de Natation';
+        $federations['Fédération Française de Pelote Basque'] = 'Fédération Française de Pelote Basque';
+        $federations['Fédération Française de Pentathlon Moderne'] = 'Fédération Française de Pentathlon Moderne';
+        $federations['Fédération Française de Pétanque et de Jeu Provençal'] =
+            'Fédération Française de Pétanque et de Jeu Provençal';
+        $federations['Fédération Française de Roller et Skateboard'] = 'Fédération Française de Roller et Skateboard';
+        $federations['Fédération Française de Rugby'] = 'Fédération Française de Rugby';
+        $federations['Fédération Française de Rugby A XIII'] = 'Fédération Française de Rugby A XIII';
+        $federations['Fédération Française de Sauvetage et de Secourisme'] = 'Fédération Française de Sauvetage et de Secourisme';
+        $federations['Fédération Française de Savate Boxe Française et Disciplines Associées'] =
+            'Fédération Française de Savate Boxe Française et Disciplines Associées';
+        $federations['Fédération Française de Ski'] = 'Fédération Française de Ski';
+        $federations['Fédération Française de Sport Automobile'] = 'Fédération Française de Sport Automobile';
+        $federations['Fédération Française de Squash'] = 'Fédération Française de Squash';
+        $federations['Fédération Française de Surf'] = 'Fédération Française de Surf';
+        $federations['Fédération Française de Taekwondo et Disciplines Associées'] =
+            'Fédération Française de Taekwondo et Disciplines Associées';
+        $federations['Fédération Française de Tennis'] = 'Fédération Française de Tennis';
+        $federations['Fédération Française de Tennis de Table'] = 'Fédération Française de Tennis de Table';
+        $federations['Fédération Française de Tir'] = 'Fédération Française de Tir';
+        $federations['Fédération Française de Tir à l\'Arc'] = 'Fédération Française de Tir à l\'Arc';
+        $federations['Fédération Française de Triathlon et Disciplines Enchaînées'] =
+            'Fédération Française de Triathlon et Disciplines Enchaînées';
+        $federations['Fédération Française de Voile'] = 'Fédération Française de Voile';
+        $federations['Fédération Française de Volley'] = 'Fédération Française de Volley';
+        $federations['Fédération Française des Sports de Glace'] = 'Fédération Française des Sports de Glace';
+
+        return $federations;
+    }
+
+    /**
+     * Retourne la liste officielle des cycles d'études.
+     *
+     * @return array
+     */
+    public static function get_study_cycles() {
+        $cycles = [];
+        $cycles['BAC+1'] = 'BAC+1';
+        $cycles['BAC+2'] = 'BAC+2';
+        $cycles['BAC+3'] = 'BAC+3';
+        $cycles['BAC+4'] = 'BAC+4';
+        $cycles['BAC+5'] = 'BAC+5';
+        $cycles['BAC+6 et plus'] = 'BAC+6 et plus';
+
+        return $cycles;
+    }
+
+    /**
      * Retourne la liste des noms officiels des activités FFSU.
      *
      * @return array
      */
-    public static function get_sexes() {
+    public static function get_user_titles() {
         $types = [];
-        $types['F'] = get_string('woman', 'local_apsolu');
-        $types['M'] = get_string('man', 'local_apsolu');
+        $types['Mme'] = get_string('madam', 'local_apsolu');
+        $types['M'] = get_string('mister', 'local_apsolu');
 
         return $types;
-    }
-
-    /**
-     * Retourne la liste des valeurs possibles pour le champ starlicense.
-     *
-     * @return array
-     */
-    public static function get_star_license_values() {
-        $values = [];
-        $values['O'] = get_string('yes');
-        $values['N'] = get_string('no');
-
-        return $values;
     }
 
     /**
@@ -755,14 +1175,20 @@ class adhesion extends record {
      * @return boolean
      */
     public function has_constraint_sports() {
-        $constraintsports = Activity::get_records(['restriction' => 1]);
-
-        if (isset($constraintsports[$this->mainsport]) === true) {
-            return true;
+        $constraintsports = [];
+        foreach (Activity::get_records(['restriction' => 1]) as $activity) {
+            $constraintsports[$activity->code] = $activity->name;
         }
 
-        if (empty($this->complementaryconstraintsport) === false) {
-            return true;
+        $data = $this->decode_data();
+        if (isset($data->activity) === false) {
+            $data->activity = [];
+        }
+
+        foreach ($data->activity as $activity) {
+            if (isset($constraintsports[$activity]) === true) {
+                return true;
+            }
         }
 
         return false;
@@ -801,7 +1227,7 @@ class adhesion extends record {
      * @return boolean|null Retourne null si la variable birthday n'a pas été initialisée.
      */
     public function is_minor() {
-        if (ctype_digit($this->birthday) === false) {
+        if (is_int($this->birthday) === false) {
             return null;
         }
 
@@ -811,6 +1237,117 @@ class adhesion extends record {
         $major = new DateTime('-18 years');
 
         return $datetime >= $major;
+    }
+
+    /**
+     * Génère une chaine en JSON contenant les données du formulaire.
+     *
+     * @param object $data Objet mform.
+     *
+     * @return string Données au format JSON.
+     */
+    public function make_json($data) {
+        global $DB;
+
+        if (is_string($this->data) === true) {
+            $json = json_decode($this->data);
+            if ($json === false) {
+                $this->data = '';
+            }
+        }
+
+        if (empty($this->data) === true) {
+            // Initialise les données JSON.
+            $json = new stdClass();
+        }
+
+        if ($data === null || isset($data->step) === false) {
+            return json_encode($json);
+        }
+
+        switch ($data->step) {
+            case APSOLU_PAGE_MEMBERSHIP:
+                $json->title = $data->title;
+                $json->postalcode = $data->postalcode ?? '';
+                $json->city = $data->city ?? '';
+                $json->phone1 = '';
+                $json->phone2 = preg_replace('/[^0-9]/', '', $data->phone2);
+                $json->licenseetype = $data->licenseetype ?? '';
+                $json->handicap = $data->handicap;
+                $json->licensetype = $data->licensetype ?? '';
+                $json->nationality = $data->nationality ?? '';
+                $json->birthname = $data->birthname ?? '';
+                $json->birthcountry = $data->birthcountry ?? '';
+                $json->birthdepartment = '';
+                $json->birthtown = $data->birthtown ?? '';
+                $json->birthplace = $data->birthplace ?? '';
+                $json->activity = $data->activity;
+                $json->insurance = $data->insurance ?? '';
+                $json->cursus = $data->cursus ?? '';
+                $json->studycycle = $data->studycycle ?? '';
+                $json->otherfederation = $data->otherfederation ?? '';
+                $json->federaltexts = $data->federaltexts;
+                $json->policyagreed = $data->policyagreed;
+                $json->commercialoffers = $data->commercialoffers;
+                $json->usepersonalimage = $data->usepersonalimage;
+                $json->newsletter = $data->newsletter;
+
+                if (self::require_honorability($json->licensetype) === false) {
+                    $json->birthname = '';
+                    $json->birthcountry = '';
+                    $json->birthtown = '';
+                    $json->birthplace = '';
+                    $json->birthdepartment = '';
+                } else if (empty($json->birthtown) === false && is_string($json->birthtown) === true) {
+                    $json->birthplace = '';
+
+                    $municipalities = $DB->get_records('apsolu_municipalities', ['inseecode' => $json->birthtown]);
+                    if ($municipalities !== []) {
+                        $municipality = current($municipalities);
+                        $json->birthdepartment = $municipality->departmentid;
+                    }
+                } else if (empty($json->birthplace) === false) {
+                    $json->birthtown = '';
+                    $json->birthdepartment = '';
+                }
+
+                $getconfig = get_config('local_apsolu');
+                foreach (['licenseetype', 'licensetype', 'insurance', 'otherfederation'] as $field) {
+                    $visibility = sprintf('%s_field_visibility', $field);
+                    if (isset($getconfig->$visibility) === false || empty($getconfig->$visibility) === false) {
+                        // Le champ est visible. L'utilisateur a pu saisir une donnée.
+                        continue;
+                    }
+
+                    $default = sprintf('%s_field_default', $field);
+                    if (isset($getconfig->$default) === false) {
+                        $getconfig->$default = '';
+                    }
+
+                    $json->$field = $getconfig->$default;
+                }
+
+                break;
+            case APSOLU_PAGE_PARENTAL_AUTHORIZATION:
+                $json->titleprimarylegalrepresentative = $data->titleprimarylegalrepresentative;
+                $json->lastnameprimarylegalrepresentative = $data->lastnameprimarylegalrepresentative;
+                $json->firstnameprimarylegalrepresentative = $data->firstnameprimarylegalrepresentative;
+                $json->phoneprimarylegalrepresentative = $data->phoneprimarylegalrepresentative;
+                $json->emailprimarylegalrepresentative = $data->emailprimarylegalrepresentative;
+                $json->titlesecondarylegalrepresentative = $data->titlesecondarylegalrepresentative;
+                $json->lastnamesecondarylegalrepresentative = $data->lastnamesecondarylegalrepresentative;
+                $json->firstnamesecondarylegalrepresentative = $data->firstnamesecondarylegalrepresentative;
+                $json->phonesecondarylegalrepresentative = $data->phonesecondarylegalrepresentative;
+                $json->emailsecondarylegalrepresentative = $data->emailsecondarylegalrepresentative;
+                break;
+            case APSOLU_PAGE_MEDICAL_CERTIFICATE:
+                $json->doctorname = $data->doctorname;
+                $json->doctorrpps = $data->doctorrpps;
+                $json->medicalcertificatedate = $data->medicalcertificatedate;
+                break;
+        }
+
+        return json_encode($json);
     }
 
     /**
@@ -874,6 +1411,24 @@ class adhesion extends record {
     }
 
     /**
+     * Détermine si une des licences choisies est soumise au contrôle de l'honorabilité.
+     *
+     * @param array $licences Un tableau contenant les codes des licences.
+     *
+     * @return boolean
+     */
+    public static function require_honorability(array $licences) {
+        // Licences soumises au contrôle de l'honorabilité : Encadrant (E), Dirigeant (D) et Arbitre (A).
+        foreach (self::get_licenses_with_honorability() as $type) {
+            if (isset($licences[$type]) === true) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Enregistre un objet en base de données.
      *
      * @throws dml_exception A DML specific exception is thrown for any errors.
@@ -891,6 +1446,7 @@ class adhesion extends record {
         $courseid = $federationcourse->get_courseid();
 
         if ($data !== null) {
+            $this->data = $this->make_json($data);
             $this->set_vars($data);
         }
 
@@ -899,10 +1455,7 @@ class adhesion extends record {
                 throw new Exception(get_string('your_medical_certificate_has_already_been_validated', 'local_apsolu'));
             }
 
-            // Modifie la valeur du champ honorabilité.
-            if (empty($this->managerlicense) === true && empty($this->refereelicense) === true) {
-                $this->honorabilityagreement = 0;
-            }
+            $json = json_decode($this->data);
 
             // Ajoute/retire l'étudiant de la cohorte assurance FFSU.
             $insurancecohortid = get_config('local_apsolu', 'insurance_cohort');
@@ -919,82 +1472,52 @@ class adhesion extends record {
                 if ($this->have_to_upload_medical_certificate() === true) {
                     $this->medicalcertificatestatus = self::MEDICAL_CERTIFICATE_STATUS_PENDING;
                 } else {
-                    $this->medicalcertificatedate = null;
+                    // Nettoie les données.
+                    $json->doctorname = '';
+                    $json->doctorrpps = '';
+                    $json->medicalcertificatedate = '';
+
+                    // TODO: supprimer le fichier.
+
                     $this->medicalcertificatestatus = self::MEDICAL_CERTIFICATE_STATUS_EXEMPTED;
                 }
             }
 
-            if ($this->have_to_upload_medical_certificate() === false) {
-                // Si l'utilisateur n'a pas de certificat à déposer, on réinitialise tout.
-                foreach (['sport', 'constraintsport'] as $sport) {
-                    for ($i = 1; $i <= 5; $i++) {
-                        $property = $sport.$i;
-                        $this->{$property} = self::SPORT_NONE;
-                    }
-                }
-
-                // Modification début 2025, suite au changement de la FFSU qui souhaite avoir une information différente de 1 pour
-                // ce champ, même si l'adhérent n'a pas eu à déposer de certificat médical.
-                $this->sport1 = $this->mainsport;
-            } else {
-                // Recalcule les valeurs sportN et constraintsportN.
-                if ($this->has_constraint_sports() === true) {
-                    $sportkeeped = ['constraintsport1', 'constraintsport2', 'constraintsport3', 'constraintsport4',
-                        'constraintsport5'];
-                    $sportremoved = ['sport1', 'sport2', 'sport3', 'sport4', 'sport5'];
-                    $constraint = 1;
-                } else {
-                    $sportkeeped = ['sport1', 'sport2', 'sport3', 'sport4', 'sport5'];
-                    $sportremoved = ['constraintsport1', 'constraintsport2', 'constraintsport3', 'constraintsport4',
-                        'constraintsport5'];
-                    $constraint = 0;
-                }
-
-                // On réinialise la catégorie de sports qu'on ne souhaite pas conserver.
-                foreach ($sportremoved as $sport) {
-                    $this->{$sport} = self::SPORT_NONE;
-                }
-
-                // On liste tous les sports qu'on souhaite conserver (sauf les NONE).
-                $items = [];
-                foreach ($sportkeeped as $sport) {
-                    if ($this->{$sport} == self::SPORT_NONE) {
-                        continue;
-                    }
-
-                    $items[$this->{$sport}] = $this->{$sport};
-                }
-                $items = array_values($items);
-
-                // On place le sport principal au début de la liste des sports à conserver.
-                if ($constraint === 1 || $this->questionnairestatus == self::HEALTH_QUESTIONNAIRE_ANSWERED_YES_ONCE) {
-                    $sports = Activity::get_records(['restriction' => $constraint]);
-                    if (isset($sports[$this->mainsport]) === true && in_array($this->mainsport, $items, $strict = true) === false) {
-                        array_unshift($items, $this->mainsport);
-                    }
-                }
-
-                // On réécrit la liste des sports à conserver.
-                foreach ($sportkeeped as $i => $sport) {
-                    if (isset($items[$i]) === true) {
-                        $this->{$sport} = $items[$i];
-                    } else {
-                        $this->{$sport} = self::SPORT_NONE;
-                    }
-                }
+            // Recalcule les groupes.
+            $groups = [];
+            foreach (groups_get_all_groups($courseid) as $group) {
+                $groups[$group->name] = $group;
             }
 
-            // Recalcule le groupe.
-            if ($this->mainsport !== self::get_mainsportid_from_user_group($courseid, $this->userid)) {
-                // Supprime tous les groupes de l'utilisateur.
-                groups_delete_group_members($courseid, $this->userid);
-
-                // Attribut le nouveau groupe.
-                $groupid = self::get_groupid_from_activityid($this->mainsport, $courseid);
-                if ($groupid !== false) {
-                    groups_add_member($groupid, $this->userid);
-                }
+            $usergroups = [];
+            foreach (groups_get_all_groups($courseid, $this->userid) as $group) {
+                $usergroups[$group->name] = $group;
             }
+
+            $activities = $DB->get_records(Activity::TABLENAME, [], $sort = 'name', $field = 'code, name');
+            foreach ($json->activity as $code) {
+                if (isset($activities[$code]) === false) {
+                    continue;
+                }
+
+                $activity = $activities[$code]->name;
+                if (isset($usergroups[$activity]) === true) {
+                    unset($usergroups[$activity]);
+                    continue;
+                }
+
+                if (isset($groups[$activity]) === false) {
+                    continue;
+                }
+
+                groups_add_member($groups[$activity]->id, $this->userid);
+            }
+
+            foreach ($usergroups as $group) {
+                groups_remove_member($group->id, $this->userid);
+            }
+
+            $this->data = json_encode($json);
         }
 
         if (empty($this->id) === true) {

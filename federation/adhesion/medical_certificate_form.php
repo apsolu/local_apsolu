@@ -46,17 +46,32 @@ class local_apsolu_federation_medical_certificate extends moodleform {
 
         $mform = $this->_form;
 
-        list($adhesion, $course, $context, $validityperiod,
-            $sportswithoutconstraint, $sportswithconstraints, $freeze) = $this->_customdata;
+        list($adhesion, $course, $context, $validityperiod, $freeze) = $this->_customdata;
 
-        if (empty($adhesion->medicalcertificatedate)) {
-            $adhesion->medicalcertificatedate = time() - YEARSECS * 2;
+        $data = $adhesion->decode_data();
+        if (empty($data->medicalcertificatedate)) {
+            $data->medicalcertificatedate = time() - YEARSECS * 2;
         }
+
+        // Nom du médecin.
+        $mform->addElement('text', 'doctorname', get_string('doctor_name', 'local_apsolu'));
+        $mform->setType('doctorname', PARAM_TEXT);
+        $mform->addRule('doctorname', get_string('required'), 'required', null, 'client');
+
+        // RPPS du médecin.
+        $mform->addElement('text', 'doctorrpps', get_string('doctor_rpps', 'local_apsolu'));
+        $mform->setType('doctorrpps', PARAM_TEXT);
+        $mform->addRule('doctorrpps', get_string('required'), 'required', null, 'client');
+
+        // Date du certificat médical.
+        $mform->addElement('date_selector', 'medicalcertificatedate', get_string('medical_certificate_date', 'local_apsolu'));
+        $mform->setType('medicalcertificatedate', PARAM_TEXT);
+        $mform->addRule('medicalcertificatedate', get_string('required'), 'required', null, 'client');
 
         // Certificat médical.
         $label = get_string('medical_certificate', 'local_apsolu');
         if ($freeze === true) {
-            $mform->freeze();
+            $mform->hardFreeze();
 
             $fs = get_file_storage();
             $context = context_course::instance($course->id, MUST_EXIST);
@@ -83,65 +98,6 @@ class local_apsolu_federation_medical_certificate extends moodleform {
             $mform->addElement('filemanager', 'medicalcertificate_filemanager', $label, $attributes, $options);
         }
 
-        // Date du certificat médical.
-        $mform->addElement('date_selector', 'medicalcertificatedate', get_string('medical_certificate_date', 'local_apsolu'));
-        $mform->setType('medicalcertificatedate', PARAM_TEXT);
-        $mform->addRule('medicalcertificatedate', get_string('required'), 'required', null, 'client');
-
-        if ($validityperiod === 6) {
-            // Sport 1 (sans contrainte).
-            $mform->addElement('select', 'sport1',
-                get_string('activity_X_without_constraint', 'local_apsolu', 1), $sportswithoutconstraint);
-            $mform->setType('sport1', PARAM_INT);
-
-            // Sport 2 (sans contrainte).
-            $mform->addElement('select', 'sport2',
-                get_string('activity_X_without_constraint', 'local_apsolu', 2), $sportswithoutconstraint);
-            $mform->setType('sport2', PARAM_INT);
-
-            // Sport 3 (sans contrainte).
-            $mform->addElement('select', 'sport3',
-                get_string('activity_X_without_constraint', 'local_apsolu', 3), $sportswithoutconstraint);
-            $mform->setType('sport3', PARAM_INT);
-
-            // Sport 4 (sans contrainte).
-            $mform->addElement('select', 'sport4',
-                get_string('activity_X_without_constraint', 'local_apsolu', 4), $sportswithoutconstraint);
-            $mform->setType('sport4', PARAM_INT);
-
-            // Sport 5 (sans contrainte).
-            $mform->addElement('select', 'sport5',
-                get_string('activity_X_without_constraint', 'local_apsolu', 5), $sportswithoutconstraint);
-            $mform->setType('sport5', PARAM_INT);
-        }
-
-        if ($validityperiod === 12) {
-            // Sport 1 (avec contrainte).
-            $mform->addElement('select', 'constraintsport1',
-                get_string('activity_X_with_specific_constraints', 'local_apsolu', 1), $sportswithconstraints);
-            $mform->setType('constraintsport1', PARAM_INT);
-
-            // Sport 2 (avec contrainte).
-            $mform->addElement('select', 'constraintsport2',
-                get_string('activity_X_with_specific_constraints', 'local_apsolu', 2), $sportswithconstraints);
-            $mform->setType('constraintsport2', PARAM_INT);
-
-            // Sport 3 (avec contrainte).
-            $mform->addElement('select', 'constraintsport3',
-                get_string('activity_X_with_specific_constraints', 'local_apsolu', 3), $sportswithconstraints);
-            $mform->setType('constraintsport3', PARAM_INT);
-
-            // Sport 4 (avec contrainte).
-            $mform->addElement('select', 'constraintsport4',
-                get_string('activity_X_with_specific_constraints', 'local_apsolu', 4), $sportswithconstraints);
-            $mform->setType('constraintsport4', PARAM_INT);
-
-            // Sport 5 (avec contrainte).
-            $mform->addElement('select', 'constraintsport5',
-                get_string('activity_X_with_specific_constraints', 'local_apsolu', 5), $sportswithconstraints);
-            $mform->setType('constraintsport5', PARAM_INT);
-        }
-
         // Champs cachés.
         $mform->addElement('hidden', 'step', APSOLU_PAGE_MEDICAL_CERTIFICATE);
         $mform->setType('step', PARAM_INT);
@@ -157,7 +113,7 @@ class local_apsolu_federation_medical_certificate extends moodleform {
         $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Set default values.
-        $this->set_data($adhesion);
+        $this->set_data($data);
     }
 
     /**
@@ -197,35 +153,6 @@ class local_apsolu_federation_medical_certificate extends moodleform {
      */
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
-
-        $medicalsports = [];
-        $medicalsports[6] = 'sport';
-        $medicalsports[12] = 'constraintsport';
-        foreach ($medicalsports as $validityperiod => $type) {
-            if ($data['validityperiod'] !== $validityperiod) {
-                continue;
-            }
-
-            $undefined = true;
-            for ($i = 1; $i < 6; $i++) {
-                $name = sprintf('%s%s', $type, $i);
-                if (isset($data[$name]) === false) {
-                    continue;
-                }
-
-                if ($data[$name] == 1) {
-                    continue;
-                }
-
-                $undefined = false;
-                break;
-            }
-
-            if ($undefined === true) {
-                $name = sprintf('%s1', $type);
-                $errors[$name] = get_string('you_must_select_at_least_one_activity', 'local_apsolu');
-            }
-        }
 
         if ($data['medicalcertificatedate'] > time()) {
             $errors['medicalcertificatedate'] = get_string('the_date_of_the_medical_certificate_cannot_be_later_than_today', 'local_apsolu'); // phpcs:ignore

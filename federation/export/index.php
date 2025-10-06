@@ -30,7 +30,7 @@ use UniversiteRennes2\Apsolu\Payment;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->libdir.'/csvlib.class.php');
+require_once($CFG->libdir.'/excellib.class.php');
 require_once(__DIR__.'/export_form.php');
 require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
 
@@ -71,23 +71,29 @@ $statuses = [
 ];
 
 $disciplines = FederationAdhesion::get_disciplines();
+$licensetypes = FederationAdhesion::get_license_types();
 
 // Récupère la liste des activités FFSU.
 $activities = [0 => get_string('all')];
 foreach (FederationActivity::get_records(null, $sort = 'name') as $record) {
-    $activities[$record->id] = $record->name;
+    $activities[$record->code] = $record->name;
 }
 
 $constraintactivities = FederationActivity::get_records(['restriction' => 1], $sort = 'name');
 
 $customdata = ['numbers' => $numbers, 'payments' => $payments, 'certificates' => $certificates,
-    'licenses' => $licenses, 'statuses' => $statuses, 'activities' => $activities];
+    'licenses' => $licenses, 'statuses' => $statuses, 'licensetypes' => $licensetypes, 'activities' => $activities];
 $mform = new local_apsolu_federation_export_licenses(null, $customdata);
 
 $content = '';
 if ($data = $mform->get_data()) {
-    // Génère les entêtes d'exportation.
-    $headers = FederationAdhesion::get_exportation_headers();
+    // Génère les entêtes et les champs d'exportation.
+    $headers = [];
+    $fields = [];
+    foreach (FederationAdhesion::get_exportation_fields() as $field => $label) {
+        $headers[] = $label;
+        $fields[] = $field;
+    }
 
     if (isset($data->exportbutton) === false) {
         // En affichage web, on préfixe le tableau de la date de dernière modification.
@@ -98,6 +104,9 @@ if ($data = $mform->get_data()) {
     if (empty($data->payment) === false) {
         $payments = Payment::get_users_cards_status_per_course($courseid);
     }
+
+    // Récupère la liste des licences soumises au contrôle de l'honorabilité.
+    $licenseswithhonorability = FederationAdhesion::get_licenses_with_honorability();
 
     // Récupère la liste des utilisateurs en fonction des critères.
     $parameters = [];
@@ -114,33 +123,17 @@ if ($data = $mform->get_data()) {
         $conditions[] = " AND u.idnumber LIKE :idnumber ";
     }
 
-    if (empty($data->activity) === false) {
-        $parameters['mainsport'] = $activities[$data->activity];
-        $conditions[] = " AND act.name = :mainsport";
-    }
-
-    $sql = "SELECT u.id AS userid, u.lastname, u.firstname, u.email, act.name AS mainsportname, adh.*".
-        " FROM {apsolu_federation_adhesions} adh".
-        " JOIN {apsolu_federation_activities} act ON act.id = adh.mainsport".
-        " JOIN {user} u ON u.id = adh.userid".
-        " JOIN {user_enrolments} ue ON u.id = ue.userid".
-        " JOIN {enrol} e ON e.id = ue.enrolid AND e.enrol = 'select'".
-        " WHERE e.courseid = :courseid".
-        implode(' ', $conditions).
-        " ORDER BY adh.timemodified DESC, u.lastname, u.firstname";
+    $sql = "SELECT u.id AS userid, u.lastname, u.firstname, u.email, adh.*
+              FROM {apsolu_federation_adhesions} adh
+              JOIN {user} u ON u.id = adh.userid
+              JOIN {user_enrolments} ue ON u.id = ue.userid
+              JOIN {enrol} e ON e.id = ue.enrolid AND e.enrol = 'select'
+             WHERE e.courseid = :courseid".implode(' ', $conditions)."
+          ORDER BY adh.timemodified DESC, u.lastname, u.firstname";
 
     $rows = [];
     $recordset = $DB->get_recordset_sql($sql, $parameters);
     foreach ($recordset as $record) {
-        // Convertit les dates.
-        $record->birthdayformat = userdate($record->birthday, '%F');
-
-        if (empty($record->medicalcertificatedate) === true) {
-            $record->medicalcertificatedateformat = '';
-        } else {
-            $record->medicalcertificatedateformat = userdate($record->medicalcertificatedate, '%F');
-        }
-
         // Numéro AS.
         if (empty($data->numbers) === false) {
             $found = false;
@@ -201,10 +194,10 @@ if ($data = $mform->get_data()) {
         }
 
         // Etat du numéro de licence.
-        if (empty($data->license) === false) {
-            if ($data->license === APSOLU_SELECT_YES && empty($record->federationnumber) === true) {
+        if (empty($data->licensenumber) === false) {
+            if ($data->licensenumber === APSOLU_SELECT_YES && empty($record->federationnumber) === true) {
                 continue;
-            } else if ($data->license === APSOLU_SELECT_NO && empty($record->federationnumber) === false) {
+            } else if ($data->licensenumber === APSOLU_SELECT_NO && empty($record->federationnumber) === false) {
                 continue;
             }
         }
@@ -220,66 +213,130 @@ if ($data = $mform->get_data()) {
         }
 
         // Remplit toutes les lignes.
-        $row = [];
-
-        if (isset($data->exportbutton) === false) {
-            $title = userdate($record->timemodified, get_string('strftimedatetimeshort', 'local_apsolu'));
-            $text = userdate($record->timemodified, get_string('strftimedatetimesortable', 'local_apsolu'));
-            $row[] = '<span class="apsolu-cursor-help" title="'.s($title).'">'.s($text).'</span>';
+        $json = json_decode($record->data);
+        if (empty($json) === true) {
+            $json = new stdClass();
         }
 
-        foreach (FederationAdhesion::get_exportation_fields() as $field) {
+        if (isset($json->licensetype) === false || is_array($json->licensetype) === false) {
+            $json->licensetype = [];
+        }
+
+        // Filtre par activité.
+        if (empty($data->activity) === false) {
+            if (isset($json->activity) === false || in_array($data->activity, $json->activity, $strict = true) === false) {
+                continue;
+            }
+        }
+
+        foreach ($json->licensetype as $licensetype) {
+            if ($data->licensetype !== $licensetype) {
+                continue;
+            }
+
+            $row = [];
+
             if (isset($data->exportbutton) === false) {
-                // En affichage web, on améliore le rendu des champs.
+                $title = userdate($record->timemodified, get_string('strftimedatetimeshort', 'local_apsolu'));
+                $text = userdate($record->timemodified, get_string('strftimedatetimesortable', 'local_apsolu'));
+                $row[] = '<span class="apsolu-cursor-help" title="'.s($title).'">'.s($text).'</span>';
+            }
+
+            foreach ($fields as $field) {
+                if (isset($data->exportbutton) === false) {
+                    // En affichage web, on améliore le rendu des champs.
+                    switch ($field) {
+                        case 'firstname':
+                        case 'lastname':
+                            $profileurl = new moodle_url('/user/view.php', ['id' => $record->userid, 'course' => $courseid]);
+                            $record->{$field} = html_writer::link($profileurl, $record->{$field});
+                            break;
+                        case 'federationnumberprefix':
+                            if (empty($record->federationnumber) === false) {
+                                $record->{$field} = $record->federationnumber;
+                            }
+                            break;
+                    }
+                }
+
+                if (isset($json->{$field}) === true) {
+                    $record->{$field} = $json->{$field};
+                }
+
+                if (isset($record->{$field}) === false) {
+                    $record->{$field} = '';
+                }
+
                 switch ($field) {
-                    case 'firstname':
-                    case 'lastname':
-                        $profileurl = new moodle_url('/user/view.php', ['id' => $record->userid, 'course' => $courseid]);
-                        $record->{$field} = html_writer::link($profileurl, $record->{$field});
-                        break;
-                    case 'federationnumberprefix':
-                        if (empty($record->federationnumber) === false) {
-                            $record->{$field} = $record->federationnumber;
+                    case 'birthday':
+                    case 'medicalcertificatedate':
+                        try {
+                            if (empty($record->{$field}) === true) {
+                                throw new Exception('empty date');
+                            }
+                            $row[] = userdate($record->{$field}, '%d/%m/%Y');
+                        } catch (Exception $exception) {
+                            $row[] = '';
                         }
                         break;
-                    case 'disciplineid':
-                        $record->{$field} = $disciplines[$record->disciplineid];
-                        break;
-                    case 'sport1':
-                    case 'sport2':
-                    case 'sport3':
-                    case 'sport4':
-                    case 'sport5':
-                    case 'constraintsport1':
-                    case 'constraintsport2':
-                    case 'constraintsport3':
-                    case 'constraintsport4':
-                    case 'constraintsport5':
-                        if (isset($activities[$record->{$field}]) === true) {
-                            $record->{$field} = $activities[$record->{$field}];
+                    case 'handicap':
+                    case 'licenseetype':
+                    case 'commercialoffers':
+                    case 'usepersonalimage':
+                    case 'policyagreed':
+                    case 'newsletter':
+                    case 'federaltexts':
+                    case 'insurance':
+                        if (empty($record->{$field}) === true) {
+                            $row[] = get_string('no');
                         } else {
-                            $record->{$field} = get_string('none');
+                            $row[] = get_string('yes');
                         }
                         break;
+                    case 'questionnairestatus':
+                        if (empty($record->{$field}) === true) {
+                            $row[] = get_string('yes');
+                        } else {
+                            $row[] = get_string('no');
+                        }
+                        break;
+                    case 'licensetype':
+                        $row[] = $licensetype;
+                        break;
+                    case 'honorability':
+                        $honorability = [];
+                        foreach ($record->licensetype as $type) {
+                            if (isset($licenseswithhonorability[$type]) === false) {
+                                continue;
+                            }
+                            $honorability[] = $type;
+                        }
+                        $row[] = implode(',', $honorability);
+                        break;
+                    case 'medicalcertifiatevalidated':
+                        if (empty($record->medicalcertificatedate) === false) {
+                            $row[] = get_string('yes');
+                        } else {
+                            $row[] = '';
+                        }
+                        break;
+                    case 'schoolcertificatevalidated':
+                        if (empty($record->licenseetype) === true) {
+                            $row[] = get_string('no');
+                        } else {
+                            $row[] = get_string('yes');
+                        }
+                        break;
+                    case 'activity':
+                        $row[] = implode(',', $record->{$field});
+                        break;
+                    default:
+                        $row[] = $record->{$field};
                 }
             }
 
-            switch ($field) {
-                case 'questionnairestatusno':
-                    $row[] = intval(empty($record->questionnairestatus));
-                    break;
-                case 'questionnairestatusyes':
-                    $row[] = intval(empty($record->questionnairestatus) === false);
-                    break;
-                case 'medicalcertificatestatus':
-                    $row[] = intval($record->{$field} === "1");
-                    break;
-                default:
-                    $row[] = $record->{$field};
-            }
+            $rows[] = $row;
         }
-
-        $rows[] = $row;
     }
     $recordset->close();
 
@@ -287,29 +344,37 @@ if ($data = $mform->get_data()) {
         $content = $OUTPUT->notification(get_string('no_results_with_these_criteria', 'local_apsolu'), 'notifyerror');
     } else {
         if (isset($data->exportbutton) === true) {
-            // Exporte au format CSV.
-            $filename = 'exportation_ffsu_'.core_date::strftime('%FT%T');
+            // Export au format excel.
+            $filename = 'exportation_ffsu_'.core_date::strftime('%F_%T');
 
-            $export = new csv_export_writer($delimiter = 'semicolon');
-            $export->set_filename($filename);
+            $workbook = new MoodleExcelWorkbook("-");
+            $workbook->send($filename);
+            $myxls = $workbook->add_worksheet();
 
-            // Réencode les données du fichier en 'iso-8859-1'.
-            $row = [];
-            foreach ($headers as $value) {
-                $row[] = core_text::convert($value, 'utf-8', 'iso-8859-1');
+            $properties = ['border' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN];
+            $excelformat = new MoodleExcelFormat($properties);
+
+            // Set headers.
+            foreach ($headers as $position => $value) {
+                $myxls->write_string(0, $position, $value, $excelformat);
             }
-            $export->add_data($row);
 
+            // Set data.
+            $line = 1;
             foreach ($rows as $values) {
-                $row = [];
-                foreach ($values as $value) {
-                    $row[] = core_text::convert($value, 'utf-8', 'iso-8859-1');
+                foreach ($values as $position => $value) {
+                    $myxls->write_string($line, $position, $value, $excelformat);
                 }
-                $export->add_data($row);
+
+                $line++;
             }
 
-            $export->download_file();
-            exit();
+            // MDL-83543: positionne un cookie pour qu'un script js déverrouille le bouton submit après le téléchargement.
+            setcookie('moodledownload_' . sesskey(), time());
+
+            // Transmet le fichier au navigateur.
+            $workbook->close();
+            exit(0);
         }
 
         // Affiche le résultat au format HTML.
@@ -328,7 +393,7 @@ if ($data = $mform->get_data()) {
         $table->caption = count($rows).' '.get_string('users');
         $table->data = $rows;
         $table->responsive = false;
-        $content = html_writer::table($table);
+        $content = html_writer::div(html_writer::table($table), 'table-responsive');
     }
 }
 

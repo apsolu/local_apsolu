@@ -194,6 +194,13 @@ $functions = [
         'capabilities' => 'moodle/site:sendmessage',
         'ajax' => true,
     ],
+    'local_apsolu_get_relevant_municipalities' => [
+        'classname' => 'local_apsolu\external\municipality',
+        'methodname' => 'get_relevant_municipalities',
+        'description' => 'Gets relevant municipalities for a search request.',
+        'type' => 'read',
+        'ajax' => true,
+    ],
 ];
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.

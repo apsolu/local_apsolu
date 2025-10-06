@@ -20,6 +20,7 @@ use Behat\Gherkin\Node\TableNode as TableNode;
 use local_apsolu\tests\behat\dataset_provider;
 
 require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
+require_once(__DIR__ . '/../../../../cohort/lib.php');
 
 /**
  * Classe gérant de nouvelles instructions behat.

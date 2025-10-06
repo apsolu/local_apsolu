@@ -27,6 +27,7 @@ use local_apsolu\core\attendance\status as AttendanceStatus;
 use local_apsolu\core\federation\activity as Activity;
 use local_apsolu\core\federation\adhesion as Adhesion;
 use local_apsolu\core\messaging;
+use local_apsolu\core\municipality as Municipality;
 use local_apsolu\task\setup_behat_data;
 
 defined('MOODLE_INTERNAL') || die;
@@ -61,20 +62,13 @@ function xmldb_local_apsolu_install() {
     set_config('parental_authorization_description', '', 'local_apsolu');
 
     set_config('insurance_field_default', '0', 'local_apsolu');
-    set_config('managerlicense_field_default', '0', 'local_apsolu');
-    set_config('managerlicensetype_field_default', '1', 'local_apsolu');
-    set_config('refereelicense_field_default', '0', 'local_apsolu');
-    set_config('sportlicense_field_default', '1', 'local_apsolu');
-    set_config('starlicense_field_default', '0', 'local_apsolu');
+    set_config('licenseetype_field_default', '1', 'local_apsolu');
+    set_config('licensetype_field_default', '["S"]', 'local_apsolu');
 
-    set_config('instagram_field_visibility', Adhesion::FIELD_HIDDEN, 'local_apsolu');
     set_config('insurance_field_visibility', Adhesion::FIELD_HIDDEN, 'local_apsolu');
-    set_config('managerlicense_field_visibility', Adhesion::FIELD_HIDDEN, 'local_apsolu');
-    set_config('managerlicensetype_field_visibility', Adhesion::FIELD_HIDDEN, 'local_apsolu');
+    set_config('licenseetype_field_visibility', Adhesion::FIELD_VISIBLE, 'local_apsolu');
+    set_config('licensetype_field_visibility', Adhesion::FIELD_LOCKED, 'local_apsolu');
     set_config('otherfederation_field_visibility', Adhesion::FIELD_VISIBLE, 'local_apsolu');
-    set_config('refereelicense_field_visibility', Adhesion::FIELD_HIDDEN, 'local_apsolu');
-    set_config('sportlicense_field_visibility', Adhesion::FIELD_VISIBLE, 'local_apsolu');
-    set_config('starlicense_field_visibility', Adhesion::FIELD_HIDDEN, 'local_apsolu');
 
     // Initialise les paramètres de l'offre de formations.
     UniversiteRennes2\Apsolu\set_initial_course_offerings_settings();
@@ -155,6 +149,9 @@ function xmldb_local_apsolu_install() {
 
     // Initialise les données dans la table apsolu_attendance_statuses.
     AttendanceStatus::generate_default_values();
+
+    // Initialise les données dans la table apsolu_municipalities.
+    Municipality::initialize_dataset();
 
     // Initialise des données fictives pour les tests Behat.
     if (defined('BEHAT_UTIL') === true) {

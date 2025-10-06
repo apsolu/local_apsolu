@@ -66,13 +66,11 @@ if ($data = $mform->get_data()) {
         $conditions[] = "AND afa.medicalcertificatestatus = :status";
     }
 
-    $federationactivities = $DB->get_records('apsolu_federation_activities');
+    $federationactivities = $DB->get_records('apsolu_federation_activities', [], $sort = 'name', $fields = 'code, name');
 
     $fullnamefields = core_user\fields::get_name_fields();
     $sql = "SELECT u.id, ".implode(', ', $fullnamefields).", u.idnumber, u.email, u.institution, afa.questionnairestatus,
-                   afa.mainsport, afa.sport1, afa.sport2, afa.sport3, afa.sport4, afa.sport5,
-                   afa.constraintsport1, afa.constraintsport2, afa.constraintsport3, afa.constraintsport4, afa.constraintsport5,
-                   afa.medicalcertificatedate, afa.medicalcertificatestatus, afa.federationnumber, afa.federationnumberrequestdate
+                   afa.data, afa.medicalcertificatestatus, afa.federationnumber, afa.federationnumberrequestdate
               FROM {user} u
               JOIN {apsolu_federation_adhesions} afa ON u.id = afa.userid
              WHERE 1 = 1 ".implode(' ', $conditions)."
@@ -82,6 +80,12 @@ if ($data = $mform->get_data()) {
     $recordset = $DB->get_recordset_sql($sql, $parameters);
     $context = context_course::instance($courseid, MUST_EXIST);
     foreach ($recordset as $record) {
+        $record->data = json_decode($record->data);
+        if ($record->data === false) {
+            // Les données JSON ne sont pas valides. Ce cas ne devrait jamais arriver.
+            continue;
+        }
+
         $profileurl = new moodle_url('/user/view.php', ['id' => $record->id, 'course' => $courseid]);
 
         $row = [];
@@ -98,16 +102,12 @@ if ($data = $mform->get_data()) {
 
         // Liste les activités de l'adhérant.
         $activities = [];
-        foreach (Adhesion::get_activity_fields() as $field) {
-            if ($record->{$field} === Adhesion::SPORT_NONE) {
+        foreach ($record->data->activity as $activity) {
+            if (isset($federationactivities[$activity]) === false) {
                 continue;
             }
-
-            if (isset($federationactivities[$record->{$field}]) === false) {
-                continue;
-            }
-
-            $activities[$record->{$field}] = $federationactivities[$record->{$field}]->name;
+            $federationactivity = $federationactivities[$activity];
+            $activities[$federationactivity->code] = $federationactivity->name;
         }
 
         if (empty($record->questionnairestatus) === false) {
@@ -118,8 +118,8 @@ if ($data = $mform->get_data()) {
         $row[] = html_writer::alist($activities, $attributes = [], $tag = 'ul');
 
         // Affiche la date d'émission du certificat médical.
-        if (empty($record->medicalcertificatedate) === false) {
-            $row[] = userdate($record->medicalcertificatedate, get_string('strftimedateshort', 'local_apsolu'));
+        if (empty($record->data->medicalcertificatedate) === false) {
+            $row[] = userdate($record->data->medicalcertificatedate, get_string('strftimedateshort', 'local_apsolu'));
         } else {
             $row[] = ''; // Aucune date de certificat médical.
         }

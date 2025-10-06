@@ -39,9 +39,10 @@ class local_apsolu_federation_numbers_edit_form extends moodleform {
         $fields = $this->_customdata['fields'];
 
         // Champ Numéro d'association.
-        $mform->addElement('text', 'number', get_string('association_number', 'local_apsolu'), ['maxlength' => 4]);
+        $mform->addElement('text', 'number', get_string('association_number', 'local_apsolu'));
         $mform->setType('number', PARAM_TEXT);
         $mform->addRule('number', get_string('required'), 'required', null, 'client');
+        $mform->addHelpButton('number', 'association_number', 'local_apsolu');
 
         // Champ "Champ".
         $options = [];

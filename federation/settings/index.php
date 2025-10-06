@@ -30,27 +30,24 @@ require_once(__DIR__.'/settings_form.php');
 $attributes = [
     'ffsu_acceptedfiles',
     'ffsu_maxfiles',
-    'instagram_field_visibility',
     'insurance_cohort',
     'insurance_field_default',
     'insurance_field_visibility',
-    'managerlicense_field_default',
-    'managerlicense_field_visibility',
-    'managerlicensetype_field_default',
-    'managerlicensetype_field_visibility',
-    'parental_authorization_enabled',
+    'licenseetype_field_default',
+    'licenseetype_field_visibility',
+    'licensetype_field_default',
+    'licensetype_field_visibility',
     'otherfederation_field_visibility',
-    'refereelicense_field_default',
-    'refereelicense_field_visibility',
-    'sportlicense_field_default',
-    'sportlicense_field_visibility',
-    'starlicense_field_default',
-    'starlicense_field_visibility',
+    'parental_authorization_enabled',
     ];
 
 $defaults = new stdClass();
 foreach ($attributes as $attribute) {
     $defaults->{$attribute} = get_config('local_apsolu', $attribute);
+
+    if ($attribute === 'licensetype_field_default') {
+        $defaults->{$attribute} = json_decode($defaults->{$attribute});
+    }
 }
 
 $defaults->ffsu_agreement['text'] = get_config('local_apsolu', 'ffsu_agreement');
@@ -80,6 +77,11 @@ if ($data = $mform->get_data()) {
     foreach ($attributes as $attribute) {
         if (isset($data->{$attribute}) === false) {
             continue;
+        }
+
+        if ($attribute === 'licensetype_field_default') {
+            $data->{$attribute} = json_encode($data->{$attribute});
+            $defaults->{$attribute} = json_encode($defaults->{$attribute});
         }
 
         if ($data->{$attribute} == $defaults->{$attribute}) {
