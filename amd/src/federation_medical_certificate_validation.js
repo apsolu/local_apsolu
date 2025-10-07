@@ -34,9 +34,9 @@ define(['jquery', 'core_form/modalform', 'core/str', 'core/toast'], function($, 
                     var title = link.textContent;
 
                     const modalForm = new ModalForm({
-                        formClass: "local_apsolu\\form\\send_email_form",
+                        formClass: "local_apsolu\\form\\federation\\validate_medical_certificate",
                         args: {users: users, contextid: contextid,
-                            targetvalidation: targetvalidation, subject: subject, body: body},
+                            jsondata: targetvalidation, subject: subject, body: body},
                         modalConfig: {title: title, large: true, buttons: {save: Str.get_string('send', 'message')}},
                     });
 

@@ -20,7 +20,6 @@ use context;
 use context_system;
 use core_form\dynamic_form;
 use html_writer;
-use local_apsolu\core\federation\adhesion as Adhesion;
 use local_apsolu\external\email;
 use moodle_url;
 
@@ -50,16 +49,7 @@ class send_email_form extends dynamic_form {
         $contextid = $this->optional_param('contextid', '0', PARAM_INT);
         $subject = $this->optional_param('subject', '', PARAM_TEXT);
         $users = $this->optional_param('users', '', PARAM_SEQUENCE);
-        $validation = $this->optional_param('targetvalidation', '0', PARAM_INT);
-
-        // Champ validation.
-        if ($validation === (int) Adhesion::MEDICAL_CERTIFICATE_STATUS_VALIDATED) {
-            $label = get_string('validate', 'local_apsolu');
-        } else if ($validation === (int) Adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING ||
-            $validation === (int) Adhesion::MEDICAL_CERTIFICATE_STATUS_EXEMPTED) {
-            $label = get_string('refuse', 'local_apsolu');
-        }
-        $mform->addElement('static', 'validationstatic', get_string('validation', 'local_apsolu'), $label);
+        $jsondata = $this->optional_param('jsondata', '', PARAM_TEXT);
 
         // Champ du destinataire.
         $items = [];
@@ -99,9 +89,9 @@ class send_email_form extends dynamic_form {
         $mform->addElement('hidden', 'contextid', $contextid);
         $mform->setType('contextid', PARAM_INT);
 
-        // Validation.
-        $mform->addElement('hidden', 'validation', $validation);
-        $mform->setType('validation', PARAM_INT);
+        // Données JSON.
+        $mform->addElement('hidden', 'jsondata', $jsondata);
+        $mform->setType('jsondata', PARAM_TEXT);
 
         // Submit buttons (No need to show buttons in modal mform).
         if (isset($this->_customdata['submitlabel'])) {
@@ -145,34 +135,9 @@ class send_email_form extends dynamic_form {
         // Note: le tableau ne contient qu'un seul utilisateur.
         $receivers = explode(',', $data->users);
 
-        // Validation du certificat.
-        $validation = $data->validation;
+        $user = false;
         foreach ($receivers as $userid) {
             $user = $DB->get_record('user', ['id' => $userid]);
-
-            if ($validation === (int) Adhesion::MEDICAL_CERTIFICATE_STATUS_VALIDATED) {
-                foreach (Adhesion::get_records(['userid' => $userid]) as $adhesion) {
-                    $adhesion->medicalcertificatestatus = $validation;
-                    $adhesion->save($mdata = null, $mform = null, $check = false);
-                }
-            } else if ($validation === (int) Adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING) {
-                foreach (Adhesion::get_records(['userid' => $userid]) as $adhesion) {
-                    if ($adhesion->have_to_upload_medical_certificate() === true) {
-                        $adhesion->medicalcertificatestatus = $adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING;
-                    } else {
-                        $adhesion->medicalcertificatestatus = $adhesion::MEDICAL_CERTIFICATE_STATUS_EXEMPTED;
-                    }
-                    $adhesion->federationnumberrequestdate = null;
-
-                    $adhesion->save($mdata = null, $mform = null, $check = false);
-                }
-            } else if ($validation === (int) Adhesion::MEDICAL_CERTIFICATE_STATUS_EXEMPTED) {
-                // On annule juste la date de demande de validation.
-                foreach (Adhesion::get_records(['userid' => $userid]) as $adhesion) {
-                    $adhesion->federationnumberrequestdate = null;
-                    $adhesion->save($mdata = null, $mform = null, $check = false);
-                }
-            }
         }
 
         // Envoi de la notification.
