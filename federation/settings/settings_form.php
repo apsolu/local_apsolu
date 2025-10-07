@@ -143,8 +143,13 @@ class local_apsolu_settings_form extends moodleform {
         $mform->addRule('ffsu_maxfiles', get_string('required'), 'required', null, 'client');
 
         // Partie paiement.
-        $mform->addElement('header', 'payment', get_string('setup_cohort_for_federation_insurance_payment', 'local_apsolu'));
+        $mform->addElement('header', 'payment', get_string('payment', 'local_apsolu'));
         $mform->setExpanded('payment', $expanded = true);
+
+        // Option pour activer le paiement par PassSport.
+        $label = get_string('enable_pass_sport_payment', 'local_apsolu');
+        $mform->addElement('selectyesno', 'enable_pass_sport_payment', $label);
+        $mform->setType('selectyesno', PARAM_INT);
 
         // Configuration de la cohorte pour le paiement de l'assurance FFSU.
         $options = ['multiple' => false];

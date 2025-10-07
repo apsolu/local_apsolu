@@ -85,14 +85,19 @@ if ($readonly === true) {
     $contacts = implode(' ', Adhesion::get_contacts());
 }
 
-$customdata = [$contacts, $cards, $havetosubmitdocuments, $due, $readonly];
+$customdata = [$contacts, $cards, $havetosubmitdocuments, $due, $readonly, $adhesion];
 $mform = new local_apsolu_federation_payment(null, $customdata);
 if ($data = $mform->get_data()) {
     // On traite les données envoyées au formulaire.
+    if (isset($data->enablepasssport) === true && empty($data->passsportnumber) === false) {
+        $adhesion->passsportnumber = $data->passsportnumber;
+        $adhesion->passsportstatus = Adhesion::PASS_SPORT_STATUS_PENDING;
+    }
+
     $adhesion->federationnumberrequestdate = time();
     $adhesion->save(null, null, $check = false);
 
-    if ($due === true) {
+    if ($due === true && isset($data->enablepasssport) === false) {
         // Si un paiement est dû, l'utilisateur est redirigé vers la page des paiements.
         $paymenturl = new moodle_url('/local/apsolu/payment/index.php');
         redirect($paymenturl);

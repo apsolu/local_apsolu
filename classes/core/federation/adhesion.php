@@ -72,6 +72,25 @@ class adhesion extends record {
     const MEDICAL_CERTIFICATE_STATUS_EXEMPTED = '2';
 
     /**
+     * Pattern du Pass Sport.
+     *
+     * Le pass Sport prend la forme d'un code composé de 10 caractères alphanumériques, différents de ceux de 2024.
+     *     Exemple : 25-XXXXX-XXXXX.
+     * Source: https://www.pass.sports.gouv.fr/v2/jeunes-et-parents#activate-code
+     */
+    const PASS_SPORT_PATTERN = '/^[0-9]{2}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}$/';
+
+    /**
+     * État du paiement par Pass Sport lorsqu'il est en attente de validation.
+     */
+    const PASS_SPORT_STATUS_PENDING = '0';
+
+    /**
+     * État du paiement par Pass Sport lorsqu'il a été validé.
+     */
+    const PASS_SPORT_STATUS_VALIDATED = '1';
+
+    /**
      * Valeur d'un champ d'adhésion caché.
      */
     const FIELD_HIDDEN = '0';
@@ -100,6 +119,12 @@ class adhesion extends record {
 
     /** @var int|string $agreementaccepted État d'acceptation de la charte. */
     public $agreementaccepted = null;
+
+    /** @var string $passsportnumber Numéro Pass Sport de l'adhérant. */
+    public $passsportnumber = null;
+
+    /** @var int|string $passsportstatus État de paiement avec Pass Sport. */
+    public $passsportstatus = null;
 
     /** @var string $federationnumberprefix Préfixe utilisé pour le numéro FFSU (4 caractères). */
     public $federationnumberprefix = null;
@@ -1240,6 +1265,17 @@ class adhesion extends record {
     }
 
     /**
+     * Valide le format du numéro du Pass Sport.
+     *
+     * @param string $number Numéro du Pass Sport.
+     *
+     * @return boolean
+     */
+    public static function is_valid_pass_sport_number(string $number) {
+        return (preg_match(self::PASS_SPORT_PATTERN, $number) === 1);
+    }
+
+    /**
      * Génère une chaine en JSON contenant les données du formulaire.
      *
      * @param object $data Objet mform.
@@ -1373,19 +1409,25 @@ class adhesion extends record {
         $strarguments = ['federationnumberprefix' => $this->federationnumberprefix, 'institution' => $user->institution];
         $subject = get_string('request_of_federation_number_subject', 'local_apsolu', $strarguments);
 
+        $extra = [];
+
         $parameters = [];
         $parameters['fullname'] = fullname($user);
         $parameters['export_url'] = (string) new moodle_url('/local/apsolu/federation/index.php', ['page' => 'export']);
         if ($this->have_to_upload_medical_certificate() === true && empty($this->medicalcertificatestatus) === true) {
             // Le certificat médical doit être validé.
-            $parameters['validation_url'] = (string) new moodle_url('/local/apsolu/federation/index.php',
-                ['page' => 'certificates_validation']);
-            $messagetext = get_string('request_of_federation_number_with_medical_certificate_message',
-                'local_apsolu', $parameters);
-        } else {
-            $messagetext = get_string('request_of_federation_number_without_medical_certificate_message',
-                'local_apsolu', $parameters);
+            $url = (string) new moodle_url('/local/apsolu/federation/index.php', ['page' => 'certificates_validation']);
+            $extra[] = get_string('request_of_federation_number_with_medical_certificate', 'local_apsolu', $url);
         }
+
+        if (empty($this->passsportnumber) === false) {
+            // Le Pass Sport doit être validé.
+            $url = (string) new moodle_url('/local/apsolu/federation/index.php', ['page' => 'pass_sport_validation']);
+            $extra[] = get_string('request_of_federation_number_with_pass_sport', 'local_apsolu', $url);
+        }
+
+        $parameters['extra'] = implode('', $extra);
+        $messagetext = get_string('request_of_federation_number_message', 'local_apsolu', $parameters);
 
         // Solution de contournement pour pouvoir envoyer un message à une adresse mail n'appartenant pas
         // à un utilisateur Moodle.

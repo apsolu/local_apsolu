@@ -200,6 +200,7 @@
             <FIELD NAME="agreementaccepted" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="medicalcertificatestatus" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="passsportnumber" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="passsportstatus" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" />
             <FIELD NAME="federationnumberprefix" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
             <FIELD NAME="federationnumber" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
             <FIELD NAME="federationnumberrequestdate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />

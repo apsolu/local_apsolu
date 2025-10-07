@@ -291,8 +291,9 @@ $string['email_primary_legal_representative_shortened'] = 'Mail du représentant
 $string['email_secondary_legal_representative'] = 'Courriel du représentant légal secondaire';
 $string['email_secondary_legal_representative_shortened'] = 'Mail du représentant légal secondaire';
 $string['employee'] = 'Personnel';
-$string['enable_parental_authorization_control'] = 'Activer le contrôle des autorisations parentales';
 $string['enable_dates_if_you_do_not_want_to_export_the_entire_data'] = 'Activer les dates si vous ne souhaitez pas exporter l’intégralité des données.';
+$string['enable_parental_authorization_control'] = 'Activer le contrôle des autorisations parentales';
+$string['enable_pass_sport_payment'] = 'Activer le paiement avec le Pass Sport';
 $string['end_date'] = 'Date de fin';
 $string['end_time_for_range_1'] = 'Première période : horaire de fin';
 $string['end_time_for_range_1_help'] = 'Détermine jusqu’à quel horaire une activité appartient au groupe de la première période.';
@@ -577,6 +578,7 @@ $string['not_set'] = 'Non défini';
 $string['not_student'] = 'Non étudiant';
 $string['not_used'] = 'Non utilisé';
 $string['not_used_help'] = 'Non utilisé';
+$string['not_validated'] = 'Non validé';
 $string['not_validated_by_the_student'] = 'Non validé (par l’étudiant)';
 $string['notified_users'] = 'Utilisateurs notifiés';
 $string['notification'] = 'Notification';
@@ -597,6 +599,20 @@ $string['overview_of_using_payments'] = 'Vue d’ensemble tarifs et usages';
 $string['parental_authorization'] = 'Autorisation parentale';
 $string['parental_authorization_description'] = 'Texte de présentation pour les autorisations parentales';
 $string['parental_authorization_description_help'] = 'Texte de présentation afficher aux utilisateurs ayant besoin d’une autorisation parentale.';
+$string['pass_sport_help'] = 'Obtenir plus d’information sur le <a href="https://www.pass.sports.gouv.fr/#:~:text=Qu\'est-ce%20que%20le%20pass%20Sport">Pass Sport</a>.';
+$string['pass_sport_not_validated'] = 'Pass Sport non validé';
+$string['pass_sport_number'] = 'Numéro du Pass Sport';
+$string['pass_sport_refusal_message_body'] = '<p>Bonjour,</p>
+<p>Le paiement de la FFSU avec votre Pass Sport n’a pas pu être validé.</p>
+<p>Cordialement,</p>';
+$string['pass_sport_refusal_message_subject'] = '[FFSU] Refus du paiement avec votre Pass Sport';
+$string['pass_sport_status'] = 'État du Pass Sport';
+$string['pass_sport_validated'] = 'Pass Sport validé';
+$string['pass_sport_validation'] = 'Validation des Pass Sport';
+$string['pass_sport_validation_message_body'] = '<p>Bonjour,</p>
+<p>Le paiement de la FFSU avec votre Pass Sport a été validé.</p>
+<p>Cordialement,</p>';
+$string['pass_sport_validation_message_subject'] = '[FFSU] Validation du paiement avec votre Pass Sport';
 $string['paybox_administration_description'] = 'Quelques informations concernant le paramétrage PayBox :
 
 * la variable **paybox_servers_incoming** correspond à la liste des adresses IP des serveurs de Paybox appelant la page APSOLU de confirmation de paiements
@@ -631,6 +647,7 @@ $string['paybox_sitenumber'] = 'Numéro de site';
 $string['pay'] = 'Payer';
 $string['pay_and_request_a_federation_number'] = 'Payer et demander un numéro de licence';
 $string['pay_for_license'] = 'Payer sa licence';
+$string['pay_with_my_pass_sport'] = 'Payer avec mon Pass Sport';
 $string['payment_center'] = 'Centre de paiement';
 $string['payment_center_help'] = 'Champ libre qui sera affiché sur la page de paiement des utilisateurs.';
 $string['payment_prefix_help'] = 'Préfixe affiché avant le numéro de commande dans le backoffice paybox. Cela peut être utile si votre abonnement Paybox est utilisé par plusieurs applications.';
@@ -686,14 +703,12 @@ $string['replyto_address_preference'] = 'Préférence pour l’adresse « répo
 $string['replyto'] = 'Répondre à';
 $string['request_a_federation_number'] = 'Demander un numéro de licence';
 $string['request_of_federation_number'] = 'Demande de numéro de licence';
+$string['request_of_federation_number_message'] = '<p>Bonjour,</p>
+<p>L’étudiant {$a->fullname} a fait une <a href="{$a->export_url}">demande de numéro de licence</a>.</p>{$a->extra}
+<p>Cordialement,</p>';
 $string['request_of_federation_number_subject'] = '[FFSU] Demande de numéro de licence ({$a->federationnumberprefix} {$a->institution})';
-$string['request_of_federation_number_with_medical_certificate_message'] = '<p>Bonjour,</p>
-<p>L’étudiant {$a->fullname} a fait une <a href="{$a->export_url}">demande de numéro de licence</a>.</p>
-<p>Un certificat médical est en attente de validation à <a href="{$a->validation_url}">cette adresse</a>.</p>
-<p>Cordialement,</p>';
-$string['request_of_federation_number_without_medical_certificate_message'] = '<p>Bonjour,</p>
-<p>L’étudiant {$a->fullname} a fait une <a href="{$a->export_url}">demande de numéro de licence</a>.</p>
-<p>Cordialement,</p>';
+$string['request_of_federation_number_with_medical_certificate'] = '<p>Un certificat médical est en attente de validation à <a href="{$a}">cette adresse</a>.</p>';
+$string['request_of_federation_number_with_pass_sport'] = '<p>Un Pass Sport est en attente de validation à <a href="{$a}">cette adresse</a>.</p>';
 $string['required_fields'] = 'Champs obligatoires';
 $string['return'] = 'Revenir';
 $string['roles'] = 'Types d’inscription';
@@ -840,6 +855,7 @@ $string['the_field_X_is_hidden_the_field_Y_must_be_hidden'] = 'Le champ « {$a-
 $string['the_fields_of_X_page_have_to_be_completed'] = '<p>Les informations de la <a href="{$a->url}">page « {$a->page} » </a> doivent être renseignées.</p>';
 $string['the_given_postal_code_is_not_valid'] = 'Le code postal saisi n’est pas valide.';
 $string['the_license_number_X_associated_to_Y_is_invalid'] = 'Le numéro de licence « {$a->licenseid} » associé à {$a->profile} est <strong>invalide</strong>.';
+$string['the_pass_sport_payment_is_not_enabled'] = 'Le paiement par Pass Sport n’est pas activé.';
 $string['the_path_X_is_a_directory'] = 'Le chemin « {$a} » est un répertoire.';
 $string['the_student_X_has_requested_for_a_license_number'] = 'L’étudiant {$a} a fait une demande de numéro de licence.';
 $string['the_unenrolment_has_been_done'] = 'La désinscription a été effectuée.';
@@ -883,6 +899,7 @@ $string['use_replyto_address'] = 'Utiliser une adresse de « réponse à »';
 $string['userid'] = 'Identifiant APSOLU';
 $string['user_profile'] = 'Profil utilisateur';
 $string['user_title'] = 'Civilité';
+$string['validated'] = 'Validé';
 $string['validate'] = 'Valider';
 $string['validated_by_the_student'] = 'Validé (par l’étudiant)';
 $string['validation'] = 'Validation';
@@ -904,6 +921,7 @@ $string['you_have_paid_for_your_membership_in_the_sports_association'] = 'Vous a
 $string['you_must_accept_the_federal_texts'] = 'Vous devez accepter les textes fédéraux.';
 $string['you_must_accept_the_honorability_check'] = 'Vous devez accepter le contrôle d’honorabilité.';
 $string['you_must_accept_the_terms_of_use_for_data'] = 'Vous devez accepter les conditions d’utilisation des données';
+$string['you_must_enter_a_number_in_the_format_XXX'] = 'Vous devez saisir un numéro au format 00-XXXX-XXXX.';
 $string['you_must_pay_for_your_membership_in_the_sports_association'] = 'Vous devez payer votre adhésion à l’association sportive.';
 $string['you_must_present_a_medical_certificate_of_less_than_X_months'] = 'Vous devez présenter un certificat médical de non-contre-indication à la pratique des sports de compétition de moins de {$a} mois.';
 $string['you_must_select_a_department_if_your_native_country_is_france'] = 'Vous devez sélectionner un département valide si votre pays de naissance est la France.';

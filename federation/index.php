@@ -45,6 +45,7 @@ $pages['numbers'] = get_string('association_numbers', 'local_apsolu');
 $pages['export'] = get_string('export', 'local_apsolu');
 $pages['import'] = get_string('import', 'local_apsolu');
 $pages['certificates_validation'] = get_string('certificates_validation', 'local_apsolu');
+$pages['pass_sport_validation'] = get_string('pass_sport_validation', 'local_apsolu');
 $pages['payments'] = get_string('exporting_payments', 'local_apsolu');
 
 $tabtree = [];

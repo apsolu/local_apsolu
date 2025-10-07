@@ -190,6 +190,12 @@ if ($hassiteconfig || has_any_capability($capabilities, context_system::instance
         $ADMIN->add('local_apsolu_federation',
             new admin_externalpage('local_apsolu_federation_certificates_validation', $str, $url, $capabilities));
 
+        // Validation des Pass Sport.
+        $str = get_string('pass_sport_validation', 'local_apsolu');
+        $url = new moodle_url('/local/apsolu/federation/index.php', ['page' => 'pass_sport_validation']);
+        $ADMIN->add('local_apsolu_federation',
+            new admin_externalpage('local_apsolu_federation_pass_sport_validation', $str, $url, $capabilities));
+
         // Exportation des paiements.
         $str = get_string('exporting_payments', 'local_apsolu');
         $url = new moodle_url('/local/apsolu/federation/index.php', ['page' => 'payments']);

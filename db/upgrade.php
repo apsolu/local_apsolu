@@ -1729,6 +1729,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         Activity::synchronize_database();
 
         // Définit les nouvelles variables.
+        set_config('enable_pass_sport_payment', '0', 'local_apsolu');
         set_config('licenseetype_field_default', '1', 'local_apsolu');
         set_config('licenseetype_field_visibility', Adhesion::FIELD_VISIBLE, 'local_apsolu');
         set_config('licensetype_field_default', '["S"]', 'local_apsolu');
@@ -1768,6 +1769,14 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
             // Insert data.
             Municipality::initialize_dataset();
+        }
+
+        // Ajouter un champ 'passsportstatus' dans la table 'apsolu_federation_adhesions'.
+        $table = new xmldb_table('apsolu_federation_adhesions');
+        $field = new xmldb_field('passsportstatus', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, 'passsportnumber');
+
+        if ($dbman->field_exists($table, $field) === false) {
+            $dbman->add_field($table, $field);
         }
 
         // Savepoint reached.

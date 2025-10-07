@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-use core_form\filetypes_util;
+use local_apsolu\core\federation\adhesion as Adhesion;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -38,7 +38,7 @@ class local_apsolu_federation_payment extends moodleform {
 
         $mform = $this->_form;
 
-        list($contact, $cards, $requireddocuments, $due, $freeze) = $this->_customdata;
+        list($contact, $cards, $requireddocuments, $due, $freeze, $adhesion) = $this->_customdata;
 
         $countrequireddocuments = count($requireddocuments);
 
@@ -73,12 +73,51 @@ class local_apsolu_federation_payment extends moodleform {
 
         // Submit buttons.
         if ($due === true) {
+            $enablepasssportpayment = get_config('local_apsolu', 'enable_pass_sport_payment');
+            if (empty($enablepasssportpayment) === false) {
+                $mform->addElement('text', 'passsportnumber', get_string('pass_sport_number', 'local_apsolu'));
+                $mform->setType('passsportnumber', PARAM_ALPHANUMEXT);
+                $mform->hideIf('passsportnumber', 'enablepasssport', 'notchecked');
+                $mform->setDefault('passsportnumber', $adhesion->passsportnumber);
+
+                $enablepasssport = (empty($adhesion->passsportnumber) === false);
+                $mform->addElement('checkbox', 'enablepasssport', get_string('pay_with_my_pass_sport', 'local_apsolu'));
+                $mform->setType('enablepasssport', PARAM_INT);
+                $mform->setDefault('enablepasssport', intval($enablepasssport));
+
+                $mform->addElement('static', 'passsporthelp', '', get_string('pass_sport_help', 'local_apsolu'));
+            }
             $label = get_string('pay_and_request_a_federation_number', 'local_apsolu');
         } else {
             $label = get_string('request_a_federation_number', 'local_apsolu');
         }
+
         $attributes = ['class' => 'btn btn-default'];
         $buttonarray[] = &$mform->createElement('submit', 'save', $label, $attributes);
         $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
+    }
+
+    /**
+     * Valide les données envoyées dans le formulaire.
+     *
+     * @param array $data
+     * @param array $files
+     *
+     * @return array The errors that were found.
+     */
+    public function validation($data, $files) {
+        $errors = parent::validation($data, $files);
+
+        if (isset($data['enablepasssport']) === false || empty($data['enablepasssport']) === true) {
+            return $errors;
+        }
+
+        if (empty($data['passsportnumber']) === true) {
+            $errors['passsportnumber'] = get_string('err_required', 'form');
+        } else if (Adhesion::is_valid_pass_sport_number($data['passsportnumber']) === false) {
+            $errors['passsportnumber'] = get_string('you_must_enter_a_number_in_the_format_XXX', 'local_apsolu');
+        }
+
+        return $errors;
     }
 }

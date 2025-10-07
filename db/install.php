@@ -61,6 +61,7 @@ function xmldb_local_apsolu_install() {
     set_config('ffsu_introduction', get_string('federation_introduction', 'local_apsolu'), 'local_apsolu');
     set_config('parental_authorization_description', '', 'local_apsolu');
 
+    set_config('enable_pass_sport_payment', '0', 'local_apsolu');
     set_config('insurance_field_default', '0', 'local_apsolu');
     set_config('licenseetype_field_default', '1', 'local_apsolu');
     set_config('licensetype_field_default', '["S"]', 'local_apsolu');

@@ -28,6 +28,7 @@ require_once(__DIR__.'/settings_form.php');
 
 // Chargement des préférences.
 $attributes = [
+    'enable_pass_sport_payment',
     'ffsu_acceptedfiles',
     'ffsu_maxfiles',
     'insurance_cohort',
