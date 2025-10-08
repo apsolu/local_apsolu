@@ -1628,7 +1628,8 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     }
 
     // Modification à appliquer lors de la prochaine mise à jour.
-    if (false) {
+    $version = 2025100800;
+    if ($oldversion < $version) {
         // Supprime tout ce qui n'est pas alphanum dans le champ 'prefix' de la table 'apsolu_payments_centers'.
         $table = 'apsolu_payments_centers';
         foreach ($DB->get_records($table) as $center) {
@@ -1779,6 +1780,12 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $dbman->add_field($table, $field);
         }
 
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
+    // Modification à appliquer lors de la prochaine mise à jour.
+    if (false) {
         // Savepoint reached.
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
