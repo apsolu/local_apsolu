@@ -48,7 +48,6 @@ class local_apsolu_payment_cards_edit_form extends moodleform {
         // Code du tarif.
         $mform->addElement('text', 'code', get_string('card_code', 'local_apsolu'), ['size' => '48']);
         $mform->setType('code', PARAM_ALPHANUM);
-        $mform->addRule('code', get_string('required'), 'required', null, 'client');
         $mform->addHelpButton('code', 'card_code', 'local_apsolu');
 
         // Libellé du tarif.
