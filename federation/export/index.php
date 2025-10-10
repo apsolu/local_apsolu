@@ -272,7 +272,7 @@ if ($data = $mform->get_data()) {
                             if (empty($record->{$field}) === true) {
                                 throw new Exception('empty date');
                             }
-                            $row[] = userdate($record->{$field}, '%d/%m/%Y');
+                            $row[] = core_date::strftime('%d/%m/%Y', $record->{$field});
                         } catch (Exception $exception) {
                             $row[] = '';
                         }
