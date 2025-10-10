@@ -218,6 +218,9 @@ if ($data = $mform->get_data()) {
             $json = new stdClass();
         }
 
+        // TODO: correction temporaire pour traiter les données erronées présentes avant le commit 6343d21.
+        unset($json->birthday);
+
         if (isset($json->licensetype) === false || is_array($json->licensetype) === false) {
             $json->licensetype = [];
         }
