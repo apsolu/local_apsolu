@@ -254,11 +254,6 @@ if ($data = $mform->get_data()) {
                             $profileurl = new moodle_url('/user/view.php', ['id' => $record->userid, 'course' => $courseid]);
                             $record->{$field} = html_writer::link($profileurl, $record->{$field});
                             break;
-                        case 'federationnumberprefix':
-                            if (empty($record->federationnumber) === false) {
-                                $record->{$field} = $record->federationnumber;
-                            }
-                            break;
                     }
                 }
 
