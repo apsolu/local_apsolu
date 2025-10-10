@@ -186,7 +186,7 @@ class adhesion extends record {
             return false;
         }
 
-        if (empty($this->data) === true) {
+        if (strpos($this->data, '"federaltexts":"1"') === false) {
             // Le formulaire d'adhésion n'a pas été rempli.
             return false;
         }
