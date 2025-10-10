@@ -175,7 +175,7 @@ if ($adhesion->questionnairestatus === null) {
     if (in_array($stepid, [APSOLU_PAGE_INTRODUCTION, APSOLU_PAGE_HEALTH_QUIZ, APSOLU_PAGE_AGREEMENT], $strict = true) === false) {
         $stepid = APSOLU_PAGE_AGREEMENT;
     }
-} else if (empty($adhesion->data) === true) {
+} else if (strpos($adhesion->data, '"federaltexts":"1"') === false) {
     // Le formulaire d'adhésion n'a jamais été rempli.
     $pages['medical_certificate'] = null;
     $pages['payment'] = null;
