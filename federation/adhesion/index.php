@@ -102,11 +102,12 @@ if ($count === 0) {
         }
     }
 
+    $birthday = '';
     if (isset($customfields->apsolubirthday) === true) {
         $datetime = DateTime::createFromFormat('d/m/Y', $customfields->apsolubirthday);
         if ($datetime !== false) {
             $datetime->setTime(0, 0, 0);
-            $json->birthday = $datetime->getTimestamp();
+            $birthday = $datetime->getTimestamp();
         }
     }
 
@@ -115,6 +116,7 @@ if ($count === 0) {
     $json->insurance = get_config('local_apsolu', 'insurance_field_default');
 
     $adhesion = new Adhesion();
+    $adhesion->birthday = $birthday;
     $adhesion->data = json_encode($json);
     $adhesion->userid = $USER->id;
 
