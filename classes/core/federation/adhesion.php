@@ -1252,7 +1252,7 @@ class adhesion extends record {
      * @return boolean|null Retourne null si la variable birthday n'a pas été initialisée.
      */
     public function is_minor() {
-        if (is_int($this->birthday) === false) {
+        if (is_numeric($this->birthday) === false) {
             return null;
         }
 
