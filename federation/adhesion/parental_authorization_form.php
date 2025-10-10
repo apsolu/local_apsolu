@@ -23,6 +23,7 @@
  */
 
 use core_form\filetypes_util;
+use local_apsolu\core\federation\adhesion as Adhesion;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -61,8 +62,8 @@ class local_apsolu_federation_parental_authorization extends moodleform {
         $mform->setExpanded('primarylegalrepresentative', $expanded = true);
 
         // Civilité du représentant légal.
-        $mform->addElement('text', 'titleprimarylegalrepresentative', get_string('title_primary_legal_representative',
-            'local_apsolu'));
+        $mform->addElement('select', 'titleprimarylegalrepresentative',
+            get_string('title_primary_legal_representative', 'local_apsolu'), Adhesion::get_user_titles());
         $mform->setType('titleprimarylegalrepresentative', PARAM_TEXT);
         $mform->addRule('titleprimarylegalrepresentative', get_string('required'), 'required', null, 'client');
 
@@ -94,8 +95,8 @@ class local_apsolu_federation_parental_authorization extends moodleform {
         $mform->setExpanded('secondarylegalrepresentative', $expanded = true);
 
         // Civilité du représentant légal secondaire.
-        $mform->addElement('text', 'titlesecondarylegalrepresentative', get_string('title_secondary_legal_representative',
-            'local_apsolu'));
+        $mform->addElement('select', 'titlesecondarylegalrepresentative',
+            get_string('title_secondary_legal_representative', 'local_apsolu'), Adhesion::get_user_titles());
         $mform->setType('titlesecondarylegalrepresentative', PARAM_TEXT);
 
         // Nom du représentant légal secondaire.
