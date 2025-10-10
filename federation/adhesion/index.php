@@ -103,9 +103,10 @@ if ($count === 0) {
     }
 
     if (isset($customfields->apsolubirthday) === true) {
-        $timestamp = strtotime($customfields->apsolubirthday);
-        if ($timestamp !== false) {
-            $json->birthday = $timestamp;
+        $datetime = DateTime::createFromFormat('d/m/Y', $customfields->apsolubirthday);
+        if ($datetime !== false) {
+            $datetime->setTime(0, 0, 0);
+            $json->birthday = $datetime->getTimestamp();
         }
     }
 
