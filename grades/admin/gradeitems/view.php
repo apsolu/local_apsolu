@@ -24,10 +24,10 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$sql = "SELECT ags.id, ags.name, r.id AS roleid, ac.name AS calendar".
-    " FROM {apsolu_grade_items} ags".
-    " LEFT JOIN {role} r ON r.id = ags.roleid".
-    " LEFT JOIN {apsolu_calendars} ac ON ac.id = ags.calendarid".
+$sql = "SELECT ags.id, ags.name, r.id AS roleid, ac.name AS calendar" .
+    " FROM {apsolu_grade_items} ags" .
+    " LEFT JOIN {role} r ON r.id = ags.roleid" .
+    " LEFT JOIN {apsolu_calendars} ac ON ac.id = ags.calendarid" .
     " ORDER BY ac.name, r.sortorder, ags.name";
 
 $roles = role_get_names();

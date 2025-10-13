@@ -25,7 +25,7 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 
-require_once($CFG->dirroot.'/course/lib.php');
+require_once($CFG->dirroot . '/course/lib.php');
 
 /**
  * Classe de tests pour local_apsolu\observer\course_category
@@ -60,15 +60,15 @@ final class course_category_test extends \advanced_testcase {
         $category2 = new grouping();
         $category2->save((object) ['name' => 'grouping']);
 
-        list($data, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
+        [$data, $mform] = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
         $category3 = new category();
         $category3->save($data, $mform);
 
-        list($data, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
+        [$data, $mform] = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
         $category4 = new category();
         $category4->save($data, $mform);
 
-        list($data, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
+        [$data, $mform] = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
         $category5 = new category();
         $category5->save($data, $mform);
 
@@ -151,7 +151,7 @@ final class course_category_test extends \advanced_testcase {
         $this->assertNotSame($parent->id, $category->parent);
 
         // Teste la mise à jour d'une catégorie d'activité APSOLU dans une catégorie Moodle.
-        list($data, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
+        [$data, $mform] = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
         $category = new category();
         $category->save($data, $mform);
 

@@ -41,7 +41,7 @@ class local_apsolu_payment_notifications_compose_form extends moodleform {
      */
     protected function definition() {
         $mform = $this->_form;
-        list($data, $cards) = $this->_customdata;
+        [$data, $cards] = $this->_customdata;
 
         // Preview field.
         $mform->addElement('selectyesno', 'simulation', get_string('simulation', 'local_apsolu'));
@@ -55,15 +55,15 @@ class local_apsolu_payment_notifications_compose_form extends moodleform {
         $mform->addRule('subject', get_string('required'), 'required', null, 'client');
 
         // Message field.
-        $mform->addElement('editor', 'message', get_string('description'), null,  ['maxfiles' => EDITOR_UNLIMITED_FILES]);
+        $mform->addElement('editor', 'message', get_string('description'), null, ['maxfiles' => EDITOR_UNLIMITED_FILES]);
         $mform->setType('message', PARAM_RAW);
         $mform->addRule('message', get_string('required'), 'required', null, 'client');
 
         // Cards field.
         $mform->addElement('header', 'header_cards', get_string('cards', 'local_apsolu'));
         foreach ($cards as $cardid => $card) {
-            $mform->addElement('checkbox', 'card'.$cardid, $card->fullname);
-            $mform->setType('card'.$cardid, PARAM_INT);
+            $mform->addElement('checkbox', 'card' . $cardid, $card->fullname);
+            $mform->setType('card' . $cardid, PARAM_INT);
         }
 
         // Submit buttons.
@@ -106,7 +106,7 @@ class local_apsolu_payment_notifications_compose_form extends moodleform {
         if ($nocards === true) {
             $cards = $DB->get_records('apsolu_payments_cards');
             foreach ($cards as $card) {
-                $errors['card'.$card->id] = 'Il faut cocher au moins une carte.';
+                $errors['card' . $card->id] = 'Il faut cocher au moins une carte.';
             }
         }
 

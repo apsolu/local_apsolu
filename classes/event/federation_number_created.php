@@ -60,8 +60,8 @@ class federation_number_created extends \core\event\base {
             $other = json_decode($other);
         }
 
-        return 'The user with id '.$this->userid.' created a federation number '.$other->federationnumber.
-            ' for adhesion with id '.$this->objectid;
+        return 'The user with id ' . $this->userid . ' created a federation number ' . $other->federationnumber .
+            ' for adhesion with id ' . $this->objectid;
     }
 
     /**

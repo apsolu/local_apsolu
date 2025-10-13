@@ -30,4 +30,4 @@ if (!in_array($action, $actions, true)) {
     $action = 'view';
 }
 
-require(__DIR__.'/'.$action.'.php');
+require(__DIR__ . '/' . $action . '.php');

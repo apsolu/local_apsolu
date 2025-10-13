@@ -26,8 +26,8 @@ use UniversiteRennes2\Apsolu\Payment;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->libdir.'/csvlib.class.php');
-require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
+require_once($CFG->libdir . '/csvlib.class.php');
+require_once($CFG->dirroot . '/local/apsolu/classes/apsolu/payment.php');
 
 $returnurl = new moodle_url('/local/apsolu/federation/index.php', ['page' => 'payments']);
 
@@ -39,7 +39,7 @@ foreach (Payment::get_course_cards($courseid) as $card) {
 
 if (empty($cards) === false) {
     // Récupère tous les adhérants ayant payé.
-    list($insql, $params) = $DB->get_in_or_equal($cards, SQL_PARAMS_NAMED, 'cardid_');
+    [$insql, $params] = $DB->get_in_or_equal($cards, SQL_PARAMS_NAMED, 'cardid_');
 
     $sql = "SELECT u.lastname, u.firstname, u.email, u.idnumber, u.institution, u.department,
                    ap.method, ap.timepaid, ap.amount, ap.id, apc.prefix, afa.mainsport
@@ -80,7 +80,7 @@ if (empty($cards) === false) {
 
         foreach ($recordset as $record) {
             if (empty($record->prefix) === false) {
-                $record->id = $record->prefix.$record->id;
+                $record->id = $record->prefix . $record->id;
             }
 
             if ($record->method !== 'paybox') {
@@ -102,7 +102,7 @@ if (empty($cards) === false) {
             $row[] = $record->institution;
             $row[] = $record->department;
             $row[] = $federationactivities[$record->mainsport]->name;
-            $row[] = get_string('method_'.$record->method, 'local_apsolu');
+            $row[] = get_string('method_' . $record->method, 'local_apsolu');
             $row[] = $timepaid;
             $row[] = $record->amount;
             $row[] = $record->id;

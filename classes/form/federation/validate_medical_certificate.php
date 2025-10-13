@@ -16,7 +16,7 @@
 
 namespace local_apsolu\form\federation;
 
-use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\core\federation\adhesion;
 use local_apsolu\external\email;
 use local_apsolu\form\send_email_form;
 
@@ -86,7 +86,7 @@ class validate_medical_certificate extends send_email_form {
         $message['carboncopysubject'] = '';
         if ($message['carboncopy'] === true) {
             if ($user !== false) {
-                $message['carboncopysubject'] = '['.$user->firstname.' '.$user->lastname.'] '.$message['subject'];
+                $message['carboncopysubject'] = '[' . $user->firstname . ' ' . $user->lastname . '] ' . $message['subject'];
             }
         }
         $message['body'] = $data->message['text'];

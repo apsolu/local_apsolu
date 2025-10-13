@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-use local_apsolu\core\category as Category;
+use local_apsolu\core\category;
 
 $categoryid = required_param('categoryid', PARAM_INT);
 $delete = optional_param('delete', '', PARAM_ALPHANUM); // Confirmation hash.

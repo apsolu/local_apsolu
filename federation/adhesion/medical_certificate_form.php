@@ -46,7 +46,7 @@ class local_apsolu_federation_medical_certificate extends moodleform {
 
         $mform = $this->_form;
 
-        list($adhesion, $course, $context, $validityperiod, $freeze) = $this->_customdata;
+        [$adhesion, $course, $context, $validityperiod, $freeze] = $this->_customdata;
 
         $data = $adhesion->decode_data();
         if (empty($data->medicalcertificatedate)) {
@@ -75,13 +75,21 @@ class local_apsolu_federation_medical_certificate extends moodleform {
 
             $fs = get_file_storage();
             $context = context_course::instance($course->id, MUST_EXIST);
-            list($component, $filearea, $itemid) = ['local_apsolu', 'medicalcertificate', $USER->id];
+            [$component, $filearea, $itemid] = ['local_apsolu', 'medicalcertificate', $USER->id];
             $sort = 'itemid, filepath, filename';
             $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
             $items = [];
             foreach ($files as $file) {
-                $url = moodle_url::make_pluginfile_url($context->id, $component, $filearea, $itemid, '/',
-                    $file->get_filename(), $forcedownload = false, $includetoken = false);
+                $url = moodle_url::make_pluginfile_url(
+                    $context->id,
+                    $component,
+                    $filearea,
+                    $itemid,
+                    '/',
+                    $file->get_filename(),
+                    $forcedownload = false,
+                    $includetoken = false
+                );
                 $items[] = html_writer::link($url, $file->get_filename());
             }
 
@@ -133,7 +141,8 @@ class local_apsolu_federation_medical_certificate extends moodleform {
         $options['areamaxbytes'] = $maxbytes;
         $options['context'] = $context;
         $options['maxbytes'] = $maxbytes;
-        $options['maxfiles'] = get_config('local_apsolu', 'ffsu_maxfiles');;
+        $options['maxfiles'] = get_config('local_apsolu', 'ffsu_maxfiles');
+        ;
         $options['subdirs'] = 0;
 
         $acceptedfiles = (string) get_config('local_apsolu', 'ffsu_acceptedfiles');

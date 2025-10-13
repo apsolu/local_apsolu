@@ -24,12 +24,12 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-use UniversiteRennes2\Apsolu\Payment as Payment;
+use UniversiteRennes2\Apsolu\Payment;
 
-require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
-require_once($CFG->dirroot.'/local/apsolu/locallib.php');
-require_once($CFG->dirroot.'/local/apsolu/payment/notifications/export_form.php');
-require_once($CFG->libdir.'/csvlib.class.php');
+require_once($CFG->dirroot . '/local/apsolu/classes/apsolu/payment.php');
+require_once($CFG->dirroot . '/local/apsolu/locallib.php');
+require_once($CFG->dirroot . '/local/apsolu/payment/notifications/export_form.php');
+require_once($CFG->libdir . '/csvlib.class.php');
 
 // Generate object.
 $cards = $DB->get_records('apsolu_payments_cards');
@@ -59,7 +59,7 @@ if ($data = $mform->get_data()) {
     // Récupère les données.
     $row = null;
     foreach ($cards as $card) {
-        $field = 'card'.$card->id;
+        $field = 'card' . $card->id;
         if (isset($data->{$field}) === false) {
             continue;
         }

@@ -24,15 +24,15 @@
 
 use core\task\manager;
 use local_apsolu\core\attendance\status as AttendanceStatus;
-use local_apsolu\core\federation\activity as Activity;
-use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\core\federation\activity;
+use local_apsolu\core\federation\adhesion;
 use local_apsolu\core\messaging;
-use local_apsolu\core\municipality as Municipality;
+use local_apsolu\core\municipality;
 use local_apsolu\task\setup_behat_data;
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot.'/local/apsolu/locallib.php');
+require_once($CFG->dirroot . '/local/apsolu/locallib.php');
 
 /**
  * Post installation procedure.
@@ -134,7 +134,7 @@ function xmldb_local_apsolu_install() {
 
     foreach ($customs as $custom) {
         $field->shortname = $custom->shortname;
-        $field->name = get_string('fields_'.$field->shortname, 'local_apsolu');
+        $field->name = get_string('fields_' . $field->shortname, 'local_apsolu');
         $field->datatype = $custom->datatype;
         $field->visible = $custom->visible;
         $field->param1 = $custom->param1;

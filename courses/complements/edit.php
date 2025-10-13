@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require(__DIR__.'/edit_form.php');
+require(__DIR__ . '/edit_form.php');
 
 // Get complement id.
 $complementid = optional_param('complementid', 0, PARAM_INT);
@@ -32,10 +32,10 @@ $complementid = optional_param('complementid', 0, PARAM_INT);
 // Generate object.
 $complement = false;
 if ($complementid != 0) {
-    $sql = "SELECT *".
-        " FROM {course} c".
-        " JOIN {apsolu_complements} ac ON c.id = ac.id".
-        " WHERE ac.id = ?".
+    $sql = "SELECT *" .
+        " FROM {course} c" .
+        " JOIN {apsolu_complements} ac ON c.id = ac.id" .
+        " WHERE ac.id = ?" .
         " ORDER BY c.fullname";
     $complement = $DB->get_record_sql($sql, ['id' => $complementid]);
 }
@@ -52,9 +52,9 @@ if ($complement === false) {
 }
 
 // Load categories.
-$sql = "SELECT id, name".
-    " FROM {course_categories} cc".
-    " WHERE parent=0".
+$sql = "SELECT id, name" .
+    " FROM {course_categories} cc" .
+    " WHERE parent=0" .
     " ORDER BY cc.name";
 $categories = [];
 foreach ($DB->get_records_sql($sql) as $category) {
@@ -81,7 +81,7 @@ if ($data = $mform->get_data()) {
         $course = create_course($complement);
         $complement->id = $course->id;
 
-        $sql = "INSERT INTO {apsolu_complements} (id, price, federation)".
+        $sql = "INSERT INTO {apsolu_complements} (id, price, federation)" .
             " VALUES(?,?,?)";
         $params = [$complement->id, $complement->price, $complement->federation];
         $DB->execute($sql, $params);
@@ -93,10 +93,10 @@ if ($data = $mform->get_data()) {
     // Display notification and display elements list.
     $notificationform = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
 
-    require(__DIR__.'/view.php');
+    require(__DIR__ . '/view.php');
 } else {
     // Display form.
-    echo '<h1>'.get_string('complement_add', 'local_apsolu').'</h1>';
+    echo '<h1>' . get_string('complement_add', 'local_apsolu') . '</h1>';
 
     $mform->display();
 }

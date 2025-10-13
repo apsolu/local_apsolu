@@ -77,8 +77,10 @@ class chart {
                 $data['series_refused'][$count] = $enrol->refused;
                 $count++;
             }
-            $accepted = new \core\chart_series(get_string("statistics_accepted_atleastonce", "local_apsolu"),
-                $data['series_accepted']);
+            $accepted = new \core\chart_series(
+                get_string("statistics_accepted_atleastonce", "local_apsolu"),
+                $data['series_accepted']
+            );
             $refused = new \core\chart_series(get_string("statistics_refused_anywhere", "local_apsolu"), $data['series_refused']);
             $chart = new \core\chart_bar();
             $chart->set_stacked(true);
@@ -123,7 +125,6 @@ class chart {
             $data['labels'] = [];
             $data['serie'] = [];
             foreach ($enrolments as $enrol) {
-
                 if (!array_key_exists($enrol->institution, $data['labels'])) {
                     $data['labels'][$enrol->institution] = $enrol->institution;
                     $data['serie'][$enrol->institution] = 1;
@@ -173,7 +174,6 @@ class chart {
             $chart->add_series($count);
 
             return ['success' => true, 'chartdata' => json_encode($chart)];
-
         }
         return ['success' => false, 'chartdata' => json_encode(get_string("statistics_noavailabledata", "local_apsolu"))];
     }
@@ -222,8 +222,7 @@ class chart {
             $institution = "";
             $userprofiles = [];
             foreach ($enrolments as $enrol) {
-
-                if (!in_array ($enrol->userprofile, $userprofiles)) {
+                if (!in_array($enrol->userprofile, $userprofiles)) {
                     $userprofiles[] = $enrol->userprofile;
                 }
 
@@ -234,7 +233,6 @@ class chart {
                 }
 
                 $data['series'][$enrol->userprofile][$count] = $enrol->total;
-
             }
 
             $chart = new \core\chart_bar();
@@ -254,7 +252,6 @@ class chart {
                 $chart->add_series($serie);
             }
             return ['success' => true, 'chartdata' => json_encode($chart)];
-
         }
         return ['success' => false, 'chartdata' => json_encode(get_string("statistics_noavailabledata", "local_apsolu"))];
     }
@@ -314,8 +311,7 @@ class chart {
             $institution = "";
             $genders = [];
             foreach ($enrolments as $enrol) {
-
-                if (!in_array ( ($enrol->gender == "" ? "Inconnu" : $enrol->gender) , $genders )) {
+                if (!in_array(($enrol->gender == "" ? "Inconnu" : $enrol->gender), $genders)) {
                     $genders[] = ($enrol->gender == "" ? "Inconnu" : $enrol->gender);
                 }
 
@@ -326,7 +322,6 @@ class chart {
                 }
 
                 $data['series'][($enrol->gender == "" ? "Inconnu" : $enrol->gender)][$count] = $enrol->total;
-
             }
 
             $chart = new \core\chart_bar();
@@ -336,7 +331,7 @@ class chart {
             foreach ($genders as $gender) {
                 $dataserie = $data['series'][$gender];
                 foreach ($data['labels'] as $key => $institution) {
-                    if (!array_key_exists ( $key , $dataserie )) {
+                    if (!array_key_exists($key, $dataserie)) {
                         $dataserie[$key] = 0;
                     }
                 }
@@ -346,7 +341,6 @@ class chart {
                 $chart->add_series($serie);
             }
             return ['success' => true, 'chartdata' => json_encode($chart)];
-
         }
         return ['success' => false, 'chartdata' => json_encode(get_string("statistics_noavailabledata", "local_apsolu"))];
     }
@@ -404,8 +398,7 @@ class chart {
             $roles = [];
 
             foreach ($enrolments as $enrol) {
-
-                if (!in_array ( $enrol->roleshortname , $roles )) {
+                if (!in_array($enrol->roleshortname, $roles)) {
                     $roles[] = $enrol->roleshortname;
                 }
 
@@ -416,7 +409,6 @@ class chart {
                 }
 
                 $data['series'][$enrol->roleshortname][$count] = $enrol->total;
-
             }
 
             $chart = new \core\chart_bar();
@@ -426,7 +418,7 @@ class chart {
             foreach ($roles as $role) {
                 $dataserie = $data['series'][$role];
                 foreach ($data['labels'] as $key => $institution) {
-                    if (!array_key_exists ( $key , $dataserie )) {
+                    if (!array_key_exists($key, $dataserie)) {
                         $dataserie[$key] = 0;
                     }
                 }
@@ -437,7 +429,6 @@ class chart {
             }
 
             return ['success' => true, 'chartdata' => json_encode($chart)];
-
         }
         return ['success' => false, 'chartdata' => json_encode(get_string("statistics_noavailabledata", "local_apsolu"))];
     }

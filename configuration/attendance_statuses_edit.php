@@ -22,11 +22,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\attendance\status as Status;
+use local_apsolu\core\attendance\status;
 
 defined('MOODLE_INTERNAL') || die;
 
-require(__DIR__.'/attendance_statuses_edit_form.php');
+require(__DIR__ . '/attendance_statuses_edit_form.php');
 
 // Get status id.
 $statusid = optional_param('statusid', 0, PARAM_INT);

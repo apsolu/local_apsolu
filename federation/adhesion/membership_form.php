@@ -22,8 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\federation\adhesion as Adhesion;
-use local_apsolu\core\federation\activity as Activity;
+use local_apsolu\core\federation\adhesion;
+use local_apsolu\core\federation\activity;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -46,7 +46,7 @@ class local_apsolu_federation_membership extends moodleform {
         global $USER;
 
         $mform = $this->_form;
-        list($adhesion, $readonly) = $this->_customdata;
+        [$adhesion, $readonly] = $this->_customdata;
 
         if ($readonly === true) {
             $messages = $adhesion::get_contacts();
@@ -175,8 +175,13 @@ class local_apsolu_federation_membership extends moodleform {
         $visibility = get_config('local_apsolu', 'licensetype_field_visibility');
         if ($visibility !== Adhesion::FIELD_HIDDEN) {
             $options = ['multiple' => true];
-            $mform->addElement('autocomplete', 'licensetype', get_string('license_type', 'local_apsolu'),
-                Adhesion::get_license_types(), $options);
+            $mform->addElement(
+                'autocomplete',
+                'licensetype',
+                get_string('license_type', 'local_apsolu'),
+                Adhesion::get_license_types(),
+                $options
+            );
             $mform->setType('licensetype', PARAM_TEXT);
             $mform->addRule('licensetype', get_string('required'), 'required', null, 'client');
 
@@ -206,7 +211,7 @@ class local_apsolu_federation_membership extends moodleform {
         $options = [
             'ajax' => 'local_apsolu/federation_adhesion_municipalities_form',
             'multiple' => false,
-            'valuehtmlcallback' => function($value) {
+            'valuehtmlcallback' => function ($value) {
                 global $DB;
 
                 $municipalities = $DB->get_records('apsolu_municipalities', ['inseecode' => $value]);
@@ -242,7 +247,7 @@ class local_apsolu_federation_membership extends moodleform {
 
             if (empty($record->restriction) === false) {
                 $restrictionactivities[] = $record->name;
-                $values[$record->code] .= ' '.$stethoscope;
+                $values[$record->code] .= ' ' . $stethoscope;
             }
         }
         $mform->addElement('autocomplete', 'activity', get_string('discipline', 'local_apsolu'), $values, $options);

@@ -32,4 +32,4 @@ if (in_array($action, $actions, $strict = true) === false) {
     $action = $actions[0];
 }
 
-require(__DIR__.'/'.$action.'.php');
+require(__DIR__ . '/' . $action . '.php');

@@ -46,7 +46,7 @@ class local_apsolu_attendance_statuses_edit_form extends moodleform {
 
         $datetimeoptions = ['optional' => true];
 
-        list($defaults) = $this->_customdata;
+        [$defaults] = $this->_customdata;
 
         // Shortlabel field.
         $mform->addElement('text', 'shortlabel', get_string('short_label', 'local_apsolu'), ['maxlength' => 3, 'size' => '48']);
@@ -78,7 +78,7 @@ class local_apsolu_attendance_statuses_edit_form extends moodleform {
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
 
         $attributes = new stdClass();
-        $attributes->href = $CFG->wwwroot.'/local/apsolu/configuration/index.php?page=attendancestatuses';
+        $attributes->href = $CFG->wwwroot . '/local/apsolu/configuration/index.php?page=attendancestatuses';
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 

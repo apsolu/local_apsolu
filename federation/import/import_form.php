@@ -46,7 +46,7 @@ class local_apsolu_federation_import_licences extends moodleform {
         $emailcolumn = optional_param('emailcolumn', null, PARAM_INT);
 
         $mform = $this->_form;
-        list($columns, $previewtable) = $this->_customdata;
+        [$columns, $previewtable] = $this->_customdata;
 
         $mform->addElement('header', 'upload', get_string('upload'));
 
@@ -86,8 +86,12 @@ class local_apsolu_federation_import_licences extends moodleform {
             $buttonarray[] = &$mform->createElement('submit', 'previewbutton', get_string('federation_preview', 'local_apsolu'));
 
             $attributes = ['class' => 'btn btn-default', 'disabled' => 'disabled'];
-            $buttonarray[] = &$mform->createElement('submit', 'importbutton',
-                get_string('federation_import', 'local_apsolu'), $attributes);
+            $buttonarray[] = &$mform->createElement(
+                'submit',
+                'importbutton',
+                get_string('federation_import', 'local_apsolu'),
+                $attributes
+            );
         } else {
             // Aperçu du fichier csv.
             $mform->addElement('header', 'preview', get_string('federation_preview', 'local_apsolu'));
@@ -106,8 +110,12 @@ class local_apsolu_federation_import_licences extends moodleform {
 
             // Les boutons aperçu et importer sont disponibles.
             $attributes = ['class' => 'btn btn-default'];
-            $buttonarray[] = &$mform->createElement('submit', 'previewbutton',
-                get_string('federation_preview', 'local_apsolu'), $attributes);
+            $buttonarray[] = &$mform->createElement(
+                'submit',
+                'previewbutton',
+                get_string('federation_preview', 'local_apsolu'),
+                $attributes
+            );
 
             $buttonarray[] = &$mform->createElement('submit', 'importbutton', get_string('federation_import', 'local_apsolu'));
         }

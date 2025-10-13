@@ -43,7 +43,7 @@ class local_apsolu_grades_gradeitems_edit_form extends moodleform {
         global $CFG;
 
         $mform = $this->_form;
-        list($gradeitem, $roles, $calendars) = $this->_customdata;
+        [$gradeitem, $roles, $calendars] = $this->_customdata;
 
         // Name field.
         $mform->addElement('text', 'name', get_string('gradeitem_name', 'local_apsolu'), ['size' => '48']);
@@ -79,7 +79,7 @@ class local_apsolu_grades_gradeitems_edit_form extends moodleform {
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 
         $attributes = new stdClass();
-        $attributes->href = $CFG->wwwroot.'/local/apsolu/grades/admin/index.php?tab=gradeitems';
+        $attributes->href = $CFG->wwwroot . '/local/apsolu/grades/admin/index.php?tab=gradeitems';
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 

@@ -60,7 +60,7 @@ class local_apsolu_payment_configurations_edit_form extends moodleform {
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 
         $attributes = new stdClass();
-        $attributes->href = $CFG->wwwroot.'/local/apsolu/payment/admin.php?tab=configurations';
+        $attributes->href = $CFG->wwwroot . '/local/apsolu/payment/admin.php?tab=configurations';
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 

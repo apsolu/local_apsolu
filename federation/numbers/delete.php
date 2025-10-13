@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-use local_apsolu\core\federation\number as Number;
+use local_apsolu\core\federation\number;
 
 $numberid = required_param('numberid', PARAM_INT);
 $delete = optional_param('delete', '', PARAM_ALPHANUM); // Confirmation hash.

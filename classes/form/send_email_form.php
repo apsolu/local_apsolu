@@ -25,7 +25,7 @@ use moodle_url;
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot.'/message/externallib.php');
+require_once($CFG->dirroot . '/message/externallib.php');
 
 /**
  * Modal form to send email.
@@ -147,7 +147,7 @@ class send_email_form extends dynamic_form {
         $message['carboncopysubject'] = '';
         if ($message['carboncopy'] === true) {
             if ($user !== false) {
-                $message['carboncopysubject'] = '['.$user->firstname.' '.$user->lastname.'] '.$message['subject'];
+                $message['carboncopysubject'] = '[' . $user->firstname . ' ' . $user->lastname . '] ' . $message['subject'];
             }
         }
         $message['body'] = $data->message['text'];

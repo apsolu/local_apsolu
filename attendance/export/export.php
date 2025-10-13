@@ -24,8 +24,8 @@
 
 // phpcs:disable moodle.NamingConventions.ValidVariableName.VariableNameUnderscore
 
-require_once(__DIR__.'/../../../../config.php');
-require_once(__DIR__.'/export_form.php');
+require_once(__DIR__ . '/../../../../config.php');
+require_once(__DIR__ . '/export_form.php');
 require_once($CFG->libdir . '/csvlib.class.php');
 require_once($CFG->libdir . '/excellib.class.php');
 
@@ -105,10 +105,10 @@ if ($data = $mform->get_data()) {
     }
 
     // Récupère toutes les sessions du cours.
-    $sql = "SELECT session.id, session.name".
-        " FROM {apsolu_attendance_sessions} session".
-        " WHERE courseid = :courseid".
-        implode(' ', $conditions_sessions).
+    $sql = "SELECT session.id, session.name" .
+        " FROM {apsolu_attendance_sessions} session" .
+        " WHERE courseid = :courseid" .
+        implode(' ', $conditions_sessions) .
         " ORDER BY session.sessiontime";
     $recordset = $DB->get_recordset_sql($sql, $params);
     $sessions = [];
@@ -120,18 +120,18 @@ if ($data = $mform->get_data()) {
     $recordset->close();
 
     // Récupère tous les inscrits dans le cours.
-    $sql = "SELECT DISTINCT u.id, u.firstname, u.lastname, u.idnumber, u.email, ra.roleid, r.name AS role".
-        " FROM {user} u".
-        " JOIN {user_enrolments} ue ON u.id = ue.userid".
-        " JOIN {enrol} e ON e.id = ue.enrolid".
-        " JOIN {role_assignments} ra ON ra.userid = ue.userid AND ra.itemid = e.id".
-        " JOIN {role} r ON r.id = ra.roleid".
-        " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50 AND ctx.instanceid = e.courseid".
-        " WHERE e.courseid = :courseid".
-        implode(' ', $conditions_enrolments).
-        " AND e.enrol = 'select'".
-        " AND e.status = 0". // Méthode d'inscription activée.
-        " AND ue.status = 0". // Inscription acceptée.
+    $sql = "SELECT DISTINCT u.id, u.firstname, u.lastname, u.idnumber, u.email, ra.roleid, r.name AS role" .
+        " FROM {user} u" .
+        " JOIN {user_enrolments} ue ON u.id = ue.userid" .
+        " JOIN {enrol} e ON e.id = ue.enrolid" .
+        " JOIN {role_assignments} ra ON ra.userid = ue.userid AND ra.itemid = e.id" .
+        " JOIN {role} r ON r.id = ra.roleid" .
+        " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50 AND ctx.instanceid = e.courseid" .
+        " WHERE e.courseid = :courseid" .
+        implode(' ', $conditions_enrolments) .
+        " AND e.enrol = 'select'" .
+        " AND e.status = 0" . // Méthode d'inscription activée.
+        " AND ue.status = 0" . // Inscription acceptée.
         " ORDER BY u.lastname, u.firstname";
     $recordset = $DB->get_recordset_sql($sql, $params);
 
@@ -148,10 +148,10 @@ if ($data = $mform->get_data()) {
     $recordset->close();
 
     // Récupère toutes les présences.
-    $sql = "SELECT aap.studentid, aap.statusid, aap.description, aas.longlabel AS status, aap.sessionid".
-        " FROM {apsolu_attendance_presences} aap".
-        " JOIN {apsolu_attendance_statuses} aas ON aas.id = aap.statusid".
-        " JOIN {apsolu_attendance_sessions} session ON session.id = aap.sessionid".
+    $sql = "SELECT aap.studentid, aap.statusid, aap.description, aas.longlabel AS status, aap.sessionid" .
+        " FROM {apsolu_attendance_presences} aap" .
+        " JOIN {apsolu_attendance_statuses} aas ON aas.id = aap.statusid" .
+        " JOIN {apsolu_attendance_sessions} session ON session.id = aap.sessionid" .
         " WHERE session.courseid = :courseid";
     $recordset = $DB->get_recordset_sql($sql, ['courseid' => $courseid]);
     foreach ($recordset as $presence) {
@@ -174,7 +174,7 @@ if ($data = $mform->get_data()) {
     $recordset->close();
 
     // Trie les étudiants par nom, prénom.
-    usort($users, function($a, $b) {
+    usort($users, function ($a, $b) {
         $compare = strcasecmp($a->lastname, $b->lastname);
         if ($compare === 0) {
             $compare = strcasecmp($a->firstname, $b->firstname);
@@ -184,7 +184,7 @@ if ($data = $mform->get_data()) {
     });
 
     // Prépare les données pour l'exportation.
-    $filename = str_replace(' ', '_', 'presences du cours '.strtolower($course->fullname));
+    $filename = str_replace(' ', '_', 'presences du cours ' . strtolower($course->fullname));
 
     $rows = [];
     foreach ($users as $user) {

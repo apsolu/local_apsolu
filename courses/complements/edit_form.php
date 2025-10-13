@@ -43,7 +43,7 @@ class local_apsolu_courses_complements_edit_form extends moodleform {
         global $CFG;
 
         $mform = $this->_form;
-        list($complement, $categories) = $this->_customdata;
+        [$complement, $categories] = $this->_customdata;
 
         // Category field.
         $mform->addElement('select', 'category', get_string('category', 'local_apsolu'), $categories);
@@ -77,7 +77,7 @@ class local_apsolu_courses_complements_edit_form extends moodleform {
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 
         $attributes = new stdClass();
-        $attributes->href = $CFG->wwwroot.'/local/apsolu/courses/complements.php';
+        $attributes->href = $CFG->wwwroot . '/local/apsolu/courses/complements.php';
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 

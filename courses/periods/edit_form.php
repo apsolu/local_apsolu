@@ -42,7 +42,7 @@ class local_apsolu_courses_periods_edit_form extends moodleform {
         if ($year === null) {
             if (empty($instance->id) === false) {
                 // On récupère l'année universitaire à partir des semaines déjà saisies.
-                list($y, $month, $day) = explode('-', $instance->weeks[0]);
+                [$y, $month, $day] = explode('-', $instance->weeks[0]);
                 if ($month > 6) {
                     $year = $y;
                 } else {
@@ -68,17 +68,24 @@ class local_apsolu_courses_periods_edit_form extends moodleform {
 
         // Contruit l'icône font-awesome pour l'année N-1.
         $str = get_string('previous');
-        $previcon = '<i class="fa fa-chevron-circle-left" title="'.s($str).'" aria-hidden="true"></i>
-            <span class="visually-hidden">'.s($str).'</span>';
+        $previcon = '<i class="fa fa-chevron-circle-left" title="' . s($str) . '" aria-hidden="true"></i>
+            <span class="visually-hidden">' . s($str) . '</span>';
 
         // Contruit l'icône font-awesome pour l'année N+1.
         $str = get_string('next');
-        $nexticon = '<i class="fa fa-chevron-circle-right" title="'.s($str).'" aria-hidden="true"></i>
-            <span class="visually-hidden">'.s($str).'</span>';
+        $nexticon = '<i class="fa fa-chevron-circle-right" title="' . s($str) . '" aria-hidden="true"></i>
+            <span class="visually-hidden">' . s($str) . '</span>';
 
         // Construit le menu permettant de changer d'année universitaire.
-        $label = sprintf('<a class="me-3" href="%s">%s</a> %s-%s <a class="ms-3" href="%s">%s</a>', $lastyearurl, $previcon, $year,
-            $year + 1, $nextyearurl, $nexticon);
+        $label = sprintf(
+            '<a class="me-3" href="%s">%s</a> %s-%s <a class="ms-3" href="%s">%s</a>',
+            $lastyearurl,
+            $previcon,
+            $year,
+            $year + 1,
+            $nextyearurl,
+            $nexticon
+        );
         $mform->addElement('static', 'yearselector', get_string('year', 'form'), $label);
 
         // Name field.
@@ -92,15 +99,16 @@ class local_apsolu_courses_periods_edit_form extends moodleform {
         $mform->addRule('generic_name', get_string('required'), 'required', null, 'client');
 
         // Weeks field.
-        $start = new DateTime($year.'-08-15T00:00:00');
-        $start->sub(new DateInterval('P'.($start->format('N') - 1).'D'));
-        $end = new DateTime(($year + 1).'-08-15T00:00:00');
-        $end->add(new DateInterval('P'.($end->format('N') - 1).'D'));
+        $start = new DateTime($year . '-08-15T00:00:00');
+        $start->sub(new DateInterval('P' . ($start->format('N') - 1) . 'D'));
+        $end = new DateTime(($year + 1) . '-08-15T00:00:00');
+        $end->add(new DateInterval('P' . ($end->format('N') - 1) . 'D'));
 
         $weeks = [];
         while ($start < $end) {
-            $range = 'du lun. '.$start->format('d').' au sam. '.userdate($start->getTimestamp() + 5 * 24 * 60 * 60, '%d %b %Y');
-            $weeks[$start->format('Y-m-d')] = 'Sem. '.$start->format('W').' ('.$range.')';
+            $range = 'du lun. ' . $start->format('d') . ' au sam. ' .
+                userdate($start->getTimestamp() + 5 * 24 * 60 * 60, '%d %b %Y');
+            $weeks[$start->format('Y-m-d')] = 'Sem. ' . $start->format('W') . ' (' . $range . ')';
             $start = $start->add(new DateInterval('P7D'));
         }
         $select = $mform->addElement('select', 'weeks', get_string('week'), $weeks, ['size' => 50, 'style' => 'width: 40em;']);
@@ -112,7 +120,7 @@ class local_apsolu_courses_periods_edit_form extends moodleform {
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 
         $attributes = new stdClass();
-        $attributes->href = $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=periods';
+        $attributes->href = $CFG->wwwroot . '/local/apsolu/courses/index.php?tab=periods';
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 

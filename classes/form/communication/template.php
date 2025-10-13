@@ -61,7 +61,7 @@ class template extends notify {
         $buttonarray[] = &$mform->createElement('submit', 'save', get_string('save'));
 
         $attributes = new stdClass();
-        $attributes->href = $CFG->wwwroot.'/local/apsolu/communication/index.php?page=templates';
+        $attributes->href = $CFG->wwwroot . '/local/apsolu/communication/index.php?page=templates';
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 

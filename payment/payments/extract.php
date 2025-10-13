@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die;
 $centerid = required_param('centerid', PARAM_INT);
 $format = optional_param('format', 'csv', PARAM_ALPHA);
 
-require_once($CFG->dirroot.'/user/profile/lib.php');
+require_once($CFG->dirroot . '/user/profile/lib.php');
 
 $center = $DB->get_record('apsolu_payments_centers', ['id' => $centerid], $fields = '*', MUST_EXIST);
 $cards = $DB->get_records('apsolu_payments_cards', ['centerid' => $center->id], $sort = 'name, fullname');
@@ -52,7 +52,7 @@ foreach ($cards as $card) {
 
 if ($format === 'xls') {
     // Export au format excel.
-    require_once($CFG->libdir.'/excellib.class.php');
+    require_once($CFG->libdir . '/excellib.class.php');
 
     $workbook = new MoodleExcelWorkbook('-');
     $workbook->send($filename);
@@ -73,7 +73,7 @@ if ($format === 'xls') {
     }
 } else {
     // Export au format csv.
-    require_once($CFG->libdir.'/csvlib.class.php');
+    require_once($CFG->libdir . '/csvlib.class.php');
 
     $csvexport = new \csv_export_writer();
     $csvexport->set_filename($filename);
@@ -103,7 +103,7 @@ foreach ($payments as $payment) {
 
     // Affiche le préfixe PayBox.
     if (empty($payment->prefix) === false) {
-        $payment->id = $payment->prefix.$payment->id;
+        $payment->id = $payment->prefix . $payment->id;
     }
 
     if ($payment->method !== 'paybox') {
@@ -116,7 +116,7 @@ foreach ($payments as $payment) {
         $payment->idnumber,
         $payment->institution,
         $payment->department,
-        get_string('method_'.$payment->method, 'local_apsolu'),
+        get_string('method_' . $payment->method, 'local_apsolu'),
         $timepaid,
         $payment->amount,
         $payment->id,

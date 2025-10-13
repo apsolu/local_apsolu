@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die;
 
 require_once('../../externallib.php');
-require_once($CFG->dirroot.'/local/apsolu/statistics/programme/report_form.php');
+require_once($CFG->dirroot . '/local/apsolu/statistics/programme/report_form.php');
 
 use local_apsolu\local\statistics\programme\report;
 

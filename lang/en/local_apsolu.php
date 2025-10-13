@@ -231,7 +231,7 @@ $string['default_federation_agreement'] = '<p>Avant de procéder à votre adhés
 <p>Cette assurance facultative vous sera facturée 1.60€. Vous pouvez obtenir plus d’information <a href="https://sport-u.com/wp-content/uploads/2022/06/20220614_FICHE-INDIVIDUELLE-D-INSCRIPTION-INFO-ASSURANCE-AC_22-23.pdf" target="_blank">sur cette page (ouvre un nouvel onglet)</a>.</p>
 <p>En procédant à votre adhésion, vous acceptez que toutes les données pré-remplies ou saisies par vous-même soient transmises à la Fédération Française du Sport Universitaire (FFSU). Conformément au règlement général de protection des données (RGPD), vous disposez des droits d’accès, d’opposition, d’effacement et de rectification de vos données. Pour toute question, vous pouvez contacter le délégué à la protection des données de la FFSU via <a href="https://sport-u.com" target="_blank">ce formulaire de contact (ouvre un nouvel onglet)</a>.</p>';
 $string['default_filters'] = 'Filtres initiaux';
-$string['default_homepage_section1_text'] = '<p>Bienvenue sur le site de gestion des inscriptions au service des sports.</p>'.
+$string['default_homepage_section1_text'] = '<p>Bienvenue sur le site de gestion des inscriptions au service des sports.</p>' .
     '<p>Ce service propose à l’ensemble des étudiants et des personnels une formation pour tous les niveaux à la pratique des activités physiques et sportives.</p>';
 $string['default_replyto_address'] = 'Adresse de « réponse à » proposée par défaut';
 $string['default_value_of_fields'] = 'Valeur par défaut des champs';
@@ -1250,37 +1250,37 @@ $string['attendance_error_no_news_forum'] = 'Le forum des annonces est absent de
 $string['attendance_success_message_forum'] = 'La notification a été publiée dans le forum des annonces.';
 $string['attendance_error_message_forum'] = 'La notification n’a pas pu être publiée dans le forum des annonces.';
 $string['attendance_forum_create_session_subject'] = 'ajout d’une session le {$a}';
-$string['attendance_forum_create_session_message'] = '<p>Bonjour,</p>'.
-    '<p>Une session de cours a été ajoutée :</p>'.
-    '<dl class="dl-horizontal">'.
-        '<dt>Jour</dt>'.
-        '<dd>{$a->datetime}</dd>'.
-        '<dt>Lieu</dt>'.
-        '<dd>{$a->location}<dd>'.
-    '</dl>'.
-    '<p>Pensez à en prendre note dans votre agenda. ;-)</p>'.
+$string['attendance_forum_create_session_message'] = '<p>Bonjour,</p>' .
+    '<p>Une session de cours a été ajoutée :</p>' .
+    '<dl class="dl-horizontal">' .
+        '<dt>Jour</dt>' .
+        '<dd>{$a->datetime}</dd>' .
+        '<dt>Lieu</dt>' .
+        '<dd>{$a->location}<dd>' .
+    '</dl>' .
+    '<p>Pensez à en prendre note dans votre agenda. ;-)</p>' .
     '<p>Cordialement</p>';
 $string['attendance_forum_edit_session_subject'] = 'modification de la session du {$a}';
-$string['attendance_forum_edit_session_message'] = '<p>Bonjour,</p>'.
-    '<p>Une session de cours a été modifiée :</p>'.
-    '<dl class="dl-horizontal">'.
-        '<dt>Jour</dt>'.
-        '<dd>{$a->datetime}</dd>'.
-        '<dt>Lieu</dt>'.
-        '<dd>{$a->location}<dd>'.
-    '</dl>'.
-    '<p>Pensez à en prendre note dans votre agenda. ;-)</p>'.
+$string['attendance_forum_edit_session_message'] = '<p>Bonjour,</p>' .
+    '<p>Une session de cours a été modifiée :</p>' .
+    '<dl class="dl-horizontal">' .
+        '<dt>Jour</dt>' .
+        '<dd>{$a->datetime}</dd>' .
+        '<dt>Lieu</dt>' .
+        '<dd>{$a->location}<dd>' .
+    '</dl>' .
+    '<p>Pensez à en prendre note dans votre agenda. ;-)</p>' .
     '<p>Cordialement</p>';
 $string['attendance_forum_delete_session_subject'] = 'suppression de la session du {$a}';
-$string['attendance_forum_delete_session_message'] = '<p>Bonjour,</p>'.
-    '<p>Une session de cours a été supprimée :</p>'.
-    '<dl class="dl-horizontal">'.
-        '<dt>Jour</dt>'.
-        '<dd>{$a->datetime}</dd>'.
-        '<dt>Lieu</dt>'.
-        '<dd>{$a->location}<dd>'.
-    '</dl>'.
-    '<p>Pensez à en prendre note dans votre agenda. ;-)</p>'.
+$string['attendance_forum_delete_session_message'] = '<p>Bonjour,</p>' .
+    '<p>Une session de cours a été supprimée :</p>' .
+    '<dl class="dl-horizontal">' .
+        '<dt>Jour</dt>' .
+        '<dd>{$a->datetime}</dd>' .
+        '<dt>Lieu</dt>' .
+        '<dd>{$a->location}<dd>' .
+    '</dl>' .
+    '<p>Pensez à en prendre note dans votre agenda. ;-)</p>' .
     '<p>Cordialement</p>';
 $string['strftimeabbrday'] = '%d %b';
 $string['strftimedatetime'] = '%A %d %B à %Hh%M';
@@ -1292,10 +1292,10 @@ $string['paymentasso'] = 'Paiement auprès de l’Association Sportive';
 $string['no_sesame'] = 'L’utilisateur n’a pas de compte Université valide ou n’est plus présent dans le référentiel de son établissement.';
 $string['invalid_user'] = '<p>Vous n’êtes pas autorisé à payer.</p>';
 $string['no_courses'] = 'Vous ne pouvez pas payer car vous n’avez aucune inscription validée ou valide pour le moment.';
-$string['no_courses_complements'] = 'Pour les cours du SIUAPS, si vous êtes inscrit en évaluation, vérifier avec votre enseignant que vous êtes autorisé à l’être.<br />'.
+$string['no_courses_complements'] = 'Pour les cours du SIUAPS, si vous êtes inscrit en évaluation, vérifier avec votre enseignant que vous êtes autorisé à l’être.<br />' .
 ' Pour l’accès aux salles de musculation, vous devez avoir validé votre séance gratuite avant de pouvoir payer.';
 $string['no_paybox'] = 'Notre prestataire de paiement semble rencontrer des difficultés techniques. Merci de réessayer ultérieurement.';
-$string['warning_payment'] = '<div class="alert alert-info col-md-12"><p><strong>Attention</strong> : vérifiez les cours qui vous sont facturés. Si vous ne souhaitez plus suivre une activité, merci de contacter votre enseignant.</p>'.
+$string['warning_payment'] = '<div class="alert alert-info col-md-12"><p><strong>Attention</strong> : vérifiez les cours qui vous sont facturés. Si vous ne souhaitez plus suivre une activité, merci de contacter votre enseignant.</p>' .
     '<p>Aucun remboursement ne sera effectué ; si vous constatez une erreur dans le montant à payer, merci d’envoyer un mail à l’adresse <a href="mailto:{$a}">{$a}</a>.</p></div>';
 $string['status_accepted'] = 'Paiement accepté.';
 $string['status_refused'] = 'Paiement refusé.';

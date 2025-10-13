@@ -18,8 +18,8 @@ namespace local_apsolu\core;
 
 use coding_exception;
 use core_course_category;
-use local_apsolu\core\course as Course;
-use local_apsolu\core\federation\activity as Activity;
+use local_apsolu\core\course;
+use local_apsolu\core\federation\activity;
 use stdClass;
 
 /**
@@ -107,9 +107,9 @@ class category extends record {
             $strictness = MUST_EXIST;
         }
 
-        $sql = "SELECT cc.id, cc.name, cc.description, cc.descriptionformat, cc.parent, acc.url".
-            " FROM {course_categories} cc".
-            " JOIN {apsolu_courses_categories} acc ON acc.id = cc.id".
+        $sql = "SELECT cc.id, cc.name, cc.description, cc.descriptionformat, cc.parent, acc.url" .
+            " FROM {course_categories} cc" .
+            " JOIN {apsolu_courses_categories} acc ON acc.id = cc.id" .
             " WHERE acc.id = :recordid";
         $record = $DB->get_record_sql($sql, ['recordid' => $recordid], $strictness);
 
@@ -135,11 +135,11 @@ class category extends record {
         global $DB;
 
         if ($data === null) {
-            throw new coding_exception('$data parameter cannot be null for '.__METHOD__.'.');
+            throw new coding_exception('$data parameter cannot be null for ' . __METHOD__ . '.');
         }
 
         if ($mform === null) {
-            throw new coding_exception('$mform parameter cannot be null for '.__METHOD__.'.');
+            throw new coding_exception('$mform parameter cannot be null for ' . __METHOD__ . '.');
         }
 
         $this->set_vars($data);
@@ -183,8 +183,14 @@ class category extends record {
 
                     $moodlecourse = new stdClass();
                     $moodlecourse->id = $course->id;
-                    $moodlecourse->fullname = Course::get_fullname($data->str_category, $course->event, $course->weekday,
-                        $course->starttime, $course->endtime, $data->str_skill);
+                    $moodlecourse->fullname = Course::get_fullname(
+                        $data->str_category,
+                        $course->event,
+                        $course->weekday,
+                        $course->starttime,
+                        $course->endtime,
+                        $data->str_skill
+                    );
                     $moodlecourse->shortname = Course::get_shortname($course->id, $moodlecourse->fullname);
                     $DB->update_record('course', $moodlecourse);
                 }

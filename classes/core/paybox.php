@@ -117,9 +117,9 @@ class paybox {
 
             // Gère les éventuels paramètres de proxy.
             $options = [];
-            if (!empty($CFG->proxyhost) && !is_proxybypass('https://'.$server)) {
+            if (!empty($CFG->proxyhost) && !is_proxybypass('https://' . $server)) {
                 if (!empty($CFG->proxyport)) {
-                    $proxy = $CFG->proxyhost.':'.$CFG->proxyport;
+                    $proxy = $CFG->proxyhost . ':' . $CFG->proxyport;
                 } else {
                     $proxy = $CFG->proxyhost;
                 }
@@ -138,7 +138,7 @@ class paybox {
             $ctx = stream_context_create($options);
 
             // Récupération des données.
-            $content = file_get_contents('https://'.$server.'/load.html', false, $ctx);
+            $content = file_get_contents('https://' . $server . '/load.html', false, $ctx);
             if (strpos($content, '<div id="server_status" style="text-align:center;">OK</div>') !== false) {
                 // Le serveur est prêt et les services opérationnels.
                 $payboxserver = $server;

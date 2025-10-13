@@ -22,16 +22,16 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\federation\activity as Activity;
-use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\core\federation\activity;
+use local_apsolu\core\federation\adhesion;
 use local_apsolu\core\federation\course as FederationCourse;
 use local_apsolu\event\federation_adhesion_viewed;
 
-require_once(__DIR__.'/../../../../config.php');
-require_once(__DIR__.'/lib.php');
-require_once($CFG->dirroot.'/enrol/select/lib.php');
-require_once($CFG->dirroot.'/group/lib.php');
-require_once($CFG->dirroot.'/user/profile/lib.php');
+require_once(__DIR__ . '/../../../../config.php');
+require_once(__DIR__ . '/lib.php');
+require_once($CFG->dirroot . '/enrol/select/lib.php');
+require_once($CFG->dirroot . '/group/lib.php');
+require_once($CFG->dirroot . '/user/profile/lib.php');
 
 $stepid = optional_param('step', null, PARAM_INT);
 
@@ -180,8 +180,13 @@ if ($adhesion->questionnairestatus === null) {
     $pages['medical_certificate'] = null;
     $pages['payment'] = null;
 
-    if (in_array($stepid, [APSOLU_PAGE_INTRODUCTION, APSOLU_PAGE_HEALTH_QUIZ, APSOLU_PAGE_AGREEMENT, APSOLU_PAGE_MEMBERSHIP],
-            $strict = true) === false) {
+    if (
+        in_array(
+            $stepid,
+            [APSOLU_PAGE_INTRODUCTION, APSOLU_PAGE_HEALTH_QUIZ, APSOLU_PAGE_AGREEMENT, APSOLU_PAGE_MEMBERSHIP],
+            $strict = true
+        ) === false
+    ) {
         $stepid = APSOLU_PAGE_MEMBERSHIP;
     }
 } else if (empty($adhesion->federationnumber) === true && $stepid === APSOLU_PAGE_SUMMARY) {
@@ -206,7 +211,7 @@ foreach ($pages as $name => $url) {
 
 // Content.
 ob_start();
-require(__DIR__ . '/'.$steps[$stepid].'.php');
+require(__DIR__ . '/' . $steps[$stepid] . '.php');
 $content = ob_get_contents();
 ob_end_clean();
 

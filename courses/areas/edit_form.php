@@ -43,7 +43,7 @@ class local_apsolu_courses_areas_edit_form extends moodleform {
         global $CFG;
 
         $mform = $this->_form;
-        list($area, $cities) = $this->_customdata;
+        [$area, $cities] = $this->_customdata;
 
         // Name field.
         $mform->addElement('text', 'name', get_string('area', 'local_apsolu'), ['size' => '48']);
@@ -59,7 +59,7 @@ class local_apsolu_courses_areas_edit_form extends moodleform {
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 
         $attributes = new stdClass();
-        $attributes->href = $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=areas';
+        $attributes->href = $CFG->wwwroot . '/local/apsolu/courses/index.php?tab=areas';
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 

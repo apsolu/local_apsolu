@@ -43,7 +43,7 @@ class local_apsolu_payment_cards_edit_form extends moodleform {
         global $CFG;
 
         $mform = $this->_form;
-        list($instance, $cohorts, $roles, $centers, $calendarstypes) = $this->_customdata;
+        [$instance, $cohorts, $roles, $centers, $calendarstypes] = $this->_customdata;
 
         // Code du tarif.
         $mform->addElement('text', 'code', get_string('card_code', 'local_apsolu'), ['size' => '48']);
@@ -84,7 +84,7 @@ class local_apsolu_payment_cards_edit_form extends moodleform {
 
         // Nombre de créneaux offerts.
         foreach ($calendarstypes as $type) {
-            $name = 'types['.$type->id.']';
+            $name = 'types[' . $type->id . ']';
             $mform->addElement('text', $name, get_string('freecourses', 'local_apsolu', $type->name), ['size' => '48']);
             $mform->setType($name, PARAM_TEXT);
             $mform->addRule($name, get_string('required'), 'required', null, 'client');
@@ -115,7 +115,7 @@ class local_apsolu_payment_cards_edit_form extends moodleform {
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 
         $attributes = new stdClass();
-        $attributes->href = $CFG->wwwroot.'/local/apsolu/payment/admin.php?tab=prices';
+        $attributes->href = $CFG->wwwroot . '/local/apsolu/payment/admin.php?tab=prices';
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 

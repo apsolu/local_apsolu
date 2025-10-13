@@ -25,7 +25,7 @@ use DatePeriod;
 use DateTime;
 use Exception;
 use local_apsolu\core as Apsolu;
-use local_apsolu\core\federation as Federation;
+use local_apsolu\core\federation;
 use local_apsolu_courses_categories_edit_form;
 use stdClass;
 use tool_langimport\controller as langimport;
@@ -47,12 +47,12 @@ class dataset_provider {
     public static function execute() {
         global $CFG;
 
-        require_once($CFG->dirroot.'/cohort/lib.php');
-        require_once($CFG->dirroot.'/course/lib.php');
-        require_once($CFG->dirroot.'/group/lib.php');
-        require_once($CFG->dirroot.'/user/profile/lib.php');
-        require_once($CFG->dirroot.'/lib/blocklib.php');
-        require_once($CFG->dirroot.'/lib/testing/generator/data_generator.php');
+        require_once($CFG->dirroot . '/cohort/lib.php');
+        require_once($CFG->dirroot . '/course/lib.php');
+        require_once($CFG->dirroot . '/group/lib.php');
+        require_once($CFG->dirroot . '/user/profile/lib.php');
+        require_once($CFG->dirroot . '/lib/blocklib.php');
+        require_once($CFG->dirroot . '/lib/testing/generator/data_generator.php');
 
         session_manager::init_empty_session();
         session_manager::set_user(get_admin());
@@ -122,8 +122,11 @@ class dataset_provider {
             $enrolments = $DB->get_records('enrol', ['courseid' => $course->courseid, 'enrol' => 'select']);
             foreach ($enrolments as $enrolment) {
                 // Récupère les utilisateurs inscrits avec cette méthode d'inscription.
-                $enrolment->users = $DB->get_records('user_enrolments',
-                    ['enrolid' => $enrolment->id, 'status' => ENROL_USER_ACTIVE], $fields = 'userid');
+                $enrolment->users = $DB->get_records(
+                    'user_enrolments',
+                    ['enrolid' => $enrolment->id, 'status' => ENROL_USER_ACTIVE],
+                    $fields = 'userid'
+                );
             }
 
             // Récupère tous les sessions du cours.
@@ -456,8 +459,8 @@ class dataset_provider {
             // Nettoie le fichier (au cas où...).
             $data = array_map('trim', $data);
 
-            list($city, $area, $location, $manager, $category, $event, $grouping, $skill,
-                $weekday, $starttime, $endtime, $period, $paymentcenter, $teachers) = $data;
+            [$city, $area, $location, $manager, $category, $event, $grouping, $skill,
+                $weekday, $starttime, $endtime, $period, $paymentcenter, $teachers] = $data;
 
             if (in_array($city, ['Châteauroux', 'Paris', 'Tahiti'], $strict = true) === false) {
                 continue;
@@ -526,8 +529,15 @@ class dataset_provider {
                     'context' => $context, 'itemid' => $itemid];
                 $mform = new local_apsolu_courses_categories_edit_form(null, $customdata);
 
-                $editor = file_prepare_standard_editor($categorydata, 'description', $mform->get_description_editor_options(),
-                    $context, 'coursecat', 'description', $itemid);
+                $editor = file_prepare_standard_editor(
+                    $categorydata,
+                    'description',
+                    $mform->get_description_editor_options(),
+                    $context,
+                    'coursecat',
+                    'description',
+                    $itemid
+                );
                 $mform->set_data($editor);
 
                 $record = new Apsolu\category();
@@ -553,8 +563,14 @@ class dataset_provider {
             $paymentcenters[$paymentcenter] = $paymentcenter;
 
             // Génère le créneau.
-            $fullname = Apsolu\course::get_fullname($categories[$category]->name, $event,
-                $weekday, $starttime, $endtime, $skills[$skill]->name);
+            $fullname = Apsolu\course::get_fullname(
+                $categories[$category]->name,
+                $event,
+                $weekday,
+                $starttime,
+                $endtime,
+                $skills[$skill]->name
+            );
 
             if (isset($courses[$fullname]) === true) {
                 continue;
@@ -707,8 +723,14 @@ class dataset_provider {
             }
 
             $user = $users[$teacher];
-            $manualplugin->enrol_user($manualinstance, $user->id, $teacherroleid = 3,
-                $timestart = 0, $timeend = 0, $status = ENROL_USER_ACTIVE);
+            $manualplugin->enrol_user(
+                $manualinstance,
+                $user->id,
+                $teacherroleid = 3,
+                $timestart = 0,
+                $timeend = 0,
+                $status = ENROL_USER_ACTIVE
+            );
         }
 
         // Attribue les droits étudiants sur les cours de l'utilisateur "lenseignante".
@@ -756,8 +778,14 @@ class dataset_provider {
                     break;
                 }
 
-                $selectplugin->enrol_user($instance, $record->userid, $roles[$role]->id,
-                    $timestart = 0, $timeend = 0, $status);
+                $selectplugin->enrol_user(
+                    $instance,
+                    $record->userid,
+                    $roles[$role]->id,
+                    $timestart = 0,
+                    $timeend = 0,
+                    $status
+                );
                 $i++;
 
                 $enroled[$record->userid] = $record->userid;
@@ -785,7 +813,7 @@ class dataset_provider {
         $calendar = new stdClass();
         $calendar->name = 'Calendrier FFSU';
         $calendar->enrolstartdate = make_timestamp($academicyear, 8, 1); // 1er août N.
-        $calendar->enrolenddate = make_timestamp($academicyear + 1, 8, 1);; // 1er août N+1.
+        $calendar->enrolenddate = make_timestamp($academicyear + 1, 8, 1); // 1er août N+1.
         $calendar->coursestartdate = $calendar->enrolstartdate;
         $calendar->courseenddate = $calendar->enrolenddate;
         $calendar->reenrolstartdate = 0;
@@ -852,8 +880,10 @@ class dataset_provider {
         $card->id = $DB->insert_record('apsolu_payments_cards', $card);
         $DB->execute('INSERT INTO {apsolu_payments_cards_cohort}(cardid, cohortid) VALUES(?, ?)', [$card->id, $cohort->id]);
         $DB->execute('INSERT INTO {apsolu_payments_cards_roles}(cardid, roleid) VALUES(?, ?)', [$card->id, $role->id]);
-        $DB->execute('INSERT INTO {apsolu_payments_cards_cals}(cardid, calendartypeid, value) VALUES(?, ?, 0)',
-            [$card->id, $calendartype->id]);
+        $DB->execute(
+            'INSERT INTO {apsolu_payments_cards_cals}(cardid, calendartypeid, value) VALUES(?, ?, 0)',
+            [$card->id, $calendartype->id]
+        );
 
         // Crée l'espace-cours.
         $course = new stdClass();
@@ -1068,8 +1098,10 @@ class dataset_provider {
             }
 
             foreach ($calendartypes as $calendartype) {
-                $DB->execute('INSERT INTO {apsolu_payments_cards_cals}(cardid, calendartypeid, value) VALUES(?, ?, 0)',
-                    [$card->id, $calendartype->id]);
+                $DB->execute(
+                    'INSERT INTO {apsolu_payments_cards_cals}(cardid, calendartypeid, value) VALUES(?, ?, 0)',
+                    [$card->id, $calendartype->id]
+                );
             }
         }
 
@@ -1163,7 +1195,7 @@ class dataset_provider {
         $roles[] = (object) ['name' => 'Évalué (option)', 'shortname' => 'option', 'color' => 'green', 'shape' => 'certificate',
             'archetype' => 'student', 'description' => 'Étudiants en formation qualifiante.'];
         $roles[] = (object) ['name' => 'Évalué (bonification)', 'shortname' => 'bonification', 'color' => 'orange',
-            'shape' => 'certificate',  'archetype' => 'student',
+            'shape' => 'certificate', 'archetype' => 'student',
             'description' => 'Étudiants en formation qualif. Seules comptent les notes au dessus de 10.'];
         $roles[] = (object) ['name' => 'Non évalué', 'shortname' => 'libre', 'color' => 'purple', 'shape' => 'circle',
             'archetype' => 'student', 'description' => 'Étudiants en formation personnelle. Aucune évaluation n\'est attendue.'];
@@ -1341,7 +1373,7 @@ class dataset_provider {
         $lastnames = ['Andre', 'Bernard', 'Bertrand', 'Blanc', 'Bonnet', 'Boyer', 'Chevalier', 'Clement', 'David', 'Dubois',
             'Dupont', 'Faure', 'Fournier', 'Francois', 'Garcia', 'Garnier', 'Gauthier', 'Gautier', 'Girard', 'Guerin', 'Guerin',
             'Henry', 'Lambert', 'Lefebvre', 'Lefevre', 'Legrand', 'Leroy', 'Martin', 'Masson', 'Mathieu', 'Mercier', 'Michel',
-            'Moreau', 'Morel', 'Morin', 'Muller',  'Perrin', 'Petit', 'Richard', 'Robert', 'Robin', 'Rousseau', 'Roussel', 'Roux',
+            'Moreau', 'Morel', 'Morin', 'Muller', 'Perrin', 'Petit', 'Richard', 'Robert', 'Robin', 'Rousseau', 'Roussel', 'Roux',
             'Thomas', 'Vincent'];
 
         // Liste de prénoms par genre.
@@ -1395,7 +1427,7 @@ class dataset_provider {
             $firstname = $firstnames[$sex][array_rand($firstnames[$sex])];
 
             do {
-                $idnumber = date('Y').str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
+                $idnumber = date('Y') . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
             } while (isset($idnumbers[$idnumber]) === true);
             $idnumbers[$idnumber] = $idnumber;
 

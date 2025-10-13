@@ -74,8 +74,13 @@ class notification_sent extends \core\event\base {
             // Si on a l'identifiant du destinaire, on va chercher son nom dans la table des utilisateurs.
             $user = $DB->get_record('user', ['id' => $other->receiver]);
             if ($this->contextlevel == CONTEXT_COURSE) {
-                $receiver = sprintf('<a href="%s/user/view.php?course=%s&id=%s">%s</a>', $CFG->wwwroot,
-                    $this->contextinstanceid, $user->id, fullname($user));
+                $receiver = sprintf(
+                    '<a href="%s/user/view.php?course=%s&id=%s">%s</a>',
+                    $CFG->wwwroot,
+                    $this->contextinstanceid,
+                    $user->id,
+                    fullname($user)
+                );
             } else {
                 $receiver = sprintf('<a href="%s/user/view.php?id=%s">%s</a>', $CFG->wwwroot, $user->id, fullname($user));
             }
@@ -85,8 +90,13 @@ class notification_sent extends \core\event\base {
         }
 
         if ($this->contextlevel == CONTEXT_COURSE) {
-            $sender = sprintf('<a href="%s/user/view.php?course=%s&id=%s">\'%s\'</a>', $CFG->wwwroot, $this->contextinstanceid,
-                $this->userid, $this->userid);
+            $sender = sprintf(
+                '<a href="%s/user/view.php?course=%s&id=%s">\'%s\'</a>',
+                $CFG->wwwroot,
+                $this->contextinstanceid,
+                $this->userid,
+                $this->userid
+            );
         } else {
             $sender = sprintf('<a href="%s/user/view.php?id=%s">\'%s\'</a>', $CFG->wwwroot, $this->userid, $this->userid);
         }

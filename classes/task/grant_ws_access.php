@@ -50,7 +50,7 @@ class grant_ws_access extends \core\task\scheduled_task {
     public function execute() {
         global $CFG;
 
-        require_once($CFG->dirroot.'/local/apsolu/externallib.php');
+        require_once($CFG->dirroot . '/local/apsolu/externallib.php');
 
         // Crée des accès aux webservices pour les enseignants du SIUAPS.
         local_apsolu_grant_ws_access();

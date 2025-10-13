@@ -54,8 +54,8 @@ class federation_adhesion_viewed extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        return 'The user with id '.$this->userid.' viewed the federation adhesion'.
-           ' with id '.$this->objectid.' in the course with the id '.$this->courseid.'.';
+        return 'The user with id ' . $this->userid . ' viewed the federation adhesion' .
+           ' with id ' . $this->objectid . ' in the course with the id ' . $this->courseid . '.';
     }
 
     /**

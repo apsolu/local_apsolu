@@ -27,7 +27,6 @@ namespace local_apsolu\local\statistics\programme;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class report extends \local_apsolu\local\statistics\report {
-
     /**
      * @var sous-requête contenant l'ensemble des créneaux
      * TODO transformer en vue
@@ -77,7 +76,6 @@ class report extends \local_apsolu\local\statistics\report {
       	LEFT JOIN {apsolu_calendars_types} ACT ON ACT.id = AC.typeid
          ORDER BY Grouping.id, Activity.id
       ) ';
-
     }
 
     /**
@@ -90,20 +88,20 @@ class report extends \local_apsolu\local\statistics\report {
           [ 'data' => "groupname", 'title' => get_string("statistics_groupe", 'local_apsolu')],
           [ 'data' => "activityname", 'title' => get_string("activity", 'local_apsolu')],
           [ 'data' => "slotevent", 'title' => get_string("event", 'local_apsolu')],
-          [ 'data' => "calendartypename", 'title' => get_string("calendartype", 'local_apsolu')] ,
-          [ 'data' => "cityname", 'title' => get_string("city", 'local_apsolu')] ,
-          [ 'data' => "placename", 'title' => get_string("locations", 'local_apsolu')] ,
-          [ 'data' => "placeaddress", 'title' => get_string("address", 'local_apsolu')] ,
+          [ 'data' => "calendartypename", 'title' => get_string("calendartype", 'local_apsolu')],
+          [ 'data' => "cityname", 'title' => get_string("city", 'local_apsolu')],
+          [ 'data' => "placename", 'title' => get_string("locations", 'local_apsolu')],
+          [ 'data' => "placeaddress", 'title' => get_string("address", 'local_apsolu')],
           [ 'data' => "slotnumweekday", 'title' => get_string("weekday", 'local_apsolu'),
             "render" => "function ( data, type, row ) {return moment.weekdays()[(data==7) ? 0 : data];}"],
-          [ 'data' => "slotstart", 'title' => get_string("coursestartdate", 'local_apsolu')] ,
-          [ 'data' => "slotend", 'title' => get_string("courseenddate", 'local_apsolu')] ,
-          [ 'data' => "actifquota", 'title' => get_string("statistics_active_quota", 'local_apsolu')] ,
-          [ 'data' => "mainquota", 'title' => get_string("statistics_main_quota", 'local_apsolu')] ,
+          [ 'data' => "slotstart", 'title' => get_string("coursestartdate", 'local_apsolu')],
+          [ 'data' => "slotend", 'title' => get_string("courseenddate", 'local_apsolu')],
+          [ 'data' => "actifquota", 'title' => get_string("statistics_active_quota", 'local_apsolu')],
+          [ 'data' => "mainquota", 'title' => get_string("statistics_main_quota", 'local_apsolu')],
           [ 'data' => "waitquota", 'title' => get_string("statistics_wait_quota", 'local_apsolu')],
-          [ 'data' => "coursestartdate", 'title' => get_string("statistics_start_the", 'local_apsolu')] ,
+          [ 'data' => "coursestartdate", 'title' => get_string("statistics_start_the", 'local_apsolu')],
           [ 'data' => "courseenddate", 'title' => get_string("statistics_end_the", 'local_apsolu')],
-          [ 'data' => "reenrolstartdate", 'title' => get_string("reenrolstartdate", 'local_apsolu')] ,
+          [ 'data' => "reenrolstartdate", 'title' => get_string("reenrolstartdate", 'local_apsolu')],
           [ 'data' => "reenrolenddate", 'title' => get_string("reenrolenddate", 'local_apsolu')],
         ];
         $orders = [0 => 'asc', 1 => 'asc'];
@@ -124,7 +122,7 @@ class report extends \local_apsolu\local\statistics\report {
      *
      * @return array
      */
-    public function getReportData($querybuilder, $criterias=null) {
+    public function getReportData($querybuilder, $criterias = null) {
         global $DB;
 
         $condition = json_decode($querybuilder);
@@ -138,7 +136,7 @@ class report extends \local_apsolu\local\statistics\report {
         $from = 'FROM programme p ';
 
         if (property_exists($condition, "sql")) {
-            $where .= " AND ". $condition->sql;
+            $where .= " AND " . $condition->sql;
         }
         if (!is_null($criterias)) {
             if (array_key_exists("cityid", $criterias) && $criterias["cityid"] != '') {
@@ -150,21 +148,20 @@ class report extends \local_apsolu\local\statistics\report {
         }
 
         if (property_exists($condition, "having")) {
-            $having = 'HAVING '.$condition->having;
+            $having = 'HAVING ' . $condition->having;
         }
 
         if (property_exists($condition, "order")) {
-            $orderby = 'ORDER BY '.$condition->order;
+            $orderby = 'ORDER BY ' . $condition->order;
         }
 
-        $sql = $with. $select . $from . $where . $groupby . $having . $orderby;
+        $sql = $with . $select . $from . $where . $groupby . $having . $orderby;
 
         if (property_exists($condition, "params")) {
             return $DB->get_records_sql($sql, $condition->params);
         } else {
             return $DB->get_records_sql($sql);
         }
-
     }
 
     /**
@@ -182,10 +179,11 @@ class report extends \local_apsolu\local\statistics\report {
         } else {
             $cities = self::get_cities();
             $cityid = implode(', ', array_map(
-            function ($v, $k) { return sprintf("%s", $v->id);
-            },
-            $cities,
-            array_keys($cities)
+                function ($v, $k) {
+                    return sprintf("%s", $v->id);
+                },
+                $cities,
+                array_keys($cities)
             ));
         }
         if (array_key_exists("calendarstypeid", $params) && $params["calendarstypeid"] != '') {
@@ -193,17 +191,18 @@ class report extends \local_apsolu\local\statistics\report {
         } else {
             $calendarstypes = self::get_calendarstypes();
             $calendarstypeid = implode(', ', array_map(
-            function ($v, $k) { return sprintf("%s", $v->id);
-            },
-            $calendarstypes,
-            array_keys($calendarstypes)
+                function ($v, $k) {
+                    return sprintf("%s", $v->id);
+                },
+                $calendarstypes,
+                array_keys($calendarstypes)
             ));
         }
 
         $sql = $params["WithProgramme"] . "SELECT
       	 p.groupid, p.groupname, count(p.slotid) as total
         FROM programme p
-        WHERE cityid in (". $cityid .") AND calendartypeid in (". $calendarstypeid .")
+        WHERE cityid in (" . $cityid . ") AND calendartypeid in (" . $calendarstypeid . ")
         GROUP BY p.groupid
         ORDER BY p.groupname";
 
@@ -225,10 +224,11 @@ class report extends \local_apsolu\local\statistics\report {
         } else {
             $cities = self::get_cities();
             $cityid = implode(', ', array_map(
-            function ($v, $k) { return sprintf("%s", $v->id);
-            },
-            $cities,
-            array_keys($cities)
+                function ($v, $k) {
+                    return sprintf("%s", $v->id);
+                },
+                $cities,
+                array_keys($cities)
             ));
         }
         if (array_key_exists("calendarstypeid", $params) && $params["calendarstypeid"] != '') {
@@ -236,10 +236,11 @@ class report extends \local_apsolu\local\statistics\report {
         } else {
             $calendarstypes = self::get_calendarstypes();
             $calendarstypeid = implode(', ', array_map(
-            function ($v, $k) { return sprintf("%s", $v->id);
-            },
-            $calendarstypes,
-            array_keys($calendarstypes)
+                function ($v, $k) {
+                    return sprintf("%s", $v->id);
+                },
+                $calendarstypes,
+                array_keys($calendarstypes)
             ));
         }
 
@@ -249,7 +250,7 @@ class report extends \local_apsolu\local\statistics\report {
             p.activityid, p.activityname, p.slotevent,
         	count(p.slotid) as total
         FROM programme p
-        WHERE cityid in (". $cityid .") AND calendartypeid in (". $calendarstypeid .")
+        WHERE cityid in (" . $cityid . ") AND calendartypeid in (" . $calendarstypeid . ")
         GROUP BY p.groupid, p.activityid
         ORDER BY p.activityname";
 
@@ -271,10 +272,11 @@ class report extends \local_apsolu\local\statistics\report {
         } else {
             $cities = self::get_cities();
             $cityid = implode(', ', array_map(
-            function ($v, $k) { return sprintf("%s", $v->id);
-            },
-            $cities,
-            array_keys($cities)
+                function ($v, $k) {
+                    return sprintf("%s", $v->id);
+                },
+                $cities,
+                array_keys($cities)
             ));
         }
         if (array_key_exists("calendarstypeid", $params) && $params["calendarstypeid"] != '') {
@@ -282,10 +284,11 @@ class report extends \local_apsolu\local\statistics\report {
         } else {
             $calendarstypes = self::get_calendarstypes();
             $calendarstypeid = implode(', ', array_map(
-            function ($v, $k) { return sprintf("%s", $v->id);
-            },
-            $calendarstypes,
-            array_keys($calendarstypes)
+                function ($v, $k) {
+                    return sprintf("%s", $v->id);
+                },
+                $calendarstypes,
+                array_keys($calendarstypes)
             ));
         }
 
@@ -293,7 +296,7 @@ class report extends \local_apsolu\local\statistics\report {
 	       SUM(mainQuota) as total
         FROM programme p
         WHERE p.actifQuota = 'Oui'
-          and cityid in (". $cityid .") AND calendartypeid in (". $calendarstypeid .")";
+          and cityid in (" . $cityid . ") AND calendartypeid in (" . $calendarstypeid . ")";
 
         return $DB->get_records_sql($sql);
     }

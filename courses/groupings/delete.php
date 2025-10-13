@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-use local_apsolu\core\grouping as Grouping;
+use local_apsolu\core\grouping;
 
 $groupingid = required_param('groupingid', PARAM_INT);
 $delete = optional_param('delete', '', PARAM_ALPHANUM); // Confirmation hash.

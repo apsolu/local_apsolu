@@ -65,9 +65,9 @@ class course_category {
 
         $context = $event->get_context();
 
-        $sql = "SELECT cc.*".
-            " FROM {course_categories} cc".
-            " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id".
+        $sql = "SELECT cc.*" .
+            " FROM {course_categories} cc" .
+            " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id" .
             " WHERE cc.id = :categoryid";
         $category = $DB->get_record_sql($sql, ['categoryid' => $context->instanceid]);
         if ($category !== false) {
@@ -75,12 +75,15 @@ class course_category {
             // Le parent doit être une catégorie de groupement d'activités sportives APSOLU.
             $parent = $DB->get_record(\local_apsolu\core\grouping::TABLENAME, ['id' => $category->parent]);
             if ($parent === false) {
-                $message = get_string('category_must_be_parent_of_a_grouping_of_sports_activities',
-                    'local_apsolu', $category->name);
+                $message = get_string(
+                    'category_must_be_parent_of_a_grouping_of_sports_activities',
+                    'local_apsolu',
+                    $category->name
+                );
                 \core\notification::add($message, \core\notification::WARNING);
 
-                $sql = "SELECT cc.*".
-                    " FROM {course_categories} cc".
+                $sql = "SELECT cc.*" .
+                    " FROM {course_categories} cc" .
                     " JOIN {apsolu_courses_groupings} acc ON cc.id = acc.id";
                 $categories = $DB->get_records_sql($sql);
                 $parent = current($categories);
@@ -98,9 +101,9 @@ class course_category {
             return;
         }
 
-        $sql = "SELECT cc.*".
-            " FROM {course_categories} cc".
-            " JOIN {apsolu_courses_groupings} acg ON cc.id = acg.id".
+        $sql = "SELECT cc.*" .
+            " FROM {course_categories} cc" .
+            " JOIN {apsolu_courses_groupings} acg ON cc.id = acg.id" .
             " WHERE cc.id = :categoryid";
         $category = $DB->get_record_sql($sql, ['categoryid' => $context->instanceid]);
         if ($category !== false) {

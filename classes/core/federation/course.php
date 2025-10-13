@@ -101,7 +101,7 @@ class course {
             return;
         }
 
-        require_once($CFG->dirroot.'/group/lib.php');
+        require_once($CFG->dirroot . '/group/lib.php');
 
         $groups = $DB->get_records('groups', ['courseid' => $federationcourseid], $sort = '', $fields = 'name');
         foreach (activity::get_records() as $activity) {
@@ -118,5 +118,4 @@ class course {
             groups_create_group($group);
         }
     }
-
 }

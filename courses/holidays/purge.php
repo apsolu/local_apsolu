@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-use local_apsolu\core\holiday as Holiday;
+use local_apsolu\core\holiday;
 
 $holidays = Holiday::get_records();
 foreach ($holidays as $holiday) {

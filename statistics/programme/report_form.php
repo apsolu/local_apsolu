@@ -34,7 +34,7 @@ class local_apsolu_statistics_programme_report_form extends moodleform {
     protected function definition() {
         $mform = $this->_form;
 
-        list($reports, $reportid) = $this->_customdata;
+        [$reports, $reportid] = $this->_customdata;
 
         $options = [];
         $options[0] = get_string('none');
@@ -43,7 +43,7 @@ class local_apsolu_statistics_programme_report_form extends moodleform {
         }
 
         $reportselect = $mform->addElement('select', 'reportid', get_string('statistics_select_reports', 'local_apsolu'), $options);
-        if (!is_null ($reportid)) {
+        if (!is_null($reportid)) {
             $reportselect->setSelected($reportid);
         }
     }

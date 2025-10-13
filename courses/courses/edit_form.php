@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\federation\activity as Activity;
+use local_apsolu\core\federation\activity;
 use local_apsolu\core\federation\course as FederationCourse;
 
 defined('MOODLE_INTERNAL') || die;
@@ -46,7 +46,7 @@ class local_apsolu_courses_courses_edit_form extends moodleform {
         global $CFG;
 
         $mform = $this->_form;
-        list($course, $categories, $skills, $locations, $periods, $weekdays) = $this->_customdata;
+        [$course, $categories, $skills, $locations, $periods, $weekdays] = $this->_customdata;
 
         // Category field (Sport).
         $mform->addElement('select', 'category', get_string('activity', 'local_apsolu'), $categories);
@@ -146,7 +146,7 @@ class local_apsolu_courses_courses_edit_form extends moodleform {
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 
         $attributes = new stdClass();
-        $attributes->href = $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=courses';
+        $attributes->href = $CFG->wwwroot . '/local/apsolu/courses/index.php?tab=courses';
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 

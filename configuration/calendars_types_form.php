@@ -42,7 +42,7 @@ class local_apsolu_calendars_types_edit_form extends moodleform {
     protected function definition() {
         $mform = $this->_form;
 
-        list($defaults) = $this->_customdata;
+        [$defaults] = $this->_customdata;
 
         $attributes = ['size' => '20', 'maxlength' => '255'];
         $mform->addElement('text', 'name', get_string('calendartypename', 'local_apsolu'), $attributes);

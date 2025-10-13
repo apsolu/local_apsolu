@@ -26,7 +26,7 @@ use local_apsolu\core\federation\course as FederationCourse;
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once(__DIR__.'/../../locallib.php');
+require_once(__DIR__ . '/../../locallib.php');
 
 $currentactivity = null;
 $currentaltclass = 'odd';
@@ -60,12 +60,12 @@ foreach ($DB->get_records_sql($sql) as $course) {
     if (empty($course->event)) {
         $course->fullname = $course->category;
     } else {
-        $course->fullname = $course->category.' ('.$course->event.')';
+        $course->fullname = $course->category . ' (' . $course->event . ')';
     }
 
     $course->alt_class = $currentaltclass;
     $course->weekday = get_string($course->weekday, 'local_apsolu');
-    $course->schedule = $course->starttime.'-'.$course->endtime;
+    $course->schedule = $course->starttime . '-' . $course->endtime;
 
 
     $teachers = UniversiteRennes2\Apsolu\get_teachers($course->id);
@@ -100,10 +100,12 @@ foreach ($attributes as $attribute) {
     }
 
     $parameters = new stdClass();
-    $parameters->url = $CFG->wwwroot.'/local/apsolu/configuration/index.php?page=messaging';
+    $parameters->url = $CFG->wwwroot . '/local/apsolu/configuration/index.php?page=messaging';
     $parameters->page = get_string('messaging', 'local_apsolu');
-    $data->notification = html_writer::div(get_string('the_fields_of_X_page_have_to_be_completed', 'local_apsolu', $parameters),
-        'alert alert-danger');
+    $data->notification = html_writer::div(
+        get_string('the_fields_of_X_page_have_to_be_completed', 'local_apsolu', $parameters),
+        'alert alert-danger'
+    );
     break;
 }
 

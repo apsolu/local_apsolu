@@ -38,7 +38,7 @@ class local_apsolu_notification_form extends moodleform {
 
         $mform = $this->_form;
 
-        list($defaultdata, $recipients, $redirecturl) = $this->_customdata;
+        [$defaultdata, $recipients, $redirecturl] = $this->_customdata;
 
         // Expéditeur.
         $noreplyuser = core_user::get_noreply_user();
@@ -72,15 +72,15 @@ class local_apsolu_notification_form extends moodleform {
         $users = [];
         foreach ($recipients as $user) {
             if (!empty($user->numberid)) {
-                $numberid = ' ('.$user->numberid.')';
+                $numberid = ' (' . $user->numberid . ')';
             } else {
                 $numberid = '';
             }
 
             $users[] = sprintf('<li>%s %s%s</li>', $user->firstname, $user->lastname, $numberid);
 
-            $mform->addElement('hidden', 'users['.$user->id.']', $user->id);
-            $mform->setType('users['.$user->id.']', PARAM_INT);
+            $mform->addElement('hidden', 'users[' . $user->id . ']', $user->id);
+            $mform->setType('users[' . $user->id . ']', PARAM_INT);
         }
 
         $label = get_string('recipients', 'local_apsolu');
@@ -215,8 +215,18 @@ class local_apsolu_notification_form extends moodleform {
             $admin->email = $functionalcontact;
 
             if (isset($replyto) === true) {
-                email_to_user($admin, $USER, $data->subject, $messagetext, $messagehtml, $attachment = '', $attachname = '',
-                    $usetrueaddress = true, $replyto, $replytoname);
+                email_to_user(
+                    $admin,
+                    $USER,
+                    $data->subject,
+                    $messagetext,
+                    $messagehtml,
+                    $attachment = '',
+                    $attachname = '',
+                    $usetrueaddress = true,
+                    $replyto,
+                    $replytoname
+                );
             } else {
                 email_to_user($admin, $USER, $data->subject, $messagetext, $messagehtml);
             }

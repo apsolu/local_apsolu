@@ -44,7 +44,7 @@ class local_apsolu_roles_edit_form extends moodleform {
 
         $mform = $this->_form;
 
-        list($defaults, $role) = $this->_customdata;
+        [$defaults, $role] = $this->_customdata;
 
         // Role field.
         $mform->addElement('static', 'description', get_string('role'), $role);
@@ -91,7 +91,7 @@ class local_apsolu_roles_edit_form extends moodleform {
 
         $radios = [];
         foreach ($icons as $value => $label) {
-            $label = $value.' <i aria-hidden="true" class="fa fa-'.$value.' ms-2"></i>';
+            $label = $value . ' <i aria-hidden="true" class="fa fa-' . $value . ' ms-2"></i>';
             $radios[] = $mform->createElement('radio', 'fontawesomeid', '', $label, $value);
         }
         $mform->addGroup($radios, 'radios', get_string('icon'), html_writer::empty_tag('br'), false);
@@ -101,7 +101,7 @@ class local_apsolu_roles_edit_form extends moodleform {
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
 
         $attributes = new stdClass();
-        $attributes->href = $CFG->wwwroot.'/local/apsolu/configuration/index.php?page=roles';
+        $attributes->href = $CFG->wwwroot . '/local/apsolu/configuration/index.php?page=roles';
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 

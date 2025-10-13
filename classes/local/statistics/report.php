@@ -29,7 +29,6 @@ use stdClass;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class report {
-
     /**
      * @var fichier de configuration des critères de recherche
      *
@@ -46,7 +45,7 @@ class report {
     public function getReport($reportid = null) {
         global $CFG;
 
-        $jsonconfigpath = $CFG->dirroot.$this->configFilePath;
+        $jsonconfigpath = $CFG->dirroot . $this->configFilePath;
         $jsonmodeldata = file_get_contents($jsonconfigpath);
         $model = json_decode($jsonmodeldata);
 
@@ -57,7 +56,7 @@ class report {
 
         $model = self::localize_reports($model);
 
-        if (!is_null ($reportid)) {
+        if (!is_null($reportid)) {
             for ($i = 0; $i < count($model->reports); $i++) {
                 $report = $model->reports[$i];
                 if ($report->id == $reportid) {
@@ -74,7 +73,6 @@ class report {
             }
             return $model->reports;
         }
-
     }
 
     /**
@@ -87,7 +85,7 @@ class report {
     public function getFilters(int $datatype = 1) {
         global $CFG, $DB;
 
-        $jsonconfigpath = $CFG->dirroot.$this->configFilePath;
+        $jsonconfigpath = $CFG->dirroot . $this->configFilePath;
         $jsonmodeldata = file_get_contents($jsonconfigpath);
         $model = json_decode($jsonmodeldata);
 
@@ -112,14 +110,13 @@ class report {
         for ($i = 0; $i < count($model->filters); $i++) {
             $filter = $model->filters[$i];
             if (property_exists($filter, "input")) {
-
                 if (property_exists($filter->values, "table")) {
                     $where = "";
                     if (property_exists($filter->values, "conditions")) {
-                        $where = "WHERE ".$filter->values->conditions;
+                        $where = "WHERE " . $filter->values->conditions;
                     }
-                    $records = $DB->get_records_sql('SELECT DISTINCT '.$filter->values->fields.
-                        ' FROM {'.$filter->values->table.'} ' .$where.' ORDER BY '.$filter->values->sort);
+                    $records = $DB->get_records_sql('SELECT DISTINCT ' . $filter->values->fields .
+                        ' FROM {' . $filter->values->table . '} ' . $where . ' ORDER BY ' . $filter->values->sort);
                     $records = json_decode(json_encode($records), true);
                     $fields = explode(",", $filter->values->fields);
                     $values = [];
@@ -189,7 +186,7 @@ class report {
                     continue;
                 }
 
-                list($stringid, $component) = explode(',', $filter->label);
+                [$stringid, $component] = explode(',', $filter->label);
                 $model->filters[$key1]->label = get_string($stringid, $component);
             }
         }
@@ -216,7 +213,7 @@ class report {
                         continue;
                     }
 
-                    list($stringid, $component) = explode(',', $column->title);
+                    [$stringid, $component] = explode(',', $column->title);
                     $model->reports[$key1]->values->columns[$key2]->title = get_string($stringid, $component);
                 }
             }

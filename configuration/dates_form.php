@@ -42,7 +42,7 @@ class local_apsolu_calendar_form extends moodleform {
     protected function definition() {
         $mform = $this->_form;
 
-        list($defaults) = $this->_customdata;
+        [$defaults] = $this->_customdata;
 
         // Payments.
         $mform->addElement('header', 'payments', get_string('payments'));

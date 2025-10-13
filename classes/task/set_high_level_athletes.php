@@ -82,9 +82,9 @@ class set_high_level_athletes extends \core\task\scheduled_task {
 
         $cards = $DB->get_records('apsolu_payments_cards');
 
-        $sql = "SELECT DISTINCT gm.userid".
-            " FROM {groups_members} gm".
-            " JOIN {groupings_groups} gg ON gg.groupid = gm.groupid".
+        $sql = "SELECT DISTINCT gm.userid" .
+            " FROM {groups_members} gm" .
+            " JOIN {groupings_groups} gg ON gg.groupid = gm.groupid" .
             " WHERE gg.groupingid = :groupingid";
         $members = $DB->get_records_sql($sql, ['groupingid' => $grouping->id]);
         foreach ($members as $member) {
@@ -100,11 +100,11 @@ class set_high_level_athletes extends \core\task\scheduled_task {
                 if ($data->data !== $record->data) {
                     $data->id = $record->id;
                     $DB->update_record('user_info_data', $data);
-                    mtrace("\t update ".$field->shortname." : userid=".$data->userid." data=".$data->data);
+                    mtrace("\t update " . $field->shortname . " : userid=" . $data->userid . " data=" . $data->data);
                 }
             } else {
                 $DB->insert_record('user_info_data', $data);
-                mtrace("\t insert ".$field->shortname." : userid=".$data->userid." data=".$data->data);
+                mtrace("\t insert " . $field->shortname . " : userid=" . $data->userid . " data=" . $data->data);
             }
 
             // Offre l'accès à la salle de musculation aux sportifs de haut niveau.
@@ -144,7 +144,7 @@ class set_high_level_athletes extends \core\task\scheduled_task {
                     $transaction = $DB->start_delegated_transaction();
 
                     $payment->id = $DB->insert_record('apsolu_payments', $payment);
-                    mtrace("\t insert apsolu_payments: userid=".$member->userid." status=gift, centerid=".$centerid);
+                    mtrace("\t insert apsolu_payments: userid=" . $member->userid . " status=gift, centerid=" . $centerid);
 
                     foreach ($cardsid as $cardid) {
                         $item = new stdClass();
@@ -152,7 +152,7 @@ class set_high_level_athletes extends \core\task\scheduled_task {
                         $item->cardid = $cardid;
 
                         $DB->insert_record('apsolu_payments_items', $item);
-                        mtrace("\t insert apsolu_payments_items: paymentid=".$payment->id.", cardid=".$cardid);
+                        mtrace("\t insert apsolu_payments_items: paymentid=" . $payment->id . ", cardid=" . $cardid);
                     }
 
                     $event = \local_apsolu\event\update_user_payment::create([
@@ -182,7 +182,7 @@ class set_high_level_athletes extends \core\task\scheduled_task {
             if (isset($members[$data->userid]) === false) {
                 $data->data = 0;
                 $DB->update_record('user_info_data', $data);
-                mtrace("\t remove ".$field->shortname." : userid=".$data->userid." data=".$data->data);
+                mtrace("\t remove " . $field->shortname . " : userid=" . $data->userid . " data=" . $data->data);
             }
         }
     }

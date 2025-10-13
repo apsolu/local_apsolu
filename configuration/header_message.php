@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot.'/local/apsolu/configuration/header_message_form.php');
+require_once($CFG->dirroot . '/local/apsolu/configuration/header_message_form.php');
 
 // Build form.
 $defaults = new stdClass();
@@ -69,8 +69,11 @@ if ($data = $mform->get_data()) {
         }
 
         // Encapsule le HTML dans une div afin de pouvoir masquer le contenu sur la page d'accueil du site.
-        $newvalue = sprintf('<div id="apsolu-topofbody"><div class="%s">%s</div></div>',
-            $style, $data->apsoluheadercontent['text']);
+        $newvalue = sprintf(
+            '<div id="apsolu-topofbody"><div class="%s">%s</div></div>',
+            $style,
+            $data->apsoluheadercontent['text']
+        );
     }
 
     if ($oldvalue !== $newvalue) {

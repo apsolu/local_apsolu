@@ -24,9 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$sql = "SELECT afa.id, afa.name, cc.name AS apsoluname".
-    " FROM {apsolu_federation_activities} afa".
-    " LEFT JOIN {course_categories} cc ON cc.id = afa.categoryid".
+$sql = "SELECT afa.id, afa.name, cc.name AS apsoluname" .
+    " FROM {apsolu_federation_activities} afa" .
+    " LEFT JOIN {course_categories} cc ON cc.id = afa.categoryid" .
     " ORDER BY afa.name, cc.name";
 $activities = $DB->get_records_sql($sql);
 

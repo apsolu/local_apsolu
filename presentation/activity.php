@@ -25,7 +25,7 @@
 use UniversiteRennes2\Apsolu;
 
 require(__DIR__ . '/../../../config.php');
-require_once($CFG->dirroot.'/enrol/select/locallib.php');
+require_once($CFG->dirroot . '/enrol/select/locallib.php');
 
 require_course_login($SITE);
 
@@ -86,7 +86,7 @@ foreach ($activities as $activity) {
         $activity->teachers = array_values($teachers[$activity->id]);
     }
 
-    $activity->area = $activity->site.' - '.$activity->area;
+    $activity->area = $activity->site . ' - ' . $activity->area;
 
     $courses[$activity->sport]->courses[] = $activity;
 }

@@ -84,8 +84,13 @@ class grouping extends record {
      *
      * @return array Un tableau d'objets instanciés.
      */
-    public static function get_records(?array $conditions = null, string $sort = '', string $fields = '*',
-                                       int $limitfrom = 0, int $limitnum = 0) {
+    public static function get_records(
+        ?array $conditions = null,
+        string $sort = '',
+        string $fields = '*',
+        int $limitfrom = 0,
+        int $limitnum = 0
+    ) {
         global $DB;
 
         if ($conditions !== null) {
@@ -110,7 +115,7 @@ class grouping extends record {
                   FROM {course_categories} cc
                   JOIN {apsolu_courses_groupings} acg ON acg.id = cc.id";
         if ($sort !== '') {
-            $sql .= " ORDER BY ".$sort;
+            $sql .= " ORDER BY " . $sort;
         }
 
         foreach ($DB->get_records_sql($sql) as $data) {
@@ -139,9 +144,9 @@ class grouping extends record {
             $strictness = MUST_EXIST;
         }
 
-        $sql = "SELECT cc.id, cc.name, cc.parent, acg.url".
-            " FROM {course_categories} cc".
-            " JOIN {apsolu_courses_groupings} acg ON acg.id = cc.id".
+        $sql = "SELECT cc.id, cc.name, cc.parent, acg.url" .
+            " FROM {course_categories} cc" .
+            " JOIN {apsolu_courses_groupings} acg ON acg.id = cc.id" .
             " WHERE acg.id = :recordid";
         $record = $DB->get_record_sql($sql, ['recordid' => $recordid], $strictness);
 

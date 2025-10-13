@@ -25,9 +25,9 @@
 use UniversiteRennes2\Apsolu\Payment;
 use local_apsolu\core\paybox;
 
-require_once(__DIR__.'/../../../config.php');
-require_once(__DIR__.'/address_form.php');
-require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
+require_once(__DIR__ . '/../../../config.php');
+require_once(__DIR__ . '/address_form.php');
+require_once($CFG->dirroot . '/local/apsolu/classes/apsolu/payment.php');
 
 require_login();
 
@@ -52,16 +52,16 @@ if ($status !== null) {
 
     switch ($status) {
         case 'accepted':
-            $data->status = get_string('status_'.$status, 'local_apsolu');
+            $data->status = get_string('status_' . $status, 'local_apsolu');
             $data->state = 'alert-success';
             break;
         case 'cancel':
         case 'wait':
-            $data->status = get_string('status_'.$status, 'local_apsolu');
+            $data->status = get_string('status_' . $status, 'local_apsolu');
             $data->state = 'alert-info';
             break;
         case 'refused':
-            $data->status = get_string('status_'.$status, 'local_apsolu');
+            $data->status = get_string('status_' . $status, 'local_apsolu');
             $data->state = 'alert-danger';
             break;
         default:

@@ -22,11 +22,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\course as Course;
+use local_apsolu\core\course;
 
 defined('MOODLE_INTERNAL') || die;
 
-require(__DIR__.'/edit_form.php');
+require(__DIR__ . '/edit_form.php');
 
 // Get course id.
 $courseid = optional_param('courseid', 0, PARAM_INT);
@@ -55,7 +55,8 @@ foreach ($DB->get_records_sql($sql) as $category) {
 }
 
 if ($categories === []) {
-    throw new moodle_exception('error_no_category', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=categories');
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'categories']);
+    throw new moodle_exception('error_no_category', 'local_apsolu', $returnurl);
 }
 
 // Load skills.
@@ -65,7 +66,8 @@ foreach ($DB->get_records('apsolu_skills', $conditions = null, $sort = 'name') a
 }
 
 if ($skills === []) {
-    throw new moodle_exception('error_no_skill', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=skills');
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'skills']);
+    throw new moodle_exception('error_no_skill', 'local_apsolu', $returnurl);
 }
 
 // Load locations.
@@ -75,7 +77,8 @@ foreach ($DB->get_records('apsolu_locations', $conditions = null, $sort = 'name'
 }
 
 if ($locations === []) {
-    throw new moodle_exception('error_no_location', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=locations');
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'locations']);
+    throw new moodle_exception('error_no_location', 'local_apsolu', $returnurl);
 }
 
 // Load periods.
@@ -85,7 +88,8 @@ foreach ($DB->get_records('apsolu_periods', $conditions = null, $sort = 'name') 
 }
 
 if ($periods === []) {
-    throw new moodle_exception('error_no_period', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=periods');
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'periods']);
+    throw new moodle_exception('error_no_period', 'local_apsolu', $returnurl);
 }
 
 // Load weekdays.
@@ -103,8 +107,15 @@ if (empty($course->id) === false) {
     $context = context_course::instance($course->id);
     $editoroptions = local_apsolu_courses_courses_edit_form::get_editor_options($course->id);
 }
-$course = file_prepare_standard_editor($course, $field = 'information', $editoroptions,
-    $context, $component, $filearea, $itemid);
+$course = file_prepare_standard_editor(
+    $course,
+    $field = 'information',
+    $editoroptions,
+    $context,
+    $component,
+    $filearea,
+    $itemid
+);
 
 // Build form.
 $customdata = [$course, $categories, $skills, $locations, $periods, $weekdays];
@@ -118,8 +129,15 @@ if ($data = $mform->get_data()) {
     }
 
     // Enregistre les images de la zone de texte.
-    $data = file_postupdate_standard_editor($data, $field = 'information', $editoroptions,
-        $context, $component, $filearea, $itemid);
+    $data = file_postupdate_standard_editor(
+        $data,
+        $field = 'information',
+        $editoroptions,
+        $context,
+        $component,
+        $filearea,
+        $itemid
+    );
 
     // Save data.
     $data->str_category = $categories[$data->category];
@@ -132,8 +150,15 @@ if ($data = $mform->get_data()) {
         $context = context_course::instance($course->id);
         $editoroptions = local_apsolu_courses_courses_edit_form::get_editor_options($course->id);
 
-        $data = file_postupdate_standard_editor($data, $field = 'information', $editoroptions,
-            $context, $component, $filearea, $itemid);
+        $data = file_postupdate_standard_editor(
+            $data,
+            $field = 'information',
+            $editoroptions,
+            $context,
+            $component,
+            $filearea,
+            $itemid
+        );
 
         $DB->set_field('apsolu_courses', 'information', $data->information, ['id' => $course->id]);
         $DB->set_field('apsolu_courses', 'informationformat', $data->informationformat, ['id' => $course->id]);

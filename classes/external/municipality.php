@@ -93,6 +93,6 @@ class municipality extends external_api {
                     OR am.name LIKE :query2
               ORDER BY am.name
                  LIMIT 20";
-        return $DB->get_records_sql($sql, ['query1' => $query.'%', 'query2' => $query.'%']);
+        return $DB->get_records_sql($sql, ['query1' => $query . '%', 'query2' => $query . '%']);
     }
 }

@@ -90,19 +90,19 @@ class attendance {
             $params['now'] = time();
         }
 
-        $sql = "SELECT aap.studentid, act.name, COUNT(*) AS total".
-            " FROM {apsolu_attendance_presences} aap".
-            " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid".
-            " JOIN {enrol} e ON e.courseid = aas.courseid".
-            " JOIN {apsolu_calendars} ac ON e.customchar1 = ac.id".
-            " JOIN {apsolu_calendars_types} act ON act.id = ac.typeid".
-            " JOIN {course} c ON c.id = aas.courseid".
-            " WHERE c.category = :categoryid".
-            " AND e.enrol = 'select'".
-            " AND aas.sessiontime BETWEEN ac.coursestartdate AND ac.courseenddate".
-            " AND aap.statusid != 4". // Exclus les absences.
-            " ".implode(' ', $conditions).
-            " GROUP BY act.id, aap.studentid".
+        $sql = "SELECT aap.studentid, act.name, COUNT(*) AS total" .
+            " FROM {apsolu_attendance_presences} aap" .
+            " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid" .
+            " JOIN {enrol} e ON e.courseid = aas.courseid" .
+            " JOIN {apsolu_calendars} ac ON e.customchar1 = ac.id" .
+            " JOIN {apsolu_calendars_types} act ON act.id = ac.typeid" .
+            " JOIN {course} c ON c.id = aas.courseid" .
+            " WHERE c.category = :categoryid" .
+            " AND e.enrol = 'select'" .
+            " AND aas.sessiontime BETWEEN ac.coursestartdate AND ac.courseenddate" .
+            " AND aap.statusid != 4" . // Exclus les absences.
+            " " . implode(' ', $conditions) .
+            " GROUP BY act.id, aap.studentid" .
             " ORDER BY act.name";
         $presences = [];
         $recordset = $DB->get_recordset_sql($sql, $params);
@@ -138,18 +138,18 @@ class attendance {
             $params['now'] = time();
         }
 
-        $sql = "SELECT aap.studentid, act.name, COUNT(*) AS total".
-            " FROM {apsolu_attendance_presences} aap".
-            " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid".
-            " JOIN {enrol} e ON e.courseid = aas.courseid".
-            " JOIN {apsolu_calendars} ac ON e.customchar1 = ac.id".
-            " JOIN {apsolu_calendars_types} act ON act.id = ac.typeid".
-            " WHERE aas.courseid = :courseid".
-            " AND e.enrol = 'select'".
-            " AND aas.sessiontime BETWEEN ac.coursestartdate AND ac.courseenddate".
-            " AND aap.statusid != 4". // Exclus les absences.
-            " ".implode(' ', $conditions).
-            " GROUP BY act.id, aap.studentid".
+        $sql = "SELECT aap.studentid, act.name, COUNT(*) AS total" .
+            " FROM {apsolu_attendance_presences} aap" .
+            " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid" .
+            " JOIN {enrol} e ON e.courseid = aas.courseid" .
+            " JOIN {apsolu_calendars} ac ON e.customchar1 = ac.id" .
+            " JOIN {apsolu_calendars_types} act ON act.id = ac.typeid" .
+            " WHERE aas.courseid = :courseid" .
+            " AND e.enrol = 'select'" .
+            " AND aas.sessiontime BETWEEN ac.coursestartdate AND ac.courseenddate" .
+            " AND aap.statusid != 4" . // Exclus les absences.
+            " " . implode(' ', $conditions) .
+            " GROUP BY act.id, aap.studentid" .
             " ORDER BY act.name";
         $presences = [];
         $recordset = $DB->get_recordset_sql($sql, $params);
@@ -181,21 +181,21 @@ class attendance {
         $params = [];
         $params['sessionid'] = $sessionid;
 
-        $sql = "SELECT aap.studentid, act.name, COUNT(*) AS total_activity,".
-            " SUM( CASE WHEN aas.courseid = aas_c.courseid THEN 1 ELSE 0 END) AS total_course".
-            " FROM {apsolu_attendance_sessions} aas_c".
-            " JOIN {course} c_cur ON c_cur.id = aas_c.courseid".
-            " JOIN {course} c ON (c.category = c_cur.category)".
-            " JOIN {apsolu_attendance_sessions} aas ON aas.courseid = c.id".
-            " JOIN {apsolu_attendance_presences} aap ON aap.sessionid = aas.id".
-            " JOIN {enrol} e ON e.courseid = aas.courseid".
-            " JOIN {apsolu_calendars} ac ON e.customchar1 = ac.id".
-            " JOIN {apsolu_calendars_types} act ON act.id = ac.typeid".
-            " WHERE aas_c.id = :sessionid".
-            " AND ac.coursestartdate < aas_c.sessiontime AND ac.courseenddate > aas_c.sessiontime".
-            " AND e.enrol = 'select'".
-            " AND aas.sessiontime BETWEEN ac.coursestartdate AND ac.courseenddate".
-            " AND aap.statusid != 4". // Exclus les absences.
+        $sql = "SELECT aap.studentid, act.name, COUNT(*) AS total_activity," .
+            " SUM( CASE WHEN aas.courseid = aas_c.courseid THEN 1 ELSE 0 END) AS total_course" .
+            " FROM {apsolu_attendance_sessions} aas_c" .
+            " JOIN {course} c_cur ON c_cur.id = aas_c.courseid" .
+            " JOIN {course} c ON (c.category = c_cur.category)" .
+            " JOIN {apsolu_attendance_sessions} aas ON aas.courseid = c.id" .
+            " JOIN {apsolu_attendance_presences} aap ON aap.sessionid = aas.id" .
+            " JOIN {enrol} e ON e.courseid = aas.courseid" .
+            " JOIN {apsolu_calendars} ac ON e.customchar1 = ac.id" .
+            " JOIN {apsolu_calendars_types} act ON act.id = ac.typeid" .
+            " WHERE aas_c.id = :sessionid" .
+            " AND ac.coursestartdate < aas_c.sessiontime AND ac.courseenddate > aas_c.sessiontime" .
+            " AND e.enrol = 'select'" .
+            " AND aas.sessiontime BETWEEN ac.coursestartdate AND ac.courseenddate" .
+            " AND aap.statusid != 4" . // Exclus les absences.
             " GROUP BY aap.studentid";
         $presences = [];
         $recordset = $DB->get_recordset_sql($sql, $params);
@@ -233,14 +233,14 @@ class attendance {
 
         $courses = [];
 
-        $sql = "SELECT c.id, c.fullname, aas.name AS sessionname, aas.sessiontime,".
-            " aass.shortlabel, aass.longlabel, aass.sumlabel, aass.color, ac.starttime, ac.endtime".
-            " FROM {course} c".
-            " JOIN {apsolu_courses} ac ON c.id = ac.id".
-            " JOIN {apsolu_attendance_sessions} aas ON c.id = aas.courseid".
-            " JOIN {apsolu_attendance_presences} aap ON aas.id = aap.sessionid".
-            " JOIN {apsolu_attendance_statuses} aass ON aass.id = aap.statusid".
-            " WHERE aap.studentid = :userid".
+        $sql = "SELECT c.id, c.fullname, aas.name AS sessionname, aas.sessiontime," .
+            " aass.shortlabel, aass.longlabel, aass.sumlabel, aass.color, ac.starttime, ac.endtime" .
+            " FROM {course} c" .
+            " JOIN {apsolu_courses} ac ON c.id = ac.id" .
+            " JOIN {apsolu_attendance_sessions} aas ON c.id = aas.courseid" .
+            " JOIN {apsolu_attendance_presences} aap ON aas.id = aap.sessionid" .
+            " JOIN {apsolu_attendance_statuses} aass ON aass.id = aap.statusid" .
+            " WHERE aap.studentid = :userid" .
             " ORDER BY c.fullname, aas.sessiontime";
         $recordset = $DB->get_recordset_sql($sql, ['userid' => $userid]);
         foreach ($recordset as $record) {
@@ -274,15 +274,15 @@ class attendance {
     public static function getUserPresences($userid) {
         global $DB;
 
-        $sql = "SELECT e.id, COUNT(*) AS total".
-            " FROM {apsolu_attendance_presences} aap".
-            " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid".
-            " JOIN {enrol} e ON e.courseid = aas.courseid".
-            " JOIN {apsolu_calendars} ac ON e.customchar1 = ac.id".
-            " WHERE aap.studentid = :userid".
-            " AND e.enrol = 'select'".
-            " AND aas.sessiontime BETWEEN ac.coursestartdate AND ac.courseenddate".
-            " AND aap.statusid != 4". // Exclus les absences.
+        $sql = "SELECT e.id, COUNT(*) AS total" .
+            " FROM {apsolu_attendance_presences} aap" .
+            " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid" .
+            " JOIN {enrol} e ON e.courseid = aas.courseid" .
+            " JOIN {apsolu_calendars} ac ON e.customchar1 = ac.id" .
+            " WHERE aap.studentid = :userid" .
+            " AND e.enrol = 'select'" .
+            " AND aas.sessiontime BETWEEN ac.coursestartdate AND ac.courseenddate" .
+            " AND aap.statusid != 4" . // Exclus les absences.
             " GROUP BY e.id";
 
         return $DB->get_records_sql($sql, ['userid' => $userid]);
@@ -299,13 +299,13 @@ class attendance {
 
         $params = [];
         $params['sessionid'] = $sessionid;
-        $sql = "SELECT act.name".
-            " FROM {apsolu_attendance_sessions} aas".
-            " JOIN {enrol} e ON e.courseid = aas.courseid".
-            " JOIN {apsolu_calendars} ac ON e.customchar1 = ac.id".
-            " JOIN {apsolu_calendars_types} act ON act.id = ac.typeid".
-            " WHERE aas.id = :sessionid ".
-            " AND e.enrol = 'select'".
+        $sql = "SELECT act.name" .
+            " FROM {apsolu_attendance_sessions} aas" .
+            " JOIN {enrol} e ON e.courseid = aas.courseid" .
+            " JOIN {apsolu_calendars} ac ON e.customchar1 = ac.id" .
+            " JOIN {apsolu_calendars_types} act ON act.id = ac.typeid" .
+            " WHERE aas.id = :sessionid " .
+            " AND e.enrol = 'select'" .
             " AND aas.sessiontime BETWEEN ac.coursestartdate AND ac.courseenddate";
 
         return $DB->get_field_sql($sql, $params);

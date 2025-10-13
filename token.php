@@ -38,9 +38,9 @@ if (!$CFG->enablewebservices) {
 $response = new stdClass();
 $response->token = null;
 
-$sql = "SELECT uid.*".
-    " FROM {user_info_data} uid".
-    " JOIN {user_info_field} uif ON uif.id = uid.fieldid AND uif.shortname = 'apsoluidcardnumber'".
+$sql = "SELECT uid.*" .
+    " FROM {user_info_data} uid" .
+    " JOIN {user_info_field} uif ON uif.id = uid.fieldid AND uif.shortname = 'apsoluidcardnumber'" .
     " WHERE uid.data = :data";
 $card = $DB->get_record_sql($sql, ['data' => $cardnumber]);
 

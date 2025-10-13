@@ -22,14 +22,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\federation\activity as Activity;
-use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\core\federation\activity;
+use local_apsolu\core\federation\adhesion;
 use UniversiteRennes2\Apsolu\Payment;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/user/profile/lib.php');
-require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
+require_once($CFG->dirroot . '/user/profile/lib.php');
+require_once($CFG->dirroot . '/local/apsolu/classes/apsolu/payment.php');
 
 $getconfig = get_config('local_apsolu');
 
@@ -103,14 +103,22 @@ if (empty($adhesion->data->medicalcertificatedate) === false) {
 // On récupère les certificats.
 $fs = get_file_storage();
 $context = context_course::instance($federationcourse->id, MUST_EXIST);
-list($component, $filearea, $itemid) = ['local_apsolu', 'medicalcertificate', $USER->id];
+[$component, $filearea, $itemid] = ['local_apsolu', 'medicalcertificate', $USER->id];
 $sort = 'itemid, filepath, filename';
 $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
 
 $items = [];
 foreach ($files as $file) {
-    $url = moodle_url::make_pluginfile_url($context->id, $component, $filearea, $itemid, '/',
-        $file->get_filename(), $forcedownload = false, $includetoken = false);
+    $url = moodle_url::make_pluginfile_url(
+        $context->id,
+        $component,
+        $filearea,
+        $itemid,
+        '/',
+        $file->get_filename(),
+        $forcedownload = false,
+        $includetoken = false
+    );
     $items[] = html_writer::link($url, $file->get_filename());
 }
 

@@ -16,7 +16,7 @@
 
 namespace local_apsolu\core;
 
-use local_apsolu\core\course as Course;
+use local_apsolu\core\course;
 use stdClass;
 
 /**
@@ -86,8 +86,14 @@ class skill extends record {
 
                     $moodlecourse = new stdClass();
                     $moodlecourse->id = $course->id;
-                    $moodlecourse->fullname = Course::get_fullname($data->str_category, $course->event, $course->weekday,
-                        $course->starttime, $course->endtime, $data->str_skill);
+                    $moodlecourse->fullname = Course::get_fullname(
+                        $data->str_category,
+                        $course->event,
+                        $course->weekday,
+                        $course->starttime,
+                        $course->endtime,
+                        $data->str_skill
+                    );
                     $moodlecourse->shortname = Course::get_shortname($course->id, $moodlecourse->fullname);
                     $DB->update_record('course', $moodlecourse);
                 }

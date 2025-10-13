@@ -28,10 +28,10 @@ use local_apsolu\core\federation\activity;
 use local_apsolu\core\federation\adhesion;
 use local_apsolu\core\federation\course as FederationCourse;
 
-require_once(__DIR__.'/../../../../config.php');
-require_once($CFG->dirroot.'/user/profile/lib.php');
-require_once($CFG->libdir.'/excellib.class.php');
-require_once(__DIR__.'/export_form.php');
+require_once(__DIR__ . '/../../../../config.php');
+require_once($CFG->dirroot . '/user/profile/lib.php');
+require_once($CFG->libdir . '/excellib.class.php');
+require_once(__DIR__ . '/export_form.php');
 
 $PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('admin');
@@ -104,8 +104,8 @@ $mform = new local_apsolu_federation_export_form(null, $customdata);
 if ($data = $mform->get_data()) {
     $fields = fields::for_userpic()->get_sql('u');
 
-    $sql = "SELECT ".substr($fields->selects, 1).", u.idnumber, u.institution, u.department, uid1.data AS ufr, uid2.data AS cycle,
-                   afac.name AS mainsport, afa.sex, afa.federationnumber
+    $sql = "SELECT " . substr($fields->selects, 1) . ", u.idnumber, u.institution, u.department, uid1.data AS ufr,
+                   uid2.data AS cycle, afac.name AS mainsport, afa.sex, afa.federationnumber
               FROM {user} u
               JOIN {apsolu_federation_adhesions} afa ON u.id = afa.userid
               JOIN {apsolu_federation_activities} afac ON afac.id = afa.mainsport
@@ -119,7 +119,7 @@ if ($data = $mform->get_data()) {
 
     // Champ activités.
     if (isset($data->activities[0])) {
-        list($sqlin, $sqlparams) = $DB->get_in_or_equal($data->activities, SQL_PARAMS_NAMED, 'activities_');
+        [$sqlin, $sqlparams] = $DB->get_in_or_equal($data->activities, SQL_PARAMS_NAMED, 'activities_');
 
         $sql .= sprintf(' AND afa.mainsport %s', $sqlin);
         $params = array_merge($params, $sqlparams);
@@ -133,7 +133,7 @@ if ($data = $mform->get_data()) {
 
     // Champ institutions.
     if (isset($data->institutions[0])) {
-        list($sqlin, $sqlparams) = $DB->get_in_or_equal($data->institutions, SQL_PARAMS_NAMED, 'institution_');
+        [$sqlin, $sqlparams] = $DB->get_in_or_equal($data->institutions, SQL_PARAMS_NAMED, 'institution_');
 
         $sql .= sprintf(' AND u.institution %s', $sqlin);
         $params = array_merge($params, $sqlparams);
@@ -141,7 +141,7 @@ if ($data = $mform->get_data()) {
 
     // Champ UFR.
     if (isset($data->ufrs[0]) === true) {
-        list($sqlin, $sqlparams) = $DB->get_in_or_equal($data->ufrs, SQL_PARAMS_NAMED, 'ufr_');
+        [$sqlin, $sqlparams] = $DB->get_in_or_equal($data->ufrs, SQL_PARAMS_NAMED, 'ufr_');
 
         $sql .= sprintf(' AND uid.data %s', $sqlin);
         $params = array_merge($params, $sqlparams);
@@ -149,7 +149,7 @@ if ($data = $mform->get_data()) {
 
     // Champ départements.
     if (isset($data->departments[0]) === true) {
-        list($sqlin, $sqlparams) = $DB->get_in_or_equal($data->departments, SQL_PARAMS_NAMED, 'department_');
+        [$sqlin, $sqlparams] = $DB->get_in_or_equal($data->departments, SQL_PARAMS_NAMED, 'department_');
 
         $sql .= sprintf(' AND u.department %s', $sqlin);
         $params = array_merge($params, $sqlparams);
@@ -164,12 +164,12 @@ if ($data = $mform->get_data()) {
                 continue;
             }
 
-            $lastnames[] = 'u.lastname LIKE :lastname'.$i;
-            $params['lastname'.$i] = '%'.$lastname.'%';
+            $lastnames[] = 'u.lastname LIKE :lastname' . $i;
+            $params['lastname' . $i] = '%' . $lastname . '%';
         }
 
         if (isset($lastnames[0])) {
-            $sql .= ' AND ( '.implode(' OR ', $lastnames).' )';
+            $sql .= ' AND ( ' . implode(' OR ', $lastnames) . ' )';
         }
     }
 
@@ -181,7 +181,7 @@ if ($data = $mform->get_data()) {
         $data = new stdClass();
         $data->users = [];
         $data->count_users = 0;
-        $data->action = $CFG->wwwroot.'/blocks/apsolu_dashboard/notify.php';
+        $data->action = $CFG->wwwroot . '/blocks/apsolu_dashboard/notify.php';
 
         $recordset = $DB->get_recordset_sql($sql, $params);
         foreach ($recordset as $user) {
@@ -193,7 +193,7 @@ if ($data = $mform->get_data()) {
     } else {
         // Export au format excel.
         $workbook = new MoodleExcelWorkbook("-");
-        $workbook->send('liste_etudiants_ffsu_'.time().'.xls');
+        $workbook->send('liste_etudiants_ffsu_' . time() . '.xls');
         $myxls = $workbook->add_worksheet();
 
         if (class_exists('PHPExcel_Style_Border') === true) {

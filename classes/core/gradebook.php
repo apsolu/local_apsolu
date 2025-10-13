@@ -125,15 +125,15 @@ class gradebook {
 
         if ($contextlevel === CONTEXT_SYSTEM) {
             // Requête pour les gestionnaires.
-            $sql = "SELECT DISTINCT c.*".
-                " FROM {course} c".
-                " JOIN {course_categories} cc ON cc.id = c.category".
-                " JOIN {enrol} e ON c.id = e.courseid".
-                " JOIN {apsolu_courses} ac ON ac.id = c.id".
-                " JOIN {context} ctx ON c.id = ctx.instanceid AND ctx.contextlevel = :context_course".
-                " JOIN {role_assignments} ra ON ctx.id = ra.contextid AND ra.roleid IN (".implode(',', $gradableroles).")".
-                " WHERE e.enrol = 'select'".
-                " AND e.status = 0".
+            $sql = "SELECT DISTINCT c.*" .
+                " FROM {course} c" .
+                " JOIN {course_categories} cc ON cc.id = c.category" .
+                " JOIN {enrol} e ON c.id = e.courseid" .
+                " JOIN {apsolu_courses} ac ON ac.id = c.id" .
+                " JOIN {context} ctx ON c.id = ctx.instanceid AND ctx.contextlevel = :context_course" .
+                " JOIN {role_assignments} ra ON ctx.id = ra.contextid AND ra.roleid IN (" . implode(',', $gradableroles) . ")" .
+                " WHERE e.enrol = 'select'" .
+                " AND e.status = 0" .
                 " ORDER BY cc.name, ac.numweekday, ac.starttime";
         } else {
             // Récupère la liste des rôles pouvant évaluer.
@@ -143,19 +143,19 @@ class gradebook {
             }
 
             // Requête pour les enseignants.
-            $sql = "SELECT DISTINCT c.*".
-                " FROM {course} c".
-                " JOIN {course_categories} cc ON cc.id = c.category".
-                " JOIN {enrol} e ON c.id = e.courseid".
-                " JOIN {apsolu_courses} ac ON ac.id = c.id".
-                " JOIN {context} ctx ON c.id = ctx.instanceid AND ctx.contextlevel = :context_course".
-                " JOIN {role_assignments} ra ON ctx.id = ra.contextid AND ra.roleid IN (".implode(',', $gradableroles).")".
-                " WHERE e.enrol = 'select'".
-                " AND e.status = 0".
+            $sql = "SELECT DISTINCT c.*" .
+                " FROM {course} c" .
+                " JOIN {course_categories} cc ON cc.id = c.category" .
+                " JOIN {enrol} e ON c.id = e.courseid" .
+                " JOIN {apsolu_courses} ac ON ac.id = c.id" .
+                " JOIN {context} ctx ON c.id = ctx.instanceid AND ctx.contextlevel = :context_course" .
+                " JOIN {role_assignments} ra ON ctx.id = ra.contextid AND ra.roleid IN (" . implode(',', $gradableroles) . ")" .
+                " WHERE e.enrol = 'select'" .
+                " AND e.status = 0" .
                 " AND ctx.id IN (SELECT contextid
                                    FROM {role_assignments}
                                   WHERE userid = :userid
-                                    AND roleid IN (".implode(',', $graderroles)."))".
+                                    AND roleid IN (" . implode(',', $graderroles) . "))" .
                 " ORDER BY cc.name, ac.numweekday, ac.starttime";
             $params['userid'] = $USER->id;
         }
@@ -268,12 +268,12 @@ class gradebook {
         // Récupération des enseignants.
         $teachers = [];
         if (isset($options['teachers']) === true || isset($fields['teachers']) === true) {
-            $sql = "SELECT c.id AS courseid, u.*".
-                " FROM {user} u".
-                " JOIN {role_assignments} ra ON u.id = ra.userid".
-                " JOIN {context} ctx ON ctx.id = ra.contextid".
-                " JOIN {apsolu_courses} c ON ctx.instanceid = c.id".
-                " WHERE ra.roleid = 3". // Enseignant.
+            $sql = "SELECT c.id AS courseid, u.*" .
+                " FROM {user} u" .
+                " JOIN {role_assignments} ra ON u.id = ra.userid" .
+                " JOIN {context} ctx ON ctx.id = ra.contextid" .
+                " JOIN {apsolu_courses} c ON ctx.instanceid = c.id" .
+                " WHERE ra.roleid = 3" . // Enseignant.
                 " ORDER BY u.lastname, u.firstname";
             $recordset = $DB->get_recordset_sql($sql);
             foreach ($recordset as $record) {
@@ -291,10 +291,10 @@ class gradebook {
 
         // Récupération des notes.
         $grades = [];
-        $sql = "SELECT gi.itemname, gi.grademax, gg.userid, gg.finalgrade, gg.feedback, gi.courseid, gi.iteminfo,".
-            " u.firstname, u.lastname, u.lastnamephonetic, u.firstnamephonetic, u.middlename, u.alternatename".
-            " FROM {grade_items} gi".
-            " JOIN {grade_grades} gg ON gi.id = gg.itemid".
+        $sql = "SELECT gi.itemname, gi.grademax, gg.userid, gg.finalgrade, gg.feedback, gi.courseid, gi.iteminfo," .
+            " u.firstname, u.lastname, u.lastnamephonetic, u.firstnamephonetic, u.middlename, u.alternatename" .
+            " FROM {grade_items} gi" .
+            " JOIN {grade_grades} gg ON gi.id = gg.itemid" .
             " LEFT JOIN {user} u ON u.id = gg.usermodified";
         $recordset = $DB->get_recordset_sql($sql);
         foreach ($recordset as $grade) {
@@ -305,7 +305,7 @@ class gradebook {
             }
 
             // On stocke toutes les notes attendues.
-            list($apsolugradeitemid, $name) = explode('-', $grade->itemname, 2);
+            [$apsolugradeitemid, $name] = explode('-', $grade->itemname, 2);
             if (isset($gradeitems[$apsolugradeitemid]) === false) {
                 continue;
             }
@@ -354,7 +354,7 @@ class gradebook {
         // Extraction des catégories de cours.
         $options['categories'] = [];
         foreach ($options['courses'] as $key => $value) {
-            list($categoryid, $courseid) = explode('-', $value);
+            [$categoryid, $courseid] = explode('-', $value);
             if ($courseid === '0') {
                 // Traite une activité.
                 $options['categories'][$categoryid] = $categoryid;
@@ -447,7 +447,7 @@ class gradebook {
         }
 
         if (isset($options['fullnameuser']) === true && empty($options['fullnameuser']) === false) {
-            $params[] = '%'.$options['fullnameuser'].'%';
+            $params[] = '%' . $options['fullnameuser'] . '%';
             $conditions[] = sprintf(" AND %s LIKE ? ", $DB->sql_fullname('u.firstname', 'u.lastname'));
         }
 
@@ -455,24 +455,24 @@ class gradebook {
                        u.institution, uid1.data AS ufr, u.department,
                        u.lastnamephonetic, u.firstnamephonetic, u.middlename, u.alternatename, u.picture, u.imagealt,
                        uid2.data AS cycle, aca.id AS calendarid, aca.name AS calendar, c.id AS courseid, c.fullname AS course,
-                       cc.name AS category, cc2.name AS grouping, ra.roleid".
-            " FROM {user} u".
-            " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = ?".
-            " LEFT JOIN {user_info_data} uid2 ON u.id = uid2.userid AND uid2.fieldid = ?".
-            " LEFT JOIN {user_info_data} uid3 ON u.id = uid3.userid AND uid3.fieldid = ?".
-            " JOIN {user_enrolments} ue ON u.id = ue.userid AND ue.status = 0".
-            " JOIN {enrol} e ON e.id = ue.enrolid AND e.enrol = 'select' AND e.status = 0".
-            " JOIN {apsolu_calendars} aca ON aca.id = e.customchar1".
-            " JOIN {course} c ON c.id = e.courseid".
-            " JOIN {course_categories} cc ON cc.id = c.category".
-            " JOIN {course_categories} cc2 ON cc2.id = cc.parent".
-            " JOIN {apsolu_courses} ac ON ac.id = c.id".
-            " JOIN {apsolu_locations} al ON al.id = ac.locationid".
-            " JOIN {apsolu_areas} aa ON aa.id = al.areaid".
-            " JOIN {apsolu_cities} act ON act.id = aa.cityid".
-            " JOIN {context} ctx ON c.id = ctx.instanceid AND ctx.contextlevel = ?".
-            " JOIN {role_assignments} ra ON ctx.id = ra.contextid AND ra.itemid = e.id AND ra.userid = u.id".
-            " WHERE u.deleted = 0".implode(' ', $conditions).
+                       cc.name AS category, cc2.name AS grouping, ra.roleid" .
+            " FROM {user} u" .
+            " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = ?" .
+            " LEFT JOIN {user_info_data} uid2 ON u.id = uid2.userid AND uid2.fieldid = ?" .
+            " LEFT JOIN {user_info_data} uid3 ON u.id = uid3.userid AND uid3.fieldid = ?" .
+            " JOIN {user_enrolments} ue ON u.id = ue.userid AND ue.status = 0" .
+            " JOIN {enrol} e ON e.id = ue.enrolid AND e.enrol = 'select' AND e.status = 0" .
+            " JOIN {apsolu_calendars} aca ON aca.id = e.customchar1" .
+            " JOIN {course} c ON c.id = e.courseid" .
+            " JOIN {course_categories} cc ON cc.id = c.category" .
+            " JOIN {course_categories} cc2 ON cc2.id = cc.parent" .
+            " JOIN {apsolu_courses} ac ON ac.id = c.id" .
+            " JOIN {apsolu_locations} al ON al.id = ac.locationid" .
+            " JOIN {apsolu_areas} aa ON aa.id = al.areaid" .
+            " JOIN {apsolu_cities} act ON act.id = aa.cityid" .
+            " JOIN {context} ctx ON c.id = ctx.instanceid AND ctx.contextlevel = ?" .
+            " JOIN {role_assignments} ra ON ctx.id = ra.contextid AND ra.itemid = e.id AND ra.userid = u.id" .
+            " WHERE u.deleted = 0" . implode(' ', $conditions) .
             " ORDER BY u.lastname, u.firstname, u.institution, u.department";
         $recordset = $DB->get_recordset_sql($sql, $params);
 
@@ -530,8 +530,10 @@ class gradebook {
 
         $gradebooks->users = [];
         foreach ($recordset as $user) {
-            if (isset($options['institutions']) === true &&
-                in_array($user->institution, $options['institutions'], $strict = true) === false) {
+            if (
+                isset($options['institutions']) === true &&
+                in_array($user->institution, $options['institutions'], $strict = true) === false
+            ) {
                 continue;
             }
 
@@ -539,8 +541,10 @@ class gradebook {
                 continue;
             }
 
-            if (isset($options['departments']) === true &&
-                in_array($user->department, $options['departments'], $strict = true) === false) {
+            if (
+                isset($options['departments']) === true &&
+                in_array($user->department, $options['departments'], $strict = true) === false
+            ) {
                 continue;
             }
 
@@ -642,7 +646,7 @@ class gradebook {
                     $grade->abj = false;
                     $grade->value = null;
                     $grade->max = $item->grademax;
-                    $grade->inputname = $user->id.'-'.$user->courseid.'-'.$apsolugradeitemid;
+                    $grade->inputname = $user->id . '-' . $user->courseid . '-' . $apsolugradeitemid;
 
                     if (isset($grades[$user->id][$user->courseid][$apsolugradeitemid]) === true) {
                         $value = $grades[$user->id][$user->courseid][$apsolugradeitemid]->grade;
@@ -776,7 +780,7 @@ class gradebook {
         $gradeitems = [];
 
         foreach ($grades as $gradename => $value) {
-            list($userid, $courseid, $apsolugradeitemid) = explode('-', $gradename, 3);
+            [$userid, $courseid, $apsolugradeitemid] = explode('-', $gradename, 3);
 
             if (isset($gradeitems[$courseid]) === false) {
                 $gradeitems[$courseid] = [];
@@ -816,8 +820,10 @@ class gradebook {
             }
 
             $currentgrade = grade_grade::fetch(['itemid' => $item->id, 'userid' => $userid]);
-            if ($currentgrade !== false && grade_floats_different($currentgrade->finalgrade, $grade->finalgrade) === false &&
-                $currentgrade->feedback === $grade->feedback) {
+            if (
+                $currentgrade !== false && grade_floats_different($currentgrade->finalgrade, $grade->finalgrade) === false &&
+                $currentgrade->feedback === $grade->feedback
+            ) {
                 // La note n'a pas changé, on continue.
                 continue;
             }

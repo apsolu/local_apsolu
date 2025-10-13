@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot.'/local/apsolu/locallib.php');
-require_once($CFG->dirroot.'/local/apsolu/payment/notifications/compose_form.php');
+require_once($CFG->dirroot . '/local/apsolu/locallib.php');
+require_once($CFG->dirroot . '/local/apsolu/payment/notifications/compose_form.php');
 
 // Generate object.
 $compose = new stdClass();
@@ -54,13 +54,13 @@ if ($data = $mform->get_data()) {
 
     if (empty($data->simulation) === false) {
         // TODO: créer un champ dédié à la simulation dans la table.
-        $compose->subject = '[x] '.$compose->subject;
+        $compose->subject = '[x] ' . $compose->subject;
     }
 
     $compose->cards = [];
 
     foreach ($cards as $card) {
-        $field = 'card'.$card->id;
+        $field = 'card' . $card->id;
         if (isset($data->{$field}) === true) {
             $compose->cards[] = $card->id;
         }
@@ -86,8 +86,12 @@ if ($data = $mform->get_data()) {
         $message = get_string('dunningsaved', 'local_apsolu');
     }
 
-    redirect(new moodle_url('/local/apsolu/payment/admin.php', ['tab' => 'notifications', 'action' => 'history']),
-        $message, 5, \core\output\notification::NOTIFY_SUCCESS);
+    redirect(
+        new moodle_url('/local/apsolu/payment/admin.php', ['tab' => 'notifications', 'action' => 'history']),
+        $message,
+        5,
+        \core\output\notification::NOTIFY_SUCCESS
+    );
 }
 
 echo $mform->render();

@@ -22,12 +22,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\federation as Federation;
+use local_apsolu\core\federation;
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot.'/local/apsolu/configuration/special_courses_form.php');
-require_once($CFG->dirroot.'/group/lib.php');
+require_once($CFG->dirroot . '/local/apsolu/configuration/special_courses_form.php');
+require_once($CFG->dirroot . '/group/lib.php');
 
 // Build form.
 $attributes = [

@@ -44,7 +44,7 @@ class local_apsolu_messaging_form extends moodleform {
     protected function definition() {
         $mform = $this->_form;
 
-        list($defaults) = $this->_customdata;
+        [$defaults] = $this->_customdata;
 
         // Functional contact.
         $mform->addElement('text', 'functional_contact', get_string('functional_contact', 'local_apsolu'), ['size' => '48']);
@@ -74,8 +74,12 @@ class local_apsolu_messaging_form extends moodleform {
         $label = get_string('default_replyto_address', 'local_apsolu');
         $mform->addElement('select', 'defaultreplytoaddresspreference', $label, messaging::get_default_replyto_options());
         $mform->setType('defaultreplytoaddresspreference', PARAM_INT);
-        $mform->hideIf('defaultreplytoaddresspreference', 'replytoaddresspreference',
-            'neq', messaging::ALLOW_REPLYTO_ADDRESS_CHOICE);
+        $mform->hideIf(
+            'defaultreplytoaddresspreference',
+            'replytoaddresspreference',
+            'neq',
+            messaging::ALLOW_REPLYTO_ADDRESS_CHOICE
+        );
 
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));

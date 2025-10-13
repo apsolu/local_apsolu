@@ -166,7 +166,7 @@ final class holiday_test extends \advanced_testcase {
 
         // Ajoute un jour férié sur la prochaine session de cours.
         $holiday = new holiday();
-        $data->day = strtotime('next '.$course->weekday.' this week') + WEEKSECS;
+        $data->day = strtotime('next ' . $course->weekday . ' this week') + WEEKSECS;
         $holiday->save($data);
 
         // Vérifie qu'il y a toujours 2 sessions.

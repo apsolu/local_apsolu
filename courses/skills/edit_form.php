@@ -60,7 +60,7 @@ class local_apsolu_courses_skills_edit_form extends moodleform {
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 
         $attributes = new stdClass();
-        $attributes->href = $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=skills';
+        $attributes->href = $CFG->wwwroot . '/local/apsolu/courses/index.php?tab=skills';
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 

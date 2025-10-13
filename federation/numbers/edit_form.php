@@ -60,7 +60,7 @@ class local_apsolu_federation_numbers_edit_form extends moodleform {
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 
         $attributes = new stdClass();
-        $attributes->href = $CFG->wwwroot.'/local/apsolu/federation/index.php?page=numbers';
+        $attributes->href = $CFG->wwwroot . '/local/apsolu/federation/index.php?page=numbers';
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 

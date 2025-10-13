@@ -32,4 +32,4 @@ if (in_array($action, $actions, $strict = true) === false) {
     $action = 'view';
 }
 
-require(__DIR__.'/roles_'.$action.'.php');
+require(__DIR__ . '/roles_' . $action . '.php');

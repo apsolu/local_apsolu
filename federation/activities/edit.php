@@ -22,11 +22,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\federation\activity as Activity;
+use local_apsolu\core\federation\activity;
 
 defined('MOODLE_INTERNAL') || die;
 
-require(__DIR__.'/edit_form.php');
+require(__DIR__ . '/edit_form.php');
 
 // Get activity id.
 $activityid = optional_param('activityid', 0, PARAM_INT);
@@ -36,13 +36,13 @@ $activity = new Activity();
 $activity->load($activityid, $required = true);
 
 // Récupère la liste des activités APSOLU.
-$sql = "SELECT cc.id, cc.name".
-    " FROM {course_categories} cc".
-    " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id".
-    " WHERE cc.id NOT IN (".
+$sql = "SELECT cc.id, cc.name" .
+    " FROM {course_categories} cc" .
+    " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id" .
+    " WHERE cc.id NOT IN (" .
         // Sauf les catégories déjà associées, à l'exception de l'activité en cours d'édition.
-        "SELECT DISTINCT categoryid FROM {apsolu_federation_activities} WHERE categoryid != :categoryid".
-    ")".
+        "SELECT DISTINCT categoryid FROM {apsolu_federation_activities} WHERE categoryid != :categoryid" .
+    ")" .
     " ORDER BY cc.name";
 $categories = [];
 $categories[0] = '';

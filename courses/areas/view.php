@@ -24,9 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$sql = "SELECT a.id, a.name, c.name AS city".
-    " FROM {apsolu_areas} a".
-    " LEFT JOIN {apsolu_cities} c ON c.id = a.cityid".
+$sql = "SELECT a.id, a.name, c.name AS city" .
+    " FROM {apsolu_areas} a" .
+    " LEFT JOIN {apsolu_cities} c ON c.id = a.cityid" .
     " ORDER BY c.name, a.name";
 
 $areas = $DB->get_records_sql($sql);

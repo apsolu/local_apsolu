@@ -26,17 +26,17 @@
 
 use UniversiteRennes2\Apsolu\Payment;
 
-require(__DIR__.'/../../../config.php');
-require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
-require_once($CFG->dirroot.'/local/apsolu/locallib.php');
-require_once($CFG->dirroot.'/user/profile/lib.php');
+require(__DIR__ . '/../../../config.php');
+require_once($CFG->dirroot . '/local/apsolu/classes/apsolu/payment.php');
+require_once($CFG->dirroot . '/local/apsolu/locallib.php');
+require_once($CFG->dirroot . '/user/profile/lib.php');
 
 $PAGE->set_context(context_system::instance());
 
 $ip = getremoteaddr();
 $response = json_encode($_GET);
 
-$outputsuccesscontent = core_date::strftime('%c').' '.$ip.' :: '.$response.PHP_EOL;
+$outputsuccesscontent = core_date::strftime('%c') . ' ' . $ip . ' :: ' . $response . PHP_EOL;
 $payboxaddresses = explode(',', get_config('local_apsolu', 'paybox_servers_incoming'));
 
 try {
@@ -51,22 +51,22 @@ try {
     }
 
     if (in_array($ip, $payboxaddresses, true) === false) {
-        throw new Exception('Bad ip: '.$ip);
+        throw new Exception('Bad ip: ' . $ip);
     }
 
     if (!isset($_GET['Mt'], $_GET['Ref'], $_GET['Auto'], $_GET['Erreur'])) {
-        throw new Exception('Invalid args: '.var_export($_GET, true));
+        throw new Exception('Invalid args: ' . var_export($_GET, true));
     }
 
     // Récupère l'id dans le numéro de commande.
     $id = Payment::get_id_from_refid($_GET['Ref']);
     if ($id === false) {
-        throw new Exception('Unknown payment (cannot parse id): '.$_GET['Ref']);
+        throw new Exception('Unknown payment (cannot parse id): ' . $_GET['Ref']);
     }
 
     $payment = $DB->get_record('apsolu_payments', ['id' => $id]);
     if (!$payment) {
-        throw new Exception('Unknown payment (not found): '.$_GET['Ref']);
+        throw new Exception('Unknown payment (not found): ' . $_GET['Ref']);
     }
 
     $user = $DB->get_record('user', ['id' => $payment->userid]);
@@ -78,7 +78,7 @@ try {
         $user->username = 'inconnu';
         $userstr = $user->username;
     } else {
-        $userstr = $user->id.' - '.$user->firstname.' '.$user->lastname.' ('.$user->username.')';
+        $userstr = $user->id . ' - ' . $user->firstname . ' ' . $user->lastname . ' (' . $user->username . ')';
     }
 
     $transaction = new stdClass();
@@ -90,28 +90,28 @@ try {
 
     $transactionid = $DB->insert_record('apsolu_payments_transactions', $transaction);
     if (!$transactionid) {
-        throw new Exception('Unable to write in apsolu_payments_transactions: '.var_export($transaction, true));
+        throw new Exception('Unable to write in apsolu_payments_transactions: ' . var_export($transaction, true));
     }
 
     if ($_GET['Erreur'] !== '00000') {
-        throw new Exception('Error from paybox: '.$_GET['Erreur']);
+        throw new Exception('Error from paybox: ' . $_GET['Erreur']);
     }
 
     $payment->status = 1;
     $payment->timepaid = core_date::strftime('%FT%T');
     if (!$DB->update_record('apsolu_payments', $payment)) {
-        throw new Exception('Unable to write in apsolu_payments: '.var_export($payment, true));
+        throw new Exception('Unable to write in apsolu_payments: ' . var_export($payment, true));
     }
 
-    $outputsuccesscontent .= core_date::strftime('%c').' '.$ip.' :: OK for user '.$userstr.PHP_EOL;
+    $outputsuccesscontent .= core_date::strftime('%c') . ' ' . $ip . ' :: OK for user ' . $userstr . PHP_EOL;
 
     if (!file_put_contents($outputsuccess, $outputsuccesscontent, FILE_APPEND | LOCK_EX)) {
-        throw new Exception('Can\'t write in '.$outputsuccess);
+        throw new Exception('Can\'t write in ' . $outputsuccess);
     }
 } catch (Exception $exception) {
-    $trace = $exception->getMessage().PHP_EOL.$outputsuccesscontent;
+    $trace = $exception->getMessage() . PHP_EOL . $outputsuccesscontent;
 
     if (empty($outputerror) === false) {
-        file_put_contents($outputerror, $trace.PHP_EOL, FILE_APPEND | LOCK_EX);
+        file_put_contents($outputerror, $trace . PHP_EOL, FILE_APPEND | LOCK_EX);
     }
 }

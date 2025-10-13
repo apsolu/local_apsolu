@@ -57,7 +57,7 @@ foreach ($calendars as $calendar) {
             continue;
         }
 
-        $attribute = 'style_'.$field;
+        $attribute = 'style_' . $field;
         $calendar->{$attribute} = 'class="text-danger"';
     }
 

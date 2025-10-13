@@ -22,11 +22,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
+
 namespace UniversiteRennes2\Apsolu;
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot.'/user/selector/lib.php');
+require_once($CFG->dirroot . '/user/selector/lib.php');
 
 /**
  * Affiche le widget de recherche d'utilisateurs sur la page de paiement.
@@ -46,14 +48,14 @@ class local_apsolu_payment_user_selector extends \user_selector_base {
     public function find_users($search) {
         global $DB;
         // By default wherecondition retrieves all users except the deleted, not confirmed and guest.
-        list($wherecondition, $params) = $this->search_sql($search, 'u');
+        [$wherecondition, $params] = $this->search_sql($search, 'u');
 
         $fields      = 'SELECT ' . $this->required_fields_sql('u');
         $countfields = 'SELECT COUNT(1)';
 
         $sql = " FROM {user} u
                 WHERE $wherecondition";
-        list($sort, $sortparams) = users_order_by_sql('u', $search, $this->accesscontext);
+        [$sort, $sortparams] = users_order_by_sql('u', $search, $this->accesscontext);
         $order = ' ORDER BY ' . $sort;
 
         if (!$this->is_validating()) {
@@ -107,12 +109,12 @@ class local_apsolu_payment_user_selector extends \user_selector_base {
 function get_teachers($courseid) {
     global $DB;
 
-    $sql = "SELECT u.*".
-        " FROM {user} u".
-        " JOIN {role_assignments} ra ON u.id = ra.userid".
-        " JOIN {context} c ON c.id = ra.contextid".
-        " WHERE c.instanceid = :courseid".
-        " AND c.contextlevel = 50".
+    $sql = "SELECT u.*" .
+        " FROM {user} u" .
+        " JOIN {role_assignments} ra ON u.id = ra.userid" .
+        " JOIN {context} c ON c.id = ra.contextid" .
+        " WHERE c.instanceid = :courseid" .
+        " AND c.contextlevel = 50" .
         " AND ra.roleid = 3";
     return $DB->get_records_sql($sql, ['courseid' => $courseid]);
 }
@@ -135,18 +137,18 @@ class local_apsolu_courses_federation_user_selector extends \user_selector_base 
     public function find_users($search) {
         global $DB;
         // By default wherecondition retrieves all users except the deleted, not confirmed and guest.
-        list($wherecondition, $params) = $this->search_sql($search, 'u');
+        [$wherecondition, $params] = $this->search_sql($search, 'u');
 
         $fields      = 'SELECT ' . $this->required_fields_sql('u');
         $countfields = 'SELECT COUNT(1)';
 
-        $sql = " FROM {user} u".
-                " JOIN {role_assignments} ra ON u.id = ra.userid".
-                " JOIN {context} ctx ON ctx.id = ra.contextid".
-                " JOIN {course} c ON c.id = ctx.instanceid AND ctx.contextlevel = 50".
-                " JOIN {apsolu_complements} ac ON c.id = ac.id AND ac.federation = 1".
-                " WHERE ".$wherecondition;
-        list($sort, $sortparams) = users_order_by_sql('u', $search, $this->accesscontext);
+        $sql = " FROM {user} u" .
+                " JOIN {role_assignments} ra ON u.id = ra.userid" .
+                " JOIN {context} ctx ON ctx.id = ra.contextid" .
+                " JOIN {course} c ON c.id = ctx.instanceid AND ctx.contextlevel = 50" .
+                " JOIN {apsolu_complements} ac ON c.id = ac.id AND ac.federation = 1" .
+                " WHERE " . $wherecondition;
+        [$sort, $sortparams] = users_order_by_sql('u', $search, $this->accesscontext);
         $order = ' ORDER BY ' . $sort;
 
         if (!$this->is_validating()) {

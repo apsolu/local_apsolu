@@ -66,7 +66,7 @@ class number extends record {
         $DB->delete_records(get_called_class()::TABLENAME, ['id' => $this->id]);
 
         // Corrige le champ sortorder des autres objets.
-        $sql = "UPDATE {".self::TABLENAME."} SET sortorder = sortorder -1 WHERE sortorder > :sortorder";
+        $sql = "UPDATE {" . self::TABLENAME . "} SET sortorder = sortorder -1 WHERE sortorder > :sortorder";
         $DB->execute($sql, ['sortorder' => $this->sortorder]);
 
         // Valide la transaction en cours.

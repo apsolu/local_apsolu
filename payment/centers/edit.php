@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require(__DIR__.'/edit_form.php');
+require(__DIR__ . '/edit_form.php');
 
 // Get center id.
 $centerid = optional_param('centerid', 0, PARAM_INT);
@@ -80,10 +80,10 @@ if ($data = $mform->get_data()) {
     // Display notification and display elements list.
     $notificationform = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
 
-    require(__DIR__.'/view.php');
+    require(__DIR__ . '/view.php');
 } else {
     // Display form.
-    echo '<h1>'.get_string('center_add', 'local_apsolu').'</h1>';
+    echo '<h1>' . get_string('center_add', 'local_apsolu') . '</h1>';
 
     $mform->display();
 }

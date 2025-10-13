@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once(__DIR__.'/settings_form.php');
+require_once(__DIR__ . '/settings_form.php');
 
 // Chargement des préférences.
 $attributes = [

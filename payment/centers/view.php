@@ -28,7 +28,8 @@ $centers = $DB->get_records('apsolu_payments_centers', $conditions = [], $sort =
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
-$data->centers = [];;
+$data->centers = [];
+;
 $data->count_centers = 0;
 
 foreach ($centers as $center) {
@@ -39,7 +40,7 @@ foreach ($centers as $center) {
                 $center->{$field} = '* * * * * * * * * *';
             } else {
                 $length = strlen($center->{$field}) / 2;
-                $center->{$field} = substr($center->{$field}, 0, $length).str_repeat('#', $length);
+                $center->{$field} = substr($center->{$field}, 0, $length) . str_repeat('#', $length);
             }
         } else {
             $center->{$field} = get_string('missing', 'local_apsolu');

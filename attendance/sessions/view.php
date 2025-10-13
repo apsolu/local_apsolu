@@ -24,10 +24,10 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$sql = "SELECT ap.*, ac.numweekday, ac.starttime, al.name AS location".
-    " FROM {apsolu_periods} ap".
-    " JOIN {apsolu_courses} ac ON ap.id = ac.periodid".
-    " JOIN {apsolu_locations} al ON al.id = ac.locationid".
+$sql = "SELECT ap.*, ac.numweekday, ac.starttime, al.name AS location" .
+    " FROM {apsolu_periods} ap" .
+    " JOIN {apsolu_courses} ac ON ap.id = ac.periodid" .
+    " JOIN {apsolu_locations} al ON al.id = ac.locationid" .
     " WHERE ac.id = :courseid";
 $data->period = $DB->get_record_sql($sql, ['courseid' => $courseid]);
 
@@ -36,12 +36,12 @@ if ($data->period !== false) {
     $data->sessions = [];
     $data->count_sessions = 0;
 
-    $sql = "SELECT aas.*, COUNT(aap.id) AS count, al.name AS location".
-        " FROM {apsolu_attendance_sessions} aas".
-        " JOIN {apsolu_locations} al ON al.id = aas.locationid".
-        " LEFT JOIN {apsolu_attendance_presences} aap ON aas.id = aap.sessionid".
-        " WHERE courseid = :courseid".
-        " GROUP BY aas.id".
+    $sql = "SELECT aas.*, COUNT(aap.id) AS count, al.name AS location" .
+        " FROM {apsolu_attendance_sessions} aas" .
+        " JOIN {apsolu_locations} al ON al.id = aas.locationid" .
+        " LEFT JOIN {apsolu_attendance_presences} aap ON aas.id = aap.sessionid" .
+        " WHERE courseid = :courseid" .
+        " GROUP BY aas.id" .
         " ORDER BY aas.sessiontime";
 
     foreach ($DB->get_records_sql($sql, ['courseid' => $courseid]) as $session) {

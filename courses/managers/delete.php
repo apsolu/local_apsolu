@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-use local_apsolu\core\location as Location;
-use local_apsolu\core\manager as Manager;
+use local_apsolu\core\location;
+use local_apsolu\core\manager;
 
 $managerid = required_param('managerid', PARAM_INT);
 $delete = optional_param('delete', '', PARAM_ALPHANUM); // Confirmation hash.

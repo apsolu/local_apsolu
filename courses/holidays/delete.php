@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-use local_apsolu\core\holiday as Holiday;
+use local_apsolu\core\holiday;
 
 $holidayid = required_param('holidayid', PARAM_INT);
 $delete = optional_param('delete', '', PARAM_ALPHANUM); // Confirmation hash.

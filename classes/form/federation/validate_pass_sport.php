@@ -18,7 +18,7 @@ namespace local_apsolu\form\federation;
 
 use context_system;
 use core_date;
-use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\core\federation\adhesion;
 use local_apsolu\core\federation\course as FederationCourse;
 use local_apsolu\external\email;
 use local_apsolu\form\send_email_form;
@@ -27,7 +27,7 @@ use UniversiteRennes2\Apsolu\Payment;
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
+require_once($CFG->dirroot . '/local/apsolu/classes/apsolu/payment.php');
 
 /**
  * Modal form to send email.
@@ -144,7 +144,7 @@ class validate_pass_sport extends send_email_form {
         $message['carboncopysubject'] = '';
         if ($message['carboncopy'] === true) {
             if ($user !== false) {
-                $message['carboncopysubject'] = '['.$user->firstname.' '.$user->lastname.'] '.$message['subject'];
+                $message['carboncopysubject'] = '[' . $user->firstname . ' ' . $user->lastname . '] ' . $message['subject'];
             }
         }
         $message['body'] = $data->message['text'];

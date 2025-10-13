@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\federation\number as Number;
+use local_apsolu\core\federation\number;
 
 defined('MOODLE_INTERNAL') || die();
 

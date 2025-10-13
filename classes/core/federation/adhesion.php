@@ -20,8 +20,8 @@ use context_course;
 use DateTime;
 use Exception;
 use local_apsolu\core\federation\course as FederationCourse;
-use local_apsolu\core\federation\activity as Activity;
-use local_apsolu\core\federation\number as Number;
+use local_apsolu\core\federation\activity;
+use local_apsolu\core\federation\number;
 use local_apsolu\core\record;
 use local_apsolu\event\federation_adhesion_updated;
 use local_apsolu\event\notification_sent;
@@ -31,7 +31,7 @@ use UniversiteRennes2\Apsolu\Payment;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/cohort/lib.php');
+require_once($CFG->dirroot . '/cohort/lib.php');
 
 /**
  * Classe gérant les adhésions.
@@ -197,7 +197,7 @@ class adhesion extends record {
         if ($this->have_to_upload_parental_authorization() === true) {
             $fs = get_file_storage();
             $context = context_course::instance($federationcourse->id, MUST_EXIST);
-            list($component, $filearea, $itemid) = ['local_apsolu', 'parentalauthorization', $this->userid];
+            [$component, $filearea, $itemid] = ['local_apsolu', 'parentalauthorization', $this->userid];
             $sort = 'itemid, filepath, filename';
             $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
             if (count($files) === 0) {
@@ -209,7 +209,7 @@ class adhesion extends record {
         if ($this->have_to_upload_medical_certificate() === true) {
             $fs = get_file_storage();
             $context = context_course::instance($federationcourse->id, MUST_EXIST);
-            list($component, $filearea, $itemid) = ['local_apsolu', 'medicalcertificate', $this->userid];
+            [$component, $filearea, $itemid] = ['local_apsolu', 'medicalcertificate', $this->userid];
             $sort = 'itemid, filepath, filename';
             $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
             if (count($files) === 0) {
@@ -257,7 +257,7 @@ class adhesion extends record {
      */
     public static function get_contacts() {
         $messages = [];
-        $messages[] = get_string('your_request_is_being_processed', 'local_apsolu').'.';
+        $messages[] = get_string('your_request_is_being_processed', 'local_apsolu') . '.';
 
         $functionalcontactmail = get_config('local_apsolu', 'functional_contact');
         if (filter_var($functionalcontactmail, FILTER_VALIDATE_EMAIL) !== false) {

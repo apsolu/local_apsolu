@@ -23,7 +23,7 @@
  */
 
 use core_form\filetypes_util;
-use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\core\federation\adhesion;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -47,7 +47,7 @@ class local_apsolu_federation_parental_authorization extends moodleform {
 
         $mform = $this->_form;
 
-        list($adhesion, $course, $context, $freeze) = $this->_customdata;
+        [$adhesion, $course, $context, $freeze] = $this->_customdata;
 
         if ($freeze === true) {
             $mform->freeze();
@@ -62,32 +62,44 @@ class local_apsolu_federation_parental_authorization extends moodleform {
         $mform->setExpanded('primarylegalrepresentative', $expanded = true);
 
         // Civilité du représentant légal.
-        $mform->addElement('select', 'titleprimarylegalrepresentative',
-            get_string('title_primary_legal_representative', 'local_apsolu'), Adhesion::get_user_titles());
+        $mform->addElement(
+            'select',
+            'titleprimarylegalrepresentative',
+            get_string('title_primary_legal_representative', 'local_apsolu'),
+            Adhesion::get_user_titles()
+        );
         $mform->setType('titleprimarylegalrepresentative', PARAM_TEXT);
         $mform->addRule('titleprimarylegalrepresentative', get_string('required'), 'required', null, 'client');
 
         // Nom du représentant légal.
-        $mform->addElement('text', 'lastnameprimarylegalrepresentative', get_string('lastname_primary_legal_representative',
-            'local_apsolu'));
+        $mform->addElement('text', 'lastnameprimarylegalrepresentative', get_string(
+            'lastname_primary_legal_representative',
+            'local_apsolu'
+        ));
         $mform->setType('lastnameprimarylegalrepresentative', PARAM_TEXT);
         $mform->addRule('lastnameprimarylegalrepresentative', get_string('required'), 'required', null, 'client');
 
         // Prénom du représentant légal.
-        $mform->addElement('text', 'firstnameprimarylegalrepresentative', get_string('firstname_primary_legal_representative',
-            'local_apsolu'));
+        $mform->addElement('text', 'firstnameprimarylegalrepresentative', get_string(
+            'firstname_primary_legal_representative',
+            'local_apsolu'
+        ));
         $mform->setType('firstnameprimarylegalrepresentative', PARAM_TEXT);
         $mform->addRule('firstnameprimarylegalrepresentative', get_string('required'), 'required', null, 'client');
 
         // Tél. du représentant légal.
-        $mform->addElement('text', 'phoneprimarylegalrepresentative', get_string('phone_primary_legal_representative',
-            'local_apsolu'));
+        $mform->addElement('text', 'phoneprimarylegalrepresentative', get_string(
+            'phone_primary_legal_representative',
+            'local_apsolu'
+        ));
         $mform->setType('phoneprimarylegalrepresentative', PARAM_TEXT);
         $mform->addRule('phoneprimarylegalrepresentative', get_string('required'), 'required', null, 'client');
 
         // Mail du représentant légal.
-        $mform->addElement('text', 'emailprimarylegalrepresentative', get_string('email_primary_legal_representative',
-            'local_apsolu'));
+        $mform->addElement('text', 'emailprimarylegalrepresentative', get_string(
+            'email_primary_legal_representative',
+            'local_apsolu'
+        ));
         $mform->setType('emailprimarylegalrepresentative', PARAM_TEXT);
         $mform->addRule('emailprimarylegalrepresentative', get_string('required'), 'required', null, 'client');
 
@@ -95,28 +107,40 @@ class local_apsolu_federation_parental_authorization extends moodleform {
         $mform->setExpanded('secondarylegalrepresentative', $expanded = true);
 
         // Civilité du représentant légal secondaire.
-        $mform->addElement('select', 'titlesecondarylegalrepresentative',
-            get_string('title_secondary_legal_representative', 'local_apsolu'), Adhesion::get_user_titles());
+        $mform->addElement(
+            'select',
+            'titlesecondarylegalrepresentative',
+            get_string('title_secondary_legal_representative', 'local_apsolu'),
+            Adhesion::get_user_titles()
+        );
         $mform->setType('titlesecondarylegalrepresentative', PARAM_TEXT);
 
         // Nom du représentant légal secondaire.
-        $mform->addElement('text', 'lastnamesecondarylegalrepresentative', get_string('lastname_secondary_legal_representative',
-            'local_apsolu'));
+        $mform->addElement('text', 'lastnamesecondarylegalrepresentative', get_string(
+            'lastname_secondary_legal_representative',
+            'local_apsolu'
+        ));
         $mform->setType('lastnamesecondarylegalrepresentative', PARAM_TEXT);
 
         // Prénom du représentant légal secondaire.
-        $mform->addElement('text', 'firstnamesecondarylegalrepresentative', get_string('firstname_secondary_legal_representative',
-            'local_apsolu'));
+        $mform->addElement('text', 'firstnamesecondarylegalrepresentative', get_string(
+            'firstname_secondary_legal_representative',
+            'local_apsolu'
+        ));
         $mform->setType('firstnamesecondarylegalrepresentative', PARAM_TEXT);
 
         // Tél. du représentant légal secondaire.
-        $mform->addElement('text', 'phonesecondarylegalrepresentative', get_string('phone_secondary_legal_representative',
-            'local_apsolu'));
+        $mform->addElement('text', 'phonesecondarylegalrepresentative', get_string(
+            'phone_secondary_legal_representative',
+            'local_apsolu'
+        ));
         $mform->setType('phonesecondarylegalrepresentative', PARAM_TEXT);
 
         // Mail du représentant légal secondaire.
-        $mform->addElement('text', 'emailsecondarylegalrepresentative', get_string('email_secondary_legal_representative',
-            'local_apsolu'));
+        $mform->addElement('text', 'emailsecondarylegalrepresentative', get_string(
+            'email_secondary_legal_representative',
+            'local_apsolu'
+        ));
         $mform->setType('emailsecondarylegalrepresentative', PARAM_TEXT);
 
         // Autorisation parentale.
@@ -127,13 +151,21 @@ class local_apsolu_federation_parental_authorization extends moodleform {
         if ($freeze === true) {
             $fs = get_file_storage();
             $context = context_course::instance($course->id, MUST_EXIST);
-            list($component, $filearea, $itemid) = ['local_apsolu', 'parentalauthorization', $USER->id];
+            [$component, $filearea, $itemid] = ['local_apsolu', 'parentalauthorization', $USER->id];
             $sort = 'itemid, filepath, filename';
             $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
             $items = [];
             foreach ($files as $file) {
-                $url = moodle_url::make_pluginfile_url($context->id, $component, $filearea, $itemid, '/',
-                    $file->get_filename(), $forcedownload = false, $includetoken = false);
+                $url = moodle_url::make_pluginfile_url(
+                    $context->id,
+                    $component,
+                    $filearea,
+                    $itemid,
+                    '/',
+                    $file->get_filename(),
+                    $forcedownload = false,
+                    $includetoken = false
+                );
                 $items[] = html_writer::link($url, $file->get_filename());
             }
 
@@ -181,7 +213,8 @@ class local_apsolu_federation_parental_authorization extends moodleform {
         $options['areamaxbytes'] = $maxbytes;
         $options['context'] = $context;
         $options['maxbytes'] = $maxbytes;
-        $options['maxfiles'] = get_config('local_apsolu', 'ffsu_maxfiles');;
+        $options['maxfiles'] = get_config('local_apsolu', 'ffsu_maxfiles');
+        ;
         $options['subdirs'] = 0;
 
         $acceptedfiles = (string) get_config('local_apsolu', 'ffsu_acceptedfiles');

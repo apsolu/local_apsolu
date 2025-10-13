@@ -22,11 +22,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\area as Area;
+use local_apsolu\core\area;
 
 defined('MOODLE_INTERNAL') || die;
 
-require(__DIR__.'/edit_form.php');
+require(__DIR__ . '/edit_form.php');
 
 // Get area id.
 $areaid = optional_param('areaid', 0, PARAM_INT);

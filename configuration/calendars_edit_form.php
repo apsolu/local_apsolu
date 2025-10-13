@@ -45,11 +45,11 @@ class local_apsolu_calendar_edit_form extends moodleform {
         $optional = ['optional' => true];
         $required = ['optional' => false];
 
-        list($defaults, $calendarstypes) = $this->_customdata;
+        [$defaults, $calendarstypes] = $this->_customdata;
 
         if (empty($defaults->id) === false) {
             // Avertissement affiché lorsqu'on modifie un calendrier existant.
-            $html = '<div class="alert alert-info">'.get_string('calendar_modification_warning', 'local_apsolu').'</div>';
+            $html = '<div class="alert alert-info">' . get_string('calendar_modification_warning', 'local_apsolu') . '</div>';
             $mform->addElement('html', $html);
         }
 
@@ -129,7 +129,7 @@ class local_apsolu_calendar_edit_form extends moodleform {
         $datetimes[] = ['gradestartdate', 'gradeenddate'];
 
         foreach ($datetimes as $dates) {
-            list($startdate, $enddate) = $dates;
+            [$startdate, $enddate] = $dates;
 
             if (empty($data[$startdate]) === true) {
                 continue;

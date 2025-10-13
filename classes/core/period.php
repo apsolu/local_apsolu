@@ -80,7 +80,7 @@ class period extends record {
             }
 
             // Calcule le timestamp.
-            list($year, $month, $day) = explode('-', $week);
+            [$year, $month, $day] = explode('-', $week);
             $sessiontime = make_timestamp($year, $month, $day);
             $sessiontime += $offset;
 

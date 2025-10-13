@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\federation\questionnaire as Questionnaire;
+use local_apsolu\core\federation\questionnaire;
 
 defined('MOODLE_INTERNAL') || die();
 

@@ -49,4 +49,4 @@ if ($action !== 'export') {
     echo $submenu;
 }
 
-require(__DIR__.'/'.$action.'.php');
+require(__DIR__ . '/' . $action . '.php');

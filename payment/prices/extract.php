@@ -26,8 +26,8 @@ defined('MOODLE_INTERNAL') || die;
 
 $exportformat = optional_param('format', 'csv', PARAM_ALPHA);
 
-require_once($CFG->libdir.'/csvlib.class.php');
-require_once($CFG->libdir.'/excellib.class.php');
+require_once($CFG->libdir . '/csvlib.class.php');
+require_once($CFG->libdir . '/excellib.class.php');
 
 $filename = get_string('payment_cards', 'local_apsolu');
 

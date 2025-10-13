@@ -22,8 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\federation\activity as Activity;
-use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\core\federation\activity;
+use local_apsolu\core\federation\adhesion;
 
 defined('MOODLE_INTERNAL') || die();
 

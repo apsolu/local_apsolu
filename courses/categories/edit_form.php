@@ -61,14 +61,19 @@ class local_apsolu_courses_categories_edit_form extends moodleform {
         $mform->setType('url', PARAM_URL);
 
         // Description field.
-        $mform->addElement('editor', 'description_editor', get_string('description'), null,
-            $this->get_description_editor_options());
+        $mform->addElement(
+            'editor',
+            'description_editor',
+            get_string('description'),
+            null,
+            $this->get_description_editor_options()
+        );
 
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 
         $attributes = new stdClass();
-        $attributes->href = $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=categories';
+        $attributes->href = $CFG->wwwroot . '/local/apsolu/courses/index.php?tab=categories';
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
@@ -125,5 +130,3 @@ class local_apsolu_courses_categories_edit_form extends moodleform {
         return $errors;
     }
 }
-
-

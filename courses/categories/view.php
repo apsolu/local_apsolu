@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\federation\activity as Activity;
+use local_apsolu\core\federation\activity;
 use local_apsolu\core\federation\course as FederationCourse;
 
 defined('MOODLE_INTERNAL') || die;
@@ -34,10 +34,10 @@ foreach (Activity::get_records() as $activity) {
 }
 
 // Génère la liste des activités APSOLU.
-$sql = "SELECT acc.id, cc.name, ccc.name AS grouping".
-    " FROM {apsolu_courses_categories} acc".
-    " JOIN {course_categories} cc ON cc.id = acc.id".
-    " JOIN {course_categories} ccc ON ccc.id = cc.parent".
+$sql = "SELECT acc.id, cc.name, ccc.name AS grouping" .
+    " FROM {apsolu_courses_categories} acc" .
+    " JOIN {course_categories} cc ON cc.id = acc.id" .
+    " JOIN {course_categories} ccc ON ccc.id = cc.parent" .
     " ORDER BY cc.name, cc.sortorder";
 $categories = [];
 foreach ($DB->get_records_sql($sql) as $categoryid => $category) {

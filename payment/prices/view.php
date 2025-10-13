@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot.'/enrol/select/locallib.php');
+require_once($CFG->dirroot . '/enrol/select/locallib.php');
 
 $sql = "SELECT apc.*
           FROM {apsolu_payments_cards} apc
@@ -43,14 +43,26 @@ $data->cards = [];
 $data->count_cards = 0;
 
 foreach ($cards as $card) {
-    $cardscohorts = $DB->get_records('apsolu_payments_cards_cohort', $conditions = ['cardid' => $card->id],
-        $sort = '', $fields = 'cohortid');
-    $cardsroles = $DB->get_records('apsolu_payments_cards_roles', $conditions = ['cardid' => $card->id],
-        $sort = '', $fields = 'roleid');
-    $cardscalendarstypes = $DB->get_records('apsolu_payments_cards_cals', $conditions = ['cardid' => $card->id],
-        $sort = '', $fields = 'calendartypeid, value');
+    $cardscohorts = $DB->get_records(
+        'apsolu_payments_cards_cohort',
+        $conditions = ['cardid' => $card->id],
+        $sort = '',
+        $fields = 'cohortid'
+    );
+    $cardsroles = $DB->get_records(
+        'apsolu_payments_cards_roles',
+        $conditions = ['cardid' => $card->id],
+        $sort = '',
+        $fields = 'roleid'
+    );
+    $cardscalendarstypes = $DB->get_records(
+        'apsolu_payments_cards_cals',
+        $conditions = ['cardid' => $card->id],
+        $sort = '',
+        $fields = 'calendartypeid, value'
+    );
 
-    $card->price = number_format($card->price, 2).'€';
+    $card->price = number_format($card->price, 2) . '€';
 
     $card->center = '';
     if (isset($centers[$card->centerid]) === true) {
@@ -84,7 +96,7 @@ foreach ($cards as $card) {
             $value = $cardscalendarstypes[$type->id]->value;
         }
 
-        $card->calendars_types[] = $type->name.' : '.$value;
+        $card->calendars_types[] = $type->name . ' : ' . $value;
         $card->count_calendars_types++;
     }
 

@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__.'/../../../config.php');
+require_once(__DIR__ . '/../../../config.php');
 
 $courseid = optional_param('courseid', 0, PARAM_INT); // Course id.
 $calendarid = optional_param('calendarid', null, PARAM_INT); // Calendar id.
@@ -193,7 +193,7 @@ if ($calendarid !== 0) {
 
 $recordset = $DB->get_recordset_sql($sql, $params);
 foreach ($recordset as $user) {
-    $id = $user->lastname.' '.$user->firstname.' '.$user->institution.' '.$user->id;
+    $id = $user->lastname . ' ' . $user->firstname . ' ' . $user->institution . ' ' . $user->id;
     $users[$id] = $user;
 }
 $recordset->close();
@@ -213,7 +213,7 @@ if ($calendarid !== 0) {
 }
 
 foreach ($DB->get_records_sql($sql, $params) as $user) {
-    $id = $user->lastname.' '.$user->firstname.' '.$user->institution.' '.$user->id;
+    $id = $user->lastname . ' ' . $user->firstname . ' ' . $user->institution . ' ' . $user->id;
 
     if (isset($users[$id])) {
         continue;

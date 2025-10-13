@@ -79,10 +79,10 @@ class course {
 
         $context = $event->get_context();
 
-        $sql = "SELECT c.*, ac.event, ac.weekday, ac.starttime, ac.endtime, ask.name AS skill".
-            " FROM {course} c".
-            " JOIN {apsolu_courses} ac ON c.id = ac.id".
-            " JOIN {apsolu_skills} ask ON ask.id = ac.skillid".
+        $sql = "SELECT c.*, ac.event, ac.weekday, ac.starttime, ac.endtime, ask.name AS skill" .
+            " FROM {course} c" .
+            " JOIN {apsolu_courses} ac ON c.id = ac.id" .
+            " JOIN {apsolu_skills} ask ON ask.id = ac.skillid" .
             " WHERE c.id = :courseid";
         $course = $DB->get_record_sql($sql, ['courseid' => $context->instanceid]);
         if ($course === false) {
@@ -90,9 +90,11 @@ class course {
             return;
         }
 
-        if (isset($event->other['updatedfields']['shortname']) === false &&
+        if (
+            isset($event->other['updatedfields']['shortname']) === false &&
             isset($event->other['updatedfields']['fullname']) === false &&
-            isset($event->other['updatedfields']['category']) === false) {
+            isset($event->other['updatedfields']['category']) === false
+        ) {
             // Le nom abrégé, le nom complet et la catégorie n'ont pas été modifiés.
             return;
         }
@@ -105,9 +107,9 @@ class course {
             $categoryid = $course->category;
         }
 
-        $sql = "SELECT cc.id, cc.name".
-            " FROM {course_categories} cc".
-            " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id".
+        $sql = "SELECT cc.id, cc.name" .
+            " FROM {course_categories} cc" .
+            " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id" .
             " WHERE cc.id = :categoryid";
         $category = $DB->get_record_sql($sql, ['categoryid' => $categoryid]);
 
@@ -118,17 +120,17 @@ class course {
             $category = false;
             if (isset($matches[1]) === true) {
                 // On essaye de déterminer la catégorie d'origine du cours.
-                $sql = "SELECT cc.id, cc.name".
-                    " FROM {course_categories} cc".
-                    " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id".
+                $sql = "SELECT cc.id, cc.name" .
+                    " FROM {course_categories} cc" .
+                    " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id" .
                     " WHERE cc.name = :name";
                 $category = $DB->get_record_sql($sql, ['name' => $matches[1]]);
             }
 
             if ($category === false) {
                 // On prend n'importe quelle catégorie "activité sportive".
-                $sql = "SELECT cc.id, cc.name".
-                    " FROM {course_categories} cc".
+                $sql = "SELECT cc.id, cc.name" .
+                    " FROM {course_categories} cc" .
                     " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id";
                 $categories = $DB->get_records_sql($sql);
                 $category = current($categories);
@@ -150,8 +152,14 @@ class course {
         }
 
         // Recalcule le nom complet du cours.
-        $fullname = apsolu_course::get_fullname($category->name, $course->event, $course->weekday,
-            $course->starttime, $course->endtime, $course->skill);
+        $fullname = apsolu_course::get_fullname(
+            $category->name,
+            $course->event,
+            $course->weekday,
+            $course->starttime,
+            $course->endtime,
+            $course->skill
+        );
         if ($course->fullname !== $fullname) {
             // Affiche un avertissement à l'utilisateur.
             $params = new stdClass();

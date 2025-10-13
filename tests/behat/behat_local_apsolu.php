@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-use Behat\Behat\Context\Step\Given as Given;
-use Behat\Behat\Context\Step\When as When;
-use Behat\Gherkin\Node\TableNode as TableNode;
+use Behat\Behat\Context\Step\Given;
+use Behat\Behat\Context\Step\When;
+use Behat\Gherkin\Node\TableNode;
 use local_apsolu\tests\behat\dataset_provider;
 
 require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
@@ -64,7 +64,7 @@ class behat_local_apsolu extends behat_base {
     public function i_setup_an_environment_for_apsolu() {
         global $CFG;
 
-        require_once($CFG->dirroot.'/local/apsolu/tests/behat/dataset_provider.php');
+        require_once($CFG->dirroot . '/local/apsolu/tests/behat/dataset_provider.php');
 
         dataset_provider::execute();
     }

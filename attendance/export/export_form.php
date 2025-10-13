@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->libdir.'/formslib.php');
+require_once($CFG->libdir . '/formslib.php');
 
 /**
  * Classe pour le formulaire permettant de sélectionner les options pour l'export des sessions.
@@ -47,7 +47,7 @@ class local_apsolu_attendance_export_form extends moodleform {
 
         // Info.
         $label = get_string('enable_dates_if_you_do_not_want_to_export_the_entire_data', 'local_apsolu');
-        $mform->addElement('html', '<p class="alert alert-info">'.$label.'</p>');
+        $mform->addElement('html', '<p class="alert alert-info">' . $label . '</p>');
 
         // Date.
         $mform->addElement('date_selector', 'startdate', get_string('start_date', 'local_apsolu'), $options);

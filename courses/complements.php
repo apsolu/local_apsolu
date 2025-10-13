@@ -33,5 +33,5 @@ admin_externalpage_setup('local_apsolu_complements_complements');
 
 // Display page.
 echo $OUTPUT->header();
-require(__DIR__.'/complements/index.php');
+require(__DIR__ . '/complements/index.php');
 echo $OUTPUT->footer();

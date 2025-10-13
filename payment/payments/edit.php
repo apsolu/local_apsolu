@@ -26,10 +26,10 @@ use UniversiteRennes2\Apsolu\Payment;
 
 defined('MOODLE_INTERNAL') || die;
 
-require(__DIR__.'/edit_form.php');
-require_once($CFG->dirroot.'/user/profile/lib.php');
-require_once($CFG->dirroot.'/local/apsolu/locallib.php');
-require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
+require(__DIR__ . '/edit_form.php');
+require_once($CFG->dirroot . '/user/profile/lib.php');
+require_once($CFG->dirroot . '/local/apsolu/locallib.php');
+require_once($CFG->dirroot . '/local/apsolu/classes/apsolu/payment.php');
 
 // Get user id.
 $userid = required_param('userid', PARAM_INT);
@@ -41,7 +41,7 @@ if ($user === false) {
 
 // TODO: vérifier le témoin : sesame valide.
 
-$backurl = $CFG->wwwroot.'/local/apsolu/payment/admin.php?tab=payments&userid='.$userid;
+$backurl = $CFG->wwwroot . '/local/apsolu/payment/admin.php?tab=payments&userid=' . $userid;
 
 $paymentid = optional_param('paymentid', null, PARAM_INT);
 if ($paymentid !== null) {
@@ -69,7 +69,7 @@ if ($paymentid === null) {
     $payment->paymentcenterid = '1';
 } else {
     foreach ($DB->get_records('apsolu_payments_items', ['paymentid' => $payment->id]) as $item) {
-        $cardname = 'card'.$item->cardid;
+        $cardname = 'card' . $item->cardid;
         $payment->{$cardname} = 1;
     }
 }
@@ -102,11 +102,11 @@ foreach ($DB->get_records('apsolu_payments_centers') as $center) {
 
 $cards = [];
 foreach ($DB->get_records('apsolu_payments_cards', $conditions = [], $sort = 'fullname') as $card) {
-    $sql = "SELECT *".
-        " FROM {apsolu_payments} ap".
-        " JOIN {apsolu_payments_items} api ON ap.id = api.paymentid".
-        " WHERE ap.timepaid IS NOT NULL".
-        " AND api.cardid = :cardid".
+    $sql = "SELECT *" .
+        " FROM {apsolu_payments} ap" .
+        " JOIN {apsolu_payments_items} api ON ap.id = api.paymentid" .
+        " WHERE ap.timepaid IS NOT NULL" .
+        " AND api.cardid = :cardid" .
         " AND ap.userid = :userid";
     if ($DB->get_record_sql($sql, ['cardid' => $card->id, 'userid' => $userid]) !== false) {
         continue;
@@ -122,7 +122,7 @@ if ($data = $mform->get_data()) {
     // Save data.
     $items = [];
     foreach ($cards as $cardid => $cardname) {
-        $name = 'card'.$cardid;
+        $name = 'card' . $cardid;
         if (isset($data->{$name}) === true) {
             $items[] = $cardid;
         }
@@ -193,16 +193,16 @@ if ($data = $mform->get_data()) {
         // Display notification and display elements list.
         $notification = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
 
-        require(__DIR__.'/view.php');
+        require(__DIR__ . '/view.php');
     } else {
         // Display form.
-        echo '<h1>'.get_string('add_payment', 'local_apsolu').'</h1>';
+        echo '<h1>' . get_string('add_payment', 'local_apsolu') . '</h1>';
         echo $OUTPUT->notification(get_string('cannotsavedata', 'error'));
         $mform->display();
     }
 } else {
     // Display form.
-    echo '<h1>'.get_string('add_payment', 'local_apsolu').'</h1>';
+    echo '<h1>' . get_string('add_payment', 'local_apsolu') . '</h1>';
 
     $mform->display();
 }

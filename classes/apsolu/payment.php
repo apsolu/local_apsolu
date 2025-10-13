@@ -133,28 +133,28 @@ class Payment {
             $userid = $USER->id;
         }
 
-        $sql = "SELECT DISTINCT apc.id, apc.code, apc.name, apc.fullname, apc.trial, apc.price, apc.centerid".
-            " FROM {apsolu_payments_cards} apc".
-            " JOIN {enrol_select_cards} esc ON esc.cardid = apc.id".
-            " JOIN {enrol} e ON e.id = esc.enrolid".
-            " JOIN {course} c ON c.id = e.courseid".
+        $sql = "SELECT DISTINCT apc.id, apc.code, apc.name, apc.fullname, apc.trial, apc.price, apc.centerid" .
+            " FROM {apsolu_payments_cards} apc" .
+            " JOIN {enrol_select_cards} esc ON esc.cardid = apc.id" .
+            " JOIN {enrol} e ON e.id = esc.enrolid" .
+            " JOIN {course} c ON c.id = e.courseid" .
             // Check cohorts.
-            " JOIN {enrol_select_cohorts} ewc ON e.id = ewc.enrolid".
-            " JOIN {cohort_members} cm ON cm.cohortid = ewc.cohortid".
-            " JOIN {user_enrolments} ue ON e.id = ue.enrolid AND ue.userid = cm.userid".
-            " JOIN {role_assignments} ra ON ra.userid = ue.userid AND ra.userid = cm.userid AND ra.itemid = e.id".
-            " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50 AND ctx.instanceid = c.id".
+            " JOIN {enrol_select_cohorts} ewc ON e.id = ewc.enrolid" .
+            " JOIN {cohort_members} cm ON cm.cohortid = ewc.cohortid" .
+            " JOIN {user_enrolments} ue ON e.id = ue.enrolid AND ue.userid = cm.userid" .
+            " JOIN {role_assignments} ra ON ra.userid = ue.userid AND ra.userid = cm.userid AND ra.itemid = e.id" .
+            " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50 AND ctx.instanceid = c.id" .
             // Check colleges.
             // " JOIN {apsolu_colleges} acol ON acol.roleid = ra.roleid".
             // " JOIN {apsolu_colleges_members} acm ON acol.id = acm.collegeid AND acm.cohortid = cm.cohortid".
             // Check cards w/ cohorts/roles.
-            " JOIN {apsolu_payments_cards_cohort} apcc ON apc.id = apcc.cardid AND apcc.cohortid = cm.cohortid".
-            " JOIN {apsolu_payments_cards_roles} apcr ON apc.id = apcr.cardid AND apcr.roleid = ra.roleid".
-            " WHERE e.enrol = 'select'".
-            " AND c.visible = 1". // Cours visible.
-            " AND e.status = 0". // Méthode d'inscription active.
-            " AND ue.status = 0". // Inscription validée.
-            " AND cm.userid = :userid".
+            " JOIN {apsolu_payments_cards_cohort} apcc ON apc.id = apcc.cardid AND apcc.cohortid = cm.cohortid" .
+            " JOIN {apsolu_payments_cards_roles} apcr ON apc.id = apcr.cardid AND apcr.roleid = ra.roleid" .
+            " WHERE e.enrol = 'select'" .
+            " AND c.visible = 1" . // Cours visible.
+            " AND e.status = 0" . // Méthode d'inscription active.
+            " AND ue.status = 0" . // Inscription validée.
+            " AND cm.userid = :userid" .
             " ORDER BY apc.fullname";
         return $DB->get_records_sql($sql, ['userid' => $userid]);
     }
@@ -169,31 +169,31 @@ class Payment {
     public static function get_card_users($cardid) {
         global $DB;
 
-        $sql = "SELECT DISTINCT u.*".
-            " FROM {user} u".
-            " JOIN {user_info_data} uid ON u.id = uid.userid".
-            " JOIN {user_info_field} uif ON uif.id = uid.fieldid".
-            " JOIN {user_enrolments} ue ON u.id = ue.userid".
-            " JOIN {enrol} e ON e.id = ue.enrolid".
-            " JOIN {enrol_select_cards} esc ON e.id = esc.enrolid".
-            " JOIN {course} c ON c.id = e.courseid".
+        $sql = "SELECT DISTINCT u.*" .
+            " FROM {user} u" .
+            " JOIN {user_info_data} uid ON u.id = uid.userid" .
+            " JOIN {user_info_field} uif ON uif.id = uid.fieldid" .
+            " JOIN {user_enrolments} ue ON u.id = ue.userid" .
+            " JOIN {enrol} e ON e.id = ue.enrolid" .
+            " JOIN {enrol_select_cards} esc ON e.id = esc.enrolid" .
+            " JOIN {course} c ON c.id = e.courseid" .
             // Check cohorts.
-            " JOIN {enrol_select_cohorts} ewc ON e.id = ewc.enrolid".
-            " JOIN {cohort_members} cm ON cm.cohortid = ewc.cohortid AND u.id = cm.userid".
-            " JOIN {role_assignments} ra ON ra.userid = ue.userid AND ra.userid = cm.userid AND ra.itemid = e.id".
-            " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50 AND ctx.instanceid = c.id".
+            " JOIN {enrol_select_cohorts} ewc ON e.id = ewc.enrolid" .
+            " JOIN {cohort_members} cm ON cm.cohortid = ewc.cohortid AND u.id = cm.userid" .
+            " JOIN {role_assignments} ra ON ra.userid = ue.userid AND ra.userid = cm.userid AND ra.itemid = e.id" .
+            " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50 AND ctx.instanceid = c.id" .
             // Check colleges.
             // " JOIN {apsolu_colleges} acol ON acol.roleid = ra.roleid".
             // " JOIN {apsolu_colleges_members} acm ON acol.id = acm.collegeid AND acm.cohortid = cm.cohortid".
             // Check cards w/ cohorts/roles.
-            " JOIN {apsolu_payments_cards_cohort} apcc ON esc.cardid = apcc.cardid AND apcc.cohortid = cm.cohortid".
-            " JOIN {apsolu_payments_cards_roles} apcr ON esc.cardid = apcr.cardid AND apcr.roleid = ra.roleid".
-            " WHERE e.enrol = 'select'".
-            " AND u.deleted = 0". // Utilisateur non supprimé.
-            " AND c.visible = 1". // Cours visible.
-            " AND e.status = 0". // Méthode d'inscription active.
-            " AND ue.status = 0". // Inscription validée.
-            " AND uif.shortname = 'apsolusesame'". // Compte Sésame validé.
+            " JOIN {apsolu_payments_cards_cohort} apcc ON esc.cardid = apcc.cardid AND apcc.cohortid = cm.cohortid" .
+            " JOIN {apsolu_payments_cards_roles} apcr ON esc.cardid = apcr.cardid AND apcr.roleid = ra.roleid" .
+            " WHERE e.enrol = 'select'" .
+            " AND u.deleted = 0" . // Utilisateur non supprimé.
+            " AND c.visible = 1" . // Cours visible.
+            " AND e.status = 0" . // Méthode d'inscription active.
+            " AND ue.status = 0" . // Inscription validée.
+            " AND uif.shortname = 'apsolusesame'" . // Compte Sésame validé.
             " AND esc.cardid = :cardid";
         return $DB->get_records_sql($sql, ['cardid' => $cardid]);
     }
@@ -213,26 +213,26 @@ class Payment {
             $userid = $USER->id;
         }
 
-        $sql = "SELECT DISTINCT e.*".
-            " FROM {enrol} e".
-            " JOIN {enrol_select_cards} esc ON e.id = esc.enrolid".
-            " JOIN {course} c ON c.id = e.courseid".
+        $sql = "SELECT DISTINCT e.*" .
+            " FROM {enrol} e" .
+            " JOIN {enrol_select_cards} esc ON e.id = esc.enrolid" .
+            " JOIN {course} c ON c.id = e.courseid" .
             // Check cohorts.
-            " JOIN {enrol_select_cohorts} ewc ON e.id = ewc.enrolid".
-            " JOIN {cohort_members} cm ON cm.cohortid = ewc.cohortid".
-            " JOIN {user_enrolments} ue ON e.id = ue.enrolid AND ue.userid = cm.userid".
-            " JOIN {role_assignments} ra ON ra.userid = ue.userid AND ra.userid = cm.userid AND ra.itemid = e.id".
-            " JOIN {apsolu_payments_cards_cohort} apcc ON esc.cardid = apcc.cardid AND apcc.cohortid = cm.cohortid".
-            " JOIN {apsolu_payments_cards_roles} apcr ON apcr.roleid = ra.roleid AND apcr.cardid = esc.cardid".
-            " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50 AND ctx.instanceid = c.id".
+            " JOIN {enrol_select_cohorts} ewc ON e.id = ewc.enrolid" .
+            " JOIN {cohort_members} cm ON cm.cohortid = ewc.cohortid" .
+            " JOIN {user_enrolments} ue ON e.id = ue.enrolid AND ue.userid = cm.userid" .
+            " JOIN {role_assignments} ra ON ra.userid = ue.userid AND ra.userid = cm.userid AND ra.itemid = e.id" .
+            " JOIN {apsolu_payments_cards_cohort} apcc ON esc.cardid = apcc.cardid AND apcc.cohortid = cm.cohortid" .
+            " JOIN {apsolu_payments_cards_roles} apcr ON apcr.roleid = ra.roleid AND apcr.cardid = esc.cardid" .
+            " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50 AND ctx.instanceid = c.id" .
             // Check colleges.
             // " JOIN {apsolu_colleges} acol ON acol.roleid = ra.roleid".
             // " JOIN {apsolu_colleges_members} acm ON acol.id = acm.collegeid AND acm.cohortid = cm.cohortid".
-            " WHERE e.enrol = 'select'".
-            " AND c.visible = 1". // Cours visible.
-            " AND e.status = 0". // Méthode d'inscription active.
-            " AND ue.status = 0". // Inscription validée.
-            " AND cm.userid = :userid".
+            " WHERE e.enrol = 'select'" .
+            " AND c.visible = 1" . // Cours visible.
+            " AND e.status = 0" . // Méthode d'inscription active.
+            " AND ue.status = 0" . // Inscription validée.
+            " AND cm.userid = :userid" .
             " AND esc.cardid = :cardid";
         return $DB->get_records_sql($sql, ['cardid' => $cardid, 'userid' => $userid]);
     }
@@ -254,16 +254,16 @@ class Payment {
         }
 
         // Vérifie si la carte a déjà été payée.
-        $sql = "SELECT ap.*".
-            " FROM {apsolu_payments} ap".
-            " JOIN {apsolu_payments_items} api ON ap.id = api.paymentid".
-            " WHERE api.cardid = :cardid".
-            " AND ap.userid = :userid".
+        $sql = "SELECT ap.*" .
+            " FROM {apsolu_payments} ap" .
+            " JOIN {apsolu_payments_items} api ON ap.id = api.paymentid" .
+            " WHERE api.cardid = :cardid" .
+            " AND ap.userid = :userid" .
             " AND ap.timepaid IS NOT NULL";
         $payment = $DB->get_record_sql($sql, ['cardid' => $card->id, 'userid' => $userid]);
         if ($payment !== false) {
             if (defined('BEHAT_SITE_RUNNING') === false) {
-                debugging('Carte '.$card->fullname.' payée !', $level = DEBUG_DEVELOPER);
+                debugging('Carte ' . $card->fullname . ' payée !', $level = DEBUG_DEVELOPER);
             }
             return $payment->status; // Valeur possible : self::PAID or self::GIFT.
         }
@@ -278,7 +278,7 @@ class Payment {
                 $conditions = ['component' => 'local_apsolu_presence', 'courseid' => $enrol->courseid, 'relateduserid' => $userid];
                 if ($DB->count_records('logstore_standard_log', $conditions) >= $card->trial) {
                     if (defined('BEHAT_SITE_RUNNING') === false) {
-                        debugging('Carte '.$card->fullname.' due (fin des séances d\'essais).', $level = DEBUG_DEVELOPER);
+                        debugging('Carte ' . $card->fullname . ' due (fin des séances d\'essais).', $level = DEBUG_DEVELOPER);
                     }
                     return self::DUE;
                 }
@@ -294,8 +294,10 @@ class Payment {
         foreach ($enrols as $enrol) {
             if (isset($calendars[$enrol->customchar1]) === false) {
                 if (defined('BEHAT_SITE_RUNNING') === false) {
-                    debugging('Aucun calendrier pour l\'inscription #'.$enrol->id.' (course #'.$enrol->courseid.')',
-                        $level = DEBUG_DEVELOPER);
+                    debugging(
+                        'Aucun calendrier pour l\'inscription #' . $enrol->id . ' (course #' . $enrol->courseid . ')',
+                        $level = DEBUG_DEVELOPER
+                    );
                 }
                 continue;
             }
@@ -307,8 +309,12 @@ class Payment {
             $enrolcalendars[$calendartypeid]++;
         }
 
-        $calendars = $DB->get_records('apsolu_payments_cards_cals', ['cardid' => $card->id],
-            $sort = '', $fields = 'calendartypeid, value');
+        $calendars = $DB->get_records(
+            'apsolu_payments_cards_cals',
+            ['cardid' => $card->id],
+            $sort = '',
+            $fields = 'calendartypeid, value'
+        );
         foreach ($calendars as $calendar) {
             if (isset($enrolcalendars[$calendar->calendartypeid]) === false) {
                 continue;
@@ -316,8 +322,10 @@ class Payment {
 
             if ($enrolcalendars[$calendar->calendartypeid] > $calendar->value) {
                 if (defined('BEHAT_SITE_RUNNING') === false) {
-                    debugging('Carte '.$card->fullname.' due (nombre d\'inscriptions offertes dépasées).',
-                        $level = DEBUG_DEVELOPER);
+                    debugging(
+                        'Carte ' . $card->fullname . ' due (nombre d\'inscriptions offertes dépasées).',
+                        $level = DEBUG_DEVELOPER
+                    );
                 }
                 return self::DUE;
             }
@@ -372,19 +380,19 @@ class Payment {
         $paybox->PBX_TIME = date('c');
 
         // URL de retour en cas de succès ou d'erreur.
-        $paybox->PBX_EFFECTUE = $CFG->wwwroot.'/local/apsolu/payment/index.php?status=accepted';
-        $paybox->PBX_REFUSE = $CFG->wwwroot.'/local/apsolu/payment/index.php?status=refused';
-        $paybox->PBX_ANNULE = $CFG->wwwroot.'/local/apsolu/payment/index.php?status=cancel';
-        $paybox->PBX_ATTENTE = $CFG->wwwroot.'/local/apsolu/payment/index.php?status=wait';
-        $paybox->PBX_REPONDRE_A = $CFG->wwwroot.'/local/apsolu/payment/paybox.php';
+        $paybox->PBX_EFFECTUE = $CFG->wwwroot . '/local/apsolu/payment/index.php?status=accepted';
+        $paybox->PBX_REFUSE = $CFG->wwwroot . '/local/apsolu/payment/index.php?status=refused';
+        $paybox->PBX_ANNULE = $CFG->wwwroot . '/local/apsolu/payment/index.php?status=cancel';
+        $paybox->PBX_ATTENTE = $CFG->wwwroot . '/local/apsolu/payment/index.php?status=wait';
+        $paybox->PBX_REPONDRE_A = $CFG->wwwroot . '/local/apsolu/payment/paybox.php';
 
         // Type de paiement.
         $paybox->PBX_TYPEPAIEMENT = 'CARTE';
         $paybox->PBX_TYPECARTE = 'CB';
 
         // Nombre d'éléments dans le panier.
-        $paybox->PBX_SHOPPINGCART = '<?xml version="1.0" encoding="utf-8"?><shoppingcart><total><totalQuantity>'.
-            $payment->quantity.'</totalQuantity></total></shoppingcart>';
+        $paybox->PBX_SHOPPINGCART = '<?xml version="1.0" encoding="utf-8"?><shoppingcart><total><totalQuantity>' .
+            $payment->quantity . '</totalQuantity></total></shoppingcart>';
 
         // Adresse postale.
         $address = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><Billing><Address></Address></Billing>');
@@ -402,7 +410,7 @@ class Payment {
         // Signature calculée avec la clé secrète.
         $message = '';
         foreach ((array) $paybox as $key => $value) {
-            $message .= '&'.$key.'='.$value;
+            $message .= '&' . $key . '=' . $value;
         }
         $message = substr($message, 1);
 
@@ -425,14 +433,14 @@ class Payment {
     public static function get_course_cards($courseid) {
         global $DB;
 
-        $sql = "SELECT DISTINCT apc.id, apc.code, apc.name, apc.fullname, apc.trial, apc.price, apc.centerid".
-            " FROM {apsolu_payments_cards} apc".
-            " JOIN {enrol_select_cards} esc ON esc.cardid = apc.id".
-            " JOIN {enrol} e ON e.id = esc.enrolid".
-            " JOIN {course} c ON c.id = e.courseid".
-            " WHERE e.enrol = 'select'".
-            " AND c.id = :courseid".
-            " AND e.status = 0". // Méthode d'inscription active.
+        $sql = "SELECT DISTINCT apc.id, apc.code, apc.name, apc.fullname, apc.trial, apc.price, apc.centerid" .
+            " FROM {apsolu_payments_cards} apc" .
+            " JOIN {enrol_select_cards} esc ON esc.cardid = apc.id" .
+            " JOIN {enrol} e ON e.id = esc.enrolid" .
+            " JOIN {course} c ON c.id = e.courseid" .
+            " WHERE e.enrol = 'select'" .
+            " AND c.id = :courseid" .
+            " AND e.status = 0" . // Méthode d'inscription active.
             " ORDER BY apc.fullname";
         return $DB->get_records_sql($sql, ['courseid' => $courseid]);
     }
@@ -475,26 +483,26 @@ class Payment {
         $users = [];
 
         // Sélectionner les cartes dûes pour chaque utilisateur dans un cours.
-        $sql = "SELECT apc.*, ue.userid".
-            " FROM {apsolu_payments_cards} apc".
-            " JOIN {enrol_select_cards} esc ON esc.cardid = apc.id".
-            " JOIN {enrol} e ON e.id = esc.enrolid".
-            " JOIN {course} c ON c.id = e.courseid".
+        $sql = "SELECT apc.*, ue.userid" .
+            " FROM {apsolu_payments_cards} apc" .
+            " JOIN {enrol_select_cards} esc ON esc.cardid = apc.id" .
+            " JOIN {enrol} e ON e.id = esc.enrolid" .
+            " JOIN {course} c ON c.id = e.courseid" .
             // Check cohorts.
-            " JOIN {enrol_select_cohorts} ewc ON e.id = ewc.enrolid".
-            " JOIN {cohort_members} cm ON cm.cohortid = ewc.cohortid".
-            " JOIN {user_enrolments} ue ON e.id = ue.enrolid AND ue.userid = cm.userid".
-            " JOIN {role_assignments} ra ON ra.userid = ue.userid AND ra.userid = cm.userid AND ra.itemid = e.id".
-            " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50 AND ctx.instanceid = c.id".
+            " JOIN {enrol_select_cohorts} ewc ON e.id = ewc.enrolid" .
+            " JOIN {cohort_members} cm ON cm.cohortid = ewc.cohortid" .
+            " JOIN {user_enrolments} ue ON e.id = ue.enrolid AND ue.userid = cm.userid" .
+            " JOIN {role_assignments} ra ON ra.userid = ue.userid AND ra.userid = cm.userid AND ra.itemid = e.id" .
+            " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50 AND ctx.instanceid = c.id" .
             // Check colleges.
             // " JOIN {apsolu_colleges} acol ON acol.roleid = ra.roleid".
             // " JOIN {apsolu_colleges_members} acm ON acol.id = acm.collegeid AND acm.cohortid = cm.cohortid".
             // Check cards w/ cohorts/roles.
-            " JOIN {apsolu_payments_cards_cohort} apcc ON apc.id = apcc.cardid AND apcc.cohortid = cm.cohortid".
-            " JOIN {apsolu_payments_cards_roles} apcr ON apc.id = apcr.cardid AND apcr.roleid = ra.roleid".
-            " WHERE e.enrol = 'select'".
-            " AND c.id = :courseid".
-            " AND e.status = 0". // Méthode d'inscription active.
+            " JOIN {apsolu_payments_cards_cohort} apcc ON apc.id = apcc.cardid AND apcc.cohortid = cm.cohortid" .
+            " JOIN {apsolu_payments_cards_roles} apcr ON apc.id = apcr.cardid AND apcr.roleid = ra.roleid" .
+            " WHERE e.enrol = 'select'" .
+            " AND c.id = :courseid" .
+            " AND e.status = 0" . // Méthode d'inscription active.
             " AND ue.status = 0"; // Inscription validée.
         $params = ['courseid' => $courseid];
 
@@ -546,12 +554,16 @@ class Payment {
 
         $images = [];
         foreach (self::get_statuses_labels() as $statusid => $statusname) {
-            $alt = 'alt_'.$statusname;
-            $definition = 'definition_'.$statusname;
+            $alt = 'alt_' . $statusname;
+            $definition = 'definition_' . $statusname;
 
             $images[$statusid] = new stdClass();
-            $images[$statusid]->image = $OUTPUT->pix_icon('t/'.$statusname, get_string($alt, 'local_apsolu'),
-                'local_apsolu', ['title' => get_string($alt, 'local_apsolu'), 'width' => '12px', 'height' => '12px']);
+            $images[$statusid]->image = $OUTPUT->pix_icon(
+                't/' . $statusname,
+                get_string($alt, 'local_apsolu'),
+                'local_apsolu',
+                ['title' => get_string($alt, 'local_apsolu'), 'width' => '12px', 'height' => '12px']
+            );
             $images[$statusid]->definition = get_string($definition, 'local_apsolu');
         }
 
@@ -599,7 +611,7 @@ class Payment {
 
         $suffix = '';
         if (isset($codes[0]) === true) {
-            $suffix = ':'.implode(',', $codes);
+            $suffix = ':' . implode(',', $codes);
         }
 
         return sprintf('%s%s%s', $prefix, $id, $suffix);

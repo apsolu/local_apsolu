@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require(__DIR__.'/../../../config.php');
+require(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
 $page = optional_param('page', 'calendars', PARAM_ALPHA);
@@ -52,6 +52,6 @@ if (isset($pages[$page]) === false) {
 }
 
 // Setup admin access requirement.
-admin_externalpage_setup('local_apsolu_configuration_'.$pages[$page]);
+admin_externalpage_setup('local_apsolu_configuration_' . $pages[$page]);
 
-require(__DIR__.'/'.$pages[$page].'.php');
+require(__DIR__ . '/' . $pages[$page] . '.php');

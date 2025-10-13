@@ -43,7 +43,7 @@ class local_apsolu_courses_groupings_edit_form extends moodleform {
         global $CFG;
 
         $mform = $this->_form;
-        list($grouping) = $this->_customdata;
+        [$grouping] = $this->_customdata;
 
         // Name field.
         $mform->addElement('text', 'name', get_string('name'), ['size' => '48']);
@@ -58,7 +58,7 @@ class local_apsolu_courses_groupings_edit_form extends moodleform {
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 
         $attributes = new stdClass();
-        $attributes->href = $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=groupings';
+        $attributes->href = $CFG->wwwroot . '/local/apsolu/courses/index.php?tab=groupings';
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 

@@ -22,13 +22,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\gradeitem as Gradeitem;
-use local_apsolu\core\gradebook as Gradebook;
+use local_apsolu\core\gradeitem;
+use local_apsolu\core\gradebook;
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once(__DIR__.'/edit_form.php');
-require_once($CFG->libdir.'/gradelib.php');
+require_once(__DIR__ . '/edit_form.php');
+require_once($CFG->libdir . '/gradelib.php');
 
 // Get gradeitem id.
 $gradeitemid = optional_param('gradeitemid', 0, PARAM_INT);

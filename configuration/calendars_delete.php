@@ -58,17 +58,21 @@ if ($confirm === $deletehash) {
         $transaction->allow_commit();
     } catch (Exception $exception) {
         // Exécuter $transaction->rollback($exception), implique une redirection vers la homepage de Moodle.
-        redirect($returnurl, get_string('an_error_occurred_while_deleting_record', 'local_apsolu'),
-            null, \core\output\notification::NOTIFY_ERROR);
+        redirect(
+            $returnurl,
+            get_string('an_error_occurred_while_deleting_record', 'local_apsolu'),
+            null,
+            \core\output\notification::NOTIFY_ERROR
+        );
     }
 
     redirect($returnurl, get_string('calendar_deleted', 'local_apsolu'), null, \core\output\notification::NOTIFY_SUCCESS);
 } else {
-    $sql = "SELECT DISTINCT c.id, c.fullname".
-        " FROM {course} c".
-        " JOIN {enrol} e ON c.id = e.courseid".
-        " WHERE e.enrol = 'select'".
-        " AND e.customchar1 = :calendarid".
+    $sql = "SELECT DISTINCT c.id, c.fullname" .
+        " FROM {course} c" .
+        " JOIN {enrol} e ON c.id = e.courseid" .
+        " WHERE e.enrol = 'select'" .
+        " AND e.customchar1 = :calendarid" .
         " ORDER BY c.fullname";
     $courses = $DB->get_records_sql($sql, ['calendarid' => $calendar->id]);
 

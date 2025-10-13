@@ -175,7 +175,7 @@ class activity extends record {
     public static function synchronize_database() {
         global $CFG, $DB;
 
-        require_once($CFG->dirroot.'/group/lib.php');
+        require_once($CFG->dirroot . '/group/lib.php');
 
         $federationcourse = new FederationCourse();
         $federationcourseid = $federationcourse->get_courseid();
@@ -191,8 +191,10 @@ class activity extends record {
                 // Met à jour l'activité FFSU.
                 $activity = $activities[$data['id']];
 
-                if ($activity->name !== $data['name'] ||
-                    $activity->restriction != $data['restriction']) {
+                if (
+                    $activity->name !== $data['name'] ||
+                    $activity->restriction != $data['restriction']
+                ) {
                     // Met à jour l'enregistrement dans la table apsolu_federation_activities.
                     $sql = "UPDATE {apsolu_federation_activities}
                                SET code = :code, name = :name, restriction = :restriction

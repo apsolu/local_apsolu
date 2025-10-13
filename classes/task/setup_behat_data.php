@@ -49,7 +49,7 @@ class setup_behat_data extends \core\task\adhoc_task {
             throw new coding_exception('This task can be only used by Behat CLI tool');
         }
 
-        require_once($CFG->dirroot.'/local/apsolu/tests/behat/dataset_provider.php');
+        require_once($CFG->dirroot . '/local/apsolu/tests/behat/dataset_provider.php');
 
         dataset_provider::execute();
     }

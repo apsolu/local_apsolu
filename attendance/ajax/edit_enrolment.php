@@ -24,9 +24,9 @@
 
 define('AJAX_SCRIPT', true);
 
-require_once(__DIR__.'/../../../../config.php');
-require($CFG->dirroot.'/enrol/select/lib.php');
-require(__DIR__.'/edit_enrolment_form.php');
+require_once(__DIR__ . '/../../../../config.php');
+require($CFG->dirroot . '/enrol/select/lib.php');
+require(__DIR__ . '/edit_enrolment_form.php');
 
 $userid = required_param('userid', PARAM_INT); // User id.
 $courseid = required_param('courseid', PARAM_INT); // Course id.
@@ -73,8 +73,15 @@ if ($data = $mform->get_data()) {
         $instance = $DB->get_record('enrol', ['id' => $enrolid, 'enrol' => 'select'], '*', MUST_EXIST);
 
         $enrolselectplugin = new enrol_select_plugin();
-        $enrolselectplugin->enrol_user($instance, $student->id, $data->roleid, $timestart = 0, $timeend = 0,
-            $status = $data->statusid, $recovergrades = null);
+        $enrolselectplugin->enrol_user(
+            $instance,
+            $student->id,
+            $data->roleid,
+            $timestart = 0,
+            $timeend = 0,
+            $status = $data->statusid,
+            $recovergrades = null
+        );
 
         $json->status = $statuses[$data->statusid];
         $json->statusid = $data->statusid;
@@ -97,13 +104,13 @@ $picture->size = 50;
 
 $json->form = '<div id="apsolu-attendance-ajax-edit-enrolment">';
 
-$json->form .= '<p>'.$OUTPUT->render($picture).' '.$student->firstname.' '.$student->lastname.'</p>';
+$json->form .= '<p>' . $OUTPUT->render($picture) . ' ' . $student->firstname . ' ' . $student->lastname . '</p>';
 
 if (isset($notification) === true) {
     if ($notification === get_string('changessaved')) {
-        $json->form .= '<p class="alert alert-success">'.get_string('changessaved').'</p>';
+        $json->form .= '<p class="alert alert-success">' . get_string('changessaved') . '</p>';
     } else {
-        $json->form .= '<p class="alert alert-danger">'.get_string('error', 'error').'</p>';
+        $json->form .= '<p class="alert alert-danger">' . get_string('error', 'error') . '</p>';
     }
 }
 

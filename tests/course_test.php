@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 
-require_once($CFG->dirroot.'/course/lib.php');
+require_once($CFG->dirroot . '/course/lib.php');
 
 /**
  * Classe de tests pour local_apsolu\core\course
@@ -178,7 +178,7 @@ final class course_test extends \advanced_testcase {
         $countsessions = count($sessions);
 
         // Vérifie l'objet inséré.
-        $strtime = get_string($data->weekday, 'local_apsolu').' '.$data->starttime.' '.$data->endtime;
+        $strtime = get_string($data->weekday, 'local_apsolu') . ' ' . $data->starttime . ' ' . $data->endtime;
         $this->assertSame(sprintf('%s %s %s %s', $data->str_category, $data->event, $strtime, $data->str_skill), $course->fullname);
         $this->assertSame($countrecords, $initialcount + 1);
 
@@ -201,7 +201,7 @@ final class course_test extends \advanced_testcase {
         $this->assertSame(sprintf('%s %s %s.', $data->str_category, $strtime, $data->str_skill), $course->shortname);
 
         // Modifie la catégorie du créneau.
-        list($catdata, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
+        [$catdata, $mform] = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
         $category->save($catdata, $mform);
 
         $oldcontext = $DB->get_record('context', ['instanceid' => $course->id, 'contextlevel' => CONTEXT_COURSE]);

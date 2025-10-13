@@ -24,9 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$sql = "SELECT *".
-    " FROM {course} c".
-    " JOIN {apsolu_complements} ac ON c.id = ac.id".
+$sql = "SELECT *" .
+    " FROM {course} c" .
+    " JOIN {apsolu_complements} ac ON c.id = ac.id" .
     " ORDER BY c.fullname";
 $complements = $DB->get_records_sql($sql);
 
@@ -36,7 +36,7 @@ $data->complements = array_values($complements);
 $data->count_complements = count($complements);
 
 foreach ($data->complements as $index => $value) {
-    $data->complements[$index]->price = number_format($value->price, 2).' €';
+    $data->complements[$index]->price = number_format($value->price, 2) . ' €';
 }
 
 if (isset($notificationform)) {

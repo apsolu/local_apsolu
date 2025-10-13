@@ -54,8 +54,8 @@ class session_updated extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        return 'The user with id '.$this->userid.' updated the course session'.
-           ' with id '.$this->objectid.' in the course with the id '.$this->courseid.'.';
+        return 'The user with id ' . $this->userid . ' updated the course session' .
+           ' with id ' . $this->objectid . ' in the course with the id ' . $this->courseid . '.';
     }
 
     /**

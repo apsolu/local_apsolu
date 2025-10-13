@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-use local_apsolu\core\course as Course;
+use local_apsolu\core\course;
 
 $courseid = required_param('courseid', PARAM_INT);
 

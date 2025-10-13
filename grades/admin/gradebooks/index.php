@@ -24,13 +24,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\gradebook as Gradebook;
+use local_apsolu\core\gradebook;
 
 defined('MOODLE_INTERNAL') || die;
 
 define('APSOLU_GRADES_COURSE_SCOPE', CONTEXT_SYSTEM);
 
-require_once($CFG->dirroot.'/local/apsolu/grades/grade/gradebook.php');
+require_once($CFG->dirroot . '/local/apsolu/grades/grade/gradebook.php');
 
 echo $OUTPUT->heading(get_string('gradebook', 'grades'));
 

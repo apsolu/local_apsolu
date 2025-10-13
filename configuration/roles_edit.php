@@ -22,11 +22,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\role as Role;
+use local_apsolu\core\role;
 
 defined('MOODLE_INTERNAL') || die;
 
-require(__DIR__.'/roles_edit_form.php');
+require(__DIR__ . '/roles_edit_form.php');
 
 // Get role id.
 $roleid = optional_param('roleid', 0, PARAM_INT);

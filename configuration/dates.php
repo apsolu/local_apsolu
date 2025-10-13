@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot.'/local/apsolu/configuration/dates_form.php');
+require_once($CFG->dirroot . '/local/apsolu/configuration/dates_form.php');
 
 // Build form.
 $attributes = [

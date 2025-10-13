@@ -60,8 +60,8 @@ class federation_number_updated extends \core\event\base {
             $other = json_decode($other);
         }
 
-        return 'The user with id '.$this->userid.' updated the federation number '.$other->oldfederationnumber.
-            ' to '.$other->federationnumber.' for adhesion with id '.$this->objectid;
+        return 'The user with id ' . $this->userid . ' updated the federation number ' . $other->oldfederationnumber .
+            ' to ' . $other->federationnumber . ' for adhesion with id ' . $this->objectid;
     }
 
     /**

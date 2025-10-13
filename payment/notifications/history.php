@@ -24,24 +24,24 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot.'/local/apsolu/locallib.php');
+require_once($CFG->dirroot . '/local/apsolu/locallib.php');
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
 $data->dunnings = [];
 $data->count_dunnings = 0;
 
-$sql = "SELECT ad.*, u.firstname, u.lastname, COUNT(adp.id) AS count_posts".
-    " FROM {apsolu_dunnings} ad".
-    " JOIN {user} u ON u.id = ad.userid".
-    " LEFT JOIN {apsolu_dunnings_posts} adp ON ad.id = adp.dunningid".
-    " GROUP BY ad.id".
+$sql = "SELECT ad.*, u.firstname, u.lastname, COUNT(adp.id) AS count_posts" .
+    " FROM {apsolu_dunnings} ad" .
+    " JOIN {user} u ON u.id = ad.userid" .
+    " LEFT JOIN {apsolu_dunnings_posts} adp ON ad.id = adp.dunningid" .
+    " GROUP BY ad.id" .
     " ORDER BY ad.timecreated DESC";
 $dunnings = $DB->get_records_sql($sql);
 
-$sql = "SELECT ".$DB->sql_concat('dc.dunningid', '" "', 'c.id').", c.*, dc.dunningid".
-    " FROM {apsolu_payments_cards} c".
-    " JOIN {apsolu_dunnings_cards} dc ON c.id = dc.cardid".
+$sql = "SELECT " . $DB->sql_concat('dc.dunningid', '" "', 'c.id') . ", c.*, dc.dunningid" .
+    " FROM {apsolu_payments_cards} c" .
+    " JOIN {apsolu_dunnings_cards} dc ON c.id = dc.cardid" .
     " ORDER BY c.name";
 $cards = $DB->get_records_sql($sql);
 

@@ -22,8 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use core\notification as Notification;
-use local_apsolu\core\attendance\status as Status;
+use core\notification;
+use local_apsolu\core\attendance\status;
 
 defined('MOODLE_INTERNAL') || die();
 

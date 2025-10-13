@@ -24,9 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-use local_apsolu\core\gradeitem as Gradeitem;
+use local_apsolu\core\gradeitem;
 
-require_once($CFG->libdir.'/gradelib.php');
+require_once($CFG->libdir . '/gradelib.php');
 
 $gradeitemid = required_param('gradeitemid', PARAM_INT);
 $delete = optional_param('delete', '', PARAM_ALPHANUM); // Confirmation hash.

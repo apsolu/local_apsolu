@@ -61,7 +61,7 @@ class holiday extends record {
 
         // Récupère la date du dimanche de Pâques.
         $easter = core_date::strftime('%d-%m', easter_date($year));
-        list($easterday, $eastermonth) = explode('-', $easter);
+        [$easterday, $eastermonth] = explode('-', $easter);
 
         $holidays = [];
         $holidays[] = make_timestamp($year, 1, 1); // 1er janvier.
@@ -87,7 +87,9 @@ class holiday extends record {
     public function regenerate_sessions() {
         global $DB;
 
-        $sql = "SELECT DISTINCT courseid FROM {".attendancesession::TABLENAME."} WHERE sessiontime BETWEEN :startdate AND :enddate";
+        $sql = "SELECT DISTINCT courseid
+                  FROM {" . attendancesession::TABLENAME . "}
+                 WHERE sessiontime BETWEEN :startdate AND :enddate";
         $params = ['startdate' => $this->day, 'enddate' => $this->day + 24 * 60 * 60 - 1];
         $sessions = $DB->get_records_sql($sql, $params);
 
@@ -97,7 +99,7 @@ class holiday extends record {
                 $course->load($session->courseid, $required = true);
                 $course->set_sessions();
             } catch (Exception $exception) {
-                debugging(__METHOD__.': le cours '.$session->courseid.' n\'existe pas.', $level = DEBUG_DEVELOPER);
+                debugging(__METHOD__ . ': le cours ' . $session->courseid . ' n\'existe pas.', $level = DEBUG_DEVELOPER);
             }
         }
     }

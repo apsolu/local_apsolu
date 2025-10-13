@@ -58,13 +58,17 @@ class email extends external_api {
                     new external_single_structure(
                         [
                             'subject' => new external_value(PARAM_TEXT, 'the subject of the email'),
-                            'carboncopy' => new external_value(PARAM_BOOL,
-                                    'Send a copy of the email to sender', VALUE_DEFAULT, true),
+                            'carboncopy' => new external_value(
+                                PARAM_BOOL,
+                                'Send a copy of the email to sender',
+                                VALUE_DEFAULT,
+                                true
+                            ),
                             'carboncopysubject' => new external_value(PARAM_TEXT, 'the subject of the email for carbon copy ; if
                                     empty, the main subject will be used.'),
                             'body' => new external_value(PARAM_RAW, 'the text of the email'),
                             'receivers' => new external_multiple_structure(
-                                    new external_value(PARAM_INT, 'id of the user to send the private email')
+                                new external_value(PARAM_INT, 'id of the user to send the private email')
                             ),
                         ]
                     )
@@ -103,7 +107,7 @@ class email extends external_api {
                 $receivers[] = $USER->id;
             }
 
-            list($sqluserids, $sqlparams) = $DB->get_in_or_equal($receivers, SQL_PARAMS_NAMED, 'userid_');
+            [$sqluserids, $sqlparams] = $DB->get_in_or_equal($receivers, SQL_PARAMS_NAMED, 'userid_');
             $tousers = $DB->get_records_select("user", "id " . $sqluserids . " AND deleted = 0", $sqlparams);
 
             foreach ($receivers as $receiver) {
@@ -157,8 +161,10 @@ class email extends external_api {
         return new external_multiple_structure(
             new external_single_structure(
                 [
-                    'msgid' => new external_value(PARAM_INT,
-                            'test this to know if it succeeds:  id of the created message if it succeeded, -1 when failed'),
+                    'msgid' => new external_value(
+                        PARAM_INT,
+                        'test this to know if it succeeds:  id of the created message if it succeeded, -1 when failed'
+                    ),
                     'errormessage' => new external_value(PARAM_TEXT, 'error message - if it failed', VALUE_OPTIONAL),
                 ]
             )

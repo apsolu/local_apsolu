@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot.'/local/apsolu/configuration/calendars_types_form.php');
+require_once($CFG->dirroot . '/local/apsolu/configuration/calendars_types_form.php');
 
 $typeid = optional_param('typeid', 0, PARAM_INT);
 
@@ -61,7 +61,7 @@ if ($data = $mform->get_data()) {
     // Display notification and display elements list.
     $notificationform = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
 
-    require(__DIR__.'/calendars_types_view.php');
+    require(__DIR__ . '/calendars_types_view.php');
 } else {
     // Display form.
     echo $OUTPUT->header();

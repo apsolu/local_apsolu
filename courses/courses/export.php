@@ -57,11 +57,11 @@ foreach ($recordset as $teacher) {
         continue;
     }
 
-    $user = $teacher->firstname.' '.$teacher->lastname.' ('.$teacher->email.')';
+    $user = $teacher->firstname . ' ' . $teacher->lastname . ' (' . $teacher->email . ')';
     if ($courses[$teacher->instanceid]->teachers === '-') {
         $courses[$teacher->instanceid]->teachers = $user;
     } else {
-        $courses[$teacher->instanceid]->teachers .= ', '.$user;
+        $courses[$teacher->instanceid]->teachers .= ', ' . $user;
     }
 }
 $recordset->close();
@@ -120,9 +120,16 @@ foreach ($DB->get_records('enrol', ['enrol' => 'select'], $sort = 'enrolstartdat
         $cards = implode(', ', $enrol_cards[$enrol->id]);
     }
 
-    $index = 'enrol'.$enrol->id;
-    $courses[$enrol->courseid]->{$index} = sprintf('Déb. ins.: %s, fin ins.: %s, LP: %s, LC: %s, rôles: %s, cartes: %s',
-        $enrolstartdate, $enrolenddate, $main_quota, $wait_quota, $roles, $cards);
+    $index = 'enrol' . $enrol->id;
+    $courses[$enrol->courseid]->{$index} = sprintf(
+        'Déb. ins.: %s, fin ins.: %s, LP: %s, LC: %s, rôles: %s, cartes: %s',
+        $enrolstartdate,
+        $enrolenddate,
+        $main_quota,
+        $wait_quota,
+        $roles,
+        $cards
+    );
 }
 
 // Génération du fichier csv.

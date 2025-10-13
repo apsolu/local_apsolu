@@ -23,9 +23,9 @@
  */
 
 use local_apsolu\core\customfields;
-use local_apsolu\core\gradebook as Gradebook;
+use local_apsolu\core\gradebook;
 
-require_once(__DIR__.'/../../../../config.php');
+require_once(__DIR__ . '/../../../../config.php');
 
 $PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('base');
@@ -37,7 +37,7 @@ $PAGE->navbar->add(get_string('gradebook', 'grades'));
 
 require_login($courseorid = null, $autologinguest = false);
 
-require_once($CFG->dirroot.'/local/apsolu/grades/grade/gradebook.php');
+require_once($CFG->dirroot . '/local/apsolu/grades/grade/gradebook.php');
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('gradebook', 'grades'));

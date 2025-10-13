@@ -22,15 +22,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\core\federation\adhesion;
 use local_apsolu\event\federation_number_created;
 use local_apsolu\event\federation_number_updated;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->libdir.'/csvlib.class.php');
+require_once($CFG->libdir . '/csvlib.class.php');
 
-require_once(__DIR__.'/import_form.php');
+require_once(__DIR__ . '/import_form.php');
 
 $context = context_course::instance($courseid, MUST_EXIST);
 $returnurl = new moodle_url('/local/apsolu/federation/index.php', ['page' => 'import']);
@@ -52,8 +52,8 @@ if ($formdata = $mform->get_data()) {
     }
 
     if (isset($formdata->importbutton) === true) {
-        $sql = "SELECT u.email, u.firstname, u.lastname, adh.*".
-            " FROM {user} u".
+        $sql = "SELECT u.email, u.firstname, u.lastname, adh.*" .
+            " FROM {user} u" .
             " JOIN {apsolu_federation_adhesions} adh ON u.id = adh.userid";
         $users = $DB->get_records_sql($sql);
 
@@ -112,7 +112,7 @@ if ($formdata = $mform->get_data()) {
                 // Numéro de licence invalide.
                 $params = new stdClass();
                 $params->licenseid = $licenseid;
-                $params->profile = html_writer::link($profileurl, $adhesion->firstname.' '.$adhesion->lastname);
+                $params->profile = html_writer::link($profileurl, $adhesion->firstname . ' ' . $adhesion->lastname);
                 $result[] = get_string('the_license_number_X_associated_to_Y_is_invalid', 'local_apsolu', $params);
                 continue;
             }
@@ -131,7 +131,7 @@ if ($formdata = $mform->get_data()) {
 
             $params = new stdClass();
             $params->licenseid = $licenseid;
-            $params->profile = html_writer::link($profileurl, $adhesion->firstname.' '.$adhesion->lastname);
+            $params->profile = html_writer::link($profileurl, $adhesion->firstname . ' ' . $adhesion->lastname);
 
             if (empty($oldlicenseid) === true) {
                 // Création d'un numéro AS.
@@ -198,7 +198,7 @@ if (isset($formdata->previewbutton) === true) {
 $mform->display();
 
 if (isset($formdata->importbutton) === true) {
-    echo '<h3>'.get_string('federation_result', 'local_apsolu').'</h3>';
+    echo '<h3>' . get_string('federation_result', 'local_apsolu') . '</h3>';
     if (isset($result[0]) === false) {
         $content = html_writer::tag('p', get_string('federation_no_import', 'local_apsolu'));
     } else {

@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\core\federation\adhesion;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -38,7 +38,7 @@ class local_apsolu_federation_payment extends moodleform {
 
         $mform = $this->_form;
 
-        list($contact, $cards, $requireddocuments, $due, $freeze, $adhesion) = $this->_customdata;
+        [$contact, $cards, $requireddocuments, $due, $freeze, $adhesion] = $this->_customdata;
 
         $countrequireddocuments = count($requireddocuments);
 

@@ -64,7 +64,7 @@ class local_apsolu_courses_holidays_generate_form extends moodleform {
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 
         $attributes = new stdClass();
-        $attributes->href = $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=holidays';
+        $attributes->href = $CFG->wwwroot . '/local/apsolu/courses/index.php?tab=holidays';
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 

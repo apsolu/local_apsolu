@@ -130,7 +130,7 @@ class status extends record {
                 continue;
             }
 
-            $sql = "INSERT INTO {apsolu_attendance_statuses} (shortlabel, longlabel, sumlabel, color, sortorder)".
+            $sql = "INSERT INTO {apsolu_attendance_statuses} (shortlabel, longlabel, sumlabel, color, sortorder)" .
                 " VALUES(:shortlabel, :longlabel, :sumlabel, :color, :sortorder)";
             $DB->execute($sql, $data);
 

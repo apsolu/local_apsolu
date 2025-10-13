@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot.'/local/apsolu/configuration/course_offerings_form.php');
+require_once($CFG->dirroot . '/local/apsolu/configuration/course_offerings_form.php');
 
 // Build form.
 $data = new stdClass();
@@ -83,7 +83,7 @@ if ($data = $mform->get_data()) {
             case 'range3_end':
             case 'range4_start':
                 if (strlen($value) === 4) {
-                    $value = '0'.$value;
+                    $value = '0' . $value;
                 }
                 $ranges->$key = $value;
                 break;

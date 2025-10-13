@@ -36,8 +36,12 @@ $returnurl = new moodle_url('/local/apsolu/payment/admin.php', ['tab' => 'prices
 // Contrôle que le template qu'aucun utilisateur n'a réglé ce tarif.
 $countrecords = $DB->count_records('apsolu_payments_items', ['cardid' => $instance->id]);
 if ($countrecords > 0) {
-    throw new moodle_exception('this_card_cannot_be_deleted_as_it_has_recently_used_in_X_transactions', 'local_apsolu',
-        $returnurl, $param = $countrecords);
+    throw new moodle_exception(
+        'this_card_cannot_be_deleted_as_it_has_recently_used_in_X_transactions',
+        'local_apsolu',
+        $returnurl,
+        $param = $countrecords
+    );
 }
 
 if ($delete === $deletehash) {
@@ -62,8 +66,10 @@ $message = '';
 $countrecords = $DB->count_records('enrol_select_cards', ['cardid' => $instance->id]);
 if ($countrecords > 0) {
     // Ajoute un avertissement si la carte est utilisée dans une méthode d'inscription.
-    $message = html_writer::div(get_string('warning_this_card_is_currently_used_in_X_enrolments', 'local_apsolu', $countrecords),
-        'alert alert-warning');
+    $message = html_writer::div(
+        get_string('warning_this_card_is_currently_used_in_X_enrolments', 'local_apsolu', $countrecords),
+        'alert alert-warning'
+    );
 }
 
 $datatemplate = [];

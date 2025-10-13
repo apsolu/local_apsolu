@@ -30,11 +30,11 @@ use local_apsolu\tests\behat\dataset_provider;
 define('CLI_SCRIPT', true);
 define('APSOLU_DEMO', true);
 
-require(__DIR__.'/../../../config.php');
+require(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/clilib.php');
-require_once($CFG->dirroot.'/local/apsolu/tests/behat/dataset_provider.php');
+require_once($CFG->dirroot . '/local/apsolu/tests/behat/dataset_provider.php');
 
-list($options, $unrecognized) = cli_get_params(
+[$options, $unrecognized] = cli_get_params(
     [
         'help'                      => false,
         'non-interactive'           => false,
@@ -159,7 +159,7 @@ dataset_provider::execute();
 cli_writeln('');
 
 // Initialise un espace-cours spécifique pour l'instance de démonstration.
-if (is_readable($CFG->dirroot.'/mod/scheduler/version.php') === true) {
+if (is_readable($CFG->dirroot . '/mod/scheduler/version.php') === true) {
     // Récupère les droits admin.
     $USER = get_admin();
 
@@ -181,9 +181,9 @@ if (is_readable($CFG->dirroot.'/mod/scheduler/version.php') === true) {
     }
 
     // Ajoute une activité Rendez-vous.
-    require_once($CFG->dirroot.'/course/modlib.php');
+    require_once($CFG->dirroot . '/course/modlib.php');
 
-    list($module, $context, $cw) = can_add_moduleinfo($course, 'scheduler', $section->section);
+    [$module, $context, $cw] = can_add_moduleinfo($course, 'scheduler', $section->section);
 
     $data = new stdClass();
     $data->section = $section->section;

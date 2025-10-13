@@ -45,11 +45,11 @@ if (isset($tabslist[$tab]) === false) {
 }
 
 // Setup admin access requirement.
-admin_externalpage_setup('local_apsolu_grades_'.$tab);
+admin_externalpage_setup('local_apsolu_grades_' . $tab);
 
 // Display page.
 ob_start();
-require(__DIR__.'/'.$tab.'/index.php');
+require(__DIR__ . '/' . $tab . '/index.php');
 $content = ob_get_contents();
 ob_end_clean();
 

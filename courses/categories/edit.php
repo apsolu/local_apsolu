@@ -22,13 +22,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\category as Category;
-use local_apsolu\core\grouping as Grouping;
-use local_apsolu\core\manager as Manager;
+use local_apsolu\core\category;
+use local_apsolu\core\grouping;
+use local_apsolu\core\manager;
 
 defined('MOODLE_INTERNAL') || die;
 
-require(__DIR__.'/edit_form.php');
+require(__DIR__ . '/edit_form.php');
 
 // Get category id.
 $categoryid = optional_param('categoryid', 0, PARAM_INT);
@@ -40,9 +40,9 @@ if ($categoryid !== 0) {
 }
 
 // Groupements d'activités sportives.
-$sql = "SELECT cc.id, cc.name".
-    " FROM {course_categories} cc".
-    " JOIN {apsolu_courses_groupings} acg ON cc.id = acg.id".
+$sql = "SELECT cc.id, cc.name" .
+    " FROM {course_categories} cc" .
+    " JOIN {apsolu_courses_groupings} acg ON cc.id = acg.id" .
     " ORDER BY cc.name";
 $groupings = [];
 foreach ($DB->get_records_sql($sql) as $grouping) {
@@ -50,7 +50,8 @@ foreach ($DB->get_records_sql($sql) as $grouping) {
 }
 
 if ($groupings === []) {
-    throw new moodle_exception('error_no_grouping', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=groupings');
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'groupings']);
+    throw new moodle_exception('error_no_grouping', 'local_apsolu', $returnurl);
 }
 
 // Build form.
@@ -59,8 +60,15 @@ $itemid = 0;
 $customdata = ['category' => $category, 'groupings' => $groupings, 'context' => $context, 'itemid' => $itemid];
 $mform = new local_apsolu_courses_categories_edit_form(null, $customdata);
 
-$editor = file_prepare_standard_editor($category, 'description', $mform->get_description_editor_options(), $context,
-    'coursecat', 'description', $itemid);
+$editor = file_prepare_standard_editor(
+    $category,
+    'description',
+    $mform->get_description_editor_options(),
+    $context,
+    'coursecat',
+    'description',
+    $itemid
+);
 $mform->set_data($editor);
 
 if ($data = $mform->get_data()) {

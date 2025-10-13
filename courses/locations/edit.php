@@ -22,11 +22,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\location as Location;
+use local_apsolu\core\location;
 
 defined('MOODLE_INTERNAL') || die;
 
-require(__DIR__.'/edit_form.php');
+require(__DIR__ . '/edit_form.php');
 
 // Get location id.
 $locationid = optional_param('locationid', 0, PARAM_INT);
@@ -44,7 +44,7 @@ foreach ($DB->get_records('apsolu_areas', $conditions = null, $sort = 'name') as
 }
 
 if ($areas === []) {
-    throw new moodle_exception('error_no_area', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=areas');
+    throw new moodle_exception('error_no_area', 'local_apsolu', $CFG->wwwroot . '/local/apsolu/courses/index.php?tab=areas');
 }
 
 // Load managers.
@@ -54,7 +54,7 @@ foreach ($DB->get_records('apsolu_managers', $conditions = null, $sort = 'name')
 }
 
 if ($managers === []) {
-    throw new moodle_exception('error_no_manager', 'local_apsolu', $CFG->wwwroot.'/local/apsolu/courses/index.php?tab=managers');
+    throw new moodle_exception('error_no_manager', 'local_apsolu', $CFG->wwwroot . '/local/apsolu/courses/index.php?tab=managers');
 }
 
 // Build form.

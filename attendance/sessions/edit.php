@@ -41,7 +41,7 @@ if ($session === false) {
     $apsolucourse = $DB->get_record('apsolu_courses', ['id' => $courseid]);
 
     $sessions = $DB->get_records('apsolu_attendance_sessions', ['courseid' => $courseid]);
-    $name = 'Cours n°'.(count($sessions) + 1);
+    $name = 'Cours n°' . (count($sessions) + 1);
 
     $instance = new stdClass();
     $instance->sessionid = 0;
@@ -93,20 +93,28 @@ if ($mdata = $mform->get_data()) {
     $variables = (object) ['datetime' => userdate($session->sessiontime, get_string('strftimedatetime', 'local_apsolu')),
         'location' => $locations[$session->locationid]];
     if ($instance->sessionid === 0) {
-        $subject = get_string('attendance_forum_create_session_subject', 'local_apsolu',
-            userdate($session->sessiontime, get_string('strftimedate', 'local_apsolu')));
+        $subject = get_string(
+            'attendance_forum_create_session_subject',
+            'local_apsolu',
+            userdate($session->sessiontime, get_string('strftimedate', 'local_apsolu'))
+        );
         $message = get_string('attendance_forum_create_session_message', 'local_apsolu', $variables);
     } else {
-        $subject = get_string('attendance_forum_edit_session_subject', 'local_apsolu',
-            userdate($session->sessiontime, get_string('strftimedate', 'local_apsolu')));
+        $subject = get_string(
+            'attendance_forum_edit_session_subject',
+            'local_apsolu',
+            userdate($session->sessiontime, get_string('strftimedate', 'local_apsolu'))
+        );
         $message = get_string('attendance_forum_edit_session_message', 'local_apsolu', $variables);
     }
 
     // Notifie le forum.
     if (empty($mdata->notify) === false) {
         if ($changed === false) {
-            $notifications[] = $OUTPUT->notification(get_string('attendance_error_no_modification', 'local_apsolu'),
-                'notifymessage');
+            $notifications[] = $OUTPUT->notification(
+                get_string('attendance_error_no_modification', 'local_apsolu'),
+                'notifymessage'
+            );
         }
 
         $forum = $DB->get_record('forum', ['type' => 'news', 'course' => $course->id]);
@@ -117,7 +125,7 @@ if ($mdata = $mform->get_data()) {
         if ($changed === true && $forum !== false) {
             require_once($CFG->dirroot . '/mod/forum/lib.php');
 
-            list($course, $cm) = get_course_and_cm_from_instance($forum, 'forum');
+            [$course, $cm] = get_course_and_cm_from_instance($forum, 'forum');
             $context = context_module::instance($cm->id);
 
             // Create the discussion.
@@ -138,11 +146,15 @@ if ($mdata = $mform->get_data()) {
             $discussion->pinned = FORUM_DISCUSSION_UNPINNED;
             $fakemform = [];
             if ($discussionid = forum_add_discussion($discussion, $fakemform)) {
-                $notifications[] = $OUTPUT->notification(get_string('attendance_success_message_forum', 'local_apsolu'),
-                    'notifysuccess');
+                $notifications[] = $OUTPUT->notification(
+                    get_string('attendance_success_message_forum', 'local_apsolu'),
+                    'notifysuccess'
+                );
             } else {
-                $notifications[] = $OUTPUT->notification(get_string('attendance_error_message_forum', 'local_apsolu'),
-                    'notifyproblem');
+                $notifications[] = $OUTPUT->notification(
+                    get_string('attendance_error_message_forum', 'local_apsolu'),
+                    'notifyproblem'
+                );
             }
         }
     }
@@ -159,13 +171,13 @@ if ($mdata = $mform->get_data()) {
 
             $mailer = new moodle_phpmailer();
             $mailer->AddAddress($functionalcontactmail);
-            $mailer->Subject = $subject.' ('.$course->fullname.')';
+            $mailer->Subject = $subject . ' (' . $course->fullname . ')';
             $mailer->Body = $message;
             if (isset($cm->id) === true) {
-                $mailer->Body .= '<p><a href="'.$CFG->wwwroot.'/mod/forum/view.php?id='.$cm->id.'">'.
-                    get_string('postincontext', 'forum').'</a></p>';
+                $mailer->Body .= '<p><a href="' . $CFG->wwwroot . '/mod/forum/view.php?id=' . $cm->id . '">' .
+                    get_string('postincontext', 'forum') . '</a></p>';
             } else {
-                $mailer->Body .= '<p><strong>'.get_string('no_messages_sent_to_forum', 'local_apsolu').'</strong></p>';
+                $mailer->Body .= '<p><strong>' . get_string('no_messages_sent_to_forum', 'local_apsolu') . '</strong></p>';
             }
             $mailer->From = $CFG->noreplyaddress;
             $mailer->FromName = '';

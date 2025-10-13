@@ -56,7 +56,7 @@ final class category_test extends \advanced_testcase {
         }
 
         // Ajoute un objet.
-        list($data, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
+        [$data, $mform] = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
         $category->save($data, $mform);
 
         // Supprime un objet existant.
@@ -85,7 +85,7 @@ final class category_test extends \advanced_testcase {
         $this->assertSame(0, $countrecords);
 
         // Enregistre un nouvel objet.
-        list($data, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
+        [$data, $mform] = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
         $category->save($data, $mform);
 
         $countrecords = $DB->count_records($category::TABLENAME);
@@ -93,7 +93,7 @@ final class category_test extends \advanced_testcase {
 
         // Enregistre un nouvel objet.
         $category->id = 0;
-        list($data, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
+        [$data, $mform] = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
         $category->save($data, $mform);
 
         $countrecords = $DB->count_records($category::TABLENAME);
@@ -114,7 +114,7 @@ final class category_test extends \advanced_testcase {
         $this->assertSame('', $category->name);
 
         // Charge un objet existant.
-        list($data, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
+        [$data, $mform] = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
         $category->save($data, $mform);
 
         $test = new category();
@@ -137,7 +137,7 @@ final class category_test extends \advanced_testcase {
         $initialcount = $DB->count_records($category::TABLENAME);
 
         // Enregistre un objet.
-        list($data, $mform) = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
+        [$data, $mform] = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
         $category->save($data, $mform);
         $countrecords = $DB->count_records($category::TABLENAME);
 

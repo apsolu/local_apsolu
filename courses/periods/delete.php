@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-use local_apsolu\core\period as Period;
+use local_apsolu\core\period;
 
 $periodid = required_param('periodid', PARAM_INT);
 $delete = optional_param('delete', '', PARAM_ALPHANUM); // Confirmation hash.
@@ -46,10 +46,10 @@ if ($delete === $deletehash) {
 }
 
 // Vérifie si cette période n'est pas associée à un cours.
-$sql = "SELECT c.fullname".
-    " FROM {course} c".
-    " JOIN {apsolu_courses} cc ON c.id = cc.id".
-    " WHERE cc.periodid = :periodid".
+$sql = "SELECT c.fullname" .
+    " FROM {course} c" .
+    " JOIN {apsolu_courses} cc ON c.id = cc.id" .
+    " WHERE cc.periodid = :periodid" .
     " ORDER BY c.fullname";
 $courses = $DB->get_records_sql($sql, ['periodid' => $period->id]);
 if (count($courses) !== 0) {

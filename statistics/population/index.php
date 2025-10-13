@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require(__DIR__.'/../../../../config.php');
+require(__DIR__ . '/../../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
 $page = optional_param('page', 'dashboard', PARAM_ALPHA);
@@ -33,7 +33,7 @@ $pages = ['dashboard', 'reports', 'custom'];
 $tabtree = [];
 foreach ($pages as $pagename) {
     $url = new moodle_url('/local/apsolu/statistics/population/index.php', ['page' => $pagename]);
-    $tabtree[] = new tabobject($pagename, $url, get_string('statistics_'.$pagename, 'local_apsolu'));
+    $tabtree[] = new tabobject($pagename, $url, get_string('statistics_' . $pagename, 'local_apsolu'));
 }
 
 // Set default tabs.
@@ -42,9 +42,9 @@ if (in_array($page, $pages, true) === false) {
 }
 
 // Setup admin access requirement.
-admin_externalpage_setup('local_apsolu_statistics_population_'.$page);
+admin_externalpage_setup('local_apsolu_statistics_population_' . $page);
 
 $heading = sprintf('%s : %s', get_string('statistics', 'local_apsolu'), get_string('statistics_population', 'local_apsolu'));
 $PAGE->set_heading($heading);
 
-require(__DIR__.'/'.$page.'.php');
+require(__DIR__ . '/' . $page . '.php');

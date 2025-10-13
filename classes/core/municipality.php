@@ -60,7 +60,7 @@ class municipality extends record {
             return;
         }
 
-        $handle = fopen($CFG->dirroot.'/local/apsolu/db/municipalities.csv', 'r');
+        $handle = fopen($CFG->dirroot . '/local/apsolu/db/municipalities.csv', 'r');
         if ($handle === false) {
             throw new Exception('error');
         }

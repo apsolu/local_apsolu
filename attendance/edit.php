@@ -28,9 +28,9 @@ use UniversiteRennes2\Apsolu\Payment;
 use local_apsolu\core\attendance;
 use local_apsolu\core\customfields;
 
-require_once(__DIR__.'/../../../config.php');
-require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
-require_once($CFG->dirroot.'/enrol/select/lib.php');
+require_once(__DIR__ . '/../../../config.php');
+require_once($CFG->dirroot . '/local/apsolu/classes/apsolu/payment.php');
+require_once($CFG->dirroot . '/enrol/select/lib.php');
 
 $courseid = optional_param('courseid', 0, PARAM_INT); // Course id.
 $sessionid = optional_param('sessionid', 0, PARAM_INT); // Session id.
@@ -63,7 +63,7 @@ if (count($sessions) === 0) {
 }
 
 // Faire choisir une session.
-require_once($CFG->dirroot.'/local/apsolu/attendance/edit_select_form.php');
+require_once($CFG->dirroot . '/local/apsolu/attendance/edit_select_form.php');
 
 foreach ($sessions as $session) {
     if ($sessionid === 0) {
@@ -91,17 +91,17 @@ $customfields = customfields::getCustomFields();
 // TODO: jointure avec colleges.
 // TODO: retrouver pourquoi on affiche les utilisateurs inscrits manuellement.
 $sql = "SELECT u.*, ue.id AS ueid, ue.status, ue.timestart, ue.timeend, ue.enrolid,
-               e.enrol, ra.id AS raid, ra.roleid, uid1.data AS apsolusesame".
-    " FROM {user} u".
-    " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = :apsolusesame".
-    " JOIN {user_enrolments} ue ON u.id = ue.userid".
-    " JOIN {enrol} e ON e.id = ue.enrolid".
-    " JOIN {role_assignments} ra ON u.id = ra.userid AND ((e.id = ra.itemid) OR (e.enrol = 'manual' AND ra.itemid = 0))".
-    " JOIN {role} r ON r.id = ra.roleid".
-    " JOIN {context} ctx ON ra.contextid = ctx.id AND ctx.instanceid = e.courseid".
-    " WHERE e.status = 0". // Only active enrolments.
-    " AND e.courseid = :courseid".
-    " AND ctx.contextlevel = 50". // Course level.
+               e.enrol, ra.id AS raid, ra.roleid, uid1.data AS apsolusesame" .
+    " FROM {user} u" .
+    " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = :apsolusesame" .
+    " JOIN {user_enrolments} ue ON u.id = ue.userid" .
+    " JOIN {enrol} e ON e.id = ue.enrolid" .
+    " JOIN {role_assignments} ra ON u.id = ra.userid AND ((e.id = ra.itemid) OR (e.enrol = 'manual' AND ra.itemid = 0))" .
+    " JOIN {role} r ON r.id = ra.roleid" .
+    " JOIN {context} ctx ON ra.contextid = ctx.id AND ctx.instanceid = e.courseid" .
+    " WHERE e.status = 0" . // Only active enrolments.
+    " AND e.courseid = :courseid" .
+    " AND ctx.contextlevel = 50" . // Course level.
     " AND r.archetype = 'student'";
 
 $params = [];
@@ -112,8 +112,8 @@ if ($invalid_enrolments) {
     $sql .= " AND ue.status >= 0";
 } else {
     // Récupération des inscriptions courantes.
-    $sql .= "AND ue.status = 0".
-        " AND (ue.timestart <= :timestart OR ue.timestart = 0)".
+    $sql .= "AND ue.status = 0" .
+        " AND (ue.timestart <= :timestart OR ue.timestart = 0)" .
         " AND (ue.timeend >= :timeend OR ue.timeend = 0)";
     $params['timestart'] = $session->sessiontime;
     $params['timeend'] = $session->sessiontime;
@@ -125,11 +125,11 @@ $params['courseid'] = $courseid;
 $students = $DB->get_records_sql($sql, $params);
 
 // TODO: récupérer les gens inscrits ponctuellement.
-$sql = "SELECT DISTINCT u.*, uid1.data AS apsolusesame".
-    " FROM {user} u".
-    " JOIN {apsolu_attendance_presences} aap ON u.id = aap.studentid".
-    " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid".
-    " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = :apsolusesame".
+$sql = "SELECT DISTINCT u.*, uid1.data AS apsolusesame" .
+    " FROM {user} u" .
+    " JOIN {apsolu_attendance_presences} aap ON u.id = aap.studentid" .
+    " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid" .
+    " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = :apsolusesame" .
     " WHERE aas.courseid = :courseid";
 
 $params = [];
@@ -150,7 +150,7 @@ foreach ($DB->get_records_sql($sql, $params) as $student) {
 }
 
 // Tri les étudiants alphabétiquement.
-uasort($students, function($a, $b) {
+uasort($students, function ($a, $b) {
     if ($a->lastname > $b->lastname) {
         return 1;
     } else if ($a->lastname < $b->lastname) {
@@ -166,8 +166,12 @@ uasort($students, function($a, $b) {
     return 0;
 });
 
-$presences = $DB->get_records('apsolu_attendance_presences', ['sessionid' => $sessionid],
-    $sort = '', $fields = 'studentid, statusid, description, id');
+$presences = $DB->get_records(
+    'apsolu_attendance_presences',
+    ['sessionid' => $sessionid],
+    $sort = '',
+    $fields = 'studentid, statusid, description, id'
+);
 
 $roles = role_fix_names($DB->get_records('role'));
 
@@ -240,12 +244,11 @@ $paymentsimages = Payment::get_statuses_images();
 $processed_sudents = [];
 
 foreach ($students as $student) {
-
     $activestart = ($student->timestart == 0 || $student->timestart < time());
     $activeend = ($student->timeend == 0 || $student->timeend > time());
     $enrolment_status = intval($activestart && $activeend);
 
-    if ( !$inactive_enrolments && $enrolment_status === 0) {
+    if (!$inactive_enrolments && $enrolment_status === 0) {
         // Inactive enrolement ! (inactive enrolments are hidden).
         continue;
     }
@@ -318,7 +321,7 @@ foreach ($students as $student) {
 
     if (isset($payments[$student->id]) === true) {
         foreach ($payments[$student->id] as $card) {
-            $informations[] = $paymentsimages[$card->status]->image.' '.$card->fullname;
+            $informations[] = $paymentsimages[$card->status]->image . ' ' . $card->fullname;
             if ($card->status === Payment::DUE) {
                 $processed_student->informations_alert = 1;
             }
@@ -349,8 +352,7 @@ $data->student_count = count($processed_sudents);
 $data->calendar = attendance::getCalendarFromSession($sessionid);
 
 if (isset($_POST['exportcsv']) === true || isset($_POST['exportexcel']) === true) {
-
-    $filename = 'extraction de la session '.$session->name;
+    $filename = 'extraction de la session ' . $session->name;
 
     // Définit les entêtes.
     $headers = [];
@@ -365,10 +367,14 @@ if (isset($_POST['exportcsv']) === true || isset($_POST['exportexcel']) === true
     $headers[] = get_string('email');
     $headers[] = get_string('attendance_presence', 'local_apsolu');
     $headers[] = get_string('attendance_comment', 'local_apsolu');
-    $headers[] = sprintf('%s (%s)', strip_tags(get_string('attendance_presences_count', 'local_apsolu')), get_string('course',
-        'local_apsolu'));
-    $headers[] = sprintf('%s (%s)', strip_tags(get_string('attendance_presences_count', 'local_apsolu')), get_string('activity',
-        'local_apsolu'));
+    $headers[] = sprintf('%s (%s)', strip_tags(get_string('attendance_presences_count', 'local_apsolu')), get_string(
+        'course',
+        'local_apsolu'
+    ));
+    $headers[] = sprintf('%s (%s)', strip_tags(get_string('attendance_presences_count', 'local_apsolu')), get_string(
+        'activity',
+        'local_apsolu'
+    ));
     $headers[] = get_string('attendance_enrolment_type', 'local_apsolu');
     if (empty($data->invalid_enrolments) === false) {
         $headers[] = get_string('attendance_enrolment_list', 'local_apsolu');
@@ -432,7 +438,7 @@ if (isset($_POST['exportcsv']) === true || isset($_POST['exportexcel']) === true
     }
 
     // Export au format excel.
-    require_once($CFG->libdir.'/excellib.class.php');
+    require_once($CFG->libdir . '/excellib.class.php');
 
     $workbook = new MoodleExcelWorkbook("-");
     $workbook->send($filename);

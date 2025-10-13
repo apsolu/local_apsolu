@@ -52,11 +52,11 @@ if (in_array($tab, $tabslist, $strict = true) === false) {
 }
 
 // Setup admin access requirement.
-admin_externalpage_setup('local_apsolu_payment_'.$tab);
+admin_externalpage_setup('local_apsolu_payment_' . $tab);
 
 // Display page.
 ob_start();
-require(__DIR__.'/'.$tab.'/index.php');
+require(__DIR__ . '/' . $tab . '/index.php');
 $content = ob_get_contents();
 ob_end_clean();
 

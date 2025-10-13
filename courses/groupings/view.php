@@ -24,9 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$sql = "SELECT *".
-    " FROM {apsolu_courses_groupings} acc".
-    " JOIN {course_categories} cc ON  acc.id=cc.id".
+$sql = "SELECT *" .
+    " FROM {apsolu_courses_groupings} acc" .
+    " JOIN {course_categories} cc ON  acc.id=cc.id" .
     " ORDER BY cc.name, cc.sortorder";
 $groupings = $DB->get_records_sql($sql);
 

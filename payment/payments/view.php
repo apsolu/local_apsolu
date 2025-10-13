@@ -26,9 +26,9 @@ use UniversiteRennes2\Apsolu\Payment;
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot.'/local/apsolu/locallib.php');
-require_once($CFG->dirroot.'/user/profile/lib.php');
-require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
+require_once($CFG->dirroot . '/local/apsolu/locallib.php');
+require_once($CFG->dirroot . '/user/profile/lib.php');
+require_once($CFG->dirroot . '/local/apsolu/classes/apsolu/payment.php');
 
 $userid = optional_param('userid', null, PARAM_INT);
 $showalltransactions = optional_param('showall', 0, PARAM_INT);
@@ -40,13 +40,13 @@ if (isset($userid)) {
     $data = new stdClass();
     $data->wwwroot = $CFG->wwwroot;
     $data->userid = $userid;
-    $data->useridentity = $OUTPUT->render(new user_picture($user)).' '.fullname($user);
+    $data->useridentity = $OUTPUT->render(new user_picture($user)) . ' ' . fullname($user);
     $data->payments = [];
     $data->count_payments = 0;
     $data->due_payments = [];
     $data->count_due_payments = 0;
     $data->has_sesame = (isset($customfields->apsolusesame) && $customfields->apsolusesame == 1);
-    $data->user_auth = get_string('pluginname', 'auth_'.$user->auth);
+    $data->user_auth = get_string('pluginname', 'auth_' . $user->auth);
 
     // Liste les cartes dûes de l'utilisateur.
     $cards = Payment::get_user_cards($userid);
@@ -86,8 +86,8 @@ if (isset($userid)) {
 
         $format = new NumberFormatter('fr_FR', NumberFormatter::CURRENCY);
         $payment->amount_string = $format->formatCurrency($payment->amount, 'EUR');
-        $payment->method_string = get_string('method_'.$payment->method, 'local_apsolu');
-        $payment->source_string = get_string('source_'.$payment->source, 'local_apsolu');
+        $payment->method_string = get_string('method_' . $payment->method, 'local_apsolu');
+        $payment->source_string = get_string('source_' . $payment->source, 'local_apsolu');
 
         switch ($payment->status) {
             case Payment::PAID:
@@ -108,9 +108,9 @@ if (isset($userid)) {
 
         $payment->items = [];
         $payment->count_items = 0;
-        $sql = "SELECT api.*, apc.fullname".
-            " FROM {apsolu_payments_items} api".
-            " JOIN {apsolu_payments_cards} apc ON apc.id = api.cardid".
+        $sql = "SELECT api.*, apc.fullname" .
+            " FROM {apsolu_payments_items} api" .
+            " JOIN {apsolu_payments_cards} apc ON apc.id = api.cardid" .
             " WHERE api.paymentid = :paymentid";
         $items = $DB->get_records_sql($sql, ['paymentid' => $payment->id]);
         foreach ($items as $item) {
@@ -122,7 +122,7 @@ if (isset($userid)) {
         $data->count_payments++;
     }
 
-    $data->backurl = $CFG->wwwroot.'/local/apsolu/payment/admin.php?tab=payments';
+    $data->backurl = $CFG->wwwroot . '/local/apsolu/payment/admin.php?tab=payments';
 } else {
     // Create the user selector objects.
     $options = ['multiselect' => false];
@@ -134,7 +134,7 @@ if (isset($userid)) {
 
     $data = new stdClass();
     $data->wwwroot = $CFG->wwwroot;
-    $data->action = $CFG->wwwroot.'/local/apsolu/payment/admin.php?tab=payments';
+    $data->action = $CFG->wwwroot . '/local/apsolu/payment/admin.php?tab=payments';
     $data->user_selector = $userselector;
 }
 

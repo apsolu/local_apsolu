@@ -46,7 +46,7 @@ class local_apsolu_payment_address_form extends moodleform {
         global $CFG;
 
         $mform = $this->_form;
-        list($address) = $this->_customdata;
+        [$address] = $this->_customdata;
 
         $attributes = ['maxlength' => 48, 'size' => 48];
 
@@ -115,7 +115,7 @@ class local_apsolu_payment_address_form extends moodleform {
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('continue'));
 
         $attributes = new stdClass();
-        $attributes->href = $CFG->wwwroot.'/my/';
+        $attributes->href = $CFG->wwwroot . '/my/';
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 

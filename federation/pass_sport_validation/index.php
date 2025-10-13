@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\core\federation\adhesion;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -30,7 +30,7 @@ define('APSOLU_SELECT_ANY', '0');
 define('APSOLU_SELECT_YES', '1');
 define('APSOLU_SELECT_NO', '2');
 
-require_once(__DIR__.'/pass_sport_validation_form.php');
+require_once(__DIR__ . '/pass_sport_validation_form.php');
 
 $mform = null;
 $content = '';
@@ -53,12 +53,12 @@ if ($mform !== null && $data = $mform->get_data()) {
     $conditions = [];
 
     if (empty($data->fullnameuser) === false) {
-        $parameters['fullnameuser'] = '%'.$data->fullnameuser.'%';
+        $parameters['fullnameuser'] = '%' . $data->fullnameuser . '%';
         $conditions[] = sprintf("AND %s LIKE :fullnameuser ", $DB->sql_fullname('u.firstname', 'u.lastname'));
     }
 
     if (empty($data->idnumber) === false) {
-        $parameters['idnumber'] = '%'.$data->idnumber.'%';
+        $parameters['idnumber'] = '%' . $data->idnumber . '%';
         $conditions[] = "AND u.idnumber LIKE :idnumber ";
     }
 
@@ -74,11 +74,11 @@ if ($mform !== null && $data = $mform->get_data()) {
     $federationactivities = $DB->get_records('apsolu_federation_activities', [], $sort = 'name', $fields = 'code, name');
 
     $fullnamefields = core_user\fields::get_name_fields();
-    $sql = "SELECT u.id, ".implode(', ', $fullnamefields).", u.idnumber, u.email, u.institution, afa.questionnairestatus,
+    $sql = "SELECT u.id, " . implode(', ', $fullnamefields) . ", u.idnumber, u.email, u.institution, afa.questionnairestatus,
                    afa.data, afa.passsportnumber, afa.passsportstatus, afa.federationnumber, afa.federationnumberrequestdate
               FROM {user} u
               JOIN {apsolu_federation_adhesions} afa ON u.id = afa.userid
-             WHERE 1 = 1 ".implode(' ', $conditions)."
+             WHERE 1 = 1 " . implode(' ', $conditions) . "
                AND afa.federationnumber IS NULL
                AND afa.passsportnumber IS NOT NULL
           ORDER BY afa.federationnumberrequestdate DESC, u.lastname, u.firstname";
@@ -101,7 +101,7 @@ if ($mform !== null && $data = $mform->get_data()) {
         } else {
             $title = userdate($record->federationnumberrequestdate, get_string('strftimedatetimeshort', 'local_apsolu'));
             $text = userdate($record->federationnumberrequestdate, get_string('strftimedatetimesortable', 'local_apsolu'));
-            $row[] = '<span class="apsolu-cursor-help" title="'.s($title).'">'.s(substr($text, 0, -3)).'</span>';
+            $row[] = '<span class="apsolu-cursor-help" title="' . s($title) . '">' . s(substr($text, 0, -3)) . '</span>';
         }
         $row[] = html_writer::link($profileurl, fullname($record));
         $row[] = $record->idnumber;
@@ -119,7 +119,7 @@ if ($mform !== null && $data = $mform->get_data()) {
 
         if (empty($record->questionnairestatus) === false) {
             $label = get_string('health_constraints', 'local_apsolu');
-            $activities[] = '<i class="icon fa fa-medkit" aria-hidden="true" aria-selected="true"></i>'.$label;
+            $activities[] = '<i class="icon fa fa-medkit" aria-hidden="true" aria-selected="true"></i>' . $label;
         }
 
         $row[] = html_writer::alist($activities, $attributes = [], $tag = 'ul');
@@ -218,7 +218,7 @@ if ($mform !== null && $data = $mform->get_data()) {
         $table->id = 'local-apsolu-pass-sport-validation-table';
         $table->head  = $headers;
         $table->attributes['class'] = 'table table-bordered table-sortable';
-        $table->caption = count($rows).' '.get_string('users');
+        $table->caption = count($rows) . ' ' . get_string('users');
         $table->data  = $rows;
         $content = html_writer::table($table);
     }

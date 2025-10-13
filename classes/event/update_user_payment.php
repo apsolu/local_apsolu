@@ -52,7 +52,7 @@ class update_user_payment extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        $description = 'User #'.$this->userid.' marks user #'.$this->relateduserid.' (info: '.$other.').';
+        $description = 'User #' . $this->userid . ' marks user #' . $this->relateduserid . ' (info: ' . $other . ').';
 
         return $description;
     }

@@ -22,17 +22,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use UniversiteRennes2\Apsolu as apsolu;
+use UniversiteRennes2\Apsolu;
 use UniversiteRennes2\Apsolu\Payment;
 use local_apsolu\core\paybox;
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
-require_once($CFG->dirroot.'/local/apsolu/locallib.php');
-require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
-require_once($CFG->dirroot.'/enrol/select/lib.php');
-require_once($CFG->dirroot.'/enrol/select/locallib.php');
-require_once($CFG->dirroot.'/user/profile/lib.php');
+require_once($CFG->dirroot . '/local/apsolu/locallib.php');
+require_once($CFG->dirroot . '/local/apsolu/classes/apsolu/payment.php');
+require_once($CFG->dirroot . '/enrol/select/lib.php');
+require_once($CFG->dirroot . '/enrol/select/locallib.php');
+require_once($CFG->dirroot . '/user/profile/lib.php');
 
 require_login();
 
@@ -107,6 +107,7 @@ foreach ($cards as $card) {
         case Payment::FREE:
             // On n'affiche pas cette carte.
             $card->price_format = '0.00';
+            break;
         case Payment::GIFT:
         default:
             break;
@@ -197,7 +198,7 @@ $payboxserver = paybox::get_server();
 if ($payboxserver === false) {
     echo $OUTPUT->render_from_template('local_apsolu/payment_unavailable_server', $data = null);
 } else {
-    $data->action_url = 'https://'.$payboxserver.'/cgi/MYchoix_pagepaiement.cgi';
+    $data->action_url = 'https://' . $payboxserver . '/cgi/MYchoix_pagepaiement.cgi';
 
     echo $OUTPUT->render_from_template('local_apsolu/payment_validation', $data);
 }

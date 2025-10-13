@@ -105,7 +105,7 @@ class notify extends \local_apsolu_notification_form {
               ORDER BY u.lastname, u.firstname";
         $teachers = [];
         foreach ($DB->get_records_sql($sql) as $teacher) {
-            $teachers[$teacher->id] = $teacher->lastname.' '.$teacher->firstname;
+            $teachers[$teacher->id] = $teacher->lastname . ' ' . $teacher->firstname;
         }
 
         if (count($teachers) !== 0) {
@@ -160,7 +160,7 @@ class notify extends \local_apsolu_notification_form {
         }
 
         // Option pour enregistrer le modèle.
-        list($defaultdata, $recipients, $redirecturl) = $this->_customdata;
+        [$defaultdata, $recipients, $redirecturl] = $this->_customdata;
         if (empty($defaultdata->template) === true) {
             $mform->addElement('header', 'saving', get_string('template', 'local_apsolu'));
             $mform->setExpanded('saving', true);
@@ -218,81 +218,81 @@ class notify extends \local_apsolu_notification_form {
 
         // Filtre: groupements d'activités.
         if (isset($data->groupings) === true && count($data->groupings) > 0) {
-            list($insql, $namedparams) = $DB->get_in_or_equal($data->groupings, SQL_PARAMS_NAMED, 'groupingid_');
+            [$insql, $namedparams] = $DB->get_in_or_equal($data->groupings, SQL_PARAMS_NAMED, 'groupingid_');
 
-            $conditions[] = 'cc.parent '.$insql;
+            $conditions[] = 'cc.parent ' . $insql;
             $params = array_merge($params, $namedparams);
         }
 
         // Filtre: activités.
         if (isset($data->categories) === true && count($data->categories) > 0) {
-            list($insql, $namedparams) = $DB->get_in_or_equal($data->categories, SQL_PARAMS_NAMED, 'catid_');
+            [$insql, $namedparams] = $DB->get_in_or_equal($data->categories, SQL_PARAMS_NAMED, 'catid_');
 
-            $conditions[] = 'cc.id '.$insql;
+            $conditions[] = 'cc.id ' . $insql;
             $params = array_merge($params, $namedparams);
         }
 
         // Filtre: cours.
         if (isset($data->courses) === true && count($data->courses) > 0) {
-            list($insql, $namedparams) = $DB->get_in_or_equal($data->courses, SQL_PARAMS_NAMED, 'courseid_');
+            [$insql, $namedparams] = $DB->get_in_or_equal($data->courses, SQL_PARAMS_NAMED, 'courseid_');
 
-            $conditions[] = 'c.id '.$insql;
+            $conditions[] = 'c.id ' . $insql;
             $params = array_merge($params, $namedparams);
         }
 
         // Filtre: enseignants.
         if (isset($data->teachers) === true && count($data->teachers) > 0) {
-            list($insql, $namedparams) = $DB->get_in_or_equal($data->teachers, SQL_PARAMS_NAMED, 'courseid_');
+            [$insql, $namedparams] = $DB->get_in_or_equal($data->teachers, SQL_PARAMS_NAMED, 'courseid_');
 
             $conditions[] = 'ctx.id IN (SELECT ra.contextid
                                           FROM {role_assignments} ra
                                          WHERE ra.roleid = 3 -- editingteacher
-                                           AND ra.userid '.$insql.')';
+                                           AND ra.userid ' . $insql . ')';
             $params = array_merge($params, $namedparams);
         }
 
         // Filtre: listes d'inscriptions.
         if (isset($data->enrollists) === true && count($data->enrollists) > 0) {
-            list($insql, $namedparams) = $DB->get_in_or_equal($data->enrollists, SQL_PARAMS_NAMED, 'enrollistid_');
+            [$insql, $namedparams] = $DB->get_in_or_equal($data->enrollists, SQL_PARAMS_NAMED, 'enrollistid_');
 
-            $conditions[] = 'ue.status '.$insql;
+            $conditions[] = 'ue.status ' . $insql;
             $params = array_merge($params, $namedparams);
         }
 
         // Filtre: calendriers.
         if (isset($data->calendars) === true && count($data->calendars) > 0) {
-            list($insql, $namedparams) = $DB->get_in_or_equal($data->calendars, SQL_PARAMS_NAMED, 'calendarid_');
+            [$insql, $namedparams] = $DB->get_in_or_equal($data->calendars, SQL_PARAMS_NAMED, 'calendarid_');
 
-            $conditions[] = 'e.customchar1 '.$insql;
+            $conditions[] = 'e.customchar1 ' . $insql;
             $params = array_merge($params, $namedparams);
         }
 
         // Filtre: rôles.
         if (isset($data->roles) === true && count($data->roles) > 0) {
-            list($insql, $namedparams) = $DB->get_in_or_equal($data->roles, SQL_PARAMS_NAMED, 'roleid_');
+            [$insql, $namedparams] = $DB->get_in_or_equal($data->roles, SQL_PARAMS_NAMED, 'roleid_');
 
-            $conditions[] = 'ra.roleid '.$insql;
+            $conditions[] = 'ra.roleid ' . $insql;
             $params = array_merge($params, $namedparams);
         }
 
         // Filtre: cohortes.
         if (isset($data->cohorts) === true && count($data->cohorts) > 0) {
-            list($insql, $namedparams) = $DB->get_in_or_equal($data->cohorts, SQL_PARAMS_NAMED, 'cohortid_');
+            [$insql, $namedparams] = $DB->get_in_or_equal($data->cohorts, SQL_PARAMS_NAMED, 'cohortid_');
 
-            $conditions[] = 'u.id IN (SELECT DISTINCT userid FROM {cohort_members} cm WHERE cm.cohortid '.$insql.')';
+            $conditions[] = 'u.id IN (SELECT DISTINCT userid FROM {cohort_members} cm WHERE cm.cohortid ' . $insql . ')';
             $params = array_merge($params, $namedparams);
         }
 
         // Filtre: lieux de pratique.
         if (isset($data->locations) === true && count($data->locations) > 0) {
-            list($insql, $namedparams) = $DB->get_in_or_equal($data->locations, SQL_PARAMS_NAMED, 'locationid_');
+            [$insql, $namedparams] = $DB->get_in_or_equal($data->locations, SQL_PARAMS_NAMED, 'locationid_');
 
-            $conditions[] = 'ac.locationid '.$insql;
+            $conditions[] = 'ac.locationid ' . $insql;
             $params = array_merge($params, $namedparams);
         }
 
         if (isset($conditions[0]) === true) {
-            $sql .= PHP_EOL.' WHERE '.implode(PHP_EOL.' AND ', $conditions);
+            $sql .= PHP_EOL . ' WHERE ' . implode(PHP_EOL . ' AND ', $conditions);
         }
 
         $sql .= " ORDER BY u.lastname, u.firstname";
@@ -379,8 +379,18 @@ class notify extends \local_apsolu_notification_form {
             $admin->email = $functionalcontact;
 
             if (isset($replyto) === true) {
-                email_to_user($admin, $USER, $data->subject, $messagetext, $messagehtml, $attachment = '', $attachname = '',
-                    $usetrueaddress = true, $replyto, $replytoname);
+                email_to_user(
+                    $admin,
+                    $USER,
+                    $data->subject,
+                    $messagetext,
+                    $messagehtml,
+                    $attachment = '',
+                    $attachname = '',
+                    $usetrueaddress = true,
+                    $replyto,
+                    $replytoname
+                );
             } else {
                 email_to_user($admin, $USER, $data->subject, $messagetext, $messagehtml);
             }

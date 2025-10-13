@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-use local_apsolu\core\area as Area;
-use local_apsolu\core\city as City;
+use local_apsolu\core\area;
+use local_apsolu\core\city;
 
 $cityid = required_param('cityid', PARAM_INT);
 $delete = optional_param('delete', '', PARAM_ALPHANUM); // Confirmation hash.

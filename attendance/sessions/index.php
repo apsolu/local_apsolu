@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__.'/../../../../config.php');
+require_once(__DIR__ . '/../../../../config.php');
 
 $courseid = required_param('courseid', PARAM_INT); // Course id.
 $sessionid = optional_param('sessionid', 0, PARAM_INT); // Session id.
@@ -54,14 +54,14 @@ $data = new stdClass();
 $data->url = $CFG->wwwroot;
 $data->courseid = $courseid;
 
-switch($action) {
+switch ($action) {
     case 'delete':
     case 'edit':
     case 'view':
-        require(__DIR__.'/'.$action.'.php');
+        require(__DIR__ . '/' . $action . '.php');
         break;
     default:
-        require(__DIR__.'/view.php');
+        require(__DIR__ . '/view.php');
 }
 
 // Titre et navigation.

@@ -22,13 +22,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\core\federation\adhesion;
 use UniversiteRennes2\Apsolu\Payment;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
-require_once($CFG->dirroot.'/local/apsolu/federation/adhesion/payment_form.php');
+require_once($CFG->dirroot . '/local/apsolu/classes/apsolu/payment.php');
+require_once($CFG->dirroot . '/local/apsolu/federation/adhesion/payment_form.php');
 
 $havetosubmitdocuments = [];
 
@@ -37,7 +37,7 @@ if ($adhesion->have_to_upload_parental_authorization() === true) {
     // On récupère les autorisations.
     $fs = get_file_storage();
     $context = context_course::instance($federationcourse->id, MUST_EXIST);
-    list($component, $filearea, $itemid) = ['local_apsolu', 'parentalauthorization', $USER->id];
+    [$component, $filearea, $itemid] = ['local_apsolu', 'parentalauthorization', $USER->id];
     $sort = 'itemid, filepath, filename';
     $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
 
@@ -52,7 +52,7 @@ if ($adhesion->have_to_upload_medical_certificate() === true) {
     // On récupère les certificats.
     $fs = get_file_storage();
     $context = context_course::instance($federationcourse->id, MUST_EXIST);
-    list($component, $filearea, $itemid) = ['local_apsolu', 'medicalcertificate', $USER->id];
+    [$component, $filearea, $itemid] = ['local_apsolu', 'medicalcertificate', $USER->id];
     $sort = 'itemid, filepath, filename';
     $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, $sort, $includedirs = false);
 

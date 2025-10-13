@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die;
 
 $dunningid = required_param('dunningid', PARAM_INT);
 
-require_once($CFG->dirroot.'/local/apsolu/locallib.php');
+require_once($CFG->dirroot . '/local/apsolu/locallib.php');
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
@@ -35,10 +35,10 @@ $data->posts = [];
 $data->count_posts = 0;
 
 if ($data->dunning !== false) {
-    $sql = "SELECT adp.*, u.firstname, u.lastname, u.email".
-        " FROM {apsolu_dunnings_posts} adp".
-        " JOIN {user} u ON u.id = adp.userid".
-        " WHERE adp.dunningid = :dunningid".
+    $sql = "SELECT adp.*, u.firstname, u.lastname, u.email" .
+        " FROM {apsolu_dunnings_posts} adp" .
+        " JOIN {user} u ON u.id = adp.userid" .
+        " WHERE adp.dunningid = :dunningid" .
         " ORDER BY u.lastname, u.firstname";
     $posts = $DB->get_records_sql($sql, ['dunningid' => $dunningid]);
 

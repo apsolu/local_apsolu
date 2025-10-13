@@ -19,7 +19,7 @@ namespace local_apsolu\task;
 use core_user;
 use DateTime;
 use exception;
-use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\core\federation\adhesion;
 use local_apsolu\core\federation\course as FederationCourse;
 use UniversiteRennes2\Apsolu\Payment;
 
@@ -51,7 +51,7 @@ class notify_new_federation_adhesions extends \core\task\scheduled_task {
     public function execute() {
         global $CFG, $DB;
 
-        require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
+        require_once($CFG->dirroot . '/local/apsolu/classes/apsolu/payment.php');
 
         $federationcourse = new FederationCourse();
         $federationcourseid = $federationcourse->get_course();
@@ -104,13 +104,13 @@ class notify_new_federation_adhesions extends \core\task\scheduled_task {
             }
 
             // On récupère la date des derniers paiements.
-            list($insql, $params) = $DB->get_in_or_equal($cards, SQL_PARAMS_NAMED, 'cardid_');
+            [$insql, $params] = $DB->get_in_or_equal($cards, SQL_PARAMS_NAMED, 'cardid_');
             $sql = "SELECT MAX(ap.timepaid) AS timepaid
                       FROM {apsolu_payments} ap
                       JOIN {apsolu_payments_items} api ON ap.id = api.paymentid
                      WHERE ap.timepaid IS NOT NULL
                        AND ap.userid = :userid
-                       AND api.cardid ".$insql;
+                       AND api.cardid " . $insql;
             $params['userid'] = $user->id;
             $payment = $DB->get_record_sql($sql, $params);
 
@@ -139,8 +139,13 @@ class notify_new_federation_adhesions extends \core\task\scheduled_task {
             // Envoie une notification au référent fonctionnel.
             $adhesion->notify_functional_contact();
 
-            mtrace(sprintf('notifie de la demande de licence pour #%s %s %s (%s)',
-                $user->id, $user->firstname, $user->lastname, $user->email));
+            mtrace(sprintf(
+                'notifie de la demande de licence pour #%s %s %s (%s)',
+                $user->id,
+                $user->firstname,
+                $user->lastname,
+                $user->email
+            ));
         }
     }
 }

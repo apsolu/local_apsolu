@@ -24,14 +24,18 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require(__DIR__.'/edit_form.php');
-require_once($CFG->dirroot.'/enrol/select/locallib.php');
+require(__DIR__ . '/edit_form.php');
+require_once($CFG->dirroot . '/enrol/select/locallib.php');
 
 // Vérifie qu'il existe au moins un type de calendrier.
 $calendarstypes = $DB->get_records('apsolu_calendars_types', $conditions = [], $sort = 'name');
 if (count($calendarstypes) === 0) {
-    redirect($CFG->wwwroot.'/local/apsolu/configuration/index.php?page=calendarstypes',
-        get_string('needcalendarstypefirst', 'local_apsolu'), null, \core\output\notification::NOTIFY_ERROR);
+    redirect(
+        $CFG->wwwroot . '/local/apsolu/configuration/index.php?page=calendarstypes',
+        get_string('needcalendarstypefirst', 'local_apsolu'),
+        null,
+        \core\output\notification::NOTIFY_ERROR
+    );
 }
 
 // Get card id.
@@ -60,12 +64,16 @@ if ($instance === false) {
 
     $instance->cohorts = array_keys($DB->get_records('apsolu_payments_cards_cohort', ['cardid' => $instance->id], '', 'cohortid'));
     $instance->roles = array_keys($DB->get_records('apsolu_payments_cards_roles', ['cardid' => $instance->id], '', 'roleid'));
-    $instance->calendarstypes = $DB->get_records('apsolu_payments_cards_cals',
-        ['cardid' => $instance->id], '', 'calendartypeid, value');
+    $instance->calendarstypes = $DB->get_records(
+        'apsolu_payments_cards_cals',
+        ['cardid' => $instance->id],
+        '',
+        'calendartypeid, value'
+    );
 }
 
 foreach ($calendarstypes as $type) {
-    $name = 'types['.$type->id.']';
+    $name = 'types[' . $type->id . ']';
     $instance->{$name} = 0;
     if (isset($instance->calendarstypes[$type->id]) === true) {
         $instance->{$name} = $instance->calendarstypes[$type->id]->value;
@@ -129,10 +137,10 @@ if ($data = $mform->get_data()) {
     // Display notification and display elements list.
     $notificationform = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
 
-    require(__DIR__.'/view.php');
+    require(__DIR__ . '/view.php');
 } else {
     // Display form.
-    echo '<h1>'.get_string('card_add', 'local_apsolu').'</h1>';
+    echo '<h1>' . get_string('card_add', 'local_apsolu') . '</h1>';
 
     $mform->display();
 }

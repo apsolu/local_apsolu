@@ -24,9 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-use local_apsolu\core\holiday as Holiday;
+use local_apsolu\core\holiday;
 
-require(__DIR__.'/generate_form.php');
+require(__DIR__ . '/generate_form.php');
 
 // Build form.
 $customdata = ['holiday' => (object) ['from' => time(), 'until' => time() + 365 * 24 * 60 * 60]];

@@ -26,8 +26,8 @@ use grade_grade;
 use grade_item;
 use local_apsolu\core\gradebook;
 
-require_once(__DIR__.'/../../../../config.php');
-require_once($CFG->libdir.'/gradelib.php');
+require_once(__DIR__ . '/../../../../config.php');
+require_once($CFG->libdir . '/gradelib.php');
 
 $inputname = required_param('inputname', PARAM_ALPHANUMEXT);
 $rt = optional_param('rt', 0, PARAM_INT);
@@ -47,7 +47,7 @@ if (preg_match('/^[0-9]+-[0-9]+-[0-9]+$/', $inputname) !== 1) {
     throw new dml_missing_record_exception('apsolu_grade_items');
 }
 
-list($userid, $courseid, $apsolugradeitemid) = explode('-', $inputname);
+[$userid, $courseid, $apsolugradeitemid] = explode('-', $inputname);
 
 // Recherche l'élément de notation APSOLU.
 $apsolugradeitem = $DB->get_record('apsolu_grade_items', ['id' => $apsolugradeitemid], '*', MUST_EXIST);

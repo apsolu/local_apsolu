@@ -79,16 +79,16 @@ function local_apsolu_override_course_page($course) {
  *
  * @return void|bool Retourne False en cas d'erreur.
  */
-function local_apsolu_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=[]) {
+function local_apsolu_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = []) {
     global $USER;
 
     if ($context->contextlevel != CONTEXT_COURSE) {
-        debugging('Wrong contextlevel: '.$context->contextlevel, DEBUG_DEVELOPER);
+        debugging('Wrong contextlevel: ' . $context->contextlevel, DEBUG_DEVELOPER);
         return false;
     }
 
     if (in_array($filearea, ['information', 'medicalcertificate', 'parentalauthorization'], $strict = true) === false) {
-        debugging('Wrong filearea: '.$filearea, DEBUG_DEVELOPER);
+        debugging('Wrong filearea: ' . $filearea, DEBUG_DEVELOPER);
         return false;
     }
 
@@ -100,7 +100,7 @@ function local_apsolu_pluginfile($course, $cm, $context, $filearea, $args, $forc
     if (empty($args) === true) {
         $filepath = '/';
     } else {
-        $filepath = '/'.implode('/', $args).'/';
+        $filepath = '/' . implode('/', $args) . '/';
     }
 
     $file = $fs->get_file($context->id, 'local_apsolu', $filearea, $itemid, $filepath, $filename);
@@ -116,8 +116,10 @@ function local_apsolu_pluginfile($course, $cm, $context, $filearea, $args, $forc
         case 'medicalcertificate':
         case 'parentalauthorization':
             // Fichier visible uniquement par le propriétaire du fichier ou un gestionnaire.
-            if ($file->get_userid() !== $USER->id &&
-                has_capability('local/apsolu:viewallmedicalcertificates', context_system::instance()) === false) {
+            if (
+                $file->get_userid() !== $USER->id &&
+                has_capability('local/apsolu:viewallmedicalcertificates', context_system::instance()) === false
+            ) {
                 return false;
             }
     }

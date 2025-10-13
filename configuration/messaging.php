@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die;
 
 use local_apsolu\core\messaging;
 
-require_once($CFG->dirroot.'/local/apsolu/configuration/messaging_form.php');
+require_once($CFG->dirroot . '/local/apsolu/configuration/messaging_form.php');
 
 // Chargement des préférences.
 $attributes = [

@@ -24,15 +24,19 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot.'/local/apsolu/configuration/calendars_edit_form.php');
+require_once($CFG->dirroot . '/local/apsolu/configuration/calendars_edit_form.php');
 
 $calendarid = optional_param('calendarid', 0, PARAM_INT);
 
 // Vérifie qu'il existe au moins un type de calendrier.
 $calendarstypes = $DB->get_records('apsolu_calendars_types', $conditions = [], $sort = 'name');
 if (count($calendarstypes) === 0) {
-    redirect($CFG->wwwroot.'/local/apsolu/configuration/index.php?page=calendarstypes',
-        get_string('needcalendarstypefirst', 'local_apsolu'), null, \core\output\notification::NOTIFY_ERROR);
+    redirect(
+        $CFG->wwwroot . '/local/apsolu/configuration/index.php?page=calendarstypes',
+        get_string('needcalendarstypefirst', 'local_apsolu'),
+        null,
+        \core\output\notification::NOTIFY_ERROR
+    );
 }
 
 // Définis l'instance.
@@ -107,7 +111,7 @@ if ($data = $mform->get_data()) {
     // Display notification and display elements list.
     $notificationform = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
 
-    require(__DIR__.'/calendars_view.php');
+    require(__DIR__ . '/calendars_view.php');
 } else {
     // Display form.
     echo $OUTPUT->header();

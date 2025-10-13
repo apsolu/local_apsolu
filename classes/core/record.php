@@ -63,8 +63,13 @@ abstract class record {
      *
      * @return array Un tableau d'objets instanciés.
      */
-    public static function get_records(?array $conditions = null, string $sort = '', string $fields = '*',
-                                       int $limitfrom = 0, int $limitnum = 0) {
+    public static function get_records(
+        ?array $conditions = null,
+        string $sort = '',
+        string $fields = '*',
+        int $limitfrom = 0,
+        int $limitnum = 0
+    ) {
         global $DB;
 
         $classname = get_called_class();

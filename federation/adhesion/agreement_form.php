@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\core\federation\adhesion;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -45,7 +45,7 @@ class local_apsolu_federation_agreement extends moodleform {
         global $USER;
 
         $mform = $this->_form;
-        list($adhesion, $readonly) = $this->_customdata;
+        [$adhesion, $readonly] = $this->_customdata;
 
         if ($readonly === true) {
             $messages = $adhesion::get_contacts();

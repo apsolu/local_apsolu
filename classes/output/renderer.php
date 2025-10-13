@@ -34,7 +34,7 @@ class renderer extends plugin_renderer_base {
      *
      * @return string
      */
-    public function render_chart($options=[]) {
+    public function render_chart($options = []) {
 
         $result = (object)\local_apsolu_webservices::get_chartdataset($options);
 
@@ -44,7 +44,7 @@ class renderer extends plugin_renderer_base {
             // Filtres.
             $htmlchartfilter = "";
             if (isset($options['criterias'])) {
-                $htmlchartfilter = $this->render_from_template('local_apsolu/statistics_chart_filters',  (object) [
+                $htmlchartfilter = $this->render_from_template('local_apsolu/statistics_chart_filters', (object) [
                   'uniqid' => $htmlid,
                   'options' => json_encode($options),
                 ]);
@@ -57,7 +57,7 @@ class renderer extends plugin_renderer_base {
             'withtable' => true,
             ]);
 
-            return $htmlchartfilter.$htmlchart;
+            return $htmlchartfilter . $htmlchart;
         } else {
             return get_string("statistics_noavailabledata", "local_apsolu");
         }
@@ -70,10 +70,14 @@ class renderer extends plugin_renderer_base {
      *
      * @return int|string
      */
-    public function render_reportCounter($options=[]) {
+    public function render_reportCounter($options = []) {
         if (isset($options['criterias'])) {
-            $result = (object)\local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid'],
-                null, $options['criterias']);
+            $result = (object)\local_apsolu_webservices::get_reportdataset(
+                $options['classname'],
+                $options['reportid'],
+                null,
+                $options['criterias']
+            );
         } else {
             $result = (object)\local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid']);
         }
@@ -93,10 +97,14 @@ class renderer extends plugin_renderer_base {
      *
      * @return int|string
      */
-    public function render_reportCounterSum($options=[]) {
+    public function render_reportCounterSum($options = []) {
         if (isset($options['criterias'])) {
-            $result = (object)\local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid'],
-                null, $options['criterias']);
+            $result = (object)\local_apsolu_webservices::get_reportdataset(
+                $options['classname'],
+                $options['reportid'],
+                null,
+                $options['criterias']
+            );
         } else {
             $result = (object)\local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid']);
         }
@@ -116,10 +124,14 @@ class renderer extends plugin_renderer_base {
      *
      * @return array|string
      */
-    public function render_reportData($options=[]) {
+    public function render_reportData($options = []) {
         if (isset($options['criterias'])) {
-            $result = (object)\local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid'],
-                null, $options['criterias']);
+            $result = (object)\local_apsolu_webservices::get_reportdataset(
+                $options['classname'],
+                $options['reportid'],
+                null,
+                $options['criterias']
+            );
         } else {
             $result = (object)\local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid']);
         }

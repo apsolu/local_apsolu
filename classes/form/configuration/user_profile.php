@@ -40,7 +40,7 @@ class user_profile extends moodleform {
 
         $mform = $this->_form;
 
-        list($defaults, $hiddenfields) = $this->_customdata;
+        [$defaults, $hiddenfields] = $this->_customdata;
 
         // Champs masqués.
         $label = get_string('information_to_hide_in_user_profile', 'local_apsolu');

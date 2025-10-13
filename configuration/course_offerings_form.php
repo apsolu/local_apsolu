@@ -225,7 +225,7 @@ class local_apsolu_course_offerings_form extends moodleform {
             // Vérifie que les données sont bien au format HH:MM.
             $badformat = false;
             foreach ($types as $type) {
-                $fieldname = $name.'_'.$type;
+                $fieldname = $name . '_' . $type;
 
                 if (preg_match('/^[0-9]?[0-9]:[0-9][0-9]$/', $data[$fieldname]) !== 1) {
                     $badformat = true;
@@ -233,7 +233,7 @@ class local_apsolu_course_offerings_form extends moodleform {
                     continue;
                 }
 
-                list($hour, $minute) = explode(':', $data[$fieldname]);
+                [$hour, $minute] = explode(':', $data[$fieldname]);
                 if ($hour > 24) {
                     $badformat = true;
                     $errors[$fieldname] = get_string('expected_time_format', 'local_apsolu');
@@ -247,7 +247,7 @@ class local_apsolu_course_offerings_form extends moodleform {
                 }
 
                 if (strlen($data[$fieldname]) === 4) {
-                    $data[$fieldname] = '0'.$data[$fieldname];
+                    $data[$fieldname] = '0' . $data[$fieldname];
                 }
             }
 
@@ -260,12 +260,12 @@ class local_apsolu_course_offerings_form extends moodleform {
             }
 
             // Vérifie que l'heure de début n'est pas postérieure à la date de fin.
-            if ($data[$name.'_start'] >= $data[$name.'_end']) {
+            if ($data[$name . '_start'] >= $data[$name . '_end']) {
                 $parameters = new stdClass();
-                $parameters->start = $data[$name.'_start'];
-                $parameters->end = $data[$name.'_end'];
+                $parameters->start = $data[$name . '_start'];
+                $parameters->end = $data[$name . '_end'];
 
-                $errors[$name.'_start'] = get_string('this_time_cannot_be_older_than_this_time', 'local_apsolu', $parameters);
+                $errors[$name . '_start'] = get_string('this_time_cannot_be_older_than_this_time', 'local_apsolu', $parameters);
             }
         }
 

@@ -36,4 +36,3 @@ echo $OUTPUT->heading(get_string('templates', 'local_apsolu'));
 echo $OUTPUT->tabtree($tabtree, $page);
 echo $OUTPUT->render_from_template('local_apsolu/communication_templates', $data);
 echo $OUTPUT->footer();
-

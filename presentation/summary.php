@@ -24,8 +24,8 @@
 
 use UniversiteRennes2\Apsolu;
 
-require(__DIR__.'/../../../config.php');
-require_once($CFG->dirroot.'/enrol/select/locallib.php');
+require(__DIR__ . '/../../../config.php');
+require_once($CFG->dirroot . '/enrol/select/locallib.php');
 
 require_course_login($SITE);
 
@@ -182,7 +182,7 @@ foreach (enrol_select_get_activities($cityid) as $activity) {
     $activity->time = implode(' ', $time);
 
     if ($cityid === 0) {
-        $activity->area = $activity->site.' - '.$activity->area;
+        $activity->area = $activity->site . ' - ' . $activity->area;
     }
 
     $courses[$activity->category]->courses[] = $activity;
@@ -203,8 +203,9 @@ foreach (enrol_select_get_activities($cityid) as $activity) {
     }
 
     foreach ($activity->teachers as $teacher) {
-        if (isset($filters['teachers']->values[$teacher->lastname.' '.$teacher->firstname]) === false) {
-            $filters['teachers']->values[$teacher->lastname.' '.$teacher->firstname] = $teacher->firstname.' '.$teacher->lastname;
+        if (isset($filters['teachers']->values[$teacher->lastname . ' ' . $teacher->firstname]) === false) {
+            $teacherfullname = $teacher->lastname . ' ' . $teacher->firstname;
+            $filters['teachers']->values[$teacherfullname] = $teacherfullname;
         }
     }
 }
@@ -255,7 +256,10 @@ foreach (json_decode($jsondata) as $filter => $value) {
     // Pattern: show_grouping_filter.
     $filtername = substr($filter, 5, -7);
     if (isset($filters[$filtername]) === false) {
-        debugging('Invalid filter: '.$filtername.', valid filters: '.implode(', ', array_keys($filters)), $level = DEBUG_DEVELOPER);
+        debugging(
+            'Invalid filter: ' . $filtername . ', valid filters: ' . implode(', ', array_keys($filters)),
+            $level = DEBUG_DEVELOPER
+        );
     }
     unset($filters[$filtername]);
 }

@@ -24,10 +24,10 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$sql = "SELECT al.id, al.name, al.address, al.email, al.phone, al.longitude, al.latitude, am.name AS manager, aa.name AS area".
-    " FROM {apsolu_locations} al".
-    " JOIN {apsolu_managers} am ON am.id = al.managerid".
-    " JOIN {apsolu_areas} aa ON aa.id = al.areaid".
+$sql = "SELECT al.id, al.name, al.address, al.email, al.phone, al.longitude, al.latitude, am.name AS manager, aa.name AS area" .
+    " FROM {apsolu_locations} al" .
+    " JOIN {apsolu_managers} am ON am.id = al.managerid" .
+    " JOIN {apsolu_areas} aa ON aa.id = al.areaid" .
     " ORDER BY al.name";
 $locations = $DB->get_records_sql($sql);
 

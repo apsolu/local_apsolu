@@ -16,7 +16,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->libdir.'/formslib.php');
+require_once($CFG->libdir . '/formslib.php');
 
 /**
  * Classe pour le formulaire permettant de prendre les présences.
@@ -34,7 +34,7 @@ class edit_enrolment_form extends moodleform {
     protected function definition() {
         $mform = $this->_form;
 
-        list($data, $statuses, $roles) = $this->_customdata;
+        [$data, $statuses, $roles] = $this->_customdata;
 
         // Statuses.
         $mform->addElement('select', 'statusid', get_string('list', 'enrol_select'), $statuses);

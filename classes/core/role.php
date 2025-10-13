@@ -86,8 +86,13 @@ class role extends record {
      *
      * @return array Un tableau d'objets instanciés.
      */
-    public static function get_records(?array $conditions = null, string $sort = '', string $fields = '*',
-                                       int $limitfrom = 0, int $limitnum = 0) {
+    public static function get_records(
+        ?array $conditions = null,
+        string $sort = '',
+        string $fields = '*',
+        int $limitfrom = 0,
+        int $limitnum = 0
+    ) {
         global $DB;
 
         $sql = "SELECT r.id, r.name, r.shortname, r.description, r.sortorder, r.archetype, ar.color, ar.fontawesomeid
@@ -159,7 +164,7 @@ class role extends record {
         }
 
         if ($DB->get_record(self::TABLENAME, ['id' => $this->id]) === false) {
-            $sql = "INSERT INTO {".self::TABLENAME."} (id, color, fontawesomeid)".
+            $sql = "INSERT INTO {" . self::TABLENAME . "} (id, color, fontawesomeid)" .
                 " VALUES(:id, :color, :fontawesomeid)";
             $parameters = ['id' => $this->id, 'color' => $this->color, 'fontawesomeid' => $this->fontawesomeid];
             $DB->execute($sql, $parameters);

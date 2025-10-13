@@ -17,7 +17,7 @@
 namespace local_apsolu\task;
 
 use core_user;
-use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\core\federation\adhesion;
 use local_apsolu\core\federation\course as FederationCourse;
 
 /**
@@ -60,7 +60,7 @@ class follow_up_incomplete_federation_adhesions extends \core\task\scheduled_tas
             return;
         }
 
-        $subject = $SITE->shortname.' : '.get_string('membership_of_the_sports_association', 'local_apsolu');
+        $subject = $SITE->shortname . ' : ' . get_string('membership_of_the_sports_association', 'local_apsolu');
 
         // Traite le système précedent, où les utilisateurs devaient faire une demande explicite de leur licence, après le paiement.
         $namefields = 'u.' . implode(', u.', core_user\fields::get_name_fields());

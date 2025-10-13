@@ -25,13 +25,13 @@
 // phpcs:disable moodle.Files.LineLength.MaxExceeded
 // phpcs:disable moodle.Files.LineLength.TooLong
 
-use local_apsolu\core\course as Course;
-use local_apsolu\core\federation\activity as Activity;
-use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\core\course;
+use local_apsolu\core\federation\activity;
+use local_apsolu\core\federation\adhesion;
 use local_apsolu\core\federation\course as FederationCourse;
-use local_apsolu\core\gradebook as Gradebook;
+use local_apsolu\core\gradebook;
 use local_apsolu\core\messaging;
-use local_apsolu\core\municipality as Municipality;
+use local_apsolu\core\municipality;
 
 /**
  * Procédure de mise à jour.
@@ -43,17 +43,17 @@ use local_apsolu\core\municipality as Municipality;
 function xmldb_local_apsolu_upgrade($oldversion = 0) {
     global $CFG, $DB;
 
-    require_once($CFG->dirroot.'/group/lib.php');
-    require_once($CFG->dirroot.'/lib/gradelib.php');
-    require_once($CFG->dirroot.'/local/apsolu/locallib.php');
-    require_once($CFG->dirroot.'/user/profile/definelib.php');
+    require_once($CFG->dirroot . '/group/lib.php');
+    require_once($CFG->dirroot . '/lib/gradelib.php');
+    require_once($CFG->dirroot . '/local/apsolu/locallib.php');
+    require_once($CFG->dirroot . '/user/profile/definelib.php');
 
     $dbman = $DB->get_manager();
 
     $version = 2017120600;
     if ($oldversion < $version) {
         // Create cache directory for homepage.
-        $cachedir = $CFG->dataroot.'/apsolu/local_apsolu/cache/homepage';
+        $cachedir = $CFG->dataroot . '/apsolu/local_apsolu/cache/homepage';
 
         if (is_dir($cachedir) === false) {
             mkdir($cachedir, $CFG->directorypermissions, $recursive = true);
@@ -119,7 +119,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             foreach ($statuses as $status) {
                 $record = new stdClass();
                 $record->name = $status;
-                $record->code = 'attendance_'.$status;
+                $record->code = 'attendance_' . $status;
 
                 $DB->insert_record('apsolu_attendance_statuses', $record);
             }
@@ -335,7 +335,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             if ($oldfield !== false) {
                 // Renomme le champ.
                 $oldfield->shortname = $custom->shortname;
-                $oldfield->name = get_string('fields_'.$oldfield->shortname, 'local_apsolu');
+                $oldfield->name = get_string('fields_' . $oldfield->shortname, 'local_apsolu');
 
                 $DB->update_record('user_info_field', $oldfield);
 
@@ -346,7 +346,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             if ($oldfield === false) {
                 // Insert les nouveaux champs.
                 $field->shortname = $custom->shortname;
-                $field->name = get_string('fields_'.$field->shortname, 'local_apsolu');
+                $field->name = get_string('fields_' . $field->shortname, 'local_apsolu');
                 $field->datatype = $custom->datatype;
                 $field->visible = $custom->visible;
                 $field->param1 = $custom->param1;
@@ -724,8 +724,8 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         $field = $DB->get_record('user_info_field', ['shortname' => 'apsoluusertype']);
         if ($field === false) {
             // Ajoute un champ de profil "type d'utilisateur".
-            $sql = "SELECT id, MAX(sortorder) AS sortorder".
-                " FROM {user_info_field}".
+            $sql = "SELECT id, MAX(sortorder) AS sortorder" .
+                " FROM {user_info_field}" .
                 " WHERE categoryid IN (SELECT categoryid FROM {user_info_field} WHERE shortname = 'apsolupostalcode')";
             $category = $DB->get_record_sql($sql);
             if ($category !== false) {
@@ -957,7 +957,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
             // Ajoute les données à la table.
             foreach (Activity::get_activity_data() as $data) {
-                $sql = "INSERT INTO {apsolu_federation_activities} (id, name, mainsport, restriction, categoryid)".
+                $sql = "INSERT INTO {apsolu_federation_activities} (id, name, mainsport, restriction, categoryid)" .
                     " VALUES(:id, :name, :mainsport, :restriction, NULL)";
                 $DB->execute($sql, $data);
             }
@@ -1114,7 +1114,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $data['color'] = get_string(sprintf('%s_style', $status->code), 'local_apsolu');
             $data['sortorder'] = $sortorder;
 
-            $sql = "UPDATE {apsolu_attendance_statuses} SET shortlabel = :shortlabel, longlabel = :longlabel,".
+            $sql = "UPDATE {apsolu_attendance_statuses} SET shortlabel = :shortlabel, longlabel = :longlabel," .
                 " sumlabel = :sumlabel, color = :color, sortorder = :sortorder WHERE id = :id";
             $DB->execute($sql, $data);
 
@@ -1226,13 +1226,37 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         $fields = [];
         $fields[] = new xmldb_field('birthname', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $fields[] = new xmldb_field('nativecountry', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $fields[] = new xmldb_field('departmentofbirth', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL,
-            null, $default = 0, null);
+        $fields[] = new xmldb_field(
+            'departmentofbirth',
+            XMLDB_TYPE_INTEGER,
+            '10',
+            XMLDB_UNSIGNED,
+            XMLDB_NOTNULL,
+            null,
+            $default = 0,
+            null
+        );
         $fields[] = new xmldb_field('cityofbirth', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $fields[] = new xmldb_field('honorabilityagreement', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL,
-            null, $default = 0, null);
-        $fields[] = new xmldb_field('usepersonalimage', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $nullable = null,
-            null, $default = 0, null);
+        $fields[] = new xmldb_field(
+            'honorabilityagreement',
+            XMLDB_TYPE_INTEGER,
+            '10',
+            XMLDB_UNSIGNED,
+            XMLDB_NOTNULL,
+            null,
+            $default = 0,
+            null
+        );
+        $fields[] = new xmldb_field(
+            'usepersonalimage',
+            XMLDB_TYPE_INTEGER,
+            '10',
+            XMLDB_UNSIGNED,
+            $nullable = null,
+            null,
+            $default = 0,
+            null
+        );
 
         $table = new xmldb_table('apsolu_federation_adhesions');
         foreach ($fields as $field) {
@@ -1245,9 +1269,9 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         Activity::synchronize_database();
 
         // Corrige les libellés des noms des créneaux horaires.
-        $sql = "SELECT cc.id, cc.name".
-            " FROM {course_categories} cc".
-            " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id".
+        $sql = "SELECT cc.id, cc.name" .
+            " FROM {course_categories} cc" .
+            " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id" .
             " ORDER BY cc.name";
         $categories = [];
         foreach ($DB->get_records_sql($sql) as $category) {
@@ -1269,8 +1293,14 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $data->str_category = $categories[$courses[$course->id]->category];
             $data->str_skill = $skills[$course->skillid];
 
-            $fullname = Course::get_fullname($data->str_category, $course->event, $course->weekday,
-                $course->starttime, $course->endtime, $data->str_skill);
+            $fullname = Course::get_fullname(
+                $data->str_category,
+                $course->event,
+                $course->weekday,
+                $course->starttime,
+                $course->endtime,
+                $data->str_skill
+            );
             $shortname = Course::get_shortname($course->id, $fullname);
 
             if ($courses[$course->id]->shortname === $shortname && $courses[$course->id]->fullname === $fullname) {
@@ -1340,7 +1370,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
             foreach ($items as $item) {
                 if (isset($rootcategories[$item->courseid]) === false) {
-                    mtrace('La catégorie racine du carnet de notes du cours #'.$item->courseid.' n’a pas été trouvée.');
+                    mtrace('La catégorie racine du carnet de notes du cours #' . $item->courseid . ' n’a pas été trouvée.');
                     continue;
                 }
 
@@ -1352,7 +1382,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             // Supprime les catégories APSOLU obsolètes.
             $items = grade_item::fetch_all(['categoryid' => $category->id]);
             if ($items !== false) {
-                mtrace('La catégorie APSOLU du cours #'.$category->courseid.' contient toujours des éléments de notation.');
+                mtrace('La catégorie APSOLU du cours #' . $category->courseid . ' contient toujours des éléments de notation.');
                 continue;
             }
 
@@ -1389,8 +1419,16 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
         // Ajoute une colonne 'timerefunded' sur la table 'apsolu_payments'.
         $table = new xmldb_table('apsolu_payments');
-        $field = new xmldb_field('timerefunded', XMLDB_TYPE_CHAR, $precision = '19', $unsigned = XMLDB_UNSIGNED, $notnull = null,
-            $sequence = null, $default = null, $previous = null);
+        $field = new xmldb_field(
+            'timerefunded',
+            XMLDB_TYPE_CHAR,
+            $precision = '19',
+            $unsigned = XMLDB_UNSIGNED,
+            $notnull = null,
+            $sequence = null,
+            $default = null,
+            $previous = null
+        );
 
         if ($dbman->field_exists($table, $field) === false) {
             $dbman->add_field($table, $field);
@@ -1404,8 +1442,16 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
         // Change le type du champ "departmentofbirth" de la table "apsolu_federation_adhesions" de bigint à varchar.
         $table = new xmldb_table('apsolu_federation_adhesions');
-        $field = new xmldb_field('departmentofbirth', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, XMLDB_NOTNULL,
-            $sequence = null, $default = null, null);
+        $field = new xmldb_field(
+            'departmentofbirth',
+            XMLDB_TYPE_CHAR,
+            '255',
+            XMLDB_UNSIGNED,
+            XMLDB_NOTNULL,
+            $sequence = null,
+            $default = null,
+            null
+        );
 
         $dbman->change_field_type($table, $field);
 
@@ -1427,12 +1473,20 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         $tablename = 'apsolu_colleges_members';
 
         $table = new xmldb_table($tablename);
-        $field = new xmldb_field('id', XMLDB_TYPE_INTEGER, $precision = '10', $unsigned = XMLDB_UNSIGNED, $notnull = XMLDB_NOTNULL,
-            $sequence = XMLDB_SEQUENCE, $default = null, $previous = null);
+        $field = new xmldb_field(
+            'id',
+            XMLDB_TYPE_INTEGER,
+            $precision = '10',
+            $unsigned = XMLDB_UNSIGNED,
+            $notnull = XMLDB_NOTNULL,
+            $sequence = XMLDB_SEQUENCE,
+            $default = null,
+            $previous = null
+        );
 
         if ($dbman->field_exists($table, $field) === false) {
             // Renomme la table actuelle.
-            $dbman->rename_table($table, $tablename.'tmp');
+            $dbman->rename_table($table, $tablename . 'tmp');
 
             // Ajoute la nouvelle table contenant la clé primaire 'id'.
             $table = new xmldb_table($tablename);
@@ -1451,14 +1505,14 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
             // Récupère le contenu de l'ancienne table et l'injecte dans la nouvelle table.
             $id = 1;
-            $recordset = $DB->get_recordset($tablename.'tmp');
+            $recordset = $DB->get_recordset($tablename . 'tmp');
             foreach ($recordset as $record) {
                 $DB->insert_record($tablename, $record);
             }
             $recordset->close();
 
             // Supprime l'ancienne table.
-            $table = new xmldb_table($tablename.'tmp');
+            $table = new xmldb_table($tablename . 'tmp');
             $dbman->drop_table($table);
         }
 
@@ -1466,12 +1520,20 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         $tablename = 'apsolu_payments_cards_cohort';
 
         $table = new xmldb_table($tablename);
-        $field = new xmldb_field('id', XMLDB_TYPE_INTEGER, $precision = '10', $unsigned = XMLDB_UNSIGNED, $notnull = XMLDB_NOTNULL,
-            $sequence = XMLDB_SEQUENCE, $default = null, $previous = null);
+        $field = new xmldb_field(
+            'id',
+            XMLDB_TYPE_INTEGER,
+            $precision = '10',
+            $unsigned = XMLDB_UNSIGNED,
+            $notnull = XMLDB_NOTNULL,
+            $sequence = XMLDB_SEQUENCE,
+            $default = null,
+            $previous = null
+        );
 
         if ($dbman->field_exists($table, $field) === false) {
             // Renomme la table actuelle.
-            $dbman->rename_table($table, $tablename.'tmp');
+            $dbman->rename_table($table, $tablename . 'tmp');
 
             // Ajoute la nouvelle table contenant la clé primaire 'id'.
             $table = new xmldb_table($tablename);
@@ -1489,14 +1551,14 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
             // Récupère le contenu de l'ancienne table et l'injecte dans la nouvelle table.
             $id = 1;
-            $recordset = $DB->get_recordset($tablename.'tmp');
+            $recordset = $DB->get_recordset($tablename . 'tmp');
             foreach ($recordset as $record) {
                 $DB->insert_record($tablename, $record);
             }
             $recordset->close();
 
             // Supprime l'ancienne table.
-            $table = new xmldb_table($tablename.'tmp');
+            $table = new xmldb_table($tablename . 'tmp');
             $dbman->drop_table($table);
         }
 
@@ -1504,12 +1566,20 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         $tablename = 'apsolu_payments_cards_roles';
 
         $table = new xmldb_table($tablename);
-        $field = new xmldb_field('id', XMLDB_TYPE_INTEGER, $precision = '10', $unsigned = XMLDB_UNSIGNED, $notnull = XMLDB_NOTNULL,
-            $sequence = XMLDB_SEQUENCE, $default = null, $previous = null);
+        $field = new xmldb_field(
+            'id',
+            XMLDB_TYPE_INTEGER,
+            $precision = '10',
+            $unsigned = XMLDB_UNSIGNED,
+            $notnull = XMLDB_NOTNULL,
+            $sequence = XMLDB_SEQUENCE,
+            $default = null,
+            $previous = null
+        );
 
         if ($dbman->field_exists($table, $field) === false) {
             // Renomme la table actuelle.
-            $dbman->rename_table($table, $tablename.'tmp');
+            $dbman->rename_table($table, $tablename . 'tmp');
 
             // Ajoute la nouvelle table contenant la clé primaire 'id'.
             $table = new xmldb_table($tablename);
@@ -1528,14 +1598,14 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
             // Récupère le contenu de l'ancienne table et l'injecte dans la nouvelle table.
             $id = 1;
-            $recordset = $DB->get_recordset($tablename.'tmp');
+            $recordset = $DB->get_recordset($tablename . 'tmp');
             foreach ($recordset as $record) {
                 $DB->insert_record($tablename, $record);
             }
             $recordset->close();
 
             // Supprime l'ancienne table.
-            $table = new xmldb_table($tablename.'tmp');
+            $table = new xmldb_table($tablename . 'tmp');
             $dbman->drop_table($table);
         }
 
@@ -1543,12 +1613,20 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         $tablename = 'apsolu_payments_cards_cals';
 
         $table = new xmldb_table($tablename);
-        $field = new xmldb_field('id', XMLDB_TYPE_INTEGER, $precision = '10', $unsigned = XMLDB_UNSIGNED, $notnull = XMLDB_NOTNULL,
-            $sequence = XMLDB_SEQUENCE, $default = null, $previous = null);
+        $field = new xmldb_field(
+            'id',
+            XMLDB_TYPE_INTEGER,
+            $precision = '10',
+            $unsigned = XMLDB_UNSIGNED,
+            $notnull = XMLDB_NOTNULL,
+            $sequence = XMLDB_SEQUENCE,
+            $default = null,
+            $previous = null
+        );
 
         if ($dbman->field_exists($table, $field) === false) {
             // Renomme la table actuelle.
-            $dbman->rename_table($table, $tablename.'tmp');
+            $dbman->rename_table($table, $tablename . 'tmp');
 
             // Ajoute la nouvelle table contenant la clé primaire 'id'.
             $table = new xmldb_table($tablename);
@@ -1568,14 +1646,14 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
             // Récupère le contenu de l'ancienne table et l'injecte dans la nouvelle table.
             $id = 1;
-            $recordset = $DB->get_recordset($tablename.'tmp');
+            $recordset = $DB->get_recordset($tablename . 'tmp');
             foreach ($recordset as $record) {
                 $DB->insert_record($tablename, $record);
             }
             $recordset->close();
 
             // Supprime l'ancienne table.
-            $table = new xmldb_table($tablename.'tmp');
+            $table = new xmldb_table($tablename . 'tmp');
             $dbman->drop_table($table);
         }
 
@@ -1654,8 +1732,16 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
         // Ajoute un champ locationid dans la table apsolu_attendance_sessions.
         $table = new xmldb_table('apsolu_federation_adhesions');
-        $field = new xmldb_field('data', XMLDB_TYPE_TEXT, $precision = null, $unsigned = null, $notnull = null,
-            $sequence = null, $default = null, $previous = 'federationnumberrequestdate');
+        $field = new xmldb_field(
+            'data',
+            XMLDB_TYPE_TEXT,
+            $precision = null,
+            $unsigned = null,
+            $notnull = null,
+            $sequence = null,
+            $default = null,
+            $previous = 'federationnumberrequestdate'
+        );
 
         if ($dbman->field_exists($table, $field) === false) {
             $dbman->add_field($table, $field);
@@ -1710,8 +1796,16 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
         // Met à jour la table apsolu_federation_activities.
         $table = new xmldb_table('apsolu_federation_activities');
-        $field = new xmldb_field('code', XMLDB_TYPE_CHAR, '255', $unsigned = null, $notnull = null,
-            $sequence = null, $default = null, $previous = 'id');
+        $field = new xmldb_field(
+            'code',
+            XMLDB_TYPE_CHAR,
+            '255',
+            $unsigned = null,
+            $notnull = null,
+            $sequence = null,
+            $default = null,
+            $previous = 'id'
+        );
 
         if ($dbman->field_exists($table, $field) === false) {
             $dbman->add_field($table, $field);

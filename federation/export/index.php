@@ -22,17 +22,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\course AS Course;
-use local_apsolu\core\federation\activity AS FederationActivity;
-use local_apsolu\core\federation\adhesion AS FederationAdhesion;
-use local_apsolu\core\federation\number AS FederationNumber;
+use local_apsolu\core\course;
+use local_apsolu\core\federation\activity as FederationActivity;
+use local_apsolu\core\federation\adhesion as FederationAdhesion;
+use local_apsolu\core\federation\number as FederationNumber;
 use UniversiteRennes2\Apsolu\Payment;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->libdir.'/excellib.class.php');
-require_once(__DIR__.'/export_form.php');
-require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
+require_once($CFG->libdir . '/excellib.class.php');
+require_once(__DIR__ . '/export_form.php');
+require_once($CFG->dirroot . '/local/apsolu/classes/apsolu/payment.php');
 
 define('APSOLU_SELECT_ANY', '0');
 define('APSOLU_SELECT_YES', '1');
@@ -114,12 +114,12 @@ if ($data = $mform->get_data()) {
 
     $conditions = [];
     if (empty($data->fullnameuser) === false) {
-        $parameters['fullnameuser'] = '%'.$data->fullnameuser.'%';
+        $parameters['fullnameuser'] = '%' . $data->fullnameuser . '%';
         $conditions[] = sprintf(" AND %s LIKE :fullnameuser ", $DB->sql_fullname('u.firstname', 'u.lastname'));
     }
 
     if (empty($data->idnumber) === false) {
-        $parameters['idnumber'] = '%'.$data->idnumber.'%';
+        $parameters['idnumber'] = '%' . $data->idnumber . '%';
         $conditions[] = " AND u.idnumber LIKE :idnumber ";
     }
 
@@ -128,7 +128,7 @@ if ($data = $mform->get_data()) {
               JOIN {user} u ON u.id = adh.userid
               JOIN {user_enrolments} ue ON u.id = ue.userid
               JOIN {enrol} e ON e.id = ue.enrolid AND e.enrol = 'select'
-             WHERE e.courseid = :courseid".implode(' ', $conditions)."
+             WHERE e.courseid = :courseid" . implode(' ', $conditions) . "
           ORDER BY adh.timemodified DESC, u.lastname, u.firstname";
 
     $rows = [];
@@ -242,7 +242,7 @@ if ($data = $mform->get_data()) {
             if (isset($data->exportbutton) === false) {
                 $title = userdate($record->timemodified, get_string('strftimedatetimeshort', 'local_apsolu'));
                 $text = userdate($record->timemodified, get_string('strftimedatetimesortable', 'local_apsolu'));
-                $row[] = '<span class="apsolu-cursor-help" title="'.s($title).'">'.s($text).'</span>';
+                $row[] = '<span class="apsolu-cursor-help" title="' . s($title) . '">' . s($text) . '</span>';
             }
 
             foreach ($fields as $field) {
@@ -343,7 +343,7 @@ if ($data = $mform->get_data()) {
     } else {
         if (isset($data->exportbutton) === true) {
             // Export au format excel.
-            $filename = 'exportation_ffsu_'.core_date::strftime('%F_%T');
+            $filename = 'exportation_ffsu_' . core_date::strftime('%F_%T');
 
             $workbook = new MoodleExcelWorkbook("-");
             $workbook->send($filename);
@@ -385,10 +385,10 @@ if ($data = $mform->get_data()) {
             }
 
             // Tronque les chaines de plus de 16 caractères.
-            $table->head[] = '<span title="'.s($value).'">'.mb_strimwidth($value, 0, 16, "...").'</span>';
+            $table->head[] = '<span title="' . s($value) . '">' . mb_strimwidth($value, 0, 16, "...") . '</span>';
         }
         $table->attributes['class'] = 'table table-sortable';
-        $table->caption = count($rows).' '.get_string('users');
+        $table->caption = count($rows) . ' ' . get_string('users');
         $table->data = $rows;
         $table->responsive = false;
         $content = html_writer::div(html_writer::table($table), 'table-responsive');

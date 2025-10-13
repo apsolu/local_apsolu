@@ -24,8 +24,8 @@
 
 use local_apsolu\core\federation\course as FederationCourse;
 
-require_once(__DIR__.'/../../../../config.php');
-require_once($CFG->dirroot.'/enrol/select/lib.php');
+require_once(__DIR__ . '/../../../../config.php');
+require_once($CFG->dirroot . '/enrol/select/lib.php');
 
 $confirm = optional_param('confirm', '', PARAM_ALPHANUM); // Confirmation hash.
 

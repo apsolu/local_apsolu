@@ -167,7 +167,10 @@ class course extends record {
      * @return int|false Retourne l'id du cours de FFSU ou false si il n'est pas défini.
      */
     public static function get_federation_courseid() {
-        debugging('Use of '.__METHOD__.' is deprecated. Use local_apsolu\core\federation\course::get_courseid().', DEBUG_DEVELOPER);
+        debugging(
+            'Use of ' . __METHOD__ . ' is deprecated. Use local_apsolu\core\federation\course::get_courseid().',
+            DEBUG_DEVELOPER
+        );
 
         $federationcourse = get_config('local_apsolu', 'federation_course');
 
@@ -205,7 +208,7 @@ class course extends record {
             $skill = $record->name;
         }
 
-        $strtime = get_string($weekday, 'local_apsolu').' '.$starttime.' '.$endtime;
+        $strtime = get_string($weekday, 'local_apsolu') . ' ' . $starttime . ' ' . $endtime;
 
         if (empty($event) === false) {
             return sprintf('%s %s %s %s', $category, $event, $strtime, $skill);
@@ -289,7 +292,7 @@ class course extends record {
                 return 7;
         }
 
-        throw new coding_exception('Invalid value ('.json_encode(['day' => $day]).' for '.__METHOD__.'.');
+        throw new coding_exception('Invalid value (' . json_encode(['day' => $day]) . ' for ' . __METHOD__ . '.');
     }
 
     /**
@@ -304,8 +307,13 @@ class course extends record {
      *
      * @return array Un tableau d'objets instanciés.
      */
-    public static function get_records(?array $conditions = null, string $sort = '', string $fields = '*',
-                                       int $limitfrom = 0, int $limitnum = 0) {
+    public static function get_records(
+        ?array $conditions = null,
+        string $sort = '',
+        string $fields = '*',
+        int $limitfrom = 0,
+        int $limitnum = 0
+    ) {
         global $DB;
 
         $classname = __CLASS__;
@@ -330,10 +338,10 @@ class course extends record {
      */
     public function get_session_offset() {
         if (preg_match('/^[0-9][0-9]:[0-9][0-9]$/', $this->starttime) !== 1) {
-            throw new coding_exception('Unexpected value of starttime ('.$this->starttime.') for '.__METHOD__.'.');
+            throw new coding_exception('Unexpected value of starttime (' . $this->starttime . ') for ' . __METHOD__ . '.');
         }
 
-        list($hours, $minutes) = explode(':', $this->starttime);
+        [$hours, $minutes] = explode(':', $this->starttime);
 
         $offset = 0;
         $offset += (($this->numweekday - 1) * 24 * 60 * 60);
@@ -385,13 +393,13 @@ class course extends record {
 
         foreach ($times as $key => $values) {
             if (count($values) !== 2) {
-                debugging(__METHOD__.': 2 valeurs attendues pour la variable $'.$key, $level = DEBUG_DEVELOPER);
+                debugging(__METHOD__ . ': 2 valeurs attendues pour la variable $' . $key, $level = DEBUG_DEVELOPER);
 
                 return false;
             }
 
             if (ctype_digit($values[0]) === false || ctype_digit($values[1]) === false) {
-                debugging(__METHOD__.': 2 entiers attendus pour la variable $'.$key, $level = DEBUG_DEVELOPER);
+                debugging(__METHOD__ . ': 2 entiers attendus pour la variable $' . $key, $level = DEBUG_DEVELOPER);
 
                 return false;
             }
@@ -402,7 +410,7 @@ class course extends record {
         $duration = $times['endtime'] - $times['starttime'];
 
         if ($duration <= 0) {
-            debugging(__METHOD__.': valeur nulle ou négative pour la variable $duration', $level = DEBUG_DEVELOPER);
+            debugging(__METHOD__ . ': valeur nulle ou négative pour la variable $duration', $level = DEBUG_DEVELOPER);
 
             return false;
         }
@@ -457,15 +465,21 @@ class course extends record {
         global $DB;
 
         if ($data === null) {
-            throw new coding_exception('$data parameter cannot be null for '.__METHOD__.'.');
+            throw new coding_exception('$data parameter cannot be null for ' . __METHOD__ . '.');
         }
 
         $this->set_vars($data);
         $this->numweekday = self::get_numweekdays($this->weekday);
 
         // Set fullname.
-        $this->fullname = self::get_fullname($data->str_category, $this->event, $this->weekday,
-            $this->starttime, $this->endtime, $data->str_skill);
+        $this->fullname = self::get_fullname(
+            $data->str_category,
+            $this->event,
+            $this->weekday,
+            $this->starttime,
+            $this->endtime,
+            $data->str_skill
+        );
 
         // Set shortname.
         $this->shortname = self::get_shortname($this->id, $this->fullname);
@@ -605,7 +619,7 @@ class course extends record {
         }
 
         foreach ($gradeitems as $item) {
-            list($apsolugradeid, $itemname) = explode('-', $item->itemname, 2);
+            [$apsolugradeid, $itemname] = explode('-', $item->itemname, 2);
 
             if (isset($coursegradeitems[$apsolugradeid]) === false) {
                 // Supprime un élément de notation obsolète.
@@ -618,7 +632,7 @@ class course extends record {
 
             // Met à jour le nom de l'élément de notation.
             $item->iteminfo = 'APSOLU';
-            $item->itemname = $gradeitem->id.'-'.$gradeitem->name;
+            $item->itemname = $gradeitem->id . '-' . $gradeitem->name;
             $item->set_hidden($gradeitem->publicationdate);
             $oldmax = $item->grademax;
             $item->grademax = $gradeitem->grademax;
@@ -638,7 +652,7 @@ class course extends record {
         foreach ($coursegradeitems as $item) {
             $gradeitem = new grade_item(['id' => 0, 'courseid' => $this->id]);
             $gradeitem->iteminfo = gradebook::NAME;
-            $gradeitem->itemname = $item->id.'-'.$item->name;
+            $gradeitem->itemname = $item->id . '-' . $item->name;
             $gradeitem->itemtype = 'manual';
             $gradeitem->categoryid = $rootcategory->id;
             $gradeitem->hidden = $gradeitem->hidden;

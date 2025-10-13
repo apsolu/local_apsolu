@@ -42,7 +42,7 @@ class local_apsolu_header_form extends moodleform {
     protected function definition() {
         $mform = $this->_form;
 
-        list($defaults) = $this->_customdata;
+        [$defaults] = $this->_customdata;
 
         // Active.
         $mform->addElement('checkbox', 'apsoluheaderactive', 'Afficher le message');

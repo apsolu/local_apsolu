@@ -23,12 +23,12 @@
  */
 
 use local_apsolu\core\customfields;
-use local_apsolu\core\gradebook as Gradebook;
+use local_apsolu\core\gradebook;
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->libdir.'/gradelib.php');
-require_once($CFG->dirroot.'/local/apsolu/grades/filters_form.php');
+require_once($CFG->libdir . '/gradelib.php');
+require_once($CFG->dirroot . '/local/apsolu/grades/filters_form.php');
 
 $options = [];
 $options['headers'] = [0 => ['sorter' => false]];
@@ -67,16 +67,18 @@ if (defined('APSOLU_GRADES_COURSE_SCOPE') === false) {
 
 $courses = [];
 foreach (Gradebook::get_courses(APSOLU_GRADES_COURSE_SCOPE) as $course) {
-    $courses[$course->category.'-0'] = $categories[$course->category]->name;
-    $courses[$course->category.'-'.$course->id] = $course->fullname;
+    $courses[$course->category . '-0'] = $categories[$course->category]->name;
+    $courses[$course->category . '-' . $course->id] = $course->fullname;
 }
 
 // Vérifie les autorisations d'accès à la page.
 if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_COURSE && $courses === []) {
     // Cet utilisateur n'a pas de cours à évaluer.
     throw new moodle_exception('no_courses_to_grade', 'local_apsolu');
-} else if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_SYSTEM &&
-    has_capability('local/apsolu:viewallgrades', context_system::instance()) === false) {
+} else if (
+    APSOLU_GRADES_COURSE_SCOPE === CONTEXT_SYSTEM &&
+    has_capability('local/apsolu:viewallgrades', context_system::instance()) === false
+) {
     // Cet utilisateur n'a pas les droits de gestionnaires.
     throw new moodle_exception('nopermissions', 'error', '', get_capability_string('local/apsolu:viewallgrades'));
 }
@@ -139,15 +141,17 @@ foreach ($DB->get_records_sql($sql, ['fieldid' => $customfields['apsolucycle']->
 
 // Liste des enseignants.
 $teachers = null;
-if (APSOLU_GRADES_COURSE_SCOPE === CONTEXT_SYSTEM &&
-    has_capability('local/apsolu:viewallgrades', context_system::instance()) === true) {
+if (
+    APSOLU_GRADES_COURSE_SCOPE === CONTEXT_SYSTEM &&
+    has_capability('local/apsolu:viewallgrades', context_system::instance()) === true
+) {
     $teachers = [];
-    $sql = "SELECT DISTINCT u.*".
-        " FROM {user} u".
-        " JOIN {role_assignments} ra ON u.id = ra.userid".
-        " JOIN {context} ctx ON ctx.id = ra.contextid".
-        " JOIN {apsolu_courses} c ON ctx.instanceid = c.id".
-        " WHERE ra.roleid = 3". // Enseignant.
+    $sql = "SELECT DISTINCT u.*" .
+        " FROM {user} u" .
+        " JOIN {role_assignments} ra ON u.id = ra.userid" .
+        " JOIN {context} ctx ON ctx.id = ra.contextid" .
+        " JOIN {apsolu_courses} c ON ctx.instanceid = c.id" .
+        " WHERE ra.roleid = 3" . // Enseignant.
         " ORDER BY u.lastname, u.firstname";
     foreach ($DB->get_records_sql($sql) as $user) {
         $teachers[$user->id] = fullname($user);
@@ -212,8 +216,10 @@ if (($formdata = $mform->get_data()) || ($data = data_submitted())) {
         $filtersdata->fields = [];
     }
 
-    if (isset($options['courses']) === false || count($options['courses']) > 1 ||
-        substr(current($options['courses']), -2) === '-0') {
+    if (
+        isset($options['courses']) === false || count($options['courses']) > 1 ||
+        substr(current($options['courses']), -2) === '-0'
+    ) {
         // Active par défaut le champ "cours" dès que la recherche ne porte pas sur un seul cours précis.
         // Soit l'utilisateur n'a pas sélectionné de cours, soit il y a plus d'un cours,
         // soit le seul cours sélectionné est une catégorie d'activités.

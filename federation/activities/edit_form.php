@@ -60,7 +60,7 @@ class local_apsolu_federation_activities_edit_form extends moodleform {
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 
         $attributes = new stdClass();
-        $attributes->href = $CFG->wwwroot.'/local/apsolu/federation/index.php?page=activities';
+        $attributes->href = $CFG->wwwroot . '/local/apsolu/federation/index.php?page=activities';
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
@@ -94,9 +94,9 @@ class local_apsolu_federation_activities_edit_form extends moodleform {
 
         // Vérifie que l'activité APSOLU n'est pas déjà associée à une autre activité FFSU.
         if (empty($data['categoryid']) === false) {
-            $sql = "SELECT afa.id, afa.name".
-                " FROM {apsolu_federation_activities} afa".
-                " WHERE afa.categoryid = :categoryid".
+            $sql = "SELECT afa.id, afa.name" .
+                " FROM {apsolu_federation_activities} afa" .
+                " WHERE afa.categoryid = :categoryid" .
                 " AND afa.id != :id";
             $record = $DB->get_record_sql($sql, ['categoryid' => $data['categoryid'], 'id' => $data['activityid']]);
             if ($record !== false) {

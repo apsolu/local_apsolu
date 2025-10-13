@@ -42,8 +42,8 @@ class local_apsolu_grades_gradebooks_filters_form extends moodleform {
     protected function definition() {
         $mform = $this->_form;
 
-        list($defaults, $courses, $roles, $calendarstypes, $gradeitems, $cities,
-            $institutions, $ufrs, $departments, $cycles, $teachers) = $this->_customdata;
+        [$defaults, $courses, $roles, $calendarstypes, $gradeitems, $cities,
+            $institutions, $ufrs, $departments, $cycles, $teachers] = $this->_customdata;
 
         $fields = [];
         $fields['emails'] = get_string('email');

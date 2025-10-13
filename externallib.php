@@ -22,13 +22,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\attendance as Attendance;
-use local_apsolu\core\customfields as CustomFields;
+use local_apsolu\core\attendance;
+use local_apsolu\core\customfields;
 use UniversiteRennes2\Apsolu\Payment;
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->libdir.'/externallib.php');
+require_once($CFG->libdir . '/externallib.php');
 
 /**
  * Fonction vérifiant la validité d'un token passé en paramètre HTTP.
@@ -68,10 +68,13 @@ function local_apsolu_write_log($method, $arguments) {
     if (isset($CFG->apsolu_enable_ws_logging) === true) {
         if (is_writable($CFG->apsolu_enable_ws_logging) === true) {
             // Place systématiquement en début de tableau le token utilisé.
-            array_unshift($arguments, 'token='.optional_param('wstoken', '', PARAM_ALPHANUM));
+            array_unshift($arguments, 'token=' . optional_param('wstoken', '', PARAM_ALPHANUM));
 
-            $result = file_put_contents($CFG->apsolu_enable_ws_logging,
-                core_date::strftime('%c').' '.$method.' '.implode(', ', $arguments).PHP_EOL, FILE_APPEND | LOCK_EX);
+            $result = file_put_contents(
+                $CFG->apsolu_enable_ws_logging,
+                core_date::strftime('%c') . ' ' . $method . ' ' . implode(', ', $arguments) . PHP_EOL,
+                FILE_APPEND | LOCK_EX
+            );
 
             return $result !== false;
         }
@@ -127,10 +130,16 @@ function local_apsolu_grant_ws_access() {
         $event = \core\event\webservice_service_user_added::create($params);
         $event->trigger();
 
-        external_generate_token(EXTERNAL_TOKEN_PERMANENT, $service->id, $user->id,
-            \context_system::instance(), $validuntil = 0, $iprestriction = '');
+        external_generate_token(
+            EXTERNAL_TOKEN_PERMANENT,
+            $service->id,
+            $user->id,
+            \context_system::instance(),
+            $validuntil = 0,
+            $iprestriction = ''
+        );
 
-        mtrace('-> Token créé pour l\'utilisateur #'.$user->id.' '.$user->firstname.' '.$user->lastname);
+        mtrace('-> Token créé pour l\'utilisateur #' . $user->id . ' ' . $user->firstname . ' ' . $user->lastname);
     }
 
     // Supprime les tokens.
@@ -142,7 +151,7 @@ function local_apsolu_grant_ws_access() {
         $user = $DB->get_record('user', ['id' => $token->userid]);
 
         if ($user === false) {
-            mtrace('Token supprimé pour l\'utilisateur #'.$token->userid.' (non trouvable dans la table user)');
+            mtrace('Token supprimé pour l\'utilisateur #' . $token->userid . ' (non trouvable dans la table user)');
             continue;
         }
 
@@ -157,7 +166,7 @@ function local_apsolu_grant_ws_access() {
         $event = \core\event\webservice_service_user_removed::create($params);
         $event->trigger();
 
-        mtrace('-> Token supprimé pour l\'utilisateur #'.$user->id.' '.$user->firstname.' '.$user->lastname);
+        mtrace('-> Token supprimé pour l\'utilisateur #' . $user->id . ' ' . $user->firstname . ' ' . $user->lastname);
     }
 }
 
@@ -182,11 +191,11 @@ class local_apsolu_webservices extends external_api {
 
         $data = [];
 
-        local_apsolu_write_log(__METHOD__, ['since='.$since]);
+        local_apsolu_write_log(__METHOD__, ['since=' . $since]);
 
         // Vérifier que le token appartienne à un enseignant du SIUAPS.
         if (local_apsolu_is_valid_token() === false) {
-            local_apsolu_write_log(__METHOD__, ['since='.$since, get_string('invalidtoken', 'webservice')]);
+            local_apsolu_write_log(__METHOD__, ['since=' . $since, get_string('invalidtoken', 'webservice')]);
             return $data;
         }
 
@@ -206,7 +215,7 @@ class local_apsolu_webservices extends external_api {
         foreach ($DB->get_records_sql($sql, $params) as $record) {
             $user = new stdClass();
             $user->iduser = $record->iduser;
-            $user->instuid = $record->auth.'|'.$record->username;
+            $user->instuid = $record->auth . '|' . $record->username;
             $user->firstname = $record->firstname;
             $user->lastname = $record->lastname;
             $user->cardnumber = $record->cardnumber;
@@ -266,11 +275,11 @@ class local_apsolu_webservices extends external_api {
 
         $data = [];
 
-        local_apsolu_write_log(__METHOD__, ['since='.$since]);
+        local_apsolu_write_log(__METHOD__, ['since=' . $since]);
 
         // Vérifier que le token appartienne à un enseignant du SIUAPS.
         if (local_apsolu_is_valid_token() === false) {
-            local_apsolu_write_log(__METHOD__, ['since='.$since, get_string('invalidtoken', 'webservice')]);
+            local_apsolu_write_log(__METHOD__, ['since=' . $since, get_string('invalidtoken', 'webservice')]);
             return $data;
         }
 
@@ -331,11 +340,11 @@ class local_apsolu_webservices extends external_api {
 
         $data = [];
 
-        local_apsolu_write_log(__METHOD__, ['since='.$since]);
+        local_apsolu_write_log(__METHOD__, ['since=' . $since]);
 
         // Vérifier que le token appartienne à un enseignant du SIUAPS.
         if (local_apsolu_is_valid_token() === false) {
-            local_apsolu_write_log(__METHOD__, ['since='.$since, get_string('invalidtoken', 'webservice')]);
+            local_apsolu_write_log(__METHOD__, ['since=' . $since, get_string('invalidtoken', 'webservice')]);
             return $data;
         }
 
@@ -522,9 +531,9 @@ class local_apsolu_webservices extends external_api {
 
         $data = [];
 
-        $sql = "SELECT DISTINCT cc.id, cc.name, acg.url".
-            " FROM {course_categories} cc".
-            " JOIN {apsolu_courses_groupings} acg ON acg.id = cc.id".
+        $sql = "SELECT DISTINCT cc.id, cc.name, acg.url" .
+            " FROM {course_categories} cc" .
+            " JOIN {apsolu_courses_groupings} acg ON acg.id = cc.id" .
             " ORDER BY name";
 
         return array_values($DB->get_records_sql($sql));
@@ -569,15 +578,15 @@ class local_apsolu_webservices extends external_api {
 
         $data = [];
 
-        local_apsolu_write_log(__METHOD__, ['since='.$since]);
+        local_apsolu_write_log(__METHOD__, ['since=' . $since]);
 
         // Vérifier que le token appartienne à un enseignant du SIUAPS.
         if (local_apsolu_is_valid_token() === false) {
-            local_apsolu_write_log(__METHOD__, ['since='.$since, get_string('invalidtoken', 'webservice')]);
+            local_apsolu_write_log(__METHOD__, ['since=' . $since, get_string('invalidtoken', 'webservice')]);
             return $data;
         }
 
-        require_once(__DIR__.'/classes/apsolu/payment.php');
+        require_once(__DIR__ . '/classes/apsolu/payment.php');
 
         $courses = [];
         $activities = [];
@@ -711,11 +720,11 @@ class local_apsolu_webservices extends external_api {
 
         $data = [];
 
-        local_apsolu_write_log(__METHOD__, ['since='.$since]);
+        local_apsolu_write_log(__METHOD__, ['since=' . $since]);
 
         // Vérifier que le token appartienne à un enseignant du SIUAPS.
         if (local_apsolu_is_valid_token() === false) {
-            local_apsolu_write_log(__METHOD__, ['since='.$since, get_string('invalidtoken', 'webservice')]);
+            local_apsolu_write_log(__METHOD__, ['since=' . $since, get_string('invalidtoken', 'webservice')]);
             return $data;
         }
 
@@ -724,17 +733,17 @@ class local_apsolu_webservices extends external_api {
             return [];
         }
 
-        $sql = "SELECT DISTINCT ra.id AS idregistration, ra.userid AS iduser, ctx.instanceid AS idcourse".
-            " FROM {role_assignments} ra".
-            " JOIN {role} r ON r.id = ra.roleid AND r.archetype = 'student'".
-            " JOIN {context} ctx ON ctx.id = ra.contextid".
-            " JOIN {enrol} e ON ctx.instanceid = e.courseid AND e.id = ra.itemid".
-            " JOIN {user_enrolments} ue ON e.id = ue.enrolid AND ra.userid = ue.userid".
-            " WHERE ra.component = 'enrol_select'".
-            " AND e.enrol = 'select'".
-            " AND e.status = 0".  // Active.
-            " AND ue.status > 0". // Inactive.
-            " AND (ue.timemodified >= :timemodified".
+        $sql = "SELECT DISTINCT ra.id AS idregistration, ra.userid AS iduser, ctx.instanceid AS idcourse" .
+            " FROM {role_assignments} ra" .
+            " JOIN {role} r ON r.id = ra.roleid AND r.archetype = 'student'" .
+            " JOIN {context} ctx ON ctx.id = ra.contextid" .
+            " JOIN {enrol} e ON ctx.instanceid = e.courseid AND e.id = ra.itemid" .
+            " JOIN {user_enrolments} ue ON e.id = ue.enrolid AND ra.userid = ue.userid" .
+            " WHERE ra.component = 'enrol_select'" .
+            " AND e.enrol = 'select'" .
+            " AND e.status = 0" .  // Active.
+            " AND ue.status > 0" . // Inactive.
+            " AND (ue.timemodified >= :timemodified" .
             " OR ue.timeend BETWEEN :since AND :now)";
         return $DB->get_records_sql($sql, ['timemodified' => $since, 'since' => $since, 'now' => time()]);
     }
@@ -780,20 +789,20 @@ class local_apsolu_webservices extends external_api {
 
         $data = [];
 
-        local_apsolu_write_log(__METHOD__, ['since='.$since]);
+        local_apsolu_write_log(__METHOD__, ['since=' . $since]);
 
         // Vérifier que le token appartienne à un enseignant du SIUAPS.
         if (local_apsolu_is_valid_token() === false) {
-            local_apsolu_write_log(__METHOD__, ['since='.$since, get_string('invalidtoken', 'webservice')]);
+            local_apsolu_write_log(__METHOD__, ['since=' . $since, get_string('invalidtoken', 'webservice')]);
             return $data;
         }
 
-        $sql = "SELECT ra.id, ra.userid, ctx.instanceid AS idcourse".
-            " FROM {role_assignments} ra".
-            " JOIN {context} ctx ON ctx.id = ra.contextid".
-            " JOIN {apsolu_courses} c ON ctx.instanceid = c.id".
-            " WHERE ra.timemodified >= :timemodified".
-            " AND ra.roleid = 3". // Enseignant.
+        $sql = "SELECT ra.id, ra.userid, ctx.instanceid AS idcourse" .
+            " FROM {role_assignments} ra" .
+            " JOIN {context} ctx ON ctx.id = ra.contextid" .
+            " JOIN {apsolu_courses} c ON ctx.instanceid = c.id" .
+            " WHERE ra.timemodified >= :timemodified" .
+            " AND ra.roleid = 3" . // Enseignant.
             " ORDER BY ra.userid, ctx.instanceid";
         foreach ($DB->get_records_sql($sql, ['timemodified' => $since]) as $record) {
             $teacher = new stdClass();
@@ -847,21 +856,21 @@ class local_apsolu_webservices extends external_api {
 
         $data = [];
 
-        local_apsolu_write_log(__METHOD__, ['since='.$since, 'from='.$from]);
+        local_apsolu_write_log(__METHOD__, ['since=' . $since, 'from=' . $from]);
 
         // Vérifier que le token appartienne à un enseignant du SIUAPS.
         if (local_apsolu_is_valid_token() === false) {
-            local_apsolu_write_log(__METHOD__, ['since='.$since, 'from='.$from, get_string('invalidtoken', 'webservice')]);
+            local_apsolu_write_log(__METHOD__, ['since=' . $since, 'from=' . $from, get_string('invalidtoken', 'webservice')]);
             return $data;
         }
 
-        $sql = "SELECT aap.id, aap.studentid AS iduser, aas.courseid, aap.timemodified".
-            " FROM {apsolu_attendance_presences} aap".
-            " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid".
-            " JOIN {apsolu_courses} ac ON ac.id = aas.courseid".
-            " WHERE aap.statusid IN (1,2)". // Present + late.
-            " AND aas.sessiontime BETWEEN :from1 AND :from2".
-            " AND aap.timemodified >= :since".
+        $sql = "SELECT aap.id, aap.studentid AS iduser, aas.courseid, aap.timemodified" .
+            " FROM {apsolu_attendance_presences} aap" .
+            " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid" .
+            " JOIN {apsolu_courses} ac ON ac.id = aas.courseid" .
+            " WHERE aap.statusid IN (1,2)" . // Present + late.
+            " AND aas.sessiontime BETWEEN :from1 AND :from2" .
+            " AND aap.timemodified >= :since" .
             " ORDER BY aas.courseid";
 
         $params = [];
@@ -923,23 +932,23 @@ class local_apsolu_webservices extends external_api {
     public static function set_card($iduser, $cardnumber) {
         global $CFG, $DB;
 
-        require_once($CFG->dirroot.'/user/profile/lib.php');
+        require_once($CFG->dirroot . '/user/profile/lib.php');
 
         $data = ['success' => false, 'cardnumber' => ''];
 
-        local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber]);
+        local_apsolu_write_log(__METHOD__, ['iduser=' . $iduser, 'cardnumber=' . $cardnumber]);
 
         try {
             // Vérifier que le token appartienne à un enseignant du SIUAPS.
             if (local_apsolu_is_valid_token() === false) {
-                local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber,
+                local_apsolu_write_log(__METHOD__, ['iduser=' . $iduser, 'cardnumber=' . $cardnumber,
                     get_string('invalidtoken', 'webservice')]);
                 throw new Exception(get_string('invalidtoken', 'webservice'));
             }
 
             $user = $DB->get_record('user', ['id' => $iduser]);
             if ($user === false) {
-                local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, get_string('unknownuser')]);
+                local_apsolu_write_log(__METHOD__, ['iduser=' . $iduser, 'cardnumber=' . $cardnumber, get_string('unknownuser')]);
                 return $data;
             }
 
@@ -956,13 +965,13 @@ class local_apsolu_webservices extends external_api {
 
             $errors = profile_validation($userfield, $files = []);
             if (count($errors) > 0) {
-                local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber,
-                    'impossible d\'enregistrer la carte ('.json_encode($errors).')']);
+                local_apsolu_write_log(__METHOD__, ['iduser=' . $iduser, 'cardnumber=' . $cardnumber,
+                    'impossible d\'enregistrer la carte (' . json_encode($errors) . ')']);
                 throw new Exception(json_encode($errors));
             }
 
             profile_save_data($userfield);
-            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, 'previouscard='.$previouscard,
+            local_apsolu_write_log(__METHOD__, ['iduser=' . $iduser, 'cardnumber=' . $cardnumber, 'previouscard=' . $previouscard,
                 'enregistrement d\'une nouvelle carte']);
 
             // Ajoute le témoin que la carte provient d'une source externe.
@@ -972,13 +981,13 @@ class local_apsolu_webservices extends external_api {
             // TODO: proposer un bug report à Moodle.org ?
             $user->timemodified = time();
             $DB->update_record('user', $user);
-            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'timemodified='.$user->timemodified,
+            local_apsolu_write_log(__METHOD__, ['iduser=' . $iduser, 'timemodified=' . $user->timemodified,
                 'mise à jour du champ timemodified de l\'utilisateur']);
 
             $data['success'] = true;
         } catch (Exception $exception) {
-            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber,
-                'exception='.$exception->getMessage(), 'impossible d\'enregistrer la carte en DB']);
+            local_apsolu_write_log(__METHOD__, ['iduser=' . $iduser, 'cardnumber=' . $cardnumber,
+                'exception=' . $exception->getMessage(), 'impossible d\'enregistrer la carte en DB']);
         }
 
         // Récupère la carte actuelle de l'utilisateur.
@@ -987,7 +996,7 @@ class local_apsolu_webservices extends external_api {
             $data['cardnumber'] = $card->data;
         }
 
-        local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'cardnumber='.$cardnumber, 'retourne '.json_encode($data)]);
+        local_apsolu_write_log(__METHOD__, ['iduser=' . $iduser, 'cardnumber=' . $cardnumber, 'retourne ' . json_encode($data)]);
 
         return $data;
     }
@@ -1001,8 +1010,12 @@ class local_apsolu_webservices extends external_api {
         return new external_function_parameters(
             [
                 'iduser' => new external_value(PARAM_INT, get_string('ws_value_iduser', 'local_apsolu'), VALUE_DEFAULT, '0'),
-                'cardnumber' => new external_value(PARAM_ALPHANUM,
-                    get_string('ws_value_cardnumber', 'local_apsolu'), VALUE_DEFAULT, ''),
+                'cardnumber' => new external_value(
+                    PARAM_ALPHANUM,
+                    get_string('ws_value_cardnumber', 'local_apsolu'),
+                    VALUE_DEFAULT,
+                    ''
+                ),
                 ]
         );
     }
@@ -1035,11 +1048,11 @@ class local_apsolu_webservices extends external_api {
 
         $data = ['success' => false];
 
-        local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp]);
+        local_apsolu_write_log(__METHOD__, ['iduser=' . $iduser, 'idcourse=' . $idcourse, 'timestamp=' . $timestamp]);
 
         // Vérifier que le token appartienne à un enseignant du SIUAPS.
         if (local_apsolu_is_valid_token() === false) {
-            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp,
+            local_apsolu_write_log(__METHOD__, ['iduser=' . $iduser, 'idcourse=' . $idcourse, 'timestamp=' . $timestamp,
                 get_string('invalidtoken', 'webservice')]);
             return $data;
         }
@@ -1049,9 +1062,9 @@ class local_apsolu_webservices extends external_api {
         $beforesessiontime = $timestamp - 2 * 60 * 60; // 2h avant le badgeage.
         $aftersessiontime = $timestamp + 2 * 60 * 60; // 2h après le badgeage.
 
-        $sql = "SELECT id".
-            " FROM {apsolu_attendance_sessions}".
-            " WHERE courseid = :courseid".
+        $sql = "SELECT id" .
+            " FROM {apsolu_attendance_sessions}" .
+            " WHERE courseid = :courseid" .
             " AND sessiontime BETWEEN :beforesessiontime AND :aftersessiontime";
 
         // Cherche la première session dont l'heure de début est comprise dans un interval de 2h
@@ -1061,7 +1074,7 @@ class local_apsolu_webservices extends external_api {
         $session = current($sessions);
 
         if (isset($session->id) === false) {
-            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp,
+            local_apsolu_write_log(__METHOD__, ['iduser=' . $iduser, 'idcourse=' . $idcourse, 'timestamp=' . $timestamp,
                 'session non trouvée dans un interval de 2h']);
 
             $beforesessiontime = strtotime('monday this week', $timestamp);
@@ -1075,12 +1088,12 @@ class local_apsolu_webservices extends external_api {
         }
 
         if (isset($session->id) === false) {
-            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp,
+            local_apsolu_write_log(__METHOD__, ['iduser=' . $iduser, 'idcourse=' . $idcourse, 'timestamp=' . $timestamp,
                 'session non trouvée dans un interval de la semaine']);
 
-            $sql = "SELECT id".
-                " FROM {apsolu_attendance_sessions}".
-                " WHERE courseid = :courseid".
+            $sql = "SELECT id" .
+                " FROM {apsolu_attendance_sessions}" .
+                " WHERE courseid = :courseid" .
                 " AND sessiontime >= :timestamp";
 
             // Cherche la première session dont l'heure de début est supérieure à l'horodatage de la présence saisie.
@@ -1089,13 +1102,13 @@ class local_apsolu_webservices extends external_api {
         }
 
         if (isset($session->id) === false) {
-            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp,
+            local_apsolu_write_log(__METHOD__, ['iduser=' . $iduser, 'idcourse=' . $idcourse, 'timestamp=' . $timestamp,
                 'impossible de trouver une session supérieure à la date du timestamp']);
 
-            $sql = "SELECT id".
-                " FROM {apsolu_attendance_sessions}".
-                " WHERE courseid = :courseid".
-                " AND sessiontime <= :timestamp".
+            $sql = "SELECT id" .
+                " FROM {apsolu_attendance_sessions}" .
+                " WHERE courseid = :courseid" .
+                " AND sessiontime <= :timestamp" .
                 " ORDER BY sessiontime DESC";
 
             // Cherche la première session dont l'heure de début est inférieure à l'horodatage de la présence saisie.
@@ -1104,9 +1117,9 @@ class local_apsolu_webservices extends external_api {
         }
 
         if (isset($session->id) === false) {
-            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp,
+            local_apsolu_write_log(__METHOD__, ['iduser=' . $iduser, 'idcourse=' . $idcourse, 'timestamp=' . $timestamp,
                 'impossible de trouver une session inférieure à la date du timestamp']);
-            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp,
+            local_apsolu_write_log(__METHOD__, ['iduser=' . $iduser, 'idcourse=' . $idcourse, 'timestamp=' . $timestamp,
                 'impossible de trouver une session pour ce cours']);
 
             return ['success' => true];
@@ -1124,7 +1137,7 @@ class local_apsolu_webservices extends external_api {
         try {
             $DB->insert_record('apsolu_attendance_presences', $presence);
         } catch (Exception $exception) {
-            local_apsolu_write_log(__METHOD__, ['iduser='.$iduser, 'idcourse='.$idcourse, 'timestamp='.$timestamp,
+            local_apsolu_write_log(__METHOD__, ['iduser=' . $iduser, 'idcourse=' . $idcourse, 'timestamp=' . $timestamp,
                 'impossible d\'enregistrer la présence']);
 
             return ['success' => true];
@@ -1180,14 +1193,14 @@ class local_apsolu_webservices extends external_api {
 
         // Vérifier que le token appartienne à un enseignant du SIUAPS.
         if (local_apsolu_is_valid_token() === false) {
-            local_apsolu_write_log(__METHOD__, ['serial='.$serial, 'idteacher='.$idteacher, 'message='.$message,
-                'timestamp='.$timestamp, get_string('invalidtoken', 'webservice')]);
+            local_apsolu_write_log(__METHOD__, ['serial=' . $serial, 'idteacher=' . $idteacher, 'message=' . $message,
+                'timestamp=' . $timestamp, get_string('invalidtoken', 'webservice')]);
 
             return ['success' => false];
         }
 
-        $return = local_apsolu_write_log(__METHOD__, ['serial='.$serial, 'idteacher='.$idteacher, 'message='.$message,
-            'timestamp='.$timestamp]);
+        $return = local_apsolu_write_log(__METHOD__, ['serial=' . $serial, 'idteacher=' . $idteacher, 'message=' . $message,
+            'timestamp=' . $timestamp]);
 
         return ['success' => $return];
     }
@@ -1229,7 +1242,7 @@ class local_apsolu_webservices extends external_api {
      * @return array
      */
     public static function get_chartdataset($options) {
-        $class = 'local_apsolu\local\statistics\\'.$options['classname'].'\chart';
+        $class = 'local_apsolu\local\statistics\\' . $options['classname'] . '\chart';
         return call_user_func([$class, $options['reportid']], $options);
     }
 
@@ -1240,46 +1253,87 @@ class local_apsolu_webservices extends external_api {
      */
     public static function get_chartdataset_parameters() {
         return new external_function_parameters(
-          [
+            [
             'options' => new external_single_structure(
-              [
+                [
                 'classname' => new external_value(PARAM_TEXT, 'Nom de la classe'),
                 'reportid' => new external_value(PARAM_TEXT, 'Identifiant du rapport'),
                 'criterias' => new external_single_structure(
-                  [
+                    [
                     'cities' =>
                       new external_multiple_structure(
-                      new external_single_structure(
-                      [
-                          'active' => new external_value(PARAM_BOOL, 'Site par défaut', VALUE_DEFAULT, null, NULL_ALLOWED),
-                          'id' => new external_value(PARAM_INT, 'Identifiant du site', VALUE_DEFAULT, null, NULL_ALLOWED),
-                          'name' => new external_value(PARAM_TEXT, 'Nom du site', VALUE_DEFAULT, null, NULL_ALLOWED),
-                      ], 'Cities'), VALUE_DEFAULT, []
+                          new external_single_structure(
+                              [
+                              'active' => new external_value(PARAM_BOOL, 'Site par défaut', VALUE_DEFAULT, null, NULL_ALLOWED),
+                              'id' => new external_value(PARAM_INT, 'Identifiant du site', VALUE_DEFAULT, null, NULL_ALLOWED),
+                              'name' => new external_value(PARAM_TEXT, 'Nom du site', VALUE_DEFAULT, null, NULL_ALLOWED),
+                              ],
+                              'Cities'
+                          ),
+                          VALUE_DEFAULT,
+                          []
                       ),
                     'calendarstypes' =>
                       new external_multiple_structure(
-                      new external_single_structure(
-                      [
-                          'active' => new external_value(PARAM_BOOL, 'Site par défaut', VALUE_DEFAULT, null, NULL_ALLOWED),
-                          'id' => new external_value(PARAM_INT, 'Identifiant du type de calendrier', VALUE_DEFAULT,
-                            null, NULL_ALLOWED),
-                          'name' => new external_value(PARAM_TEXT, 'Nom du type de calendrier', VALUE_DEFAULT, null, NULL_ALLOWED),
-                      ], 'CalendarsTypes'), VALUE_DEFAULT, []
+                          new external_single_structure(
+                              [
+                              'active' => new external_value(PARAM_BOOL, 'Site par défaut', VALUE_DEFAULT, null, NULL_ALLOWED),
+                              'id' => new external_value(
+                                  PARAM_INT,
+                                  'Identifiant du type de calendrier',
+                                  VALUE_DEFAULT,
+                                  null,
+                                  NULL_ALLOWED
+                              ),
+                              'name' => new external_value(
+                                  PARAM_TEXT,
+                                  'Nom du type de calendrier',
+                                  VALUE_DEFAULT,
+                                  null,
+                                  NULL_ALLOWED
+                              ),
+                              ],
+                              'CalendarsTypes'
+                          ),
+                          VALUE_DEFAULT,
+                          []
                       ),
                     'complementaries' =>
                       new external_multiple_structure(
-                      new external_single_structure(
-                      [
-                          'active' => new external_value(PARAM_BOOL, 'Site par défaut', VALUE_DEFAULT, null, NULL_ALLOWED),
-                          'id' => new external_value(PARAM_INT, 'Identifiant de l\'activité complementaire', VALUE_DEFAULT,
-                            null, NULL_ALLOWED),
-                          'name' => new external_value(PARAM_TEXT, 'Nom de l\'activité complémentaire', VALUE_DEFAULT,
-                            null, NULL_ALLOWED),
-                      ], 'Complementaries'), VALUE_DEFAULT, []
+                          new external_single_structure(
+                              [
+                              'active' => new external_value(PARAM_BOOL, 'Site par défaut', VALUE_DEFAULT, null, NULL_ALLOWED),
+                              'id' => new external_value(
+                                  PARAM_INT,
+                                  'Identifiant de l\'activité complementaire',
+                                  VALUE_DEFAULT,
+                                  null,
+                                  NULL_ALLOWED
+                              ),
+                              'name' => new external_value(
+                                  PARAM_TEXT,
+                                  'Nom de l\'activité complémentaire',
+                                  VALUE_DEFAULT,
+                                  null,
+                                  NULL_ALLOWED
+                              ),
+                              ],
+                              'Complementaries'
+                          ),
+                          VALUE_DEFAULT,
+                          []
                       ),
-                  ], 'Criterias', VALUE_DEFAULT, []),
-              ], 'Options', VALUE_DEFAULT, []),
-          ]
+                    ],
+                    'Criterias',
+                    VALUE_DEFAULT,
+                    []
+                ),
+                ],
+                'Options',
+                VALUE_DEFAULT,
+                []
+            ),
+            ]
         );
     }
 
@@ -1290,10 +1344,10 @@ class local_apsolu_webservices extends external_api {
      */
     public static function get_chartdataset_returns() {
         return new external_single_structure(
-        [
-          'success' => new external_value(PARAM_BOOL, get_string('ws_value_boolean', 'local_apsolu')),
-          'chartdata' => new external_value(PARAM_RAW, 'chart object'),
-          ]
+            [
+            'success' => new external_value(PARAM_BOOL, get_string('ws_value_boolean', 'local_apsolu')),
+            'chartdata' => new external_value(PARAM_RAW, 'chart object'),
+            ]
         );
     }
 
@@ -1311,13 +1365,13 @@ class local_apsolu_webservices extends external_api {
 
         raise_memory_limit(MEMORY_EXTRA);
 
-        $class = 'local_apsolu\local\statistics\\'.$classname.'\report';
+        $class = 'local_apsolu\local\statistics\\' . $classname . '\report';
         $reportobj = new $class();
 
         // Check if report is defined as a rules.
         if (!is_null($reportid)) {
             $report = $reportobj->getReport($reportid);
-            if (!is_null ($report) && property_exists($report, "values")) {
+            if (!is_null($report) && property_exists($report, "values")) {
                 $custom = json_encode($report->values);
             }
         }
@@ -1367,12 +1421,12 @@ class local_apsolu_webservices extends external_api {
      */
     public static function get_reportdataset_parameters() {
         return new external_function_parameters(
-          [
+            [
             'classname' => new external_value(PARAM_TEXT, 'Nom de la classe', VALUE_DEFAULT, null, NULL_ALLOWED),
             'reportid' => new external_value(PARAM_TEXT, 'Identifiant du rapport', VALUE_DEFAULT, null, NULL_ALLOWED),
             'querybuilder' => new external_value(PARAM_RAW, 'Requête customisée', VALUE_DEFAULT, null, NULL_ALLOWED),
             'criterias' => new external_value(PARAM_RAW, 'filtres de customisation', VALUE_DEFAULT, null, NULL_ALLOWED),
-          ]
+            ]
         );
     }
 
@@ -1383,14 +1437,19 @@ class local_apsolu_webservices extends external_api {
      */
     public static function get_reportdataset_returns() {
         return new external_single_structure(
-        [
-          'success' => new external_value(PARAM_BOOL, get_string('ws_value_boolean', 'local_apsolu'), VALUE_DEFAULT,
-            null, NULL_ALLOWED),
-          'columns' => new external_value(PARAM_RAW, 'report column', VALUE_DEFAULT, null, NULL_ALLOWED),
-          'data' => new external_value(PARAM_RAW, 'report data'),
-          'orders' => new external_value(PARAM_RAW, 'report orders', VALUE_DEFAULT, null, NULL_ALLOWED),
-          'filters' => new external_value(PARAM_RAW, 'report columns filters type', VALUE_DEFAULT, null, NULL_ALLOWED),
-          ]
+            [
+            'success' => new external_value(
+                PARAM_BOOL,
+                get_string('ws_value_boolean', 'local_apsolu'),
+                VALUE_DEFAULT,
+                null,
+                NULL_ALLOWED
+            ),
+            'columns' => new external_value(PARAM_RAW, 'report column', VALUE_DEFAULT, null, NULL_ALLOWED),
+            'data' => new external_value(PARAM_RAW, 'report data'),
+            'orders' => new external_value(PARAM_RAW, 'report orders', VALUE_DEFAULT, null, NULL_ALLOWED),
+            'filters' => new external_value(PARAM_RAW, 'report columns filters type', VALUE_DEFAULT, null, NULL_ALLOWED),
+            ]
         );
     }
 
@@ -1404,12 +1463,12 @@ class local_apsolu_webservices extends external_api {
 
         $data = [];
 
-        $sql = "SELECT DISTINCT cc.id AS sportid, cc.name AS sport, acc.url AS sporturl, cc.description,".
-            " cc0.id AS domainid, cc0.name AS domain, acg.url AS domainurl".
-            " FROM {apsolu_courses_categories} acc".
-            " JOIN {course_categories} cc ON cc.id = acc.id".
-            " JOIN {apsolu_courses_groupings} acg ON acg.id = cc.parent".
-            " JOIN {course_categories} cc0 ON cc0.id = acg.id".
+        $sql = "SELECT DISTINCT cc.id AS sportid, cc.name AS sport, acc.url AS sporturl, cc.description," .
+            " cc0.id AS domainid, cc0.name AS domain, acg.url AS domainurl" .
+            " FROM {apsolu_courses_categories} acc" .
+            " JOIN {course_categories} cc ON cc.id = acc.id" .
+            " JOIN {apsolu_courses_groupings} acg ON acg.id = cc.parent" .
+            " JOIN {course_categories} cc0 ON cc0.id = acg.id" .
             " ORDER BY sport, domain";
 
         return array_values($DB->get_records_sql($sql));
@@ -1457,7 +1516,7 @@ class local_apsolu_webservices extends external_api {
 
         raise_memory_limit(MEMORY_EXTRA);
 
-        $class = 'local_apsolu\local\statistics\\'.$classname.'\report';
+        $class = 'local_apsolu\local\statistics\\' . $classname . '\report';
         $report = new $class();
 
         $filters = $report->getfilters($datatype);
@@ -1473,10 +1532,10 @@ class local_apsolu_webservices extends external_api {
      */
     public static function get_reportfilters_parameters() {
         return new external_function_parameters(
-          [
+            [
             'classname' => new external_value(PARAM_TEXT, 'Nom de la classe', VALUE_DEFAULT, null, NULL_ALLOWED),
             'datatype' => new external_value(PARAM_TEXT, 'type de rapport', VALUE_DEFAULT, null, NULL_ALLOWED),
-          ]
+            ]
         );
     }
 
@@ -1487,11 +1546,16 @@ class local_apsolu_webservices extends external_api {
      */
     public static function get_reportfilters_returns() {
         return new external_single_structure(
-        [
-            'success' => new external_value(PARAM_BOOL, get_string('ws_value_boolean', 'local_apsolu'), VALUE_DEFAULT,
-            null, NULL_ALLOWED),
-          'filters' => new external_value(PARAM_RAW, 'report columns filters type', VALUE_DEFAULT, null, NULL_ALLOWED),
-          ]
+            [
+            'success' => new external_value(
+                PARAM_BOOL,
+                get_string('ws_value_boolean', 'local_apsolu'),
+                VALUE_DEFAULT,
+                null,
+                NULL_ALLOWED
+            ),
+            'filters' => new external_value(PARAM_RAW, 'report columns filters type', VALUE_DEFAULT, null, NULL_ALLOWED),
+            ]
         );
     }
 }

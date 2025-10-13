@@ -32,7 +32,7 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 
-require_once($CFG->dirroot.'/local/apsolu/courses/categories/edit_form.php');
+require_once($CFG->dirroot . '/local/apsolu/courses/categories/edit_form.php');
 
 /**
  * Data generator class
@@ -85,7 +85,7 @@ class local_apsolu_generator extends testing_module_generator {
 
         $groupings = [];
         foreach ($records as $record) {
-            list($groupingname, $categoryname) = $record;
+            [$groupingname, $categoryname] = $record;
 
             if (isset($groupings[$groupingname]) === false) {
                 $grouping = new grouping();
@@ -95,7 +95,7 @@ class local_apsolu_generator extends testing_module_generator {
                 $groupings[$groupingname] = $grouping;
             }
 
-            list($catdata, $mform) = $this->get_category_data();
+            [$catdata, $mform] = $this->get_category_data();
             $catdata->name = $categoryname;
             $catdata->parent = $groupings[$groupingname]->id;
 
@@ -145,8 +145,15 @@ class local_apsolu_generator extends testing_module_generator {
         $customdata = ['category' => $category, 'groupings' => $groupings, 'context' => $context, 'itemid' => $itemid];
         $mform = new local_apsolu_courses_categories_edit_form(null, $customdata);
 
-        $editor = file_prepare_standard_editor($category, 'description', $mform->get_description_editor_options(), $context,
-            'coursecat', 'description', $itemid);
+        $editor = file_prepare_standard_editor(
+            $category,
+            'description',
+            $mform->get_description_editor_options(),
+            $context,
+            'coursecat',
+            'description',
+            $itemid
+        );
         $mform->set_data($editor);
 
         return [$category, $mform];

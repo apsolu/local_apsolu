@@ -72,8 +72,8 @@ class local_apsolu_payment_payments_edit_form extends moodleform {
 
         // Courses field.
         foreach ($cards as $cardid => $cardname) {
-            $mform->addElement('checkbox', 'card'.$cardid, $cardname);
-            $mform->setType('card'.$cardid, PARAM_INT);
+            $mform->addElement('checkbox', 'card' . $cardid, $cardname);
+            $mform->setType('card' . $cardid, PARAM_INT);
         }
 
         // TODO: disable les checkboxes en fonction des centres de paiement.
@@ -87,7 +87,7 @@ class local_apsolu_payment_payments_edit_form extends moodleform {
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 
         $attributes = new stdClass();
-        $attributes->href = $CFG->wwwroot.'/local/apsolu/payment/admin.php?tab=payments&userid='.$payment->userid;
+        $attributes->href = $CFG->wwwroot . '/local/apsolu/payment/admin.php?tab=payments&userid=' . $payment->userid;
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 

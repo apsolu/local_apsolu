@@ -41,7 +41,7 @@ class local_apsolu_federation_export_form extends moodleform {
      */
     protected function definition() {
         $mform = $this->_form;
-        list($activities, $sexes, $institutions, $ufrs, $departments) = $this->_customdata;
+        [$activities, $sexes, $institutions, $ufrs, $departments] = $this->_customdata;
 
         $multiple = ['multiple' => true];
 

@@ -16,7 +16,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->libdir.'/formslib.php');
+require_once($CFG->libdir . '/formslib.php');
 
 /**
  * Classe pour le formulaire permettant de sélectionner les sessions.
@@ -50,7 +50,6 @@ class edit_select_form extends moodleform {
         $sessions = [];
         foreach ($this->_customdata['sessions'] as $session) {
             $sessions[$session->id] = $session->name;
-
         }
         $mform->addElement('select', 'sessionid', get_string('attendance_select_session', 'local_apsolu'), $sessions);
         $mform->setType('sessionid', PARAM_INT);

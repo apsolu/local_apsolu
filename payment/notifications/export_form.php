@@ -41,18 +41,20 @@ class local_apsolu_payment_notifications_export_form extends moodleform {
      */
     protected function definition() {
         $mform = $this->_form;
-        list($cards) = $this->_customdata;
+        [$cards] = $this->_customdata;
 
         $mform->addElement('header', 'header_cards', get_string('cards', 'local_apsolu'));
 
         // Notice explicative.
-        $mform->addElement('html', sprintf('<div class="bg-light card card-body my-4">%s</div>',
-            get_string('this_form_allows_you_to_export_list_of_pending_payments', 'local_apsolu')));
+        $mform->addElement('html', sprintf(
+            '<div class="bg-light card card-body my-4">%s</div>',
+            get_string('this_form_allows_you_to_export_list_of_pending_payments', 'local_apsolu')
+        ));
 
         // Liste des cartes.
         foreach ($cards as $cardid => $card) {
-            $mform->addElement('checkbox', 'card'.$cardid, $card->fullname);
-            $mform->setType('card'.$cardid, PARAM_INT);
+            $mform->addElement('checkbox', 'card' . $cardid, $card->fullname);
+            $mform->setType('card' . $cardid, PARAM_INT);
         }
 
         // Submit buttons.
@@ -91,7 +93,7 @@ class local_apsolu_payment_notifications_export_form extends moodleform {
         if ($nocards === true) {
             $cards = $DB->get_records('apsolu_payments_cards');
             foreach ($cards as $card) {
-                $errors['card'.$card->id] = 'Il faut cocher au moins une carte.';
+                $errors['card' . $card->id] = 'Il faut cocher au moins une carte.';
             }
         }
 

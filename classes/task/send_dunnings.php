@@ -25,7 +25,7 @@
 namespace local_apsolu\task;
 
 use stdClass;
-use UniversiteRennes2\Apsolu\Payment as Payment;
+use UniversiteRennes2\Apsolu\Payment;
 
 /**
  * Classe représentant la tâche pour notifier les utilisateurs d'un paiement dû.
@@ -53,7 +53,7 @@ class send_dunnings extends \core\task\scheduled_task {
     public function execute() {
         global $CFG, $DB;
 
-        require_once($CFG->dirroot.'/local/apsolu/classes/apsolu/payment.php');
+        require_once($CFG->dirroot . '/local/apsolu/classes/apsolu/payment.php');
 
         $dunnings = $DB->get_records('apsolu_dunnings', ['timestarted' => null]);
 
@@ -62,8 +62,8 @@ class send_dunnings extends \core\task\scheduled_task {
         }
 
         foreach ($dunnings as $dunning) {
-            mtrace('relance du '.
-                userdate($dunning->timecreated, get_string('strftimedatetime', 'local_apsolu')).' intitulée '.$dunning->subject);
+            mtrace('relance du ' . userdate($dunning->timecreated, get_string('strftimedatetime', 'local_apsolu')) .
+                ' intitulée ' . $dunning->subject);
 
             $dunning->timestarted = time();
             $DB->update_record('apsolu_dunnings', $dunning);
@@ -75,13 +75,13 @@ class send_dunnings extends \core\task\scheduled_task {
             $sender = $DB->get_record('user', ['id' => $dunning->userid]);
             $receivers = [];
 
-            $sql = "SELECT apc.*".
-                " FROM {apsolu_payments_cards} apc".
-                " JOIN {apsolu_dunnings_cards} adc ON apc.id = adc.cardid".
+            $sql = "SELECT apc.*" .
+                " FROM {apsolu_payments_cards} apc" .
+                " JOIN {apsolu_dunnings_cards} adc ON apc.id = adc.cardid" .
                 " WHERE adc.dunningid = :dunningid";
             $cards = $DB->get_records_sql($sql, ['dunningid' => $dunning->id]);
             foreach ($cards as $card) {
-                mtrace(' - carte '.$card->fullname);
+                mtrace(' - carte ' . $card->fullname);
 
                 $users = Payment::get_card_users($card->id);
                 foreach ($users as $user) {
@@ -93,8 +93,8 @@ class send_dunnings extends \core\task\scheduled_task {
                             if ($simulation === false) {
                                 email_to_user($user, $sender, $dunning->subject, $dunning->messagetext, $dunning->message);
 
-                                mtrace('   - relance envoyée à '.$user->email.
-                                    ' (#'.$user->id.' '.$user->firstname.' '.$user->lastname.')');
+                                mtrace('   - relance envoyée à ' . $user->email .
+                                    ' (#' . $user->id . ' ' . $user->firstname . ' ' . $user->lastname . ')');
                             }
 
                             $post = new stdClass();
@@ -111,9 +111,9 @@ class send_dunnings extends \core\task\scheduled_task {
             $DB->update_record('apsolu_dunnings', $dunning);
 
             if ($simulation === true) {
-                mtrace('=> '.count($receivers).' envois simulés.');
+                mtrace('=> ' . count($receivers) . ' envois simulés.');
             } else {
-                mtrace('=> '.count($receivers).' relances envoyées.');
+                mtrace('=> ' . count($receivers) . ' relances envoyées.');
             }
         }
     }

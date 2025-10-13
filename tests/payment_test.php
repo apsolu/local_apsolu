@@ -58,7 +58,7 @@ final class payment_test extends \advanced_testcase {
      */
     public static function make_refid_provider(): array {
         return [
-            ['', '123', [],  '123'],
+            ['', '123', [], '123'],
             ['prefixe', '123', [], 'prefixe-123'],
             ['', '123', ['code tarifs'], '123:code tarifs'],
             ['', '123', ['code tarif 1', 'code tarif 2'], '123:code tarif 1,code tarif 2'],

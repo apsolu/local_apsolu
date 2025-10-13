@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\core\federation\adhesion;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -30,7 +30,7 @@ define('APSOLU_SELECT_ANY', '0');
 define('APSOLU_SELECT_YES', '1');
 define('APSOLU_SELECT_NO', '2');
 
-require_once(__DIR__.'/certificates_validation_form.php');
+require_once(__DIR__ . '/certificates_validation_form.php');
 
 // Définit les options d'état des certificats.
 $certificates = [
@@ -48,12 +48,12 @@ if ($data = $mform->get_data()) {
     $conditions = [];
 
     if (empty($data->fullnameuser) === false) {
-        $parameters['fullnameuser'] = '%'.$data->fullnameuser.'%';
+        $parameters['fullnameuser'] = '%' . $data->fullnameuser . '%';
         $conditions[] = sprintf("AND %s LIKE :fullnameuser ", $DB->sql_fullname('u.firstname', 'u.lastname'));
     }
 
     if (empty($data->idnumber) === false) {
-        $parameters['idnumber'] = '%'.$data->idnumber.'%';
+        $parameters['idnumber'] = '%' . $data->idnumber . '%';
         $conditions[] = "AND u.idnumber LIKE :idnumber ";
     }
 
@@ -69,11 +69,11 @@ if ($data = $mform->get_data()) {
     $federationactivities = $DB->get_records('apsolu_federation_activities', [], $sort = 'name', $fields = 'code, name');
 
     $fullnamefields = core_user\fields::get_name_fields();
-    $sql = "SELECT u.id, ".implode(', ', $fullnamefields).", u.idnumber, u.email, u.institution, afa.questionnairestatus,
+    $sql = "SELECT u.id, " . implode(', ', $fullnamefields) . ", u.idnumber, u.email, u.institution, afa.questionnairestatus,
                    afa.data, afa.medicalcertificatestatus, afa.federationnumber, afa.federationnumberrequestdate
               FROM {user} u
               JOIN {apsolu_federation_adhesions} afa ON u.id = afa.userid
-             WHERE 1 = 1 ".implode(' ', $conditions)."
+             WHERE 1 = 1 " . implode(' ', $conditions) . "
           ORDER BY afa.federationnumberrequestdate DESC, u.lastname, u.firstname";
 
     $rows = [];
@@ -94,7 +94,7 @@ if ($data = $mform->get_data()) {
         } else {
             $title = userdate($record->federationnumberrequestdate, get_string('strftimedatetimeshort', 'local_apsolu'));
             $text = userdate($record->federationnumberrequestdate, get_string('strftimedatetimesortable', 'local_apsolu'));
-            $row[] = '<span class="apsolu-cursor-help" title="'.s($title).'">'.s(substr($text, 0, -3)).'</span>';
+            $row[] = '<span class="apsolu-cursor-help" title="' . s($title) . '">' . s(substr($text, 0, -3)) . '</span>';
         }
         $row[] = html_writer::link($profileurl, fullname($record));
         $row[] = $record->idnumber;
@@ -112,7 +112,7 @@ if ($data = $mform->get_data()) {
 
         if (empty($record->questionnairestatus) === false) {
             $label = get_string('health_constraints', 'local_apsolu');
-            $activities[] = '<i class="icon fa fa-medkit" aria-hidden="true" aria-selected="true"></i>'.$label;
+            $activities[] = '<i class="icon fa fa-medkit" aria-hidden="true" aria-selected="true"></i>' . $label;
         }
 
         $row[] = html_writer::alist($activities, $attributes = [], $tag = 'ul');
@@ -159,12 +159,18 @@ if ($data = $mform->get_data()) {
         } else {
             // Récupère les fichiers déposés.
             $fs = get_file_storage();
-            list($component, $itemid) = ['local_apsolu', $record->id];
+            [$component, $itemid] = ['local_apsolu', $record->id];
             $sort = 'itemid, filepath, filename';
             $files = [];
             foreach (['medicalcertificate', 'parentalauthorization'] as $filearea) {
-                $files = array_merge($files, $fs->get_area_files($context->id, $component, $filearea,
-                    $itemid, $sort, $includedirs = false));
+                $files = array_merge($files, $fs->get_area_files(
+                    $context->id,
+                    $component,
+                    $filearea,
+                    $itemid,
+                    $sort,
+                    $includedirs = false
+                ));
             }
 
             if (count($files) === 0) {
@@ -186,16 +192,24 @@ if ($data = $mform->get_data()) {
             } else {
                 $items = [];
                 foreach ($files as $file) {
-                    $url = moodle_url::make_pluginfile_url($context->id, $component, $file->get_filearea(), $itemid, '/',
-                        $file->get_filename(), $forcedownload = false, $includetoken = false);
+                    $url = moodle_url::make_pluginfile_url(
+                        $context->id,
+                        $component,
+                        $file->get_filearea(),
+                        $itemid,
+                        '/',
+                        $file->get_filename(),
+                        $forcedownload = false,
+                        $includetoken = false
+                    );
                     $helpstr = get_string('help');
                     $date = userdate($file->get_timemodified(), get_string('strftimedateshort', 'local_apsolu'));
                     $datacontent = format_string(get_string('uploaded_date', 'local_apsolu', $date));
                     $link = '<a class="btn btn-link p-0" role="button" data-bs-container="body" data-bs-toggle="popover"
-                        data-bs-placement="right" data-bs-content="'.$datacontent.'" data-bs-html="false" tabindex="0"
-                        data-bs-trigger="focus" aria-label="'.$helpstr.'" data-original-title=""
+                        data-bs-placement="right" data-bs-content="' . $datacontent . '" data-bs-html="false" tabindex="0"
+                        data-bs-trigger="focus" aria-label="' . $helpstr . '" data-original-title=""
                         title=""><i class="icon fa fa-clock-o fa-fw" role="img"></i></a>';
-                    $items[] = html_writer::link($url, mb_strimwidth($file->get_filename(), 0, 16, '...')).' '.$link;
+                    $items[] = html_writer::link($url, mb_strimwidth($file->get_filename(), 0, 16, '...')) . ' ' . $link;
                 }
                 $row[] = html_writer::alist($items, $attributes = [], $tag = 'ul');
 
@@ -334,7 +348,7 @@ if ($data = $mform->get_data()) {
         $table->id = 'local-apsolu-certificates-validation-table';
         $table->head  = $headers;
         $table->attributes['class'] = 'table table-bordered table-sortable';
-        $table->caption = count($rows).' '.get_string('users');
+        $table->caption = count($rows) . ' ' . get_string('users');
         $table->data  = $rows;
         $content = html_writer::table($table);
     }

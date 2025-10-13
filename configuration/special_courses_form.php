@@ -44,7 +44,7 @@ class local_apsolu_special_courses_form extends moodleform {
 
         $mform = $this->_form;
 
-        list($defaults, $collaborativecourses, $federationcourses) = $this->_customdata;
+        [$defaults, $collaborativecourses, $federationcourses] = $this->_customdata;
 
         // Cours collaboratif pour les enseignants du SUAPS.
         $label = get_string('internal_collaborative_course', 'local_apsolu');

@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\federation\questionnaire as Questionnaire;
+use local_apsolu\core\federation\questionnaire;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -35,8 +35,11 @@ echo html_writer::div($introduction, 'mx-auto my-5 w-75');
 
 $buttons = [];
 // Bouton pour passer au QCM médical.
-$buttons[] = html_writer::link(new moodle_url('/local/apsolu/federation/adhesion/index.php', ['step' => 0]),
-    get_string('continue'), ['class' => 'btn btn-primary']);
+$buttons[] = html_writer::link(
+    new moodle_url('/local/apsolu/federation/adhesion/index.php', ['step' => 0]),
+    get_string('continue'),
+    ['class' => 'btn btn-primary']
+);
 
 if ($adhesion->can_edit() === true) {
     // Bouton d'annulation et de désinscription.

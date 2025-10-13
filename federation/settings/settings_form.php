@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_apsolu\core\federation\adhesion as Adhesion;
+use local_apsolu\core\federation\adhesion;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -44,7 +44,7 @@ class local_apsolu_settings_form extends moodleform {
     protected function definition() {
         $mform = $this->_form;
 
-        list($defaults, $cohorts) = $this->_customdata;
+        [$defaults, $cohorts] = $this->_customdata;
 
         // Partie formulaire d'adhésion.
         $mform->addElement('header', 'agreement', get_string('setup_the_text_of_the_agreement', 'local_apsolu'));
