@@ -328,6 +328,14 @@ if ($data = $mform->get_data()) {
                     case 'activity':
                         $row[] = implode(',', $record->{$field});
                         break;
+                    case 'federationnumberprefix':
+                        // Exporte la colonne uniquement si le numéro semble correspondre à un numéro de section.
+                        if (ctype_digit($record->{$field}) === true && strlen($record->{$field}) === 11) {
+                            $row[] = $record->{$field};
+                        } else {
+                            $row[] = '';
+                        }
+                        break;
                     default:
                         $row[] = $record->{$field};
                 }

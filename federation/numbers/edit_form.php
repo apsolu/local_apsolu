@@ -38,6 +38,9 @@ class local_apsolu_federation_numbers_edit_form extends moodleform {
         $number = $this->_customdata['number'];
         $fields = $this->_customdata['fields'];
 
+        $label = get_string('if_the_section_number_is_not_an_11-digit_number_the_section_column_will_be_empty', 'local_apsolu');
+        $mform->addElement('html', html_writer::div($label, 'alert alert-info'));
+
         // Champ Numéro d'association.
         $mform->addElement('text', 'number', get_string('association_number', 'local_apsolu'));
         $mform->setType('number', PARAM_TEXT);
