@@ -48,9 +48,9 @@ class local_apsolu_federation_export_form extends moodleform {
         $mform->addElement('autocomplete', 'activities', get_string('activities', 'local_apsolu'), $activities, $multiple);
         $mform->setType('activities', PARAM_TEXT);
 
-        $mform->addElement('autocomplete', 'sexes', get_string('sex', 'local_apsolu'), $sexes, $multiple);
+        $mform->addElement('autocomplete', 'sexes', get_string('user_title', 'local_apsolu'), $sexes, $multiple);
         $mform->setType('sexes', PARAM_TEXT);
-        $mform->setDefault('sexes', ['F', 'M']);
+        $mform->setDefault('sexes', ['Mme', 'M']);
 
         $mform->addElement('autocomplete', 'institutions', get_string('institution'), $institutions, $multiple);
         $mform->setType('institutions', PARAM_TEXT);

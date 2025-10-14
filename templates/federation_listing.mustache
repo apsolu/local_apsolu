@@ -60,7 +60,7 @@
 {{#count_users}}
 <p class="alert alert-info">{{#str}}students_found, local_apsolu, {{ count_users }}{{/str}}</p>
 
-<p>{{#str}}select{{/str}} <button type="button" class="btn btn-link checkall">{{#str}}any{{/str}}</button> / <button type="button" class="btn btn-link uncheckall">{{#str}}none{{/str}}</button></p>
+<p>{{#str}}select{{/str}} <button type="button" class="btn btn-link checkall">{{#str}}all{{/str}}</button> / <button type="button" class="btn btn-link uncheckall">{{#str}}none{{/str}}</button></p>
 
 <form action="{{action}}" method="post">
 	<table class="table table-striped">
@@ -71,9 +71,9 @@
 			<th>{{#str}}lastname{{/str}}</th>
 			<th>{{#str}}firstname{{/str}}</th>
 			<th>{{#str}}federation_number, local_apsolu{{/str}}</th>
-			<th>{{#str}}main_sport, local_apsolu{{/str}}</th>
+			<th>{{#str}}activities, local_apsolu{{/str}}</th>
 			<th>{{#str}}idnumber{{/str}}</th>
-			<th>{{#str}}sex, local_apsolu{{/str}}</th>
+			<th>{{#str}}user_title, local_apsolu{{/str}}</th>
 			<th>{{#str}}institution{{/str}}</th>
 			<th>{{#str}}department{{/str}}</th>
 			<th>{{#str}}fields_apsoluufr, local_apsolu{{/str}}</th>
@@ -88,9 +88,9 @@
 			<td>{{lastname}}</td>
 			<td>{{firstname}}</td>
 			<td>{{federationnumber}}</td>
-			<td>{{mainsport}}</td>
+			<td>{{activities}}</td>
 			<td>{{idnumber}}</td>
-			<td>{{sex}}</td>
+			<td>{{title}}</td>
 			<td>{{institution}}</td>
 			<td>{{department}}</td>
 			<td>{{ufr}}</td>
@@ -100,7 +100,7 @@
 	</tbody>
 	</table>
 
-	<p>{{#str}}select{{/str}} <button type="button" class="btn btn-link checkall">{{#str}}any{{/str}}</button> / <button type="button" class="btn btn-link uncheckall">{{#str}}none{{/str}}</button></p>
+	<p>{{#str}}select{{/str}} <button type="button" class="btn btn-link checkall">{{#str}}all{{/str}}</button> / <button type="button" class="btn btn-link uncheckall">{{#str}}none{{/str}}</button></p>
 	<p><input type="submit" class="btn btn-primary" name="notify" value="{{#str}}notify, local_apsolu{{/str}}" /></p>
 </form>
 {{/count_users}}

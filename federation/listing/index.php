@@ -57,12 +57,12 @@ $PAGE->navbar->add(get_string('list_of_my_students', 'local_apsolu'));
 
 // Récupère les activités.
 $activities = [];
-foreach (activity::get_activity_data() as $activity) {
-    $activities[$activity['id']] = $activity['name'];
+foreach (Activity::get_records([], $sort = 'name') as $record) {
+    $activities[$record->code] = $record->name;
 }
 
 // Récupère les sexes.
-$sexes = adhesion::get_sexes();
+$sexes = adhesion::get_user_titles();
 
 // Récupère les institutions, ufr et départements.
 $customfields = customfields::getCustomFields();
@@ -105,10 +105,9 @@ if ($data = $mform->get_data()) {
     $fields = fields::for_userpic()->get_sql('u');
 
     $sql = "SELECT " . substr($fields->selects, 1) . ", u.idnumber, u.institution, u.department, uid1.data AS ufr,
-                   uid2.data AS cycle, afac.name AS mainsport, afa.sex, afa.federationnumber
+                   uid2.data AS cycle, afa.data, afa.federationnumber
               FROM {user} u
               JOIN {apsolu_federation_adhesions} afa ON u.id = afa.userid
-              JOIN {apsolu_federation_activities} afac ON afac.id = afa.mainsport
          LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = :fieldid1
          LEFT JOIN {user_info_data} uid2 ON u.id = uid2.userid AND uid2.fieldid = :fieldid2
              WHERE u.deleted = 0
@@ -116,20 +115,6 @@ if ($data = $mform->get_data()) {
     $params = [];
     $params['fieldid1'] = $customfields['apsoluufr']->id;
     $params['fieldid2'] = $customfields['apsolucycle']->id;
-
-    // Champ activités.
-    if (isset($data->activities[0])) {
-        [$sqlin, $sqlparams] = $DB->get_in_or_equal($data->activities, SQL_PARAMS_NAMED, 'activities_');
-
-        $sql .= sprintf(' AND afa.mainsport %s', $sqlin);
-        $params = array_merge($params, $sqlparams);
-    }
-
-    // Champ sexes.
-    if (isset($data->sexes[0]) === true && isset($data->sexes[1]) === false) {
-        $sql .= ' AND afa.sex = :sex';
-        $params['sex'] = $data->sexes[0];
-    }
 
     // Champ institutions.
     if (isset($data->institutions[0])) {
@@ -175,45 +160,82 @@ if ($data = $mform->get_data()) {
 
     $sql .= " ORDER BY u.lastname, u.firstname, u.institution, ufr, u.department";
 
+    $users = [];
+    $countusers = 0;
+    $recordset = $DB->get_recordset_sql($sql, $params);
+    foreach ($recordset as $user) {
+        $json = json_decode($user->data);
+
+        if (empty($json) === true) {
+            continue;
+        }
+
+        // Champ activités.
+        if (isset($data->activities[0]) === true) {
+            if (isset($json->activity) === false) {
+                continue;
+            }
+
+            $found = false;
+            foreach ($json->activity as $activity) {
+                if (in_array($activity, $data->activities, $strict = true) === false) {
+                    continue;
+                }
+
+                $found = true;
+                break;
+            }
+
+            if ($found === false) {
+                continue;
+            }
+        }
+
+        // Champ civilité.
+        if (isset($data->sexes[0]) === true && isset($data->sexes[1]) === false) {
+            if (isset($json->title) === false) {
+                continue;
+            }
+
+            if ($data->sexes[0] !== $json->title) {
+                continue;
+            }
+        }
+
+        $user->htmlpicture = $OUTPUT->user_picture($user, ['courseid' => $courseid]);
+        $user->activities = '';
+        if (is_array($json->activity) === true) {
+            $user->activities = implode(', ', $json->activity);
+        }
+        $user->title = $json->title;
+
+        $users[] = $user;
+        $countusers++;
+    }
+    $recordset->close();
 
     if ($data->submitbutton === get_string('show')) {
         // Récupère les données.
         $data = new stdClass();
-        $data->users = [];
-        $data->count_users = 0;
+        $data->users = $users;
+        $data->count_users = $countusers;
         $data->action = $CFG->wwwroot . '/blocks/apsolu_dashboard/notify.php';
-
-        $recordset = $DB->get_recordset_sql($sql, $params);
-        foreach ($recordset as $user) {
-            $user->htmlpicture = $OUTPUT->user_picture($user, ['courseid' => $courseid]);
-            $data->users[] = $user;
-            $data->count_users++;
-        }
-        $recordset->close();
     } else {
         // Export au format excel.
         $workbook = new MoodleExcelWorkbook("-");
         $workbook->send('liste_etudiants_ffsu_' . time() . '.xls');
         $myxls = $workbook->add_worksheet();
 
-        if (class_exists('PHPExcel_Style_Border') === true) {
-            // Jusqu'à Moodle 3.7.x.
-            $properties = ['border' => PHPExcel_Style_Border::BORDER_THIN];
-        } else {
-            // Depuis Moodle 3.8.x.
-            $properties = ['border' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN];
-        }
-
-        $excelformat = new MoodleExcelFormat($properties);
+        $excelformat = new MoodleExcelFormat(['border' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN]);
 
         // Set headers.
         $headers = [];
         $headers[] = get_string('lastname');
         $headers[] = get_string('firstname');
         $headers[] = get_string('federation_number', 'local_apsolu');
-        $headers[] = get_string('main_sport', 'local_apsolu');
+        $headers[] = get_string('activities', 'local_apsolu');
         $headers[] = get_string('idnumber');
-        $headers[] = get_string('sex', 'local_apsolu');
+        $headers[] = get_string('user_title', 'local_apsolu');
         $headers[] = get_string('institution');
         $headers[] = get_string('department');
         $headers[] = get_string('ufr', 'local_apsolu');
@@ -224,14 +246,13 @@ if ($data = $mform->get_data()) {
 
         // Set data.
         $line = 1;
-        $recordset = $DB->get_recordset_sql($sql, $params);
-        foreach ($recordset as $user) {
+        foreach ($users as $user) {
             $myxls->write_string($line, 0, $user->lastname, $excelformat);
             $myxls->write_string($line, 1, $user->firstname, $excelformat);
             $myxls->write_string($line, 2, $user->federationnumber, $excelformat);
-            $myxls->write_string($line, 3, $user->mainsport, $excelformat);
+            $myxls->write_string($line, 3, $user->activities, $excelformat);
             $myxls->write_string($line, 4, $user->idnumber, $excelformat);
-            $myxls->write_string($line, 5, $user->sex, $excelformat);
+            $myxls->write_string($line, 5, $user->title, $excelformat);
             $myxls->write_string($line, 6, $user->institution, $excelformat);
             $myxls->write_string($line, 7, $user->department, $excelformat);
             $myxls->write_string($line, 8, $user->ufr, $excelformat);
@@ -239,7 +260,6 @@ if ($data = $mform->get_data()) {
 
             $line++;
         }
-        $recordset->close();
 
         // MDL-83543: positionne un cookie pour qu'un script js déverrouille le bouton submit après le téléchargement.
         setcookie('moodledownload_' . sesskey(), time());
