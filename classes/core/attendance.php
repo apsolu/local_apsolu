@@ -195,7 +195,8 @@ class attendance {
             " AND ac.coursestartdate < aas_c.sessiontime AND ac.courseenddate > aas_c.sessiontime" .
             " AND e.enrol = 'select'" .
             " AND aas.sessiontime BETWEEN ac.coursestartdate AND ac.courseenddate" .
-            " AND aap.statusid != 4" . // Exclus les absences.
+            " AND aap.statusid < 4" . // Exclus les absences et autres types de présences. TODO: créer un champ dans la table
+            // apsolu_attendance_presences pour déterminer si le type de présences doit être compté dans les présences.
             " GROUP BY aap.studentid";
         $presences = [];
         $recordset = $DB->get_recordset_sql($sql, $params);
