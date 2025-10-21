@@ -100,7 +100,8 @@ class attendance {
             " WHERE c.category = :categoryid" .
             " AND e.enrol = 'select'" .
             " AND aas.sessiontime BETWEEN ac.coursestartdate AND ac.courseenddate" .
-            " AND aap.statusid != 4" . // Exclus les absences.
+            " AND aap.statusid < 4" . // Exclus les absences et autres types de présences. TODO: créer un champ dans la table
+            // apsolu_attendance_presences pour déterminer si le type de présences doit être compté dans les présences.
             " " . implode(' ', $conditions) .
             " GROUP BY act.id, aap.studentid" .
             " ORDER BY act.name";
@@ -147,7 +148,8 @@ class attendance {
             " WHERE aas.courseid = :courseid" .
             " AND e.enrol = 'select'" .
             " AND aas.sessiontime BETWEEN ac.coursestartdate AND ac.courseenddate" .
-            " AND aap.statusid != 4" . // Exclus les absences.
+            " AND aap.statusid < 4" . // Exclus les absences et autres types de présences. TODO: créer un champ dans la table
+            // apsolu_attendance_presences pour déterminer si le type de présences doit être compté dans les présences.
             " " . implode(' ', $conditions) .
             " GROUP BY act.id, aap.studentid" .
             " ORDER BY act.name";
@@ -283,7 +285,8 @@ class attendance {
             " WHERE aap.studentid = :userid" .
             " AND e.enrol = 'select'" .
             " AND aas.sessiontime BETWEEN ac.coursestartdate AND ac.courseenddate" .
-            " AND aap.statusid != 4" . // Exclus les absences.
+            " AND aap.statusid < 4" . // Exclus les absences et autres types de présences. TODO: créer un champ dans la table
+            // apsolu_attendance_presences pour déterminer si le type de présences doit être compté dans les présences.
             " GROUP BY e.id";
 
         return $DB->get_records_sql($sql, ['userid' => $userid]);
