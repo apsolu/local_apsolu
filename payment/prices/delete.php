@@ -48,7 +48,7 @@ if ($delete === $deletehash) {
     // Effectue les actions de suppression.
     require_sesskey();
 
-    $DB->delete_record('apsolu_payments_cards', ['id' => $instance->id]);
+    $DB->delete_records('apsolu_payments_cards', ['id' => $instance->id]);
 
     // Ajoute une trace des changements dans les logs.
     $event = \local_apsolu\event\card_deleted::create([
