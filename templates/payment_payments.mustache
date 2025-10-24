@@ -60,7 +60,7 @@
             {{#str}}payments_extraction_in_csv_format, local_apsolu{{/str}}
         </a>
 
-        <div aria-labelledby="dropdown-payments-centers-csv" class="dropdown-menu">
+        <div aria-labelledby="dropdown-payments-centers-csv" class="apsolu-dropdown-menu dropdown-menu dropdown-menu-end">
             {{#payments_centers}}
             <a class="dropdown-item" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=payments&action=extract&format=csv&centerid={{id}}">{{name}}</a>
             {{/payments_centers}}
@@ -71,7 +71,7 @@
             {{#str}}payments_extraction_in_excel_format, local_apsolu{{/str}}
         </a>
 
-        <div aria-labelledby="dropdown-payments-centers-excel" class="dropdown-menu">
+        <div aria-labelledby="dropdown-payments-centers-excel" class="apsolu-dropdown-menu dropdown-menu dropdown-menu-end">
             {{#payments_centers}}
             <a class="dropdown-item" href="{{wwwroot}}/local/apsolu/payment/admin.php?tab=payments&action=extract&format=xls&centerid={{id}}">{{name}}</a>
             {{/payments_centers}}

@@ -11,7 +11,8 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
                     ' data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
                     'Pour les présences <u>non saisies</u> :' +
                     '</button>' +
-                    '<div class="dropdown-menu" aria-labelledby="apsolu-dropdown-status-selector">';
+                    '<div class="apsolu-dropdown-menu dropdown-menu dropdown-menu-end"' +
+                    ' aria-labelledby="apsolu-dropdown-status-selector">';
                 for (let i = 0; i < attendancestatus.length; i++) {
                     let state = attendancestatus[i];
                     dropdown += '<button class="apsolu-status-selector dropdown-item" data-value="' + state.value + '">' +

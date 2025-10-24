@@ -175,6 +175,7 @@ if ($mform !== null && $data = $mform->get_data()) {
             ];
 
             $menu = new action_menu();
+            $menu->attributessecondary['class'] .= ' apsolu-dropdown-menu';
             $menu->set_menu_trigger(get_string('edit'));
 
             foreach ($menuoptions as $value) {

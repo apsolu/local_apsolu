@@ -3,6 +3,11 @@
     cursor: help;
 }
 
+/* Permet aux éléments des menus dropdown (type "actions") de ne pas être masqués par la barre latérale de droite. */
+.apsolu-dropdown-menu.dropdown-menu {
+    z-index: 9999;
+}
+
 .userinitials.size-40 {
     width: 40px;
     height: 40px;

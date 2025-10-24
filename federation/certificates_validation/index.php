@@ -148,6 +148,7 @@ if ($data = $mform->get_data()) {
                     ],
                 );
                 $menu = new action_menu();
+                $menu->attributessecondary['class'] .= ' apsolu-dropdown-menu';
                 $menu->set_menu_trigger(get_string('edit'));
                 $menu->add($menulink);
 
@@ -275,6 +276,7 @@ if ($data = $mform->get_data()) {
                         $row[] = $cell;
 
                         $menu = new action_menu();
+                        $menu->attributessecondary['class'] .= ' apsolu-dropdown-menu';
                         $menu->set_menu_trigger(get_string('edit'));
 
                         foreach ($menuoptions as $value) {
@@ -298,6 +300,7 @@ if ($data = $mform->get_data()) {
 
                     if (empty($record->federationnumber) === true) {
                         $menu = new action_menu();
+                        $menu->attributessecondary['class'] .= ' apsolu-dropdown-menu';
                         $menu->set_menu_trigger(get_string('edit'));
 
                         $menuoptions[0]['attributes']['class'] .= ' d-none'; // Supprime l'option de validation.
