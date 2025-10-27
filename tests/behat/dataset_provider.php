@@ -918,8 +918,8 @@ class dataset_provider {
         $course = new Federation\course();
         $course->set_groups();
 
-        // Définit un numéro d'association.
-        $numbers = ['AB00' => 'ENC Paris', 'AC01' => 'IUT Paris', 'AD03' => 'U. Paris'];
+        // Définit un numéro de section.
+        $numbers = ['07507500303' => 'ENC Paris', '07507500302' => 'IUT Paris', '07507500301' => 'U. Paris'];
         foreach ($numbers as $id => $value) {
             $number = new Federation\number();
             $number->number = $id;
