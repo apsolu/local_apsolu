@@ -202,6 +202,17 @@ if ($data = $mform->get_data()) {
             }
         }
 
+        $checkbox = new \core\output\checkbox_toggleall('users-table', false, [
+            'classes' => 'usercheckbox m-1',
+            'id' => 'checkbox-user-' . $user->id,
+            'name' => 'users[]',
+            'value' => $user->id,
+            'checked' => false,
+            'label' => get_string('selectitem', 'moodle', fullname($user)),
+            'labelclasses' => 'accesshide',
+        ]);
+
+        $user->checkbox = $OUTPUT->render($checkbox);
         $user->htmlpicture = $OUTPUT->user_picture($user, ['courseid' => $courseid]);
         $user->activities = '';
         if (is_array($json->activity) === true) {
@@ -215,10 +226,20 @@ if ($data = $mform->get_data()) {
     $recordset->close();
 
     if ($data->submitbutton === get_string('show')) {
+        $mastercheckbox = new \core\output\checkbox_toggleall('users-table', true, [
+            'id' => 'select-all-users',
+            'name' => 'select-all-users',
+            'label' => get_string('selectall'),
+            'labelclasses' => 'visually-hidden',
+            'classes' => 'm-1',
+            'checked' => false,
+            ]);
+
         // Récupère les données.
         $data = new stdClass();
         $data->users = $users;
         $data->count_users = $countusers;
+        $data->mastercheckbox = $OUTPUT->render($mastercheckbox);
         $data->action = $CFG->wwwroot . '/blocks/apsolu_dashboard/notify.php';
     } else {
         // Export au format excel.
@@ -269,9 +290,6 @@ if ($data = $mform->get_data()) {
         exit(0);
     }
 }
-
-// Javascript.
-$PAGE->requires->js_call_amd('block_apsolu_dashboard/select_all_checkboxes', 'initialise');
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('list_of_my_students', 'local_apsolu'));

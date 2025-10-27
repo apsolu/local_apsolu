@@ -60,13 +60,11 @@
 {{#count_users}}
 <p class="alert alert-info">{{#str}}students_found, local_apsolu, {{ count_users }}{{/str}}</p>
 
-<p>{{#str}}select{{/str}} <button type="button" class="btn btn-link checkall">{{#str}}all{{/str}}</button> / <button type="button" class="btn btn-link uncheckall">{{#str}}none{{/str}}</button></p>
-
 <form action="{{action}}" method="post">
 	<table class="table table-striped">
 	<thead>
 		<tr>
-			<th>{{#str}}action{{/str}}</th>
+			<th>{{{ mastercheckbox }}}</th>
 			<th>{{#str}}pictureofuser{{/str}}</th>
 			<th>{{#str}}lastname{{/str}}</th>
 			<th>{{#str}}firstname{{/str}}</th>
@@ -83,7 +81,7 @@
 	<tbody>
 		{{#users}}
 		<tr>
-			<td><input type="checkbox" class="apsolu-select-manage-users-input-checkbox" name="users[]" value="{{id}}" /></td>
+			<td>{{{ checkbox }}}</td>
 			<td>{{{htmlpicture}}}</td>
 			<td>{{lastname}}</td>
 			<td>{{firstname}}</td>
@@ -100,7 +98,6 @@
 	</tbody>
 	</table>
 
-	<p>{{#str}}select{{/str}} <button type="button" class="btn btn-link checkall">{{#str}}all{{/str}}</button> / <button type="button" class="btn btn-link uncheckall">{{#str}}none{{/str}}</button></p>
 	<p><input type="submit" class="btn btn-primary" name="notify" value="{{#str}}notify, local_apsolu{{/str}}" /></p>
 </form>
 {{/count_users}}
