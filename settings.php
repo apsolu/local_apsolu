@@ -121,6 +121,14 @@ if ($hassiteconfig || has_any_capability($capabilities, context_system::instance
         new admin_externalpage('local_apsolu_configuration_user_profile', $str, $url, $capabilities)
     );
 
+    // Configuration > Paramétrage d'exportation.
+    $str = get_string('export_settings', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'exportsettings']);
+    $ADMIN->add(
+        'local_apsolu_configuration',
+        new admin_externalpage('local_apsolu_configuration_export_settings', $str, $url, $capabilities)
+    );
+
     // Configuration > Type d'inscription.
     $str = get_string('roles', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'roles']);

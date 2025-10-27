@@ -1880,6 +1880,9 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
     // Modification à appliquer lors de la prochaine mise à jour.
     if (false) {
+        // Initialise la variable exportfields.
+        set_config('export_fields', '["email","institution","department"]', 'local_apsolu');
+
         // Savepoint reached.
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }

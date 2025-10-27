@@ -39,6 +39,7 @@ $pages['userprofile'] = 'user_profile';
 $pages['attendancestatuses'] = 'attendance_statuses';
 $pages['roles'] = 'roles';
 $pages['specialcourses'] = 'special_courses';
+$pages['exportsettings'] = 'export_settings';
 
 $tabtree = [];
 foreach ($pages as $pagename => $name) {

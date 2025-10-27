@@ -43,4 +43,42 @@ class customfields {
 
         return $fields;
     }
+
+    /**
+     * Retourne la liste des champs additionnels à exporter.
+     *
+     * @return array
+     */
+    public static function get_extra_fields_for_export(): array {
+        $fields = [];
+
+        $exportfields = json_decode(get_config('local_apsolu', 'export_fields'));
+        if (is_array($exportfields) === false) {
+            $exportfields = [];
+        }
+
+        $customfields = false;
+        foreach ($exportfields as $field) {
+            if (str_starts_with($field, 'extra_') === false) {
+                $fields[$field] = get_string($field);
+                continue;
+            }
+
+            if ($customfields === false) {
+                $customfields = [];
+                foreach (profile_get_custom_fields() as $customfield) {
+                    $customfields['extra_' . $customfield->shortname] = $customfield;
+                }
+            }
+
+            if (isset($customfields[$field]) === false) {
+                continue;
+            }
+
+            $customfield = $customfields[$field];
+            $fields[$customfield->shortname] = $customfield->name;
+        }
+
+        return $fields;
+    }
 }
