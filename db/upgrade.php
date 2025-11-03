@@ -1883,6 +1883,8 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         // Initialise la variable exportfields.
         set_config('export_fields', '["email","institution","department"]', 'local_apsolu');
 
+        unset_config('parental_authorization_enabled', 'local_apsolu');
+
         // Savepoint reached.
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }

@@ -55,8 +55,10 @@ class local_apsolu_federation_parental_authorization extends moodleform {
 
         // Texte de présentation pour l'autorisation parentale.
         $description = get_config('local_apsolu', 'parental_authorization_description');
-        $html = '<div class="bg-light card mx-auto my-3 w-75"><div class="card-body">%s</div></div>';
-        $mform->addElement('html', sprintf($html, $description));
+        if (empty($description) === false) {
+            $html = '<div class="bg-light card mx-auto my-3 w-75"><div class="card-body">%s</div></div>';
+            $mform->addElement('html', sprintf($html, $description));
+        }
 
         $mform->addElement('header', 'primarylegalrepresentative', get_string('primary_legal_representative', 'local_apsolu'));
         $mform->setExpanded('primarylegalrepresentative', $expanded = true);

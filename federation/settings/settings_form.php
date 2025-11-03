@@ -112,9 +112,6 @@ class local_apsolu_settings_form extends moodleform {
         $mform->addElement('header', 'parental_authorization', get_string('parental_authorization', 'local_apsolu'));
         $mform->setExpanded('parental_authorization', $expanded = true);
 
-        $label = get_string('enable_parental_authorization_control', 'local_apsolu');
-        $mform->addElement('selectyesno', 'parental_authorization_enabled', $label);
-
         $label = get_string('parental_authorization_description', 'local_apsolu');
         $mform->addElement('editor', 'parental_authorization_description', $label);
         $mform->addHelpButton('parental_authorization_description', 'parental_authorization_description', 'local_apsolu');

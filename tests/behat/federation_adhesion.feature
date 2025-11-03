@@ -89,9 +89,7 @@ Feature: Teste la procédure d'adhésion à la FFSU.
 
   @javascript
   Scenario: L'étudiant "user4" réalise une adhésion avec une contrainte sur la majorité.
-    Given the following config values are set as admin:
-      | parental_authorization_enabled | 1 | local_apsolu |
-    And I am on the "Homepage" page logged in as "user4"
+    Given I am on the "Homepage" page logged in as "user4"
     When I click on "Adhérer à l’AS (Licence FFSU)" "link"
     And I click on "Continue" "link"
     And I set the following fields to these values:

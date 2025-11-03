@@ -39,7 +39,6 @@ $attributes = [
     'licensetype_field_default',
     'licensetype_field_visibility',
     'otherfederation_field_visibility',
-    'parental_authorization_enabled',
     ];
 
 $defaults = new stdClass();
@@ -97,6 +96,11 @@ if ($data = $mform->get_data()) {
     foreach (['ffsu_agreement', 'ffsu_introduction', 'parental_authorization_description'] as $key) {
         if (isset($data->{$key}['text']) === false) {
             continue;
+        }
+
+        if (empty(trim(strip_tags($data->{$key}['text']))) === true) {
+            // Force la valeur pour les données ne contenant que des balises HTML vides.
+            $data->{$key}['text'] = '';
         }
 
         if ($data->{$key} === $defaults->{$key}) {
