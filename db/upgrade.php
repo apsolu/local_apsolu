@@ -1881,7 +1881,10 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
     // Modification à appliquer lors de la prochaine mise à jour.
     if (false) {
         // Initialise la variable exportfields.
-        set_config('export_fields', '["email","institution","department"]', 'local_apsolu');
+        $value = get_config('local_apsolu', 'export_fields');
+        if ($value === false) {
+            set_config('export_fields', '["email","institution","department"]', 'local_apsolu');
+        }
 
         unset_config('parental_authorization_enabled', 'local_apsolu');
 
