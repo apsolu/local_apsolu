@@ -214,7 +214,7 @@ $string['cli_setup_behat_help'] = 'Script permettant d’injecter un jeu de donn
 
 Options:
 -h, --help                  Affiche cette aide.
---non-interactive           Éxécute le script sans question interaction ou confirmation.
+--non-interactive           Exécute le script sans question interaction ou confirmation.
 
 Exemple:
 $sudo -u www-data /usr/bin/php local/apsolu/cli/setup_demo.php --non-interactive
