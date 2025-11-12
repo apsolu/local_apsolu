@@ -65,6 +65,7 @@ $string['additional_fields_to_display'] = 'Champs additionnels à afficher';
 $string['additional_fields_to_display_help'] = 'Afficher des champs supplémentaires, tels que l’adresse de courriel, l’UFR, le département, etc.';
 $string['additional_fields_to_export'] = 'Champs additionnels à exporter';
 $string['additional_fields_to_export_help'] = 'Liste des champs à inclure dans les fichiers d’exportation. Ce paramètre est valable :
+
 * sur le formulaire « liste de mes étudiants » présent sur le tableau de bord des enseignants
 * sur les boutons d’exportation dans les pages de gestion des étudiants des méthodes d’inscription par voeux';
 $string['additional_information_help'] = 'Informations additionnelles qui seront affichées aux étudiants au moment de l’inscription à ce cours.';
