@@ -195,7 +195,8 @@ class local_apsolu_federation_parental_authorization extends moodleform {
         $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Set default values.
-        $this->set_data($adhesion);
+        $data = $adhesion->decode_data();
+        $this->set_data($data);
     }
 
     /**
