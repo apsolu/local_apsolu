@@ -345,9 +345,26 @@ class local_apsolu_federation_membership extends moodleform {
 
         $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
-        // Set default values.
+        // Si la date de naissance est saisie et valide dans le profil, on passe le champ date de naissance en lecteur seule.
+        $birthday = '';
+        $customfields = profile_user_record($USER->id);
+        if (isset($customfields->apsolubirthday) === true) {
+            $datetime = DateTime::createFromFormat('d/m/Y', $customfields->apsolubirthday);
+            if ($datetime !== false) {
+                $datetime->setTime(0, 0, 0);
+                $birthday = $datetime->getTimestamp();
+            }
+        }
+
         $data = $adhesion->decode_data();
-        $data->birthday = $adhesion->birthday;
+        if ($birthday === '') {
+            $data->birthday = $adhesion->birthday;
+        } else {
+            $data->birthday = $birthday;
+            $mform->freeze('birthday');
+        }
+
+        // Set default values.
         $this->set_data($data);
     }
 
