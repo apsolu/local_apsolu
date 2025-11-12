@@ -53,6 +53,8 @@ class dataset_provider {
         require_once($CFG->dirroot . '/user/profile/lib.php');
         require_once($CFG->dirroot . '/lib/blocklib.php');
         require_once($CFG->dirroot . '/lib/testing/generator/data_generator.php');
+        require_once($CFG->dirroot . '/lib/testing/generator/component_generator_base.php');
+        require_once($CFG->dirroot . '/lib/testing/generator/module_generator.php');
 
         session_manager::init_empty_session();
         session_manager::set_user(get_admin());
@@ -595,6 +597,180 @@ class dataset_provider {
             $courses[$fullname] = $course;
 
             self::setup_enrolments($course, $period, $teachers);
+
+            // Ajoute du contenu dans l'espace-cours pour l'instance de démonstration.
+            if (defined('APSOLU_DEMO') === true && $fullname === 'Basket-ball 5x5 (H) Jeudi 14:30 16:15 Débutant') {
+                $sections = [];
+                $sections[0] = new stdClass();
+                $sections[0]->name = 'Généralités';
+                $sections[1] = new stdClass();
+                $sections[1]->name = 'Votre connaissance de l’activité basket-ball';
+                $sections[1]->contents = [];
+                $sections[1]->contents[0] = new stdClass();
+                $sections[1]->contents[0]->type = 'quiz';
+                $sections[1]->contents[0]->title = 'Quizz initial : testez vos connaissances ;)';
+                $sections[2] = new stdClass();
+                $sections[2]->name = 'Le basket dans toutes ses dimensions';
+                $sections[3] = new stdClass();
+                $sections[3]->name = 'Glossaire';
+                $sections[3]->contents = [];
+                $sections[3]->contents[0] = new stdClass();
+                $sections[3]->contents[0]->type = 'glossary';
+                $sections[3]->contents[0]->title = 'Notre glossaire basket-ball : quelques définitions utiles';
+                $sections[4] = new stdClass();
+                $sections[4]->name = 'Modalités d’évaluation';
+
+                $subsections = [];
+                $subsections[5] = new stdClass();
+                $subsections[5]->name = 'Communication (visio conférence - forum)';
+                $subsections[5]->section = 0;
+                $subsections[5]->contents = [];
+                $subsections[5]->contents[0] = new stdClass();
+                $subsections[5]->contents[0]->type = 'label';
+                $subsections[5]->contents[0]->title = 'Espace visio-conférence BBB de ce cours';
+                $subsections[6] = new stdClass();
+                $subsections[6]->name = 'Les pré-requis pour ce cours';
+                $subsections[6]->section = 0;
+                $subsections[6]->contents = [];
+                $subsections[6]->contents[0] = new stdClass();
+                $subsections[6]->contents[0]->type = 'label';
+                $subsections[6]->contents[0]->title = '<img src="data:image/svg+xml;base64,' .
+                    'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9z' .
+                    'dmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj4KICA8cmFkaWFsR3JhZGllbnQgaWQ9ImEiIGN4PSIzNy4yNSIgY3k9IjMxLjUz' .
+                    'IiByPSI2MC4yMSIgZ3JhZGllbnRUcmFuc2Zvcm09InNjYWxlKDQuMTQyKSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2Ui' .
+                    'PgogICAgPHN0b3Agb2Zmc2V0PSIuMTIxOCIgc3RvcC1jb2xvcj0iI0ZGNzUwMCIvPgogICAgPHN0b3Agb2Zmc2V0PSIuMzQ0NCIg' .
+                    'c3RvcC1jb2xvcj0iI0ZDNzMwMSIvPgogICAgPHN0b3Agb2Zmc2V0PSIuNTMzIiBzdG9wLWNvbG9yPSIjRjE2RTAyIi8+CiAgICA8' .
+                    'c3RvcCBvZmZzZXQ9Ii43MDkzIiBzdG9wLWNvbG9yPSIjRTA2NjA1Ii8+CiAgICA8c3RvcCBvZmZzZXQ9Ii44NzciIHN0b3AtY29s' .
+                    'b3I9IiNDNzVBMDkiLz4KICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0IwNEYwRCIvPgogIDwvcmFkaWFsR3JhZGll' .
+                    'bnQ+CiAgPGcgc3Ryb2tlLXdpZHRoPSI0LjE0MiI+CiAgICA8Y2lyY2xlIGN4PSIxOTkuMyIgY3k9IjE5OS41IiByPSIxOTkuMyIg' .
+                    'ZmlsbD0idXJsKCNhKSIvPgogICAgPHBhdGggZD0iTTU3LjcgMjMzLjRDNTcuNyAzMS41IDE3MSAxLjUgMTczLjQgMS41di4wMDhM' .
+                    'MTg3LjQ0LjAyMWMwIC4wNDU2LTE5LjYyIDYuMjA5LTI5Ljk0IDEyLjQyLTEwLjMxIDYuMjA5LTI0LjEgMTYuNTUtMzcuOTIgMzMu' .
+                    'MDUtMjcuNjIgMzMtNTQuODkgOTAuNTItNTQuOTEgMTg5LjUgMCA3My4wMyAzNi45NiAxMjAuMyA1NS42OCAxMzkuMiA2LjIzNCA2' .
+                    'LjMwOCAyMy4wNyAxNi40MyAyMy4wOSAxNi40NmwtMjAuOS03LjM3N2MtLjIwNzEtLjE3NC02NC44NS00My4zLTY0Ljg1LTE1MHoi' .
+                    'Lz4KICAgIDxwYXRoIGQ9Ik02MS4xIDE4OS4zYy0zNy4yOC00LjIyNS00Mi43Mi0zMi45NS00Mi42Mi01NC42NWwuMTc0LTkuOTI4' .
+                    'Yy4wODctOS4wMzMuNDEtMTAuMzkuNDEtMTAuMzlsNS41MDUtMTAuNzRzLTEuNzczIDEwLjk0LTEuNzczIDIxLjE0Yy4xMTE4IDIx' .
+                    'LjQ2IDQuOTU4IDUwLjY5IDM4Ljg4IDU0LjM5IDMuODQuNDE4MyA3LjUwOS42MjEzIDExLjA0LjYyMTMgMjQuOTQtMi4xNTggNTcu' .
+                    'NzktMTkuOTMgOTguNDYtNTEuMTcgNDAuMzItMzAuODIgMTA3LjUtNzAuNzYgMTU4LjMtNzEuMjcgNC40MDMgMCA4Ljc3MiAxLjA3' .
+                    'MyAxMi4wNiAyLjQxNWw1LjYyOSA2LjA4NGMtMi41NzItMS4wNi0xMC44OC0xLjU5NS0xNC45My0xLjU5NS0zNS4xNi0uMTUzMi0x' .
+                    'MTUuNCA0Mi42MS0xNTQuOCA3My00MC4zOCAzMC45NS02Ny4yIDUyLjcyLTEwNC44IDUyLjc2LTMuNjkgMC03LjUxMy0uMjIzNy0x' .
+                    'MS40OS0uNjU4NnpNMjIxIDM2MC41Yy0yMy40My02LjQwNy01Mi4yLTIzLjY4LTgwLjM4LTM3LjIxLTI3LjI0LTEzLjEtNTQuOTUt' .
+                    'MjIuOTctNzcuMDEtMjYuMjEtMy4wOS0uMzc2OS01Ljg2MS0uNTMwMi04LjM2Mi0uNTMwMi0xNS4zNy4wNzA0LTIxLjM2IDYuNDIt' .
+                    'MjIuODEgOC45MzQtLjQ3MjIuODYxNS0uOTk0IDEuNDk1LS45OTQgMS40OTVsLTIuNjU1LTQuMDEzYy40ODg3LS44NzM5IDQuMzQx' .
+                    'LTE1LjQgMjYuMzUtMTUuMjUgMi42NzIgMCA1LjYxMi4xNjk4IDguODU1LjU1OTIgMjYuNjQgMy4xNjQgNTIuNjkgMTQuNjQgNzku' .
+                    'OTkgMjcuNzYgMjguMzMgMTMuNjQgNTUuOTUgMzAuNjkgNzguNSAzNi44MyAyMi44NSA2LjIyMSAyOC44MSA5LjQzMSA0NS41NiA5' .
+                    'LjQ0OCAzMS44NC4wNjYzIDU1LjIyLTYuNzA2IDU1LjI3LTYuNzMxbC0zLjgxOSAyLjc4M2MtLjA5MTEuMDA4LTI2LjczIDkuODM3' .
+                    'LTUxLjcxIDkuMzE5LTE3LjA4LjAxMjQtMjQuMDgtLjk3NzUtNDYuNzktNy4xODJ6TTYxLjIgMjQ3LjZjLTExLjgxLTEuNzMxLTMw' .
+                    'LjQxLTYuMzQ1LTQ1LjEzLTExLjktMTQuNzgtNS41NDItMTQuMTYtOC40MTItMTQuMTYtOC40MTJzLTEuMTY0LTUuMTc3LTEuNTUz' .
+                    'LTE1LjAxYzAgMCA0LjUzMSA0LjIwOCA3LjU3MSA1Ljk1NiAyLjAwNSAxLjY1MyA2Ljg4OCAzLjkwNiAxMy4xNCA2LjI3OWwtLjYw' .
+                    'NDctLjQyMjVjMTMuNTYgNS4xNDggMzEuOTYgOS43MTMgNDIuNTIgMTEuMjIgMTguODUgMi43NDIgNDkuODEgNC44NDIgODkuNzYg' .
+                    'NC44NDIgNC4yODMgMCA4LjY3Ny0uMDI5IDEzLjE4LS4wNzA0IDQ2LjE0LS40ODg3IDExNy43LTYuMzk5IDE2MS45LTE3LjA5IDM4' .
+                    'LjczLTkuMzQ0IDYwLjI1LTIxLjg2IDY0LjQ2LTI0LjMzLjU0NjctLjM1MjEgNi4zODctMy4xOTMgNi4zODctMy4xOTMgMi4wNzEt' .
+                    'LjkwNzEgMS41NzQgMTEuOTMtLjQzMDggMTMuMjktLjYwMDYuNDI2Ni0yMS42NyAxNS4yNi02Ny40OSAyNi4zMi00NS45MyAxMS4w' .
+                    'Ni0xMTcuNiAxNi44OC0xNjQuNyAxNy40My00LjUzOS4wMzczLTguOTY3LjA2MjEtMTMuMy4wNzA0LTQwLjQyLS4wMTI0LTcxLjc1' .
+                    'LTIuMTA0LTkxLjU1LTQuOTd6Ii8+CiAgPC9nPgo8L3N2Zz4=" width="120px">';
+                $subsections[7] = new stdClass();
+                $subsections[7]->name = 'Approche historique';
+                $subsections[7]->section = 2;
+                $subsections[7]->contents = [];
+                $subsections[7]->contents[0] = new stdClass();
+                $subsections[7]->contents[0]->type = 'url';
+                $subsections[7]->contents[0]->title = 'La page wikipedia';
+                $subsections[7]->contents[1] = new stdClass();
+                $subsections[7]->contents[1]->type = 'label';
+                $subsections[7]->contents[1]->title = '<p>Le basket-ball est inventé en décembre 1891 par James Naismith,' .
+                    ' professeur d’éducation physique canado-américain au Springfield College, dans l’État du Massachusetts' .
+                    ' (États-Unis). Lors d’une journée de pluie, Naismith tente d’assurer malgré tout son cours de sport, et' .
+                    ' essaie de développer un sport d’intérieur pour maintenir la condition physique de ses élèves entre les' .
+                    ' saisons de football américain et de baseball, pendant les longs hivers de la Nouvelle-Angleterre. Il ' .
+                    ' souhaite leur trouver une activité où les contacts physiques sont restreints, afin d’éviter les risques de ' .
+                    ' blessure.</p>';
+                $subsections[8] = new stdClass();
+                $subsections[8]->name = 'Approche sociologique';
+                $subsections[8]->section = 2;
+                $subsections[8]->contents = [];
+                $subsections[8]->contents[0] = new stdClass();
+                $subsections[8]->contents[0]->type = 'label';
+                $subsections[8]->contents[0]->title = '<p>Comme de nombreux sports populaires, le basket-ball possède une' .
+                    ' exposition culturelle et médiatique très forte.</p>' .
+                    '<p>Au cinéma, un grand nombre de films traitent de basket-ball, tels que Coach Carter, Les blancs ne savent' .
+                    ' pas sauter, Space Jam, Above the Rim ou encore Magic Baskets. D’autres ont une action qui se déroule sur' .
+                    ' fond de basket-ball (He Got Game, le court métrage Fierrot le Pou de Mathieu Kassovitz). Le basket-ball a' .
+                    ' en outre donné lieu à plusieurs comédies comme À la gloire des Celtics, Basket Academy ou Shaolin Basket.' .
+                    ' Le Grand Défi (Hoosiers), avec Gene Hackman et Dennis Hopper, est considéré comme le quatrième meilleur' .
+                    ' film de sport de l’histoire par la chaîne ESPN. Il est en outre présent dans la plupart des longs-métrages' .
+                    ' de Spike Lee, grand amateur de basket-ball. Enfin, des joueurs ont parfois accepté de petits rôles au' .
+                    ' cinéma, comme Shaquille O’Neal et Bob Cousy dans Blue Chips.</p>' .
+                    '<p>Source : <a href="#section-8">https://fr.wikipedia.org/wiki/Basket-ball#Culture_du_basket-ball</a></p>';
+                $subsections[9] = new stdClass();
+                $subsections[9]->name = 'Approche tactico-technique';
+                $subsections[9]->section = 2;
+                $subsections[9]->contents = [];
+                $subsections[9]->contents[0] = new stdClass();
+                $subsections[9]->contents[0]->type = 'label';
+                $subsections[9]->contents[0]->title = '<p>Une technique courante, nommée écran, consiste à venir se placer devant' .
+                    ' le joueur défendant sur le porteur de balle (« faire écran ») pour laisser le champ libre à son coéquipier.' .
+                    ' Celui-ci peut alors tirer, courir vers le panier ou passer la balle au joueur ayant placé l’écran. Cette' .
+                    ' dernière technique est nommée pick and roll : un joueur pose un écran sur un défenseur, puis passe derrière' .
+                    ' lui pour courir vers le panier et obtenir une passe d’un de ses coéquipiers. Il en existe plusieurs' .
+                    ' variantes : le pick and pop, où le joueur qui place l’écran se place dans une zone libre de marquage pour' .
+                    ' tenter un tir à mi-distance ; ou encore le give and go, où un joueur fait la passe à l’autre puis lui la ' .
+                    ' redonne instantanément (à la manière d’un « une-deux » au football).</p>' .
+                    '<p>Ces combinaisons sont fréquemment à la base de nombreux systèmes d’attaque et constituent un aspect' .
+                    ' important du basketball moderne. De nombreux duos de joueurs se sont illustrés dans l’usage du pick and' .
+                    ' roll : Oscar Robertson et Jerry West dans les années 1960, puis Kobe Bryant et Pau Gasol, ou encore Kevin' .
+                    ' Garnett et Paul Pierce.</p>' .
+                    '<p>Source : <a href="#section-9">https://fr.wikipedia.org/wiki/Basket-ball#Techniques_et_stratégies</a></p>';
+
+                $generator = new testing_data_generator();
+                foreach ($sections as $sectionnumber => $section) {
+                    $record = $DB->get_record('course_sections', ['section' => $sectionnumber, 'course' => $course->id]);
+                    if ($record === false) {
+                        $record = course_create_section($course->id);
+                    }
+
+                    $record->name = $section->name;
+                    $DB->update_record('course_sections', $record);
+
+                    if (isset($section->contents) === false) {
+                        $section->contents = [];
+                    }
+
+                    $options = ['course' => $course->id];
+                    foreach ($section->contents as $module) {
+                        $options['section'] = $record->section;
+                        $options['name'] = $module->title;
+                        $generator->create_module($module->type, $options);
+                    }
+                }
+
+                foreach ($subsections as $subsection) {
+                    if (isset($subsection->contents) === false) {
+                        $subsection->contents = [];
+                    }
+
+                    $options = ['course' => $course->id];
+                    $options['section'] = $subsection->section;
+                    $options['name'] = $subsection->name;
+                    $record = $generator->create_module('subsection', $options);
+
+                    $coursemodule = $DB->get_record('course_modules', ['id' => $record->cmid]);
+                    $coursesubsection = $DB->get_record('course_sections', [
+                        'course' => $course->id,
+                        'component' => 'mod_subsection',
+                        'itemid' => $coursemodule->instance,
+                    ]);
+
+                    foreach ($subsection->contents as $module) {
+                        $options['name'] = '';
+                        if ($module->type !== 'label') {
+                            $options['name'] = strip_tags($module->title);
+                        }
+                        $options['intro'] = $module->title;
+                        $options['section'] = $coursesubsection->section;
+                        $generator->create_module($module->type, $options);
+                    }
+                }
+            }
         }
 
         // Définit les centres de paiements.
