@@ -226,4 +226,57 @@ class local_apsolu_federation_parental_authorization extends moodleform {
 
         return $options;
     }
+
+    /**
+     * Valide les données envoyées dans le formulaire.
+     *
+     * @param array $data
+     * @param array $files
+     *
+     * @return array The errors that were found.
+     */
+    public function validation($data, $files) {
+        $errors = parent::validation($data, $files);
+
+        // Contrôle que le champ téléphone du représentant légal contient uniquement 10 chiffres.
+        $phone = preg_replace('/[^0-9]/', '', $data['phoneprimarylegalrepresentative']);
+        if (strlen($phone) !== 10) {
+            $label = get_string('phone_primary_legal_representative', 'local_apsolu');
+
+            $errors['phoneprimarylegalrepresentative'] = get_string('the_field_X_has_an_invalid_value', 'local_apsolu', $label);
+        }
+
+        // Contrôle la validité du champ mail du représentant légal.
+        if (filter_var($data['emailprimarylegalrepresentative'], FILTER_VALIDATE_EMAIL) === false) {
+            $label = get_string('email_primary_legal_representative', 'local_apsolu');
+
+            $errors['emailprimarylegalrepresentative'] = get_string('the_field_X_has_an_invalid_value', 'local_apsolu', $label);
+        }
+
+        // Contrôle que le champ téléphone contient uniquement 10 chiffres.
+        if ($data['phonesecondarylegalrepresentative'] !== '') {
+            $phone = preg_replace('/[^0-9]/', '', $data['phonesecondarylegalrepresentative']);
+            if (strlen($phone) !== 10) {
+                $label = get_string('phone_secondary_legal_representative', 'local_apsolu');
+
+                $errors['phonesecondarylegalrepresentative'] = get_string(
+                    'the_field_X_has_an_invalid_value',
+                    'local_apsolu',
+                    $label
+                );
+            }
+        }
+
+        // Contrôle la validité du champ mail du représentant légal secondaire.
+        if (
+            $data['emailsecondarylegalrepresentative'] !== '' &&
+            filter_var($data['emailsecondarylegalrepresentative'], FILTER_VALIDATE_EMAIL) === false
+        ) {
+            $label = get_string('email_secondary_legal_representative', 'local_apsolu');
+
+            $errors['emailsecondarylegalrepresentative'] = get_string('the_field_X_has_an_invalid_value', 'local_apsolu', $label);
+        }
+
+        return $errors;
+    }
 }
