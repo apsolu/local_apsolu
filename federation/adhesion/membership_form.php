@@ -379,8 +379,8 @@ class local_apsolu_federation_membership extends moodleform {
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
 
-        // Contrôle la validité du champ date de naissance.
-        if ($data['birthday'] > (time() - DAYSECS)) {
+        // Contrôle la validité du champ date de naissance (interdit les dates de naissance avant 12 ans).
+        if ($data['birthday'] > (time() - 12 * YEARSECS)) {
             $label = get_string('birthday', 'local_apsolu');
 
             $errors['birthday'] = get_string('the_field_X_has_an_invalid_value', 'local_apsolu', $label);
