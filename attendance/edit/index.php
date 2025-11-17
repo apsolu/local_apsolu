@@ -26,6 +26,7 @@
 
 use UniversiteRennes2\Apsolu\Payment;
 use local_apsolu\core\attendance;
+use local_apsolu\core\attendancesession;
 use local_apsolu\core\customfields;
 
 defined('MOODLE_INTERNAL') || die;
@@ -38,7 +39,7 @@ $sessionid = optional_param('sessionid', 0, PARAM_INT); // Session id.
 $invalid_enrolments = optional_param('invalid_enrolments', 0, PARAM_INT);
 $inactive_enrolments = optional_param('inactive_enrolments', 0, PARAM_INT);
 
-$sessions = $DB->get_records('apsolu_attendance_sessions', ['courseid' => $courseid], $sort = 'sessiontime');
+$sessions = attendancesession::get_records(['courseid' => $courseid], $sort = 'sessiontime');
 
 if (count($sessions) === 0) {
     throw new moodle_exception('no_course_sessions_found_please_check_the_period_settings', 'local_apsolu');
