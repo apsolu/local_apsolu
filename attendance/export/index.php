@@ -30,27 +30,6 @@ require_once(__DIR__ . '/export_form.php');
 require_once($CFG->libdir . '/csvlib.class.php');
 require_once($CFG->libdir . '/excellib.class.php');
 
-$courseid = required_param('courseid', PARAM_INT); // Course id.
-
-$PAGE->set_pagelayout('base'); // Désactive l'affichage des blocs.
-$PAGE->set_url('/local/apsolu/attendance/export/export.php', ['courseid' => $courseid]);
-
-// Basic access control checks.
-// Login to the course and retrieve also all fields defined by course format.
-$course = get_course($courseid);
-require_login($course);
-$course = course_get_format($course)->get_course();
-
-$category = $DB->get_record('course_categories', ['id' => $course->category], '*', MUST_EXIST);
-$coursecontext = context_course::instance($course->id);
-require_capability('moodle/course:update', $coursecontext);
-
-// Vérifier qu'il s'agit d'une activité APSOLU.
-$activity = $DB->get_record('apsolu_courses', ['id' => $course->id]);
-if ($activity === false) {
-    throw new moodle_exception('taking_attendance_is_only_possible_on_a_course', 'local_apsolu');
-}
-
 $strexport = get_string('export', 'local_apsolu');
 
 $PAGE->navbar->add($strexport);

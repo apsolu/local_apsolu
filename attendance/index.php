@@ -38,5 +38,22 @@ if (in_array($page, $pages, $strict = true) === false) {
     $page = 'edit';
 }
 
+// Login to the course.
+$course = get_course($courseid);
+require_login($course);
+
+// Vérifier qu'il s'agit d'une activité APSOLU.
+$activity = $DB->get_record('apsolu_courses', ['id' => $course->id]);
+if ($activity === false) {
+    throw new moodle_exception('taking_attendance_is_only_possible_on_a_course', 'local_apsolu');
+}
+
+// Basic access control checks.
+$coursecontext = context_course::instance($course->id);
+require_capability('moodle/course:update', $coursecontext);
+
+$PAGE->set_pagelayout('admin');
+$PAGE->set_url('/local/apsolu/attendance/index.php', ['page' => $page, 'courseid' => $course->id]);
+
 // Charge la page.
 require_once($CFG->dirroot . '/local/apsolu/attendance/' . $page . '/index.php');
