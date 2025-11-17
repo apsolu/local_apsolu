@@ -31,6 +31,7 @@ use local_apsolu\core\customfields;
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . '/enrol/select/lib.php');
+require_once($CFG->dirroot . '/local/apsolu/attendance/edit/edit_select_form.php');
 require_once($CFG->dirroot . '/local/apsolu/classes/apsolu/payment.php');
 
 $sessionid = optional_param('sessionid', 0, PARAM_INT); // Session id.
@@ -42,9 +43,6 @@ $sessions = $DB->get_records('apsolu_attendance_sessions', ['courseid' => $cours
 if (count($sessions) === 0) {
     throw new moodle_exception('no_course_sessions_found_please_check_the_period_settings', 'local_apsolu');
 }
-
-// Faire choisir une session.
-require_once($CFG->dirroot . '/local/apsolu/attendance/edit/edit_select_form.php');
 
 // Faire choisir une session.
 foreach ($sessions as $session) {
