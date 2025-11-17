@@ -49,7 +49,7 @@
 
 {{#period}}
     <ul class="list-inline text-end">
-        <li class="list-inline-item"><a class="btn btn-primary" href="{{ url }}/local/apsolu/attendance/sessions/index.php?action=edit&courseid={{ courseid }}&sessionid=0">{{#str}}attendance_add_session, local_apsolu{{/str}}</a></li>
+        <li class="list-inline-item"><a class="btn btn-primary" href="{{ url }}/local/apsolu/attendance/index.php?page=sessions&action=edit&courseid={{ courseid }}&sessionid=0">{{#str}}attendance_add_session, local_apsolu{{/str}}</a></li>
     </ul>
 
     {{^count_sessions}}
@@ -74,9 +74,9 @@
             <td>{{ location }}</td>
             <td>
                 <ul class="list-inline">
-                    <li class="list-inline-item"><a class="btn btn-sm btn-primary" href="{{ url }}/local/apsolu/attendance/sessions/index.php?action=edit&courseid={{ courseid }}&sessionid={{ id }}">{{#str}}edit{{/str}}</a></li>
+                    <li class="list-inline-item"><a class="btn btn-sm btn-primary" href="{{ url }}/local/apsolu/attendance/index.php?page=sessions&action=edit&courseid={{ courseid }}&sessionid={{ id }}">{{#str}}edit{{/str}}</a></li>
                     {{^count}}
-                    <li class="list-inline-item"><a class="btn btn-sm btn-danger" href="{{ url }}/local/apsolu/attendance/sessions/index.php?action=delete&courseid={{ courseid }}&sessionid={{ id }}">{{#str}}delete{{/str}}</a></li>
+                    <li class="list-inline-item"><a class="btn btn-sm btn-danger" href="{{ url }}/local/apsolu/attendance/index.php?page=sessions&action=delete&courseid={{ courseid }}&sessionid={{ id }}">{{#str}}delete{{/str}}</a></li>
                     {{/count}}
                 </ul>
             </td>

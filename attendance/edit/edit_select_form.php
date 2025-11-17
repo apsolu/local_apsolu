@@ -62,6 +62,10 @@ class edit_select_form extends moodleform {
         $mform->addElement('checkbox', 'inactive_enrolments', get_string('attendance_display_inactive_enrolments', 'local_apsolu'));
         $mform->setType('inactive_enrolments', PARAM_INT);
 
+        // Page.
+        $mform->addElement('hidden', 'page', 'edit');
+        $mform->setType('page', PARAM_ALPHA);
+
         // Courseid.
         $mform->addElement('hidden', 'courseid', null);
         $mform->setType('courseid', PARAM_INT);

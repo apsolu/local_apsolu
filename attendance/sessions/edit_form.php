@@ -84,13 +84,19 @@ class local_apsolu_attendance_sessions_edit_form extends moodleform {
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
 
         $attributes = new stdClass();
-        $attributes->href = $CFG->wwwroot . '/local/apsolu/attendance/sessions/index.php?courseid=' . $session->courseid;
+        $attributes->href = new moodle_url(
+            '/local/apsolu/attendance/index.php',
+            ['page' => 'sessions', 'courseid' => $session->courseid]
+        );
         $attributes->class = 'btn btn-default btn-secondary';
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
         $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
+        $mform->addElement('hidden', 'page', 'sessions');
+        $mform->setType('page', PARAM_ALPHA);
+
         $mform->addElement('hidden', 'action', 'edit');
         $mform->setType('action', PARAM_ALPHA);
 

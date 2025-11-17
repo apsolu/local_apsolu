@@ -15,21 +15,28 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Redirige vers la nouvelle page de prise des présences.
+ * Contrôleur pour les pages de cours pour module de prises de présences.
  *
  * @package    local_apsolu
  * @copyright  2025 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// phpcs:disable moodle.Files.RequireLogin.Missing
+use local_apsolu\core\federation\activity;
+use local_apsolu\core\federation\adhesion;
+use local_apsolu\core\federation\course as FederationCourse;
+use local_apsolu\event\federation_adhesion_viewed;
 
-// UNDO: Supprimer ce fichier pour Moodle 5.2.x.
-require(__DIR__ . '/../../../config.php');
+require_once(__DIR__ . '/../../../config.php');
 
 $courseid = required_param('courseid', PARAM_INT);
+$page = required_param('page', PARAM_ALPHA);
 
-$redirection = new moodle_url('/local/apsolu/attendance/index.php', ['page' => 'edit', 'courseid' => $courseid]);
+$pages = ['edit', 'export', 'overview', 'sessions'];
 
-header('Location: ' . $redirection->out($escape = false), $replace = true, $httpresponsecode = 301);
-exit();
+if (in_array($page, $pages, $strict = true) === false) {
+    $page = 'edit';
+}
+
+// Charge la page.
+require_once($CFG->dirroot . '/local/apsolu/attendance/' . $page . '/index.php');
