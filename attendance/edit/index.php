@@ -45,18 +45,22 @@ if (count($sessions) === 0) {
     throw new moodle_exception('no_course_sessions_found_please_check_the_period_settings', 'local_apsolu');
 }
 
-// Faire choisir une session.
-foreach ($sessions as $session) {
-    if ($sessionid === 0) {
-        if (($session->sessiontime + 24 * 60 * 60) > time()) {
-            $sessionid = $session->id;
-        }
-    }
-}
-
+// Si la session n'est pas définie, on essaye de déterminer la prochaine session à venir.
 if ($sessionid === 0) {
-    // On met le dernier créneau de l'année.
-    $sessionid = $session->id;
+    foreach ($sessions as $session) {
+        // Note: on attend 24h pour considérer que la session est passée.
+        if ($session->sessiontime + DAYSECS < time()) {
+            continue;
+        }
+
+        $sessionid = $session->id;
+        break;
+    }
+
+    // Si aucune session n'a pu être trouvée, on utilise le dernier créneau de l'année.
+    if ($sessionid === 0) {
+        $sessionid = $session->id;
+    }
 }
 
 $session = $DB->get_record('apsolu_attendance_sessions', ['id' => $sessionid, 'courseid' => $courseid], '*', MUST_EXIST);
