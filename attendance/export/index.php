@@ -41,21 +41,6 @@ $fullname = $course->fullname;
 $PAGE->set_title($title);
 $PAGE->set_heading($fullname);
 
-// Build tabtree.
-$tabsbar = [];
-
-$url = new moodle_url('/local/apsolu/attendance/edit.php', ['courseid' => $courseid]);
-$tabsbar[] = new tabobject('sessions', $url, get_string('attendance_sessionsview', 'local_apsolu'));
-
-$url = new moodle_url('/local/apsolu/attendance/overview.php', ['courseid' => $courseid]);
-$tabsbar[] = new tabobject('overview', $url, get_string('attendance_overview', 'local_apsolu'));
-
-$url = new moodle_url('/local/apsolu/attendance/sessions/index.php', ['courseid' => $courseid]);
-$tabsbar[] = new tabobject('sessions_edit', $url, get_string('attendance_sessions_edit', 'local_apsolu'));
-
-$url = new moodle_url('/local/apsolu/attendance/export/export.php', ['courseid' => $courseid]);
-$tabsbar[] = new tabobject('export', $url, get_string('export', 'local_apsolu'));
-
 $mform = new local_apsolu_attendance_export_form(null, ['courseid' => $courseid]);
 
 if ($data = $mform->get_data()) {

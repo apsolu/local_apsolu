@@ -44,21 +44,6 @@ $options['widgets'] = ['stickyHeaders'];
 $options['widgetOptions'] = ['stickyHeaders_filteredToTop' => true, 'stickyHeaders_offset' => '50px'];
 $PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise', [$options]);
 
-// Build tabtree.
-$tabsbar = [];
-
-$url = new moodle_url('/local/apsolu/attendance/edit.php', ['courseid' => $courseid]);
-$tabsbar[] = new tabobject('sessions', $url, get_string('attendance_sessionsview', 'local_apsolu'));
-
-$url = new moodle_url('/local/apsolu/attendance/overview.php', ['courseid' => $courseid]);
-$tabsbar[] = new tabobject('overview', $url, get_string('attendance_overview', 'local_apsolu'));
-
-$url = new moodle_url('/local/apsolu/attendance/sessions/index.php', ['courseid' => $courseid]);
-$tabsbar[] = new tabobject('sessions_edit', $url, get_string('attendance_sessions_edit', 'local_apsolu'));
-
-$url = new moodle_url('/local/apsolu/attendance/export/export.php', ['courseid' => $courseid]);
-$tabsbar[] = new tabobject('export', $url, get_string('export', 'local_apsolu'));
-
 // Ajoute le lien pour afficher la vue complète.
 $url = new moodle_url('/local/apsolu/attendance/index.php', ['page' => 'overview', 'courseid' => $courseid, 'calendarid' => 0]);
 $calendars = [0 => (object) ['active' => false, 'name' => get_string('fullview', 'local_apsolu'), 'url' => $url]];

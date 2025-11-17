@@ -55,5 +55,20 @@ require_capability('moodle/course:update', $coursecontext);
 $PAGE->set_pagelayout('admin');
 $PAGE->set_url('/local/apsolu/attendance/index.php', ['page' => $page, 'courseid' => $course->id]);
 
+// Onglets.
+$tabsbar = [];
+
+$url = new moodle_url('/local/apsolu/attendance/index.php', ['page' => 'edit', 'courseid' => $courseid]);
+$tabsbar[] = new tabobject('edit', $url, get_string('attendance_sessionsview', 'local_apsolu'));
+
+$url = new moodle_url('/local/apsolu/attendance/index.php', ['page' => 'overview', 'courseid' => $courseid]);
+$tabsbar[] = new tabobject('overview', $url, get_string('attendance_overview', 'local_apsolu'));
+
+$url = new moodle_url('/local/apsolu/attendance/index.php', ['page' => 'sessions', 'courseid' => $courseid]);
+$tabsbar[] = new tabobject('sessions', $url, get_string('attendance_sessions_edit', 'local_apsolu'));
+
+$url = new moodle_url('/local/apsolu/attendance/index.php', ['page' => 'export', 'courseid' => $courseid]);
+$tabsbar[] = new tabobject('export', $url, get_string('export', 'local_apsolu'));
+
 // Charge la page.
 require_once($CFG->dirroot . '/local/apsolu/attendance/' . $page . '/index.php');

@@ -477,21 +477,6 @@ $options['widgetOptions'] = ['stickyHeaders_filteredToTop' => true, 'stickyHeade
 $PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise', [$options]);
 $PAGE->requires->js_call_amd('local_apsolu/attendance', 'initialise');
 
-// Onglets.
-$tabsbar = [];
-
-$url = new moodle_url('/local/apsolu/attendance/edit.php', ['courseid' => $courseid]);
-$tabsbar[] = new tabobject('sessions', $url, get_string('attendance_sessionsview', 'local_apsolu'));
-
-$url = new moodle_url('/local/apsolu/attendance/overview.php', ['courseid' => $courseid]);
-$tabsbar[] = new tabobject('overview', $url, get_string('attendance_overview', 'local_apsolu'));
-
-$url = new moodle_url('/local/apsolu/attendance/sessions/index.php', ['courseid' => $courseid]);
-$tabsbar[] = new tabobject('sessions_edit', $url, get_string('attendance_sessions_edit', 'local_apsolu'));
-
-$url = new moodle_url('/local/apsolu/attendance/export/export.php', ['courseid' => $courseid]);
-$tabsbar[] = new tabobject('export', $url, get_string('export', 'local_apsolu'));
-
 // Select form pour la session et les options.
 $select_args = [
     'courseid' => $course->id,
@@ -506,7 +491,7 @@ $selectform = new edit_select_form($url, $select_args);
 
 // Ecriture finale.
 echo $OUTPUT->header();
-echo $OUTPUT->tabtree($tabsbar, 'sessions');
+echo $OUTPUT->tabtree($tabsbar, 'edit');
 echo $OUTPUT->heading($title);
 
 $selectform->display();
