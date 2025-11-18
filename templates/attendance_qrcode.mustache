@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="fr" style="height:100vh;width:100vw;" xml:lang="fr">
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body, div {
+            font-size: 1.5em;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <p>{{{ course }}}</p>
+    <div style="height:80vh;width:100vw;">
+        {{# debugurl }}<a href="{{{ debugurl }}}">{{/ debugurl }}{{{ image }}}{{# debugurl }}</a>{{/ debugurl }}
+    </div>
+    <p>{{{ session }}}</p>
+</body>
+</html>
