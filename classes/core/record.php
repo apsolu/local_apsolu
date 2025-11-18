@@ -52,6 +52,35 @@ abstract class record {
     }
 
     /**
+     * Recherche et instancie un objet depuis la base de données.
+     *
+     * @see Se référer à la documentation de la méthode get_record() de la variable globale $DB.
+     * @param array|null $conditions Critères de sélection des objets.
+     * @param string     $fields     Liste des champs retournés.
+     * @param int $strictness IGNORE_MISSING means compatible mode, false returned if record not found, debug message if more found;
+     *                        IGNORE_MULTIPLE means return first, ignore multiple records found(not recommended);
+     *                        MUST_EXIST means we will throw an exception if no record or multiple records found.
+     *
+     * @return array Un tableau d'objets instanciés.
+     */
+    public static function get_record(?array $conditions = null, string $fields = '*', int $strictness = IGNORE_MISSING) {
+        global $DB;
+
+        $classname = get_called_class();
+
+        $data = $DB->get_record($classname::TABLENAME, $conditions, $fields, $strictness);
+
+        if ($data === false) {
+            return $data;
+        }
+
+        $record = new $classname();
+        $record->set_vars($data);
+
+        return $record;
+    }
+
+    /**
      * Recherche et instancie des objets depuis la base de données.
      *
      * @see Se référer à la documentation de la méthode get_records() de la variable globale $DB.
