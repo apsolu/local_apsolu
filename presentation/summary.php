@@ -203,9 +203,9 @@ foreach (enrol_select_get_activities($cityid) as $activity) {
     }
 
     foreach ($activity->teachers as $teacher) {
-        if (isset($filters['teachers']->values[$teacher->lastname . ' ' . $teacher->firstname]) === false) {
-            $teacherfullname = $teacher->lastname . ' ' . $teacher->firstname;
-            $filters['teachers']->values[$teacherfullname] = $teacherfullname;
+        $teacherfullname = $teacher->lastname . ' ' . $teacher->firstname;
+        if (isset($filters['teachers']->values[$teacherfullname]) === false) {
+            $filters['teachers']->values[$teacherfullname] = $teacher->firstname . ' ' . $teacher->lastname;
         }
     }
 }
