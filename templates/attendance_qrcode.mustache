@@ -50,7 +50,7 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="fr" style="height:100vh;width:100vw;" xml:lang="fr">
 <head>
-    <title></title>
+    <title>{{ session }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {{# rotate }}
         <meta http-equiv="refresh" content="30"> {{! Recharge la page toutes les 30 secondes. }}
@@ -102,12 +102,6 @@
 <body>
     <nav id="navbar">
         <p style="display:inline-block;margin:0 1em;"><a class="dark-link" href="{{ wwwroot }}/">{{ sitename }}</a></p>
-        {{!
-        <ul style="background-color:#1d1d1f;color:#f2f2f2;display:inline-block;height:50px;margin:0;padding:0;">
-            <li style="display:inline-block;margin:0 1em;padding:0;">Tableau de bord</li>
-            <li style="display:inline-block;margin:0 1em;padding:0;">Mes cours</li>
-        </ul>
-        }}
         <p style="background-color:#1d1d1f;color:#f2f2f2;flex-grow:1;height:50px;margin:0;padding:0 2em;text-align: right;"><a class="light-link" href="{{ wwwroot }}/">{{ user }}</a></p>
     </nav>
     <p>{{{ course }}}</p>
