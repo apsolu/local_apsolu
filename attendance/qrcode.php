@@ -116,6 +116,7 @@ if (isset($id) === true) {
     $data = new stdClass();
     $data->wwwroot = $CFG->wwwroot;
     $data->color = get_config('theme_apsolu', 'custom_brandcolor');
+    $data->sessionname = $session->name;
     $data->sitename = format_string($SITE->shortname, true, ['context' => context_course::instance(SITEID), "escape" => false]);
     $data->course = html_writer::link($courseurl, $course->fullname);
     $data->session = html_writer::link($sessionurl, $session->name);
