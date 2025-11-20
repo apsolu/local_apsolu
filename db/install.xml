@@ -49,7 +49,7 @@
     </TABLE>
 
     <!-- ATTENDANCE QR CODE -->
-    <TABLE NAME="apsolu_attendance_qrcodes" COMMENT"apsolu_attendance_qrcodes table">
+    <TABLE NAME="apsolu_attendance_qrcodes" COMMENT="apsolu_attendance_qrcodes table">
         <FIELDS>
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
             <FIELD NAME="keycode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
