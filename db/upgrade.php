@@ -1896,8 +1896,8 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $dbman->add_field($table, $field);
         }
 
-        // Ajoute une table apsolu_attendance_qrcode.
-        $table = new xmldb_table('apsolu_attendance_qrcode');
+        // Ajoute une table apsolu_attendance_qrcodes.
+        $table = new xmldb_table('apsolu_attendance_qrcodes');
         if ($dbman->table_exists($table) === false) {
             // Ajoute les champs.
             $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);

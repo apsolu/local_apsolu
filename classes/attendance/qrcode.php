@@ -19,10 +19,13 @@ namespace local_apsolu\attendance;
 use coding_exception;
 use context_course;
 use core_useragent;
-use local_apsolu\core\attendance\status as attendancestatus;
 use local_apsolu\core\attendancepresence;
 use local_apsolu\core\attendancesession;
+use local_apsolu\core\attendance\status as attendancestatus;
 use local_apsolu\core\record;
+use local_apsolu\event\qrcode_created;
+use local_apsolu\event\qrcode_deleted;
+use local_apsolu\event\qrcode_updated;
 use moodle_exception;
 use stdClass;
 
@@ -37,7 +40,7 @@ class qrcode extends record {
     /**
      * Nom de la table de référence en base de données.
      */
-    const TABLENAME = 'apsolu_attendance_qrcode';
+    const TABLENAME = 'apsolu_attendance_qrcodes';
 
     /** @var int|string Identifiant numérique de la session de cours. */
     public $id = 0;
@@ -114,29 +117,33 @@ class qrcode extends record {
             $transaction = $DB->start_delegated_transaction();
         }
 
+        $session = attendancesession::get_record(['id' => $session->id]);
         if (empty($this->id) === true) {
-            // TODO: event.
-            $DB->delete_records(get_called_class()::TABLENAME, ['sessionid' => $this->sessionid]);
+            $qrcode = $DB->get_record(get_called_class()::TABLENAME, ['sessionid' => $this->sessionid]);
+            if ($qrcode !== false) {
+                $DB->delete_records(get_called_class()::TABLENAME, ['sessionid' => $this->sessionid]);
 
-            // TODO: event.
-            $eventclass = '\local_apsolu\event\session_created';
+                $event = qrcode_deleted::create([
+                    'objectid' => $qrcode->id,
+                    'context' => context_course::instance($session->courseid),
+                    ]);
+                $event->trigger();
+            }
+
+            $eventclass = 'qrcode_created';
             $this->timecreated = time();
             $this->id = $DB->insert_record(get_called_class()::TABLENAME, $this);
         } else {
-            // TODO: event.
-            $eventclass = '\local_apsolu\event\session_updated';
+            $eventclass = 'qrcode_updated';
             $DB->update_record(get_called_class()::TABLENAME, $this);
         }
 
         // Enregistre un évènement dans les logs.
-        // TODO: event.
-        /*
         $event = $eventclass::create([
             'objectid' => $this->id,
-            'context' => context_course::instance($this->courseid),
+            'context' => context_course::instance($session->courseid),
             ]);
         $event->trigger();
-         */
 
         // Valide la transaction en cours.
         if (isset($transaction) === true) {

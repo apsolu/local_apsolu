@@ -306,7 +306,7 @@ if ($hassiteconfig || has_any_capability($capabilities, context_system::instance
         new admin_externalpage('local_apsolu_attendances_qrcode', $str, $url, $capabilities)
     );
 
-    // Présences > Type de présences. TODO: changer les URL
+    // Présences > Type de présences. TODO: changer l'URL pour être au format /attendance/admin/index.php?tab=statuses.
     $str = get_string('attendance_statuses', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'attendancestatuses']);
     $ADMIN->add(

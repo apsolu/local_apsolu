@@ -99,8 +99,13 @@ class attendancesession extends record {
         return true;
     }
 
-    public function get_duration() {
-        $course = course::get_record(['id' => $this->courseid]);
+    /**
+     * Retourne la durée en secondes d'une session basée sur l'heure de début et de fin du cours.
+     *
+     * @return int|false Durée en secondes du cours, ou false si une erreur est détectée.
+     */
+    public function get_duration(): int|false {
+        $course = course::get_record(['id' => $this->courseid], '*', MUST_EXIST);
 
         return course::getDuration($course->starttime, $course->endtime);
     }
