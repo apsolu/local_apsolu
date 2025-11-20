@@ -117,7 +117,7 @@ class qrcode extends record {
             $transaction = $DB->start_delegated_transaction();
         }
 
-        $session = attendancesession::get_record(['id' => $session->id]);
+        $session = attendancesession::get_record(['id' => $this->sessionid], '*', MUST_EXIST);
         if (empty($this->id) === true) {
             $qrcode = $DB->get_record(get_called_class()::TABLENAME, ['sessionid' => $this->sessionid]);
             if ($qrcode !== false) {
@@ -130,11 +130,11 @@ class qrcode extends record {
                 $event->trigger();
             }
 
-            $eventclass = 'qrcode_created';
+            $eventclass = '\local_apsolu\event\qrcode_created';
             $this->timecreated = time();
             $this->id = $DB->insert_record(get_called_class()::TABLENAME, $this);
         } else {
-            $eventclass = 'qrcode_updated';
+            $eventclass = '\local_apsolu\event\qrcode_updated';
             $DB->update_record(get_called_class()::TABLENAME, $this);
         }
 
