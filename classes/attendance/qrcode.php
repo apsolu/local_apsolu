@@ -180,9 +180,11 @@ class qrcode extends record {
     }
 
     /**
-     * Retourne le paramétrage par défaut, configuré dans l'administration.
+     * Marque une présence et retourne le message de confirmation.
      *
-     * @return stdClass
+     * @param attendancesession $session Session pour laquelle la présence doit être marquée.
+     *
+     * @return string
      */
     public function sign(attendancesession $session): string {
         global $USER;

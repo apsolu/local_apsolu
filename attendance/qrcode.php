@@ -42,7 +42,15 @@ if ($keycode !== null) {
     unset($id);
     $qrcode = qrcode::get_record(['keycode' => $keycode]);
     if ($qrcode === false) {
-        throw new moodle_exception('the_qr_code_does_not_exist_or_has_expired', 'local_apsolu');
+        // TODO: améliorer l'affichage.
+        $PAGE->set_context(context_system::instance());
+        $PAGE->set_pagelayout('course');
+        $PAGE->set_url('/local/apsolu/attendance/qrcode.php', ['keycode' => $keycode]);
+
+        echo $OUTPUT->header();
+        echo $OUTPUT->notification(get_string('the_qr_code_does_not_exist_or_has_expired', 'local_apsolu'), 'notifyproblem');
+        echo $OUTPUT->footer();
+        exit(0);
     }
 } else {
     unset($keycode);
