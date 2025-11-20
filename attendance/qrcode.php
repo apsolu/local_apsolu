@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// phpcs:disable moodle.Commenting.TodoComment.MissingInfoInline
+
 use local_apsolu\attendance\qrcode;
 use local_apsolu\core\attendancesession as Session;
 use core_qrcode;
@@ -33,13 +35,15 @@ $keycode = optional_param('keycode', null, PARAM_TEXT);
 
 $qrcodeenabled = get_config('local_apsolu', 'qrcode_enabled');
 if (empty($qrcodeenabled) === true) {
-    // TODO.
-    throw new moodle_exception('');
+    throw new moodle_exception('qr_code_function_is_not_enabled', 'local_apsolu');
 }
 
 if ($keycode !== null) {
     unset($id);
-    $qrcode = qrcode::get_record(['keycode' => $keycode], '*', MUST_EXIST);
+    $qrcode = qrcode::get_record(['keycode' => $keycode]);
+    if ($qrcode === false) {
+        throw new moodle_exception('the_qr_code_does_not_exist_or_has_expired', 'local_apsolu');
+    }
 } else {
     unset($keycode);
     $qrcode = qrcode::get_record(['id' => $id], '*', MUST_EXIST);
@@ -61,16 +65,35 @@ if ($activity === false) {
 
 // Basic access control checks.
 $coursecontext = context_course::instance($course->id, MUST_EXIST);
+$PAGE->set_context($coursecontext);
+
 if (isset($id) === true) {
     require_capability('moodle/course:update', $coursecontext);
 
     $PAGE->set_pagelayout('print');
     $PAGE->set_url('/local/apsolu/attendance/qrcode.php', ['id' => $id]);
 
-    // $PAGE->add_body_class('limitedwidth');
+    $rotate = empty($qrcode->settings->rotate) === false;
+    if ($rotate === true) {
+        $settings = $qrcode->settings;
+        $qrcode->keycode = qrcode::generate_keycode();
+        $qrcode->save();
 
-    if (empty($qrcode->settings->rotate) === false) {
-        // TODO: call JS.
+        // Restaure les paramètres au format objet.
+        $qrcode->settings = $settings;
+    }
+
+    $isloggedin = isloggedin();
+    if (empty($qrcode->settings->autologout) === false && $isloggedin === true) {
+        // TODO: gérer le warning "mutated the session after it was closed".
+        $authsequence = get_enabled_auth_plugins();
+        foreach ($authsequence as $authname) {
+            $authplugin = get_auth_plugin($authname);
+            $authplugin->logoutpage_hook();
+        }
+
+        require_logout();
+        $isloggedin = false;
     }
 
     // Construit le fil d'ariane.
@@ -81,7 +104,7 @@ if (isset($id) === true) {
     $qrcodeurl = new moodle_url('/local/apsolu/attendance/qrcode.php', ['keycode' => $qrcode->keycode]);
     $image = new core_qrcode($qrcodeurl->out(false));
 
-    $lines = explode(PHP_EOL, $image->getBarcodeSVGcode(15, 15, $black));
+    $lines = explode(PHP_EOL, $image->getBarcodeSVGcode(15, 15, $color = 'black'));
     unset($lines[0], $lines[1]);
     $lines[2] = preg_replace(
         '/<svg width="([0-9]+)" height="([0-9]+)"/',
@@ -91,9 +114,17 @@ if (isset($id) === true) {
 
     // Affichage du QR code.
     $data = new stdClass();
+    $data->wwwroot = $CFG->wwwroot;
+    $data->color = get_config('theme_apsolu', 'custom_brandcolor');
+    $data->sitename = format_string($SITE->shortname, true, ['context' => context_course::instance(SITEID), "escape" => false]);
     $data->course = html_writer::link($courseurl, $course->fullname);
     $data->session = html_writer::link($sessionurl, $session->name);
+    $data->rotate = $rotate;
     $data->image = implode(PHP_EOL, $lines);
+    $data->user = get_string('loggedinnot');
+    if ($isloggedin === true) {
+        $data->user = fullname($USER);
+    }
     if (empty($CFG->debugdisplay) === false) {
         $url = new moodle_url('/local/apsolu/attendance/qrcode.php', ['keycode' => $qrcode->keycode]);
         $data->debugurl = $url->out(false);
@@ -104,17 +135,17 @@ if (isset($id) === true) {
     exit(0);
 }
 
-// TODO.
+$PAGE->set_pagelayout('course');
+$PAGE->set_url('/local/apsolu/attendance/qrcode.php', ['keycode' => $keycode]);
 
-if (
-    empty($qrcode->settings->allowguests) === true &&
-    is_enrolled($coursecontext, $user = null, $withcapability = '', $onlyactive = true) === false
-) {
-    throw new moodle_exception('not_enrolled', 'local_apsolu');
+echo $OUTPUT->header();
+
+try {
+    $message = $qrcode->sign($session);
+
+    echo $OUTPUT->notification($message, 'notifysuccess');
+} catch (Exception $exception) {
+    echo $OUTPUT->notification($exception->getMessage(), 'notifyproblem');
 }
 
-$PAGE->set_pagelayout('print');
-$PAGE->set_url('/local/apsolu/attendance/qrcode.php', ['id' => $id]);
-
-$PAGE->set_pagelayout('admin');
-echo 'fin';die();
+echo $OUTPUT->footer();

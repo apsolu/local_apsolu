@@ -59,6 +59,7 @@ require_capability('moodle/course:update', $coursecontext);
 
 $PAGE->set_pagelayout('admin');
 $PAGE->set_url('/local/apsolu/attendance/index.php', ['page' => $page, 'courseid' => $course->id]);
+$PAGE->set_context($coursecontext);
 
 // Onglets.
 $tabsbar = [];

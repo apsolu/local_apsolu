@@ -99,6 +99,12 @@ class attendancesession extends record {
         return true;
     }
 
+    public function get_duration() {
+        $course = course::get_record(['id' => $this->courseid]);
+
+        return course::getDuration($course->starttime, $course->endtime);
+    }
+
     /**
      * Indique si la session est passée.
      *

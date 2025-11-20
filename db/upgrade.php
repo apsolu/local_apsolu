@@ -1888,6 +1888,14 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
         unset_config('parental_authorization_enabled', 'local_apsolu');
 
+        // Ajoute un champ à la table apsolu_attendance_presences.
+        $table = new xmldb_table('apsolu_attendance_presences');
+        $field = new xmldb_field('fingerprint', XMLDB_TYPE_CHAR, '255', null, null, null, null, $previous = 'description');
+
+        if ($dbman->field_exists($table, $field) === false) {
+            $dbman->add_field($table, $field);
+        }
+
         // Ajoute une table apsolu_attendance_qrcode.
         $table = new xmldb_table('apsolu_attendance_qrcode');
         if ($dbman->table_exists($table) === false) {

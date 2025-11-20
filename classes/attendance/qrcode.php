@@ -18,7 +18,12 @@ namespace local_apsolu\attendance;
 
 use coding_exception;
 use context_course;
+use core_useragent;
+use local_apsolu\core\attendance\status as attendancestatus;
+use local_apsolu\core\attendancepresence;
+use local_apsolu\core\attendancesession;
 use local_apsolu\core\record;
+use moodle_exception;
 use stdClass;
 
 /**
@@ -48,6 +53,15 @@ class qrcode extends record {
 
     /** @var int|string $sessionid Identifiant numérique de la session. */
     public $sessionid = '';
+
+    /**
+     * Génère une valeur pour le champ keycode.
+     *
+     * @return string
+     */
+    public static function generate_keycode(): string {
+        return base64_encode(uniqid(time(), $moreentropy = true));
+    }
 
     /**
      * Retourne le paramétrage par défaut, configuré dans l'administration.
@@ -91,6 +105,8 @@ class qrcode extends record {
 
             $data->settings = json_encode($data->settings);
             $this->set_vars($data);
+        } else if (is_object($this->settings) === true) {
+            $this->settings = json_encode($this->settings);
         }
 
         // Démarre une transaction, si ce n'est pas déjà fait.
@@ -104,6 +120,7 @@ class qrcode extends record {
 
             // TODO: event.
             $eventclass = '\local_apsolu\event\session_created';
+            $this->timecreated = time();
             $this->id = $DB->insert_record(get_called_class()::TABLENAME, $this);
         } else {
             // TODO: event.
@@ -133,7 +150,13 @@ class qrcode extends record {
      * @return void
      */
     public function set_default_settings(): void {
-        if (isset($this->settings) === false || is_object($this->settings) === false) {
+        if ($this->settings === '') {
+            $this->settings = new stdClass();
+        } else if (is_string($this->settings) === true) {
+            $this->settings = json_decode($this->settings);
+        }
+
+        if (is_object($this->settings) === false) {
             throw new coding_exception('$this->settings must be an object for ' . __METHOD__ . '.');
         }
 
@@ -147,5 +170,86 @@ class qrcode extends record {
         $this->settings->allowguests = get_config('local_apsolu', 'qrcode_allowguests');
         $this->settings->autologout = get_config('local_apsolu', 'qrcode_autologout');
         $this->settings->rotate = get_config('local_apsolu', 'qrcode_rotate');
+    }
+
+    /**
+     * Retourne le paramétrage par défaut, configuré dans l'administration.
+     *
+     * @return stdClass
+     */
+    public function sign(attendancesession $session): string {
+        global $USER;
+
+        $now = time();
+
+        // Contrôle que l'utilisateur n'a pas déjà été noté présent.
+        $presence = attendancepresence::get_record(['sessionid' => $session->id, 'studentid' => $USER->id]);
+        if ($presence !== false) {
+            $status = attendancestatus::get_record(['id' => $presence->statusid], '*', MUST_EXIST);
+
+            $a = new stdClass();
+            $a->status = $status->longlabel;
+            $a->datetime = userdate($presence->timecreated, get_string('strftimedatetime', 'local_apsolu'));
+            throw new moodle_exception(
+                'your_participation_has_already_been_recorded_X_for_this_session_the_X',
+                'local_apsolu',
+                $link = '',
+                $a
+            );
+        }
+
+        // Si le QR code n'autorise pas les non-inscrits, contrôle que l'utilisateur est bien inscrit au cours.
+        $coursecontext = context_course::instance($session->courseid, MUST_EXIST);
+        if (
+            empty($this->settings->allowguests) === true &&
+            is_enrolled($coursecontext, $user = null, $withcapability = '', $onlyactive = true) === false
+        ) {
+            throw new moodle_exception('you_do_not_have_any_active_enrolments_for_this_course', 'local_apsolu');
+        }
+
+        // Détermine si la prise de présence a débuté.
+        if ($now < $session->sessiontime - $this->settings->starttime) {
+            throw new moodle_exception('the_attendance_recording_for_this_session_has_not_started_yet', 'local_apsolu');
+        }
+
+        // Détermine si la prise de présence n'est pas expirée.
+        $endtime = $this->settings->endtime;
+
+        if (empty($endtime) === true) {
+            // Si aucune date de fin n'est précisée dans le paramétrage du QR code, utilise la date de fin de la session.
+            $endtime = $session->get_duration();
+        }
+
+        if ($now > $session->sessiontime + $endtime) {
+            throw new moodle_exception('the_attendance_recording_for_this_session_is_over', 'local_apsolu');
+        }
+
+        // Définit le type de présence à appliquer.
+        $statusid = $this->settings->presentstatus;
+
+        // Vérifie si il ne faut pas appliquer le second type de présence.
+        if ($now > $session->sessiontime + $this->settings->latetime) {
+            $statusid = $this->settings->latetimestatus;
+        }
+
+        // Enregistre la présence.
+        $presence = new attendancepresence();
+        $presence->studentid = $USER->id;
+        $presence->teacherid = $USER->id;
+        $presence->statusid = $statusid;
+        $presence->timecreated = $now;
+        $presence->timemodified = $now;
+        $presence->sessionid = $session->id;
+
+        $presence->fingerprint = hash('sha256', getremoteaddr() . core_useragent::get_user_agent_string());
+        $presence->save();
+
+        $status = attendancestatus::get_record(['id' => $statusid], '*', MUST_EXIST);
+
+        $a = new stdClass();
+        $a->status = $status->longlabel;
+        $a->time = userdate($presence->timecreated, get_string('strftimetime'));
+
+        return get_string('your_participation_has_been_recorded_X_for_this_session_the_X', 'local_apsolu', $a);
     }
 }
