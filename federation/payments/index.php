@@ -42,7 +42,7 @@ if (empty($cards) === false) {
     [$insql, $params] = $DB->get_in_or_equal($cards, SQL_PARAMS_NAMED, 'cardid_');
 
     $sql = "SELECT u.lastname, u.firstname, u.email, u.idnumber, u.institution, u.department,
-                   ap.method, ap.timepaid, ap.amount, ap.id, apc.prefix, afa.mainsport
+                   ap.method, ap.timepaid, ap.amount, ap.id, apc.prefix, afa.data
               FROM {user} u
               JOIN {apsolu_federation_adhesions} afa ON u.id = afa.userid
               JOIN {apsolu_payments} ap ON ap.userid = afa.userid
@@ -94,6 +94,17 @@ if (empty($cards) === false) {
                 $timepaid = '';
             }
 
+            try {
+                $activity = '';
+                $data = json_decode($record->data);
+
+                if (isset($data->activity) === true) {
+                    $activity = implode(', ', $data->activity);
+                }
+            } catch (Exception $exception) {
+                $activity = '';
+            }
+
             $row = [];
             $row[] = $record->lastname;
             $row[] = $record->firstname;
@@ -101,7 +112,7 @@ if (empty($cards) === false) {
             $row[] = $record->idnumber;
             $row[] = $record->institution;
             $row[] = $record->department;
-            $row[] = $federationactivities[$record->mainsport]->name;
+            $row[] = $activity;
             $row[] = get_string('method_' . $record->method, 'local_apsolu');
             $row[] = $timepaid;
             $row[] = $record->amount;
