@@ -17,7 +17,7 @@
 namespace local_apsolu\event;
 
 /**
- * Enregistre la création d'une session de cours.
+ * Enregistre la suppression d'une session de cours.
  *
  * @package   local_apsolu
  * @copyright 2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
