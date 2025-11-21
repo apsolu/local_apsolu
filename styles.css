@@ -35,6 +35,7 @@
 
 .apsolu-comments-summary {
     cursor: pointer;
+    display: block;
 }
 
 .apsolu-comments-div {
