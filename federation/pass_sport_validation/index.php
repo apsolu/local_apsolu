@@ -69,6 +69,8 @@ if ($mform !== null && $data = $mform->get_data()) {
     } else if ($data->pass_sport_status === APSOLU_SELECT_NO) {
         $parameters['status'] = Adhesion::PASS_SPORT_STATUS_PENDING;
         $conditions[] = "AND afa.passsportstatus = :status";
+    } else {
+        $conditions[] = "AND afa.passsportstatus IS NOT NULL";
     }
 
     $federationactivities = $DB->get_records('apsolu_federation_activities', [], $sort = 'name', $fields = 'code, name');
