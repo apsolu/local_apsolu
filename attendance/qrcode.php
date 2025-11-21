@@ -147,7 +147,48 @@ if (isset($id) === true) {
 $PAGE->set_pagelayout('course');
 $PAGE->set_url('/local/apsolu/attendance/qrcode.php', ['keycode' => $keycode]);
 
+$CFG->additionalhtmltopofbody = ''; // Désactive sur cette page le bandeau d'information.
+
+$now = time();
+$roles = [];
+
+$sql = "SELECT DISTINCT r.*
+          FROM {role} r
+          JOIN {role_assignments} ra ON r.id = ra.roleid
+          JOIN {context} ctx ON ra.contextid = ctx.id
+          JOIN {course} c ON c.id = ctx.instanceid AND ctx.contextlevel = 50
+          JOIN {enrol} e ON c.id = e.courseid AND ra.itemid = e.id
+          JOIN {user_enrolments} ue ON e.id = ue.enrolid AND ue.userid = ra.userid
+         WHERE ra.userid = :userid
+           AND e.status = :status
+           AND (ue.timestart = 0 OR :now1 >= ue.timestart)
+           AND (ue.timeend = 0 OR :now2 <= ue.timeend)";
+$params = ['userid' => $USER->id, 'status' => ENROL_INSTANCE_ENABLED, 'now1' => $now, 'now2' => $now];
+foreach (role_fix_names($DB->get_records_sql($sql, $params)) as $role) {
+    $roles[] = $role->name;
+}
+
+if ($roles === []) {
+    $roles[] = get_string('none');
+}
+
 echo $OUTPUT->header();
+echo $OUTPUT->heading($course->fullname);
+
+echo html_writer::start_tag('dl', ['class' => 'row']);
+echo html_writer::start_tag('div', ['class' => 'col-12 col-md-6']);
+echo html_writer::tag('dt', get_string('course'));
+echo html_writer::tag('dd', $course->fullname);
+echo html_writer::tag('dt', get_string('user'));
+echo html_writer::tag('dd', fullname($USER));
+echo html_writer::end_tag('div');
+echo html_writer::start_tag('div', ['class' => 'col-12 col-md-6']);
+echo html_writer::tag('dt', get_string('session', 'local_apsolu'));
+echo html_writer::tag('dd', $session->name);
+echo html_writer::tag('dt', get_string('role', 'local_apsolu'));
+echo html_writer::tag('dd', implode(', ', $roles));
+echo html_writer::end_tag('div');
+echo html_writer::end_tag('dl');
 
 try {
     $message = $qrcode->sign($session);

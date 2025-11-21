@@ -760,6 +760,7 @@ $string['section2_text'] = '<div class="alert alert-info">Le tableau des activit
 $string['see_the_message'] = 'Voir le message';
 $string['send_a_copy_of_this_message_to'] = 'Envoyer une copie de ce message à {$a}';
 $string['sender'] = 'Expéditeur';
+$string['session'] = 'Session';
 $string['session_:count:_of_the_:strdatetime:'] = 'Cours n°{$a->count} du {$a->strdatetime}';
 $string['session_created'] = 'Session créée.';
 $string['session_deleted'] = 'Session supprimée.';
