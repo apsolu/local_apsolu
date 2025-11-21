@@ -662,6 +662,7 @@ $string['payment_prefix'] = 'Préfixe de paiement';
 $string['payments_extraction'] = 'Extraction des paiements';
 $string['payments_extraction_in_csv_format'] = 'Extraction des paiements au format CSV';
 $string['payments_extraction_in_excel_format'] = 'Extraction des paiements au format Excel';
+$string['payment_updated'] = 'Paiment modifié';
 $string['pending_approval'] = 'En attente de validation';
 $string['period_cannot_be_deleted'] = 'La période « {$a} » ne peut pas être supprimée, car elle est rattachée aux créneaux suivants :';
 $string['period'] = 'Période';

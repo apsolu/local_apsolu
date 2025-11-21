@@ -16,6 +16,8 @@
 
 namespace local_apsolu\event;
 
+use moodle_url;
+
 /**
  * Event to log payment.
  *
@@ -43,7 +45,7 @@ class update_user_payment extends \core\event\base {
      * @return string
      */
     public static function get_name() {
-        return get_string('event_user_mark', 'local_apsolu');
+        return get_string('payment_updated', 'local_apsolu');
     }
 
     /**
@@ -63,6 +65,6 @@ class update_user_payment extends \core\event\base {
      * @return moodle_url
      */
     public function get_url() {
-        return new \moodle_url('/local/apsolu_presence/index.php', ['tab' => 'history', 'courseid' => $this->courseid]);
+        return new moodle_url('/local/apsolu/payment/admin.php', ['tab' => 'payments', 'userid' => $this->relateduserid]);
     }
 }
