@@ -169,7 +169,20 @@ final class qrcode_test extends \advanced_testcase {
      * @covers ::set_default_settings()
      */
     public function test_set_default_settings(): void {
-        // TODO.
+        $qrcode = new qrcode();
+        $qrcode->settings = '';
+        $qrcode->set_default_settings();
+        $this->assertCount(10, (array) $qrcode->settings());
+
+        $qrcode = new qrcode();
+        $qrcode->settings = '{}';
+        $qrcode->set_default_settings();
+        $this->assertCount(10, (array) $qrcode->settings());
+
+        // TODO: exception.
+        $qrcode = new qrcode();
+        $qrcode->settings = true;
+        $qrcode->set_default_settings();
     }
 
     /**

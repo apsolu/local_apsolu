@@ -982,8 +982,8 @@ $string['you_must_select_a_department_if_your_native_country_is_france'] = 'Vous
 $string['you_must_select_at_least_one_activity'] = 'Vous devez sélectionner au moins une activité.';
 $string['you_must_select_other_department_if_your_native_country_is_not_france'] = 'Vous devez sélectionner « autre » département si votre pays de naissance n’est pas la France.';
 $string['your_medical_certificate_has_already_been_validated'] = 'Votre certificat médical a déjà été validé par le secrétariat.';
-$string['your_participation_has_already_been_recorded_X_for_this_session_the_X'] = 'Votre participation a déjà été enregistrée pour cette session le {$a->datetime} avec le motif « {$a->status} ».';
-$string['your_participation_has_been_recorded_X_for_this_session_the_X'] = 'Votre participation a bien été enregistrée à {$a->time} avec le motif « {$a->status} ».';
+$string['your_participation_has_already_been_recorded_X_for_this_session_the_X'] = 'Votre participation a déjà été enregistrée pour cette session le {$a->datetime} avec l’indication « {$a->status} ».';
+$string['your_participation_has_been_recorded_X_for_this_session_the_X'] = 'Votre participation a bien été enregistrée à {$a->time} avec l’indication « {$a->status} ».';
 $string['your_request_is_being_processed'] = 'Votre demande est en cours de traitement';
 
 // Anciennes chaines dépréciées, qui utilisent de mauvaises clés de nommage.
