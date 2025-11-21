@@ -115,18 +115,6 @@ class validate_pass_sport extends send_email_form {
                     $DB->insert_record('apsolu_payments_items', $item);
                 }
 
-                // Met à jour l'adhésion.
-                $adhesion = $DB->get_record(Adhesion::TABLENAME, ['userid' => $user->id]);
-                if ($adhesion !== false) {
-                    if ($payment->status === Payment::DUE) {
-                        $adhesion->passsportstatus = null;
-                        $adhesion->federationnumberrequestdate = null;
-                    } else if ($payment->status === Payment::PAID) {
-                        $adhesion->passsportstatus = Adhesion::PASS_SPORT_STATUS_VALIDATED;
-                    }
-                    $DB->update_record(Adhesion::TABLENAME, $adhesion);
-                }
-
                 // Enregistre un évènement.
                 $event = \local_apsolu\event\update_user_payment::create([
                     'relateduserid' => $userid,
@@ -134,6 +122,18 @@ class validate_pass_sport extends send_email_form {
                     'other' => ['payment' => $payment, 'items' => $items],
                 ]);
                 $event->trigger();
+            }
+
+            // Met à jour l'adhésion.
+            $adhesion = $DB->get_record(Adhesion::TABLENAME, ['userid' => $user->id]);
+            if ($adhesion !== false) {
+                if ($validation == Adhesion::PASS_SPORT_STATUS_PENDING) {
+                    $adhesion->passsportstatus = null;
+                    $adhesion->federationnumberrequestdate = null;
+                } else if ($validation == Adhesion::PASS_SPORT_STATUS_VALIDATED) {
+                    $adhesion->passsportstatus = $validation;
+                }
+                $DB->update_record(Adhesion::TABLENAME, $adhesion);
             }
         }
 
