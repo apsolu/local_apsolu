@@ -216,12 +216,12 @@ class qrcode extends record {
             throw new moodle_exception('you_do_not_have_any_active_enrolments_for_this_course', 'local_apsolu');
         }
 
-        // Détermine si la prise de présence a débuté.
+        // Détermine si la prise de présences a débuté.
         if ($now < $session->sessiontime - $this->settings->starttime) {
             throw new moodle_exception('the_attendance_recording_for_this_session_has_not_started_yet', 'local_apsolu');
         }
 
-        // Détermine si la prise de présence n'est pas expirée.
+        // Détermine si la prise de présences n'est pas expirée.
         $endtime = $this->settings->endtime;
 
         if (empty($endtime) === true) {
@@ -238,7 +238,7 @@ class qrcode extends record {
 
         // Vérifie si il ne faut pas appliquer le second type de présence.
         if ($now > $session->sessiontime + $this->settings->latetime) {
-            $statusid = $this->settings->latetimestatus;
+            $statusid = $this->settings->latestatus;
         }
 
         // Enregistre la présence.

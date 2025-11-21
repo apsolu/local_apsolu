@@ -16,11 +16,14 @@
 
 namespace local_apsolu\attendance;
 
+use coding_exception;
 use local_apsolu\attendance\qrcode;
 use local_apsolu\core\attendancepresence;
 use local_apsolu\core\attendancesession;
 use local_apsolu\core\attendance\status;
 use local_apsolu\core\course;
+use moodle_exception;
+use stdClass;
 
 /**
  * Classe de tests pour local_apsolu\attendance\qrcode
@@ -29,9 +32,8 @@ use local_apsolu\core\course;
  * @category   test
  * @copyright  2025 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- * @coversDefaultClass \local_apsolu\attendance\qrcode
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(qrcode::class)]
 final class qrcode_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp();
@@ -42,7 +44,7 @@ final class qrcode_test extends \advanced_testcase {
     /**
      * Teste delete().
      *
-     * @covers ::delete()
+     * @return void
      */
     public function test_delete(): void {
         // Génère un nouveau cours.
@@ -77,7 +79,7 @@ final class qrcode_test extends \advanced_testcase {
     /**
      * Teste generate_keycode().
      *
-     * @covers ::generate_keycode()
+     * @return void
      */
     public function test_generate_keycode(): void {
         $this->assertIsString(qrcode::generate_keycode());
@@ -86,7 +88,7 @@ final class qrcode_test extends \advanced_testcase {
     /**
      * Teste get_default_settings().
      *
-     * @covers ::get_default_settings()
+     * @return void
      */
     public function test_get_default_settings(): void {
         $this->assertIsObject(qrcode::get_default_settings());
@@ -96,7 +98,7 @@ final class qrcode_test extends \advanced_testcase {
     /**
      * Teste save().
      *
-     * @covers ::save()
+     * @return void
      */
     public function test_save(): void {
         // Génère un nouveau cours.
@@ -166,31 +168,162 @@ final class qrcode_test extends \advanced_testcase {
     /**
      * Teste set_default_settings().
      *
-     * @covers ::set_default_settings()
+     * @return void
      */
     public function test_set_default_settings(): void {
         $qrcode = new qrcode();
         $qrcode->settings = '';
         $qrcode->set_default_settings();
-        $this->assertCount(10, (array) $qrcode->settings());
+        $this->assertCount(10, (array) $qrcode->settings);
 
         $qrcode = new qrcode();
         $qrcode->settings = '{}';
         $qrcode->set_default_settings();
-        $this->assertCount(10, (array) $qrcode->settings());
+        $this->assertCount(10, (array) $qrcode->settings);
 
-        // TODO: exception.
-        $qrcode = new qrcode();
-        $qrcode->settings = true;
-        $qrcode->set_default_settings();
+        try {
+            $qrcode = new qrcode();
+            $qrcode->settings = true;
+            $qrcode->set_default_settings();
+
+            $this->fail('Une exception "coding_exception" attendue parce que l\'attribut "settings" n\'est pas un objet.');
+        } catch (coding_exception $exception) {
+            $this->assertInstanceOf('coding_exception', $exception);
+        }
     }
 
     /**
      * Teste sign().
      *
-     * @covers ::sign()
+     * @return void
      */
     public function test_sign(): void {
-        // TODO.
+        global $USER;
+
+        // Génère un nouveau cours.
+        $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
+        $course = new course();
+        $course->save($data);
+
+        // Génère une session de cours.
+        $session = new attendancesession();
+        $session->courseid = $course->id;
+        $session->name = 'attendancesession 1';
+        $session->save();
+
+        // Génère un QR code.
+        $qrcode = new qrcode();
+        $qrcode->keycode = qrcode::generate_keycode();
+        $qrcode->settings = qrcode::get_default_settings();
+        $qrcode->sessionid = $session->id;
+
+        $statuses = status::get_records();
+
+        // Teste l'erreur lorsque la validation est effectuée avec un étudiant non-inscrit.
+        try {
+            $qrcode->settings->allowguests = false;
+            $qrcode->sign($session);
+
+            $this->fail('Une exception "moodle_exception" attendue pour un utilisateur non-inscrit à ce cours.');
+        } catch (moodle_exception $exception) {
+            $this->assertInstanceOf('moodle_exception', $exception);
+            $this->assertSame(
+                get_string('you_do_not_have_any_active_enrolments_for_this_course', 'local_apsolu'),
+                $exception->getMessage()
+            );
+        } finally {
+            $qrcode->settings->allowguests = true;
+        }
+
+        // Teste l'erreur lorsque la prise de présences n'a pas débuté.
+        try {
+            $session->sessiontime = time() + DAYSECS;
+            $session->save();
+
+            $qrcode->sign($session);
+            $this->fail('Une exception "moodle_exception" attendue pour une prise de présences non démarrée');
+        } catch (moodle_exception $exception) {
+            $this->assertInstanceOf('moodle_exception', $exception);
+            $this->assertSame(
+                get_string('the_attendance_recording_for_this_session_has_not_started_yet', 'local_apsolu'),
+                $exception->getMessage()
+            );
+        }
+
+        // Teste l'erreur lorsque la prise de présences est terminée (délai expiré).
+        try {
+            $session->sessiontime = time() - 61;
+            $session->save();
+
+            $qrcode->settings->endtime = 60;
+            $qrcode->sign($session);
+            $this->fail('Une exception "moodle_exception" attendue pour une prise de présences terminée (délai expiré)');
+        } catch (moodle_exception $exception) {
+            $this->assertInstanceOf('moodle_exception', $exception);
+            $this->assertSame(
+                get_string('the_attendance_recording_for_this_session_is_over', 'local_apsolu'),
+                $exception->getMessage()
+            );
+        }
+
+        // Teste l'erreur lorsque la prise de présences est terminée (session terminée).
+        try {
+            $session->sessiontime = time() - DAYSECS;
+            $session->save();
+
+            $qrcode->sign($session);
+            $this->fail('Une exception "moodle_exception" attendue pour une prise de présences terminée (session terminée)');
+        } catch (moodle_exception $exception) {
+            $this->assertInstanceOf('moodle_exception', $exception);
+            $this->assertSame(
+                get_string('the_attendance_recording_for_this_session_is_over', 'local_apsolu'),
+                $exception->getMessage()
+            );
+        }
+
+        // Teste la validation d'une présence "normale".
+        $session->sessiontime = time() - 60;
+        $session->save();
+
+        $a = new stdClass();
+        $a->status = $statuses[$qrcode->settings->presentstatus]->longlabel;
+        $a->time = userdate(time(), get_string('strftimetime'));
+        $response = get_string('your_participation_has_been_recorded_X_for_this_session_the_X', 'local_apsolu', $a);
+
+        $qrcode->settings->starttime = 0;
+        $qrcode->settings->latetime = 120;
+        $this->assertSame($response, $qrcode->sign($session));
+
+        $presence = attendancepresence::get_record(['sessionid' => $session->id, 'studentid' => $USER->id], '*', MUST_EXIST);
+        $presence->delete();
+
+        // Teste la validation d'une présence "en retard".
+        $qrcode->settings->latetime = 30;
+
+        $a = new stdClass();
+        $a->status = $statuses[$qrcode->settings->latestatus]->longlabel;
+        $a->time = userdate(time(), get_string('strftimetime'));
+        $response = get_string('your_participation_has_been_recorded_X_for_this_session_the_X', 'local_apsolu', $a);
+
+        $this->assertSame($response, $qrcode->sign($session));
+
+        // Teste l'erreur lorsque la validation a déjà été effectuée précédemment.
+        try {
+            $qrcode->sign($session);
+
+            $this->fail('Une exception "moodle_exception" attendue pour une validation déjà effectuée précédemment');
+        } catch (moodle_exception $exception) {
+            $presence = attendancepresence::get_record(['sessionid' => $session->id, 'studentid' => $USER->id]);
+
+            $a = new stdClass();
+            $a->status = $statuses[$presence->statusid]->longlabel;
+            $a->datetime = userdate($presence->timecreated, get_string('strftimedatetime', 'local_apsolu'));
+
+            $this->assertInstanceOf('moodle_exception', $exception);
+            $this->assertSame(
+                get_string('your_participation_has_already_been_recorded_X_for_this_session_the_X', 'local_apsolu', $a),
+                $exception->getMessage()
+            );
+        }
     }
 }
