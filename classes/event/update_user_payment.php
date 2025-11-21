@@ -54,7 +54,19 @@ class update_user_payment extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        $description = 'User #' . $this->userid . ' marks user #' . $this->relateduserid . ' (info: ' . $this->other . ').';
+        $paymentid = '';
+        if (isset($this->other->paymentid) === true) {
+            $paymentid = $this->other->paymentid;
+        } else if (isset($this->other->payment->id) === true) {
+            $paymentid = $this->other->payment->id;
+        }
+
+        if (isset($this->other->items) === false || is_array($this->other->items) === false) {
+            $this->other->items = [];
+        }
+
+        $description = 'The user with id #' . $this->userid . ' updated the payment for the user with id #' . $this->relateduserid .
+           ' (paymentid: ' . $paymentid . ', cards: ' . implode(', ', $this->other->items) . ').';
 
         return $description;
     }

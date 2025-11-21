@@ -177,7 +177,7 @@ if ($data = $mform->get_data()) {
         $event = \local_apsolu\event\update_user_payment::create([
             'relateduserid' => $userid,
             'context' => context_system::instance(),
-            'other' => ['payment' => $payment, 'items' => $items],
+            'other' => ['paymentid' => $payment->id, 'items' => $items],
         ]);
         $event->trigger();
 
