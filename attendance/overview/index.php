@@ -27,26 +27,6 @@ defined('MOODLE_INTERNAL') || die;
 $calendarid = optional_param('calendarid', null, PARAM_INT); // Calendar id.
 $sessionid = optional_param('sessionid', 0, PARAM_INT); // Session id.
 
-$PAGE->set_pagelayout('base'); // Désactive l'affichage des blocs.
-$PAGE->set_url('/local/apsolu/attendance/edit.php', ['courseid' => $courseid]);
-
-// Basic access control checks.
-// Login to the course and retrieve also all fields defined by course format.
-$course = get_course($courseid);
-require_login($course);
-$course = course_get_format($course)->get_course();
-
-$category = $DB->get_record('course_categories', ['id' => $course->category], '*', MUST_EXIST);
-$coursecontext = context_course::instance($course->id);
-require_capability('moodle/course:update', $coursecontext);
-
-// Vérifier qu'il s'agit d'une activité APSOLU.
-$activity = $DB->get_record('apsolu_courses', ['id' => $course->id]);
-if ($activity === false) {
-    // TODO: créer un message.
-    throw new moodle_exception('needcoursecategroyid');
-}
-
 $streditcoursesettings = get_string('attendance_overview', 'local_apsolu');
 
 $PAGE->navbar->add($streditcoursesettings);

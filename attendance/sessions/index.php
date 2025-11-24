@@ -24,28 +24,8 @@
 
 require_once(__DIR__ . '/../../../../config.php');
 
-$courseid = required_param('courseid', PARAM_INT); // Course id.
 $sessionid = optional_param('sessionid', 0, PARAM_INT); // Session id.
 $action = optional_param('action', 'view', PARAM_ALPHANUM);
-
-$PAGE->set_pagelayout('admin');
-$PAGE->set_url('/local/apsolu/attendance/sessions/index.php', ['courseid' => $courseid]);
-
-// Basic access control checks.
-// Login to the course and retrieve also all fields defined by course format.
-$course = get_course($courseid);
-require_login($course);
-$course = course_get_format($course)->get_course();
-
-$coursecontext = context_course::instance($course->id);
-require_capability('moodle/course:update', $coursecontext);
-
-// Vérifier qu'il s'agit d'une activité APSOLU.
-$activity = $DB->get_record('apsolu_courses', ['id' => $course->id]);
-if ($activity === false) {
-    // TODO: créer un message.
-    throw new moodle_exception('needcoursecategroyid');
-}
 
 $notifications = [];
 $streditcoursesettings = get_string('attendance_sessions_edit', 'local_apsolu');

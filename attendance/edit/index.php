@@ -33,29 +33,9 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->dirroot . '/enrol/select/lib.php');
 require_once($CFG->dirroot . '/local/apsolu/classes/apsolu/payment.php');
 
-$courseid = optional_param('courseid', 0, PARAM_INT); // Course id.
 $sessionid = optional_param('sessionid', 0, PARAM_INT); // Session id.
 $invalid_enrolments = optional_param('invalid_enrolments', 0, PARAM_INT);
 $inactive_enrolments = optional_param('inactive_enrolments', 0, PARAM_INT);
-
-$PAGE->set_pagelayout('base'); // Désactive l'affichage des blocs.
-$PAGE->set_url('/local/apsolu/attendance/edit.php', ['courseid' => $courseid]);
-
-// Basic access control checks.
-// Login to the course and retrieve also all fields defined by course format.
-$course = get_course($courseid);
-require_login($course);
-$course = course_get_format($course)->get_course();
-
-$category = $DB->get_record('course_categories', ['id' => $course->category], '*', MUST_EXIST);
-$coursecontext = context_course::instance($course->id);
-require_capability('moodle/course:update', $coursecontext);
-
-// Vérifier qu'il s'agit d'une activité APSOLU.
-$activity = $DB->get_record('apsolu_courses', ['id' => $course->id]);
-if ($activity === false) {
-    throw new moodle_exception('taking_attendance_is_only_possible_on_a_course', 'local_apsolu');
-}
 
 $sessions = $DB->get_records('apsolu_attendance_sessions', ['courseid' => $courseid], $sort = 'sessiontime');
 
