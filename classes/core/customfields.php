@@ -18,6 +18,8 @@
 
 namespace local_apsolu\core;
 
+use coding_exception;
+
 /**
  * Fonctions pour le module apsolu.
  *
@@ -45,22 +47,29 @@ class customfields {
     }
 
     /**
-     * Retourne la liste des champs additionnels à exporter.
+     * Retourne la liste des champs additionnels.
+     *
+     * @param string $context Contexte d'utilisation des champs additionnels. Peut être display ou export.
      *
      * @return array
      */
-    public static function get_extra_fields_for_export(): array {
-        $fields = [];
+    public static function get_extra_fields(string $context): array {
+        // Valide le contexte d'utilisation.
+        if (in_array($context, ['display', 'export'], $strict = true) === false) {
+            throw new coding_exception('Unexpected value for $context argument in ' . __METHOD__);
+        }
 
-        $exportfields = json_decode(get_config('local_apsolu', 'export_fields'));
-        if (is_array($exportfields) === false) {
-            $exportfields = [];
+        $extrafields = [];
+
+        $fields = json_decode(get_config('local_apsolu', sprintf('%s_fields', $context)));
+        if (is_array($fields) === false) {
+            $fields = [];
         }
 
         $customfields = false;
-        foreach ($exportfields as $field) {
+        foreach ($fields as $field) {
             if (str_starts_with($field, 'extra_') === false) {
-                $fields[$field] = get_string($field);
+                $extrafields[$field] = get_string($field);
                 continue;
             }
 
@@ -76,9 +85,21 @@ class customfields {
             }
 
             $customfield = $customfields[$field];
-            $fields[$customfield->shortname] = $customfield->name;
+            $extrafields[$customfield->shortname] = $customfield->name;
         }
 
-        return $fields;
+        return $extrafields;
+    }
+
+    /**
+     * Retourne la liste des champs additionnels à exporter.
+     *
+     * @return array
+     */
+    #[\core\attribute\deprecated('local_apsolu\core\customfields::get_extra_fields("export")')]
+    public static function get_extra_fields_for_export(): array {
+        \core\deprecation::emit_deprecation(__METHOD__);
+
+        return self::get_extra_fields('export');
     }
 }

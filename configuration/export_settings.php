@@ -28,20 +28,31 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . '/user/profile/lib.php');
 
-// Charge le paramétrage actuel.
-$currentexportfields = get_config('local_apsolu', 'export_fields');
+$fieldtypes = ['display', 'export'];
+$currentjsonfields = [];
+$currentarrayfields = [];
 
-$exportfields = json_decode($currentexportfields);
-if (is_array($exportfields) === false) {
-    $exportfields = [];
+// Charge le paramétrage actuel.
+foreach ($fieldtypes as $fieldtype) {
+    $configkey = sprintf('%s_fields', $fieldtype);
+
+    $currentjsonfields[$fieldtype] = get_config('local_apsolu', $configkey);
+
+    $currentarrayfields[$fieldtype] = json_decode($currentjsonfields[$fieldtype]);
+    if (is_array($currentarrayfields[$fieldtype]) === false) {
+        $currentarrayfields[$fieldtype] = [];
+    }
 }
 
 // Build form.
 $defaults = new stdClass();
+foreach ($fieldtypes as $fieldtype) {
+    $attribute = sprintf('additional%sfields', $fieldtype);
 
-$defaults->additionalexportfields = [];
-foreach ($exportfields as $exportfield) {
-    $defaults->additionalexportfields[] = $exportfield;
+    $defaults->$attribute = [];
+    foreach ($currentarrayfields[$fieldtype] as $field) {
+        $defaults->{$attribute}[] = $field;
+    }
 }
 
 $fields = [];
@@ -60,21 +71,26 @@ $customdata = [$defaults, $fields];
 $mform = new export_settings_form($PAGE->url->out(false), $customdata);
 
 if ($data = $mform->get_data()) {
-    $values = [];
-    foreach ($fields as $field => $unused) {
-        if (in_array($field, $data->additionalexportfields, $strict = true) === false) {
-            continue;
+    foreach ($fieldtypes as $fieldtype) {
+        $configkey = sprintf('%s_fields', $fieldtype);
+        $selectfield = sprintf('additional%sfields', $fieldtype);
+
+        $values = [];
+        foreach ($fields as $field => $unused) {
+            if (in_array($field, $data->{$selectfield}, $strict = true) === false) {
+                continue;
+            }
+
+            $values[] = $field;
         }
 
-        $values[] = $field;
-    }
+        if ($currentarrayfields[$fieldtype] !== $values) {
+            // La valeur a été modifiée.
+            $newjsonfield = json_encode($values);
+            add_to_config_log($configkey, $currentjsonfields[$fieldtype], $newjsonfield, 'local_apsolu');
 
-    if ($exportfields !== $values) {
-        // La valeur a été modifiée.
-        $newexportfields = json_encode($values);
-        add_to_config_log('export_fields', $currentexportfields, $newexportfields, 'local_apsolu');
-
-        set_config('export_fields', $newexportfields, 'local_apsolu');
+            set_config($configkey, $newjsonfield, 'local_apsolu');
+        }
     }
 
     $notificationform = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');

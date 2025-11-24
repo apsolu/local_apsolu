@@ -53,6 +53,7 @@ function xmldb_local_apsolu_install() {
     set_config('replytoaddresspreference', messaging::DISABLE_REPLYTO_ADDRESS, 'local_apsolu');
     set_config('defaultreplytoaddresspreference', messaging::USE_REPLYTO_ADDRESS, 'local_apsolu');
 
+    set_config('display_fields', '["email","institution","department"]', 'local_apsolu');
     set_config('export_fields', '["email","institution","department"]', 'local_apsolu');
     set_config('userhiddenfields', 'address,apsolupostalcode,apsolubirthday,country,phone1,phone2,city', 'local_apsolu');
 

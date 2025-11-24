@@ -42,6 +42,16 @@ class export_settings extends moodleform {
 
         [$defaults, $fields] = $this->_customdata;
 
+        $displayselect = $mform->addElement(
+            'select',
+            'additionaldisplayfields',
+            get_string('additional_fields_to_display', 'local_apsolu'),
+            $fields,
+            ['size' => 10, 'style' => 'width: 40em;']
+        );
+        $mform->addHelpButton('additionaldisplayfields', 'additional_fields_to_display', 'local_apsolu');
+        $displayselect->setMultiple(true);
+
         $exporselect = $mform->addElement(
             'select',
             'additionalexportfields',
