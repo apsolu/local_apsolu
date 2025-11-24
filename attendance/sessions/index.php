@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../../../config.php');
+defined('MOODLE_INTERNAL') || die;
 
 $sessionid = optional_param('sessionid', 0, PARAM_INT); // Session id.
 $action = optional_param('action', 'view', PARAM_ALPHANUM);
@@ -54,23 +54,8 @@ $fullname = $course->fullname;
 $PAGE->set_title($title);
 $PAGE->set_heading($fullname);
 
-// Build tabtree.
-$tabsbar = [];
-
-$url = new moodle_url('/local/apsolu/attendance/edit.php', ['courseid' => $courseid]);
-$tabsbar[] = new tabobject('sessions', $url, get_string('attendance_sessionsview', 'local_apsolu'));
-
-$url = new moodle_url('/local/apsolu/attendance/overview.php', ['courseid' => $courseid]);
-$tabsbar[] = new tabobject('overview', $url, get_string('attendance_overview', 'local_apsolu'));
-
-$url = new moodle_url('/local/apsolu/attendance/sessions/index.php', ['courseid' => $courseid]);
-$tabsbar[] = new tabobject('sessions_edit', $url, get_string('attendance_sessions_edit', 'local_apsolu'));
-
-$url = new moodle_url('/local/apsolu/attendance/export/export.php', ['courseid' => $courseid]);
-$tabsbar[] = new tabobject('export', $url, get_string('export', 'local_apsolu'));
-
 echo $OUTPUT->header();
-echo $OUTPUT->tabtree($tabsbar, 'sessions_edit');
+echo $OUTPUT->tabtree($tabsbar, 'sessions');
 echo $OUTPUT->heading($pagedesc);
 foreach ($notifications as $notification) {
     echo $notification;
