@@ -77,11 +77,13 @@ if ($data = $mform->get_data()) {
         set_config('export_fields', $newexportfields, 'local_apsolu');
     }
 
-    $returnurl = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'exportsettings']);
-    redirect($returnurl, $message = get_string('changessaved'), $delay = null, \core\output\notification::NOTIFY_SUCCESS);
+    $notificationform = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
 }
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('export_settings', 'local_apsolu'));
+if (isset($notificationform) === true) {
+    echo $notificationform;
+}
 $mform->display();
 echo $OUTPUT->footer();
