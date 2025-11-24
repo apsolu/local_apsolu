@@ -73,6 +73,19 @@ function xmldb_local_apsolu_install() {
     set_config('licensetype_field_visibility', Adhesion::FIELD_LOCKED, 'local_apsolu');
     set_config('otherfederation_field_visibility', Adhesion::FIELD_VISIBLE, 'local_apsolu');
 
+    // Initialise les variables liées à la prise de présences.
+    set_config('qrcode_enabled', 0, 'local_apsolu');
+    set_config('qrcode_starttime', 15 * 60, 'local_apsolu');
+    set_config('qrcode_presentstatus', 1, 'local_apsolu');
+    set_config('qrcode_latetime', 15 * 60, 'local_apsolu');
+    set_config('qrcode_latestatus', 2, 'local_apsolu');
+    set_config('qrcode_endtime', 30 * 60, 'local_apsolu');
+    set_config('qrcode_automark', 1, 'local_apsolu');
+    set_config('qrcode_automarkstatus', 4, 'local_apsolu');
+    set_config('qrcode_allowguests', 0, 'local_apsolu');
+    set_config('qrcode_autologout', 1, 'local_apsolu');
+    set_config('qrcode_rotate', 0, 'local_apsolu');
+
     // Initialise les paramètres de l'offre de formations.
     UniversiteRennes2\Apsolu\set_initial_course_offerings_settings();
 

@@ -1,0 +1,113 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_apsolu/attendance_qrcode
+
+    Template Moodle pour afficher le QR code pour les prises de présences.
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * wwwroot
+    * color
+    * sitename
+    * course
+    * session
+    * image
+    * user
+    * debugurl
+
+    Example context (json):
+    {
+        "wwwroot": "http://localhost",
+        "color": "#A2A2A2",
+        "sitename": "APSOLU",
+        "course": "Basket-ball 5x5 (H) Jeudi 14:30 16:15 Débutant",
+        "session": "Session du 18 novembre",
+        "image": "",
+        "user": "Non connecté",
+        "debugurl": ""
+    }
+}}
+<!DOCTYPE html>
+<html dir="ltr" lang="fr" style="height:100vh;width:100vw;" xml:lang="fr">
+<head>
+    <title>{{ sessionname }} | {{ sitename }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{# rotate }}
+        <meta http-equiv="refresh" content="30"> {{! Recharge la page toutes les 30 secondes. }}
+    {{/ rotate }}
+    <style>
+        body, div {
+            font-size: 1.5em;
+            font-weight: 600;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        #navbar {
+            background-color: {{ color }};
+            color: #f2f2f2;
+            display: flex;
+            font-size: .7em;
+            height: 60px;
+            line-height: 50px;
+            text-align: left;
+        }
+
+        @media print {
+            #navbar {
+                display: none;
+            }
+        }
+
+        .dark-link {
+            color: #1d1d1f;
+            text-decoration: none;
+        }
+
+        .dark-link:hover {
+            text-decoration: underline;
+        }
+
+        .light-link {
+            color: #f2f2f2;
+            text-decoration: none;
+        }
+
+        .light-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <nav id="navbar">
+        <p style="display:inline-block;margin:0 1em;"><a class="dark-link" href="{{ wwwroot }}/">{{ sitename }}</a></p>
+        <p style="background-color:#1d1d1f;color:#f2f2f2;flex-grow:1;height:50px;margin:0;padding:0 2em;text-align: right;"><a class="light-link" href="{{ wwwroot }}/">{{ user }}</a></p>
+    </nav>
+    <p>{{{ course }}}</p>
+    <div style="height:70vh;width:100vw;">
+        {{# debugurl }}<a href="{{{ debugurl }}}">{{/ debugurl }}{{{ image }}}{{# debugurl }}</a>{{/ debugurl }}
+    </div>
+    <p>{{{ session }}}</p>
+</body>
+</html>

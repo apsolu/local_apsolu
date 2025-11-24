@@ -34,6 +34,11 @@ $page = required_param('page', PARAM_ALPHA);
 
 $pages = ['edit', 'export', 'overview', 'sessions'];
 
+$qrcodeenabled = get_config('local_apsolu', 'qrcode_enabled');
+if (empty($qrcodeenabled) === false) {
+    $pages[] = 'qrcode';
+}
+
 if (in_array($page, $pages, $strict = true) === false) {
     $page = 'edit';
 }
@@ -54,6 +59,7 @@ require_capability('moodle/course:update', $coursecontext);
 
 $PAGE->set_pagelayout('admin');
 $PAGE->set_url('/local/apsolu/attendance/index.php', ['page' => $page, 'courseid' => $course->id]);
+$PAGE->set_context($coursecontext);
 
 // Onglets.
 $tabsbar = [];
@@ -69,6 +75,11 @@ $tabsbar[] = new tabobject('sessions', $url, get_string('attendance_sessions_edi
 
 $url = new moodle_url('/local/apsolu/attendance/index.php', ['page' => 'export', 'courseid' => $courseid]);
 $tabsbar[] = new tabobject('export', $url, get_string('export', 'local_apsolu'));
+
+if (empty($qrcodeenabled) === false) {
+    $url = new moodle_url('/local/apsolu/attendance/index.php', ['page' => 'qrcode', 'courseid' => $courseid]);
+    $tabsbar[] = new tabobject('qrcode', $url, get_string('qr_code', 'local_apsolu'));
+}
 
 // Charge la page.
 require_once($CFG->dirroot . '/local/apsolu/attendance/' . $page . '/index.php');

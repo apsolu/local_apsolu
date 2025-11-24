@@ -145,14 +145,6 @@ if ($hassiteconfig || has_any_capability($capabilities, context_system::instance
         new admin_externalpage('local_apsolu_configuration_calendars_types', $str, $url, $capabilities)
     );
 
-    // Configuration > Type de présences.
-    $str = get_string('attendance_statuses', 'local_apsolu');
-    $url = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'attendancestatuses']);
-    $ADMIN->add(
-        'local_apsolu_configuration',
-        new admin_externalpage('local_apsolu_configuration_attendance_statuses', $str, $url, $capabilities)
-    );
-
     // Communication.
     $ADMIN->add('apsolu', new admin_category('local_apsolu_communication', get_string('communication', 'local_apsolu')));
 
@@ -302,6 +294,25 @@ if ($hassiteconfig || has_any_capability($capabilities, context_system::instance
     $label = get_string('payment_cards', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/payment/admin.php', ['tab' => 'prices']);
     $ADMIN->add('local_apsolu_payment', new admin_externalpage('local_apsolu_payment_prices', $label, $url, $capabilities));
+
+    // Présences.
+    $ADMIN->add('apsolu', new admin_category('local_apsolu_attendances', get_string('attendances', 'local_apsolu')));
+
+    // Présences > QRCode.
+    $str = get_string('qr_code', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/attendance/admin/index.php', ['tab' => 'qrcode']);
+    $ADMIN->add(
+        'local_apsolu_attendances',
+        new admin_externalpage('local_apsolu_attendances_qrcode', $str, $url, $capabilities)
+    );
+
+    // Présences > Type de présences. TODO: changer l'URL pour être au format /attendance/admin/index.php?tab=statuses.
+    $str = get_string('attendance_statuses', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'attendancestatuses']);
+    $ADMIN->add(
+        'local_apsolu_attendances',
+        new admin_externalpage('local_apsolu_configuration_attendance_statuses', $str, $url, $capabilities)
+    );
 
     // Présentation.
     if (empty($ADMIN->locate('local_apsolu_appearance')) === true) {

@@ -25,6 +25,7 @@
 // phpcs:disable moodle.NamingConventions.ValidVariableName.VariableNameUnderscore
 
 use UniversiteRennes2\Apsolu\Payment;
+use local_apsolu\attendance\qrcode;
 use local_apsolu\core\attendance;
 use local_apsolu\core\attendancesession;
 use local_apsolu\core\customfields;
@@ -481,12 +482,23 @@ $PAGE->requires->js_call_amd('local_apsolu/sort', 'initialise', [$options]);
 $PAGE->requires->js_call_amd('local_apsolu/attendance', 'initialise');
 
 // Select form pour la session et les options.
+$qrcodeid = null;
+if (empty($qrcodeenabled) === false && isset($sessions[$sessionid]) === true && $sessions[$sessionid]->is_expired() === false) {
+    $qrcodeid = 0;
+
+    $qrcode = qrcode::get_record(['sessionid' => $sessionid]);
+    if ($qrcode !== false) {
+        $qrcodeid = $qrcode->id;
+    }
+}
+
 $select_args = [
     'courseid' => $course->id,
     'sessionid' => $sessionid,
     'sessions' => $sessions,
     'invalid_enrolments' => $invalid_enrolments,
     'inactive_enrolments' => $inactive_enrolments,
+    'qrcodeid' => $qrcodeid,
 ];
 
 $url = new moodle_url('/local/apsolu/attendance/index.php', ['page' => 'edit', 'courseid' => $courseid]);

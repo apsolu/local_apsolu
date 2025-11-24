@@ -37,6 +37,7 @@ class edit_select_form extends moodleform {
         $data = new stdClass();
         $data->courseid = $this->_customdata['courseid']; // This contains the data of this form.
         $data->sessionid = $this->_customdata['sessionid'];
+        $qrcodeid = $this->_customdata['qrcodeid'];
 
         if (isset($this->_customdata['invalid_enrolments']) == true) {
             $data->invalid_enrolments = $this->_customdata['invalid_enrolments'];
@@ -74,6 +75,39 @@ class edit_select_form extends moodleform {
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('show'));
         $buttonarray[] = &$mform->createElement('submit', 'exportcsv', get_string('export_to_csv_format', 'local_apsolu'));
         $buttonarray[] = &$mform->createElement('submit', 'exportexcel', get_string('export_to_excel_format', 'local_apsolu'));
+        if ($qrcodeid !== null) {
+            $url = new moodle_url('/local/apsolu/attendance/index.php', [
+                'page' => 'qrcode',
+                'courseid' => $data->courseid,
+                'sessionid' => $data->sessionid,
+            ]);
+
+            if ($qrcodeid === 0) {
+                // Définit le lien pour générer le QR code.
+                $link = html_writer::link($url, get_string('generate_a_qr_code', 'local_apsolu'), ['class' => 'btn btn-warning']);
+                $buttonarray[] = &$mform->createElement('html', $link);
+            } else {
+                // Définit le lien pour modifier le QR code.
+                $items = [html_writer::link($url, get_string('edit_qr_code', 'local_apsolu'), ['class' => 'dropdown-item'])];
+                $list = html_writer::alist($items, ['class' => 'dropdown-menu']);
+
+                // Définit le lien pour afficher le QR code.
+                $url = new moodle_url('/local/apsolu/attendance/qrcode.php', ['id' => $qrcodeid]);
+                $link = html_writer::link($url, get_string('show_qr_code', 'local_apsolu'), [
+                    'class' => 'btn btn-warning',
+                ]);
+
+                $dropdown = html_writer::tag('button', html_writer::span('Toggle Dropdown', 'visually-hidden'), [
+                    'aria-expanded' => 'false',
+                    'class' => 'btn btn-warning dropdown-toggle dropdown-toggle-split',
+                    'data-bs-toggle' => 'dropdown',
+                    'type' => 'button',
+                ]);
+
+                // Affiche les 2 liens sur la page.
+                $buttonarray[] = &$mform->createElement('html', html_writer::div($link . $dropdown . $list, 'btn-group dropdown'));
+            }
+        }
         $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Finally set the current form data.

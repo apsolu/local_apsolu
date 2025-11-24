@@ -31,6 +31,7 @@
             <FIELD NAME="teacherid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" />
             <FIELD NAME="statusid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" />
             <FIELD NAME="description" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="fingerprint" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
             <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="sessionid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" />
@@ -44,6 +45,24 @@
             <INDEX NAME="teacherid" UNIQUE="false" FIELDS="teacherid" />
             <INDEX NAME="statusid" UNIQUE="false" FIELDS="statusid" />
             <INDEX NAME="sessionid" UNIQUE="false" FIELDS="sessionid" />
+        </INDEXES>
+    </TABLE>
+
+    <!-- ATTENDANCE QR CODE -->
+    <TABLE NAME="apsolu_attendance_qrcodes" COMMENT="apsolu_attendance_qrcodes table">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+            <FIELD NAME="keycode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+            <FIELD NAME="settings" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+            <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+            <FIELD NAME="sessionid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="keycode" UNIQUE="true" FIELDS="keycode" />
+            <INDEX NAME="sessionid" UNIQUE="true" FIELDS="sessionid" />
         </INDEXES>
     </TABLE>
 
