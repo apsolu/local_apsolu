@@ -25,8 +25,8 @@
 define('AJAX_SCRIPT', true);
 
 require_once(__DIR__ . '/../../../../config.php');
-require($CFG->dirroot . '/enrol/select/lib.php');
-require(__DIR__ . '/edit_enrolment_form.php');
+require_once($CFG->dirroot . '/enrol/select/lib.php');
+require_once($CFG->dirroot . '/local/apsolu/attendance/ajax/edit_enrolment_form.php');
 
 $userid = required_param('userid', PARAM_INT); // User id.
 $courseid = required_param('courseid', PARAM_INT); // Course id.
