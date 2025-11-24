@@ -81,7 +81,6 @@ if ($mform !== null && $data = $mform->get_data()) {
               FROM {user} u
               JOIN {apsolu_federation_adhesions} afa ON u.id = afa.userid
              WHERE 1 = 1 " . implode(' ', $conditions) . "
-               AND afa.federationnumber IS NULL
                AND afa.passsportnumber IS NOT NULL
           ORDER BY afa.federationnumberrequestdate DESC, u.lastname, u.firstname";
 
