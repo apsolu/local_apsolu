@@ -57,7 +57,7 @@ foreach (profile_get_custom_fields() as $field) {
 
 $customdata = [$defaults, $fields];
 
-$mform = new export_settings_form(null, $customdata);
+$mform = new export_settings_form($PAGE->url->out(false), $customdata);
 
 if ($data = $mform->get_data()) {
     $values = [];

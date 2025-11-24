@@ -57,10 +57,6 @@ class export_settings extends moodleform {
 
         $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
-        // Hidden fields.
-        $mform->addElement('hidden', 'page', 'exportsettings');
-        $mform->setType('page', PARAM_ALPHANUM);
-
         // Set default values.
         $this->set_data($defaults);
     }
