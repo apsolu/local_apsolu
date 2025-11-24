@@ -59,6 +59,10 @@ class local_apsolu_attendance_export_form extends moodleform {
         $formats['excel'] = get_string('excel_format', 'local_apsolu');
         $mform->addElement('select', 'format', get_string('export_format', 'local_apsolu'), $formats);
 
+        // Page.
+        $mform->addElement('hidden', 'page', 'export');
+        $mform->setType('page', PARAM_ALPHA);
+
         // Courseid.
         $mform->addElement('hidden', 'courseid', $courseid);
         $mform->setType('courseid', PARAM_INT);

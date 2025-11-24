@@ -29,8 +29,8 @@ $sessionid = required_param('sessionid', PARAM_INT);
 $delete = optional_param('delete', 0, PARAM_INT); // Confirmation hash.
 
 $url = new moodle_url(
-    '/local/apsolu/attendance/sessions/index.php',
-    ['action' => 'delete', 'courseid' => $courseid, 'sessionid' => $sessionid]
+    '/local/apsolu/attendance/index.php',
+    ['page' => 'sessions', 'action' => 'delete', 'courseid' => $courseid, 'sessionid' => $sessionid]
 );
 
 $session = $DB->get_record('apsolu_attendance_sessions', ['id' => $sessionid, 'courseid' => $courseid], '*', MUST_EXIST);
@@ -156,11 +156,17 @@ if (count($presences) > 0) {
     }
     $message = $OUTPUT->notification(get_string($stringid, 'local_apsolu', $params), 'notifyproblem');
 
-    $urlarguments = ['action' => 'delete', 'courseid' => $course->id, 'sessionid' => $sessionid, 'delete' => 1];
-    $confirmurl = new moodle_url('/local/apsolu/attendance/sessions/index.php', $urlarguments);
+    $urlarguments = [
+        'page' => 'sessions',
+        'action' => 'delete',
+        'courseid' => $course->id,
+        'sessionid' => $sessionid,
+        'delete' => 1,
+    ];
+    $confirmurl = new moodle_url('/local/apsolu/attendance/index.php', $urlarguments);
     $confirmbutton = new single_button($confirmurl, get_string('delete'), 'post');
 
-    $cancelurl = new moodle_url('/local/apsolu/attendance/sessions/index.php', ['courseid' => $courseid]);
+    $cancelurl = new moodle_url('/local/apsolu/attendance/index.php', ['page' => 'sessions', 'courseid' => $courseid]);
 
     $data->form = $OUTPUT->confirm($message, $confirmbutton, $cancelurl);
 }

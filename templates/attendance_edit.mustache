@@ -120,7 +120,7 @@
 {{#notification}}<div class="alert alert-success">{{#str}}changessaved{{/str}}</div>{{/notification}}
 
 
-<form action="{{wwwroot}}/local/apsolu/attendance/edit.php?courseid={{courseid}}&sessionid={{sessionid}}" method="post">
+<form action="{{wwwroot}}/local/apsolu/attendance/index.php?page=edit&courseid={{courseid}}&sessionid={{sessionid}}" method="post">
     <div class="apsolu-mask-wrapper table-responsive" data-mask-name="attendance_edit">
         <table class="table table-striped table-sortable" id="apsolu-attendance-table">
             <caption>{{#str}}attendance_table_caption, local_apsolu, {{student_count}}{{/str}}</caption>
