@@ -61,7 +61,7 @@ class qrcode extends moodleform {
         $mform->addElement('duration', 'starttime', get_string('open_attendance_recording', 'local_apsolu'), $durationoptions);
         $mform->addHelpButton('starttime', 'open_attendance_recording', 'local_apsolu');
 
-        $mform->addElement('select', 'presentstatus', get_string('attendance_status', 'local_apsolu'), $statuses);
+        $mform->addElement('select', 'presentstatus', get_string('status_present', 'local_apsolu'), $statuses);
         $mform->addHelpButton('presentstatus', 'status_present', 'local_apsolu');
 
         // Durant la session.
@@ -73,7 +73,7 @@ class qrcode extends moodleform {
         $mform->addHelpButton('latetime', 'change_status', 'local_apsolu');
         $mform->disabledIf('latetime', 'enablelatetime', 'notchecked');
 
-        $mform->addElement('select', 'latestatus', get_string('attendance_status', 'local_apsolu'), $statuses);
+        $mform->addElement('select', 'latestatus', get_string('status_late', 'local_apsolu'), $statuses);
         $mform->addHelpButton('latestatus', 'status_late', 'local_apsolu');
         $mform->disabledIf('latestatus', 'enablelatetime', 'notchecked');
 
@@ -89,7 +89,7 @@ class qrcode extends moodleform {
         $mform->addElement('selectyesno', 'automark', get_string('assign_status_to_students_without_attendance', 'local_apsolu'));
         $mform->addHelpButton('automark', 'assign_status_to_students_without_attendance', 'local_apsolu');
 
-        $mform->addElement('select', 'automarkstatus', get_string('attendance_status', 'local_apsolu'), $statuses);
+        $mform->addElement('select', 'automarkstatus', get_string('status_absent', 'local_apsolu'), $statuses);
         $mform->addHelpButton('automarkstatus', 'status_absent', 'local_apsolu');
         $mform->disabledIf('automarkstatus', 'automark', 'eq', '0');
 
