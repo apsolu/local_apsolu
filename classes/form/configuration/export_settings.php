@@ -42,12 +42,15 @@ class export_settings extends moodleform {
 
         [$defaults, $fields] = $this->_customdata;
 
-        $mform->addElement('static', 'additionalfields', get_string('additional_fields_to_export', 'local_apsolu'));
-        $mform->addHelpButton('additionalfields', 'additional_fields_to_export', 'local_apsolu');
-
-        foreach ($fields as $fieldname => $label) {
-            $mform->addElement('checkbox', $fieldname, $label);
-        }
+        $exporselect = $mform->addElement(
+            'select',
+            'additionalexportfields',
+            get_string('additional_fields_to_export', 'local_apsolu'),
+            $fields,
+            ['size' => 10, 'style' => 'width: 40em;']
+        );
+        $mform->addHelpButton('additionalexportfields', 'additional_fields_to_export', 'local_apsolu');
+        $exporselect->setMultiple(true);
 
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));

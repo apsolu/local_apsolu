@@ -38,8 +38,10 @@ if (is_array($exportfields) === false) {
 
 // Build form.
 $defaults = new stdClass();
+
+$defaults->additionalexportfields = [];
 foreach ($exportfields as $exportfield) {
-    $defaults->{$exportfield} = 1;
+    $defaults->additionalexportfields[] = $exportfield;
 }
 
 $fields = [];
@@ -60,7 +62,7 @@ $mform = new export_settings_form(null, $customdata);
 if ($data = $mform->get_data()) {
     $values = [];
     foreach ($fields as $field => $unused) {
-        if (isset($data->{$field}) === false) {
+        if (in_array($field, $data->additionalexportfields, $strict = true) === false) {
             continue;
         }
 
