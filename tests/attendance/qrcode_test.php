@@ -271,6 +271,7 @@ final class qrcode_test extends \advanced_testcase {
             $session->sessiontime = time() - DAYSECS;
             $session->save();
 
+            $qrcode->settings->endtime = -1;
             $qrcode->sign($session);
             $this->fail('Une exception "moodle_exception" attendue pour une prise de présences terminée (session terminée)');
         } catch (moodle_exception $exception) {
@@ -292,6 +293,19 @@ final class qrcode_test extends \advanced_testcase {
 
         $qrcode->settings->starttime = 0;
         $qrcode->settings->latetime = 120;
+        $this->assertSame($response, $qrcode->sign($session));
+
+        $presence = attendancepresence::get_record(['sessionid' => $session->id, 'studentid' => $USER->id], '*', MUST_EXIST);
+        $presence->delete();
+
+        // Teste la validation d'une présence sans le paramètre "en retard".
+        $qrcode->settings->latetime = -1;
+
+        $a = new stdClass();
+        $a->status = $statuses[$qrcode->settings->presentstatus]->longlabel;
+        $a->time = userdate(time(), get_string('strftimetime'));
+        $response = get_string('your_participation_has_been_recorded_X_for_this_session_the_X', 'local_apsolu', $a);
+
         $this->assertSame($response, $qrcode->sign($session));
 
         $presence = attendancepresence::get_record(['sessionid' => $session->id, 'studentid' => $USER->id], '*', MUST_EXIST);
