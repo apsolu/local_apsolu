@@ -69,6 +69,10 @@ if ($data = $mform->get_data()) {
             continue;
         }
 
+        if ($default->$attribute == $data->$attribute) {
+            continue;
+        }
+
         $configname = sprintf('qrcode_%s', $attribute);
 
         add_to_config_log($configname, $default->$attribute, $data->$attribute, 'local_apsolu');
