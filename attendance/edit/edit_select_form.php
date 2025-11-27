@@ -98,7 +98,11 @@ class edit_select_form extends moodleform {
                 $buttonarray[] = &$mform->createElement('html', $input);
             } else {
                 // Définit le lien pour modifier le QR code.
-                $items = [html_writer::link($url, get_string('edit_qr_code', 'local_apsolu'), ['class' => 'dropdown-item'])];
+                $printurl = new moodle_url('/local/apsolu/attendance/qrcode.php', ['id' => $qrcodeid, 'print' => 1]);
+                $items = [
+                    html_writer::link($url, get_string('edit_qr_code', 'local_apsolu'), ['class' => 'dropdown-item']),
+                    html_writer::link($printurl, get_string('print', 'local_apsolu'), ['class' => 'dropdown-item']),
+                ];
                 $list = html_writer::alist($items, ['class' => 'dropdown-menu']);
 
                 // Définit le lien pour afficher le QR code.

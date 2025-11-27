@@ -32,6 +32,7 @@ require_once(__DIR__ . '/../../../config.php');
 
 $id = optional_param('id', 0, PARAM_INT);
 $keycode = optional_param('keycode', null, PARAM_TEXT);
+$print = optional_param('print', null, PARAM_INT);
 
 $qrcodeenabled = get_config('local_apsolu', 'qrcode_enabled');
 if (empty($qrcodeenabled) === true) {
@@ -130,6 +131,7 @@ if (isset($id) === true) {
     $data->session = html_writer::link($sessionurl, $session->name);
     $data->rotate = $rotate;
     $data->image = implode(PHP_EOL, $lines);
+    $data->print = $print;
     $data->user = get_string('loggedinnot');
     if ($isloggedin === true) {
         $data->user = fullname($USER);

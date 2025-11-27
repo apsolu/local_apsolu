@@ -52,9 +52,11 @@
 <head>
     <title>{{ sessionname }} | {{ sitename }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{^ print }}
     {{# rotate }}
         <meta http-equiv="refresh" content="30"> {{! Recharge la page toutes les 30 secondes. }}
     {{/ rotate }}
+    {{/ print }}
     <style>
         body, div {
             font-size: 1.5em;
@@ -97,17 +99,30 @@
         .light-link:hover {
             text-decoration: underline;
         }
+
+        #afterprint-container {
+            display: none;
+            flex-direction: column;
+            font-size: 2em;
+            height: 90vh;
+            justify-content: center;
+        }
     </style>
 </head>
-<body>
+<body{{# print}} onload="window.print();" onafterprint="document.getElementById('afterprint-container').style.display = 'flex';document.getElementById('qrcode-container').style.display = 'none';"{{/ print}}>
     <nav id="navbar">
         <p style="display:inline-block;margin:0 1em;"><a class="dark-link" href="{{ wwwroot }}/">{{ sitename }}</a></p>
         <p style="background-color:#1d1d1f;color:#f2f2f2;flex-grow:1;height:50px;margin:0;padding:0 2em;text-align: right;"><a class="light-link" href="{{ wwwroot }}/">{{ user }}</a></p>
     </nav>
-    <p>{{{ course }}}</p>
-    <div style="height:70vh;width:100vw;">
-        {{# debugurl }}<a href="{{{ debugurl }}}">{{/ debugurl }}{{{ image }}}{{# debugurl }}</a>{{/ debugurl }}
+    <div id="qrcode-container">
+        <p id="course-p">{{{ course }}}</p>
+        <div id="qrcode" style="height:70vh;width:100vw;">
+            {{# debugurl }}<a href="{{{ debugurl }}}">{{/ debugurl }}{{{ image }}}{{# debugurl }}</a>{{/ debugurl }}
+        </div>
+        <p id="session-p">{{{ session }}}</p>
     </div>
-    <p>{{{ session }}}</p>
+    <div id="afterprint-container">
+        <p><a href="javascript:history.back();">{{# str }}return_to_course, local_apsolu{{/ str }}</a></p>
+    </div>
 </body>
 </html>

@@ -719,6 +719,7 @@ $string['please_note_that_this_process_can_take_a_long_time'] = 'Veuillez noter 
 $string['postal_code'] = 'Code postal';
 $string['preview'] = 'Aperçu';
 $string['primary_legal_representative'] = 'Représentant légal';
+$string['print'] = 'Imprimer';
 $string['publication_date'] = 'Date de publication';
 $string['purge_holidays'] = 'Vider la liste des jours fériés';
 $string['qr_code'] = 'QR code';
@@ -746,6 +747,7 @@ $string['request_of_federation_number_with_medical_certificate'] = '<p>Un certif
 $string['request_of_federation_number_with_pass_sport'] = '<p>Un Pass Sport est en attente de validation à <a href="{$a}">cette adresse</a>.</p>';
 $string['required_fields'] = 'Champs obligatoires';
 $string['return'] = 'Revenir';
+$string['return_to_course'] = 'Revenir au cours';
 $string['roles'] = 'Types d’inscription';
 $string['role'] = 'Type d’inscription';
 $string['role_updated'] = 'Type d’inscription modifié.';
