@@ -483,12 +483,14 @@ $PAGE->requires->js_call_amd('local_apsolu/attendance', 'initialise');
 
 // Select form pour la session et les options.
 $qrcodeid = null;
-if (empty($qrcodeenabled) === false && isset($sessions[$sessionid]) === true && $sessions[$sessionid]->is_expired() === false) {
-    $qrcodeid = 0;
+if (empty($qrcodeenabled) === false && isset($sessions[$sessionid]) === true) {
+    $qrcodeid = 0; // Valeur permettant d'afficher le bouton "Générer un QR code".
 
     $qrcode = qrcode::get_record(['sessionid' => $sessionid]);
     if ($qrcode !== false) {
-        $qrcodeid = $qrcode->id;
+        $qrcodeid = $qrcode->id; // Valeur permettrant d'afficher le bouton dropdown "Afficher le QR code".
+    } else if ($sessions[$sessionid]->is_expired() === true) {
+        $qrcodeid = -1; // Valeur permettant de griser le bouton "Générer un QR code".
     }
 }
 

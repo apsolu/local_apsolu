@@ -86,6 +86,16 @@ class edit_select_form extends moodleform {
                 // Définit le lien pour générer le QR code.
                 $link = html_writer::link($url, get_string('generate_a_qr_code', 'local_apsolu'), ['class' => 'btn btn-warning']);
                 $buttonarray[] = &$mform->createElement('html', $link);
+            } else if ($qrcodeid === -1) {
+                // Affiche un bouton grisé "Générer le QR code".
+                $input = html_writer::empty_tag('input', [
+                    'class' => 'btn btn-warning',
+                    'disabled' => 1,
+                    'name' => 'generateqrcode',
+                    'type' => 'submit',
+                    'value' => get_string('generate_a_qr_code', 'local_apsolu'),
+                ]);
+                $buttonarray[] = &$mform->createElement('html', $input);
             } else {
                 // Définit le lien pour modifier le QR code.
                 $items = [html_writer::link($url, get_string('edit_qr_code', 'local_apsolu'), ['class' => 'dropdown-item'])];
