@@ -242,6 +242,8 @@ class qrcode extends record {
         }
 
         // Enregistre la présence.
+        $status = attendancestatus::get_record(['id' => $statusid], '*', MUST_EXIST);
+
         $presence = new attendancepresence();
         $presence->studentid = $USER->id;
         $presence->teacherid = $USER->id;
@@ -252,8 +254,6 @@ class qrcode extends record {
 
         $presence->fingerprint = hash('sha256', getremoteaddr() . core_useragent::get_user_agent_string());
         $presence->save();
-
-        $status = attendancestatus::get_record(['id' => $statusid], '*', MUST_EXIST);
 
         $a = new stdClass();
         $a->status = $status->longlabel;
