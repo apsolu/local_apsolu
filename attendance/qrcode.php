@@ -62,9 +62,7 @@ $qrcode->settings = json_decode($qrcode->settings, $associative = false, flags: 
 
 $session = Session::get_record(['id' => $qrcode->sessionid], '*', MUST_EXIST);
 
-// Login to the course.
 $course = $DB->get_record('course', ['id' => $session->courseid], '*', MUST_EXIST);
-require_login($course);
 
 // Vérifier qu'il s'agit d'une activité APSOLU.
 $activity = $DB->get_record('apsolu_courses', ['id' => $course->id]);
@@ -77,6 +75,9 @@ $coursecontext = context_course::instance($course->id, MUST_EXIST);
 $PAGE->set_context($coursecontext);
 
 if (isset($id) === true) {
+    // Login to the course.
+    require_login($course);
+
     require_capability('moodle/course:update', $coursecontext);
 
     $PAGE->set_pagelayout('print');
@@ -145,6 +146,9 @@ if (isset($id) === true) {
 
     exit(0);
 }
+
+// Login to the site to handle guests.
+require_login();
 
 $PAGE->set_pagelayout('course');
 $PAGE->set_url('/local/apsolu/attendance/qrcode.php', ['keycode' => $keycode]);
