@@ -47,7 +47,7 @@ $PAGE->set_heading($fullname);
 
 $sessions = [0 => 'Toutes les sessions à venir'];
 foreach (Session::get_records(['courseid' => $courseid]) as $record) {
-    if ($record->is_expired() === true) {
+    if ($record->has_expired() === true) {
         continue;
     }
     $sessions[$record->id] = $record->name;

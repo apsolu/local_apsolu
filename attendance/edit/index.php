@@ -489,7 +489,7 @@ if (empty($qrcodeenabled) === false && isset($sessions[$sessionid]) === true) {
     $qrcode = qrcode::get_record(['sessionid' => $sessionid]);
     if ($qrcode !== false) {
         $qrcodeid = $qrcode->id; // Valeur permettrant d'afficher le bouton dropdown "Afficher le QR code".
-    } else if ($sessions[$sessionid]->is_expired() === true) {
+    } else if ($sessions[$sessionid]->has_expired() === true) {
         $qrcodeid = -1; // Valeur permettant de griser le bouton "Générer un QR code".
     }
 }

@@ -134,7 +134,7 @@ class dataset_provider {
             // Récupère tous les sessions du cours.
             $sessions = Apsolu\attendancesession::get_records(['courseid' => $course->courseid]);
             foreach ($sessions as $session) {
-                if ($session->is_expired() === false) {
+                if ($session->has_started() === false) {
                     // Rappel: ne pas mettre une présence à une session future.
                     continue;
                 }
