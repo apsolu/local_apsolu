@@ -148,6 +148,7 @@ if (isset($id) === true) {
 
 $PAGE->set_pagelayout('course');
 $PAGE->set_url('/local/apsolu/attendance/qrcode.php', ['keycode' => $keycode]);
+$PAGE->navbar->add(get_string('attendance', 'local_apsolu'));
 
 $CFG->additionalhtmltopofbody = ''; // Désactive sur cette page le bandeau d'information.
 
