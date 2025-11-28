@@ -115,11 +115,48 @@ class attendancesession extends record {
      *
      * @return bool
      */
-    public function is_expired() {
+    public function has_expired(): bool {
         $now = getdate();
         $today = make_timestamp($now['year'], $now['mon'], $now['mday'], $now['hours'], $now['minutes'], $now['seconds']);
 
-        return $today > $this->sessiontime;
+        return $today > ($this->sessiontime + $this->get_duration());
+    }
+
+    /**
+     * Indique si la session a débuté.
+     *
+     * Pour tester si la session est passée, utiliser le méthode has_expired.
+     *
+     * @return bool
+     */
+    public function has_started(): bool {
+        $now = getdate();
+        $today = make_timestamp($now['year'], $now['mon'], $now['mday'], $now['hours'], $now['minutes'], $now['seconds']);
+
+        return $today >= $this->sessiontime;
+    }
+
+    /**
+     * Indique si la session a débuté.
+     *
+     * Pour tester si la session est passée, utiliser le méthode has_expired.
+     *
+     * @return bool
+     */
+    #[\core\attribute\deprecated('local_apsolu\core\attendancesession::has_started()')]
+    public function is_expired(): bool {
+        \core\deprecation::emit_deprecation(__METHOD__);
+
+        return $this->has_started();
+    }
+
+    /**
+     * Indique si la session est en cours.
+     *
+     * @return bool
+     */
+    public function is_in_progress(): bool {
+        return $this->has_started() === true && $this->has_expired() === false;
     }
 
     /**

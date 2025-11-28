@@ -26,8 +26,8 @@ use stdClass;
  * @package    local_apsolu
  * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \local_apsolu\core\attendancesession
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(attendancesession::class)]
 final class attendancesession_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp();
@@ -38,7 +38,7 @@ final class attendancesession_test extends \advanced_testcase {
     /**
      * Teste delete().
      *
-     * @covers ::delete()
+     * @return void
      */
     public function test_delete(): void {
         global $DB;
@@ -73,7 +73,7 @@ final class attendancesession_test extends \advanced_testcase {
     /**
      * Teste get_records().
      *
-     * @covers ::get_records()
+     * @return void
      */
     public function test_get_records(): void {
         global $DB;
@@ -107,9 +107,114 @@ final class attendancesession_test extends \advanced_testcase {
     }
 
     /**
+     * Teste has_expired().
+     *
+     * @return void
+     */
+    public function test_has_expired(): void {
+        // Génère un nouveau cours dont les sessions durent 1 heure.
+        $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
+        $data->starttime = '12:00';
+        $data->endtime = '13:00';
+        $course = new course();
+        $course->save($data);
+
+        // Génère une session de cours.
+        $attendancesession = new attendancesession();
+        $attendancesession->courseid = $course->id;
+
+        $attendancesession->sessiontime = time() - DAYSECS; // Teste une session qui a commencé la veille.
+        $this->assertTrue($attendancesession->has_expired());
+
+        $attendancesession->sessiontime = time() - HOURSECS - MINSECS; // Teste une session qui s'est terminée depuis 1 minute.
+        $this->assertTrue($attendancesession->has_expired());
+
+        $attendancesession->sessiontime = time(); // Teste une session qui commence à l'instant.
+        $this->assertFalse($attendancesession->has_expired());
+
+        $attendancesession->sessiontime = time() - HOURSECS + MINSECS; // Teste une session qui se termine dans 1 minute.
+        $this->assertFalse($attendancesession->has_expired());
+
+        $attendancesession->sessiontime = time() + DAYSECS; // Teste une session qui commence le lendemain.
+        $this->assertFalse($attendancesession->has_expired());
+    }
+
+    /**
+     * Teste has_started().
+     *
+     * @return void
+     */
+    public function test_has_started(): void {
+        // Génère un nouveau cours dont les sessions durent 1 heure.
+        $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
+        $data->starttime = '12:00';
+        $data->endtime = '13:00';
+        $course = new course();
+        $course->save($data);
+
+        // Génère une session de cours.
+        $attendancesession = new attendancesession();
+        $attendancesession->courseid = $course->id;
+
+        $attendancesession->sessiontime = time() - DAYSECS; // Teste une session qui a commencé la veille.
+        $this->assertTrue($attendancesession->has_started());
+
+        $attendancesession->sessiontime = time() - MINSECS; // Teste une session qui a commencé depuis 1 minute.
+        $this->assertTrue($attendancesession->has_started());
+
+        $attendancesession->sessiontime = time(); // Teste une session qui commence à l'instant.
+        $this->assertTrue($attendancesession->has_started());
+
+        $attendancesession->sessiontime = time() + MINSECS; // Teste une session qui commence dans 1 minute.
+        $this->assertFalse($attendancesession->has_started());
+
+        $attendancesession->sessiontime = time() + DAYSECS; // Teste une session qui commence le lendemain.
+        $this->assertFalse($attendancesession->has_started());
+    }
+
+    /**
+     * Teste is_in_progress().
+     *
+     * @return void
+     */
+    public function test_is_in_progress(): void {
+        // Génère un nouveau cours dont les sessions durent 1 heure.
+        $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
+        $data->starttime = '12:00';
+        $data->endtime = '13:00';
+        $course = new course();
+        $course->save($data);
+
+        // Génère une session de cours.
+        $attendancesession = new attendancesession();
+        $attendancesession->courseid = $course->id;
+
+        $attendancesession->sessiontime = time() - DAYSECS; // Teste une session qui a commencé la veille.
+        $this->assertFalse($attendancesession->is_in_progress());
+
+        $attendancesession->sessiontime = time() + MINSECS; // Teste une session qui commence dans 1 minute.
+        $this->assertFalse($attendancesession->is_in_progress());
+
+        $attendancesession->sessiontime = time(); // Teste une session qui commence à l'instant.
+        $this->assertTrue($attendancesession->is_in_progress());
+
+        $attendancesession->sessiontime = time() - MINSECS; // Teste une session qui a commencé depuis 1 minute.
+        $this->assertTrue($attendancesession->is_in_progress());
+
+        $attendancesession->sessiontime = time() - HOURSECS + MINSECS; // Teste une session qui se termine dans 1 minute.
+        $this->assertTrue($attendancesession->is_in_progress());
+
+        $attendancesession->sessiontime = time() - HOURSECS - MINSECS; // Teste une session qui s'est terminée depuis 1 minute.
+        $this->assertFalse($attendancesession->is_in_progress());
+
+        $attendancesession->sessiontime = time() + DAYSECS; // Teste une session qui commence le lendemain.
+        $this->assertFalse($attendancesession->is_in_progress());
+    }
+
+    /**
      * Teste load().
      *
-     * @covers ::load()
+     * @return void
      */
     public function test_load(): void {
         // Génère un nouveau cours.
@@ -139,7 +244,7 @@ final class attendancesession_test extends \advanced_testcase {
     /**
      * Teste save().
      *
-     * @covers ::save()
+     * @return void
      */
     public function test_save(): void {
         global $DB;
