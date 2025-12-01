@@ -1238,11 +1238,6 @@ class adhesion extends record {
      * @return boolean|null Retourne null si la variable birthday n'a pas été initialisée.
      */
     public function have_to_upload_parental_authorization() {
-        $enablecontrol = get_config('local_apsolu', 'parental_authorization_enabled');
-        if (empty($enablecontrol) === true) {
-            return false;
-        }
-
         return $this->is_minor();
     }
 
