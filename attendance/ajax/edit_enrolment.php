@@ -36,7 +36,7 @@ $roleid = required_param('roleid', PARAM_INT); // Role id.
 
 // Set permissions.
 $course = get_course($courseid);
-require_login($course);
+require_login($course, $autologinguest = false);
 
 $student = $DB->get_record('user', ['id' => $userid], '*', MUST_EXIST);
 

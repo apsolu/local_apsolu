@@ -76,7 +76,7 @@ $PAGE->set_context($coursecontext);
 
 if (isset($id) === true) {
     // Login to the course.
-    require_login($course);
+    require_login($course, $autologinguest = false);
 
     require_capability('moodle/course:update', $coursecontext);
 
@@ -148,7 +148,7 @@ if (isset($id) === true) {
 }
 
 // Login to the site to handle guests.
-require_login();
+require_login($courseorid = null, $autologinguest = false);
 
 $PAGE->set_pagelayout('course');
 $PAGE->set_url('/local/apsolu/attendance/qrcode.php', ['keycode' => $keycode]);

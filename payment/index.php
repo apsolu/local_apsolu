@@ -29,7 +29,7 @@ require_once(__DIR__ . '/../../../config.php');
 require_once(__DIR__ . '/address_form.php');
 require_once($CFG->dirroot . '/local/apsolu/classes/apsolu/payment.php');
 
-require_login();
+require_login($courseorid = null, $autologinguest = false);
 
 $context = context_user::instance($USER->id);
 

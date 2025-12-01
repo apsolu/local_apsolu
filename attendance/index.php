@@ -45,7 +45,7 @@ if (in_array($page, $pages, $strict = true) === false) {
 
 // Login to the course.
 $course = get_course($courseid);
-require_login($course);
+require_login($course, $autologinguest = false);
 
 // Vérifier qu'il s'agit d'une activité APSOLU.
 $activity = $DB->get_record('apsolu_courses', ['id' => $course->id]);

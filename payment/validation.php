@@ -34,7 +34,7 @@ require_once($CFG->dirroot . '/enrol/select/lib.php');
 require_once($CFG->dirroot . '/enrol/select/locallib.php');
 require_once($CFG->dirroot . '/user/profile/lib.php');
 
-require_login();
+require_login($courseorid = null, $autologinguest = false);
 
 $context = context_user::instance($USER->id);
 

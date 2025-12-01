@@ -38,7 +38,7 @@ $PAGE->set_pagelayout('admin');
 $PAGE->set_url('/local/apsolu/federation/listing/index.php');
 $PAGE->set_title(get_string('list_of_my_students', 'local_apsolu'));
 
-require_login();
+require_login($courseorid = null, $autologinguest = false);
 
 $federationcourse = new FederationCourse();
 $courseid = $federationcourse->get_courseid();
