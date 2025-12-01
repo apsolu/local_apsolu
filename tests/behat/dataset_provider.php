@@ -1096,12 +1096,16 @@ class dataset_provider {
 
         // Définit un numéro de section.
         $numbers = ['07507500303' => 'ENC Paris', '07507500302' => 'IUT Paris', '07507500301' => 'U. Paris'];
+        $sortorder = 0;
         foreach ($numbers as $id => $value) {
             $number = new Federation\number();
             $number->number = $id;
             $number->field = 'institution';
             $number->value = $value;
+            $number->sortorder = $sortorder;
             $number->save();
+
+            $sortorder++;
         }
 
         // Ajoute les utilisateurs "etudiant" dans la cohorte FFSU.
