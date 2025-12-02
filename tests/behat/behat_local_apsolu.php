@@ -19,8 +19,9 @@ use Behat\Behat\Context\Step\When;
 use Behat\Gherkin\Node\TableNode;
 use local_apsolu\tests\behat\dataset_provider;
 
+// Note: ne jamais inclure directement les lib.php (exemple: cohort/lib.php), sinon les tests behat ne seront plus exécutés.
+// Ces fichiers commencent par `defined('MOODLE_INTERNAL') || die();` ; et dans ce contexte, c'est le `die()` qui s'applique.
 require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
-require_once(__DIR__ . '/../../../../cohort/lib.php');
 
 /**
  * Classe gérant de nouvelles instructions behat.

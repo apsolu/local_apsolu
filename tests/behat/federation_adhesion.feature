@@ -10,6 +10,9 @@ Feature: Teste la procédure d'adhésion à la FFSU.
       | user2    | User      | Two      | two@example.com   | 1            | U. Paris    | 0123456789 |
       | user3    | User      | Three    | three@example.com | 1            | U. Paris    | 0123456789 |
       | user4    | User      | Four     | four@example.com  | 1            | U. Paris    | 0123456789 |
+    And the following "cohort" exists:
+      | name        | FFSU |
+      | idnumber    | FFSU |
     And the following "cohort members" exist:
       | user  | cohort  |
       | user1 | FFSU    |
