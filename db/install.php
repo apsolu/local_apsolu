@@ -82,6 +82,7 @@ function xmldb_local_apsolu_install() {
     set_config('qrcode_endtime', 30 * 60, 'local_apsolu');
     set_config('qrcode_automark', 1, 'local_apsolu');
     set_config('qrcode_automarkstatus', 4, 'local_apsolu');
+    set_config('qrcode_automarktime', DAYSECS, 'local_apsolu');
     set_config('qrcode_allowguests', 0, 'local_apsolu');
     set_config('qrcode_autologout', 1, 'local_apsolu');
     set_config('qrcode_rotate', 0, 'local_apsolu');

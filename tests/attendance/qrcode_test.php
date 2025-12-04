@@ -92,7 +92,7 @@ final class qrcode_test extends \advanced_testcase {
      */
     public function test_get_default_settings(): void {
         $this->assertIsObject(qrcode::get_default_settings());
-        $this->assertCount(10, (array) qrcode::get_default_settings());
+        $this->assertCount(11, (array) qrcode::get_default_settings());
     }
 
     /**
@@ -174,12 +174,12 @@ final class qrcode_test extends \advanced_testcase {
         $qrcode = new qrcode();
         $qrcode->settings = '';
         $qrcode->set_default_settings();
-        $this->assertCount(10, (array) $qrcode->settings);
+        $this->assertCount(11, (array) $qrcode->settings);
 
         $qrcode = new qrcode();
         $qrcode->settings = '{}';
         $qrcode->set_default_settings();
-        $this->assertCount(10, (array) $qrcode->settings);
+        $this->assertCount(11, (array) $qrcode->settings);
 
         try {
             $qrcode = new qrcode();

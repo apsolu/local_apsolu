@@ -84,6 +84,7 @@ try {
     $qrcodedefaultsettings['qrcode_endtime'] = 30 * MINSECS;
     $qrcodedefaultsettings['qrcode_automark'] = 1;
     $qrcodedefaultsettings['qrcode_automarkstatus'] = 4;
+    $qrcodedefaultsettings['qrcode_automarktime'] = DAYSECS;
     $qrcodedefaultsettings['qrcode_allowguests'] = 0;
     $qrcodedefaultsettings['qrcode_autologout'] = 1;
     $qrcodedefaultsettings['qrcode_rotate'] = 0;

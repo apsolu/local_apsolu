@@ -80,6 +80,7 @@ class qrcode extends record {
         $settings->endtime = get_config('local_apsolu', 'qrcode_endtime');
         $settings->automark = get_config('local_apsolu', 'qrcode_automark');
         $settings->automarkstatus = get_config('local_apsolu', 'qrcode_automarkstatus');
+        $settings->automarktime = get_config('local_apsolu', 'qrcode_automarktime');
         $settings->allowguests = get_config('local_apsolu', 'qrcode_allowguests');
         $settings->autologout = get_config('local_apsolu', 'qrcode_autologout');
         $settings->rotate = get_config('local_apsolu', 'qrcode_rotate');
@@ -174,6 +175,7 @@ class qrcode extends record {
         $this->settings->endtime = get_config('local_apsolu', 'qrcode_endtime');
         $this->settings->automark = get_config('local_apsolu', 'qrcode_automark');
         $this->settings->automarkstatus = get_config('local_apsolu', 'qrcode_automarkstatus');
+        $this->settings->automarktime = get_config('local_apsolu', 'qrcode_automarktime');
         $this->settings->allowguests = get_config('local_apsolu', 'qrcode_allowguests');
         $this->settings->autologout = get_config('local_apsolu', 'qrcode_autologout');
         $this->settings->rotate = get_config('local_apsolu', 'qrcode_rotate');

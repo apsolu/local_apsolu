@@ -89,6 +89,16 @@ class qrcode extends moodleform {
         $mform->addHelpButton('automarkstatus', 'status_absent', 'local_apsolu');
         $mform->disabledIf('automarkstatus', 'automark', 'eq', '0');
 
+        $durationoptions['units'][] = DAYSECS;
+        $mform->addElement(
+            'duration',
+            'automarktime',
+            get_string('deadline_for_recording_attendance', 'local_apsolu'),
+            $durationoptions
+        );
+        $mform->addHelpButton('automarktime', 'deadline_for_recording_attendance', 'local_apsolu');
+        $mform->disabledIf('automarktime', 'automark', 'eq', '0');
+
         // Options.
         $mform->addElement('header', 'options', get_string('options', 'local_apsolu'));
         $mform->setExpanded('options', true);
