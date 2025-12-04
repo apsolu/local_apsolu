@@ -32,20 +32,6 @@ defined('MOODLE_INTERNAL') || die;
 $default = qrcode::get_default_settings();
 $default->enabled = get_config('local_apsolu', 'qrcode_enabled');
 
-$latetime = $default->latetime;
-$default->enablelatetime = 1;
-if ($default->latetime == -1) {
-    $default->enablelatetime = 0;
-    $default->latetime = 0;
-}
-
-$endtime = $default->endtime;
-$default->enableendtime = 1;
-if ($default->endtime == -1) {
-    $default->enableendtime = 0;
-    $default->endtime = 0;
-}
-
 // Récupère les différents types de présence.
 $statuses = [];
 foreach (Status::get_records() as $record) {
@@ -58,18 +44,6 @@ $mform = new qrcode_form($PAGE->url->out(false), $customdata);
 
 // Traite le formulaire.
 if ($data = $mform->get_data()) {
-    // Restaure les valeurs réelles.
-    $default->latetime = $latetime;
-    $default->endtime = $endtime;
-
-    if (isset($data->enablelatetime) === false) {
-        $data->latetime = -1;
-    }
-
-    if (isset($data->enableendtime) === false) {
-        $data->endtime = -1;
-    }
-
     foreach (get_object_vars($data) as $attribute => $unused) {
         if (isset($default->$attribute) === false) {
             continue;

@@ -83,18 +83,6 @@ foreach ((array) $qrcode->settings as $key => $value) {
     $default->$key = $value;
 }
 
-$default->enablelatetime = 1;
-if ($default->latetime == -1) {
-    $default->enablelatetime = 0;
-    $default->latetime = 0;
-}
-
-$default->enableendtime = 1;
-if ($default->endtime == -1) {
-    $default->enableendtime = 0;
-    $default->endtime = 0;
-}
-
 // Build form.
 $customdata = [$default, $sessions, $statuses];
 $mform = new qrcode_form($PAGE->url->out(false), $customdata);
@@ -102,6 +90,7 @@ $mform = new qrcode_form($PAGE->url->out(false), $customdata);
 // Traite les données envoyées par le formulaire.
 $notification = null;
 if ($data = $mform->get_data()) {
+    // Calcule la liste des sessions à générer.
     $codes = [];
     if (empty($data->sessionid) === true) {
         $codes = array_keys($sessions);
@@ -110,23 +99,15 @@ if ($data = $mform->get_data()) {
         $codes = [$data->sessionid];
     }
 
+    // Construit la variable stockant les options du QR code.
     $settings = new stdClass();
-    $settings->starttime = $data->starttime;
-    $settings->presentstatus = $data->presentstatus;
-    $settings->latetime = -1;
-    if (isset($data->enablelatetime) === true) {
-        $settings->latetime = $data->latetime;
-        $settings->latestatus = $data->latestatus;
+    foreach (qrcode::get_json_setting_names() as $name) {
+        if (isset($data->$name) === false) {
+            $data->$name = '';
+        }
+
+        $settings->$name = $data->$name;
     }
-    $settings->endtime = -1;
-    if (isset($data->enableendtime) === true) {
-        $settings->endtime = $data->endtime;
-    }
-    $settings->allowguests = $data->allowguests;
-    $settings->automark = $data->automark;
-    $settings->automarkstatus = $data->automarkstatus;
-    $settings->autologout = $data->autologout;
-    $settings->rotate = $data->rotate;
 
     $count = 0;
     foreach ($codes as $sessionid) {

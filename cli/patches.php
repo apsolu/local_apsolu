@@ -79,10 +79,12 @@ try {
     $qrcodedefaultsettings['qrcode_enabled'] = 0;
     $qrcodedefaultsettings['qrcode_starttime'] = 15 * MINSECS;
     $qrcodedefaultsettings['qrcode_presentstatus'] = 1;
+    $qrcodedefaultsettings['qrcode_latetimeenabled'] = 1;
     $qrcodedefaultsettings['qrcode_latetime'] = 15 * MINSECS;
     $qrcodedefaultsettings['qrcode_latestatus'] = 2;
+    $qrcodedefaultsettings['qrcode_endtimeenabled'] = 1;
     $qrcodedefaultsettings['qrcode_endtime'] = 30 * MINSECS;
-    $qrcodedefaultsettings['qrcode_automark'] = 1;
+    $qrcodedefaultsettings['qrcode_automarkenabled'] = 1;
     $qrcodedefaultsettings['qrcode_automarkstatus'] = 4;
     $qrcodedefaultsettings['qrcode_automarktime'] = DAYSECS;
     $qrcodedefaultsettings['qrcode_allowguests'] = 0;
