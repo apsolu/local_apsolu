@@ -73,19 +73,34 @@ class qrcode extends record {
      */
     public static function get_default_settings(): stdClass {
         $settings = new stdClass();
-        $settings->starttime = get_config('local_apsolu', 'qrcode_starttime');
-        $settings->presentstatus = get_config('local_apsolu', 'qrcode_presentstatus');
-        $settings->latetime = get_config('local_apsolu', 'qrcode_latetime');
-        $settings->latestatus = get_config('local_apsolu', 'qrcode_latestatus');
-        $settings->endtime = get_config('local_apsolu', 'qrcode_endtime');
-        $settings->automark = get_config('local_apsolu', 'qrcode_automark');
-        $settings->automarkstatus = get_config('local_apsolu', 'qrcode_automarkstatus');
-        $settings->automarktime = get_config('local_apsolu', 'qrcode_automarktime');
-        $settings->allowguests = get_config('local_apsolu', 'qrcode_allowguests');
-        $settings->autologout = get_config('local_apsolu', 'qrcode_autologout');
-        $settings->rotate = get_config('local_apsolu', 'qrcode_rotate');
+
+        foreach (self::get_json_setting_names() as $name) {
+            $settings->$name = get_config('local_apsolu', sprintf('qrcode_%s', $name));
+        }
 
         return $settings;
+    }
+
+    /**
+     * Retourne la liste des noms des paramètres JSON.
+     *
+     * @return array
+     */
+    public static function get_json_setting_names(): array {
+        $names = [];
+        $names[] = 'starttime';
+        $names[] = 'presentstatus';
+        $names[] = 'latetime';
+        $names[] = 'latestatus';
+        $names[] = 'endtime';
+        $names[] = 'automark';
+        $names[] = 'automarkstatus';
+        $names[] = 'automarktime';
+        $names[] = 'allowguests';
+        $names[] = 'autologout';
+        $names[] = 'rotate';
+
+        return $names;
     }
 
     /**
@@ -168,17 +183,9 @@ class qrcode extends record {
             throw new coding_exception('$this->settings must be an object for ' . __METHOD__ . '.');
         }
 
-        $this->settings->starttime = get_config('local_apsolu', 'qrcode_starttime');
-        $this->settings->presentstatus = get_config('local_apsolu', 'qrcode_presentstatus');
-        $this->settings->latetime = get_config('local_apsolu', 'qrcode_latetime');
-        $this->settings->latestatus = get_config('local_apsolu', 'qrcode_latestatus');
-        $this->settings->endtime = get_config('local_apsolu', 'qrcode_endtime');
-        $this->settings->automark = get_config('local_apsolu', 'qrcode_automark');
-        $this->settings->automarkstatus = get_config('local_apsolu', 'qrcode_automarkstatus');
-        $this->settings->automarktime = get_config('local_apsolu', 'qrcode_automarktime');
-        $this->settings->allowguests = get_config('local_apsolu', 'qrcode_allowguests');
-        $this->settings->autologout = get_config('local_apsolu', 'qrcode_autologout');
-        $this->settings->rotate = get_config('local_apsolu', 'qrcode_rotate');
+        foreach (self::get_json_setting_names() as $name) {
+            $this->settings->$name = get_config('local_apsolu', sprintf('qrcode_%s', $name));
+        }
     }
 
     /**
