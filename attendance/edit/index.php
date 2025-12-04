@@ -29,6 +29,7 @@ use local_apsolu\attendance\qrcode;
 use local_apsolu\core\attendance;
 use local_apsolu\core\attendancesession;
 use local_apsolu\core\customfields;
+use local_apsolu\enrolment;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -69,41 +70,13 @@ $session = $DB->get_record('apsolu_attendance_sessions', ['id' => $sessionid, 'c
 $customfields = customfields::getCustomFields();
 
 // Récupérer tous les inscrits.
-// TODO: jointure avec colleges.
-// TODO: retrouver pourquoi on affiche les utilisateurs inscrits manuellement.
-$sql = "SELECT u.*, ue.id AS ueid, ue.status, ue.timestart, ue.timeend, ue.enrolid,
-               e.enrol, ra.id AS raid, ra.roleid, uid1.data AS apsolusesame" .
-    " FROM {user} u" .
-    " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = :apsolusesame" .
-    " JOIN {user_enrolments} ue ON u.id = ue.userid" .
-    " JOIN {enrol} e ON e.id = ue.enrolid" .
-    " JOIN {role_assignments} ra ON u.id = ra.userid AND ((e.id = ra.itemid) OR (e.enrol = 'manual' AND ra.itemid = 0))" .
-    " JOIN {role} r ON r.id = ra.roleid" .
-    " JOIN {context} ctx ON ra.contextid = ctx.id AND ctx.instanceid = e.courseid" .
-    " WHERE e.status = 0" . // Only active enrolments.
-    " AND e.courseid = :courseid" .
-    " AND ctx.contextlevel = 50" . // Course level.
-    " AND r.archetype = 'student'";
-
-$params = [];
-$params['apsolusesame'] = $customfields['apsolusesame']->id;
-
-if ($invalid_enrolments) {
-    // Récupération de toutes les inscriptions.
-    $sql .= " AND ue.status >= 0";
-} else {
-    // Récupération des inscriptions courantes.
-    $sql .= "AND ue.status = 0" .
-        " AND (ue.timestart <= :timestart OR ue.timestart = 0)" .
-        " AND (ue.timeend >= :timeend OR ue.timeend = 0)";
-    $params['timestart'] = $session->sessiontime;
-    $params['timeend'] = $session->sessiontime;
+$status = $timestart = $timeend = null;
+if ($invalid_enrolments === 0) {
+    $status = 0;
+    $timestart = $timeend = $session->sessiontime;
 }
 
-$sql .= " ORDER BY u.lastname, u.firstname";
-
-$params['courseid'] = $courseid;
-$students = $DB->get_records_sql($sql, $params);
+$students = enrolment::get_enrolled_users($courseid, $status, $timestart, $timeend);
 
 // TODO: récupérer les gens inscrits ponctuellement.
 $sql = "SELECT DISTINCT u.*, uid1.data AS apsolusesame" .
