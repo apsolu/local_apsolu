@@ -77,11 +77,11 @@ try {
     // Initialise les variables liées à la prise de présences.
     $qrcodedefaultsettings = [];
     $qrcodedefaultsettings['qrcode_enabled'] = 0;
-    $qrcodedefaultsettings['qrcode_starttime'] = 15 * 60;
+    $qrcodedefaultsettings['qrcode_starttime'] = 15 * MINSECS;
     $qrcodedefaultsettings['qrcode_presentstatus'] = 1;
-    $qrcodedefaultsettings['qrcode_latetime'] = 15 * 60;
+    $qrcodedefaultsettings['qrcode_latetime'] = 15 * MINSECS;
     $qrcodedefaultsettings['qrcode_latestatus'] = 2;
-    $qrcodedefaultsettings['qrcode_endtime'] = 30 * 60;
+    $qrcodedefaultsettings['qrcode_endtime'] = 30 * MINSECS;
     $qrcodedefaultsettings['qrcode_automark'] = 1;
     $qrcodedefaultsettings['qrcode_automarkstatus'] = 4;
     $qrcodedefaultsettings['qrcode_allowguests'] = 0;
