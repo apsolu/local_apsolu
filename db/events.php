@@ -89,4 +89,44 @@ $observers = [
         'internal'    => true,
         'priority'    => 9999,
     ],
+    // Gère la génération de tâche adhoc lors de la création de QR codes.
+    [
+        'eventname'   => '\local_apsolu\event\qrcode_created',
+        'callback'    => '\local_apsolu\observer\qrcode::created',
+        'includefile' => null,
+        'internal'    => true,
+        'priority'    => 9999,
+    ],
+    // Gère la génération de tâche adhoc lors de la suppression de QR codes.
+    [
+        'eventname'   => '\local_apsolu\event\qrcode_deleted',
+        'callback'    => '\local_apsolu\observer\qrcode::deleted',
+        'includefile' => null,
+        'internal'    => true,
+        'priority'    => 9999,
+    ],
+    // Gère la génération de tâche adhoc lors de la supression de sessions.
+    [
+        'eventname'   => '\local_apsolu\event\session_deleted',
+        'callback'    => '\local_apsolu\observer\qrcode::deleted',
+        'includefile' => null,
+        'internal'    => true,
+        'priority'    => 9999,
+    ],
+    // Gère la génération de tâche adhoc lors de la mise à jour de QR codes.
+    [
+        'eventname'   => '\local_apsolu\event\qrcode_updated',
+        'callback'    => '\local_apsolu\observer\qrcode::updated',
+        'includefile' => null,
+        'internal'    => true,
+        'priority'    => 9999,
+    ],
+    // Gère la génération de tâche adhoc lors de la mise à jour de sessions.
+    [
+        'eventname'   => '\local_apsolu\event\session_updated',
+        'callback'    => '\local_apsolu\observer\qrcode::updated',
+        'includefile' => null,
+        'internal'    => true,
+        'priority'    => 9999,
+    ],
 ];

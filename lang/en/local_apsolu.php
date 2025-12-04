@@ -242,6 +242,8 @@ $string['data_saved'] = 'Données enregistrées.';
 $string['data_updated'] = 'Données modifiées.';
 $string['dates'] = 'Dates';
 $string['day_of_the_week'] = 'Jour de la semaine';
+$string['deadline_for_recording_attendance'] = 'Délai pour enregistrer les présences';
+$string['deadline_for_recording_attendance_help'] = 'Permet de définir un délai à partir duquel le type de présence sera appliqué aux étudiants sans présence.';
 $string['default_federation_agreement'] = '<p>Avant de procéder à votre adhésion, nous vous informons que la FFSU vous propose une souscription à un contrat d’assurance couvrant les dommages corporels auxquels la pratique sportive peut vous exposer.</p>
 <p>Cette assurance facultative vous sera facturée 1.60€. Vous pouvez obtenir plus d’information <a href="https://sport-u.com/wp-content/uploads/2022/06/20220614_FICHE-INDIVIDUELLE-D-INSCRIPTION-INFO-ASSURANCE-AC_22-23.pdf" target="_blank">sur cette page (ouvre un nouvel onglet)</a>.</p>
 <p>En procédant à votre adhésion, vous acceptez que toutes les données pré-remplies ou saisies par vous-même soient transmises à la Fédération Française du Sport Universitaire (FFSU). Conformément au règlement général de protection des données (RGPD), vous disposez des droits d’accès, d’opposition, d’effacement et de rectification de vos données. Pour toute question, vous pouvez contacter le délégué à la protection des données de la FFSU via <a href="https://sport-u.com" target="_blank">ce formulaire de contact (ouvre un nouvel onglet)</a>.</p>';
@@ -728,6 +730,7 @@ $string['qr_code_deleted'] = 'QR code supprimé.';
 $string['qr_code_function_is_not_enabled'] = 'La fonction QR code n’est pas activée.';
 $string['qr_code_updated'] = 'QR code modifié.';
 $string['recipients'] = 'Destinataires';
+$string['record_missing_attendance'] = 'Enregistrer les présences manquantes';
 $string['red'] = 'Rouge';
 $string['referee_license'] = 'Licence arbitre';
 $string['refused_everywhere'] = 'Refusé partout';
