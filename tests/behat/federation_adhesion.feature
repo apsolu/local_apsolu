@@ -19,6 +19,9 @@ Feature: Teste la procédure d'adhésion à la FFSU.
       | user2 | FFSU    |
       | user3 | FFSU    |
       | user4 | FFSU    |
+    And the following config values are set as admin:
+      | config                       | value | plugin       |
+      | licensetype_field_visibility |     1 | local_apsolu |
 
   Scenario: Sur mon tableau de bord, je n'ai pas le bouton pour m'inscrire à la FFSU.
     Given I am on the "Homepage" page logged in as "user0"
@@ -102,7 +105,7 @@ Feature: Teste la procédure d'adhésion à la FFSU.
        | En cochant la case, je déclare accepter la charte ci-dessus. | 1 |
     And I click on "Save" "button"
     And I set the following fields to these values:
-      | Date de naissance                    | ## 2025-01-01 ## |
+      | Date de naissance                    | ## 2013-01-01 ## |
       | Type de licence                      | SPORTIVE         |
       | Discipline                           | AVIRON           |
       | Textes fédéraux                      | Yes              |

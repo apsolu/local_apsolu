@@ -24,7 +24,7 @@ Feature: Teste la présentation réalisée lors de démonstration de l'applicati
     Given I am on the "Homepage" page logged in as "letudiant"
     When I follow "S’inscrire à une activité"
     And I click on "Déplier/replier toutes les activités" "button"
-    And I click on "Basket-ball" "Thursday" "14:30" course
+    And I click on "Basket-ball" "Jeudi" "14:30" course
     And I wait until "#apsolu-enrol-form" "css_element" exists
     And I should see "Évalué (option)" in the "Type d’inscription" "select"
     And I should see "Évalué (bonification)" in the "Type d’inscription" "select"
@@ -56,38 +56,23 @@ Feature: Teste la présentation réalisée lors de démonstration de l'applicati
     And I press "Continue"
     Then I should see "15.00 euros"
 
+  @javascript
   Scenario: Valide le processus d'inscription à l'AS.
     Given I am on the "Homepage" page logged in as "letudiant"
     When I follow "Adhérer à l’AS (Licence FFSU)"
     And I follow "Continue"
     And I set the following fields to these values:
-      | q1  | 0 |
-      | q2  | 0 |
-      | q3  | 0 |
-      | q4  | 0 |
-      | q5  | 0 |
-      | q6  | 0 |
-      | q7  | 0 |
-      | q8  | 0 |
-      | q9  | 0 |
-      | q10 | 0 |
-      | q11 | 0 |
-      | q12 | 0 |
-      | q13 | 0 |
+      | quizstatus | 0 |
     And I press "Save"
     And I set the following fields to these values:
       | agreementaccepted | 1 |
     And I press "Save"
     And I set the following fields to these values:
-      | Date de naissance        | 946684800        |
-      | Pays de naissance        | France           |
-      | Département de naissance | 75 - Paris       |
-      | Ville de naissance       | Paris            |
-      | Sexe                     | Homme            |
-      | Discipline / cursus      | Arts             |
-      | Adresse 1                | 35 rue de Rennes |
-      | Code postal              | 75006            |
-      | City/town                | Paris            |
+      | Date de naissance                    | 946684800  |
+      | Tél. mobile                          | 0601020304 |
+      | Discipline                           | AVIRON     |
+      | Textes fédéraux                      | Yes        |
+      | Conditions d’utilisation des données | Yes        |
     And I press "Save"
     And I follow "Continuer"
     And I press "Demander un numéro de licence"
