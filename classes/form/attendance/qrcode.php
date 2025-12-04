@@ -62,32 +62,36 @@ class qrcode extends moodleform {
         $mform->addElement('header', 'during', get_string('during_the_session', 'local_apsolu'));
         $mform->setExpanded('during', true);
 
-        $mform->addElement('checkbox', 'enablelatetime', get_string('enable_change_of_attendance_type', 'local_apsolu'));
+        $mform->addElement('selectyesno', 'latetimeenabled', get_string('enable_change_of_attendance_type', 'local_apsolu'));
 
         $mform->addElement('duration', 'latetime', get_string('change_status', 'local_apsolu'), $durationoptions);
         $mform->addHelpButton('latetime', 'change_status', 'local_apsolu');
-        $mform->disabledIf('latetime', 'enablelatetime', 'notchecked');
+        $mform->disabledIf('latetime', 'latetimeenabled', 'eq', '0');
 
         $mform->addElement('select', 'latestatus', get_string('status_late', 'local_apsolu'), $statuses);
         $mform->addHelpButton('latestatus', 'status_late', 'local_apsolu');
-        $mform->disabledIf('latestatus', 'enablelatetime', 'notchecked');
+        $mform->disabledIf('latestatus', 'latetimeenabled', 'eq', '0');
 
-        $mform->addElement('checkbox', 'enableendtime', get_string('enable_stop_of_attendance_recordings', 'local_apsolu'));
+        $mform->addElement('selectyesno', 'endtimeenabled', get_string('enable_stop_of_attendance_recordings', 'local_apsolu'));
 
         $mform->addElement('duration', 'endtime', get_string('stop_taking_attendance', 'local_apsolu'), $durationoptions);
         $mform->addHelpButton('endtime', 'stop_taking_attendance', 'local_apsolu');
-        $mform->disabledIf('endtime', 'enableendtime', 'notchecked');
+        $mform->disabledIf('endtime', 'endtimeenabled', 'eq', '0');
 
         // Après la session.
         $mform->addElement('header', 'after', get_string('after_the_session', 'local_apsolu'));
         $mform->setExpanded('after', true);
 
-        $mform->addElement('selectyesno', 'automark', get_string('assign_status_to_students_without_attendance', 'local_apsolu'));
-        $mform->addHelpButton('automark', 'assign_status_to_students_without_attendance', 'local_apsolu');
+        $mform->addElement(
+            'selectyesno',
+            'automarkenabled',
+            get_string('assign_status_to_students_without_attendance', 'local_apsolu')
+        );
+        $mform->addHelpButton('automarkenabled', 'assign_status_to_students_without_attendance', 'local_apsolu');
 
         $mform->addElement('select', 'automarkstatus', get_string('status_absent', 'local_apsolu'), $statuses);
         $mform->addHelpButton('automarkstatus', 'status_absent', 'local_apsolu');
-        $mform->disabledIf('automarkstatus', 'automark', 'eq', '0');
+        $mform->disabledIf('automarkstatus', 'automarkenabled', 'eq', '0');
 
         $durationoptions['units'][] = DAYSECS;
         $mform->addElement(
@@ -97,7 +101,7 @@ class qrcode extends moodleform {
             $durationoptions
         );
         $mform->addHelpButton('automarktime', 'deadline_for_recording_attendance', 'local_apsolu');
-        $mform->disabledIf('automarktime', 'automark', 'eq', '0');
+        $mform->disabledIf('automarktime', 'automarkenabled', 'eq', '0');
 
         // Options.
         $mform->addElement('header', 'options', get_string('options', 'local_apsolu'));
@@ -136,7 +140,7 @@ class qrcode extends moodleform {
 
         $errors = parent::validation($data, $files);
 
-        if (isset($data['enablelatetime']) === true && $data['starttime'] === 0 && $data['latetime'] === 0) {
+        if (empty($data['latetimeenabled']) === false && $data['starttime'] === 0 && $data['latetime'] === 0) {
             // Contrôle que la durée de prises de présences initiales et la durée de présence "en retard" ne sont pas égales à zéro.
             $a = new stdClass();
             $a->field1 = get_string('change_status', 'local_apsolu');
@@ -149,7 +153,7 @@ class qrcode extends moodleform {
             );
         }
 
-        if (isset($data['enableendtime']) === true && $data['starttime'] === 0 && $data['endtime'] === 0) {
+        if (empty($data['endtimeenabled']) === false && $data['starttime'] === 0 && $data['endtime'] === 0) {
             // Contrôle que la durée de prises de présences initiales et l'arrêt de prises de présences ne sont pas égales à zéro.
             $a = new stdClass();
             $a->field1 = get_string('stop_taking_attendance', 'local_apsolu');
@@ -160,7 +164,11 @@ class qrcode extends moodleform {
                 'local_apsolu',
                 $a
             );
-        } else if (isset($data['enablelatetime'], $data['enableendtime']) === true && $data['latetime'] >= $data['endtime']) {
+        } else if (
+            empty($data['latetimeenabled']) === false &&
+            empty($data['endtimeenabled']) === false &&
+            $data['latetime'] >= $data['endtime']
+        ) {
             // Contrôle que la durée de prises de présences "en retard" n'est pas égale à l'arrêt de prises de présences.
             $a = new stdClass();
             $a->field1 = get_string('stop_taking_attendance', 'local_apsolu');

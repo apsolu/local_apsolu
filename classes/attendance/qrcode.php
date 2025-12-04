@@ -90,10 +90,12 @@ class qrcode extends record {
         $names = [];
         $names[] = 'starttime';
         $names[] = 'presentstatus';
+        $names[] = 'latetimeenabled';
         $names[] = 'latetime';
         $names[] = 'latestatus';
+        $names[] = 'endtimeenabled';
         $names[] = 'endtime';
-        $names[] = 'automark';
+        $names[] = 'automarkenabled';
         $names[] = 'automarkstatus';
         $names[] = 'automarktime';
         $names[] = 'allowguests';

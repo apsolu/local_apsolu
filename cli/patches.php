@@ -79,10 +79,12 @@ try {
     $qrcodedefaultsettings['qrcode_enabled'] = 0;
     $qrcodedefaultsettings['qrcode_starttime'] = 15 * MINSECS;
     $qrcodedefaultsettings['qrcode_presentstatus'] = 1;
+    $qrcodedefaultsettings['qrcode_latetimeenabled'] = 1;
     $qrcodedefaultsettings['qrcode_latetime'] = 15 * MINSECS;
     $qrcodedefaultsettings['qrcode_latestatus'] = 2;
+    $qrcodedefaultsettings['qrcode_endtimeenabled'] = 1;
     $qrcodedefaultsettings['qrcode_endtime'] = 30 * MINSECS;
-    $qrcodedefaultsettings['qrcode_automark'] = 1;
+    $qrcodedefaultsettings['qrcode_automarkenabled'] = 1;
     $qrcodedefaultsettings['qrcode_automarkstatus'] = 4;
     $qrcodedefaultsettings['qrcode_automarktime'] = DAYSECS;
     $qrcodedefaultsettings['qrcode_allowguests'] = 0;
@@ -97,6 +99,47 @@ try {
         }
 
         set_config($key, $value, 'local_apsolu');
+    }
+
+    // Modifie le format de données JSON des anciens QR codes.
+    $tablename = 'apsolu_attendance_qrcodes';
+    foreach ($DB->get_records($tablename) as $qrcode) {
+        $settings = json_decode($qrcode->settings);
+        if (empty($settings) === true) {
+            continue;
+        }
+
+        $changed = false;
+        if (isset($settings->latetimeenabled) === false) {
+            $settings->latetimeenabled = (string) intval($settings->latetime != -1);
+
+            if ($settings->latetime == -1) {
+                $settings->latetime = 0;
+            }
+
+            $changed = true;
+        }
+
+        if (isset($settings->endtimeenabled) === false) {
+            $settings->endtimeenabled = (string) intval($settings->endtime != -1);
+
+            if ($settings->endtime == -1) {
+                $settings->endtime = 0;
+            }
+
+            $changed = true;
+        }
+
+        if (isset($settings->automarkenabled) === false) {
+            $settings->automarkenabled = $settings->automark;
+            unset($settings->automark);
+            $changed = true;
+        }
+
+        if ($changed === true) {
+            $qrcode->settings = json_encode($settings);
+            $DB->update_record($tablename, $qrcode);
+        }
     }
 
     mtrace(get_string('success'));

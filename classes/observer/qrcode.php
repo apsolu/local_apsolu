@@ -49,7 +49,7 @@ class qrcode {
         }
 
         $settings = json_decode($qrcode->settings);
-        if (empty($settings->automark) === true) {
+        if (empty($settings->automarkenabled) === true) {
             // Le marquage automatique n'est pas activé.
             return;
         }

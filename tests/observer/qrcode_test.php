@@ -63,7 +63,7 @@ final class qrcode_test extends \advanced_testcase {
 
         // Génère un QR code.
         $settings = attendanceqrcode::get_default_settings();
-        $settings->automark = 0;
+        $settings->automarkenabled = 0;
 
         $qrcode = new attendanceqrcode();
         $qrcode->keycode = attendanceqrcode::generate_keycode();
@@ -97,7 +97,7 @@ final class qrcode_test extends \advanced_testcase {
         $this->assertSame(0, $DB->count_records('task_adhoc', $params));
 
         // Teste la création de tâche lorsque la session n'existe plus.
-        $settings->automark = 1;
+        $settings->automarkenabled = 1;
         $record->settings = json_encode($settings);
         $record->sessionid = 0;
         $DB->update_record(attendanceqrcode::TABLENAME, $record); // On passe par l'objet DB pour éviter de déclancher les events.
@@ -138,7 +138,7 @@ final class qrcode_test extends \advanced_testcase {
         $qrcode = new attendanceqrcode();
         $qrcode->keycode = attendanceqrcode::generate_keycode();
         $qrcode->settings = attendanceqrcode::get_default_settings();
-        $qrcode->settings->automark = 1;
+        $qrcode->settings->automarkenabled = 1;
         $qrcode->sessionid = $session->id;
         $qrcode->save();
 
