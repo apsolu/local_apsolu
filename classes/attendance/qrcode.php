@@ -58,6 +58,31 @@ class qrcode extends record {
     public $sessionid = '';
 
     /**
+     * Supprime un objet en base de données.
+     *
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     *
+     * @return bool true.
+     */
+    public function delete() {
+        global $DB;
+
+        // Supprime l'objet en base de données.
+        $DB->delete_records(get_called_class()::TABLENAME, ['id' => $this->id]);
+
+        // Génère un évènement de suppression.
+        $session = attendancesession::get_record(['id' => $this->sessionid], '*', MUST_EXIST);
+
+        $event = qrcode_deleted::create([
+            'objectid' => $this->id,
+            'context' => context_course::instance($session->courseid),
+            ]);
+        $event->trigger();
+
+        return true;
+    }
+
+    /**
      * Génère une valeur pour le champ keycode.
      *
      * @return string
@@ -137,15 +162,10 @@ class qrcode extends record {
 
         $session = attendancesession::get_record(['id' => $this->sessionid], '*', MUST_EXIST);
         if (empty($this->id) === true) {
-            $qrcode = $DB->get_record(get_called_class()::TABLENAME, ['sessionid' => $this->sessionid]);
-            if ($qrcode !== false) {
-                $DB->delete_records(get_called_class()::TABLENAME, ['sessionid' => $this->sessionid]);
-
-                $event = qrcode_deleted::create([
-                    'objectid' => $qrcode->id,
-                    'context' => context_course::instance($session->courseid),
-                    ]);
-                $event->trigger();
+            // Supprime tous les QR codes qui seraient associés à cette session de cours.
+            $qrcodes = self::get_records(['sessionid' => $this->sessionid]);
+            foreach ($qrcodes as $qrcode) {
+                $qrcode->delete();
             }
 
             $eventclass = '\local_apsolu\event\qrcode_created';
