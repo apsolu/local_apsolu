@@ -62,7 +62,6 @@ foreach (Status::get_records() as $record) {
     $statuses[$record->id] = $record->longlabel;
 }
 
-$default = new qrcode();
 $qrcode = false;
 if ($sessionid !== 0 && isset($sessions[$sessionid]) === true) {
     $qrcode = qrcode::get_record(['sessionid' => $sessionid]);
