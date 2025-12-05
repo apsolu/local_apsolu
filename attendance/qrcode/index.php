@@ -115,7 +115,10 @@ if ($data = $mform->get_data()) {
         $qrcodedata->settings = $settings;
         $qrcodedata->sessionid = $sessionid;
 
-        $qrcode = new qrcode();
+        $qrcode = qrcode::get_record(['sessionid' => $sessionid]);
+        if ($qrcode === false) {
+            $qrcode = new qrcode();
+        }
         $qrcode->save($qrcodedata);
 
         $count++;
