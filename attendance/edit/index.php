@@ -196,7 +196,7 @@ $authorizedusers = enrol_select_plugin::get_authorized_registred_users($courseid
 $payments = Payment::get_users_cards_status_per_course($courseid);
 $paymentsimages = Payment::get_statuses_images();
 
-$processed_sudents = [];
+$processed_students = [];
 
 foreach ($students as $student) {
     $activestart = ($student->timestart == 0 || $student->timestart < time());
@@ -291,7 +291,7 @@ foreach ($students as $student) {
     $processed_student->informations = $informations;
 
 
-    $processed_sudents[] = $processed_student;
+    $processed_students[] = $processed_student;
 }
 
 // Construction des paramètres de la page.
@@ -302,8 +302,8 @@ $data->sessionid = $sessionid;
 $data->notification = $notification;
 $data->invalid_enrolments = $invalid_enrolments;
 $data->inactive_enrolments = $inactive_enrolments;
-$data->students = $processed_sudents;
-$data->student_count = count($processed_sudents);
+$data->students = $processed_students;
+$data->student_count = count($processed_students);
 $data->calendar = attendance::getCalendarFromSession($sessionid);
 
 if (isset($_POST['exportcsv']) === true || isset($_POST['exportexcel']) === true) {
