@@ -91,17 +91,21 @@ $params['apsolusesame'] = $customfields['apsolusesame']->id;
 $params['courseid'] = $courseid;
 
 foreach ($DB->get_records_sql($sql, $params) as $student) {
-    if (isset($students[$student->id]) === false) {
-        $student->status = null;
-        $student->timestart = time() + 60;
-        $student->timeend = time() + 60;
-        $student->enrolid = null;
-        $student->enrol = null;
-        $student->raid = null;
-        $student->roleid = null;
-
-        $students[$student->id] = $student;
+    if (isset($students[$student->id]) === true) {
+        // L'étudiant est déjà inscrit à ce cours.
+        continue;
     }
+
+    // L'étudiant n'est pas inscrit à ce cours.
+    $student->status = null;
+    $student->timestart = time() + 60;
+    $student->timeend = time() + 60;
+    $student->enrolid = null;
+    $student->enrol = null;
+    $student->raid = null;
+    $student->roleid = null;
+
+    $students[$student->id] = $student;
 }
 
 // Tri les étudiants alphabétiquement.
