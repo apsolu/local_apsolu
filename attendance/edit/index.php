@@ -96,6 +96,7 @@ foreach ($DB->get_records_sql($sql, $params) as $student) {
         $student->timestart = time() + 60;
         $student->timeend = time() + 60;
         $student->enrolid = null;
+        $student->enrol = null;
         $student->raid = null;
         $student->roleid = null;
 
