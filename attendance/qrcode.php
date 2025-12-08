@@ -31,6 +31,7 @@ use core_qrcode;
 require_once(__DIR__ . '/../../../config.php');
 
 $id = optional_param('id', 0, PARAM_INT);
+$sessionid = optional_param('sessionid', null, PARAM_INT);
 $keycode = optional_param('keycode', null, PARAM_TEXT);
 $print = optional_param('print', null, PARAM_INT);
 
@@ -40,7 +41,8 @@ if (empty($qrcodeenabled) === true) {
 }
 
 if ($keycode !== null) {
-    unset($id);
+    // Gère le scan du QR code par les étudiants.
+    unset($id, $sessionid);
     $qrcode = qrcode::get_record(['keycode' => $keycode]);
     if ($qrcode === false) {
         // TODO: améliorer l'affichage.
@@ -53,8 +55,38 @@ if ($keycode !== null) {
         echo $OUTPUT->footer();
         exit(0);
     }
+} else if ($sessionid !== null) {
+    // Gére la création du QR code par l'enseignant.
+    unset($id, $keycode);
+
+    $session = Session::get_record(['id' => $sessionid], '*', MUST_EXIST);
+    $course = $DB->get_record('course', ['id' => $session->courseid], '*', MUST_EXIST);
+
+    // Vérifier qu'il s'agit d'une activité APSOLU.
+    $activity = $DB->get_record('apsolu_courses', ['id' => $course->id]);
+    if ($activity === false) {
+        throw new moodle_exception('taking_attendance_is_only_possible_on_a_course', 'local_apsolu');
+    }
+
+    // Basic access control checks.
+    $coursecontext = context_course::instance($course->id, MUST_EXIST);
+
+    // Login to the course.
+    require_login($course, $autologinguest = false);
+
+    require_capability('moodle/course:update', $coursecontext);
+
+    $qrcode = new qrcode();
+    $qrcode->keycode = qrcode::generate_keycode();
+    $qrcode->set_default_settings();
+    $qrcode->sessionid = $sessionid;
+    $qrcode->save();
+
+    // Réaffiche la page en passant l'id du QR code en paramètre.
+    redirect(new moodle_url('/local/apsolu/attendance/qrcode.php', ['id' => $qrcode->id]));
 } else {
-    unset($keycode);
+    // Gére l'affichage du QR code par l'enseignant.
+    unset($keycode, $sessionid);
     $qrcode = qrcode::get_record(['id' => $id], '*', MUST_EXIST);
 }
 

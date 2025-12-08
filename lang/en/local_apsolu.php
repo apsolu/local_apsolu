@@ -777,6 +777,7 @@ $string['setup_the_text_of_the_agreement'] = 'Configurer le texte de la charte';
 $string['sex'] = 'Sexe';
 $string['short_label'] = 'Libellé court';
 $string['shortname_course_has_been_renamed_to'] = 'Le nom abrégé du cours « {$a->oldname} » a été renommé en « {$a->newname} ».';
+$string['show_a_new_qr_code'] = 'Afficher un nouveau QR code';
 $string['show_all_transactions'] = 'Afficher toutes les transactions';
 $string['show_area_column'] = 'Afficher la zone géographique';
 $string['show_area_column_help'] = 'Affiche la colonne « zone géographique » sur l’offre de formation.';

@@ -82,18 +82,14 @@ class edit_select_form extends moodleform {
                 'sessionid' => $data->sessionid,
             ]);
 
-            if ($qrcodeid === 0) {
-                // Définit le lien pour générer le QR code.
-                $link = html_writer::link($url, get_string('generate_a_qr_code', 'local_apsolu'), ['class' => 'btn btn-warning']);
-                $buttonarray[] = &$mform->createElement('html', $link);
-            } else if ($qrcodeid === -1) {
+            if ($qrcodeid === -1) {
                 // Affiche un bouton grisé "Générer le QR code".
                 $input = html_writer::empty_tag('input', [
                     'class' => 'btn btn-warning',
                     'disabled' => 1,
                     'name' => 'generateqrcode',
                     'type' => 'submit',
-                    'value' => get_string('generate_a_qr_code', 'local_apsolu'),
+                    'value' => get_string('show_qr_code', 'local_apsolu'),
                 ]);
                 $buttonarray[] = &$mform->createElement('html', $input);
             } else {
@@ -106,10 +102,15 @@ class edit_select_form extends moodleform {
                 $list = html_writer::alist($items, ['class' => 'dropdown-menu']);
 
                 // Définit le lien pour afficher le QR code.
-                $url = new moodle_url('/local/apsolu/attendance/qrcode.php', ['id' => $qrcodeid]);
-                $link = html_writer::link($url, get_string('show_qr_code', 'local_apsolu'), [
-                    'class' => 'btn btn-warning',
-                ]);
+                if ($qrcodeid === 0) {
+                    $label = get_string('show_a_new_qr_code', 'local_apsolu');
+                    $url = new moodle_url('/local/apsolu/attendance/qrcode.php', ['sessionid' => $data->sessionid]);
+                } else {
+                    $label = get_string('show_qr_code', 'local_apsolu');
+                    $url = new moodle_url('/local/apsolu/attendance/qrcode.php', ['id' => $qrcodeid]);
+                }
+
+                $link = html_writer::link($url, $label, ['class' => 'btn btn-warning']);
 
                 $dropdown = html_writer::tag('button', html_writer::span('Toggle Dropdown', 'visually-hidden'), [
                     'aria-expanded' => 'false',
