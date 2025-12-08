@@ -199,8 +199,8 @@ $paymentsimages = Payment::get_statuses_images();
 $processed_students = [];
 
 foreach ($students as $student) {
-    $activestart = ($student->timestart == 0 || $student->timestart < time());
-    $activeend = ($student->timeend == 0 || $student->timeend > time());
+    $activestart = ($student->timestart == 0 || $student->timestart <= $session->sessiontime);
+    $activeend = ($student->timeend == 0 || $student->timeend >= $session->sessiontime);
     $enrolment_status = intval($activestart && $activeend);
 
     if (!$inactive_enrolments && $enrolment_status === 0) {
