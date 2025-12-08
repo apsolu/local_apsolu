@@ -48,6 +48,7 @@ if (count($sessions) === 0) {
 }
 
 // Si la session n'est pas définie, on essaye de déterminer la prochaine session à venir.
+$sessionduration = HOURSECS;
 if ($sessionid === 0) {
     foreach ($sessions as $session) {
         // Note: on attend 24h pour considérer que la session est passée.
@@ -56,12 +57,14 @@ if ($sessionid === 0) {
         }
 
         $sessionid = $session->id;
+        $sessionduration = $session->get_duration();
         break;
     }
 
     // Si aucune session n'a pu être trouvée, on utilise le dernier créneau de l'année.
     if ($sessionid === 0) {
         $sessionid = $session->id;
+        $sessionduration = $session->get_duration();
     }
 }
 
@@ -98,8 +101,8 @@ foreach ($DB->get_records_sql($sql, $params) as $student) {
 
     // L'étudiant n'est pas inscrit à ce cours.
     $student->status = null;
-    $student->timestart = time() + 60;
-    $student->timeend = time() + 60;
+    $student->timestart = $session->sessiontime;
+    $student->timeend = $session->sessiontime + $sessionduration;
     $student->enrolid = null;
     $student->enrol = null;
     $student->raid = null;
