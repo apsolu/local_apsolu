@@ -142,6 +142,19 @@ try {
         }
     }
 
+    // Ajoute un champ "absence" dans la table "apsolu_attendance_statuses".
+    $table = new xmldb_table('apsolu_attendance_statuses');
+    $field = new xmldb_field('absence', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, $sequence = null, $default = 0, 'color');
+
+    if ($dbman->field_exists($table, $field) === false) {
+        $dbman->add_field($table, $field);
+    }
+
+    foreach ($DB->get_records('apsolu_attendance_statuses') as $record) {
+        $record->absence = intval($record->id > 2);
+        $DB->update_record('apsolu_attendance_statuses', $record);
+    }
+
     mtrace(get_string('success'));
 } catch (Exception $exception) {
     mtrace(get_string('error'));

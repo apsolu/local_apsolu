@@ -54,6 +54,9 @@ class status extends record {
     /** @var string $color Identifiant de couleur Boostrap (valeurs possibles : success, warning, info et danger). */
     public $color = '';
 
+    /** @var int|string $absence Booléan pour indiquer si il s'agit d'un statut représentant une absence. */
+    public $absence = 0;
+
     /** @var int|string $sortorder Index de tri. */
     public $sortorder = 0;
 
@@ -123,6 +126,7 @@ class status extends record {
             $data['longlabel'] = get_string($code, 'local_apsolu');
             $data['sumlabel'] = get_string(sprintf('%s_total', $code), 'local_apsolu');
             $data['color'] = $color;
+            $data['absence'] = intval($sortorder > 2);
             $data['sortorder'] = $sortorder;
 
             if (isset($existingrecords[$data['shortlabel']]) === true) {
@@ -130,8 +134,8 @@ class status extends record {
                 continue;
             }
 
-            $sql = "INSERT INTO {apsolu_attendance_statuses} (shortlabel, longlabel, sumlabel, color, sortorder)" .
-                " VALUES(:shortlabel, :longlabel, :sumlabel, :color, :sortorder)";
+            $sql = "INSERT INTO {apsolu_attendance_statuses} (shortlabel, longlabel, sumlabel, color, absence, sortorder)
+                         VALUES (:shortlabel, :longlabel, :sumlabel, :color, :absence, :sortorder)";
             $DB->execute($sql, $data);
 
             $sortorder++;

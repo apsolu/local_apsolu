@@ -74,6 +74,9 @@ class local_apsolu_attendance_statuses_edit_form extends moodleform {
         $mform->setType('color', PARAM_TEXT);
         $mform->addRule('color', get_string('required'), 'required', null, 'client');
 
+        // Champ "est une absence ?".
+        $mform->addElement('selectyesno', 'absence', get_string('is_an_absence', 'local_apsolu'));
+
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
 

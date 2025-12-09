@@ -35,6 +35,7 @@
         * longlabel
         * sumlabel
         * color
+        * absence
         * sortorder
 
     Example context (json):
@@ -64,6 +65,7 @@
         <th>{{#str}}short_label, local_apsolu{{/str}}</th>
         <th>{{#str}}long_label, local_apsolu{{/str}}</th>
         <th>{{#str}}sum_label, local_apsolu{{/str}}</th>
+        <th>{{#str}}is_an_absence, local_apsolu{{/str}}</th>
         <th>{{#str}}actions{{/str}}</th>
     </tr>
 </thead>
@@ -73,6 +75,7 @@
         <td class="text-{{color}}">{{shortlabel}}</td>
         <td>{{longlabel}}</td>
         <td>{{sumlabel}}</td>
+        <td>{{#absence}}{{#str}}yes{{/str}}{{/absence}}{{^absence}}{{#str}}no{{/str}}{{/absence}}</td>
         <td>
             <ul class="list-inline">
                 <li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/configuration/index.php?page=attendancestatuses&action=edit&statusid={{id}}">{{#pix}}t/edit, core, {{#str}}edit{{/str}}{{/pix}}</a></li>
