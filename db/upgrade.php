@@ -1878,8 +1878,8 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
-    // Modification à appliquer lors de la prochaine mise à jour.
-    if (false) {
+    $version = 2025121000;
+    if ($oldversion < $version) {
         // Initialise la variable display_fields.
         $value = get_config('local_apsolu', 'display_fields');
         if ($value === false) {
@@ -1892,6 +1892,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             set_config('export_fields', '["email","institution","department"]', 'local_apsolu');
         }
 
+        // Supprime la variable parental_authorization_enabled.
         unset_config('parental_authorization_enabled', 'local_apsolu');
 
         // Ajoute un champ à la table apsolu_attendance_presences.
@@ -1926,13 +1927,16 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         // Initialise les variables liées à la prise de présences.
         $qrcodedefaultsettings = [];
         $qrcodedefaultsettings['qrcode_enabled'] = 0;
-        $qrcodedefaultsettings['qrcode_starttime'] = 15 * 60;
+        $qrcodedefaultsettings['qrcode_starttime'] = 15 * MINSECS;
         $qrcodedefaultsettings['qrcode_presentstatus'] = 1;
-        $qrcodedefaultsettings['qrcode_latetime'] = 15 * 60;
+        $qrcodedefaultsettings['qrcode_latetimeenabled'] = 1;
+        $qrcodedefaultsettings['qrcode_latetime'] = 15 * MINSECS;
         $qrcodedefaultsettings['qrcode_latestatus'] = 2;
-        $qrcodedefaultsettings['qrcode_endtime'] = 30 * 60;
-        $qrcodedefaultsettings['qrcode_automark'] = 1;
+        $qrcodedefaultsettings['qrcode_endtimeenabled'] = 1;
+        $qrcodedefaultsettings['qrcode_endtime'] = 30 * MINSECS;
+        $qrcodedefaultsettings['qrcode_automarkenabled'] = 1;
         $qrcodedefaultsettings['qrcode_automarkstatus'] = 4;
+        $qrcodedefaultsettings['qrcode_automarktime'] = DAYSECS;
         $qrcodedefaultsettings['qrcode_allowguests'] = 0;
         $qrcodedefaultsettings['qrcode_autologout'] = 1;
         $qrcodedefaultsettings['qrcode_rotate'] = 0;
@@ -1945,6 +1949,60 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             }
 
             set_config($key, $value, 'local_apsolu');
+        }
+
+        // Modifie le format de données JSON des anciens QR codes.
+        $tablename = 'apsolu_attendance_qrcodes';
+        foreach ($DB->get_records($tablename) as $qrcode) {
+            $settings = json_decode($qrcode->settings);
+            if (empty($settings) === true) {
+                continue;
+            }
+
+            $changed = false;
+            if (isset($settings->latetimeenabled) === false) {
+                $settings->latetimeenabled = (string) intval($settings->latetime != -1);
+
+                if ($settings->latetime == -1) {
+                    $settings->latetime = 0;
+                }
+
+                $changed = true;
+            }
+
+            if (isset($settings->endtimeenabled) === false) {
+                $settings->endtimeenabled = (string) intval($settings->endtime != -1);
+
+                if ($settings->endtime == -1) {
+                    $settings->endtime = 0;
+                }
+
+                $changed = true;
+            }
+
+            if (isset($settings->automarkenabled) === false) {
+                $settings->automarkenabled = $settings->automark;
+                unset($settings->automark);
+                $changed = true;
+            }
+
+            if ($changed === true) {
+                $qrcode->settings = json_encode($settings);
+                $DB->update_record($tablename, $qrcode);
+            }
+        }
+
+        // Ajoute un champ "absence" dans la table "apsolu_attendance_statuses".
+        $table = new xmldb_table('apsolu_attendance_statuses');
+        $field = new xmldb_field('absence', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, $sequence = null, $default = 0, 'color');
+
+        if ($dbman->field_exists($table, $field) === false) {
+            $dbman->add_field($table, $field);
+        }
+
+        foreach ($DB->get_records('apsolu_attendance_statuses') as $record) {
+            $record->absence = intval($record->id > 2);
+            $DB->update_record('apsolu_attendance_statuses', $record);
         }
 
         // Savepoint reached.
