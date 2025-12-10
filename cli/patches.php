@@ -31,6 +31,11 @@ require(__DIR__ . '/../../../config.php');
 try {
     $dbman = $DB->get_manager();
 
+    // Ajoute l'incrémentation automatique sur le champ "id" de la table "apsolu_communication_templates".
+    $table = new xmldb_table('apsolu_communication_templates');
+    $field = new xmldb_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+    $dbman->change_field_type($table, $field);
+
     mtrace(get_string('success'));
 } catch (Exception $exception) {
     mtrace(get_string('error'));
