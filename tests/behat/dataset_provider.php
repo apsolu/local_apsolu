@@ -17,6 +17,7 @@
 namespace local_apsolu\tests\behat;
 
 use context_block;
+use context_course;
 use context_helper;
 use context_system;
 use core\session\manager as session_manager;
@@ -450,12 +451,29 @@ class dataset_provider {
         $weekdays['Samedi'] = 'saturday';
         $weekdays['Dimanche'] = 'sunday';
 
+        // Ajoute du contenu spécifique pour l'instance de démonstration.
+        $democontent = [];
+        if (defined('APSOLU_DEMO') === true) {
+            $democontent[] = str_getcsv('Paris,Vaires-sur-Marne,Base nautique de Vaires-sur-Marne,Mairie de Paris,' .
+                'Aviron (Réservation à la séance),,Sports aquatiques,Tous niveaux,Lundi,08:30,10:00,Annuelle,Service des sports,' .
+                'lenseignante', ',', '"', '');
+            $democontent[] = str_getcsv('Paris,Saint-Denis,Stade de France,Mairie de Paris,Athlétisme (Réservation à la séance),,' .
+                'Sports athlétiques,Expert,Jeudi,08:30,10:00,Annuelle,Service des sports,lenseignante', ',', '"', '');
+            $democontent[] = str_getcsv('Paris,Paris,Grand Palais éphémère,Mairie de Paris,Aïkido (Réservation à la séance),,' .
+                'Sports de combat,Débutant,Vendredi,08:30,10:00,Annuelle,Service des sports,lenseignante', ',', '"', '');
+        }
+
         $first = true;
-        while (($data = fgetcsv($handle, 0, ',', '"', '')) !== false) {
+        while (($data = fgetcsv($handle, 0, ',', '"', '')) !== false || $democontent !== []) {
             if ($first === true) {
                 // Ignore la 1ère ligne du fichier.
                 $first = false;
                 continue;
+            }
+
+            if ($data === false) {
+                // Utilise les valeurs présentes dans $democontent.
+                $data = array_shift($democontent);
             }
 
             // Nettoie le fichier (au cas où...).
@@ -770,6 +788,63 @@ class dataset_provider {
                         $generator->create_module($module->type, $options);
                     }
                 }
+            } else if (
+                defined('APSOLU_DEMO') === true &&
+                str_contains($fullname, 'Réservation à la séance') === true &&
+                $DB->get_record('modules', ['name' => 'scheduler', 'visible' => 1]) !== false
+            ) {
+                // Récupère le compte lenseignante.
+                $teacher = $DB->get_record('user', ['username' => 'lenseignante']);
+
+                // Récupère les étudiants du cours.
+                $coursecontext = context_course::instance($course->id);
+                $students = $DB->get_records(
+                    'role_assignments',
+                    ['contextid' => $coursecontext->id],
+                    $sort = '',
+                    $fields = 'DISTINCT userid'
+                );
+                unset($students[$teacher->id]);
+
+                // Génère une activité rendez-vous.
+                $generator = new testing_data_generator();
+
+                $options = [];
+                $options['slottimes'] = [];
+                $options['slotstudents'] = [];
+                foreach ($DB->get_records('apsolu_attendance_sessions', ['courseid' => $course->id]) as $session) {
+                    // Définit l'heure du créneau.
+                    $options['slottimes'][] = $session->sessiontime;
+
+                    if ($session->sessiontime > time()) {
+                        // On ne marque pas de présences pour les créneaux à venir.
+                        continue;
+                    }
+
+                    // Sélectionne aléatoire des étudiants.
+                    $selected = [];
+                    $maxselected = rand(0, intval(floor(count($students) / 2)));
+                    for ($i = 0; $i < $maxselected; $i++) {
+                        $studentid = array_rand($students);
+                        $selected[$studentid] = $studentid;
+                    }
+                    $options['slotstudents'][] = $selected;
+                }
+
+                // Génère l'activité rendez-vous.
+                $scheduler = $generator->create_module('scheduler', ['course' => $course->id], $options);
+
+                // Met à jour le nom de l'activité rendez-vous générée.
+                $scheduler->name = 'Gestion des rendez-vous';
+                $DB->update_record('scheduler', $scheduler);
+
+                // Met à jour les informations des créneaux générés.
+                foreach ($DB->get_records('scheduler_slots', ['schedulerid' => $scheduler->id]) as $record) {
+                    $record->teacherid = $teacher->id;
+                    $record->appointmentlocation = $locations[$location]->name;
+                    $record->duration = 2 * 60;
+                    $DB->update_record('scheduler_slots', $record);
+                }
             }
         }
 
@@ -939,7 +1014,10 @@ class dataset_provider {
                     continue;
                 }
 
-                if ($DB->count_records('user_enrolments', ['userid' => $record->userid]) > 2) {
+                if (
+                    $DB->count_records('user_enrolments', ['userid' => $record->userid]) > 2 &&
+                    str_contains($course->fullname, 'Réservation à la séance') === false
+                ) {
                     // Empêche un même étudiant d'être inscrit sur 20 créneaux.
                     continue;
                 }
