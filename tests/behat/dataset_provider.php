@@ -455,12 +455,12 @@ class dataset_provider {
         $democontent = [];
         if (defined('APSOLU_DEMO') === true) {
             $democontent[] = str_getcsv('Paris,Vaires-sur-Marne,Base nautique de Vaires-sur-Marne,Mairie de Paris,' .
-                'Aviron (Réservation à la séance),,Sports aquatiques,Tous niveaux,Lundi,08:30,10:00,Annuelle,Service des sports,' .
-                'lenseignante', ',', '"', '');
+                'Aviron (Réservation à la séance),,Sports aquatiques,Tous niveaux,Lundi,08:30,10:00,AnnuelleSP,' .
+                'Service des sports,lenseignante', ',', '"', '');
             $democontent[] = str_getcsv('Paris,Saint-Denis,Stade de France,Mairie de Paris,Athlétisme (Réservation à la séance),,' .
-                'Sports athlétiques,Expert,Jeudi,08:30,10:00,Annuelle,Service des sports,lenseignante', ',', '"', '');
+                'Sports athlétiques,Expert,Jeudi,08:30,10:00,AnnuelleSP,Service des sports,lenseignante', ',', '"', '');
             $democontent[] = str_getcsv('Paris,Paris,Grand Palais éphémère,Mairie de Paris,Aïkido (Réservation à la séance),,' .
-                'Sports de combat,Débutant,Vendredi,08:30,10:00,Annuelle,Service des sports,lenseignante', ',', '"', '');
+                'Sports de combat,Débutant,Vendredi,08:30,10:00,AnnuelleSP,Service des sports,lenseignante', ',', '"', '');
         }
 
         $first = true;
@@ -910,7 +910,7 @@ class dataset_provider {
         }
 
         // Initialise les méthodes d'inscription par voeux.
-        if ($period === 'Annuelle') {
+        if (str_starts_with($period, 'Annuelle') === true) {
             $expectedinstances = ['Semestre 1', 'Semestre 2'];
         } else {
             $expectedinstances = [$period];
@@ -1418,6 +1418,7 @@ class dataset_provider {
         $weeks['Semestre 1'] = [];
         $weeks['Semestre 2'] = [];
         $weeks['Annuelle'] = [];
+        $weeks['AnnuelleSP'] = [];
 
         // Semestre 1: du dernier lundi de juillet au 4ème lundi de décembre.
         $oneweekinterval = new DateInterval('P7D');
