@@ -925,13 +925,15 @@ class dataset_provider {
             unset($expectedinstances[$key]);
         }
 
+        $selectplugin = enrol_get_plugin('select');
+
         if (str_contains($course->fullname, 'Réservation à la séance') === true) {
             $quotaenabled = false;
+            $customchar3 = $selectplugin::ACCEPTED;
         } else {
             $quotaenabled = true;
         }
 
-        $selectplugin = enrol_get_plugin('select');
         foreach ($expectedinstances as $instancename) {
             $data = $selectplugin->get_instance_defaults();
             $data['name'] = $instancename;
@@ -943,6 +945,11 @@ class dataset_provider {
             $data['customint3'] = intval($quotaenabled); // Active les quotas.
             $data['customint1'] = 15; // Quota sur liste principale.
             $data['customint2'] = 10; // Quota sur liste complémentaire.
+
+            if (isset($customchar3) === true) {
+                $data['customchar3'] = $customchar3; // Force la liste d’inscription par défaut.
+            }
+
             $instanceid = $selectplugin->add_instance($course, $data);
             $selectinstances[$instanceid] = $DB->get_record('enrol', ['id' => $instanceid]);
 
