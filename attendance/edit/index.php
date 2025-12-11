@@ -82,13 +82,13 @@ if ($invalid_enrolments === 0) {
 $students = enrolment::get_enrolled_users($courseid, $status, $timestart, $timeend);
 
 // TODO: récupérer les gens inscrits ponctuellement.
-$sql = "SELECT DISTINCT u.*, uid1.data AS apsolusesame" .
-    " FROM {user} u" .
-    " JOIN {apsolu_attendance_presences} aap ON u.id = aap.studentid" .
-    " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid" .
-    " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = :apsolusesame" .
-    " WHERE aas.courseid = :courseid" .
-    " AND aas.sessiontime = :sessiontime";
+$sql = "SELECT DISTINCT u.*, uid1.data AS apsolusesame
+          FROM {user} u
+          JOIN {apsolu_attendance_presences} aap ON u.id = aap.studentid
+          JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid
+     LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = :apsolusesame
+         WHERE aas.courseid = :courseid
+           AND aas.sessiontime = :sessiontime";
 
 $params = [];
 $params['apsolusesame'] = $customfields['apsolusesame']->id;
