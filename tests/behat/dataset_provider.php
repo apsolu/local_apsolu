@@ -924,6 +924,12 @@ class dataset_provider {
             unset($expectedinstances[$key]);
         }
 
+        if (str_contains($course->fullname, 'Réservation à la séance') === true) {
+            $quotaenabled = false;
+        } else {
+            $quotaenabled = true;
+        }
+
         $selectplugin = enrol_get_plugin('select');
         foreach ($expectedinstances as $instancename) {
             $data = $selectplugin->get_instance_defaults();
@@ -933,7 +939,7 @@ class dataset_provider {
             $data['enrolenddate'] = $calendars[$instancename]->enrolenddate;
             $data['customint7'] = $calendars[$instancename]->coursestartdate;
             $data['customint8'] = $calendars[$instancename]->courseenddate;
-            $data['customint3'] = 1; // Active les quotas.
+            $data['customint3'] = intval($quotaenabled); // Active les quotas.
             $data['customint1'] = 15; // Quota sur liste principale.
             $data['customint2'] = 10; // Quota sur liste complémentaire.
             $instanceid = $selectplugin->add_instance($course, $data);
