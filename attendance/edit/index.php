@@ -87,11 +87,13 @@ $sql = "SELECT DISTINCT u.*, uid1.data AS apsolusesame" .
     " JOIN {apsolu_attendance_presences} aap ON u.id = aap.studentid" .
     " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid" .
     " LEFT JOIN {user_info_data} uid1 ON u.id = uid1.userid AND uid1.fieldid = :apsolusesame" .
-    " WHERE aas.courseid = :courseid";
+    " WHERE aas.courseid = :courseid" .
+    " AND aas.sessiontime = :sessiontime";
 
 $params = [];
 $params['apsolusesame'] = $customfields['apsolusesame']->id;
 $params['courseid'] = $courseid;
+$params['sessiontime'] = $session->sessiontime;
 
 foreach ($DB->get_records_sql($sql, $params) as $student) {
     if (isset($students[$student->id]) === true) {
