@@ -829,6 +829,7 @@ class dataset_provider {
                         $selected[$studentid] = $studentid;
                     }
                     $options['slotstudents'][] = $selected;
+                    $options['slotattended'][] = 1;
                 }
 
                 // Génère l'activité rendez-vous.
