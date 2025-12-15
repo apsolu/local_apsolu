@@ -809,10 +809,26 @@ class dataset_provider {
                 // Génère une activité rendez-vous.
                 $generator = new testing_data_generator();
 
+                // Récupère l'année universitaire en cours.
+                $academicyear = self::get_academic_year();
+
+                $oneweekinterval = new DateInterval('P7D');
+                $start = new DateTime(sprintf('last monday of july %s', $academicyear));
+                $end = new DateTime(sprintf('first monday of august %s', $academicyear + 1));
+
+                $period = new Apsolu\period();
+                $period->weeks = [];
+
+                $dateperiod = new DatePeriod($start, $oneweekinterval, $end);
+                foreach ($dateperiod as $datetime) {
+                    $period->weeks[] = $datetime->format('Y-m-d');
+                }
+                $period->weeks = implode(',', $period->weeks);
+
                 $options = [];
                 $options['slottimes'] = [];
                 $options['slotstudents'] = [];
-                foreach ($DB->get_records('apsolu_attendance_sessions', ['courseid' => $course->id]) as $session) {
+                foreach ($period->get_sessions($course->get_session_offset()) as $session) {
                     // Définit l'heure du créneau.
                     $options['slottimes'][] = $session->sessiontime;
 
