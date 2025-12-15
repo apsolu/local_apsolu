@@ -57,6 +57,11 @@ function xmldb_local_apsolu_install() {
     set_config('export_fields', '["email","institution","department"]', 'local_apsolu');
     set_config('userhiddenfields', 'address,apsolupostalcode,apsolubirthday,country,phone1,phone2,city', 'local_apsolu');
 
+    // Paramètres Paybox.
+    set_config('paybox_servers_incoming', '62.161.13.193,62.161.15.193,195.25.67.22', 'local_apsolu');
+    set_config('paybox_servers_outgoing', 'tpeweb.paybox.com,tpeweb1.paybox.com', 'local_apsolu');
+
+    // Paramètres FFSU.
     set_config('ffsu_acceptedfiles', '.pdf .odt .doc .docx .jpe .jpeg .jpg .png', 'local_apsolu');
     set_config('ffsu_maxfiles', 1, 'local_apsolu');
     set_config('ffsu_agreement', get_string('default_federation_agreement', 'local_apsolu'), 'local_apsolu');
