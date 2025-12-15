@@ -214,7 +214,20 @@ final class qrcode_test extends \advanced_testcase {
         // Génère un QR code.
         $qrcode = new qrcode();
         $qrcode->keycode = qrcode::generate_keycode();
-        $qrcode->settings = qrcode::get_default_settings();
+        $qrcode->settings = new stdClass();
+        $qrcode->settings->starttime = 15 * MINSECS;
+        $qrcode->settings->presentstatus = 1;
+        $qrcode->settings->latetimeenabled = 1;
+        $qrcode->settings->latetime = 15 * MINSECS;
+        $qrcode->settings->latestatus = 2;
+        $qrcode->settings->endtimeenabled = 1;
+        $qrcode->settings->endtime = 30 * MINSECS;
+        $qrcode->settings->automarkenabled = 1;
+        $qrcode->settings->automarkstatus = 4;
+        $qrcode->settings->automarktime = DAYSECS;
+        $qrcode->settings->allowguests = 0;
+        $qrcode->settings->autologout = 1;
+        $qrcode->settings->rotate = 0;
         $qrcode->sessionid = $session->id;
 
         $statuses = status::get_records();
@@ -256,6 +269,7 @@ final class qrcode_test extends \advanced_testcase {
             $session->save();
 
             $qrcode->settings->endtime = 60;
+            $qrcode->settings->endtimeenabled = 1;
             $qrcode->sign($session);
             $this->fail('Une exception "moodle_exception" attendue pour une prise de présences terminée (délai expiré)');
         } catch (moodle_exception $exception) {
@@ -271,7 +285,7 @@ final class qrcode_test extends \advanced_testcase {
             $session->sessiontime = time() - DAYSECS;
             $session->save();
 
-            $qrcode->settings->endtime = -1;
+            $qrcode->settings->endtimeenabled = 0;
             $qrcode->sign($session);
             $this->fail('Une exception "moodle_exception" attendue pour une prise de présences terminée (session terminée)');
         } catch (moodle_exception $exception) {
@@ -293,13 +307,14 @@ final class qrcode_test extends \advanced_testcase {
 
         $qrcode->settings->starttime = 0;
         $qrcode->settings->latetime = 120;
+        $qrcode->settings->latetimeenabled = 1;
         $this->assertSame($response, $qrcode->sign($session));
 
         $presence = attendancepresence::get_record(['sessionid' => $session->id, 'studentid' => $USER->id], '*', MUST_EXIST);
         $presence->delete();
 
         // Teste la validation d'une présence sans le paramètre "en retard".
-        $qrcode->settings->latetime = -1;
+        $qrcode->settings->latetimeenabled = 0;
 
         $a = new stdClass();
         $a->status = $statuses[$qrcode->settings->presentstatus]->longlabel;
@@ -313,6 +328,7 @@ final class qrcode_test extends \advanced_testcase {
 
         // Teste la validation d'une présence "en retard".
         $qrcode->settings->latetime = 30;
+        $qrcode->settings->latetimeenabled = 1;
 
         $a = new stdClass();
         $a->status = $statuses[$qrcode->settings->latestatus]->longlabel;
