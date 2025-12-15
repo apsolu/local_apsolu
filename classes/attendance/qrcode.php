@@ -253,11 +253,11 @@ class qrcode extends record {
         }
 
         // Détermine si la prise de présences n'est pas expirée.
-        $endtime = $this->settings->endtime;
+        $endtime = $session->get_duration();
 
-        if (empty($this->settings->endtimeenabled) === true) {
-            // Si aucune date de fin n'est précisée dans le paramétrage du QR code, utilise la date de fin de la session.
-            $endtime = $session->get_duration();
+        if (empty($this->settings->endtimeenabled) === false) {
+            // Utilise la durée définie par le paramétrage d'arrêt des prises de présences.
+            $endtime = $this->settings->endtime;
         }
 
         if ($now > $session->sessiontime + $endtime) {
