@@ -101,8 +101,11 @@ if ($data = $mform->get_data()) {
             $text = userdate($adhesion->federationnumberrequestdate, get_string('strftimedatetimesortable', 'local_apsolu'));
             $row[] = '<span class="apsolu-cursor-help" title="' . s($title) . '">' . s(substr($text, 0, -3)) . '</span>';
         }
-        $row[] = html_writer::link($profileurl, fullname($record));
-        $row[] = $record->idnumber;
+        $fullname = html_writer::link($profileurl, fullname($record));
+        if (empty($record->idnumber) === false) {
+            $fullname .= sprintf(' (%s)', $record->idnumber);
+        }
+        $row[] = $fullname;
         $row[] = $record->institution;
 
         // Liste les activités de l'adhérant.
@@ -267,7 +270,6 @@ if ($data = $mform->get_data()) {
         $headers = [
             get_string('federation_number_request_date', 'local_apsolu'),
             get_string('fullname'),
-            get_string('idnumber'),
             get_string('institution'),
             get_string('activities'),
             get_string('medical_certificate_date', 'local_apsolu'),
