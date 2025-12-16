@@ -1519,7 +1519,12 @@ class adhesion extends record {
         $parameters['export_url'] = (string) new moodle_url('/local/apsolu/federation/index.php', ['page' => 'export']);
         if ($this->have_to_upload_medical_certificate() === true && empty($this->medicalcertificatestatus) === true) {
             // Le certificat médical doit être validé.
-            $url = (string) new moodle_url('/local/apsolu/federation/index.php', ['page' => 'certificates_validation']);
+            $parameters = ['page' => 'certificates_validation'];
+            if (empty($user->idnumber) === false) {
+                $parameters = ['idnumber' => $user->idnumber];
+            }
+            $url = (string) new moodle_url('/local/apsolu/federation/index.php', $parameters);
+
             $extra[] = get_string('request_of_federation_number_with_medical_certificate', 'local_apsolu', $url);
         }
 
