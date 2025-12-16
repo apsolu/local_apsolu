@@ -32,6 +32,8 @@ define('APSOLU_SELECT_NO', '2');
 
 require_once(__DIR__ . '/certificates_validation_form.php');
 
+$idnumber = optional_param('idnumber', null, PARAM_INT);
+
 // Définit les options d'état des certificats.
 $certificates = [
     APSOLU_SELECT_ANY => get_string('all'),
@@ -43,7 +45,11 @@ $customdata = ['certificates' => $certificates];
 $mform = new local_apsolu_federation_certificates_validation(null, $customdata);
 
 $content = '';
-if ($data = $mform->get_data()) {
+if (($data = $mform->get_data()) || isset($idnumber) === true) {
+    if (is_object($data) === false) {
+        $data = (object) ['fullnameuser' => '', 'idnumber' => $idnumber, 'medical_certificate_status' => ''];
+    }
+
     $parameters = [];
     $conditions = [];
 
