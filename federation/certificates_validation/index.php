@@ -268,13 +268,15 @@ if ($data = $mform->get_data()) {
         $actioncell->attributes = ['class' => 'filter-false sorter-false'];
 
         $headers = [
-            get_string('federation_number_request_date', 'local_apsolu'),
+            html_writer::tag('abbr', get_string('request_date', 'local_apsolu'), [
+                'title' => get_string('federation_number_request_date', 'local_apsolu'),
+            ]),
             get_string('fullname'),
             get_string('institution'),
             get_string('activities'),
-            get_string('medical_certificate_date', 'local_apsolu'),
+            get_string('certificate_date', 'local_apsolu'),
             get_string('file'),
-            get_string('medical_certificate_status', 'local_apsolu'),
+            get_string('certificate_status', 'local_apsolu'),
             $actioncell,
         ];
 
