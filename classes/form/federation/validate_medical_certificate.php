@@ -54,28 +54,23 @@ class validate_medical_certificate extends send_email_form {
                 continue;
             }
 
+            $adhesion = Adhesion::get_record(['userid' => $userid], $fields = '*', MUST_EXIST);
             if ($validation === (int) Adhesion::MEDICAL_CERTIFICATE_STATUS_VALIDATED) {
-                foreach (Adhesion::get_records(['userid' => $userid]) as $adhesion) {
-                    $adhesion->medicalcertificatestatus = $validation;
-                    $adhesion->save($mdata = null, $mform = null, $check = false);
-                }
+                $adhesion->medicalcertificatestatus = $validation;
+                $adhesion->save($mdata = null, $mform = null, $check = false);
             } else if ($validation === (int) Adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING) {
-                foreach (Adhesion::get_records(['userid' => $userid]) as $adhesion) {
-                    if ($adhesion->have_to_upload_medical_certificate() === true) {
-                        $adhesion->medicalcertificatestatus = $adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING;
-                    } else {
-                        $adhesion->medicalcertificatestatus = $adhesion::MEDICAL_CERTIFICATE_STATUS_EXEMPTED;
-                    }
-                    $adhesion->federationnumberrequestdate = null;
-
-                    $adhesion->save($mdata = null, $mform = null, $check = false);
+                if ($adhesion->have_to_upload_medical_certificate() === true) {
+                    $adhesion->medicalcertificatestatus = $adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING;
+                } else {
+                    $adhesion->medicalcertificatestatus = $adhesion::MEDICAL_CERTIFICATE_STATUS_EXEMPTED;
                 }
+                $adhesion->federationnumberrequestdate = null;
+
+                $adhesion->save($mdata = null, $mform = null, $check = false);
             } else if ($validation === (int) Adhesion::MEDICAL_CERTIFICATE_STATUS_EXEMPTED) {
                 // On annule juste la date de demande de validation.
-                foreach (Adhesion::get_records(['userid' => $userid]) as $adhesion) {
-                    $adhesion->federationnumberrequestdate = null;
-                    $adhesion->save($mdata = null, $mform = null, $check = false);
-                }
+                $adhesion->federationnumberrequestdate = null;
+                $adhesion->save($mdata = null, $mform = null, $check = false);
             }
         }
 
