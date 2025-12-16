@@ -20,12 +20,15 @@ use context_course;
 use DateTime;
 use Exception;
 use local_apsolu\core\federation\course as FederationCourse;
+use action_menu;
+use action_menu_link_secondary;
 use local_apsolu\core\federation\activity;
 use local_apsolu\core\federation\number;
 use local_apsolu\core\record;
 use local_apsolu\event\federation_adhesion_updated;
 use local_apsolu\event\notification_sent;
 use moodle_url;
+use pix_icon;
 use stdClass;
 use UniversiteRennes2\Apsolu\Payment;
 
@@ -247,6 +250,106 @@ class adhesion extends record {
         }
 
         return $json;
+    }
+
+    /**
+     * Retourne le menu d'actions permettant aux gestionnaires de valider ou refuser une adhésion sur la page de validation des
+     * certificats.
+     *
+     * @param int|string $userid Identifiant de l'utilisateur ayant réalisé une demande.
+     * @param int|string $contextid Identifiant du contexte du cours FFSU.
+     *
+     * @return action_menu|null Retourne null si aucune action n'est disponible pour l'utilisateur donné.
+     */
+    public function get_action_menu(int|string $userid, int|string $contextid): ?action_menu {
+        if (empty($this->federationnumberrequestdate) === true) {
+            // L'utilisateur n'a pas encore validé sa demande.
+            return null;
+        }
+
+        $menuoptions = [];
+
+        $attributes = [
+            'class' => 'local-apsolu-federation-medical-certificate-validation',
+            'data-contextid' => $contextid,
+            'data-target-validation' => self::MEDICAL_CERTIFICATE_STATUS_VALIDATED,
+            'data-target-validation-color' => 'table-success',
+            'data-target-validation-text' => get_string('medical_certificate_validated', 'local_apsolu'),
+            'data-users' => $userid,
+        ];
+
+        if ($this->medicalcertificatestatus !== self::MEDICAL_CERTIFICATE_STATUS_EXEMPTED) {
+            // Option permettant la validation du certificat.
+            $attributes['data-stringid'] = 'medical_certificate_validation_message';
+            $menuoptions[] = [
+                'attributes' => $attributes,
+                'icon' => 'i/grade_correct',
+                'label' => get_string('validate', 'local_apsolu'),
+            ];
+
+            // Option permettant le refus du certificat (raison: plus d'un an).
+            $attributes['data-stringid'] = 'medical_certificate_refusal_message_for_one_year_expiration';
+            $attributes['data-target-validation'] = self::MEDICAL_CERTIFICATE_STATUS_PENDING;
+            $attributes['data-target-validation-color'] = 'table-warning';
+            $attributes['data-target-validation-text'] = get_string('medical_certificate_not_validated', 'local_apsolu');
+            $reason = strtolower(get_string('more_than_one_year', 'local_apsolu'));
+            $menuoptions[] = [
+                'attributes' => $attributes,
+                'icon' => 'i/grade_incorrect',
+                'label' => get_string('refuse_with_reasons_X', 'local_apsolu', $reason),
+            ];
+
+            // Option permettant le refus du certificat (raison: plus de 6 mois).
+            $attributes['data-stringid'] = 'medical_certificate_refusal_message_for_six_months_expiration';
+            $reason = strtolower(get_string('more_than_six_months', 'local_apsolu'));
+            $menuoptions[] = [
+                'attributes' => $attributes,
+                'icon' => 'i/grade_incorrect',
+                'label' => get_string('refuse_with_reasons_X', 'local_apsolu', $reason),
+            ];
+
+            // Option permettant le refus du certificat (raison: mention du sport manquante).
+            $attributes['data-stringid'] = 'medical_certificate_refusal_message_for_mention_missing';
+            $reason = strtolower(get_string('mention_missing', 'local_apsolu'));
+            $menuoptions[] = [
+                'attributes' => $attributes,
+                'icon' => 'i/grade_incorrect',
+                'label' => get_string('refuse_with_reasons_X', 'local_apsolu', $reason),
+            ];
+
+            if (
+                empty($this->federationnumber) === true &&
+                $this->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_VALIDATED
+            ) {
+                $menuoptions[0]['attributes']['class'] .= ' d-none'; // Supprime l'option de validation.
+            }
+        } else {
+            $attributes['data-stringid'] = 'medical_certificate_refusal_message';
+            $attributes['data-target-validation'] = self::MEDICAL_CERTIFICATE_STATUS_EXEMPTED;
+            $attributes['data-target-validation-color'] = 'table-info';
+            $attributes['data-target-validation-text'] = get_string('medical_certificate_not_required', 'local_apsolu');
+            $menuoptions[] = [
+                'attributes' => $attributes,
+                'icon' => 'i/grade_incorrect',
+                'label' => get_string('refuse', 'local_apsolu'),
+            ];
+        }
+
+        $actionmenu = new action_menu();
+        $actionmenu->attributessecondary['class'] .= ' apsolu-dropdown-menu';
+        $actionmenu->set_menu_trigger(get_string('edit'));
+
+        foreach ($menuoptions as $value) {
+            $menulink = new action_menu_link_secondary(
+                new moodle_url(''),
+                new pix_icon($value['icon'], '', null, ['class' => 'smallicon']),
+                $value['label'],
+                $value['attributes'],
+            );
+            $actionmenu->add($menulink);
+        }
+
+        return $actionmenu;
     }
 
     /**
