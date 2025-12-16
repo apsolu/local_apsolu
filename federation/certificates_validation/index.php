@@ -130,7 +130,10 @@ if ($data = $mform->get_data()) {
         }
 
         // Affiche la colonne pour afficher les fichiers.
-        if ($adhesion->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_EXEMPTED) {
+        if (
+            $adhesion->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_EXEMPTED &&
+            $adhesion->have_to_upload_parental_authorization() === false
+        ) {
             // Cas où l'étudiant n'a pas de fichier à déposer.
             $row[] = ''; // Aucun fichier.
             $cell = new html_table_cell(get_string('medical_certificate_not_required', 'local_apsolu'));
@@ -181,16 +184,42 @@ if ($data = $mform->get_data()) {
                         $forcedownload = false,
                         $includetoken = false
                     );
-                    $helpstr = get_string('help');
+
+                    if ($file->get_filearea() === 'parentalauthorization') {
+                        $areaicon = html_writer::tag('i', '', [
+                            'aria-label' => get_string('parental_authorization', 'local_apsolu'),
+                            'class' => 'icon fa fa-solid fa-fw fa-baby',
+                            'role' => 'img',
+                        ]);
+                    } else {
+                        $areaicon = html_writer::tag('i', '', [
+                            'aria-label' => get_string('medical_certificate', 'local_apsolu'),
+                            'class' => 'icon fa fa-solid fa-fw fa-kit-medical',
+                            'role' => 'img',
+                        ]);
+                    }
+
                     $date = userdate($file->get_timemodified(), get_string('strftimedateshort', 'local_apsolu'));
-                    $datacontent = format_string(get_string('uploaded_date', 'local_apsolu', $date));
-                    $link = '<a class="btn btn-link p-0" role="button" data-bs-container="body" data-bs-toggle="popover"
-                        data-bs-placement="right" data-bs-content="' . $datacontent . '" data-bs-html="false" tabindex="0"
-                        data-bs-trigger="focus" aria-label="' . $helpstr . '" data-original-title=""
-                        title=""><i class="icon fa fa-clock-o fa-fw" role="img"></i></a>';
-                    $items[] = html_writer::link($url, mb_strimwidth($file->get_filename(), 0, 16, '...')) . ' ' . $link;
+                    $clockicon = html_writer::tag('i', '', ['class' => 'icon fa fa-clock-o fa-fw', 'role' => 'img']);
+                    $clocklink = html_writer::tag('a', $clockicon, [
+                        'aria-label' => get_string('help'),
+                        'class' => 'btn btn-link p-0',
+                        'data-bs-container' => 'body',
+                        'data-bs-content' => format_string(get_string('uploaded_date', 'local_apsolu', $date)),
+                        'data-bs-html' => 'false',
+                        'data-bs-placement' => 'right',
+                        'data-bs-toggle' => 'popover',
+                        'data-bs-trigger' => 'focus',
+                        'data-original-title' => '',
+                        'role' => 'button',
+                        'tabindex' => '0',
+                        'title' => '',
+                    ]);
+
+                    $label = $areaicon . mb_strimwidth($file->get_filename(), 0, 16, '...');
+                    $items[] = html_writer::link($url, $label) . ' ' . $clocklink;
                 }
-                $row[] = html_writer::alist($items, $attributes = [], $tag = 'ul');
+                $row[] = html_writer::alist($items, $attributes = ['class' => 'list-unstyled'], $tag = 'ul');
 
                 if ($adhesion->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING) {
                     if (empty($adhesion->federationnumberrequestdate) === true) {
@@ -209,6 +238,11 @@ if ($data = $mform->get_data()) {
                     $cell = new html_table_cell();
                     $cell->text = get_string('medical_certificate_validated', 'local_apsolu');
                     $cell->attributes = ['class' => 'medical-certificate-status table-success', 'data-userid' => $record->id];
+                    $row[] = $cell;
+                } else if ($adhesion->have_to_upload_parental_authorization() === true) {
+                    // Lorsque l'étudiant a déposé seulement une autorisation parentale.
+                    $cell = new html_table_cell('');
+                    $cell->attributes = ['class' => 'medical-certificate-status', 'data-userid' => $record->id];
                     $row[] = $cell;
                 }
             }
