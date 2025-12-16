@@ -1530,7 +1530,12 @@ class adhesion extends record {
 
         if (empty($this->passsportnumber) === false) {
             // Le Pass Sport doit être validé.
-            $url = (string) new moodle_url('/local/apsolu/federation/index.php', ['page' => 'pass_sport_validation']);
+            $parameters = ['page' => 'pass_sport_validation'];
+            if (empty($user->idnumber) === false) {
+                $parameters = ['idnumber' => $user->idnumber];
+            }
+            $url = (string) new moodle_url('/local/apsolu/federation/index.php', $parameters);
+
             $extra[] = get_string('request_of_federation_number_with_pass_sport', 'local_apsolu', $url);
         }
 

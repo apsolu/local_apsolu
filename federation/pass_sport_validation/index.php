@@ -32,6 +32,8 @@ define('APSOLU_SELECT_NO', '2');
 
 require_once(__DIR__ . '/pass_sport_validation_form.php');
 
+$idnumber = optional_param('idnumber', null, PARAM_INT);
+
 $mform = null;
 $content = '';
 if (empty(get_config('local_apsolu', 'enable_pass_sport_payment')) === true) {
@@ -48,7 +50,11 @@ if (empty(get_config('local_apsolu', 'enable_pass_sport_payment')) === true) {
     $mform = new local_apsolu_federation_pass_sport_validation(null, $customdata);
 }
 
-if ($mform !== null && $data = $mform->get_data()) {
+if ($mform !== null && (($data = $mform->get_data()) || isset($idnumber) === true)) {
+    if (is_object($data) === false) {
+        $data = (object) ['fullnameuser' => '', 'idnumber' => $idnumber, 'pass_sport_status' => ''];
+    }
+
     $parameters = [];
     $conditions = [];
 
