@@ -1528,6 +1528,18 @@ class adhesion extends record {
             $extra[] = get_string('request_of_federation_number_with_medical_certificate', 'local_apsolu', $url);
         }
 
+        if ($this->have_to_upload_parental_authorization() === true) {
+            // L'autorisation parentale doit être validée.
+
+            $parameters = ['page' => 'certificates_validation'];
+            if (empty($user->idnumber) === false) {
+                $parameters = ['idnumber' => $user->idnumber];
+            }
+            $url = (string) new moodle_url('/local/apsolu/federation/index.php', $parameters);
+
+            $extra[] = get_string('request_of_federation_number_with_medical_certificate', 'local_apsolu', $url);
+        }
+
         if (empty($this->passsportnumber) === false) {
             // Le Pass Sport doit être validé.
             $parameters = ['page' => 'pass_sport_validation'];

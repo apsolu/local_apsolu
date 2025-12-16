@@ -751,6 +751,7 @@ $string['request_of_federation_number_message'] = '<p>Bonjour,</p>
 <p>Cordialement,</p>';
 $string['request_of_federation_number_subject'] = '[FFSU] Demande de numéro de licence ({$a->federationnumberprefix} {$a->institution})';
 $string['request_of_federation_number_with_medical_certificate'] = '<p>Un certificat médical est en attente de validation à <a href="{$a}">cette adresse</a>.</p>';
+$string['request_of_federation_number_with_parental_authorization'] = '<p>Une autorisation parentale est en attente de validation à <a href="{$a}">cette adresse</a>.</p>';
 $string['request_of_federation_number_with_pass_sport'] = '<p>Un Pass Sport est en attente de validation à <a href="{$a}">cette adresse</a>.</p>';
 $string['required_fields'] = 'Champs obligatoires';
 $string['return'] = 'Revenir';
