@@ -69,8 +69,7 @@ if ($data = $mform->get_data()) {
     $federationactivities = $DB->get_records('apsolu_federation_activities', [], $sort = 'name', $fields = 'code, name');
 
     $fullnamefields = core_user\fields::get_name_fields();
-    $sql = "SELECT u.id, " . implode(', ', $fullnamefields) . ", u.idnumber, u.email, u.institution, afa.questionnairestatus,
-                   afa.data, afa.medicalcertificatestatus, afa.federationnumber, afa.federationnumberrequestdate
+    $sql = "SELECT u.id, " . implode(', ', $fullnamefields) . ", u.idnumber, u.email, u.institution, afa.id AS adhesionid
               FROM {user} u
               JOIN {apsolu_federation_adhesions} afa ON u.id = afa.userid
              WHERE 1 = 1 " . implode(' ', $conditions) . "
@@ -80,8 +79,14 @@ if ($data = $mform->get_data()) {
     $recordset = $DB->get_recordset_sql($sql, $parameters);
     $context = context_course::instance($courseid, MUST_EXIST);
     foreach ($recordset as $record) {
-        $record->data = json_decode($record->data);
-        if ($record->data === false) {
+        $adhesion = new Adhesion();
+        $adhesion->load($record->adhesionid);
+        if ($adhesion->id === 0) {
+            continue;
+        }
+
+        $adhesion->data = json_decode($adhesion->data);
+        if ($adhesion->data === false) {
             // Les données JSON ne sont pas valides. Ce cas ne devrait jamais arriver.
             continue;
         }
@@ -89,11 +94,11 @@ if ($data = $mform->get_data()) {
         $profileurl = new moodle_url('/user/view.php', ['id' => $record->id, 'course' => $courseid]);
 
         $row = [];
-        if (empty($record->federationnumberrequestdate) === true) {
+        if (empty($adhesion->federationnumberrequestdate) === true) {
             $row[] = get_string('never');
         } else {
-            $title = userdate($record->federationnumberrequestdate, get_string('strftimedatetimeshort', 'local_apsolu'));
-            $text = userdate($record->federationnumberrequestdate, get_string('strftimedatetimesortable', 'local_apsolu'));
+            $title = userdate($adhesion->federationnumberrequestdate, get_string('strftimedatetimeshort', 'local_apsolu'));
+            $text = userdate($adhesion->federationnumberrequestdate, get_string('strftimedatetimesortable', 'local_apsolu'));
             $row[] = '<span class="apsolu-cursor-help" title="' . s($title) . '">' . s(substr($text, 0, -3)) . '</span>';
         }
         $row[] = html_writer::link($profileurl, fullname($record));
@@ -102,7 +107,7 @@ if ($data = $mform->get_data()) {
 
         // Liste les activités de l'adhérant.
         $activities = [];
-        foreach ($record->data->activity as $activity) {
+        foreach ($adhesion->data->activity as $activity) {
             if (isset($federationactivities[$activity]) === false) {
                 continue;
             }
@@ -110,7 +115,7 @@ if ($data = $mform->get_data()) {
             $activities[$federationactivity->code] = $federationactivity->name;
         }
 
-        if (empty($record->questionnairestatus) === false) {
+        if (empty($adhesion->questionnairestatus) === false) {
             $label = get_string('health_constraints', 'local_apsolu');
             $activities[] = '<i class="icon fa fa-medkit" aria-hidden="true" aria-selected="true"></i>' . $label;
         }
@@ -118,19 +123,19 @@ if ($data = $mform->get_data()) {
         $row[] = html_writer::alist($activities, $attributes = [], $tag = 'ul');
 
         // Affiche la date d'émission du certificat médical.
-        if (empty($record->data->medicalcertificatedate) === false) {
-            $row[] = userdate($record->data->medicalcertificatedate, get_string('strftimedateshort', 'local_apsolu'));
+        if (empty($adhesion->data->medicalcertificatedate) === false) {
+            $row[] = userdate($adhesion->data->medicalcertificatedate, get_string('strftimedateshort', 'local_apsolu'));
         } else {
             $row[] = ''; // Aucune date de certificat médical.
         }
 
-        if ($record->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_EXEMPTED) {
+        if ($adhesion->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_EXEMPTED) {
             $row[] = ''; // Aucun fichier.
             $cell = new html_table_cell(get_string('medical_certificate_not_required', 'local_apsolu'));
             $cell->attributes = ['class' => 'medical-certificate-status table-info', 'data-userid' => $record->id];
             $row[] = $cell;
 
-            if (empty($record->federationnumberrequestdate) === false) {
+            if (empty($adhesion->federationnumberrequestdate) === false) {
                 // L'étudiant a validé sa demande.
                 // Les gestionnaires peuvent annuler sa demande, afin que l'étudiant puisse la modifier.
                 $menulink = new action_menu_link_secondary(
@@ -176,10 +181,10 @@ if ($data = $mform->get_data()) {
 
             if (count($files) === 0) {
                 $row[] = get_string('no_files', 'local_apsolu');
-                if ($record->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING) {
+                if ($adhesion->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING) {
                     $cell = new html_table_cell(get_string('medical_certificate_not_validated', 'local_apsolu'));
                     $cell->attributes = ['class' => 'table-warning'];
-                } else if ($record->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_VALIDATED) {
+                } else if ($adhesion->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_VALIDATED) {
                     // Probablement validé sans avoir été déposé sur APSOLU.
                     $cell = new html_table_cell(get_string('medical_certificate_validated', 'local_apsolu'));
                     $cell->attributes = ['class' => 'table-success'];
@@ -263,8 +268,8 @@ if ($data = $mform->get_data()) {
                     'label' => get_string('refuse_with_reasons_X', 'local_apsolu', $reason),
                 ];
 
-                if ($record->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING) {
-                    if (empty($record->federationnumberrequestdate) === true) {
+                if ($adhesion->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_PENDING) {
+                    if (empty($adhesion->federationnumberrequestdate) === true) {
                         // Certificat déposé, mais pas validé par l'étudiant.
                         $cell = new html_table_cell(get_string('medical_certificate_not_validated', 'local_apsolu'));
                         $cell->attributes = ['class' => 'medical-certificate-status table-warning', 'data-userid' => $record->id];
@@ -291,14 +296,14 @@ if ($data = $mform->get_data()) {
 
                         $row[] = $OUTPUT->render($menu);
                     }
-                } else if ($record->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_VALIDATED) {
+                } else if ($adhesion->medicalcertificatestatus === Adhesion::MEDICAL_CERTIFICATE_STATUS_VALIDATED) {
                     // Certificat validé.
                     $cell = new html_table_cell();
                     $cell->text = get_string('medical_certificate_validated', 'local_apsolu');
                     $cell->attributes = ['class' => 'medical-certificate-status table-success', 'data-userid' => $record->id];
                     $row[] = $cell;
 
-                    if (empty($record->federationnumber) === true) {
+                    if (empty($adhesion->federationnumber) === true) {
                         $menu = new action_menu();
                         $menu->attributessecondary['class'] .= ' apsolu-dropdown-menu';
                         $menu->set_menu_trigger(get_string('edit'));
