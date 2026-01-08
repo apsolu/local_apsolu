@@ -29,6 +29,7 @@ use UniversiteRennes2\Apsolu\Payment;
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/externallib.php');
+require_once($CFG->dirroot . '/enrol/select/locallib.php');
 
 /**
  * Fonction vérifiant la validité d'un token passé en paramètre HTTP.
