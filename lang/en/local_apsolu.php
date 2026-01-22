@@ -268,6 +268,7 @@ $string['discipline_cursus'] = 'Discipline / cursus';
 $string['discipline_cursus_shortened'] = 'Discipline cursus';
 $string['disciplines'] = 'Disciplines';
 $string['disclaimer_dsp2'] = 'Afin de satisfaire aux obligations européennes liées à la <a href="https://fr.wikipedia.org/wiki/Directive_sur_les_services_de_paiement#La_Directive_sur_les_services_de_paiements_(DSP_2)" target="_blank">directive sur les services de paiements (DSP 2)</a>, notre prestataire de paiement doit récupérer les coordonnées postales du porteur de la carte de paiement.';
+$string['display_and_export_settings'] = 'Paramètres d’affichage et d’exportation';
 $string['do_i_plan_to_practice_one_of_the_following_sports_in_addition'] = 'Est-ce que j’envisage de pratiquer en complément un des sports suivants ?{$a}';
 $string['do_not_use_replyto_address'] = 'Ne pas utiliser d’adresse de « réponse à »';
 $string['do_you_have_a_disability'] = 'Êtes-vous en situation de handicap ?';

@@ -97,7 +97,7 @@ if ($data = $mform->get_data()) {
 }
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('export_settings', 'local_apsolu'));
+echo $OUTPUT->heading(get_string('display_and_export_settings', 'local_apsolu'));
 if (isset($notificationform) === true) {
     echo $notificationform;
 }

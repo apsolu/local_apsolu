@@ -121,8 +121,8 @@ if ($hassiteconfig || has_any_capability($capabilities, context_system::instance
         new admin_externalpage('local_apsolu_configuration_user_profile', $str, $url, $capabilities)
     );
 
-    // Configuration > Paramétrage d'exportation.
-    $str = get_string('export_settings', 'local_apsolu');
+    // Configuration > Paramétrage d'affichage et d'exportation.
+    $str = get_string('display_and_export_settings', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'exportsettings']);
     $ADMIN->add(
         'local_apsolu_configuration',
