@@ -33,7 +33,7 @@ require_once($CFG->dirroot . '/message/externallib.php');
  * @see TODO: refactoriser avec /local/apsolu/forms/notification_form.php
  *
  * @package   local_apsolu
- * @copyright 2023 Université Rennes 2 {@link https://www.univ-rennes2.fr}
+ * @copyright 2023 Université Rennes 2
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class send_email_form extends dynamic_form {

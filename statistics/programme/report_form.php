@@ -22,7 +22,7 @@ require_once($CFG->libdir . '/formslib.php');
  * Classe pour gérer un formulaire Moodle.
  *
  * @package    local_apsolu
- * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2017 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class local_apsolu_statistics_programme_report_form extends moodleform {

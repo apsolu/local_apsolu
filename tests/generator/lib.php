@@ -14,15 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * local_apsolu data generator
- *
- * @package    local_apsolu
- * @category   test
- * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 use local_apsolu\core\category;
 use local_apsolu\core\course;
 use local_apsolu\core\grouping;
@@ -39,7 +30,7 @@ require_once($CFG->dirroot . '/local/apsolu/courses/categories/edit_form.php');
  *
  * @package    local_apsolu
  * @category   test
- * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2020 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class local_apsolu_generator extends testing_module_generator {

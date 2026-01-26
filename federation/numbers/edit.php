@@ -18,7 +18,7 @@
  * Page pour éditer les numéros d'association.
  *
  * @package    local_apsolu
- * @copyright  2022 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2022 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

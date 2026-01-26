@@ -18,7 +18,7 @@
  * Webservices pour APSOLU.
  *
  * @package    local_apsolu
- * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2016 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -175,7 +175,7 @@ function local_apsolu_grant_ws_access() {
  * Classe décrivant les webservices APSOLU.
  *
  * @package    local_apsolu
- * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2016 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class local_apsolu_webservices extends external_api {

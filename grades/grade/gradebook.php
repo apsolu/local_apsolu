@@ -18,7 +18,7 @@
  * Page générant les données d'affichage du carnet de notes (le formulaire de filtres, les données du carnet de notes, etc)
  *
  * @package    local_apsolu
- * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2016 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

@@ -18,7 +18,7 @@
  * Permet de répondre à un ping d'un boitier Famoco.
  *
  * @package    local_apsolu
- * @copyright  2018 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2018 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

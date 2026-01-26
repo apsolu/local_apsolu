@@ -20,7 +20,7 @@
  * La colonne des méthodes d'inscription contient les dates d'inscription, les quotas, les rôles acceptés et les tarifs requis.
  *
  * @package    local_apsolu
- * @copyright  2016 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2016 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe pour le formulaire permettant de gérer la charte.
- *
- * @package    local_apsolu
- * @copyright  2023 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 use local_apsolu\core\federation\adhesion;
 
 defined('MOODLE_INTERNAL') || die();
@@ -29,10 +21,10 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/formslib.php');
 
 /**
- * Classe pour le formulaire permettant de gérer la charte.
+ * Classe pour le formulaire permettant de gérer la charte FFSU.
  *
  * @package    local_apsolu
- * @copyright  2023 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2023 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class local_apsolu_federation_agreement extends moodleform {

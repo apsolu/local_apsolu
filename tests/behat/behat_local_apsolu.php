@@ -27,7 +27,7 @@ require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
  * Classe gérant de nouvelles instructions behat.
  *
  * @package    local_apsolu
- * @copyright  2023 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2023 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class behat_local_apsolu extends behat_base {

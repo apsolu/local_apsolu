@@ -22,7 +22,7 @@ require_once($CFG->libdir . '/formslib.php');
  * Classe pour le formulaire permettant d'éditer les numéros d'association.
  *
  * @package    local_apsolu
- * @copyright  2022 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2022 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class local_apsolu_federation_numbers_edit_form extends moodleform {

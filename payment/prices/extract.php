@@ -18,7 +18,7 @@
  * Page pour exporter une vue d'ensemble d'utilisation des tarifs.
  *
  * @package    local_apsolu
- * @copyright  2024 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2024 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

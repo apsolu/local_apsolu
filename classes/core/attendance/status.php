@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe gérant les types de présences.
- *
- * @package    local_apsolu
- * @copyright  2023 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace local_apsolu\core\attendance;
 
 use local_apsolu\core\record;
@@ -30,7 +22,7 @@ use local_apsolu\core\record;
  * Classe gérant les types de présences.
  *
  * @package    local_apsolu
- * @copyright  2023 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2023 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class status extends record {

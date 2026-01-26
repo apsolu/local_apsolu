@@ -32,7 +32,7 @@ require_once($CFG->dirroot . '/local/apsolu/forms/notification_form.php');
  * Classe pour le formulaire permettant de communiquer auprès des utilisateurs.
  *
  * @package    local_apsolu
- * @copyright  2024 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2024 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class notify extends \local_apsolu_notification_form {

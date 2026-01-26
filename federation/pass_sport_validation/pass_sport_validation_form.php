@@ -22,7 +22,7 @@ require_once($CFG->libdir . '/formslib.php');
  * Classe pour le formulaire permettant de valider les paiements par Pass Sport.
  *
  * @package    local_apsolu
- * @copyright  2025 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2025 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class local_apsolu_federation_pass_sport_validation extends moodleform {

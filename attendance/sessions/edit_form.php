@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe pour le formulaire permettant d'éditer des sessions.
- *
- * @package    local_apsolu
- * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 use local_apsolu\core\messaging;
 
 defined('MOODLE_INTERNAL') || die;
@@ -32,7 +24,7 @@ require_once($CFG->libdir . '/formslib.php');
  * Classe pour le formulaire permettant d'éditer des sessions.
  *
  * @package    local_apsolu
- * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2017 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class local_apsolu_attendance_sessions_edit_form extends moodleform {

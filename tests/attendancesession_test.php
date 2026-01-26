@@ -24,7 +24,7 @@ use stdClass;
  * Classe de tests pour local_apsolu\core\attendancesession
  *
  * @package    local_apsolu
- * @copyright  2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2020 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(attendancesession::class)]

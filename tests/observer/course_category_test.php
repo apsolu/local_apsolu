@@ -32,7 +32,7 @@ require_once($CFG->dirroot . '/course/lib.php');
  *
  * @package    local_apsolu
  * @category   test
- * @copyright  2021 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2021 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \local_apsolu\observer\course_category
  */

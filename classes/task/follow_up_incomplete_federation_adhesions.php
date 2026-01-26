@@ -32,7 +32,7 @@ use local_apsolu\core\federation\course as FederationCourse;
  *    jusqu'à ce qu'il fasse sa demande d'adhésion.
  *
  * @package    local_apsolu
- * @copyright  2023 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2023 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class follow_up_incomplete_federation_adhesions extends \core\task\scheduled_task {

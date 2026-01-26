@@ -20,7 +20,7 @@ namespace local_apsolu\event;
  * Enregistre la mise à jour du numéro de licence FFSU.
  *
  * @package   local_apsolu
- * @copyright 2023 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright 2023 Université Rennes 2
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class federation_number_updated extends \core\event\base {

@@ -17,7 +17,7 @@
  * Permet de récupérer les préférences utilisateurs
  *
  * @module     local_apsolu/preference
- * @copyright  2025 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2025 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

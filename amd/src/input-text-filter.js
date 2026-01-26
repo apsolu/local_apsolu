@@ -19,7 +19,7 @@
  * Initialise un filtre de recherche sur un élément.
  *
  * @module     local_apsolu/input-text-filter
- * @copyright  2021 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2021 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 define([], function() {

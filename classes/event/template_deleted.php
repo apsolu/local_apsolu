@@ -20,7 +20,7 @@ namespace local_apsolu\event;
  * Enregistre une trace lorsqu'un modèle de message est supprimé.
  *
  * @package    local_apsolu
- * @copyright  2024 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2024 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class template_deleted extends \core\event\base {

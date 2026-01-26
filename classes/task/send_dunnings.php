@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Classe représentant la tâche pour notifier les utilisateurs d'un paiement dû.
- *
- * @package    local_apsolu
- * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace local_apsolu\task;
 
 use stdClass;
@@ -31,7 +23,7 @@ use UniversiteRennes2\Apsolu\Payment;
  * Classe représentant la tâche pour notifier les utilisateurs d'un paiement dû.
  *
  * @package    local_apsolu
- * @copyright  2017 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright  2017 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class send_dunnings extends \core\task\scheduled_task {

@@ -22,7 +22,7 @@ use core\event\cohort_deleted;
  * Classe permettant d'écouter les évènements diffusés par Moodle.
  *
  * @package   local_apsolu
- * @copyright 2022 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright 2022 Université Rennes 2
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class cohort {

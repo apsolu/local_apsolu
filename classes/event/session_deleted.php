@@ -20,7 +20,7 @@ namespace local_apsolu\event;
  * Enregistre la suppression d'une session de cours.
  *
  * @package   local_apsolu
- * @copyright 2020 Université Rennes 2 <dsi-contact@univ-rennes2.fr>
+ * @copyright 2020 Université Rennes 2
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class session_deleted extends \core\event\base {
