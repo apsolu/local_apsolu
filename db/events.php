@@ -89,6 +89,22 @@ $observers = [
         'internal'    => true,
         'priority'    => 9999,
     ],
+    // Gère l'importation de numéros FFSU.
+    [
+        'eventname'   => '\local_apsolu\event\federation_number_created',
+        'callback'    => '\local_apsolu\observer\federation_number::created',
+        'includefile' => null,
+        'internal'    => true,
+        'priority'    => 9999,
+    ],
+    // Gère l'importation de numéros FFSU.
+    [
+        'eventname'   => '\local_apsolu\event\federation_number_updated',
+        'callback'    => '\local_apsolu\observer\federation_number::updated',
+        'includefile' => null,
+        'internal'    => true,
+        'priority'    => 9999,
+    ],
     // Gère la génération de tâche adhoc lors de la création de QR codes.
     [
         'eventname'   => '\local_apsolu\event\qrcode_created',

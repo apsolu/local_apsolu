@@ -2009,5 +2009,54 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 2026012800;
+    if ($oldversion < $version) {
+        require_once($CFG->dirroot . '/user/profile/definelib.php');
+        require_once($CFG->dirroot . '/user/profile/lib.php');
+
+        $shortname = 'apsolufederationnumber';
+
+        // Génère le champ de profil "Numéro de licence FFSU" si il n'existe pas.
+        if ($DB->get_record('user_info_field', ['shortname' => $shortname]) === false) {
+            $category = $DB->get_record('user_info_field', ['shortname' => 'apsoluusertype'], $fields = '*', MUST_EXIST);
+
+            $data = [
+                'shortname' => $shortname,
+                'name' => get_string('federation_number', 'local_apsolu'),
+                'datatype' => 'text',
+                'description' => ['format' => FORMAT_HTML, 'text' => ''],
+                'categoryid' => $category->categoryid,
+                'required' => 0,
+                'locked' => 1,
+                'visible' => 1,
+                'forceunique' => 0,
+                'signup' => 0,
+                'defaultdata' => '',
+                'defaultdataformat' => FORMAT_MOODLE,
+                'param1' => 30,
+                'param2' => 2048,
+                'param3' => 0,
+                'param4' => '',
+                'param5' => '',
+            ];
+
+            profile_save_field((object) $data, $editors = []);
+        }
+
+        // Remplit le champ de profil "Numéro de licence FFSU" avec les données.
+        foreach ($DB->get_records('apsolu_federation_adhesions') as $record) {
+            if (empty($record->federationnumber) === true) {
+                continue;
+            }
+
+            $infodata = (object) ['id' => $record->userid, 'profile_field_' . $shortname => $record->federationnumber];
+
+            profile_save_data($infodata);
+        }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
     return true;
 }

@@ -154,6 +154,8 @@ function xmldb_local_apsolu_install() {
         'param1' => null, 'param2' => null, 'param3' => null, 'visible' => 0];
     $customs[] = (object) ['shortname' => 'apsoluusertype', 'datatype' => 'text',
         'param1' => 30, 'param2' => 2048, 'param3' => 0, 'visible' => 1];
+    $customs[] = (object) ['shortname' => 'apsolufederationnumber', 'datatype' => 'text',
+        'param1' => 30, 'param2' => 2048, 'param3' => 0, 'visible' => 1];
 
     foreach ($customs as $custom) {
         $field->shortname = $custom->shortname;
