@@ -134,6 +134,7 @@ class notify_new_federation_adhesions extends \core\task\scheduled_task {
 
             // On modifie la valeur de "federationnumberrequestdate" afin de ne pas notifier en boucle les contacts fonctionnels.
             $adhesion->federationnumberrequestdate = time();
+            $adhesion->timemodified = time();
             $adhesion->save(null, null, $check = false);
 
             // Envoie une notification au référent fonctionnel.
