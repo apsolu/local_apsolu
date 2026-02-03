@@ -2009,7 +2009,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
-    $version = 2026012800;
+    $version = 2026020300;
     if ($oldversion < $version) {
         require_once($CFG->dirroot . '/user/profile/definelib.php');
         require_once($CFG->dirroot . '/user/profile/lib.php');
@@ -2053,6 +2053,12 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
             profile_save_data($infodata);
         }
+
+        // Augmente la taille du champ 'reference' de la table 'apsolu_payments_transactions'.
+        $table = new xmldb_table('apsolu_payments_transactions');
+        $field = new xmldb_field('reference', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+
+        $dbman->change_field_precision($table, $field);
 
         // Savepoint reached.
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');

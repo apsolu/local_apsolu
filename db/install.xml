@@ -370,7 +370,7 @@
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" />
             <FIELD NAME="timecreated" TYPE="char" LENGTH="19" NOTNULL="true" SEQUENCE="false" />
             <FIELD NAME="amount" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Paybox retourne un montant entier. Exemple: un montant de 10.50€ donnera 1050." />
-            <FIELD NAME="reference" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="reference" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
             <FIELD NAME="auto" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
             <FIELD NAME="error" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
         </FIELDS>
