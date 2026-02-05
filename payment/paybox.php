@@ -97,7 +97,7 @@ try {
         throw new Exception('Error from paybox: ' . $_GET['Erreur']);
     }
 
-    $payment->status = 1;
+    $payment->status = Payment::PAID;
     $payment->timepaid = core_date::strftime('%FT%T');
     if (!$DB->update_record('apsolu_payments', $payment)) {
         throw new Exception('Unable to write in apsolu_payments: ' . var_export($payment, true));
