@@ -2060,6 +2060,9 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
         $dbman->change_field_precision($table, $field);
 
+        // Initialise l'adresse du contact FFSU avec l'adresse du contact fonctionnel.
+        set_config('federation_contact', get_config('local_apsolu', 'functional_contact'), 'local_apsolu');
+
         // Savepoint reached.
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }

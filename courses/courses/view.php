@@ -92,10 +92,10 @@ if (isset($notificationform)) {
 }
 
 // Ajoute des avertissements aux gestionnaires pour indiquer que des paramètres n'ont pas été renseignés.
-$attributes = ['functional_contact', 'technical_contact'];
+$attributes = ['federation_contact', 'functional_contact', 'technical_contact'];
 foreach ($attributes as $attribute) {
     $email = get_config('local_apsolu', $attribute);
-    if (empty($email) === false && filter_var($email, FILTER_VALIDATE_EMAIL) !== false) {
+    if (empty($email) === false) {
         continue;
     }
 

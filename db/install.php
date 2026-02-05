@@ -44,6 +44,7 @@ function xmldb_local_apsolu_install() {
     set_config('payments_startdate', '', 'local_apsolu');
     set_config('payments_enddate', '', 'local_apsolu');
 
+    set_config('federation_contact', '', 'local_apsolu');
     set_config('functional_contact', '', 'local_apsolu');
     set_config('technical_contact', '', 'local_apsolu');
 

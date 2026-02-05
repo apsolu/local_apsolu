@@ -348,6 +348,10 @@ $string['federal_texts'] = 'Textes fédéraux';
 $string['federal_texts_help'] = 'J’atteste avoir pris connaissance des statuts, règlements et chartes de la FFSU et y adhérer (<a href="https://sport-u.com/la-ff-sport-u/" target="_blank">accessible ici</a>).';
 $string['federation'] = 'FFSU';
 $string['federations'] = 'FFSU';
+$string['federation_contact'] = 'Contact FFSU';
+$string['federation_contact_help'] = 'Adresse de contact affichée lors de la procédure d’inscription à la FFSU.
+
+Si le module FFSU n’est pas activé, cette adresse ne sera jamais utilisée.';
 $string['federation_course'] = 'Cours FFSU';
 $string['federation_course_help'] = 'Espace-cours permettant de gérer les étudiants inscrits à la Fédération Française des Sports Universitaires.
 

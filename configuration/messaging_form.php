@@ -44,6 +44,12 @@ class local_apsolu_messaging_form extends moodleform {
         $mform->setType('functional_contact', PARAM_TEXT);
         $mform->addRule('functional_contact', get_string('required'), 'required', null, 'client');
 
+        // Contact FFSU.
+        $mform->addElement('text', 'federation_contact', get_string('federation_contact', 'local_apsolu'), ['size' => '48']);
+        $mform->addHelpButton('federation_contact', 'federation_contact', 'local_apsolu');
+        $mform->setType('federation_contact', PARAM_TEXT);
+        $mform->addRule('federation_contact', get_string('required'), 'required', null, 'client');
+
         // Technical contact.
         $mform->addElement('text', 'technical_contact', get_string('technical_contact', 'local_apsolu'), ['size' => '48']);
         $mform->addHelpButton('technical_contact', 'technical_contact', 'local_apsolu');
@@ -98,6 +104,7 @@ class local_apsolu_messaging_form extends moodleform {
         $errors = parent::validation($data, $files);
 
         $addresses = [];
+        $addresses[] = 'federation_contact';
         $addresses[] = 'functional_contact';
         $addresses[] = 'technical_contact';
 
