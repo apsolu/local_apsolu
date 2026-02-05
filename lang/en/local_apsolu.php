@@ -683,6 +683,7 @@ $string['pay'] = 'Payer';
 $string['pay_and_request_a_federation_number'] = 'Payer et demander un numéro de licence';
 $string['pay_for_license'] = 'Payer sa licence';
 $string['pay_with_my_pass_sport'] = 'Payer avec mon Pass Sport';
+$string['payment_approved'] = 'Paiment confirmé';
 $string['payment_center'] = 'Centre de paiement';
 $string['payment_center_help'] = 'Champ libre qui sera affiché sur la page de paiement des utilisateurs.';
 $string['payment_prefix_help'] = 'Préfixe affiché avant le numéro de commande dans le backoffice paybox. Cela peut être utile si votre abonnement Paybox est utilisé par plusieurs applications.';

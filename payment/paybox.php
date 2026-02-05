@@ -103,6 +103,14 @@ try {
         throw new Exception('Unable to write in apsolu_payments: ' . var_export($payment, true));
     }
 
+    // Enregistre l'évènement de réussite du paiement.
+    $event = \local_apsolu\event\payment_approved::create([
+        'objectid' => $payment->id,
+        'relateduserid' => $payment->userid,
+        'context' => context_system::instance(),
+    ]);
+    $event->trigger();
+
     $outputsuccesscontent .= core_date::strftime('%c') . ' ' . $ip . ' :: OK for user ' . $userstr . PHP_EOL;
 
     if (!file_put_contents($outputsuccess, $outputsuccesscontent, FILE_APPEND | LOCK_EX)) {

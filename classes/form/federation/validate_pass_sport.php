@@ -122,6 +122,16 @@ class validate_pass_sport extends send_email_form {
                     'other' => ['paymentid' => $payment->id, 'items' => $center->items],
                 ]);
                 $event->trigger();
+
+                if ($payment->status !== Payment::DUE) {
+                    // Enregistre l'évènement de réussite du paiement.
+                    $event = \local_apsolu\event\payment_approved::create([
+                        'objectid' => $payment->id,
+                        'relateduserid' => $payment->userid,
+                        'context' => context_system::instance(),
+                    ]);
+                    $event->trigger();
+                }
             }
 
             // Met à jour l'adhésion.

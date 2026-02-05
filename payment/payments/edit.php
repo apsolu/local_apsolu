@@ -181,6 +181,16 @@ if ($data = $mform->get_data()) {
         ]);
         $event->trigger();
 
+        if ($payment->status !== Payment::DUE) {
+            // Enregistre l'évènement de réussite du paiement.
+            $event = \local_apsolu\event\payment_approved::create([
+                'objectid' => $payment->id,
+                'relateduserid' => $payment->userid,
+                'context' => context_system::instance(),
+            ]);
+            $event->trigger();
+        }
+
         $success = true;
 
         $transaction->allow_commit();
