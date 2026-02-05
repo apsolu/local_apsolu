@@ -147,10 +147,11 @@ class set_high_level_athletes extends \core\task\scheduled_task {
                         mtrace("\t insert apsolu_payments_items: paymentid=" . $payment->id . ", cardid=" . $cardid);
                     }
 
-                    $event = \local_apsolu\event\update_user_payment::create([
-                        'relateduserid' => $member->userid,
+                    $event = \local_apsolu\event\payment_created::create([
+                        'objectid' => $payment->id,
+                        'relateduserid' => $payment->userid,
                         'context' => context_system::instance(),
-                        'other' => ['paymentid' => $payment->id, 'items' => $cardsid],
+                        'other' => ['items' => $cardsid],
                     ]);
                     $event->trigger();
 

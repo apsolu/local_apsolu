@@ -116,10 +116,11 @@ class validate_pass_sport extends send_email_form {
                 }
 
                 // Enregistre un évènement.
-                $event = \local_apsolu\event\update_user_payment::create([
-                    'relateduserid' => $userid,
+                $event = \local_apsolu\event\payment_created::create([
+                    'objectid' => $payment->id,
+                    'relateduserid' => $payment->userid,
                     'context' => context_system::instance(),
-                    'other' => ['paymentid' => $payment->id, 'items' => $center->items],
+                    'other' => ['items' => $center->items],
                 ]);
                 $event->trigger();
 

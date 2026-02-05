@@ -159,8 +159,10 @@ if ($data = $mform->get_data()) {
 
             unset($payment->id);
             $payment->id = $DB->insert_record('apsolu_payments', $payment);
+            $eventclassname = '\local_apsolu\event\payment_created';
         } else {
             $DB->update_record('apsolu_payments', $payment);
+            $eventclassname = '\local_apsolu\event\payment_updated';
         }
 
         $sql = "DELETE FROM {apsolu_payments_items} WHERE paymentid = :paymentid";
@@ -174,10 +176,11 @@ if ($data = $mform->get_data()) {
             $DB->insert_record('apsolu_payments_items', $item);
         }
 
-        $event = \local_apsolu\event\update_user_payment::create([
-            'relateduserid' => $userid,
+        $event = $eventclassname::create([
+            'objectid' => $payment->id,
+            'relateduserid' => $payment->userid,
             'context' => context_system::instance(),
-            'other' => ['paymentid' => $payment->id, 'items' => $items],
+            'other' => ['items' => $items],
         ]);
         $event->trigger();
 
