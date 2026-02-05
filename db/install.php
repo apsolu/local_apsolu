@@ -57,6 +57,9 @@ function xmldb_local_apsolu_install() {
     set_config('export_fields', '["email","institution","department"]', 'local_apsolu');
     set_config('userhiddenfields', 'address,apsolupostalcode,apsolubirthday,country,phone1,phone2,city', 'local_apsolu');
 
+    set_config('collaborative_course', '', 'local_apsolu');
+    set_config('federation_course', '', 'local_apsolu');
+
     // Paramètres Paybox.
     set_config('paybox_servers_incoming', '62.161.13.193,62.161.15.193,195.25.67.22', 'local_apsolu');
     set_config('paybox_servers_outgoing', 'tpeweb.paybox.com,tpeweb1.paybox.com', 'local_apsolu');
@@ -94,7 +97,8 @@ function xmldb_local_apsolu_install() {
     set_config('qrcode_autologout', 1, 'local_apsolu');
     set_config('qrcode_rotate', 0, 'local_apsolu');
 
-    // Initialise les paramètres de l'offre de formations.
+    // Initialise les paramètres de l'offre de formations (json_course_offerings_columns, json_course_offerings_filters
+    // et json_course_offerings_ranges).
     UniversiteRennes2\Apsolu\set_initial_course_offerings_settings();
 
     // Ajoute les différents champs de profil complémentaires.
