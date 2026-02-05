@@ -212,31 +212,34 @@ class local_apsolu_notification_form extends moodleform {
             // à un utilisateur Moodle.
             $admin = get_admin();
             $admin->auth = 'manual'; // Force l'auth. en manual, car email_to_user() ignore le traitement des comptes en nologin.
-            $admin->email = $functionalcontact;
 
-            if (isset($replyto) === true) {
-                email_to_user(
-                    $admin,
-                    $USER,
-                    $data->subject,
-                    $messagetext,
-                    $messagehtml,
-                    $attachment = '',
-                    $attachname = '',
-                    $usetrueaddress = true,
-                    $replyto,
-                    $replytoname
-                );
-            } else {
-                email_to_user($admin, $USER, $data->subject, $messagetext, $messagehtml);
+            foreach (explode(';', $functionalcontact) as $email) {
+                $admin->email = $email;
+
+                if (isset($replyto) === true) {
+                    email_to_user(
+                        $admin,
+                        $USER,
+                        $data->subject,
+                        $messagetext,
+                        $messagehtml,
+                        $attachment = '',
+                        $attachname = '',
+                        $usetrueaddress = true,
+                        $replyto,
+                        $replytoname
+                    );
+                } else {
+                    email_to_user($admin, $USER, $data->subject, $messagetext, $messagehtml);
+                }
+
+                $event = \local_apsolu\event\notification_sent::create([
+                    'relateduserid' => $admin->id,
+                    'context' => $context,
+                    'other' => ['sender' => $USER->id, 'receiver' => $admin->email, 'subject' => $eventdata->subject],
+                    ]);
+                $event->trigger();
             }
-
-            $event = \local_apsolu\event\notification_sent::create([
-                'relateduserid' => $admin->id,
-                'context' => $context,
-                'other' => ['sender' => $USER->id, 'receiver' => $admin->email, 'subject' => $eventdata->subject],
-                ]);
-            $event->trigger();
         }
     }
 }

@@ -188,10 +188,16 @@ $data->wwwroot = $CFG->wwwroot;
 $data->is_siuaps_rennes = isset($CFG->is_siuaps_rennes);
 $data->payment_centers = array_values($paymentcenters);
 $data->count_payment_centers = count($data->payment_centers);
-$data->functional_contact = get_config('local_apsolu', 'functional_contact');
-if (empty($data->functional_contact) === true) {
+$functionalcontact = get_config('local_apsolu', 'functional_contact');
+if (empty($functionalcontact) === true) {
     $admin = get_admin();
-    $data->functional_contact = $admin->email;
+    $data->functional_contact = sprintf('<a href="mailto:%s">%s</a>', $admin->email, $admin->email);
+} else {
+    $contacts = [];
+    foreach (explode(';', $functionalcontact) as $contact) {
+        $contacts[] = sprintf('<a href="mailto:%s">%s</a>', $contact, $contact);
+    }
+    $data->functional_contact = implode(' ou ', $contacts);
 }
 
 $payboxserver = paybox::get_server();

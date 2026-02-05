@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\messaging;
+
 defined('MOODLE_INTERNAL') || die;
 
 require(__DIR__ . '/edit_form.php');
@@ -161,30 +163,14 @@ if ($mdata = $mform->get_data()) {
 
     // Notifie le secrétariat.
     if ($changed === true) {
-        $functionalcontactmail = get_config('local_apsolu', 'functional_contact');
-        if (filter_var($functionalcontactmail, FILTER_VALIDATE_EMAIL) !== false) {
-            if (isset($CFG->divertallemailsto) === true && filter_var($CFG->divertallemailsto, FILTER_VALIDATE_EMAIL) !== false) {
-                $functionalcontactmail = $CFG->divertallemailsto;
-            }
-
-            require_once($CFG->libdir . '/phpmailer/moodle_phpmailer.php');
-
-            $mailer = new moodle_phpmailer();
-            $mailer->AddAddress($functionalcontactmail);
-            $mailer->Subject = $subject . ' (' . $course->fullname . ')';
-            $mailer->Body = $message;
-            if (isset($cm->id) === true) {
-                $mailer->Body .= '<p><a href="' . $CFG->wwwroot . '/mod/forum/view.php?id=' . $cm->id . '">' .
-                    get_string('postincontext', 'forum') . '</a></p>';
-            } else {
-                $mailer->Body .= '<p><strong>' . get_string('no_messages_sent_to_forum', 'local_apsolu') . '</strong></p>';
-            }
-            $mailer->From = $CFG->noreplyaddress;
-            $mailer->FromName = '';
-            $mailer->CharSet = 'UTF-8';
-            $mailer->isHTML();
-            $mailer->Send();
+        if (isset($cm->id) === true) {
+            $body = $message . '<p><a href="' . $CFG->wwwroot . '/mod/forum/view.php?id=' . $cm->id . '">' .
+                get_string('postincontext', 'forum') . '</a></p>';
+        } else {
+            $body = $message . '<p><strong>' . get_string('no_messages_sent_to_forum', 'local_apsolu') . '</strong></p>';
         }
+
+        messaging::notify_functional_address($subject . ' (' . $course->fullname . ')', $body);
     }
 
     require(__DIR__ . '/view.php');

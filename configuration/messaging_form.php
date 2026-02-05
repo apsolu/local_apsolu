@@ -103,9 +103,20 @@ class local_apsolu_messaging_form extends moodleform {
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
 
+        // Valide le champ "Contact fonctionnel".
+        foreach (explode(';', $data['functional_contact']) as $email) {
+            if (filter_var($email, FILTER_VALIDATE_EMAIL) !== false) {
+                // L'adresse de courriel est valide.
+                continue;
+            }
+
+            $errors['functional_contact'] = get_string('invalidemail');
+            break;
+        }
+
+        // Valide les champs "Contact FFSU" et "Contact technique".
         $addresses = [];
         $addresses[] = 'federation_contact';
-        $addresses[] = 'functional_contact';
         $addresses[] = 'technical_contact';
 
         foreach ($addresses as $fieldname) {
@@ -114,6 +125,7 @@ class local_apsolu_messaging_form extends moodleform {
             }
 
             if (filter_var($data[$fieldname], FILTER_VALIDATE_EMAIL) !== false) {
+                // L'adresse de courriel est valide.
                 continue;
             }
 

@@ -1081,7 +1081,9 @@ $string['payments_enddate'] = 'Date de fin des paiements';
 $string['semester1_grading_deadline'] = 'Date limite pour rendre les notes du S1';
 $string['semester2_grading_deadline'] = 'Date limite pour rendre les notes du S2';
 $string['functional_contact'] = 'Contact fonctionnel';
-$string['functional_contact_help'] = 'Cette adresse sera notifiée à chaque création, modification ou suppression de sessions. Un enseignant aura également la possibilité de mettre en copie cette adresse lors de l’envoi d’une notification à ses étudiants. Enfin, la page de paiement proposera de contacter cette adresse en cas de difficulté.';
+$string['functional_contact_help'] = 'Cette adresse sera notifiée à chaque création, modification ou suppression de sessions. Un enseignant aura également la possibilité de mettre en copie cette adresse lors de l’envoi d’une notification à ses étudiants. Enfin, la page de paiement proposera de contacter cette adresse en cas de difficulté.
+
+Il est possible de spécifier plusieurs adresses de courriel, séparées par un point-virgule.';
 $string['technical_contact'] = 'Contact technique';
 $string['technical_contact_help'] = 'Adresse non utilisée pour l’instant.';
 
@@ -1372,7 +1374,7 @@ $string['no_courses_complements'] = 'Pour les cours du SIUAPS, si vous êtes ins
 ' Pour l’accès aux salles de musculation, vous devez avoir validé votre séance gratuite avant de pouvoir payer.';
 $string['no_paybox'] = 'Notre prestataire de paiement semble rencontrer des difficultés techniques. Merci de réessayer ultérieurement.';
 $string['warning_payment'] = '<div class="alert alert-info col-md-12"><p><strong>Attention</strong> : vérifiez les cours qui vous sont facturés. Si vous ne souhaitez plus suivre une activité, merci de contacter votre enseignant.</p>' .
-    '<p>Aucun remboursement ne sera effectué ; si vous constatez une erreur dans le montant à payer, merci d’envoyer un mail à l’adresse <a href="mailto:{$a}">{$a}</a>.</p></div>';
+    '<p>Aucun remboursement ne sera effectué ; si vous constatez une erreur dans le montant à payer, merci d’envoyer un mail à l’adresse {$a}.</p></div>';
 $string['status_accepted'] = 'Paiement accepté.';
 $string['status_refused'] = 'Paiement refusé.';
 $string['status_wait'] = 'Paiement en attente.';

@@ -376,34 +376,36 @@ class notify extends \local_apsolu_notification_form {
             // Solution de contournement pour pouvoir envoyer un message à une adresse n'appartenant pas à un utilisateur Moodle.
             $admin = get_admin();
             $admin->auth = 'manual'; // Change l'authentification car la fonction email_to_user() ignore les comptes en nologin.
-            $admin->email = $functionalcontact;
+            foreach (explode(';', $functionalcontact) as $email) {
+                $admin->email = $email;
 
-            if (isset($replyto) === true) {
-                email_to_user(
-                    $admin,
-                    $USER,
-                    $data->subject,
-                    $messagetext,
-                    $messagehtml,
-                    $attachment = '',
-                    $attachname = '',
-                    $usetrueaddress = true,
-                    $replyto,
-                    $replytoname
-                );
-            } else {
-                email_to_user($admin, $USER, $data->subject, $messagetext, $messagehtml);
+                if (isset($replyto) === true) {
+                    email_to_user(
+                        $admin,
+                        $USER,
+                        $data->subject,
+                        $messagetext,
+                        $messagehtml,
+                        $attachment = '',
+                        $attachname = '',
+                        $usetrueaddress = true,
+                        $replyto,
+                        $replytoname
+                    );
+                } else {
+                    email_to_user($admin, $USER, $data->subject, $messagetext, $messagehtml);
+                }
+
+                $other = ['communicationid' => $communicationid, 'sender' => $USER->id, 'receiver' => $admin->email,
+                    'template' => $templateid];
+
+                $event = \local_apsolu\event\communication_sent::create([
+                    'relateduserid' => $admin->id,
+                    'context' => $context,
+                    'other' => $other,
+                    ]);
+                $event->trigger();
             }
-
-            $other = ['communicationid' => $communicationid, 'sender' => $USER->id, 'receiver' => $admin->email,
-                'template' => $templateid];
-
-            $event = \local_apsolu\event\communication_sent::create([
-                'relateduserid' => $admin->id,
-                'context' => $context,
-                'other' => $other,
-                ]);
-            $event->trigger();
         }
     }
 }

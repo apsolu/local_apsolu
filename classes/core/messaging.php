@@ -104,4 +104,39 @@ class messaging {
 
         return $options;
     }
+
+    /**
+     * Notifie l'adresse de contact fonctionnel.
+     *
+     * @param string $subject Sujet du courriel.
+     * @param string $message Message du courriel.
+     *
+     * @return void
+     */
+    public static function notify_functional_address(string $subject, string $message): void {
+        global $CFG;
+
+        $functionalcontactmail = get_config('local_apsolu', 'functional_contact');
+        if (empty($functionalcontactmail) === true) {
+            return;
+        }
+
+        require_once($CFG->libdir . '/phpmailer/moodle_phpmailer.php');
+
+        if (isset($CFG->divertallemailsto) === true && filter_var($CFG->divertallemailsto, FILTER_VALIDATE_EMAIL) !== false) {
+            $functionalcontactmail = $CFG->divertallemailsto;
+        }
+
+        $mailer = new moodle_phpmailer();
+        foreach (explode(';', $functionalcontactmail) as $email) {
+            $mailer->AddAddress($email);
+        }
+        $mailer->Subject = $subject;
+        $mailer->Body = $message;
+        $mailer->From = $CFG->noreplyaddress;
+        $mailer->FromName = '';
+        $mailer->CharSet = 'UTF-8';
+        $mailer->isHTML();
+        $mailer->Send();
+    }
 }
