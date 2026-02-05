@@ -1514,14 +1514,11 @@ class adhesion extends record {
 
         $extra = [];
 
-        $parameters = [];
-        $parameters['fullname'] = fullname($user);
-        $parameters['export_url'] = (string) new moodle_url('/local/apsolu/federation/index.php', ['page' => 'export']);
         if ($this->have_to_upload_medical_certificate() === true && empty($this->medicalcertificatestatus) === true) {
             // Le certificat médical doit être validé.
             $parameters = ['page' => 'certificates_validation'];
             if (empty($user->idnumber) === false) {
-                $parameters = ['idnumber' => $user->idnumber];
+                $parameters['idnumber'] = $user->idnumber;
             }
             $url = (string) new moodle_url('/local/apsolu/federation/index.php', $parameters);
 
@@ -1533,7 +1530,7 @@ class adhesion extends record {
 
             $parameters = ['page' => 'certificates_validation'];
             if (empty($user->idnumber) === false) {
-                $parameters = ['idnumber' => $user->idnumber];
+                $parameters['idnumber'] = $user->idnumber;
             }
             $url = (string) new moodle_url('/local/apsolu/federation/index.php', $parameters);
 
@@ -1544,13 +1541,16 @@ class adhesion extends record {
             // Le Pass Sport doit être validé.
             $parameters = ['page' => 'pass_sport_validation'];
             if (empty($user->idnumber) === false) {
-                $parameters = ['idnumber' => $user->idnumber];
+                $parameters['idnumber'] = $user->idnumber;
             }
             $url = (string) new moodle_url('/local/apsolu/federation/index.php', $parameters);
 
             $extra[] = get_string('request_of_federation_number_with_pass_sport', 'local_apsolu', $url);
         }
 
+        $parameters = [];
+        $parameters['fullname'] = fullname($user);
+        $parameters['export_url'] = (string) new moodle_url('/local/apsolu/federation/index.php', ['page' => 'export']);
         $parameters['extra'] = implode('', $extra);
         $messagetext = get_string('request_of_federation_number_message', 'local_apsolu', $parameters);
 
