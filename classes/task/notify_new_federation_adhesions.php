@@ -138,7 +138,7 @@ class notify_new_federation_adhesions extends \core\task\scheduled_task {
             $adhesion->save(null, null, $check = false);
 
             // Envoie une notification au référent fonctionnel.
-            $adhesion->notify_functional_contact();
+            $adhesion->notify_federation_contact();
 
             mtrace(sprintf(
                 'notifie de la demande de licence pour #%s %s %s (%s)',

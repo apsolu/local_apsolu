@@ -367,9 +367,9 @@ class adhesion extends record {
         $messages = [];
         $messages[] = get_string('your_request_is_being_processed', 'local_apsolu') . '.';
 
-        $functionalcontactmail = get_config('local_apsolu', 'functional_contact');
-        if (filter_var($functionalcontactmail, FILTER_VALIDATE_EMAIL) !== false) {
-            $messages[] = get_string('if_you_want_to_make_a_change_please_contact_X', 'local_apsolu', $functionalcontactmail);
+        $federationcontactmail = get_config('local_apsolu', 'federation_contact');
+        if (filter_var($federationcontactmail, FILTER_VALIDATE_EMAIL) !== false) {
+            $messages[] = get_string('if_you_want_to_make_a_change_please_contact_X', 'local_apsolu', $federationcontactmail);
         }
 
         return $messages;
@@ -1494,7 +1494,7 @@ class adhesion extends record {
      *
      * @return bool Retourne false lorsque l'adresse de contact fonctionnel est vide.
      */
-    public function notify_functional_contact() {
+    public function notify_federation_contact() {
         global $DB;
 
         $user = $DB->get_record('user', ['id' => $this->userid]);
@@ -1504,8 +1504,8 @@ class adhesion extends record {
         }
 
         // Notifie l'adresse du contact fonctionnel pour valider l'adhésion.
-        $functionalcontact = get_config('local_apsolu', 'functional_contact');
-        if (empty($functionalcontact) === true) {
+        $federationcontact = get_config('local_apsolu', 'federation_contact');
+        if (empty($federationcontact) === true) {
             return false;
         }
 
@@ -1558,7 +1558,7 @@ class adhesion extends record {
         // à un utilisateur Moodle.
         $admin = get_admin();
         $admin->auth = 'manual'; // Force l'auth. en manual, car email_to_user() ignore le traitement des comptes en nologin.
-        $admin->email = $functionalcontact;
+        $admin->email = $federationcontact;
 
         email_to_user($admin, $user, $subject, $messagetext);
 

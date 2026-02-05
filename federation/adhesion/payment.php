@@ -104,7 +104,7 @@ if ($data = $mform->get_data()) {
     }
 
     // Si aucun paiement est dû, on notifie le contact fonctionnel.
-    $adhesion->notify_functional_contact();
+    $adhesion->notify_federation_contact();
 
     redirect(new moodle_url('/local/apsolu/federation/adhesion/index.php', ['step' => APSOLU_PAGE_SUMMARY]));
 }
