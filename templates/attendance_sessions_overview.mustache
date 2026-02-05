@@ -154,7 +154,7 @@
 
             {{^abbr}}
             {{! Étudiant avec aucune présence saisie pour cette session. }}
-            <td class="text-center">-</td>
+            <td class="text-center{{#style}} table-{{ style }}{{/style}}">{{label}}</td>
             {{/abbr}}
         {{/presences_per_sessions}}
 

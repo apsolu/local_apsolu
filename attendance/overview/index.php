@@ -138,7 +138,7 @@ $users = [];
 
 // Récupère la liste des utilisateurs inscrits aux cours.
 // TODO: retrouver pourquoi on affiche les utilisateurs inscrits manuellement.
-$sql = "SELECT DISTINCT u.*, '0' AS guest, ra.roleid
+$sql = "SELECT DISTINCT u.*, '0' AS guest, ra.roleid, ue.timecreated AS timestart
           FROM {user} u
           JOIN {user_enrolments} ue ON u.id = ue.userid
           JOIN {enrol} e ON e.id = ue.enrolid
@@ -226,6 +226,14 @@ foreach ($users as $user) {
             $presence->sortorder = $statuses[$id]->sortorder;
             $presence->label = $statuses[$id]->longlabel;
             $presence->style = $statuses[$id]->color;
+        } else {
+            // Marque une absence de prise de présence pour cette session.
+            $presence->label = '-';
+            if (isset($user->timestart) === false || $user->timestart > $session->sessiontime) {
+                // Distingue le cas où l'étudiant n'était pas inscrit au cours pour cette session.
+                $presence->label = '';
+                $presence->style = 'secondary';
+            }
         }
         $student->presences_per_sessions[] = $presence;
     }
