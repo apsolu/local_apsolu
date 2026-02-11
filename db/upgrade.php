@@ -2009,7 +2009,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
-    $version = 2026020300;
+    $version = 2026021100;
     if ($oldversion < $version) {
         require_once($CFG->dirroot . '/user/profile/definelib.php');
         require_once($CFG->dirroot . '/user/profile/lib.php');
