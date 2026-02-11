@@ -1498,6 +1498,7 @@ $string['ws_local_apsolu_get_unenrolments_description'] = 'Retourne toutes les d
 $string['ws_local_apsolu_get_teachers_description'] = 'Retourne tous les enseignants';
 $string['ws_local_apsolu_get_attendances_description'] = 'Retourne toutes les prises de présences';
 $string['ws_local_apsolu_set_card_description'] = 'Associe un utilisateur et une carte donnés';
+$string['ws_local_apsolu_set_course_description'] = 'Définit un créneau horaire';
 $string['ws_local_apsolu_set_presence_description'] = 'Ajoute une présence via un utilisateur, un cours et un timestamp donnés';
 $string['ws_local_apsolu_ping_description'] = 'Réponds pong.';
 $string['ws_local_apsolu_debugging_description'] = 'Enregistre des remontées d’information.';

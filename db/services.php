@@ -136,6 +136,15 @@ $functions = [
         'loginrequired' => true,
         'ajax' => true,
     ],
+    // Fonction set_course().
+    'local_apsolu_set_course' => [
+        'classname' => 'local_apsolu\external\course',
+        'methodname' => 'set_course',
+        'description' => get_string('ws_local_apsolu_set_course_description', 'local_apsolu'),
+        'type'        => 'write',
+        'loginrequired' => true,
+        'ajax' => true,
+    ],
     // Fonction set_presence().
     'local_apsolu_set_presence' => [
         'classname'   => 'local_apsolu_webservices',
@@ -215,6 +224,7 @@ $services = [
             'local_apsolu_get_teachers',
             'local_apsolu_get_attendances',
             'local_apsolu_set_card',
+            'local_apsolu_set_course',
             'local_apsolu_set_presence',
             'local_apsolu_debugging',
             'local_apsolu_get_chartdataset',
