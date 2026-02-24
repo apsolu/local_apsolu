@@ -16,6 +16,8 @@
 
 namespace local_apsolu\core;
 
+use moodle_phpmailer;
+
 /**
  * Classe gérant les options de messagerie.
  *
