@@ -1463,6 +1463,7 @@ $string['fields_apsolusesame'] = 'Compte Université validé';
 $string['fields_apsoluhighlevelathlete'] = 'Sportif de haut niveau';
 $string['fields_apsoluidcardnumber'] = 'Carte vie universitaire';
 $string['fields_apsoludoublecursus'] = 'Double cursus';
+$string['fields_apsolufederationnumber'] = 'Numéro de licence';
 
 // Settings.
 $string['settings_root'] = 'APSOLU';
