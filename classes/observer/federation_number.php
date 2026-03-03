@@ -39,7 +39,11 @@ class federation_number {
     }
 
     /**
+     * Hook permettant de remplir le numéro de licence FFSU dans le profil de l'utilisateur après un import de licences FFSU.
      *
+     * @param federation_number_created|federation_number_updated $event Évènement diffusé par Moodle.
+     *
+     * @return void
      */
     public static function set_federation_number(federation_number_created|federation_number_updated $event): void {
         global $CFG, $DB;
