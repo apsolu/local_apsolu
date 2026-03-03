@@ -153,6 +153,8 @@ final class holiday_test extends \advanced_testcase {
      * @covers ::regenerate_sessions()
      */
     public function test_regenerate_sessions(): void {
+        $this->setAdminUser();
+
         // Génère une période.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_period_data('p1');
         $period1 = new period();
