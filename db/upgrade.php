@@ -36,7 +36,7 @@ use local_apsolu\core\municipality;
 /**
  * Procédure de mise à jour.
  *
- * @param int $oldversion Numéro de la version du module theme_apsolu actuellement installé.
+ * @param int $oldversion Numéro de la version du module actuellement installé.
  *
  * @return bool
  */
