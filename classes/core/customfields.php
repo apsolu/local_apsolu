@@ -19,6 +19,8 @@
 namespace local_apsolu\core;
 
 use coding_exception;
+use html_writer;
+use stdClass;
 
 /**
  * Fonctions pour le module apsolu.
@@ -28,6 +30,74 @@ use coding_exception;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class customfields {
+    /** @var array Tableau contenant le résultat de profile_get_custom_fields() indexé par fieldname. */
+    public static $profilecustomfields = null;
+
+    /**
+     * Formate les données retournées par la fonction profile_user_record().
+     *
+     * @param array         $fields       Tableau des champs à traiter.
+     * @param stdClass      $customdata   Objet contenant les données personnalisées à traiter.
+     * @param stdClass|null $user         Objet contenant les données utilisateur à traiter.
+     * @param bool          $ishtmloutput Booléen indiquant si les données doivent être encodées pour une sortie HTML.
+     *
+     * @return array
+     */
+    public static function format_extra_fields(
+        array $fields,
+        stdClass $customdata,
+        ?stdClass $user = null,
+        bool $ishtmloutput = true
+    ): array {
+        $extrafields = [];
+
+        self::get_profile_custom_fields();
+
+        foreach ($fields as $fieldname) {
+            if (isset($user->$fieldname) === true) {
+                $extrafields[] = s($user->$fieldname);
+            } else if (isset($customdata->$fieldname) === true) {
+                if ($fieldname === 'apsoluothertrainings') {
+                    // Hack spécifique pour le champ 'apsoluothertrainings'.
+                    if ($ishtmloutput === true) {
+                        $values = explode(PHP_EOL, $customdata->$fieldname);
+                        array_map('s', $values);
+                        if (empty($values[0]) === false) {
+                            $extrafields[] = html_writer::alist($values, $attributes = [], $tag = 'ul');
+                        } else {
+                            $extrafields[] = '';
+                        }
+                    } else {
+                        $extrafields[] = $customdata->$fieldname;
+                    }
+                    continue;
+                }
+
+                switch (self::$profilecustomfields[$fieldname]->datatype) {
+                    case 'checkbox':
+                        if (empty($customdata->$fieldname) === true) {
+                            $extrafields[] = s(get_string('no'));
+                        } else {
+                            $extrafields[] = s(get_string('yes'));
+                        }
+                        break;
+                    case 'textarea':
+                    case 'text':
+                    default:
+                        if ($ishtmloutput === true) {
+                            $extrafields[] = s($customdata->$fieldname);
+                        } else {
+                            $extrafields[] = $customdata->$fieldname;
+                        }
+                }
+            } else {
+                $extrafields[] = '';
+            }
+        }
+
+        return $extrafields;
+    }
+
     /**
      * Retourne la liste des champs personnalisés APSOLU indéxés par nom abrégé.
      *
@@ -75,7 +145,7 @@ class customfields {
 
             if ($customfields === false) {
                 $customfields = [];
-                foreach (profile_get_custom_fields() as $customfield) {
+                foreach (self::get_profile_custom_fields() as $customfield) {
                     $customfields['extra_' . $customfield->shortname] = $customfield;
                 }
             }
@@ -101,5 +171,25 @@ class customfields {
         \core\deprecation::emit_deprecation(__METHOD__);
 
         return self::get_extra_fields('export');
+    }
+
+    /**
+     * Initialise la variable self::$profilecustomfields et retourne la liste des champs de profil utilisateur personnalisés.
+     *
+     * La valeur retournée provient de la fonction profile_get_custom_fields(). Le résultat est indexé par le nom abrégé des champs.
+     *
+     * @return array
+     */
+    public static function get_profile_custom_fields() {
+        if (self::$profilecustomfields !== null) {
+            return self::$profilecustomfields;
+        }
+
+        self::$profilecustomfields = [];
+        foreach (profile_get_custom_fields() as $field) {
+            self::$profilecustomfields[$field->shortname] = $field;
+        }
+
+        return self::$profilecustomfields;
     }
 }
