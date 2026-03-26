@@ -1464,6 +1464,8 @@ $string['fields_apsoluhighlevelathlete'] = 'Sportif de haut niveau';
 $string['fields_apsoluidcardnumber'] = 'Carte vie universitaire';
 $string['fields_apsoludoublecursus'] = 'Double cursus';
 $string['fields_apsolufederationnumber'] = 'Numéro de licence';
+$string['fields_apsolumaintraining'] = 'Formation';
+$string['fields_apsoluothertrainings'] = 'Autres cursus';
 
 // Settings.
 $string['settings_root'] = 'APSOLU';
