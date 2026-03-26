@@ -2067,5 +2067,24 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
+    $version = 0;
+    if ($oldversion < $version) {
+        // Ajoute l'incrémentation automatique sur le champ "id" de la table "apsolu_communication_templates".
+        $table = new xmldb_table('apsolu_communication_templates');
+        $field = new xmldb_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+        $dbman->change_field_type($table, $field);
+
+        // Met à jour les adresses Paybox.
+        $oldvalue = get_config('local_apsolu', 'paybox_servers_incoming');
+        if ($oldvalue === '194.2.122.158,194.2.122.190,195.25.7.166,195.25.67.22') {
+            $newvalue = '62.161.13.193,62.161.15.193,195.25.67.22';
+            set_config('paybox_servers_incoming', $newvalue, 'local_apsolu');
+            add_to_config_log('paybox_servers_incoming', $oldvalue, $newvalue, 'local_apsolu');
+        }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
     return true;
 }
