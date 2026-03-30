@@ -32,6 +32,12 @@ $template = 'local_apsolu/attendance_sessions_form';
 
 // Get session id.
 $sessionid = optional_param('sessionid', 0, PARAM_INT);
+$PAGE->set_url('/local/apsolu/attendance/index.php', [
+    'page' => 'sessions',
+    'action' => 'edit',
+    'courseid' => $courseid,
+    'sessionid' => $sessionid,
+]);
 
 // Generate object.
 $session = false;
@@ -67,7 +73,7 @@ foreach ($DB->get_records('apsolu_locations', $conditions = null, $sort = 'name'
 
 // Build form.
 $customdata = ['session' => $instance, 'locations' => $locations];
-$mform = new local_apsolu_attendance_sessions_edit_form(null, $customdata);
+$mform = new local_apsolu_attendance_sessions_edit_form($PAGE->url->out(false), $customdata);
 
 if ($mdata = $mform->get_data()) {
     // Save data.

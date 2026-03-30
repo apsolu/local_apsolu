@@ -85,19 +85,6 @@ class local_apsolu_attendance_sessions_edit_form extends moodleform {
 
         $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
-        // Hidden fields.
-        $mform->addElement('hidden', 'page', 'sessions');
-        $mform->setType('page', PARAM_ALPHA);
-
-        $mform->addElement('hidden', 'action', 'edit');
-        $mform->setType('action', PARAM_ALPHA);
-
-        $mform->addElement('hidden', 'sessionid');
-        $mform->setType('sessionid', PARAM_INT);
-
-        $mform->addElement('hidden', 'courseid');
-        $mform->setType('courseid', PARAM_INT);
-
         // Set default values.
         $this->set_data($session);
     }
