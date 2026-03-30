@@ -59,6 +59,7 @@ class local_apsolu_attendance_sessions_edit_form extends moodleform {
         $mform->addElement('selectyesno', 'notify', get_string('attendance_forum_notify', 'local_apsolu'));
         $mform->setType('notify', PARAM_INT);
         $mform->addRule('notify', get_string('required'), 'required', null, 'client');
+        $mform->setDefault('notify', 1);
 
         // Notifier le contact fonctionnel.
         $functionalcontact = get_config('local_apsolu', 'functional_contact');
@@ -68,7 +69,7 @@ class local_apsolu_attendance_sessions_edit_form extends moodleform {
             $mform->setType('notify_functional_contact', PARAM_INT);
 
             // Force la notification auprès de l'adresse de contact fonctionnel.
-            $session->notify_functional_contact = 1;
+            $mform->setDefault('notify_functional_contact', 1);
             $checkbox->freeze();
         }
 

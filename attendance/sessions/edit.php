@@ -22,6 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\attendancesession;
 use local_apsolu\core\messaging;
 
 defined('MOODLE_INTERNAL') || die;
@@ -40,30 +41,22 @@ $PAGE->set_url('/local/apsolu/attendance/index.php', [
 ]);
 
 // Generate object.
-$session = false;
-if ($sessionid != 0) {
-    $session = $DB->get_record('apsolu_attendance_sessions', ['id' => $sessionid]);
+$session = new AttendanceSession();
+if ($sessionid !== 0) {
+    $session->load($sessionid);
 }
 
-if ($session === false) {
+if (empty($session->id) === true) {
     $apsolucourse = $DB->get_record('apsolu_courses', ['id' => $courseid]);
 
     $sessions = $DB->get_records('apsolu_attendance_sessions', ['courseid' => $courseid]);
     $name = 'Cours n°' . (count($sessions) + 1);
 
-    $instance = new stdClass();
-    $instance->sessionid = 0;
-    $instance->name = $name;
-    $instance->sessiontime = 0;
-    $instance->courseid = $course->id;
-    $instance->activityid = $course->category;
-    $instance->locationid = $apsolucourse->locationid;
-} else {
-    $instance = clone $session;
-    $instance->sessionid = $session->id;
+    $session->name = $name;
+    $session->sessiontime = 0;
+    $session->courseid = $course->id;
+    $session->locationid = $apsolucourse->locationid;
 }
-
-$instance->notify = 1; // Default: notify students.
 
 // Load locations.
 $locations = [];
@@ -72,24 +65,13 @@ foreach ($DB->get_records('apsolu_locations', $conditions = null, $sort = 'name'
 }
 
 // Build form.
-$customdata = ['session' => $instance, 'locations' => $locations];
+$customdata = ['session' => $session, 'locations' => $locations];
 $mform = new local_apsolu_attendance_sessions_edit_form($PAGE->url->out(false), $customdata);
 
 if ($mdata = $mform->get_data()) {
     // Save data.
-    $session = new stdClass();
-    $session->id = $mdata->sessionid;
-    $session->name = $mdata->name;
-    $session->sessiontime = $mdata->sessiontime;
-    $session->locationid = $mdata->locationid;
-    $session->courseid = $course->id;
-    $session->activityid = $course->category;
-
-    if ($session->id === 0) {
-        $session->id = $DB->insert_record('apsolu_attendance_sessions', $session);
-    } else {
-        $DB->update_record('apsolu_attendance_sessions', $session);
-    }
+    $instance = clone $session;
+    $session->save($mdata);
 
     // Display notification and display elements list.
     $notifications[] = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
@@ -100,7 +82,7 @@ if ($mdata = $mform->get_data()) {
     // Prépare les variables pour les notifications.
     $variables = (object) ['datetime' => userdate($session->sessiontime, get_string('strftimedatetime', 'local_apsolu')),
         'location' => $locations[$session->locationid]];
-    if ($instance->sessionid === 0) {
+    if ($instance->id === 0) {
         $subject = get_string(
             'attendance_forum_create_session_subject',
             'local_apsolu',
