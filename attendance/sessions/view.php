@@ -53,7 +53,7 @@ if ($data->period !== false) {
             unset($weeks[$index]);
         }
 
-        $session->sessiontimestr = userdate($session->sessiontime, get_string('strftimedatetime', 'local_apsolu'));
+        $session->sessiontimestr = userdate($session->sessiontime, get_string('strftimedatetimewithyear', 'local_apsolu'));
 
         $data->sessions[] = $session;
         $data->count_sessions++;

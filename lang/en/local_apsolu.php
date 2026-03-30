@@ -1362,6 +1362,7 @@ $string['attendance_forum_delete_session_message'] = '<p>Bonjour,</p>' .
     '<p>Cordialement</p>';
 $string['strftimeabbrday'] = '%d %b';
 $string['strftimedatetime'] = '%A %d %B à %Hh%M';
+$string['strftimedatetimewithyear'] = '%A %d %B %Y à %Hh%M';
 $string['strftimedate'] = '%A %d %B';
 
 // Payments.
