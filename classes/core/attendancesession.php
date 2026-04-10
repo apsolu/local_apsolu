@@ -16,6 +16,7 @@
 
 namespace local_apsolu\core;
 
+use calendar_event;
 use context_course;
 use stdClass;
 
@@ -77,6 +78,12 @@ class attendancesession extends record {
             $presence->delete();
         }
 
+        // Supprime l'évènement dans le calendrier Moodle.
+        $event = $this->get_calendar_event();
+        if ($event !== false) {
+            $event->delete();
+        }
+
         // Supprime l'objet en base de données.
         $DB->delete_records(self::TABLENAME, ['id' => $this->id]);
 
@@ -100,6 +107,27 @@ class attendancesession extends record {
     }
 
     /**
+     * Retourne l'évènement du calendrier Moodle correspondant à cette session.
+     *
+     * @return calendar_event|false Retourne un objet calendar_event ou False, si l'évènement n'existe pas.
+     */
+    public function get_calendar_event() {
+        global $DB;
+
+        $params = [];
+        $params['instance'] = $this->id;
+        $params['component'] = 'local_apsolu';
+        $params['courseid'] = $this->courseid;
+        $event = $DB->get_record('event', $params);
+
+        if ($event === false) {
+            return false;
+        }
+
+        return calendar_event::load($event);
+    }
+
+    /**
      * Retourne la durée en secondes d'une session basée sur l'heure de début et de fin du cours.
      *
      * @return int|false Durée en secondes du cours, ou false si une erreur est détectée.
@@ -108,6 +136,64 @@ class attendancesession extends record {
         $course = course::get_record(['id' => $this->courseid], '*', MUST_EXIST);
 
         return course::getDuration($course->starttime, $course->endtime);
+    }
+
+    /**
+     * Retourne un objet représentant un évènement du calendrier Moodle en lien avec la session de cours.
+     *
+     * @return stclass
+     */
+    public function get_new_event() {
+        global $CFG, $DB;
+
+        require_once($CFG->dirroot . '/calendar/lib.php');
+
+        $course = $DB->get_record('apsolu_courses', ['id' => $this->courseid]);
+        $location = $DB->get_record('apsolu_locations', ['id' => $this->locationid]);
+
+        $event = new stdClass();
+        // The name of the event.
+        $event->name = $this->name;
+        // The description of the event.
+        $event->description = '';
+        $event->format = FORMAT_HTML;
+        // The category the event is associated with (0 if none).
+        $event->categoryid = 0;
+        // The course the event is associated with (0 if none).
+        $event->courseid = $this->courseid;
+        // The group the event is associated with (0 if none).
+        $event->groupid = 0;
+        // The user the event is associated with (0 if none).
+        $event->userid = 0;
+        // If this is a repeated event this will be set to the id of the original.
+        $event->repeatid = 0;
+        // If created by a plugin/component (other than module)., the full frankenstyle name of a component.
+        $event->component = 'local_apsolu';
+        // If added by a module this will be the module name.
+        $event->modulename = 0;
+        // If added by a module this will be the module instance.
+        $event->instance = $this->id;
+        // This is used for events we only want to display on the calendar, and are not needed on the block_myoverview.
+        $event->type = CALENDAR_EVENT_TYPE_STANDARD;
+        // The event type.
+        $event->eventtype = 'course';
+        // The start time as a timestamp.
+        $event->timestart = $this->sessiontime;
+        // The duration of the event in seconds.
+        $event->timeduration = course::getDuration($course->starttime, $course->endtime);
+        $event->timesort = null; // Ce champ n'est pas documenté.
+        $event->visible = 1;
+        $event->uuid = ''; // Ce champ n'est pas documenté.
+        $event->sequence = 1;
+        $event->timemodified = time();
+        // The event_subscription id this event is associated with.
+        $event->subscriptionid = null;
+        // The event's display priority. For multiple events with the same module name, instance and
+        // eventtype (e.g. for group overrides), the one with the higher priority will be displayed.
+        $event->priority = null;
+        $event->location = $location->name;
+
+        return $event;
     }
 
     /**
@@ -189,9 +275,23 @@ class attendancesession extends record {
         if (empty($this->id) === true) {
             $eventclass = '\local_apsolu\event\session_created';
             $this->id = $DB->insert_record(get_called_class()::TABLENAME, $this);
+
+            // Ajoute l'évènement au calendrier Moodle.
+            $event = $this->get_new_event();
+            calendar_event::create($event, $checkcapability = false);
         } else {
             $eventclass = '\local_apsolu\event\session_updated';
             $DB->update_record(get_called_class()::TABLENAME, $this);
+
+            // Met à jour l'évènement dans le calendrier Moodle.
+            $event = $this->get_new_event();
+
+            $calendarevent = $this->get_calendar_event();
+            if ($calendarevent === false) {
+                calendar_event::create($event, $checkcapability = false);
+            } else {
+                $calendarevent->update($event, $checkcapability = false);
+            }
         }
 
         // Enregistre un évènement dans les logs.

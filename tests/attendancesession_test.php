@@ -18,6 +18,7 @@ namespace local_apsolu;
 
 use local_apsolu\core\attendancesession;
 use local_apsolu\core\course;
+use local_apsolu\core\location;
 use stdClass;
 
 /**
@@ -46,20 +47,25 @@ final class attendancesession_test extends \advanced_testcase {
         global $DB;
 
         // Génère un nouveau cours.
+        $location = new location();
+        $location->save();
+
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
+        $data->locationid = $location->id;
         $course = new course();
         $course->save($data);
 
         // Génère une session de cours.
         $attendancesession = new attendancesession();
         $attendancesession->courseid = $course->id;
+        $attendancesession->locationid = $location->id;
 
         // Supprime un objet inexistant.
         $result = $attendancesession->delete(1);
         $this->assertTrue($result);
 
         // Supprime un objet existant.
-        $attendancesession->name = 'attendancesession 1';
+        $attendancesession->name = 'Cours n°1';
         $attendancesession->save();
 
         $countrecords = $DB->count_records($attendancesession::TABLENAME);
@@ -81,19 +87,24 @@ final class attendancesession_test extends \advanced_testcase {
         global $DB;
 
         // Génère un nouveau cours.
+        $location = new location();
+        $location->save();
+
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
+        $data->locationid = $location->id;
         $course = new course();
         $course->save($data);
 
         // Génère une session de cours.
         $attendancesession = new attendancesession();
         $attendancesession->courseid = $course->id;
+        $attendancesession->locationid = $location->id;
 
         $countrecords = $DB->count_records($attendancesession::TABLENAME);
         $this->assertSame(0, $countrecords);
 
         // Enregistre un nouvel objet.
-        $attendancesession->name = 'attendancesession 1';
+        $attendancesession->name = 'Cours n°1';
         $attendancesession->save();
 
         $countrecords = $DB->count_records($attendancesession::TABLENAME);
@@ -101,7 +112,7 @@ final class attendancesession_test extends \advanced_testcase {
 
         // Enregistre un nouvel objet.
         $attendancesession->id = 0;
-        $attendancesession->name = 'attendancesession 2';
+        $attendancesession->name = 'Cours n°2';
         $attendancesession->save();
 
         $countrecords = $DB->count_records($attendancesession::TABLENAME);
@@ -115,7 +126,11 @@ final class attendancesession_test extends \advanced_testcase {
      */
     public function test_has_expired(): void {
         // Génère un nouveau cours dont les sessions durent 1 heure.
+        $location = new location();
+        $location->save();
+
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
+        $data->locationid = $location->id;
         $data->starttime = '12:00';
         $data->endtime = '13:00';
         $course = new course();
@@ -124,6 +139,7 @@ final class attendancesession_test extends \advanced_testcase {
         // Génère une session de cours.
         $attendancesession = new attendancesession();
         $attendancesession->courseid = $course->id;
+        $attendancesession->locationid = $location->id;
 
         $attendancesession->sessiontime = time() - DAYSECS; // Teste une session qui a commencé la veille.
         $this->assertTrue($attendancesession->has_expired());
@@ -148,7 +164,11 @@ final class attendancesession_test extends \advanced_testcase {
      */
     public function test_has_started(): void {
         // Génère un nouveau cours dont les sessions durent 1 heure.
+        $location = new location();
+        $location->save();
+
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
+        $data->locationid = $location->id;
         $data->starttime = '12:00';
         $data->endtime = '13:00';
         $course = new course();
@@ -157,6 +177,7 @@ final class attendancesession_test extends \advanced_testcase {
         // Génère une session de cours.
         $attendancesession = new attendancesession();
         $attendancesession->courseid = $course->id;
+        $attendancesession->locationid = $location->id;
 
         $attendancesession->sessiontime = time() - DAYSECS; // Teste une session qui a commencé la veille.
         $this->assertTrue($attendancesession->has_started());
@@ -181,7 +202,11 @@ final class attendancesession_test extends \advanced_testcase {
      */
     public function test_is_in_progress(): void {
         // Génère un nouveau cours dont les sessions durent 1 heure.
+        $location = new location();
+        $location->save();
+
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
+        $data->locationid = $location->id;
         $data->starttime = '12:00';
         $data->endtime = '13:00';
         $course = new course();
@@ -190,6 +215,7 @@ final class attendancesession_test extends \advanced_testcase {
         // Génère une session de cours.
         $attendancesession = new attendancesession();
         $attendancesession->courseid = $course->id;
+        $attendancesession->locationid = $location->id;
 
         $attendancesession->sessiontime = time() - DAYSECS; // Teste une session qui a commencé la veille.
         $this->assertFalse($attendancesession->is_in_progress());
@@ -220,7 +246,11 @@ final class attendancesession_test extends \advanced_testcase {
      */
     public function test_load(): void {
         // Génère un nouveau cours.
+        $location = new location();
+        $location->save();
+
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
+        $data->locationid = $location->id;
         $course = new course();
         $course->save($data);
 
@@ -232,8 +262,9 @@ final class attendancesession_test extends \advanced_testcase {
         $this->assertSame('', $attendancesession->name);
 
         // Charge un objet existant.
-        $attendancesession->name = 'attendancesession';
+        $attendancesession->name = 'Cours n°1';
         $attendancesession->courseid = $course->id;
+        $attendancesession->locationid = $location->id;
         $attendancesession->save();
 
         $test = new attendancesession();
@@ -252,19 +283,24 @@ final class attendancesession_test extends \advanced_testcase {
         global $DB;
 
         // Génère un nouveau cours.
+        $location = new location();
+        $location->save();
+
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
+        $data->locationid = $location->id;
         $course = new course();
         $course->save($data);
 
         // Génère une session de cours.
         $attendancesession = new attendancesession();
         $attendancesession->courseid = $course->id;
+        $attendancesession->locationid = $location->id;
 
         $initialcount = $DB->count_records($attendancesession::TABLENAME);
 
         // Enregistre un objet.
         $data = new stdClass();
-        $data->name = 'attendancesession 1';
+        $data->name = 'Cours n°1';
 
         $attendancesession->save($data);
         $countrecords = $DB->count_records($attendancesession::TABLENAME);
@@ -274,7 +310,7 @@ final class attendancesession_test extends \advanced_testcase {
         $this->assertSame($countrecords, $initialcount + 1);
 
         // Mets à jour l'objet.
-        $data->name = 'attendancesession 1';
+        $data->name = 'Cours n°1';
 
         $attendancesession->save($data);
         $countrecords = $DB->count_records($attendancesession::TABLENAME);
@@ -285,7 +321,7 @@ final class attendancesession_test extends \advanced_testcase {
 
         // Ajoute un nouvel objet (sans argument).
         $attendancesession->id = 0;
-        $attendancesession->name = 'attendancesession 2';
+        $attendancesession->name = 'Cours n°2';
 
         $attendancesession->save();
         $countrecords = $DB->count_records($attendancesession::TABLENAME);

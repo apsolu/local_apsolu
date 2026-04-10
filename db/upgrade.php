@@ -25,6 +25,8 @@
 // phpcs:disable moodle.Files.LineLength.MaxExceeded
 // phpcs:disable moodle.Files.LineLength.TooLong
 
+use calendar_event;
+use local_apsolu\core\attendancesession;
 use local_apsolu\core\course;
 use local_apsolu\core\federation\activity;
 use local_apsolu\core\federation\adhesion;
@@ -2140,6 +2142,27 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
 
         // Savepoint reached.
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
+    }
+
+    $version = 2022111802;
+    if ($result && $oldversion < $version) {
+        // Nettoie des sessions obsolètes, dont les cours rattachés ont déjà été supprimés.
+        $sql = "SELECT DISTINCT courseid FROM {apsolu_attendance_sessions} WHERE courseid NOT IN (SELECT id FROM {course})";
+        foreach ($DB->get_records_sql($sql) as $record) {
+            foreach (attendancesession::get_records(['courseid' => $record->courseid]) as $session) {
+                $session->delete();
+            }
+        }
+
+        // Ajoute les sessions de cours dans le calendrier Moodle.
+        $sessions = local_apsolu\core\attendancesession::get_records();
+        foreach ($sessions as $session) {
+            $calendarevent = $session->get_calendar_event();
+            if ($calendarevent === false) {
+                $event = $session->get_new_event();
+                calendar_event::create($event, $checkcapability = false);
+            }
+        }
     }
 
     return true;

@@ -21,6 +21,7 @@ use local_apsolu\attendance\qrcode;
 use local_apsolu\core\attendancepresence;
 use local_apsolu\core\attendancesession;
 use local_apsolu\core\course;
+use local_apsolu\core\location;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -60,9 +61,20 @@ final class record_missing_attendance_test extends \advanced_testcase {
         [$plugin, $enrol, $users] = $generator->get_plugin_generator('enrol_select')->create_enrol_instance($numberofusers);
         $users = $users[enrol_select_plugin::ACCEPTED];
 
+        // Génère un nouveau cours.
+        $location = new location();
+        $location->save();
+
+        $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
+        $data->id = $enrol->courseid;
+        $data->locationid = $location->id;
+        $course = new course();
+        $course->save($data);
+
         // Génère une session de cours.
         $session = new attendancesession();
-        $session->courseid = $enrol->courseid;
+        $session->courseid = $course->id;
+        $session->locationid = $course->locationid;
         $session->name = 'attendancesession 1';
         $session->save();
 

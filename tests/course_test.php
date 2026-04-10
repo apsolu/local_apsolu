@@ -20,6 +20,7 @@ use coding_exception;
 use local_apsolu\core\attendancesession;
 use local_apsolu\core\category;
 use local_apsolu\core\course;
+use local_apsolu\core\location;
 use local_apsolu\core\period;
 use moodle_exception;
 
@@ -263,9 +264,18 @@ final class course_test extends \advanced_testcase {
         $period3 = new period();
         $period3->save($data);
 
+        // Génère un nouveau cours.
+        $location = new location();
+        $location->save();
+
+        $otherlocation = new location();
+        $otherlocation->name = 'otherlocation';
+        $otherlocation->save();
+
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
-        $course = new course();
+        $data->locationid = $location->id;
         $data->periodid = $period1->id;
+        $course = new course();
         $course->save($data);
 
         // La période p1 a été associée au cours. Il devrait y avoir 2 sessions à venir.
@@ -330,11 +340,11 @@ final class course_test extends \advanced_testcase {
         $this->assertArrayNotHasKey($futuresessionid, $sessions);
 
         // Change le lieu de pratique du cours.
-        $course->locationid = (string) ($pastsessionlocation + 1);
+        $course->locationid = $otherlocation->id;
         $course->set_sessions();
         $sessions = $course->get_sessions();
         // La session passée non prévue doit conserver son lieu de pratique.
-        $this->assertEquals($pastsessionlocation, $sessions[$pastsessionid]->locationid);
+        $this->assertEquals($location->id, $sessions[$pastsessionid]->locationid);
         unset($sessions[$pastsessionid]);
 
         // Les futures sessions doivent être associées au nouveau lieu de pratique.
