@@ -18,6 +18,7 @@ namespace local_apsolu\core;
 
 use calendar_event;
 use context_course;
+use moodle_exception;
 use stdClass;
 
 /**
@@ -270,6 +271,11 @@ class attendancesession extends record {
         // Démarre une transaction, si ce n'est pas déjà fait.
         if ($DB->is_transaction_started() === false) {
             $transaction = $DB->start_delegated_transaction();
+        }
+
+        // Contrôle la valeur locationid.
+        if (empty($this->locationid) === true) {
+            throw new moodle_exception('missingparam', 'error', $link = '', 'locationid');
         }
 
         if (empty($this->id) === true) {
