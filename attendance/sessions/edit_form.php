@@ -50,6 +50,12 @@ class local_apsolu_attendance_sessions_edit_form extends moodleform {
         $mform->setType('sessiontime', PARAM_INT);
         $mform->addRule('sessiontime', get_string('required'), 'required', null, 'client');
 
+        // Champ "Durée".
+        $durationoptions = ['units' => [MINSECS, HOURSECS]];
+        $mform->addElement('duration', 'duration', get_string('duration', 'local_apsolu'), $durationoptions);
+        $mform->addRule('duration', get_string('required'), 'required', null, 'client');
+        $mform->setType('duration', PARAM_INT);
+
         // Location field.
         $mform->addElement('select', 'locationid', get_string('location', 'local_apsolu'), $locations);
         $mform->setType('locationid', PARAM_INT);
