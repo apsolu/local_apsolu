@@ -297,7 +297,7 @@ class qrcode extends record {
     /**
      * Returns the QR code in DB for a given session id
      *
-     * @param integer $sessionid
+     * @param int $sessionid
      * @return qrcode (false if not found)
      */
     public static function get_qrcode_by_sessionid(int $sessionid): qrcode {
@@ -308,7 +308,7 @@ class qrcode extends record {
     /**
      * returns the DB status and rotate setting of a QR code given its session id
      *
-     * @param integer $sessionid
+     * @param int $sessionid
      * @return array of 2 boolean : is the QR code in DB and if so is it considered as printable (i.e. not rotating)
      */
     public static function get_session_qrcode_dbstatus(int $sessionid): array {
@@ -326,7 +326,7 @@ class qrcode extends record {
     /**
      * returns the DB status and rotate setting of all QR codes for a list of sessions
      *
-     * @param array $sessionsids : ids of the not yet expired sessions of a course
+     * @param array $sessionids : ids of the not yet expired sessions of a course
      * @return array of 2 booleans : are all the QR code in DB and if so are they all considered as printable (i.e. not rotating)
      */
     public static function get_course_qrcodes_dbstatus(array $sessionids): array {
@@ -368,9 +368,9 @@ class qrcode extends record {
     /**
      * get all the data needed for the template to render a QR code
      *
-     * @param int $course
+     * @param int $courseid
      * @param qrcode $qrcode
-     * @param session $session
+     * @param attendancesession $session
      * @return stdClass data
      */
     public static function build_qrcode_image(int $courseid, qrcode $qrcode, attendancesession $session): stdClass {
