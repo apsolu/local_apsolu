@@ -65,6 +65,18 @@ phpcs:
 phpdoc:
   stage: analyses
   needs: ["savepoints", "validate"]  # Attend la fin de l'exécution des jobs savepoints et validate pour démarrer ce job.
+  services:
+    - name: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/mariadb:${MARIADB_VERSION}
+      alias: docker-mariadb
+      command:
+        - "--character-set-server=utf8mb4"
+        - "--collation-server=utf8mb4_unicode_ci"
+        - "--innodb_file_per_table=On"
+        - "--wait-timeout=28800"
+        - "--skip-log-bin"
+      variables:
+        MARIADB_DATABASE: moodle
+        MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "yes"
   script:
     - moodle-plugin-ci phpdoc --moodle "$WWWMOODLE_PATH" --max-warnings 0 -- "$PLUGIN_PATH"
   rules:
