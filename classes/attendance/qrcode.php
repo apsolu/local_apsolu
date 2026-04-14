@@ -23,11 +23,12 @@ use local_apsolu\core\attendancepresence;
 use local_apsolu\core\attendancesession;
 use local_apsolu\core\attendance\status as attendancestatus;
 use local_apsolu\core\record;
-use local_apsolu\event\qrcode_created;
+use core_qrcode;
 use local_apsolu\event\qrcode_deleted;
-use local_apsolu\event\qrcode_updated;
 use moodle_exception;
+use core\url as moodle_url;
 use stdClass;
+use html_writer;
 
 /**
  * Classe gérant les QR code pour la prise de présences.
@@ -291,5 +292,116 @@ class qrcode extends record {
         $a->time = userdate($presence->timecreated, get_string('strftimetime'));
 
         return get_string('your_participation_has_been_recorded_X_for_this_session_the_X', 'local_apsolu', $a);
+    }
+
+    /**
+     * Returns the QR code in DB for a given session id
+     *
+     * @param integer $sessionid
+     * @return qrcode (false if not found)
+     */
+    public static function get_qrcode_by_sessionid(int $sessionid): qrcode {
+        $qrcode = self::get_record(['sessionid' => $sessionid]);
+        return $qrcode;
+    }
+
+    /**
+     * returns the DB status and rotate setting of a QR code given its session id
+     *
+     * @param integer $sessionid
+     * @return array of 2 boolean : is the QR code in DB and if so is it considered as printable (i.e. not rotating)
+     */
+    public static function get_session_qrcode_dbstatus(int $sessionid): array {
+        $qrcode = self::get_qrcode_by_sessionid($sessionid);
+        $isindb = false;
+        $isprintable = false;
+        if ($qrcode !== false) {
+            $isindb = true;
+            $isrotating = $qrcode->is_qrcode_rotating();
+            $isprintable = !$isrotating;
+        }
+        return ['isindb' => $isindb, 'isprintable' => $isprintable];
+    }
+
+    /**
+     * returns the DB status and rotate setting of all QR codes for a list of sessions
+     *
+     * @param array $sessionsids : ids of the not yet expired sessions of a course
+     * @return array of 2 booleans : are all the QR code in DB and if so are they all considered as printable (i.e. not rotating)
+     */
+    public static function get_course_qrcodes_dbstatus(array $sessionids): array {
+        global $DB;
+
+        $qrcodesdata = $DB->get_records_list('apsolu_attendance_qrcodes', 'sessionid', $sessionids);
+
+        // Le nombre de QR codes doit correspondre aux nombres de sessions.
+        $isindb = count($qrcodesdata) == count($sessionids);
+        $isprintable = false;
+        // QR codes imprimables ( != rotate).
+        if ($isindb) {
+            $isprintable = true;
+            foreach ($qrcodesdata as $data) {
+                $qrcode = new qrcode();
+                $qrcode->set_vars($data);
+                if ($qrcode->is_qrcode_rotating()) {
+                    $isprintable = false;
+                    break;
+                }
+            }
+        }
+
+        return ['isindb' => $isindb, 'isprintable' => $isprintable];
+    }
+
+
+    /**
+     * returns the rotate setting value of a QR code
+     *
+     * @return boolean
+     */
+    protected function is_qrcode_rotating(): bool {
+        $settings = json_decode($this->settings, $associative = false, flags: JSON_THROW_ON_ERROR);
+        return empty($settings->rotate) === false;
+    }
+
+
+    /**
+     * get all the data needed for the template to render a QR code
+     *
+     * @param int $course
+     * @param qrcode $qrcode
+     * @param session $session
+     * @return stdClass data
+     */
+    public static function build_qrcode_image(int $courseid, qrcode $qrcode, attendancesession $session): stdClass {
+        global $CFG;
+        // Infos du QR code : nom de l'activité et session.
+        $sessionurl = new moodle_url('/local/apsolu/attendance/index.php', ['page' => 'edit', 'courseid' => $courseid]);
+
+        // Construit l'image du QR code.
+        $qrcodeurl = new moodle_url('/local/apsolu/attendance/qrcode.php', ['keycode' => $qrcode->keycode]);
+        $image = new core_qrcode($qrcodeurl->out(false));
+
+        $lines = explode(PHP_EOL, $image->getBarcodeSVGcode(15, 15, $color = 'black'));
+        unset($lines[0], $lines[1]);
+        $lines[2] = preg_replace(
+            '/<svg width="([0-9]+)" height="([0-9]+)"/',
+            '<svg width="100%" height="100%" viewBox="0 0 \1 \2"',
+            $lines[2]
+        );
+
+        // Affichage du QR code.
+        $data = new stdClass();
+        $data->sessionname = $session->name;
+        $data->session = html_writer::link($sessionurl, $session->name);
+        $data->image = implode(PHP_EOL, $lines);
+        if (empty($CFG->debugdisplay) === false) {
+            $url = new moodle_url('/local/apsolu/attendance/qrcode.php', ['keycode' => $qrcode->keycode]);
+            $data->debugurl = $url->out(false);
+        }
+
+        $data->keycodeinfo = substr($qrcode->keycode, -5);
+
+        return $data;
     }
 }

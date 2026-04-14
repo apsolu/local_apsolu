@@ -93,21 +93,20 @@ class edit_select_form extends moodleform {
                 ]);
                 $buttonarray[] = &$mform->createElement('html', $input);
             } else {
-                // Définit le lien pour modifier le QR code.
-                $printurl = new moodle_url('/local/apsolu/attendance/qrcode.php', ['id' => $qrcodeid, 'print' => 1]);
-                $items = [
-                    html_writer::link($url, get_string('edit_qr_code', 'local_apsolu'), ['class' => 'dropdown-item']),
-                    html_writer::link($printurl, get_string('print', 'local_apsolu'), ['class' => 'dropdown-item']),
-                ];
-                $list = html_writer::alist($items, ['class' => 'dropdown-menu']);
+                // Définit le lien pour modifier les réglages du QR code.
+                $items = [html_writer::link($url, get_string('edit_qr_code', 'local_apsolu'), ['class' => 'dropdown-item'])];
 
-                // Définit le lien pour afficher le QR code.
+                // Action principale : générer et afficher le QR code s'il n'existe pas encore.
                 if ($qrcodeid === 0) {
                     $label = get_string('show_a_new_qr_code', 'local_apsolu');
                     $url = new moodle_url('/local/apsolu/attendance/qrcode.php', ['sessionid' => $data->sessionid]);
-                } else {
+                } else { // Afficher le QR code existant s'il existe déjà.
                     $label = get_string('show_qr_code', 'local_apsolu');
                     $url = new moodle_url('/local/apsolu/attendance/qrcode.php', ['id' => $qrcodeid]);
+
+                    // Bouton imprimer le QR code de la session.
+                    $printurl = new moodle_url('/local/apsolu/attendance/qrcode.php', ['id' => $qrcodeid, 'print' => 1]);
+                    $items[] = html_writer::link($printurl, get_string('print', 'local_apsolu'), ['class' => 'dropdown-item']);
                 }
 
                 $link = html_writer::link($url, $label, ['class' => 'btn btn-warning']);
@@ -118,6 +117,8 @@ class edit_select_form extends moodleform {
                     'data-bs-toggle' => 'dropdown',
                     'type' => 'button',
                 ]);
+
+                $list = html_writer::alist($items, ['class' => 'dropdown-menu']);
 
                 // Affiche les 2 liens sur la page.
                 $buttonarray[] = &$mform->createElement('html', html_writer::div($link . $dropdown . $list, 'btn-group dropdown'));

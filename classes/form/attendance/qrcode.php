@@ -16,8 +16,11 @@
 
 namespace local_apsolu\form\attendance;
 
+use core\url as moodle_url;
+use html_writer;
 use moodleform;
 use stdClass;
+use local_apsolu\attendance\qrcode as dbcode;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -40,13 +43,17 @@ class qrcode extends moodleform {
         global $CFG;
 
         $mform = $this->_form;
-        [$default, $sessions, $statuses] = $this->_customdata;
+        [$default, $statuses] = $this->_customdata;
+        $setupglobal = $this->_customdata['setupglobal'];
+
+        // Boutons Enregistrer et Imprimer : disabled si QRcode / tous les QRcodes ne sont pas en bdd.
+        $qrcodedbstatus = $this->_customdata['qrcodedbstatus'];
 
         $durationoptions = ['units' => [1, MINSECS, HOURSECS]];
 
-        // Général.
-        $mform->addElement('header', 'general', get_string('qr_code', 'local_apsolu'));
-        $mform->addElement('select', 'sessionid', get_string('generate_a_qr_code_for', 'local_apsolu'), $sessions);
+        // Formulaire pour modifier un QR code d'une session ou tous les QR codes des sessions à venir.
+        // Session id (input caché).
+        $mform->addElement('hidden', 'sessionid', $default->sessionid);
 
         // Avant le début de la session.
         $mform->addElement('header', 'before', get_string('before_the_start_of_the_session', 'local_apsolu'));
@@ -103,8 +110,8 @@ class qrcode extends moodleform {
         $mform->addHelpButton('automarktime', 'deadline_for_recording_attendance', 'local_apsolu');
         $mform->disabledIf('automarktime', 'automarkenabled', 'eq', '0');
 
-        // Options.
-        $mform->addElement('header', 'options', get_string('options', 'local_apsolu'));
+        // Options et réglages du QR code + affichage session(s) concernée(s).
+        $mform->addElement('header', 'options', get_string('qr_code_setup', 'local_apsolu'));
         $mform->setExpanded('options', true);
 
         $label = get_string('allow_students_who_are_not_enrolled_in_the_course', 'local_apsolu');
@@ -118,10 +125,65 @@ class qrcode extends moodleform {
         $mform->addElement('selectyesno', 'rotate', get_string('rotate_qr_code', 'local_apsolu'));
         $mform->addHelpButton('rotate', 'rotate_qr_code', 'local_apsolu');
 
-        // Submit buttons.
-        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save'));
+        // Bouton Enregistrer (enregistre les options sans changer le.s keycode.s).
+        $attr = array_merge($qrcodedbstatus['isindb'] ? [] : ['disabled' => 'disabled'], ['name' => 'save',
+                    'class' => 'btn btn-default btn-primary',
+                    'type' => 'submit',
+                    'id' => 'id_save']);
 
-        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
+        $btnsave = html_writer::tag('div', html_writer::tag('button', get_string('save'), $attr), ['class' => 'mb-3 fitem']);
+
+        // QR code pour une session.
+        if ($setupglobal == false) {
+            $actionhelpstr = 'submit_qr_code';
+            // Bouton Générer le QR code.
+            $btn = html_writer::tag('div', html_writer::tag('button', get_string('generate_a_qr_code', 'local_apsolu'), [
+                    'name' => 'generate',
+                    'class' => 'btn btn-default btn-warning',
+                    'type' => 'submit',
+                    'id' => 'id_generate_qrcode',
+                ]), ['class' => 'mb-3 fitem']);
+            $submitbtnar[] = &$mform->createElement('html', $btn);
+            $submitbtnar[] = &$mform->createElement('html', $btnsave);
+        } else {
+            // QR code pour toutes les sessions.
+            $actionhelpstr = 'submit_all_qr_codes';
+
+            // Bouton Générer les QR codes.
+            $btn = html_writer::tag('div', html_writer::tag('button', get_string('generate_all_qr_codes', 'local_apsolu'), [
+                    'name' => 'generate',
+                    'class' => 'btn btn-default btn-warning',
+                    'type' => 'submit',
+                    'id' => 'id_generate_all_qrcodes',
+                ]), ['class' => 'mb-3 fitem']);
+
+            $submitbtnar[] = &$mform->createElement('html', $btn);
+            $submitbtnar[] = &$mform->createElement('html', $btnsave);
+
+            // Bouton Imprimer tous les QR codes.
+            $url = new moodle_url(
+                '/local/apsolu/attendance/qrcode.php',
+                ['courseid' => $this->_customdata['courseid'], 'print' => 1]
+            );
+
+            $class = $qrcodedbstatus['isindb'] && $qrcodedbstatus['isprintable'] ?
+                'btn btn-default btn-primary' : 'btn btn-default btn-primary btn-disabled';
+            $attr = ['name' => 'print_all',
+                    'class' => $class,
+                    'type' => 'button',
+                    'id' => 'id_print_all_qrcodes'];
+
+            $btn = html_writer::tag(
+                'div',
+                html_writer::link($url, get_string('print', 'local_apsolu'), $attr),
+                ['class' => 'mb-3 fitem']
+            );
+
+            $submitbtnar[] = &$mform->createElement('html', $btn);
+        }
+
+        $mform->addGroup($submitbtnar, 'buttonar', '', [' '], false);
+        $mform->addHelpButton('buttonar', $actionhelpstr, 'local_apsolu');
 
         // Set default values.
         $this->set_data($default);

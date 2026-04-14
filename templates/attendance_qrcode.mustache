@@ -40,13 +40,15 @@
         "wwwroot": "http://localhost",
         "color": "#A2A2A2",
         "sitename": "APSOLU",
-        "course": "Basket-ball 5x5 (H) Jeudi 14:30 16:15 Débutant",
         "session": "Session du 18 novembre",
-        "image": "",
+        "qrcodes": [],
         "user": "Non connecté",
-        "debugurl": ""
+        "display_qrcode": true
     }
 }}
+
+{{! displays QR code directly for scanning or in the print window }}
+{{#display_qrcode}}
 <!DOCTYPE html>
 <html dir="ltr" lang="fr" style="height:100vh;width:100vw;" xml:lang="fr">
 <head>
@@ -54,12 +56,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {{^ print }}
     {{# rotate }}
-        <meta http-equiv="refresh" content="30"> {{! Recharge la page toutes les 30 secondes. }}
+        <meta http-equiv="refresh" content="30;url={{ refreshurl }}"> {{! Recharge la page toutes les 30 secondes. }}
     {{/ rotate }}
     {{/ print }}
     <style>
         body, div {
-            font-size: 1.5em;
+            font-size: 1.5rem;
             font-weight: 600;
             margin: 0;
             padding: 0;
@@ -107,22 +109,155 @@
             height: 90vh;
             justify-content: center;
         }
+
+        .alert {
+            width: 70%;
+            margin-left: 15%;
+            margin-top: 8px;
+            margin-bottom: 8px;
+            font-size: 0.9vw;
+        }
+
+        .alert-warning {
+            --bs-alert-color: #60451f;
+            --bs-alert-bg: #fcefdc;
+            --bs-alert-border-color: #60451f;
+            --bs-alert-link-color: #60451f;
+        }
+
+        #qrcodes-container {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .session-p {
+            font-size: 1rem;
+            margin: 0px 0px 15px 0px;
+        }
+
+        .col-3 .session-p {
+            font-size: 0.7rem;
+            margin: 0px 0px 15px 0px;
+        }
+
+        .col-sm .session-p {
+            font-size: 1rem;
+            margin: 0px 0px 15px 0px;
+        }
+
+        #course-p {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 15px; 
+        }
+
+        .container .grid-row {
+            max-width: 600px;
+        }
+
+        .qrcode-image {
+            max-height: 300px;
+        }
+
+        .keycode-info {
+            font-size:  0.6rem;
+            font-weight: 300;
+            margin: 5px 0px 10px 0px;
+            align-self: end;
+        }
+
+        .col-sm, .col-3 {
+            break-inside: avoid;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .col-3 {
+            margin-top: 10px;
+        }
+
+        .col-3:nth-child(4n+1):not(:first-child) {
+            break-before: auto;
+        }
+        
     </style>
 </head>
-<body{{# print}} onload="window.print();" onafterprint="document.getElementById('afterprint-container').style.display = 'flex';document.getElementById('qrcode-container').style.display = 'none';"{{/ print}}>
+<body{{# print}} onload="printHandler()" {{/ print}} {{^ print}} onload='dismissNotification()' {{/ print}}>
     <nav id="navbar">
         <p style="display:inline-block;margin:0 1em;"><a class="dark-link" href="{{ wwwroot }}/">{{ sitename }}</a></p>
         <p style="background-color:#1d1d1f;color:#f2f2f2;flex-grow:1;height:50px;margin:0;padding:0 2em;text-align: right;"><a class="light-link" href="{{ wwwroot }}/">{{ user }}</a></p>
     </nav>
-    <div id="qrcode-container">
-        <p id="course-p">{{{ course }}}</p>
-        <div id="qrcode" style="height:70vh;width:100vw;">
-            {{# debugurl }}<a href="{{{ debugurl }}}">{{/ debugurl }}{{{ image }}}{{# debugurl }}</a>{{/ debugurl }}
-        </div>
-        <p id="session-p">{{{ session }}}</p>
-    </div>
+    <div id="qrcodes-container" class="container">
+        <p id="course-p" class="mv-2 row">{{{ course }}}</p>
+        <div class='row grid-row'>
+        {{# qrcodes }}
+        
+            {{# multiple }}
+            <div class="qrcode col-3">
+            {{/ multiple}}
+        
+            {{^ multiple}}
+            <div class="qrcode col-sm">
+            {{/ multiple}}
+           
+                <p class="session-p mt-0">{{{ session }}}</p>
+                <div class="qrcode-image">
+                    {{# debugurl }}<a href="{{{ debugurl }}}">{{/ debugurl }}{{{ image }}}{{# debugurl }}</a>{{/ debugurl }}
+                    
+                </div>
+                <span class="keycode-info">keycode= xxx{{ keycodeinfo }}</span>
+
+            </div>
+
+        {{/ qrcodes }}</div>
+     </div>
     <div id="afterprint-container">
         <p><a href="javascript:history.back();">{{# str }}return_to_course, local_apsolu{{/ str }}</a></p>
     </div>
+
+{{/display_qrcode}}
+
+{{! displays informations about QR code scanning results and availability }}
+{{^display_qrcode}}
+    <div class='row'>
+        <dl class='col-12 col-md-6'>
+            <dt>{{# str }}course{{/ str }}</dt>
+            <dd>{{ course }}</dd>
+            <dt>{{# str }}user{{/ str }}</dt>
+            <dd>{{ username }}</dd>
+        </dl>
+        <dl class='col-12 col-md-6'>
+            <dt>{{# str }}session, local_apsolu{{/ str }}</dt>
+            <dd>{{ session }}</dd>
+            <dt>{{# str }}role, local_apsolu{{/ str }}</dt>
+            <dd>{{ roles }}</dd>
+        </dl>
+    </div> 
+
+{{/display_qrcode}}
+
+    <script>
+
+        function printHandler() {
+            this.window.print();
+            addEventListener("afterprint", () => { 
+                document.getElementById('afterprint-container').style.display = 'flex';
+                document.getElementById('qrcodes-container').style.display = 'none';
+            });
+        }
+
+        function dismissNotification() {
+            if(document.getElementsByClassName("btn-close").length) {
+                document.getElementsByClassName("btn-close")[0].addEventListener("click", (event) => {
+                    // Masquer le message d'avertissement.
+                    event.currentTarget.parentNode.classList.add('visually-hidden');
+                });
+            }
+
+        }
+
+    </script>
+
 </body>
 </html>
