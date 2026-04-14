@@ -61,7 +61,7 @@
         <thead>
         <tr>
             <th>{{#str}}name{{/str}}</th>
-            <th>{{#str}}date{{/str}}</th>
+            <th>{{#str}}duration, local_apsolu{{/str}}</th>
             <th>{{#str}}location, local_apsolu{{/str}}</th>
             <th>{{#str}}action{{/str}}</th>
         </tr>
@@ -70,7 +70,7 @@
         {{#sessions}}
         <tr>
             <td>{{ name }}</td>
-            <td>{{ sessiontimestr }}</td>
+            <td>{{ durationstr }}</td>
             <td>{{ location }}</td>
             <td>
                 {{^expired}}
