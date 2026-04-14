@@ -113,6 +113,24 @@ try {
         $dbman->drop_field($table, $field);
     }
 
+    // Ajoute un champ "duration" dans la table "apsolu_attendance_sessions".
+    $table = new xmldb_table('apsolu_attendance_sessions');
+    $field = new xmldb_field('duration', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, $sequence = null, 0, 'sessiontime');
+
+    if ($dbman->field_exists($table, $field) === false) {
+        $dbman->add_field($table, $field);
+
+        // Initialise le champ "duration".
+        foreach (\local_apsolu\core\attendancesession::get_records() as $session) {
+            if (empty($session->duration) === false) {
+                continue;
+            }
+
+            $session->duration = $session->get_duration();
+            $session->save();
+        }
+    }
+
     mtrace(get_string('success'));
 } catch (Exception $exception) {
     mtrace(get_string('error'));
