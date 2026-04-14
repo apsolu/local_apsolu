@@ -35,6 +35,7 @@ $data->url = $CFG->wwwroot;
 $data->courseid = $courseid;
 
 switch ($action) {
+    case 'bulk':
     case 'delete':
     case 'edit':
     case 'view':

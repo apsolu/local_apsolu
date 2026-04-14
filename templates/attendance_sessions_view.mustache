@@ -49,7 +49,19 @@
 
 {{#period}}
     <ul class="list-inline text-end">
-        <li class="list-inline-item"><a class="btn btn-primary" href="{{ url }}/local/apsolu/attendance/index.php?page=sessions&action=edit&courseid={{ courseid }}&sessionid=0">{{#str}}attendance_add_session, local_apsolu{{/str}}</a></li>
+        <li class="list-inline-item">
+            <div class="btn-group dropdown">
+                <a class="btn btn-primary" href="{{ url }}/local/apsolu/attendance/index.php?page=sessions&action=edit&courseid={{ courseid }}&sessionid=0">{{#str}}attendance_add_session, local_apsolu{{/str}}</a>
+                <button aria-expanded="false" class="btn btn-primary btn-sm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" type="button">
+                    <span class="visually-hidden">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" href="{{ url }}/local/apsolu/attendance/index.php?page=sessions&action=bulk&courseid={{ courseid }}">{{#str}}add_bulk_sessions, local_apsolu{{/str}}</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
     </ul>
 
     {{^count_sessions}}
