@@ -42,8 +42,9 @@ class course extends external_api {
      * @return external_function_parameters
      */
     public static function set_course_parameters() {
-        return new external_function_parameters(
-            new external_single_structure([
+        return new external_function_parameters([
+            'course' => new external_single_structure(
+                [
                 // Elements descriptifs d'un cours.
                 'courseid' => new external_value(PARAM_INT, 'course id', VALUE_OPTIONAL),
                 'event' => new external_value(PARAM_TEXT, 'event', VALUE_OPTIONAL),
@@ -81,9 +82,10 @@ class course extends external_api {
                 'period' => new external_value(PARAM_TEXT, 'period name', VALUE_OPTIONAL),
                 'generic_name' => new external_value(PARAM_TEXT, 'generic name', VALUE_OPTIONAL),
                 'weeks' => new external_value(PARAM_RAW, 'weeks', VALUE_OPTIONAL),
-            ]),
-            'course to create'
-        );
+                ],
+                'course to create'
+            ),
+        ]);
     }
 
     /**
