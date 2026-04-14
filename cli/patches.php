@@ -100,6 +100,19 @@ try {
         profile_save_field((object) $data, $editors = []);
     }
 
+    // Supprime le champ "activityid" de la table "apsolu_attendance_sessions".
+    $table = new xmldb_table('apsolu_attendance_sessions');
+
+    $index = new xmldb_index('activityid', XMLDB_INDEX_NOTUNIQUE, ['activityid']);
+    if ($dbman->index_exists($table, $index) === true) {
+        $dbman->drop_index($table, $index);
+    }
+
+    $field = new xmldb_field('activityid');
+    if ($dbman->field_exists($table, $field) === true) {
+        $dbman->drop_field($table, $field);
+    }
+
     mtrace(get_string('success'));
 } catch (Exception $exception) {
     mtrace(get_string('error'));

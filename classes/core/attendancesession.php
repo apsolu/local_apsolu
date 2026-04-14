@@ -44,9 +44,6 @@ class attendancesession extends record {
     /** @var int|string $courseid Identifiant du cours auquel est rattachée la session. */
     public $courseid = '';
 
-    /** @var int|string $activityid Identifiant numérique de la catégorie du cours (activité sportive). TODO: champ à supprimer ? */
-    public $activityid = '';
-
     /** @var int|string $timecreated Timestamp Unix de création de la session. */
     public $timecreated = '';
 
