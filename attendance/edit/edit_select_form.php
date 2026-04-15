@@ -72,7 +72,6 @@ class edit_select_form extends moodleform {
         $mform->setType('courseid', PARAM_INT);
 
         // Submit buttons.
-        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('show'));
         $buttonarray[] = &$mform->createElement('submit', 'exportcsv', get_string('export_to_csv_format', 'local_apsolu'));
         $buttonarray[] = &$mform->createElement('submit', 'exportexcel', get_string('export_to_excel_format', 'local_apsolu'));
         if ($qrcodeid !== null) {

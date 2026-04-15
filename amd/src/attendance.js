@@ -1,9 +1,17 @@
-define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
+define([
+  "jquery",
+  "enrol_select/jquery.popupoverlay",
+  "core/modal_save_cancel",
+  'core/str',
+  "core/modal_events"
+], function($, PopupOverlay, ModalSaveCancel, Str, ModalEvents) {
     return {
         initialise: function() {
             // Créé un bouton dropdown pour cocher toutes les présences non définies.
             let selector = '#apsolu-attendance-table tbody tr:first-child .apsolu-attendance-status-form input';
             let attendancestatus = document.querySelectorAll(selector);
+            // Etat du formulaire des présences : des modifications apportées aux boutons radio et aux commentaires ?
+            var dirtyPresenceForm = false;
             if (attendancestatus.length) {
                 // Génère le bouton dropdown avec la liste des motifs de présences disponibles.
                 let dropdown = '<div class="dropdown">' +
@@ -58,6 +66,9 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
                                 }
                             }
                         });
+
+                        // Mettre à jour l'état du formulaire (modifications non enregistrées).
+                        dirtyPresenceForm = hasUnsavedChanges();
                     });
                 });
 
@@ -178,6 +189,127 @@ define(["jquery", "enrol_select/jquery.popupoverlay"], function($) {
                     popup.popup('hide');
                 });
             }
+
+            /* Etat et soumission des deux formulaires (session et options d'affichage / tableau des présences).
+             * Rétablit l'affichage d'un message d'alerte pour les modifications non enregistrées.
+             * Le changement de valeur d'un des inputs du premier formulaire déclenche automatiquement l'envoi du formulaire.
+             * S'il y a des modifications en attente dans le 2e formulaire : gère l'affichage d'une modal de confirmation.
+            */
+            const main = $('#region-main');
+            var form1 = $(main).find('form').eq(0); // Formulaire avec la liste des sessions et les options d'affichage du tableau.
+            var form2 = $(main).find('form').eq(1); // Formulaire qui correspond au tableau des présences.
+
+            // Flag pour désactiver l'affichage du message d'alerte (modifications non enregistrées).
+            var ignoreDirtyForm = false;
+
+           /**
+            * Gestion de l'événement onbeforeunload lors d'un clic sur un submit ou un lien
+            * on veut seulement l'alerte du navigateur quand le formulaire de présences est modifié (pas les inputs du form 1).
+            * @param {*} e
+            * @returns boolean false
+            */
+            function presenceFormAlert(e) {
+                if (dirtyPresenceForm === true && ignoreDirtyForm !== true) {
+                    e.preventDefault(); // Déclenche l'affichage de la boite de dialogue native du navigateur
+                }
+                e.stopPropagation();
+                return false;
+            }
+
+            window.addEventListener('beforeunload', presenceFormAlert, true);
+
+            /** Soumission du formulaire pour l'affichage du tableau de présence.*/
+            function sessionFormSubmission() {
+                window.removeEventListener('beforeunload', presenceFormAlert, true);
+                ignoreDirtyForm = true; // Empêche la boite de dialogue du navigateur.
+                window.addEventListener('beforeunload', presenceFormAlert, true);
+                $(form1).submit();
+            }
+
+            $(form2).find('textarea, input').on('change', function() {
+                // On vérifie à nouveau, car les inputs peuvent avoir été re positionnés sur leurs valeurs de départ.
+                dirtyPresenceForm = hasUnsavedChanges();
+            });
+
+            // On ne veut pas d'alerte lors du clic sur le bouton Enregistrer
+            $(form2).find('input[type="submit"]').on('click', () => {ignoreDirtyForm = true;});
+
+            // Les valeurs initiales du formulaire 1 sont stockées au chargement de la page.
+            var valeursInitiales = new Map();
+            $(form1).find('select, input[type="checkbox"]').each(function() {
+                var el = this;
+                valeursInitiales.set(el, el.type === 'checkbox' ? el.checked : el.value);
+            });
+
+            /** Restaurer les valeurs du formulaire 1 en cas d'annulation. */
+            function restaurerValeurs() {
+                valeursInitiales.forEach(function(valeur, el) {
+                    if (el.type === 'checkbox') {
+                        el.checked = valeur;
+                    } else {
+                        el.value = valeur;
+                    }
+                });
+            }
+
+            /** Vérifier la présence de modifications non enregistrées dans le tableau de présences. */
+            function hasUnsavedChanges() {
+                // Vérifier l'état des champs "Commentaire"
+                const presence_comments = $(form2).find('textarea').toArray();
+                if(presence_comments.some(function(el) {
+                    return el.value !== el.defaultValue;
+                })) {
+                    return true;
+                }
+
+                // Vérifier la valeur des groupes de boutons radio "Présence"
+                const presence_radios = $(form2).find('td[class="apsolu-attendance-status-form"]');
+                var hasUnsavedChanges = false;
+                $(presence_radios).each(function() {
+                    const defaultValue = $(this).find('input[name="presence_default_value"]').val();
+                    let checked = $(this).find('input[type="radio"]:checked');
+                    let val = checked.length == 1 ? checked.val() : "0";
+                    if(defaultValue != val) {
+                        hasUnsavedChanges = true;
+                        return false;
+                    }
+                });
+
+                return hasUnsavedChanges;
+            }
+
+            // Au changement de valeur sur l'un des inputs du formulaire 1, on affiche une modal de confirmation.
+            $(form1).find('select, input[type="checkbox"]').each(function() {
+                $(this).on('change', function () {
+                    if (dirtyPresenceForm == false) { // Pas de modifications en attente dans le formulaire 2.
+                        sessionFormSubmission(); // On désactive l'alerte et on soumet le formulaire.
+                        return;
+                    }
+                    // Sinon : il y a des modifications en attente, on affiche une modal pour demander confirmation.
+                    ModalSaveCancel.create({
+                        title: Str.get_string('data_unsaved', 'local_apsolu'),
+                        body: Str.get_string('data_unsaved_confirm_or_cancel', 'local_apsolu'),
+                        removeOnClose: true
+                    }).then(function(modal) {
+                        modal.setSaveButtonText('Continuer');
+                        // Confirmation de l'envoi du formulaire.
+                        modal.getRoot().on(ModalEvents.save, function() {
+                            sessionFormSubmission();
+                        });
+                        // Annulation de l'envoi du formulaire, on restaure les valeurs initiales
+                        modal.getRoot().on(ModalEvents.cancel, function() {
+                            restaurerValeurs();
+                        });
+                        // Traiter le clic sur la croix comme un cancel.
+                        modal.getRoot().on(ModalEvents.hidden, function() {
+                            restaurerValeurs();
+                        });
+                        modal.show();
+                        return modal;
+                    });
+                });
+            });
+
         },
         setupcourse: function() {
             // Affiche les raccourcis de gestion de cours en haut de la page d'accueil du cours.

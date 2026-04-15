@@ -152,6 +152,7 @@
                         {{lastname}} {{firstname}}
                     </td>
                     <td class="apsolu-attendance-status-form">
+                        <input type="hidden" name="presence_default_value" value="{{ presence_status }}">
                         {{#presences_radios}}
                             <div><label><input type="radio" name="presences[{{id}}]" value="{{statusid}}" {{#checked}}checked="checked"{{/checked}}> {{label}}</label></div>
                         {{/presences_radios}}
@@ -180,7 +181,7 @@
             </tbody>
         </table>
     </div>
-    <p class="text-end">
+    <p class="text-end mt-2">
         <input class="btn btn-primary" type="submit" name="apsolu" value="{{#str}}savechanges{{/str}}">
         {{#invalid_enrolments}}<input type="hidden" name="invalid_enrolments" value="1">{{/invalid_enrolments}}
         {{#inactive_enrolments}}<input type="hidden" name="inactive_enrolments" value="1">{{/inactive_enrolments}}
