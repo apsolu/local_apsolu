@@ -29,5 +29,5 @@ require(__DIR__ . '/../../../config.php');
 
 $redirection = $CFG->wwwroot . '/local/apsolu/grades/grade/index.php';
 
-header('Location: ' . $redirection, $repalce = true, $httpresponsecode = 301);
+header('Location: ' . $redirection, $replace = true, $httpresponsecode = 301);
 exit();

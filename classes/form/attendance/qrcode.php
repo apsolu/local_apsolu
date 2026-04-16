@@ -110,7 +110,7 @@ class qrcode extends moodleform {
         $mform->addHelpButton('automarktime', 'deadline_for_recording_attendance', 'local_apsolu');
         $mform->disabledIf('automarktime', 'automarkenabled', 'eq', '0');
 
-        // Options et réglages du QR code + affichage session(s) concernée(s).
+        // Gestion du QR code.
         $mform->addElement('header', 'options', get_string('qr_code_setup', 'local_apsolu'));
         $mform->setExpanded('options', true);
 
