@@ -58,6 +58,7 @@ $string['add_association_number'] = 'Ajouter un numéro de section';
 $string['add_category'] = 'Ajouter une activité physique';
 $string['add_city'] = 'Ajouter un site';
 $string['add_course'] = 'Ajouter un créneau horaire';
+$string['add_course_of_type_X'] = 'Ajouter un créneau horaire ({$a})';
 $string['add_course_type'] = 'Ajouter un type de format';
 $string['add_gradeitem'] = 'Ajouter un élément d’évaluation';
 $string['add_grouping'] = 'Ajouter un groupement d’activités';

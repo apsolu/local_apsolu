@@ -23,103 +23,44 @@
  */
 
 use local_apsolu\core\course;
+use local_apsolu\core\customfields;
 
 defined('MOODLE_INTERNAL') || die;
 
 require(__DIR__ . '/edit_form.php');
 
-// Get course id.
+// Récupère les données passées en paramètre.
 $courseid = optional_param('courseid', 0, PARAM_INT);
+$coursetypeid = required_param('coursetypeid', PARAM_INT);
 
-// Generate object.
+// Récupère le créneau (ou génère un nouveau créneau).
 $course = new Course();
+// $course->typeid = $coursetypeid;
 if ($courseid !== 0) {
     $course->load($courseid);
-
-    if (empty($course->id) === false) {
-        $idnumber = $DB->get_record('course', ['id' => $course->id]);
-        $course->idnumber = $idnumber->idnumber;
-    }
 }
 
-$url = new moodle_url('/local/apsolu/courses/courses/edit.php', ['tab' => $tab, 'action' => 'edit', 'courseid' => $courseid]);
-
-// Load categories.
-$sql = "SELECT cc.id, cc.name
-          FROM {course_categories} cc
-          JOIN {apsolu_courses_categories} acc ON cc.id = acc.id
-      ORDER BY cc.name";
-$categories = [];
-foreach ($DB->get_records_sql($sql) as $category) {
-    $categories[$category->id] = $category->name;
-}
-
-if ($categories === []) {
-    $returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'categories']);
-    throw new moodle_exception('error_no_category', 'local_apsolu', $returnurl);
-}
-
-// Load skills.
-$skills = [];
-foreach ($DB->get_records('apsolu_skills', $conditions = null, $sort = 'name') as $skill) {
-    $skills[$skill->id] = $skill->name;
-}
-
-if ($skills === []) {
-    $returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'skills']);
-    throw new moodle_exception('error_no_skill', 'local_apsolu', $returnurl);
-}
-
-// Load locations.
-$locations = [];
-foreach ($DB->get_records('apsolu_locations', $conditions = null, $sort = 'name') as $location) {
-    $locations[$location->id] = $location->name;
-}
-
-if ($locations === []) {
-    $returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'locations']);
-    throw new moodle_exception('error_no_location', 'local_apsolu', $returnurl);
-}
-
-// Load periods.
-$periods = [];
-foreach ($DB->get_records('apsolu_periods', $conditions = null, $sort = 'name') as $period) {
-    $periods[$period->id] = $period->name;
-}
-
-if ($periods === []) {
-    $returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'periods']);
-    throw new moodle_exception('error_no_period', 'local_apsolu', $returnurl);
-}
-
-// Load weekdays.
-$weekdays = Course::get_weekdays();
-
-// Charge le contenu de l'éditeur de texte pour le champ "informations additionnelles".
-$component = 'local_apsolu';
-$filearea = 'information';
-$editoroptions = local_apsolu_courses_courses_edit_form::get_editor_options();
-$context = context_system::instance();
-
-$itemid = null;
 if (empty($course->id) === false) {
-    $itemid = $course->id;
-    $context = context_course::instance($course->id);
-    $editoroptions = local_apsolu_courses_courses_edit_form::get_editor_options($course->id);
+    $coursetypeid = $course->customfields['type']->get_value();
+} else {
+    // Initialise les champs personnalisés.
+    $course->customfields = Course::get_customfield_records();
 }
-$course = file_prepare_standard_editor(
-    $course,
-    $field = 'information',
-    $editoroptions,
-    $context,
-    $component,
-    $filearea,
-    $itemid
-);
 
-// Build form.
-$customdata = [$course, $categories, $skills, $locations, $periods, $weekdays];
-$mform = new local_apsolu_courses_courses_edit_form(null, $customdata);
+if (empty($coursetypeid) === true) {
+    throw new moodle_exception('missingparam', 'error', '', 'coursetypeid');
+}
+
+// Récupère le format de créneau.
+$coursetype = $DB->get_record('apsolu_courses_types', ['id' => $coursetypeid], '*', MUST_EXIST);
+
+// Construit l'url de la page.
+$paramurl = ['tab' => $tab, 'action' => 'edit', 'courseid' => $courseid, 'coursetypeid' => $coursetypeid];
+$url = new moodle_url('/local/apsolu/courses/index.php', $paramurl);
+
+// Construit le formulaire.
+$customdata = [$coursetypeid, $course];
+$mform = new local_apsolu_courses_courses_edit_form($url->out(false), $customdata);
 
 if ($data = $mform->get_data()) {
     // Message à afficher à la fin de l'enregistrement.
@@ -128,51 +69,17 @@ if ($data = $mform->get_data()) {
         $message = get_string('course_saved', 'local_apsolu');
     }
 
-    // Enregistre les images de la zone de texte.
-    $data = file_postupdate_standard_editor(
-        $data,
-        $field = 'information',
-        $editoroptions,
-        $context,
-        $component,
-        $filearea,
-        $itemid
-    );
-
-    // Save data.
-    $data->str_category = $categories[$data->category];
-    $data->str_skill = $skills[$data->skillid];
     $course->save($data);
 
-    if ($context->contextlevel === CONTEXT_SYSTEM) {
-        // Une fois le cours créé, on réécrit le message afin de passer les images dans un contexte de cours, et non plus système.
-        $itemid = $course->id;
-        $context = context_course::instance($course->id);
-        $editoroptions = local_apsolu_courses_courses_edit_form::get_editor_options($course->id);
-
-        $data = file_postupdate_standard_editor(
-            $data,
-            $field = 'information',
-            $editoroptions,
-            $context,
-            $component,
-            $filearea,
-            $itemid
-        );
-
-        $DB->set_field('apsolu_courses', 'information', $data->information, ['id' => $course->id]);
-        $DB->set_field('apsolu_courses', 'informationformat', $data->informationformat, ['id' => $course->id]);
-    }
-
     // Redirige vers la page générale.
-    $returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'courses']);
+    $returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'courses', 'coursetypeid' => $coursetypeid]);
     redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
 }
 
 // Display form.
-$heading = get_string('edit_course', 'local_apsolu');
+$heading = get_string('edit_course_of_type_X', 'local_apsolu', $coursetype->name);
 if (empty($course->id) === true) {
-    $heading = get_string('add_course', 'local_apsolu');
+    $heading = get_string('add_course_of_type_X', 'local_apsolu', $coursetype->name);
 }
 echo $OUTPUT->heading($heading);
 $mform->display();

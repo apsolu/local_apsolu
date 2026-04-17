@@ -40,24 +40,40 @@
         * period
         * license
         * teachers
+    * coursestypes
+        * id
+        * shortname
+        * name
+    * coursetypeid
 
     Example context (json):
     {
         "wwwroot": "",
         "notification": "",
         "count_courses": 0,
-        "courses": []
+        "courses": [],
+        "coursestypes": [],
+        "coursetypeid": 0
     }
 }}
 <h1>{{#str}}courses_list, local_apsolu{{/str}}</h1>
+
+<ul class="nav nav-tabs mb-2">
+    {{#coursestypes}}
+    <li class="nav-item">
+        <a class="nav-link{{#selected}} active{{/selected}}" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&coursetypeid={{ id }}">{{ name }}</a>
+    </li>
+    {{/coursestypes}}
+</ul>
 
 {{#notification}}
     {{{notification}}}
 {{/notification}}
 
 <ul class="list-inline text-end">
-    <li class="list-inline-item"><a class="btn btn-default btn-secondary" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=export">{{#str}}courses_csv_export, local_apsolu{{/str}}</a></li>
-    <li class="list-inline-item"><a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=edit">{{#str}}course_add, local_apsolu{{/str}}</a></li>
+    <li class="list-inline-item"><a class="btn btn-default btn-secondary" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&coursetypeid={{ coursetypeid }}&action=export">{{#str}}courses_csv_export, local_apsolu{{/str}}</a></li>
+    <li class="list-inline-item"><a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&coursetypeid={{ coursetypeid }}&action=edit">{{#str}}course_add, local_apsolu{{/str}}</a></li>
+
 </ul>
 
 {{^count_courses}}
@@ -74,12 +90,9 @@
         <th>{{#str}}course_number, local_apsolu{{/str}}</th>
         <th>{{#str}}groupings, local_apsolu{{/str}}</th>
         <th>{{#str}}categories, local_apsolu{{/str}}</th>
-        <th>{{#str}}skills, local_apsolu{{/str}}</th>
-        <th>{{#str}}weekdays, local_apsolu{{/str}}</th>
-        <th>{{#str}}schedule, local_apsolu{{/str}}</th>
-        <th>{{#str}}locations, local_apsolu{{/str}}</th>
-        <th class="filter-select">{{#str}}periods, local_apsolu{{/str}}</th>
-        {{#federation_course}}<th class="filter-select">{{#str}}federation, local_apsolu{{/str}}</th>{{/federation_course}}
+        {{#headers}}
+        <th>{{.}}</th>
+        {{/headers}}
         <th>{{#str}}teachers{{/str}}</th>
         <th class="filter-false sorter-false">{{#str}}actions{{/str}}</th>
     </tr>
@@ -90,17 +103,9 @@
         <td><a href="{{wwwroot}}/course/view.php?id={{id}}">{{id}}</a>{{#idnumber}} <small>({{ idnumber }})</small>{{/idnumber}}</td>
         <td>{{grouping}}</td>
         <td>{{fullname}}</td>
-        <td>{{skill}}</td>
-        <td>{{weekday}}</td>
-        <td>{{schedule}}</td>
-        {{#unique_city}}
-        <td>{{location}}</td>
-        {{/unique_city}}
-        {{^unique_city}}
-        <td><b>{{city}}</b> - {{location}}</td>
-        {{/unique_city}}
-        <td>{{period}}</td>
-        {{#federation_course}}<td>{{#license}}{{#str}}yes{{/str}}{{/license}}{{^license}}{{#str}}no{{/str}}{{/license}}</td>{{/federation_course}}
+        {{#fields}}
+        <td>{{.}}</td>
+        {{/fields}}
         <td>{{#teachers}}<div>{{firstname}} {{lastname}}</div>{{/teachers}}</td>
         <td>
             {{! Menu déroulant permettant de réaliser des actions sur les cours. }}
@@ -119,14 +124,14 @@
                     <a class="dropdown-item menu-action" href="{{wwwroot}}/enrol/instances.php?id={{id}}">
                         <i aria-hidden="true" class="fa fa-fw fa-users icon"></i>{{#str}}enrolmentinstances, enrol{{/str}}
                     </a>
-                    <a class="dropdown-item menu-action" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=show&courseid={{id}}">
+                    <a class="dropdown-item menu-action" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=show&courseid={{id}}&coursetypeid={{ coursetypeid }}">
                         {{^visible}}<i aria-hidden="true" class="fa fa-eye fa-fw icon"></i>{{#str}}show{{/str}}{{/visible}}
                         {{#visible}}<i aria-hidden="true" class="fa fa-eye-slash fa-fw icon"></i>{{#str}}hide{{/str}}{{/visible}}
                     </a>
-                    <a class="dropdown-item menu-action" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=edit&courseid={{id}}">
+                    <a class="dropdown-item menu-action" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=edit&courseid={{id}}&coursetypeid={{ coursetypeid }}">
                         <i aria-hidden="true" class="fa fa-cog fa-fw icon"></i>{{#str}}edit{{/str}}
                     </a>
-                    <a class="dropdown-item menu-action" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=delete&courseid={{id}}">
+                    <a class="dropdown-item menu-action" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=courses&action=delete&courseid={{id}}&coursetypeid={{ coursetypeid }}">
                         <i aria-hidden="true" class="fa fa-fw fa-trash icon"></i>{{#str}}delete{{/str}}
                     </a>
                 </div>

@@ -22,6 +22,7 @@ namespace local_apsolu\core;
 use coding_exception;
 use context_block;
 use context_course;
+use core_course\customfield\course_handler;
 use core_course_category;
 use core_php_time_limit;
 use grade_category;
@@ -55,52 +56,14 @@ class course extends record {
     /** @var string $idnumber Identifiant du créneau horaire. */
     public $idnumber = '';
 
-    /** @var int|string $category Entier représentant l'identifiant de l'activité sportive. */
+    /** @var int|string $categoryid Entier représentant l'identifiant de l'activité sportive. */
     public $category = '';
 
-    /** @var string $event Précision sur la discipline ou la spécificité de
-                           ce créneau (ex: 100m, 110m haies, football en salle, etc). */
-    public $event = '';
+    /** @var int|string $visible Entier booléen déterminant si le cours est visible ou non. */
+    public $visible = '';
 
-    /** @var int|string $numweekday Ordre du jour (ex: 1 = lundi, 2 = mardi, etc). Facilite le tri dans la requête SQL. */
-    public $numweekday = '';
-
-    /** @var string $weekday Jour de la semaine en anglais. Champ à utiliser avec
-                             la fonction Moodle get_string($weekday, 'local_apsolu'). */
-    public $weekday = '';
-
-    /** @var string $starttime Heure de début du créneau au format HH:MM. */
-    public $starttime = '';
-
-    /** @var string $endtime Heure de fin du créneau au format HH:MM. */
-    public $endtime = '';
-
-    /** @var bool $license Indique si le créneau nécessite l'adhésion à la FFSU. */
-    public $license = 0;
-
-    /** @var bool $on_homepage Indique si le créneau doit être affiché sur la homepage. */
-    public $on_homepage = '';
-
-    /** @var bool $showpolicy Indique si les recommandations médicales doivent être acceptées lors de l'inscription. */
-    public $showpolicy = '';
-
-    /** @var int|string $locationid Identifiant numérique du lieu de pratique. */
-    public $locationid = '';
-
-    /** @var int|string $periodid Identifiant numérique de la période de cours. */
-    public $periodid = '';
-
-    /** @var int|string $skillid Identifiant numérique du niveau de pratique. */
-    public $skillid = '';
-
-    /** @var string $information Informations additionnelles affichées après l'inscription à un créneau. */
-    public $information = '';
-
-    /** @var int|string $informationformat Identifiant numérique du format du texte. */
-    public $informationformat = FORMAT_HTML;
-
-    /** @var string $information_editor Variable pour le formulaire contenant l'éditeur de texte. */
-    public $information_editor = '';
+    /** @var array $customfields Liste de champs personnalisés. */
+    public $customfields = [];
 
     /**
      * Affiche une représentation textuelle de l'objet.
@@ -162,6 +125,25 @@ class course extends record {
     }
 
     /**
+     * Récupère les champs personnalisés d'un cours.
+     *
+     * @param int $courseid Identifiant du cours pour lequel on souhaite récupérer les champs personnalisés.
+     *
+     * @return array
+     */
+    public static function get_customfield_records(int $courseid = 0): array {
+        $handler = course_handler::create();
+
+        $customfields = [];
+        foreach ($handler->get_instance_data($courseid, $returnall = true) as $customdata) {
+            $shortname = $customdata->get_field()->get('shortname');
+            $customfields[$shortname] = $customdata;
+        }
+
+        return $customfields;
+    }
+
+    /**
      * Retourne l'id du cours de FFSU.
      *
      * @return int|false Retourne l'id du cours de FFSU ou false si il n'est pas défini.
@@ -193,28 +175,30 @@ class course extends record {
      *
      * @return string Nom abrégé unique.
      */
-    public static function get_fullname($category, $event, $weekday, $starttime, $endtime, $skill) {
+    public static function get_fullname(object $data) {
         global $DB;
 
-        if (ctype_digit($category) === true) {
-            // Récupère le nom de la catégorie en base de données, si c'est un identifiant qui a été entré en paramètre.
-            $record = $DB->get_record('course_categories', ['id' => $category], $fields = '*', MUST_EXIST);
-            $category = $record->name;
+        $coursetype = $DB->get_record('apsolu_courses_types', ['id' => $data->customfield_type]);
+        $fullname = $coursetype->fullnametemplate;
+
+        preg_match_all('/%[0-9]{2}/', $coursetype->fullnametemplate, $matches);
+
+        $customfields = [];
+        foreach ($matches[0] as $code) {
+            $fieldid = intval(substr($code, 1));
+            $customfields[$fieldid] = $code;
         }
 
-        if (ctype_digit($skill) === true) {
-            // Récupère le nom du niveau de pratique en base de données, si c'est un identifiant qui a été entré en paramètre.
-            $record = $DB->get_record('apsolu_skills', ['id' => $skill], $fields = '*', MUST_EXIST);
-            $skill = $record->name;
+        // Remplace les %0x par le texte correspondant à l'identifiant du champ.
+        foreach (self::get_customfield_records($data->id) as $customfield) {
+            if (isset($customfields[$customfield->get('fieldid')]) === false) {
+                continue;
+            }
+
+            $fullname = str_replace($customfields[$customfield->get('fieldid')], $customfield->export_value(), $fullname);
         }
 
-        $strtime = get_string($weekday, 'local_apsolu') . ' ' . $starttime . ' ' . $endtime;
-
-        if (empty($event) === false) {
-            return sprintf('%s %s %s %s', $category, $event, $strtime, $skill);
-        }
-
-        return sprintf('%s %s %s', $category, $strtime, $skill);
+        return $fullname;
     }
 
     /**
@@ -307,7 +291,7 @@ class course extends record {
      *
      * @return array Un tableau d'objets instanciés.
      */
-    public static function get_records(
+    public static function get_raw_records(
         ?array $conditions = null,
         string $sort = '',
         string $fields = '*',
@@ -316,11 +300,189 @@ class course extends record {
     ) {
         global $DB;
 
+        $records = [];
+
+        $select = [];
+        $select[] = 'c.id';
+        $select[] = 'c.shortname';
+        $select[] = 'c.fullname';
+        $select[] = 'c.visible';
+        $select[] = 'cc.id AS category';
+        $select[] = 'cc.name AS categoryname';
+        $select[] = 'ccc.id AS grouping';
+        $select[] = 'ccc.name AS groupingname';
+
+        $join = [];
+        $params = [];
+
+        $customfields = customfields::get_course_custom_fields();
+        foreach ($customfields as $name => $customfield) {
+            $id = $customfield->id;
+            $leftjoin = sprintf('LEFT JOIN {customfield_data} d%s ON d%s.contextid = ctx.id
+                AND d%s.fieldid = :field%s', $id, $id, $id, $id);
+
+            switch ($customfield->shortname) {
+                case 'skill':
+                    $select[] = sprintf('d%s.intvalue AS skill', $id);
+                    $select[] = 'sk.name AS skillname';
+                    $join[] = $leftjoin;
+                    $join[] = sprintf('LEFT JOIN {apsolu_skills} sk ON d%s.intvalue = sk.id', $id);
+                    $params[sprintf('field%s', $id)] = $id;
+                    break;
+                case 'location':
+                    $select[] = sprintf('d%s.intvalue AS location', $id);
+                    $select[] = 'loc.name AS locationname';
+                    $select[] = 'area.id AS area';
+                    $select[] = 'area.name AS areaname';
+                    $select[] = 'city.id AS city';
+                    $select[] = 'city.name AS cityname';
+                    $join[] = $leftjoin;
+                    $join[] = sprintf('LEFT JOIN {apsolu_locations} loc ON d%s.intvalue = loc.id', $id);
+                    $join[] = 'LEFT JOIN {apsolu_areas} area ON area.id = loc.areaid';
+                    $join[] = 'LEFT JOIN {apsolu_cities} city ON city.id = area.cityid';
+                    $params[sprintf('field%s', $id)] = $id;
+                    break;
+                case 'period':
+                    $select[] = sprintf('d%s.intvalue AS period', $id);
+                    $select[] = 'p.name AS periodname';
+                    $join[] = $leftjoin;
+                    $join[] = sprintf('LEFT JOIN {apsolu_periods} p ON d%s.intvalue = p.id', $id);
+                    $params[sprintf('field%s', $id)] = $id;
+                    break;
+                case 'type':
+                    $select[] = sprintf('d%s.intvalue AS type', $id);
+                    $select[] = 't.name AS typename';
+                    $join[] = sprintf('JOIN {customfield_data} d%s ON d%s.contextid = ctx.id
+                        AND d%s.fieldid = :field%s', $id, $id, $id, $id);
+                    $join[] = sprintf('JOIN {apsolu_courses_types} t ON d%s.intvalue = t.id', $id);
+                    $params[sprintf('field%s', $id)] = $id;
+                    break;
+                case 'activity':
+                case 'event':
+                case 'weekday':
+                case 'start_time':
+                case 'end_time':
+                case 'start_date':
+                case 'end_date':
+                case 'federation':
+                case 'on_homepage':
+                case 'showpolicy':
+                case 'information':
+                default:
+                    $select[] = sprintf('d%s.value AS %s', $id, $customfield->shortname);
+                    $join[] = sprintf('LEFT JOIN {customfield_data} d%s ON d%s.contextid = ctx.id
+                        AND d%s.fieldid = :field%s', $id, $id, $id, $id);
+                    $params[sprintf('field%s', $id)] = $id;
+            }
+        }
+
+        if ($fields === '*') {
+            $fields = implode(', ', $select);
+        }
+
+        $jointures = implode(' ', $join);
+
+        $where = '';
+        if (empty($conditions) === false) {
+            $i = 0;
+            $where = [];
+            foreach ($conditions as $field => $value) {
+                $namedparam = sprintf('where%s', $i);
+                $where[] = sprintf('%s = :%s', $field, $namedparam);
+                $params[$namedparam] = $value;
+                $i++;
+            }
+            $where = sprintf('WHERE %s', implode(' AND ', $where));
+        }
+
+        $order = '';
+        if (empty($sort) === false) {
+            $order = sprintf('ORDER BY %s', $sort);
+        }
+
+        $sql = sprintf("SELECT %s
+                          FROM {course} c
+                          JOIN {context} ctx ON ctx.instanceid = c.id AND ctx.contextlevel = 50
+                          JOIN {course_categories} cc ON cc.id = c.category
+                          JOIN {course_categories} ccc ON ccc.id = cc.parent %s %s %s", $fields, $jointures, $where, $order);
+
+        foreach ($DB->get_records_sql($sql, $params) as $data) {
+            $record = new course();
+            $record->set_vars($data);
+            $records[$record->id] = $record;
+        }
+
+        return $records;
+    }
+
+    /**
+     * Recherche et instancie des objets depuis la base de données.
+     *
+     * @see Se référer à la documentation de la méthode get_records() de la variable globale $DB.
+     * @param array|null $conditions Critères de sélection des objets.
+     * @param string     $sort       Champs par lesquels s'effectue le tri.
+     * @param string     $fields     Liste des champs retournés.
+     * @param int        $limitfrom  Retourne les enregistrements à partir de n+$limitfrom.
+     * @param int        $limitnum   Nombre total d'enregistrements retournés.
+     *
+     * @return array Un tableau d'objets instanciés.
+     */
+    public static function get_records(
+        ?array $conditions = null,
+        string $sort = '',
+        string $fields = 'id, shortname, fullname, idnumber, category, visible',
+        int $limitfrom = 0,
+        int $limitnum = 0
+    ) {
+        global $DB;
+
         $classname = __CLASS__;
 
         $records = [];
+        foreach ($DB->get_records('course', $conditions, $sort, $fields, $limitfrom, $limitnum) as $data) {
+            // Récupère les champs personnalisés de cours.
+            $data->customfields = self::get_customfield_records($data->id);
 
-        foreach ($DB->get_records(get_called_class()::TABLENAME, $conditions, $sort, $fields, $limitfrom, $limitnum) as $data) {
+            $record = new $classname();
+            $record->set_vars($data);
+            $records[$record->id] = $record;
+        }
+
+        return $records;
+    }
+
+    /**
+     * Recherche et instancie des objets depuis la base de données.
+     *
+     * @see Se référer à la documentation de la méthode get_records() de la variable globale $DB.
+     * @param array|null $conditions Critères de sélection des objets.
+     * @param string     $sort       Champs par lesquels s'effectue le tri.
+     * @param string     $fields     Liste des champs retournés.
+     * @param int        $limitfrom  Retourne les enregistrements à partir de n+$limitfrom.
+     * @param int        $limitnum   Nombre total d'enregistrements retournés.
+     *
+     * @return array Un tableau d'objets instanciés.
+     */
+    public static function get_records_by_course_type(int $coursetypeid): array {
+        global $DB;
+
+        $classname = __CLASS__;
+        $handler = course_handler::create();
+
+        $records = [];
+
+        $sql = "SELECT c.id, c.shortname, c.fullname, c.idnumber, c.category, c.visible
+                  FROM {course} c
+                  JOIN {customfield_data} cd ON c.id = cd.instanceid
+                  JOIN {customfield_field} cf ON cf.id = cd.fieldid
+                 WHERE cf.type = 'apsolu_course_type'
+                   AND cd.intvalue = :coursetypeid
+              ORDER BY c.fullname";
+
+        foreach ($DB->get_records_sql($sql, ['coursetypeid' => $coursetypeid]) as $data) {
+            // Récupère les champs personnalisés de cours.
+            $data->customfields = self::get_customfield_records($data->id);
+
             $record = new $classname();
             $record->set_vars($data);
             $records[$record->id] = $record;
@@ -435,17 +597,19 @@ class course extends record {
             $strictness = MUST_EXIST;
         }
 
-        $sql = "SELECT c.id, c.shortname, c.fullname, c.category, ac.event, ac.skillid, ac.locationid,
-                       ac.numweekday, ac.weekday, ac.starttime, ac.endtime, ac.periodid,
-                       ac.license, ac.on_homepage, ac.showpolicy, ac.information, ac.informationformat
-                  FROM {course} c
-                  JOIN {apsolu_courses} ac ON ac.id=c.id
-                 WHERE c.id = :id";
-        $record = $DB->get_record_sql($sql, ['id' => $recordid], $strictness);
+        $record = $DB->get_record(
+            'course',
+            ['id' => $recordid],
+            'id, shortname, fullname, idnumber, category, visible',
+            $strictness
+        );
 
         if ($record === false) {
             return;
         }
+
+        // Récupère les champs personnalisés de cours.
+        $record->customfields = self::get_customfield_records($record->id);
 
         $this->set_vars($record);
     }
@@ -469,19 +633,20 @@ class course extends record {
         }
 
         $this->set_vars($data);
-        $this->numweekday = self::get_numweekdays($this->weekday);
 
-        // Set fullname.
-        $this->fullname = self::get_fullname(
-            $data->str_category,
-            $this->event,
-            $this->weekday,
-            $this->starttime,
-            $this->endtime,
-            $data->str_skill
-        );
+        /*
+        $this->numweekday = null;
+        if (empty($this->weekday) === false) {
+            $this->numweekday = self::get_numweekdays($this->weekday);
+        }
+        */
 
-        // Set shortname.
+        // TODO: Set fullname.
+        // $data->str_category = 'TODO(cat)';
+        // $data->str_skill = 'TODO(skill)';
+        $this->fullname = self::get_fullname($data);
+
+        // TODO: Set shortname.
         $this->shortname = self::get_shortname($this->id, $this->fullname);
 
         if (isset($data->idnumber) === true) {
@@ -497,31 +662,13 @@ class course extends record {
 
         if (empty($this->id) === true) {
             // Créé le cours.
-            $newcourse = create_course((object)(array)$this);
-            $this->id = $newcourse->id;
+            $coursedata = $data;
+            $coursedata->fullname = $this->fullname;
+            $coursedata->shortname = $this->shortname;
+            $coursedata->category = $data->customfield_category;
 
-            // Créé l'instance apsolu_courses.
-            // Note: insert_record() exige l'absence d'un id.
-            $sql = "INSERT INTO {apsolu_courses} (id, event, skillid, locationid, weekday, numweekday, starttime, endtime,
-                                                  periodid, license, on_homepage, showpolicy, information, informationformat)
-                                          VALUES (:id, :event, :skillid, :locationid, :weekday, :numweekday, :starttime, :endtime,
-                                                  :periodid, :license, :onhomepage, :showpolicy, :information, :informationformat)";
-            $params = [];
-            $params['id'] = $this->id;
-            $params['event'] = $this->event;
-            $params['skillid'] = $this->skillid;
-            $params['locationid'] = $this->locationid;
-            $params['weekday'] = $this->weekday;
-            $params['numweekday'] = $this->numweekday;
-            $params['starttime'] = $this->starttime;
-            $params['endtime'] = $this->endtime;
-            $params['periodid'] = $this->periodid;
-            $params['license'] = $this->license;
-            $params['onhomepage'] = $this->on_homepage;
-            $params['showpolicy'] = $this->showpolicy;
-            $params['information'] = $this->information;
-            $params['informationformat'] = $this->informationformat;
-            $DB->execute($sql, $params);
+            $newcourse = create_course($coursedata);
+            $this->id = $newcourse->id;
 
             // Ajoute une méthode d'inscription manuelle.
             $instance = $DB->get_record('enrol', ['enrol' => 'manual', 'courseid' => $this->id]);
@@ -559,30 +706,45 @@ class course extends record {
             $block->instance_create();
 
             // Génére les sessions de cours.
-            $this->set_sessions();
+            if (empty($this->periodid) === false) {
+                $this->set_sessions();
+            }
         } else {
             $oldcourse = new course();
             $oldcourse->load($this->id, $required = true);
 
-            update_course((object)(array)$this);
+            $coursedata = $data;
+            $coursedata->fullname = $this->fullname;
+            $coursedata->shortname = $this->shortname;
+            $coursedata->category = $data->customfield_category;
 
-            $DB->update_record(self::TABLENAME, $this);
+            update_course($coursedata);
 
-            // Vérifie que les informations liées aux sessions de cours n'ont pas été modifiées.
-            $sessionfields = ['locationid', 'weekday', 'numweekday', 'starttime', 'endtime', 'periodid'];
-            foreach ($sessionfields as $field) {
-                if ($oldcourse->{$field} == $this->{$field}) {
-                    continue;
+            /*
+            if ($this->typeid === '1') {
+                // TODO: hack pour maintenir la compatibilité avec la table historique.
+                $DB->update_record(self::TABLENAME, $this);
+            }
+             */
+
+            // TODO: Vérifie que les informations liées aux sessions de cours n'ont pas été modifiées.
+            if (false && empty($this->periodid) === false) {
+                $sessionfields = ['locationid', 'weekday', 'numweekday', 'starttime', 'endtime', 'periodid'];
+                foreach ($sessionfields as $field) {
+                    if ($oldcourse->{$field} == $this->{$field}) {
+                        continue;
+                    }
+
+                    // Génère les sessions de cours.
+                    $this->set_sessions();
+                    break;
+
                 }
-
-                // Génère les sessions de cours.
-                $this->set_sessions();
-                break;
             }
         }
 
         // Trie les cours de la catégorie.
-        $category = core_course_category::get((int) $this->category);
+        $category = core_course_category::get((int) $data->customfield_category);
         if ($category->can_resort_courses()) {
             \core_course\management\helper::action_category_resort_courses($category, $sort = 'fullname');
         }
@@ -735,6 +897,40 @@ class course extends record {
             $session->timemodified = time();
             $session->save();
         }
+    }
+
+    /**
+     * Trie les cours par ordre alphabétique.
+     *
+     * @param array $courses
+     *
+     * @return array
+     */
+    public static function sort(array $courses): array {
+        uasort($courses, function ($a, $b) {
+            $fields = [];
+            $fields[] = 'category'; // Trie par activité.
+            $fields[] = 'weekday'; // Trie par jour de la semaine.
+            $fields[] = 'start_date'; // Trie par date de début.
+            $fields[] = 'start_time'; // Trie par heure de début.
+            $fields[] = 'location'; // Trie par lieu.
+            $fields[] = 'skill'; // Trie par niveau.
+
+            foreach ($fields as $field) {
+                if (isset($a->customfields[$field], $b->customfields[$field]) === false) {
+                    continue;
+                }
+
+                $return = strcmp($a->customfields[$field]->export_value(), $b->customfields[$field]->export_value());
+                if ($return !== 0) {
+                    return $return;
+                }
+            }
+
+            return 0;
+        });
+
+        return $courses;
     }
 
     /**

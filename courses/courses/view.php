@@ -23,69 +23,134 @@
  */
 
 use local_apsolu\core\federation\course as FederationCourse;
+use local_apsolu\core\course;
+use local_apsolu\core\customfields;
+use local_apsolu\core\grouping;
 
 defined('MOODLE_INTERNAL') || die;
 
 require_once(__DIR__ . '/../../locallib.php');
 
+$coursetypeid = optional_param('coursetypeid', null, PARAM_INT);
+
+$coursestypes = $DB->get_records('apsolu_courses_types', $conditions = null, $sort = 'sortorder');
+if (isset($coursestypes[$coursetypeid]) === false) {
+    $coursetype = current($coursestypes);
+    $coursetypeid = $coursetype->id;
+}
+$coursestypes[$coursetypeid]->selected = true;
+
+$categories = $DB->get_records('course_categories');
+
+$customfields = $DB->get_records(
+    'apsolu_courses_fields',
+    ['coursetypeid' => $coursetypeid],
+    $sort = null,
+    $fields = 'customfieldid, showinadministration, showonpublicpages'
+);
+
 $currentactivity = null;
 $currentaltclass = 'odd';
 
-$sql = "SELECT c.id, cc.name AS category, ccc.name AS grouping, ac.event, ac.weekday, ac.starttime, ac.endtime,
-               ask.name AS skill, al.name AS location, city.name AS city, ap.name AS period, ac.license, c.visible, c.idnumber
-          FROM {course} c
-          JOIN {course_categories} cc ON cc.id = c.category
-          JOIN {course_categories} ccc ON ccc.id = cc.parent
-          JOIN {apsolu_courses} ac ON c.id = ac.id
-          JOIN {apsolu_courses_categories} acc ON acc.id = c.category
-          JOIN {apsolu_skills} ask ON ask.id = ac.skillid
-          JOIN {apsolu_locations} al ON al.id = ac.locationid
-          JOIN {apsolu_areas} aa ON aa.id = al.areaid
-          JOIN {apsolu_cities} city ON city.id = aa.cityid
-          JOIN {apsolu_periods} ap ON ap.id = ac.periodid
-      ORDER BY category, ac.numweekday, ac.starttime, city, location, skill";
-$cities = [];
 $courses = [];
-foreach ($DB->get_records_sql($sql) as $course) {
-    if ($currentactivity !== $course->category) {
-        $currentactivity = $course->category;
+$cities = [];
+
+$i = 0;
+$locationindex = null;
+$headers = [];
+// Récupère la liste des champs personnalisés pour ce type de format de cours.
+foreach (customfields::get_course_custom_fields($coursetypeid) as $name => $customfield) {
+    if (empty($customfields[$customfield->id]->showinadministration) === true) {
+        // Ignore les champs non affichés dans l'administration.
+        continue;
+    }
+
+    if (in_array($name, ['category', 'event', 'type'], $strict = true) === true) {
+        // Le champ "Activité" (category) est toujours affiché.
+        // Les champs "Libellé complémentaire" et "Type" ne sont jamais affichés.
+        continue;
+    }
+
+    if (in_array($customfield->type, ['textarea'], $strict = true) === true) {
+        // Les champs de type "zone de texte" ne sont jamais affichés.
+        continue;
+    }
+
+    if ($customfield->shortname === 'location') {
+        $locationindex = $i;
+    }
+
+    $i++;
+    $headers[$customfield->shortname] = get_string($customfield->shortname, 'local_apsolu');
+}
+
+foreach (course::get_records_by_course_type($coursetypeid) as $course) {
+// foreach (course::get_records(['t.id' => $coursetypeid]) as $course) {
+    /*
+    if ($currentactivity !== $course->categoryid) {
+        $currentactivity = $course->categoryid;
 
         if ($currentaltclass === 'odd') {
             $currentaltclass = 'even';
         } else {
             $currentaltclass = 'odd';
         }
-    }
-
-    if (empty($course->event)) {
-        $course->fullname = $course->category;
-    } else {
-        $course->fullname = $course->category . ' (' . $course->event . ')';
-    }
-
-    $course->alt_class = $currentaltclass;
-    $course->weekday = get_string($course->weekday, 'local_apsolu');
-    $course->schedule = $course->starttime . '-' . $course->endtime;
-
+    }*/
+    $altclass = $currentaltclass;
 
     $teachers = UniversiteRennes2\Apsolu\get_teachers($course->id);
     sort($teachers);
 
-    $course->teachers = $teachers;
+    $fields = [];
+    foreach ($headers as $key => $string) {
+        $value = '';
+        if (isset($course->customfields[$key]) === true) {
+            $value = $course->customfields[$key]->export_value();
+        }
+        $fields[] = $value;
+    }
 
-    $cities[$course->city] = 1;
-    $courses[] = $course;
+    $fullname = $course->customfields['category']->export_value();
+    if (isset($course->customfields['event']) === true && empty($course->customfields['event']->export_value()) === false) {
+        $fullname .= ' (' . $course->customfields['event']->export_value() . ')';
+    }
+
+    $parent = $categories[$course->category]->parent;
+
+    $data = new stdClass();
+    $data->id = $course->id;
+    $data->fullname = $fullname;
+    $data->grouping = $categories[$parent]->name;
+    $data->fields = $fields;
+    $data->alt_class = $altclass;
+    $data->visible = $course->visible;
+    $data->teachers = $teachers;
+    $data->customfields = $course->customfields;
+    // $data->city = $course->city;
+    // var_dump($course);die();
+    if (isset($course->dbfields['cityid']) === true) {
+        $cities[$course->dbfields['cityid']] = 1;
+    }
+    $courses[] = $data;
 }
 
-$federationcourse = new FederationCourse();
+// TODO: trier $courses[] par ordre alphabétique avec la fonction Course::sort($courses).
+$courses = Course::sort($courses);
+
+if (count($cities) > 1 && $locationindex !== null) {
+    foreach ($courses as $course) {
+        $course->fields[$locationindex] = sprintf('[%s] %s', $course->dbfields['cityname'], $course->fields[$locationindex]);
+    }
+}
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
 $data->courses = array_values($courses);
 $data->count_courses = count($courses);
-$data->unique_city = (count($cities) === 1);
-$data->federation_course = $federationcourse->get_courseid();
 $data->notification = '';
+$data->coursestypes = array_values($coursestypes);
+$data->coursetypeid = $coursetypeid;
+$data->headers = array_values($headers);
 
 if (isset($notificationform)) {
     $data->notification = $notificationform;
