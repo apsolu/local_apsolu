@@ -157,6 +157,160 @@ try {
         $dbman->create_table($table);
     }
 
+/*
+    // Ajoute une colonne 'coursetypeid' sur la table 'apsolu_courses'.
+    $table = new xmldb_table('apsolu_courses');
+    $field = new xmldb_field('coursetypeid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, $sequence = null, $default = '1', $previous = 'on_homepage');
+
+    if ($dbman->field_exists($table, $field) === false) {
+        $dbman->add_field($table, $field);
+    }
+ */
+
+    $table = new xmldb_table('apsolu_courses');
+    if ($dbman->table_exists($table) === true) {
+        // Initialise un type de format "cours".
+        $params = ['name' => 'APSOLU', 'component' => 'core_course', 'area' => 'course', 'itemid' => 0];
+        $category = $DB->get_record('customfield_category', $params, '*', MUST_EXIST);
+
+        $handler = handler::get_handler('core_course', 'course', 0);
+
+        $fields = [];
+        foreach ($handler->get_categories_with_fields()[$category->id]->get_fields() as $field) {
+            $fields[$field->get('shortname')] = $field->get('id');
+        }
+
+        $record = new stdClass();
+        $record->shortname = strtolower(get_string('course'));
+        $record->name = get_string('course');
+        // Modèle: [activité] [jour] [heure début] [heure fin] [niveau].
+        $record->fullnametemplate = sprintf(
+            '%%%02d %%%02d %%%02d %%%02d %%%02d',
+            $fields['category'],
+            $fields['weekday'],
+            $fields['start_time'],
+            $fields['end_time'],
+            $fields['skill']
+        );
+        $record->color = '#f66151';
+        $DB->insert_record('apsolu_courses_types', $record);
+
+        // Associe les champs personnalisés au type de format "cours".
+        $params = ['name' => 'APSOLU', 'component' => 'core_course', 'area' => 'course', 'itemid' => 0];
+        $category = $DB->get_record('customfield_category', $params, '*', MUST_EXIST);
+        $coursetype = $DB->get_record('apsolu_courses_types', ['shortname' => strtolower(get_string('course'))], '*', MUST_EXIST);
+
+        $coursefields = ['category', 'event', 'skill', 'location', 'weekday', 'start_time', 'end_time', 'license', 'on_homepage',
+            'period', 'show_policy', 'information'];
+
+        $handler = handler::get_handler('core_course', 'course', 0);
+        foreach ($handler->get_categories_with_fields()[$category->id]->get_fields() as $field) {
+            if (in_array($field->get('shortname'), $coursefields, $strict = true) === false) {
+                continue;
+            }
+
+            $record = new stdClass();
+            $record->coursetypeid = $coursetype->id;
+            $record->customfieldid = $field->get('id');
+            $record->showinadministration = 1;
+            $record->showonpublicpages = 1;
+            $DB->insert_record('apsolu_courses_fields', $record);
+        }
+
+        // Migre l'ancienne table mdl_apsolu_courses.
+        $handler = handler::get_handler('core_course', 'course', 0);
+
+        $params = ['name' => 'APSOLU', 'component' => 'core_course', 'area' => 'course', 'itemid' => 0];
+        $category = $DB->get_record('customfield_category', $params, '*', MUST_EXIST);
+        $customcategory = $handler->get_categories_with_fields()[$category->id];
+
+        $courses = $DB->get_records('course', $conditions = null, $sort = '', $fields = 'id, category');
+        foreach ($DB->get_records('apsolu_courses') as $course) {
+            if (isset($courses[$course->id]) === false) {
+                // Note: cette situation ne devrait pas exister.
+                continue;
+            }
+
+            $coursecontext = context_course::instance($course->id);
+            foreach ($customcategory->get_fields() as $field) {
+                $shortname = $field->get('shortname');
+                $fieldnameform = 'customfield_' . $shortname;
+
+                $params = (object) ['instanceid' => $course->id, 'contextid' => $coursecontext->id];
+                $data = data_controller::create(0, $params, $field);
+
+                switch ($shortname) {
+                    case 'category':
+                        $value = $courses[$course->id]->category;
+                        break;
+                    case 'end_date':
+                    case 'start_date':
+                        $value = 0;
+                        break;
+                    case 'end_time':
+                        $values = explode(':', $course->endtime);
+                        $value = $values[0] * HOURSECS + $values[1] * MINSECS;
+                        break;
+                    case 'start_time':
+                        $values = explode(':', $course->starttime);
+                        $value = $values[0] * HOURSECS + $values[1] * MINSECS;
+                        break;
+                    case 'information':
+                        if ($course->information === null) {
+                            $course->information = '';
+                        }
+
+                        if ($course->informationformat === null) {
+                            $course->informationformat = FORMAT_HTML;
+                        }
+                        $value = ['text' => $course->information, 'format' => $course->informationformat];
+                        $fieldnameform .= '_editor';
+                        break;
+                    case 'location':
+                    case 'period':
+                    case 'skill':
+                        $key = $shortname . 'id';
+                        $value = $course->{$key};
+                        break;
+                    case 'show_policy':
+                        $value = $course->showpolicy;
+                        if ($value === null) {
+                            $value = 0;
+                        }
+                        break;
+                    case 'event':
+                    case 'license':
+                    case 'on_homepage':
+                    // numweek ?
+                    // weekdayid ?
+                        $value = $course->{$shortname};
+                        break;
+                    case 'weekday':
+                        $value = $course->numweekday;
+                        break;
+                    case 'type':
+                        $value = '1';
+                        break;
+                }
+
+                $mformdata = (object) [$fieldnameform => $value];
+                $data->instance_form_save($mformdata);
+            }
+
+            // TODO: later...
+            /*
+            $tables = ['apsolu_courses', 'apsolu_courses_fieldsxxx'];
+            // TODO: apsolu_complements
+            foreach ($tables as $tablename) {
+                $table = new xmldb_table($tablename);
+                if ($dbman->table_exists($table) === true) {
+                    $dbman->drop_table($table);
+                }
+            }
+             */
+        }
+    }
+
     mtrace(get_string('success'));
 } catch (Exception $exception) {
     mtrace(get_string('error'));
