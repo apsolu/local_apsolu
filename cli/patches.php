@@ -24,6 +24,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core_customfield\data_controller;
+use core_customfield\handler;
+use local_apsolu\core\customfields;
+
 define('CLI_SCRIPT', true);
 
 require(__DIR__ . '/../../../config.php');
@@ -98,6 +102,59 @@ try {
         ];
 
         profile_save_field((object) $data, $editors = []);
+    }
+
+    $table = new xmldb_table('apsolu_courses_types');
+    if ($dbman->table_exists($table) === false) {
+        $previous = null;
+        $nodefault = null;
+        $nosequence = null;
+        $notnull = XMLDB_NOTNULL;
+
+        // Adding fields.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $notnull, XMLDB_SEQUENCE, $nodefault, $previous);
+        $table->add_field('shortname', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, $notnull, $nosequence, $nodefault, $previous);
+        $table->add_field('name', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, $notnull, $nosequence, $nodefault, $previous);
+        $table->add_field('fullnametemplate', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, $notnull, $nosequence, $nodefault, $previous);
+        $table->add_field('color', XMLDB_TYPE_CHAR, '255', XMLDB_UNSIGNED, $notnull, $nosequence, $nodefault, $previous);
+        $table->add_field('sortorder', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $notnull, $nosequence, $default = 0, $previous);
+
+        // Adding key.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        // Adding indexes.
+        $table->add_index('shortname', XMLDB_INDEX_UNIQUE, ['shortname']);
+        $table->add_index('sortorder', XMLDB_INDEX_NOTUNIQUE, ['sortorder']);
+
+        // Create table.
+        $dbman->create_table($table);
+
+        // Initialise les champs personnalisés de cours.
+        customfields::initialize_course_customfields();
+    }
+
+    $table = new xmldb_table('apsolu_courses_fields');
+    if ($dbman->table_exists($table) === false) {
+        $previous = null;
+        $nodefault = null;
+        $nosequence = null;
+        $notnull = XMLDB_NOTNULL;
+
+        // Adding fields.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $notnull, XMLDB_SEQUENCE, $nodefault, $previous);
+        $table->add_field('coursetypeid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $notnull, $nosequence, $nodefault, $previous);
+        $table->add_field('customfieldid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $notnull, $nosequence, $nodefault, $previous);
+        $table->add_field('showinadministration', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $notnull, $nosequence, $nodefault);
+        $table->add_field('showonpublicpages', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $notnull, $nosequence, $nodefault);
+
+        // Adding key.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        // Adding indexes.
+        $table->add_index('unique', XMLDB_INDEX_UNIQUE, ['coursetypeid, customfieldid']);
+
+        // Create table.
+        $dbman->create_table($table);
     }
 
     mtrace(get_string('success'));

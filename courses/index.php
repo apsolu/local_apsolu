@@ -25,11 +25,11 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
-$tab = optional_param('tab', 'courses', PARAM_ALPHA);
+$tab = optional_param('tab', 'courses', PARAM_ALPHAEXT);
 $action = optional_param('action', 'view', PARAM_ALPHA);
 
 // Set tabs.
-$coursestabs = ['courses', 'groupings', 'categories', 'skills', 'periods'];
+$coursestabs = ['courses', 'groupings', 'categories', 'skills', 'periods', 'course_types'];
 $locationstabs = ['locations', 'areas', 'cities', 'managers'];
 $skillstabs = ['skills', 'skills_descriptions'];
 $periodstabs = ['periods', 'holidays'];

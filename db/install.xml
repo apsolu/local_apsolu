@@ -182,6 +182,23 @@
         </KEYS>
     </TABLE>
 
+    <!-- COURSES FIELDS -->
+    <TABLE NAME="apsolu_courses_fields" COMMENT="Extend courses data">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" />
+            <FIELD NAME="coursetypeid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="customfieldid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="showinadministration" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="showonpublicpages" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_courses_fields" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="mainkey" UNIQUE="true" FIELDS="coursetypeid,customfieldid"/>
+        </INDEXES>
+    </TABLE>
+
     <!-- GROUPINGS (SPORTS SETS) -->
     <TABLE NAME="apsolu_courses_groupings" COMMENT="Extend courses data">
         <FIELDS>
@@ -191,6 +208,24 @@
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_courses_groupings" />
         </KEYS>
+    </TABLE>
+
+    <!-- COURSES TYPES -->
+    <TABLE NAME="apsolu_courses_types" COMMENT="Extend courses data">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" />
+            <FIELD NAME="shortname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="labelpattern" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="color" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_courses_types" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="sortorder" UNIQUE="false" FIELDS="sortorder" />
+        </INDEXES>
     </TABLE>
 
     <!-- FEDERATION ACTIVITIES -->

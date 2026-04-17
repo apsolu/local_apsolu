@@ -40,3 +40,14 @@ $plugin->maturity = MATURITY_STABLE;
 
 // Support Moodle from 5.0.0 to 5.0.x.
 $plugin->supported = [500, 500];
+
+// Dependencies on another plugin.
+$plugin->dependencies = [
+    'customfield_apsolu_category' => '2021051700',
+    'customfield_apsolu_course_type' => '2021051700',
+    'customfield_apsolu_location' => '2021051700',
+    'customfield_apsolu_period' => '2021051700',
+    'customfield_apsolu_skill' => '2021051700',
+    'customfield_time' => '2021051700',
+    'customfield_weekday' => '2021051700',
+];
