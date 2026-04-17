@@ -46,6 +46,20 @@ if ($DB->count_records('apsolu_courses_types') < 2) {
     redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_WARNING);
 }
 
+// Vérifie si ce type n'est pas associé à un cours.
+$courses = course::get_records(['t.id' => $coursetype->id]);
+if (count($courses) !== 0) {
+    $datatemplate = [];
+    $datatemplate['message'] = get_string('course_type_cannot_be_deleted', 'local_apsolu', $coursetype->name);
+    $datatemplate['dependences'] = [];
+    foreach ($courses as $course) {
+        $datatemplate['dependences'][] = $course->fullname;
+    }
+    $message = $OUTPUT->render_from_template('local_apsolu/courses_form_undeletable_message', $datatemplate);
+
+    redirect($returnurl, $message, $delay = null, \core\output\notification::NOTIFY_WARNING);
+}
+
 // Effectue les actions de suppression.
 if ($delete === $deletehash) {
     require_sesskey();
