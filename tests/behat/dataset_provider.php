@@ -60,11 +60,6 @@ class dataset_provider {
         session_manager::init_empty_session();
         session_manager::set_user(get_admin());
 
-        // Force l'utilisation du français, notamment pour avoir le bon jour de la semaine dans le nom des cours.
-        $langimport = new langimport();
-        $langimport->install_languagepacks('fr', $updating = false);
-        force_current_language('fr');
-
         self::setup_blocks_and_theme();
         self::setup_config();
         self::setup_roles();
