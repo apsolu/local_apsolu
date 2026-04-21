@@ -8,7 +8,7 @@ define([
     return {
         initialise: function() {
             // Créé un bouton dropdown pour cocher toutes les présences non définies.
-            let selector = '#apsolu-attendance-table tbody tr:first-child .apsolu-attendance-status-form input';
+            let selector = '#apsolu-attendance-table tbody tr:first-child .apsolu-attendance-status-form input[type=radio]';
             let attendancestatus = document.querySelectorAll(selector);
             // Etat du formulaire des présences : des modifications apportées aux boutons radio et aux commentaires ?
             var dirtyPresenceForm = false;
