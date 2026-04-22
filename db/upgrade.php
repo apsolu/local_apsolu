@@ -2067,7 +2067,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
-    $version = 0;
+    $version = 2026042200;
     if ($oldversion < $version) {
         // Ajoute l'incrémentation automatique sur le champ "id" de la table "apsolu_communication_templates".
         $table = new xmldb_table('apsolu_communication_templates');
@@ -2127,7 +2127,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
                 'forceunique' => 0,
                 'signup' => 0,
                 'defaultdata' => '',
-                'defaultdataformat' => FORMAT_MOODLE,
+                'defaultdataformat' => FORMAT_PLAIN,
                 'param1' => null,
                 'param2' => null,
                 'param3' => null,
