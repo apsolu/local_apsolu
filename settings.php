@@ -382,4 +382,23 @@ if ($hassiteconfig || has_any_capability($capabilities, context_system::instance
         'local_apsolu_statistics_programme',
         new admin_externalpage('local_apsolu_statistics_programme_custom', $label, $url, $capabilities)
     );
+
+    // --- ATOUTS NORMANDIE ---
+    // Création de la catégorie Atouts Normandie dans le menu Apsolu.
+    $ADMIN->add('apsolu', new admin_category('local_apsolu_atouts', 'Atouts Normandie'));
+
+    // Ajout d'une page de réglages (checkbox pour activer/désactiver).
+    $atouts_settings = new admin_settingpage('local_apsolu_atouts_settings', 'Configuration Atouts');
+
+    // Case à cocher : Activer/Désactiver le bouton.
+    $atouts_settings->add(new admin_setting_configcheckbox(
+        'local_apsolu/enable_atouts',              // Nom interne du réglage
+        'Activer le bouton de réduction',          // Libellé
+        'Cochez cette case pour afficher le bouton "Utiliser mon avantage Atouts Normandie" sur la page de paiement.', // Description
+        1                                          // Valeur par défaut : Activé
+    ));
+
+    $ADMIN->add('local_apsolu_atouts', $atouts_settings);
+    // --- FIN ATOUTS NORMANDIE ---
+
 }

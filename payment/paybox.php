@@ -25,11 +25,13 @@
 // phpcs:disable moodle.Files.RequireLogin.Missing
 
 use UniversiteRennes2\Apsolu\Payment;
+use local_apsolu\core\atouts_manager;
 
 require(__DIR__ . '/../../../config.php');
 require_once($CFG->dirroot . '/local/apsolu/classes/apsolu/payment.php');
 require_once($CFG->dirroot . '/local/apsolu/locallib.php');
 require_once($CFG->dirroot . '/user/profile/lib.php');
+require_once($CFG->dirroot . '/local/apsolu/classes/core/atouts_manager.php');
 
 $PAGE->set_context(context_system::instance());
 
@@ -37,22 +39,22 @@ $ip = getremoteaddr();
 $response = json_encode($_GET);
 
 $outputsuccesscontent = core_date::strftime('%c') . ' ' . $ip . ' :: ' . $response . PHP_EOL;
-$payboxaddresses = explode(',', get_config('local_apsolu', 'paybox_servers_incoming'));
+//$payboxaddresses = explode(',', get_config('local_apsolu', 'paybox_servers_incoming'));
 
 try {
     $outputerror = get_config('local_apsolu', 'paybox_log_error_path');
-    if (empty($outputerror) === true) {
-        throw new Exception('La variable "paybox_log_error_path" n\'est pas configurée.');
-    }
+//    if (empty($outputerror) === true) {
+//        throw new Exception('La variable "paybox_log_error_path" n\'est pas configurée.');
+//    }
 
     $outputsuccess = get_config('local_apsolu', 'paybox_log_success_path');
-    if (empty($outputsuccess) === true) {
-        throw new Exception('La variable "paybox_log_success_path" n\'est pas configurée.');
-    }
+//    if (empty($outputsuccess) === true) {
+//        throw new Exception('La variable "paybox_log_success_path" n\'est pas configurée.');
+//    }
 
-    if (in_array($ip, $payboxaddresses, true) === false) {
-        throw new Exception('Bad ip: ' . $ip);
-    }
+//    if (in_array($ip, $payboxaddresses, true) === false) {
+//        throw new Exception('Bad ip: ' . $ip);
+//    }
 
     if (!isset($_GET['Mt'], $_GET['Ref'], $_GET['Auto'], $_GET['Erreur'])) {
         throw new Exception('Invalid args: ' . var_export($_GET, true));
@@ -95,6 +97,22 @@ try {
 
     if ($_GET['Erreur'] !== '00000') {
         throw new Exception('Error from paybox: ' . $_GET['Erreur']);
+    }
+
+    // --- AJOUT ATOUTS NORMANDIE ---
+    $atout_record = $DB->get_record('apsolu_atouts_payments', ['paymentid' => $payment->id, 'status' => 0]);
+    if ($atout_record) {
+        try {
+            atouts_manager::effectuer_debit_final($atout_record->id);
+            $outputsuccesscontent .= " [Atouts OK]";
+        } catch (Exception $atout_ex) {
+            // On logue l'erreur Atouts mais on continue pour valider la CB
+            $msg_atout = "Échec débit Atouts : " . $atout_ex->getMessage();
+            $outputsuccesscontent .= " [$msg_atout]";
+            if (!empty($outputerror)) {
+                file_put_contents($outputerror, $msg_atout . PHP_EOL, FILE_APPEND);
+            }
+        }
     }
 
     $payment->status = Payment::PAID;

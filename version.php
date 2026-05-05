@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 // The current plugin version (Date: YYYYMMDDXX).
-$plugin->version = 2026021100;
+$plugin->version = 2026033001;
 
 $plugin->release = '5.0.6';
 
