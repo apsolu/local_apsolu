@@ -112,4 +112,24 @@ class local_apsolu_roles_edit_form extends moodleform {
         // Set default values.
         $this->set_data($defaults);
     }
+
+    /**
+     * Validation.
+     *
+     * @param array $data
+     * @param array $files
+     * @return array the errors that were found
+     */
+    public function validation($data, $files) {
+        global $DB;
+
+        $errors = parent::validation($data, $files);
+
+        // Valide la couleur.
+        if (preg_match('/^#[a-fA-F0-9]{6}$/', $data['color']) !== 1) {
+            $errors['color'] = get_string('the_field_X_has_an_invalid_value', 'local_apsolu', get_string('color', 'local_apsolu'));
+        }
+
+        return $errors;
+    }
 }

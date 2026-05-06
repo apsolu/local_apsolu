@@ -36,7 +36,7 @@ use local_apsolu\core\municipality;
 /**
  * Procédure de mise à jour.
  *
- * @param int $oldversion Numéro de la version du module theme_apsolu actuellement installé.
+ * @param int $oldversion Numéro de la version du module actuellement installé.
  *
  * @return bool
  */
@@ -2064,30 +2064,6 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         set_config('federation_contact', get_config('local_apsolu', 'functional_contact'), 'local_apsolu');
 
         // Savepoint reached.
-        upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
-    }
-
-    // Ajout de la table pour la gestion du paiement via Atouts Normandie
-    $version = 2026033001;
-    if ($oldversion < $version) {
-        $table = new xmldb_table('apsolu_atouts_payments');
-
-        if (!$dbman->table_exists($table)) {
-            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-            $table->add_field('paymentid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-            $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-            $table->add_field('nocarte', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null);
-            $table->add_field('amount', XMLDB_TYPE_NUMBER, '10, 2', null, XMLDB_NOTNULL, null, '0.00');
-            $table->add_field('ticket', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
-            $table->add_field('status', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
-            $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
-            $table->add_key('paymentid', XMLDB_KEY_FOREIGN, ['paymentid'], 'apsolu_payments', ['id']);
-
-            $dbman->create_table($table);
-        }
-
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 

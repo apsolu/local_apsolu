@@ -32,6 +32,7 @@ $sql = "SELECT ap.*, ac.numweekday, ac.starttime, al.name AS location" .
 $data->period = $DB->get_record_sql($sql, ['courseid' => $courseid]);
 
 if ($data->period !== false) {
+    $time = time();
     $weeks = explode(',', $data->period->weeks);
     $data->sessions = [];
     $data->count_sessions = 0;
@@ -53,7 +54,8 @@ if ($data->period !== false) {
             unset($weeks[$index]);
         }
 
-        $session->sessiontimestr = userdate($session->sessiontime, get_string('strftimedatetime', 'local_apsolu'));
+        $session->sessiontimestr = userdate($session->sessiontime, get_string('strftimedatetimewithyear', 'local_apsolu'));
+        $session->expired = $time > $session->sessiontime;
 
         $data->sessions[] = $session;
         $data->count_sessions++;

@@ -59,6 +59,7 @@ class local_apsolu_attendance_sessions_edit_form extends moodleform {
         $mform->addElement('selectyesno', 'notify', get_string('attendance_forum_notify', 'local_apsolu'));
         $mform->setType('notify', PARAM_INT);
         $mform->addRule('notify', get_string('required'), 'required', null, 'client');
+        $mform->setDefault('notify', 1);
 
         // Notifier le contact fonctionnel.
         $functionalcontact = get_config('local_apsolu', 'functional_contact');
@@ -68,7 +69,7 @@ class local_apsolu_attendance_sessions_edit_form extends moodleform {
             $mform->setType('notify_functional_contact', PARAM_INT);
 
             // Force la notification auprès de l'adresse de contact fonctionnel.
-            $session->notify_functional_contact = 1;
+            $mform->setDefault('notify_functional_contact', 1);
             $checkbox->freeze();
         }
 
@@ -84,19 +85,6 @@ class local_apsolu_attendance_sessions_edit_form extends moodleform {
         $buttonarray[] = &$mform->createElement('static', '', '', get_string('cancel_link', 'local_apsolu', $attributes));
 
         $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
-
-        // Hidden fields.
-        $mform->addElement('hidden', 'page', 'sessions');
-        $mform->setType('page', PARAM_ALPHA);
-
-        $mform->addElement('hidden', 'action', 'edit');
-        $mform->setType('action', PARAM_ALPHA);
-
-        $mform->addElement('hidden', 'sessionid');
-        $mform->setType('sessionid', PARAM_INT);
-
-        $mform->addElement('hidden', 'courseid');
-        $mform->setType('courseid', PARAM_INT);
 
         // Set default values.
         $this->set_data($session);

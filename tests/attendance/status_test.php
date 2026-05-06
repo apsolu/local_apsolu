@@ -45,6 +45,8 @@ final class status_test extends \advanced_testcase {
     public function test_delete(): void {
         global $DB;
 
+        $this->setAdminUser();
+
         // Génère un nouveau cours.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
         $course = new course();

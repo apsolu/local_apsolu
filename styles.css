@@ -50,6 +50,14 @@
     margin: unset;
 }
 
+a.btn-disabled {
+    color: var(--bs-btn-disabled-color);
+    pointer-events: none;
+    background-color: var(--bs-btn-disabled-bg);
+    border-color: var(--bs-btn-disabled-border-color);
+    opacity: var(--bs-btn-disabled-opacity);
+}
+
 /* Courses */
 .apsolu-category-level1-div,
 .apsolu-category-level1-h2,

@@ -159,6 +159,16 @@ class notify extends \local_apsolu_notification_form {
             $mform->addElement('autocomplete', 'locations', get_string('locations', 'local_apsolu'), $locations, $options);
         }
 
+        // Filtre: sites.
+        $cities = [];
+        foreach ($DB->get_records('apsolu_cities', $conditions = [], $sort = 'name') as $city) {
+            $cities[$city->id] = $city->name;
+        }
+
+        if (count($cities) > 1) {
+            $mform->addElement('autocomplete', 'cities', get_string('cities', 'local_apsolu'), $cities, $options);
+        }
+
         // Option pour enregistrer le modèle.
         [$defaultdata, $recipients, $redirecturl] = $this->_customdata;
         if (empty($defaultdata->template) === true) {
@@ -288,6 +298,16 @@ class notify extends \local_apsolu_notification_form {
             [$insql, $namedparams] = $DB->get_in_or_equal($data->locations, SQL_PARAMS_NAMED, 'locationid_');
 
             $conditions[] = 'ac.locationid ' . $insql;
+            $params = array_merge($params, $namedparams);
+        }
+
+        // Filtre: sites.
+        if (isset($data->cities) === true && count($data->cities) > 0) {
+            [$insql, $namedparams] = $DB->get_in_or_equal($data->cities, SQL_PARAMS_NAMED, 'cityid_');
+
+            $sql .= " JOIN {apsolu_locations} al ON al.id = ac.locationid
+                      JOIN {apsolu_areas} aa ON aa.id = al.areaid";
+            $conditions[] = 'aa.cityid ' . $insql;
             $params = array_merge($params, $namedparams);
         }
 

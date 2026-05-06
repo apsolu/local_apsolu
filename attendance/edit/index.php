@@ -232,6 +232,7 @@ foreach ($students as $student) {
 
     // Contruction des infos des radio parce que mustache veut ZERO logique.
     $presences_radios = [];
+    $processed_student->presence_status = "0";
     foreach ($statuses as $status) {
         $radio = new stdClass();
         $radio->label = $status->longlabel;
@@ -239,6 +240,7 @@ foreach ($students as $student) {
         $radio->checked = 0;
         if (isset($presences[$student->id]) && $presences[$student->id]->statusid == $status->id) {
             $radio->checked = 1;
+            $processed_student->presence_status = $status->id;
         }
         $presences_radios[] = $radio;
     }

@@ -47,6 +47,8 @@ final class qrcode_test extends \advanced_testcase {
      * @return void
      */
     public function test_delete(): void {
+        $this->setAdminUser();
+
         // Génère un nouveau cours.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
         $course = new course();
@@ -101,6 +103,8 @@ final class qrcode_test extends \advanced_testcase {
      * @return void
      */
     public function test_save(): void {
+        $this->setAdminUser();
+
         // Génère un nouveau cours.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
         $course = new course();
@@ -198,10 +202,12 @@ final class qrcode_test extends \advanced_testcase {
      * @return void
      */
     public function test_sign(): void {
-        global $USER;
+        $this->setAdminUser();
+
+        $generator = $this->getDataGenerator();
 
         // Génère un nouveau cours.
-        $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
+        $data = $generator->get_plugin_generator('local_apsolu')->get_course_data();
         $course = new course();
         $course->save($data);
 
@@ -231,6 +237,9 @@ final class qrcode_test extends \advanced_testcase {
         $qrcode->sessionid = $session->id;
 
         $statuses = status::get_records();
+
+        $user = $generator->create_user();
+        $this->setUser($user);
 
         // Teste l'erreur lorsque la validation est effectuée avec un étudiant non-inscrit.
         try {
@@ -310,7 +319,7 @@ final class qrcode_test extends \advanced_testcase {
         $qrcode->settings->latetimeenabled = 1;
         $this->assertSame($response, $qrcode->sign($session));
 
-        $presence = attendancepresence::get_record(['sessionid' => $session->id, 'studentid' => $USER->id], '*', MUST_EXIST);
+        $presence = attendancepresence::get_record(['sessionid' => $session->id, 'studentid' => $user->id], '*', MUST_EXIST);
         $presence->delete();
 
         // Teste la validation d'une présence sans le paramètre "en retard".
@@ -323,7 +332,7 @@ final class qrcode_test extends \advanced_testcase {
 
         $this->assertSame($response, $qrcode->sign($session));
 
-        $presence = attendancepresence::get_record(['sessionid' => $session->id, 'studentid' => $USER->id], '*', MUST_EXIST);
+        $presence = attendancepresence::get_record(['sessionid' => $session->id, 'studentid' => $user->id], '*', MUST_EXIST);
         $presence->delete();
 
         // Teste la validation d'une présence "en retard".
@@ -343,7 +352,7 @@ final class qrcode_test extends \advanced_testcase {
 
             $this->fail('Une exception "moodle_exception" attendue pour une validation déjà effectuée précédemment');
         } catch (moodle_exception $exception) {
-            $presence = attendancepresence::get_record(['sessionid' => $session->id, 'studentid' => $USER->id]);
+            $presence = attendancepresence::get_record(['sessionid' => $session->id, 'studentid' => $user->id]);
 
             $a = new stdClass();
             $a->status = $statuses[$presence->statusid]->longlabel;

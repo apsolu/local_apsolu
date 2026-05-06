@@ -73,12 +73,14 @@
             <td>{{ sessiontimestr }}</td>
             <td>{{ location }}</td>
             <td>
+                {{^expired}}
                 <ul class="list-inline">
                     <li class="list-inline-item"><a class="btn btn-sm btn-primary" href="{{ url }}/local/apsolu/attendance/index.php?page=sessions&action=edit&courseid={{ courseid }}&sessionid={{ id }}">{{#str}}edit{{/str}}</a></li>
                     {{^count}}
                     <li class="list-inline-item"><a class="btn btn-sm btn-danger" href="{{ url }}/local/apsolu/attendance/index.php?page=sessions&action=delete&courseid={{ courseid }}&sessionid={{ id }}">{{#str}}delete{{/str}}</a></li>
                     {{/count}}
                 </ul>
+                {{/expired}}
             </td>
         </tr>
         {{/sessions}}

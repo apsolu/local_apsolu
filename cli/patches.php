@@ -31,19 +31,6 @@ require(__DIR__ . '/../../../config.php');
 try {
     $dbman = $DB->get_manager();
 
-    // Ajoute l'incrémentation automatique sur le champ "id" de la table "apsolu_communication_templates".
-    $table = new xmldb_table('apsolu_communication_templates');
-    $field = new xmldb_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
-    $dbman->change_field_type($table, $field);
-
-    // Met à jour les adresses Paybox.
-    $oldvalue = get_config('local_apsolu', 'paybox_servers_incoming');
-    if ($oldvalue === '194.2.122.158,194.2.122.190,195.25.7.166,195.25.67.22') {
-        $newvalue = '62.161.13.193,62.161.15.193,195.25.67.22';
-        set_config('paybox_servers_incoming', $newvalue, 'local_apsolu');
-        add_to_config_log('paybox_servers_incoming', $oldvalue, $newvalue, 'local_apsolu');
-    }
-
     mtrace(get_string('success'));
 } catch (Exception $exception) {
     mtrace(get_string('error'));
