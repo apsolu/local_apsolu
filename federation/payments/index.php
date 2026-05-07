@@ -72,7 +72,7 @@ if (empty($cards) === false) {
             get_string('department'),
             get_string('main_sport', 'local_apsolu'),
             get_string('method', 'local_apsolu'),
-            get_string('date', 'local_apsolu'),
+            get_string('payment_date', 'local_apsolu'),
             get_string('amount', 'local_apsolu'),
             get_string('payment_number', 'local_apsolu'),
         ];
