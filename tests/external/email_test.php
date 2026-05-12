@@ -17,7 +17,7 @@
 namespace local_apsolu\external;
 
 use context_system;
-use external_api;
+use core_external\external_api;
 use externallib_advanced_testcase;
 
 defined('MOODLE_INTERNAL') || die();
