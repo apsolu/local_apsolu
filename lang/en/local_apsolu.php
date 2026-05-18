@@ -1506,6 +1506,7 @@ $string['fields_apsoludoublecursus'] = 'Double cursus';
 $string['fields_apsolufederationnumber'] = 'Numéro de licence';
 $string['fields_apsolumaintraining'] = 'Formation';
 $string['fields_apsoluothertrainings'] = 'Autres cursus';
+$string['fields_apsolusite'] = 'Site';
 
 // Settings.
 $string['settings_root'] = 'APSOLU';

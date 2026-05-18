@@ -62,6 +62,37 @@ try {
         }
     }
 
+    // Génère un champ de profil "Site" si il n'existe pas.
+    require_once($CFG->dirroot . '/user/profile/definelib.php');
+    require_once($CFG->dirroot . '/user/profile/lib.php');
+
+    $category = $DB->get_record('user_info_field', ['shortname' => 'apsoluusertype'], $fields = '*', MUST_EXIST);
+
+    $shortname = 'apsolusite';
+    if ($DB->get_record('user_info_field', ['shortname' => $shortname]) === false) {
+        $data = [
+            'shortname' => $shortname,
+            'name' => get_string('fields_' . $shortname, 'local_apsolu'),
+            'datatype' => 'text',
+            'description' => ['format' => FORMAT_HTML, 'text' => ''],
+            'categoryid' => $category->categoryid,
+            'required' => 0,
+            'locked' => 1,
+            'visible' => 1,
+            'forceunique' => 0,
+            'signup' => 0,
+            'defaultdata' => '',
+            'defaultdataformat' => FORMAT_MOODLE,
+            'param1' => 30,
+            'param2' => 2048,
+            'param3' => 0,
+            'param4' => '',
+            'param5' => '',
+        ];
+
+        profile_save_field((object) $data, $editors = []);
+    }
+
     mtrace(get_string('success'));
 } catch (Exception $exception) {
     mtrace(get_string('error'));
