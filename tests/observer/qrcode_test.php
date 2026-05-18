@@ -18,8 +18,9 @@ namespace local_apsolu\observer;
 
 use context_course;
 use local_apsolu\attendance\qrcode as attendanceqrcode;
-use local_apsolu\core\course;
 use local_apsolu\core\attendancesession;
+use local_apsolu\core\course;
+use local_apsolu\core\location;
 use local_apsolu\event\qrcode_updated;
 
 /**
@@ -51,13 +52,18 @@ final class qrcode_test extends \advanced_testcase {
         $params = ['component' => 'local_apsolu', 'classname' => '\local_apsolu\task\record_missing_attendance'];
 
         // Génère un nouveau cours.
+        $location = new location();
+        $location->save();
+
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
+        $data->locationid = $location->id;
         $course = new course();
         $course->save($data);
 
         // Génère une session de cours.
         $session = new attendancesession();
         $session->courseid = $course->id;
+        $session->locationid = $course->locationid;
         $session->name = 'attendancesession 1';
         $session->save();
 
@@ -124,13 +130,18 @@ final class qrcode_test extends \advanced_testcase {
         $params = ['component' => 'local_apsolu', 'classname' => '\local_apsolu\task\record_missing_attendance'];
 
         // Génère un nouveau cours.
+        $location = new location();
+        $location->save();
+
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
+        $data->locationid = $location->id;
         $course = new course();
         $course->save($data);
 
         // Génère une session de cours.
         $session = new attendancesession();
         $session->courseid = $course->id;
+        $session->locationid = $course->locationid;
         $session->name = 'attendancesession 1';
         $session->save();
 

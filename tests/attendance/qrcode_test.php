@@ -22,6 +22,7 @@ use local_apsolu\core\attendancepresence;
 use local_apsolu\core\attendancesession;
 use local_apsolu\core\attendance\status;
 use local_apsolu\core\course;
+use local_apsolu\core\location;
 use moodle_exception;
 use stdClass;
 
@@ -50,13 +51,18 @@ final class qrcode_test extends \advanced_testcase {
         $this->setAdminUser();
 
         // Génère un nouveau cours.
+        $location = new location();
+        $location->save();
+
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
+        $data->locationid = $location->id;
         $course = new course();
         $course->save($data);
 
         // Génère une session de cours.
         $session = new attendancesession();
         $session->courseid = $course->id;
+        $session->locationid = $location->id;
         $session->name = 'attendancesession 1';
         $session->save();
 
@@ -106,18 +112,24 @@ final class qrcode_test extends \advanced_testcase {
         $this->setAdminUser();
 
         // Génère un nouveau cours.
+        $location = new location();
+        $location->save();
+
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
+        $data->locationid = $location->id;
         $course = new course();
         $course->save($data);
 
         // Génère une session de cours.
         $session1 = new attendancesession();
         $session1->courseid = $course->id;
+        $session1->locationid = $location->id;
         $session1->name = 'attendancesession 1';
         $session1->save();
 
         $session2 = new attendancesession();
         $session2->courseid = $course->id;
+        $session2->locationid = $location->id;
         $session2->name = 'attendancesession 2';
         $session2->save();
 
@@ -207,13 +219,18 @@ final class qrcode_test extends \advanced_testcase {
         $generator = $this->getDataGenerator();
 
         // Génère un nouveau cours.
+        $location = new location();
+        $location->save();
+
         $data = $generator->get_plugin_generator('local_apsolu')->get_course_data();
+        $data->locationid = $location->id;
         $course = new course();
         $course->save($data);
 
         // Génère une session de cours.
         $session = new attendancesession();
         $session->courseid = $course->id;
+        $session->locationid = $location->id;
         $session->name = 'attendancesession 1';
         $session->save();
 

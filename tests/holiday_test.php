@@ -20,6 +20,7 @@ use core_date;
 use dml_write_exception;
 use local_apsolu\core\course;
 use local_apsolu\core\holiday;
+use local_apsolu\core\location;
 use local_apsolu\core\period;
 use stdClass;
 
@@ -161,9 +162,13 @@ final class holiday_test extends \advanced_testcase {
         $period1->save($data);
 
         // Génère un cours.
+        $location = new location();
+        $location->save();
+
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
-        $course = new course();
+        $data->locationid = $location->id;
         $data->periodid = $period1->id;
+        $course = new course();
         $course->save($data);
 
         // Ajoute un jour férié sur la prochaine session de cours.

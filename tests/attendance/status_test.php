@@ -20,6 +20,7 @@ use local_apsolu\core\attendancepresence;
 use local_apsolu\core\attendancesession;
 use local_apsolu\core\attendance\status;
 use local_apsolu\core\course;
+use local_apsolu\core\location;
 
 /**
  * Classe de tests pour local_apsolu\core\attendance\status
@@ -48,13 +49,18 @@ final class status_test extends \advanced_testcase {
         $this->setAdminUser();
 
         // Génère un nouveau cours.
+        $location = new location();
+        $location->save();
+
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
+        $data->locationid = $location->id;
         $course = new course();
         $course->save($data);
 
         // Génère une session de cours.
         $attendancesession = new attendancesession();
         $attendancesession->courseid = $course->id;
+        $attendancesession->locationid = $location->id;
         $attendancesession->name = 'attendancesession 1';
         $attendancesession->save();
 
