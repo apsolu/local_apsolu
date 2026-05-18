@@ -55,6 +55,7 @@ if ($data->period !== false) {
         }
 
         $session->sessiontimestr = userdate($session->sessiontime, get_string('strftimedatetimewithyear', 'local_apsolu'));
+        $session->durationstr = get_string('X_minutes', 'local_apsolu', $session->duration / 60);
         $session->expired = $time > $session->sessiontime;
 
         $data->sessions[] = $session;
