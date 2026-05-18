@@ -41,6 +41,9 @@ class attendancesession extends record {
     /** @var int|string $sessiontime Timestamp Unix représentant la date de début de la session. */
     public $sessiontime = '';
 
+    /** @var int|string $duration Durée en secondes de la session. */
+    public $duration = '';
+
     /** @var int|string $courseid Identifiant du cours auquel est rattachée la session. */
     public $courseid = '';
 
@@ -171,6 +174,11 @@ class attendancesession extends record {
 
         if ($data !== null) {
             $this->set_vars($data);
+        }
+
+        if (empty($this->duration) === true) {
+            // Force le calcul de la durée de la session.
+            $this->duration = $this->get_duration();
         }
 
         // Démarre une transaction, si ce n'est pas déjà fait.
