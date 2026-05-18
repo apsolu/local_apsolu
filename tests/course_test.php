@@ -302,7 +302,6 @@ final class course_test extends \advanced_testcase {
         $session->name = 'Test past session';
         $session->sessiontime = $pastsessiontime;
         $session->courseid = $course->id;
-        $session->activityid = $course->category;
         $session->locationid = $pastsessionlocation;
         $session->save();
         $pastsessionid = $session->id;
@@ -314,7 +313,6 @@ final class course_test extends \advanced_testcase {
         $session->name = 'Test future session';
         $session->sessiontime = $futuresessiontime;
         $session->courseid = $course->id;
-        $session->activityid = $course->category;
         $session->locationid = $course->locationid;
         $session->save();
         $futuresessionid = $session->id;
