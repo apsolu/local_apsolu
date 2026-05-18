@@ -1001,6 +1001,7 @@ $string['whatever'] = 'Peu importe';
 $string['with_insurance'] = 'Avec IA';
 $string['woman'] = 'Femme';
 $string['work_mail'] = 'Mail pro';
+$string['X_minutes'] = '{$a} minutes';
 $string['X_qr_code_created'] = 'QR code généré pour la session {$a}';
 $string['X_qr_codes_created'] = '{$a} QR codes générés';
 $string['X_qr_code_updated'] = 'QR code mis à jour pour la session {$a}';
@@ -1350,6 +1351,8 @@ $string['attendance_forum_create_session_message'] = '<p>Bonjour,</p>' .
     '<dl class="dl-horizontal">' .
         '<dt>Jour</dt>' .
         '<dd>{$a->datetime}</dd>' .
+        '<dt>Durée</dt>' .
+        '<dd>{$a->duration}</dd>' .
         '<dt>Lieu</dt>' .
         '<dd>{$a->location}<dd>' .
     '</dl>' .
@@ -1361,6 +1364,8 @@ $string['attendance_forum_edit_session_message'] = '<p>Bonjour,</p>' .
     '<dl class="dl-horizontal">' .
         '<dt>Jour</dt>' .
         '<dd>{$a->datetime}</dd>' .
+        '<dt>Durée</dt>' .
+        '<dd>{$a->duration}</dd>' .
         '<dt>Lieu</dt>' .
         '<dd>{$a->location}<dd>' .
     '</dl>' .

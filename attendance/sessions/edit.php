@@ -23,6 +23,7 @@
  */
 
 use local_apsolu\core\attendancesession;
+use local_apsolu\core\course;
 use local_apsolu\core\messaging;
 
 defined('MOODLE_INTERNAL') || die;
@@ -54,6 +55,7 @@ if (empty($session->id) === true) {
 
     $session->name = $name;
     $session->sessiontime = 0;
+    $session->duration = course::getDuration($apsolucourse->starttime, $apsolucourse->endtime);
     $session->courseid = $course->id;
     $session->locationid = $apsolucourse->locationid;
 }
@@ -77,11 +79,18 @@ if ($mdata = $mform->get_data()) {
     $notifications[] = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
 
     // Détermine si la session a changé de date et/ou de lieu.
-    $changed = ($instance->sessiontime != $session->sessiontime || $instance->locationid != $session->locationid);
+    $changed = (
+        $instance->sessiontime != $session->sessiontime ||
+        $instance->duration != $session->duration ||
+        $instance->locationid != $session->locationid
+    );
 
     // Prépare les variables pour les notifications.
-    $variables = (object) ['datetime' => userdate($session->sessiontime, get_string('strftimedatetime', 'local_apsolu')),
-        'location' => $locations[$session->locationid]];
+    $variables = (object) [
+        'datetime' => userdate($session->sessiontime, get_string('strftimedatetime', 'local_apsolu')),
+        'duration' => get_string('X_minutes', 'local_apsolu', $session->duration / 60),
+        'location' => $locations[$session->locationid],
+    ];
     if ($instance->id === 0) {
         $subject = get_string(
             'attendance_forum_create_session_subject',
