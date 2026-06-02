@@ -60,6 +60,9 @@ class dataset_provider {
         session_manager::init_empty_session();
         session_manager::set_user(get_admin());
 
+        // Configurer les méthodes d'enrolment manuelles par défaut pour désactiver l'envoi d'emails de bienvenue.
+        set_config('sendcoursewelcomemessage', 0, 'enrol_manual');
+
         self::setup_blocks_and_theme();
         self::setup_config();
         self::setup_roles();
@@ -1272,10 +1275,14 @@ class dataset_provider {
                         continue;
                     }
 
+                    if (!isset($apsolucalendars[$calendartype])) {
+                        continue;
+                    }
+
                     $data = new stdClass();
                     $data->name = $itemname;
                     $data->roleid = $roles[$rolename];
-                    $data->calendarid = $calendartypeid;
+                    $data->calendarid = $apsolucalendars[$calendartype];
                     $data->grademax = get_config('core', 'gradepointmax');
                     $data->publicationdate = 1;
 
