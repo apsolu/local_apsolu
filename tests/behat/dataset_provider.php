@@ -1260,6 +1260,10 @@ class dataset_provider {
             $calendartypes[$record->name] = $record->id;
         }
 
+        foreach ($DB->get_records('apsolu_calendars') as $record) {
+            $apsolucalendars[$record->name] = $record->id;
+        }
+
         $roles = [];
         foreach (Apsolu\gradebook::get_gradable_roles() as $record) {
             $options['roles'][] = $record->id;
