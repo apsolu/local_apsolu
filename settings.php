@@ -269,6 +269,19 @@ if ($hassiteconfig || has_any_capability($capabilities, context_system::instance
             new admin_externalpage('local_apsolu_payment_configurations', $label, $url, $capabilities)
         );
 
+        // Paiements > Atouts Normandie.
+        $atoutssettings = new admin_settingpage('local_apsolu_atouts_settings', 'Atouts Normandie');
+
+        // Case à cocher : Activer/Désactiver le bouton.
+        $atoutssettings->add(new admin_setting_configcheckbox(
+            'local_apsolu/enable_atouts', // Nom interne du réglage.
+            'Activer le bouton de réduction', // Libellé.
+            'Cochez cette case pour afficher le bouton "Utiliser mon avantage Atouts Normandie" sur la page de paiement.', // Desc.
+            0 // Valeur par défaut : Désactivé.
+        ));
+
+        $ADMIN->add('local_apsolu_payment', $atoutssettings);
+
         // Paiements > Centres de paiement.
         $label = get_string('payment_centers', 'local_apsolu');
         $url = new moodle_url('/local/apsolu/payment/admin.php', ['tab' => 'centers']);

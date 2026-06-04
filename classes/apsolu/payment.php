@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+// phpcs:disable moodle.Commenting.TodoComment.MissingInfoInline
+
 namespace UniversiteRennes2\Apsolu;
 
 use SimpleXMLElement;
@@ -105,16 +107,21 @@ class Payment {
      * @return string|false Retourne l'id de la table apsolu_payments ou false en cas d'erreur.
      */
     public static function get_id_from_refid(string $refid) {
-        if (preg_match(self::REFID_PATTERN, $refid, $matches, PREG_UNMATCHED_AS_NULL) !== 1) {
-            return false;
+        // On sépare la chaîne par les tirets.
+        $parts = explode('-', $refid);
+
+        // On récupère le dernier élément (qui doit être l'ID numérique).
+        $id = (int) end($parts);
+
+        if ($id > 0) {
+            return (string) $id;
         }
 
-        if (count($matches) === 4) {
-            // Parfait. $matches contient les 4 éléments : la chaine refid, le préfixe, l'id et les codes de cartes.
+        // Si on n'a pas pu extraire d'ID, on tente quand même la Regex d'origine au cas où.
+        if (preg_match(self::REFID_PATTERN, $refid, $matches, PREG_UNMATCHED_AS_NULL) === 1) {
             return $matches[2];
         }
 
-        // Ce cas ne devrait pas arriver.
         return false;
     }
 
@@ -615,5 +622,54 @@ class Payment {
         }
 
         return sprintf('%s%s%s', $prefix, $id, $suffix);
+    }
+
+    /**
+     * Confirme le paiement et procède aux inscriptions Moodle effectives.
+     * * Cette fonction parcourt les items du paiement, met à jour leur statut
+     * et inscrit l'étudiant aux cours correspondants via le plugin 'enrol_select'.
+     *
+     * @param stdClass $payment Objet complet de la table {apsolu_payments}.
+     * @return bool Succès global du traitement.
+     */
+    public static function confirm_payment($payment) {
+        global $DB;
+
+        // 1. Récupération de tous les items liés à ce paiement.
+        $items = $DB->get_records('apsolu_payments_items', ['paymentid' => $payment->id]);
+
+        if (empty($items)) {
+            return false;
+        }
+
+        foreach ($items as $item) {
+            // Récupération de la carte (l'activité/cours) associée.
+            $card = $DB->get_record('apsolu_payments_cards', ['id' => $item->cardid]);
+
+            if (!$card) {
+                continue;
+            }
+
+            // 2. Mise à jour du statut de l'item en base.
+            $item->status = 1; // Marqué comme traité/inscrit.
+            $item->timemodified = time();
+            $DB->update_record('apsolu_payments_items', $item);
+
+            // 3. Logique d'inscription (Enrolment).
+            // On vérifie si la carte est liée à un cours Moodle (field 'courseid').
+            if (!empty($card->courseid)) {
+                $course = $DB->get_record('course', ['id' => $card->courseid], '*', MUST_EXIST);
+
+                // Utilisation de l'instance d'enrôlement 'select' (ou manuelle selon votre config).
+                $enrol = enrol_get_plugin('select');
+                $instance = $DB->get_record('enrol', ['courseid' => $course->id, 'enrol' => 'select'], '*', IGNORE_MISSING);
+
+                if ($instance) {
+                    // Inscription de l'utilisateur au cours.
+                    $enrol->enrol_user($instance, $payment->userid, $instance->roleid, time());
+                }
+            }
+        }
+        return true;
     }
 }

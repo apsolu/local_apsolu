@@ -702,5 +702,26 @@
             <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apsolu_roles" />
         </KEYS>
     </TABLE>
+
+    <!-- Paiement Atouts Normandie -->
+    <TABLE NAME="apsolu_atouts_payments" COMMENT="Détails du débit Atouts Normandie lié à une commande globale">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" />
+            <FIELD NAME="paymentid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Lien vers apsolu_payments.id" />
+            <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="nocarte" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Stockage du QR Code pour annulation hors session" />
+            <FIELD NAME="amount" TYPE="float" LENGTH="10" DECIMALS="2" DEFAULT="0.00" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" />
+            <FIELD NAME="ticket" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Numéro de dossier renvoyé par Dialog" />
+            <FIELD NAME="status" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="0: initié, 1: débité, 2: annulé" />
+            <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+            <KEY NAME="paymentid_fk" TYPE="foreign" FIELDS="paymentid" REFTABLE="apsolu_payments" REFFIELDS="id" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
+        </INDEXES>
+    </TABLE>
 </TABLES>
 </XMLDB>

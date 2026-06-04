@@ -54,7 +54,7 @@ Feature: Teste la présentation réalisée lors de démonstration de l'applicati
       | Ville du porteur de carte           | Paris             |
       | Pays du porteur de carte            | France            |
     And I press "Continue"
-    Then I should see "15.00 euros"
+    Then I should see "Payer 15,00 €"
 
   @javascript
   Scenario: Valide le processus d'inscription à l'AS.

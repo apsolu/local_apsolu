@@ -93,6 +93,27 @@ try {
         profile_save_field((object) $data, $editors = []);
     }
 
+    // Ajout de la table pour la gestion du paiement via Atouts Normandie.
+    $table = new xmldb_table('apsolu_atouts_payments');
+
+    if (!$dbman->table_exists($table)) {
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('paymentid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('nocarte', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('amount', XMLDB_TYPE_NUMBER, '10, 2', null, XMLDB_NOTNULL, null, '0.00');
+        $table->add_field('ticket', XMLDB_TYPE_CHAR, '50', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('status', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('paymentid', XMLDB_KEY_FOREIGN, ['paymentid'], 'apsolu_payments', ['id']);
+
+        $table->add_index($indexname = 'userid', XMLDB_INDEX_NOTUNIQUE, $fields = ['userid']);
+
+        $dbman->create_table($table);
+    }
+
     mtrace(get_string('success'));
 } catch (Exception $exception) {
     mtrace(get_string('error'));

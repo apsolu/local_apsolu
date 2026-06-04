@@ -25,11 +25,13 @@
 // phpcs:disable moodle.Files.RequireLogin.Missing
 
 use UniversiteRennes2\Apsolu\Payment;
+use local_apsolu\core\atouts_manager;
 
 require(__DIR__ . '/../../../config.php');
 require_once($CFG->dirroot . '/local/apsolu/classes/apsolu/payment.php');
 require_once($CFG->dirroot . '/local/apsolu/locallib.php');
 require_once($CFG->dirroot . '/user/profile/lib.php');
+require_once($CFG->dirroot . '/local/apsolu/classes/core/atouts_manager.php');
 
 $PAGE->set_context(context_system::instance());
 
@@ -95,6 +97,22 @@ try {
 
     if ($_GET['Erreur'] !== '00000') {
         throw new Exception('Error from paybox: ' . $_GET['Erreur']);
+    }
+
+    // AJOUT ATOUTS NORMANDIE.
+    $atoutrecord = $DB->get_record('apsolu_atouts_payments', ['paymentid' => $payment->id, 'status' => 0]);
+    if ($atoutrecord) {
+        try {
+            atouts_manager::effectuer_debit_final($atoutrecord->id);
+            $outputsuccesscontent .= " [Atouts OK]";
+        } catch (Exception $atoutex) {
+            // On logue l'erreur Atouts mais on continue pour valider la CB.
+            $msgatout = "Échec débit Atouts : " . $atoutex->getMessage();
+            $outputsuccesscontent .= " [$msgatout]";
+            if (!empty($outputerror)) {
+                file_put_contents($outputerror, $msgatout . PHP_EOL, FILE_APPEND);
+            }
+        }
     }
 
     $payment->status = Payment::PAID;
