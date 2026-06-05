@@ -149,7 +149,6 @@ class attendancesession extends record {
 
         require_once($CFG->dirroot . '/calendar/lib.php');
 
-        $course = $DB->get_record('apsolu_courses', ['id' => $this->courseid]);
         $location = $DB->get_record('apsolu_locations', ['id' => $this->locationid]);
 
         $event = new stdClass();
@@ -181,7 +180,7 @@ class attendancesession extends record {
         // The start time as a timestamp.
         $event->timestart = $this->sessiontime;
         // The duration of the event in seconds.
-        $event->timeduration = course::getDuration($course->starttime, $course->endtime);
+        $event->timeduration = $this->duration;
         $event->timesort = null; // Ce champ n'est pas documenté.
         $event->visible = 1;
         $event->uuid = ''; // Ce champ n'est pas documenté.
