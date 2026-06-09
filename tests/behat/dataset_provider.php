@@ -615,6 +615,11 @@ class dataset_provider {
             $course->save($coursedata);
             $courses[$fullname] = $course;
 
+            // On modifie les sessions pour permettre aux sessions déjà passées d'être ajoutées.
+            if (defined('APSOLU_DEMO') === true) {
+                $course->set_sessions(true);
+            }
+
             self::setup_enrolments($course, $period, $teachers);
 
             // Ajoute du contenu dans l'espace-cours pour l'instance de démonstration.

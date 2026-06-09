@@ -664,9 +664,11 @@ class course extends record {
     /**
      * Génère les sessions du cours.
      *
+     * @param bool $createpastsessions Témoin indiquant si il faut créer les sessions déjà passées.
+     *
      * @return void
      */
-    public function set_sessions() {
+    public function set_sessions(bool $createpastsessions = false) {
         // Récupère le nombre de secondes entre le début de la semaine et la date de début du cours.
         $offset = $this->get_session_offset();
 
@@ -676,7 +678,7 @@ class course extends record {
         $period = new period();
         $period->load($this->periodid);
         foreach ($period->get_sessions($offset) as $sessiontime => $session) {
-            if ($session->has_started() === true && defined('APSOLU_DEMO') === false) {
+            if ($session->has_started() === true && $createpastsessions === false) {
                 // On retire de la sélection toutes les sessions déjà passées.
                 continue;
             }
@@ -710,7 +712,7 @@ class course extends record {
         foreach ($sessions as $sessiontime => $session) {
             $count++;
 
-            if ($session->has_started() === true && defined('APSOLU_DEMO') === false) {
+            if ($session->has_started() === true && $createpastsessions === false) {
                 // On ne modifie jamais les sessions passées.
                 continue;
             }
