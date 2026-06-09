@@ -362,6 +362,63 @@ select.tablesorter-filter {
     display: block !important; /* stylelint-disable-line declaration-no-important */
 }
 
+/* Administration > Réinitialisation des espaces cours > Configuration de la prochaine réinitialisation. */
+#page-admin-local-apsolu-reset-index h2 {
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+}
+#page-admin-local-apsolu-reset-index fieldset div[class*="col-md-3 col-form-label"]:has(label) {
+    width: 75% !important; /* stylelint-disable-line declaration-no-important */
+    margin-right: 2.5rem !important; /* stylelint-disable-line declaration-no-important */
+
+    & [class*="form-label-addon"] {
+        margin-left: 1.5rem !important; /* stylelint-disable-line declaration-no-important */
+    }
+
+    & label {
+        text-align: justify;
+    }
+}
+
+#page-admin-local-apsolu-reset-index fieldset div[class*="col-md-9"][data-fieldtype="selectyesno"] {
+    width: 16.6% !important; /* stylelint-disable-line declaration-no-important */
+}
+
+#page-admin-local-apsolu-reset-index fieldset div[class*="col-md-9"]:has([data-fieldtype="submit"]) {
+    width: 90% !important; /* stylelint-disable-line declaration-no-important */
+}
+
+#page-admin-local-apsolu-reset-index div[class*="femptylabel"][data-groupname*="button"] {
+    margin-top: 2.5rem;
+
+    & div[class*="col-md-3 col-form-label"] {
+        width: 10% !important; /* stylelint-disable-line declaration-no-important */
+    }
+
+    & div[data-fieldtype*="group"] {
+        width: 90% !important; /* stylelint-disable-line declaration-no-important */
+    }
+
+    & div[data-groupname*="nextdatetime"] {
+        margin-right: 2.5rem !important; /* stylelint-disable-line declaration-no-important */
+    }
+
+    & #savenotif {
+        visibility: hidden;
+        padding-left: 5%;
+        margin-top: .8rem;
+        font-weight: 400;
+        font-style: oblique;
+    }
+
+    & div[class*='submitbtn']:hover ~ #savenotif {
+        visibility: visible;
+    }
+
+
+}
+
 /* Styles pour masquer des colonnes de tableau */
 .table thead th.table-column-shrink {
     width: 0.1%;

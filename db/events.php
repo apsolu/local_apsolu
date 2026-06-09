@@ -137,6 +137,31 @@ $observers = [
         'internal'    => true,
         'priority'    => 9999,
     ],
+    // Gère la suppression de tâches adhoc et l'envoi d'emails lors de la déprogrammation de la réinitialisation.
+    [
+        'eventname'   => '\local_apsolu\event\reset_disabled',
+        'callback'    => 'local_apsolu\observer\reset::disabled',
+        'includefile' => null,
+        'internal'    => true,
+        'priority'    => 9999,
+    ],
+    // Gère la génération de tâches adhoc et l'envoi d'emails lors de la programmation de la réinitialisation.
+    [
+        'eventname'   => '\local_apsolu\event\reset_enabled',
+        'callback'    => '\local_apsolu\observer\reset::enabled',
+        'includefile' => null,
+        'internal'    => true,
+        'priority'    => 9999,
+    ],
+    // Gère la mise à jour de la date d'exécution des tâches adhoc et l'envoi d'emails lors de la
+    // reconfiguration et/ou reprogrammation de la réinitialisation.
+    [
+        'eventname'   => '\local_apsolu\event\reset_updated',
+        'callback'    => '\local_apsolu\observer\reset::updated',
+        'includefile' => null,
+        'internal'    => true,
+        'priority'    => 9999,
+    ],
     // Gère la génération de tâche adhoc lors de la mise à jour de sessions.
     [
         'eventname'   => '\local_apsolu\event\session_updated',

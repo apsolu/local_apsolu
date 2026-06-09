@@ -107,4 +107,12 @@ $capabilities = [
             'manager' => CAP_ALLOW,
         ],
     ],
+    // Capacité à modifier les paramètres de réinitialisation des espace-cours.
+    'local/apsolu:resetsettings' => [
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+        ],
+    ],
 ];

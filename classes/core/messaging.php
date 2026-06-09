@@ -16,6 +16,7 @@
 
 namespace local_apsolu\core;
 
+use core_availability\capability_checker;
 use moodle_phpmailer;
 
 /**
@@ -140,5 +141,43 @@ class messaging {
         $mailer->CharSet = 'UTF-8';
         $mailer->isHTML();
         $mailer->Send();
+    }
+
+     /**
+      * Notifie l'ensemble des adresses utilisateurs ayant une permission particulière.
+      * @param mixed $context context instance (contexte système, cours ou module)
+      * @param string $capability Permission (filtre utilisateurs) dans le contexte système.
+      * @param string $subject Sujet du courriel.
+      * @param string $message Message du courriel.
+      * @param bool $useadmin Permet d'ajouter les utilisateurs administrateurs qui ont par défaut toutes les permissions.
+      *
+      * @return void
+      */
+    public static function notify_users_by_capability(
+        $context,
+        string $capability,
+        string $subject,
+        string $message,
+        bool $useadmin = true
+    ): void {
+
+        global $CFG;
+
+        $checker = new capability_checker($context);
+        $userids = $checker->get_users_by_capability($capability);
+        $users = [];
+        foreach ($userids as $id => $user) {
+            $users[$id] = \core\user::get_user($id);
+        }
+
+        // On merge les users définis par la capacité avec les user administrateurs ?
+        // Comme les clés du tableau sont les identifiants il n'y a pas de doublons.
+        if ($useadmin) {
+            $users = array_merge($users, get_admins());
+        }
+
+        foreach ($users as $user) {
+            email_to_user($user, $CFG->noreplyaddress, $subject, $message);
+        }
     }
 }

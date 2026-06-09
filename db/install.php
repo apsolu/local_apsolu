@@ -29,6 +29,7 @@ use local_apsolu\core\federation\adhesion;
 use local_apsolu\core\messaging;
 use local_apsolu\core\municipality;
 use local_apsolu\task\setup_behat_data;
+use local_apsolu\core\reset;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -97,6 +98,9 @@ function xmldb_local_apsolu_install() {
     set_config('qrcode_allowguests', 0, 'local_apsolu');
     set_config('qrcode_autologout', 1, 'local_apsolu');
     set_config('qrcode_rotate', 0, 'local_apsolu');
+
+    // Initialise les variables pour la réinitialisation de la plateforme.
+    reset::init_config();
 
     // Initialise les paramètres de l'offre de formations (json_course_offerings_columns, json_course_offerings_filters
     // et json_course_offerings_ranges).

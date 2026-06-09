@@ -395,4 +395,21 @@ if ($hassiteconfig || has_any_capability($capabilities, context_system::instance
         'local_apsolu_statistics_programme',
         new admin_externalpage('local_apsolu_statistics_programme_custom', $label, $url, $capabilities)
     );
+
+    // Réinitialisation des espaces cours.
+    $year = userdate(time(), get_string('strftimeyear', 'local_apsolu'));
+    $ADMIN->add('apsolu', new admin_category('local_apsolu_reset', get_string('settings_reset_courses', 'local_apsolu')));
+
+    $ADMIN->add(
+        'local_apsolu_reset',
+        new admin_category('settings_reset_next', get_string('settings_reset_next', 'local_apsolu', $year))
+    );
+
+    // Réinitialisation des espaces cours > Configuration du renouvellement annuel.
+    $label = get_string('settings_reset_next', 'local_apsolu', $year);
+    $url = new moodle_url('/local/apsolu/reset/index.php', ['page' => 'next']);
+    $ADMIN->add(
+        'local_apsolu_reset',
+        new admin_externalpage('local_apsolu_reset_next', $label, $url, $capabilities)
+    );
 }

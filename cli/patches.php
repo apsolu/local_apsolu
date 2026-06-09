@@ -24,6 +24,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\reset;
+
 define('CLI_SCRIPT', true);
 
 require(__DIR__ . '/../../../config.php');
@@ -113,6 +115,9 @@ try {
 
         $dbman->create_table($table);
     }
+
+    // Ajoute la configuration nécessaire pour la réinitisalisation des espaces cours et les permissions associées.
+    reset::init_config();
 
     mtrace(get_string('success'));
 } catch (Exception $exception) {
