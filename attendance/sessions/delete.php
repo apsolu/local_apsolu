@@ -22,9 +22,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\attendancesession;
 use local_apsolu\core\messaging;
 
 defined('MOODLE_INTERNAL') || die;
+
+require_once($CFG->dirroot.'/calendar/lib.php');
 
 // Get session id.
 $sessionid = required_param('sessionid', PARAM_INT);
@@ -54,8 +57,9 @@ if (count($presences) > 0) {
     try {
         $transaction = $DB->start_delegated_transaction();
 
-        $DB->delete_records('apsolu_attendance_presences', ['sessionid' => $session->id]);
-        $DB->delete_records('apsolu_attendance_sessions', ['id' => $session->id]);
+        $attendancesession = new attendancesession();
+        $attendancesession->load($session->id, $required = true);
+        $attendancesession->delete();
 
         $notifications[] = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
 
