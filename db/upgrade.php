@@ -25,7 +25,6 @@
 // phpcs:disable moodle.Files.LineLength.MaxExceeded
 // phpcs:disable moodle.Files.LineLength.TooLong
 
-use calendar_event;
 use local_apsolu\core\attendancesession;
 use local_apsolu\core\course;
 use local_apsolu\core\federation\activity;
@@ -34,6 +33,7 @@ use local_apsolu\core\federation\course as FederationCourse;
 use local_apsolu\core\gradebook;
 use local_apsolu\core\messaging;
 use local_apsolu\core\municipality;
+use local_apsolu\core\reset;
 
 /**
  * Procédure de mise à jour.
@@ -2144,8 +2144,8 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, $version, 'local', 'apsolu');
     }
 
-    $version = 2022111802;
-    if ($result && $oldversion < $version) {
+    $version = 2026061000;
+    if ($oldversion < $version) {
         // Nettoie des sessions obsolètes, dont les cours rattachés ont déjà été supprimés.
         $sql = "SELECT DISTINCT courseid FROM {apsolu_attendance_sessions} WHERE courseid NOT IN (SELECT id FROM {course})";
         foreach ($DB->get_records_sql($sql) as $record) {
@@ -2155,7 +2155,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
         }
 
         // Ajoute les sessions de cours dans le calendrier Moodle.
-        $sessions = local_apsolu\core\attendancesession::get_records();
+        $sessions = attendancesession::get_records();
         foreach ($sessions as $session) {
             $calendarevent = $session->get_calendar_event();
             if ($calendarevent === false) {
@@ -2163,6 +2163,92 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
                 calendar_event::create($event, $checkcapability = false);
             }
         }
+
+        // Supprime le champ "activityid" de la table "apsolu_attendance_sessions".
+        $table = new xmldb_table('apsolu_attendance_sessions');
+
+        $index = new xmldb_index('activityid', XMLDB_INDEX_NOTUNIQUE, ['activityid']);
+        if ($dbman->index_exists($table, $index) === true) {
+            $dbman->drop_index($table, $index);
+        }
+
+        $field = new xmldb_field('activityid');
+        if ($dbman->field_exists($table, $field) === true) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Ajoute un champ "duration" dans la table "apsolu_attendance_sessions".
+        $table = new xmldb_table('apsolu_attendance_sessions');
+        $field = new xmldb_field('duration', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, $sequence = null, 0, 'sessiontime');
+
+        if ($dbman->field_exists($table, $field) === false) {
+            $dbman->add_field($table, $field);
+
+            // Initialise le champ "duration".
+            foreach (\local_apsolu\core\attendancesession::get_records() as $session) {
+                if (empty($session->duration) === false) {
+                    continue;
+                }
+
+                $session->duration = $session->get_duration();
+                $session->save();
+            }
+        }
+
+        // Génère un champ de profil "Site" si il n'existe pas.
+        require_once($CFG->dirroot . '/user/profile/definelib.php');
+        require_once($CFG->dirroot . '/user/profile/lib.php');
+
+        $category = $DB->get_record('user_info_field', ['shortname' => 'apsoluusertype'], $fields = '*', MUST_EXIST);
+
+        $shortname = 'apsolusite';
+        if ($DB->get_record('user_info_field', ['shortname' => $shortname]) === false) {
+            $data = [
+                'shortname' => $shortname,
+                'name' => get_string('fields_' . $shortname, 'local_apsolu'),
+                'datatype' => 'text',
+                'description' => ['format' => FORMAT_HTML, 'text' => ''],
+                'categoryid' => $category->categoryid,
+                'required' => 0,
+                'locked' => 1,
+                'visible' => 1,
+                'forceunique' => 0,
+                'signup' => 0,
+                'defaultdata' => '',
+                'defaultdataformat' => FORMAT_MOODLE,
+                'param1' => 30,
+                'param2' => 2048,
+                'param3' => 0,
+                'param4' => '',
+                'param5' => '',
+            ];
+
+            profile_save_field((object) $data, $editors = []);
+        }
+
+        // Ajout de la table pour la gestion du paiement via Atouts Normandie.
+        $table = new xmldb_table('apsolu_atouts_payments');
+
+        if (!$dbman->table_exists($table)) {
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+            $table->add_field('paymentid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+            $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+            $table->add_field('nocarte', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null);
+            $table->add_field('amount', XMLDB_TYPE_NUMBER, '10, 2', null, XMLDB_NOTNULL, null, '0.00');
+            $table->add_field('ticket', XMLDB_TYPE_CHAR, '50', null, XMLDB_NOTNULL, null, null);
+            $table->add_field('status', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+            $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+            $table->add_key('paymentid', XMLDB_KEY_FOREIGN, ['paymentid'], 'apsolu_payments', ['id']);
+
+            $table->add_index($indexname = 'userid', XMLDB_INDEX_NOTUNIQUE, $fields = ['userid']);
+
+            $dbman->create_table($table);
+        }
+
+        // Ajoute la configuration nécessaire pour la réinitisalisation des espaces cours et les permissions associées.
+        reset::init_config();
     }
 
     return true;
