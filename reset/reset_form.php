@@ -172,7 +172,14 @@ class local_apsolu_reset_form extends moodleform {
 
         $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
-        $mform->addHelpButton('buttonar', 'settings_reset_nextdatetime', 'local_apsolu', '', false, $a);
+        $mform->addHelpButton(
+            'buttonar',
+            'settings_reset_nextdatetime',
+            'local_apsolu',
+            '',
+            false,
+            ceil(reset::MINIMUMPERIOD / 3600)
+        );
 
         // Set default values.
         $this->set_data($default);
