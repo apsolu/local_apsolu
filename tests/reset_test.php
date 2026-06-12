@@ -55,7 +55,7 @@ final class reset_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp();
         $this->setAdminUser();
-        $this->set_config(['allusers' => true, 'oldusers' => false]);
+        $this->set_config(['allusers' => true, 'oldusers' => false, 'selectenrolments' => false]);
 
         $this->resetAfterTest();
     }
@@ -479,6 +479,7 @@ final class reset_test extends \advanced_testcase {
 
         reset::set_config('nextactive', 1);
         reset::set_config('nextdatetime', reset::get_minimum_datetime());
+        reset::set_config('selectenrolments', 1);
         reset::set_config('metaenrolments', 1);
 
         // La purge des utilisateurs est effectuée et testée dans une fonction dédiée.

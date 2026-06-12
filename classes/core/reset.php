@@ -66,7 +66,7 @@ class reset extends record {
     public $userselectenrolments = true;
 
     /** @var bool Supprimer les méthodes d'inscription de type "select" (inscriptions par voeux). */
-    public $selectenrolments = true;
+    public $selectenrolments = false;
 
     /** @var bool Supprimer les membres des cohortes. */
     public $cohortmembers = true;
@@ -122,7 +122,7 @@ class reset extends record {
     public static function init_config($attributes = []) {
         $settings = self::get_settings_list();
         // Variables qui sont initialisées avec la valeur 0.
-        $defaultnull = ['nextactive', 'nextdatetime', 'metaenrolments', 'allusers', 'manualusers'];
+        $defaultnull = ['nextactive', 'nextdatetime', 'metaenrolments', 'allusers', 'manualusers', 'selectenrolments'];
 
         // Initialise la configuration avec la valeur par défaut, ou la valeur passée en paramètre si présente.
         foreach ($settings as $setting) {
