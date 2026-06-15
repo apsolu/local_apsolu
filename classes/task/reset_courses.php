@@ -456,15 +456,15 @@ class reset_courses extends \core\task\adhoc_task {
      * vérifie si tous les champs sont renseignés et si la réinitialisation est activée.
      * @return reset|bool $reset la configuration utilisée, false si elle est invalide
      */
-    protected function get_reset_config() {
+    public function get_reset_config() {
 
         // Récupère la configuration.
         $reset = new reset();
 
         if ($reset->load_default_settings() == false) {
             $errormsg = 'La tâche de réinitialisation a été abandonnée car la configuration n\'est pas valide.';
-            mtrace($errormsg);
-            $this->notify_failure($errormsg, $reset);
+
+            $this->reset_abort($errormsg, $reset);
             return false;
         }
 
@@ -472,8 +472,8 @@ class reset_courses extends \core\task\adhoc_task {
         if ($reset->nextactive == false || $reset->nextdatetime == null) {
             $errormsg = 'La tâche de réinitialisation a été abandonnée car
                 les valeurs dans la table de configuration indiquent que celle-ci n\'est pas programmée.';
-            mtrace($errormsg);
-            $this->notify_failure($errormsg, $reset);
+
+            $this->reset_abort($errormsg, $reset);
             return false;
         }
 
@@ -492,8 +492,8 @@ class reset_courses extends \core\task\adhoc_task {
         // Envoyer un mail pour aviser les administrateurs et gestionnaires de la réinitialisation de l'espace-cours.
         $this->notify_success($reset);
 
-        reset::set_config('nextactive', 0);
-        reset::set_config('nextdatetime', 0);
+        // On met à jour les valeurs dans la configuration (nextactive et nextdatetime => 0).
+        reset::unactivate();
 
         $settings = (array) $reset;
 
@@ -512,5 +512,23 @@ class reset_courses extends \core\task\adhoc_task {
         $event->trigger();
 
         reset::set_config('lastruntime', $event->timecreated);
+    }
+
+    /**
+     * Effectue les actions nécessaires en cas d'abandon de la tâche lors de la vérification des paramètres.
+     * Envoie d'un email et positionnement des valeurs de nextactive et nextdatetime à 0.
+     *
+     * @param string $errormsg
+     * @param reset $reset
+     * @return void
+     */
+    public function reset_abort($errormsg, $reset) {
+        // On met à jour les valeurs dans la configuration (nextactive et nextdatetime => 0).
+        reset::unactivate();
+
+        mtrace($errormsg);
+
+        // On envoie un mail pour notifier de l'abandon de la tâche.
+        $this->notify_failure($errormsg, $reset);
     }
 }

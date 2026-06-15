@@ -473,6 +473,58 @@ final class reset_test extends \advanced_testcase {
     }
 
     /**
+     * test reset_get_reset_config
+     *
+     * @covers \local_apsolu\task\reset_courses::get_reset_config
+     */
+    public function test_get_reset_config(): void {
+        $task = new resetTask();
+        ob_start();
+        $this->assertFalse($task->get_reset_config());
+
+        reset::set_config('nextdatetime', time() + (50 * 3600));
+        reset::set_config('nextactive', 1);
+
+        $reset = $task->get_reset_config();
+        $this->assertInstanceOf(reset::class, $reset);
+        ob_get_clean();
+    }
+
+    /**
+     * test reset_abort()
+     *
+     * @covers \local_apsolu\task\reset_courses::reset_abort
+     */
+    public function test_reset_abort(): void {
+        $task = new resetTask();
+        $reset = new reset();
+        $reset->load_default_settings();
+
+        // Ouverture des buffers.
+        $sinkmail = $this->redirectEmails();
+        ob_start();
+
+        $task->reset_abort('La tâche de réinitialisation a été abandonnée', $reset);
+
+        // Fermeture des buffers et récupération des valeurs émises.
+        $echos = ob_get_clean();
+        $messages = $sinkmail->get_messages();
+        $mail = reset($messages);
+        $sinkmail->clear();
+
+        // Vérifier la sortie mtrace.
+        $this->assertStringContainsString('La tâche de réinitialisation a été abandonnée', $echos);
+
+        // Vérifier l'envoi d'emails et le sujet du mail : 'Echec de la réinitialisation des espace-cours'.
+        $this->assertNotEmpty($messages);
+        $this->assertStringContainsString(get_string('reset_task_failed', 'local_apsolu'), $mail->subject);
+
+        // Vérifier les nouvelles valeurs dans la configuration (réinitialisation désactivée).
+        $this->assertFalse(get_config('local_apsolu', 'nextactive'));
+        $this->assertEquals(0, get_config('local_apsolu', 'nextdatetime'));
+    }
+
+    /**
      * test execute()
      *
      * @covers \local_apsolu\task\reset_courses::execute
