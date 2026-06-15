@@ -118,8 +118,6 @@ final class reset_test extends \advanced_testcase {
         $this->assertFalse(reset::is_active());
 
         reset::set_config('nextactive', 1);
-        reset::set_config('nextdatetime', time() - 1000); // Nextactive est true mais nextdatetime est dépassé.
-        $this->assertFalse(reset::is_active());
 
         reset::set_config('nextdatetime', time() + 1000); // Nextdatetime est à venir : statut actif ok.
         $this->assertTrue(reset::is_active());

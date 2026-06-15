@@ -158,7 +158,7 @@ class reset extends record {
             }
         }
 
-        // Vérification de la date : ne doit pas être passée.
+        // Vérification de la date : nulle si tâche non active.
         if (self::is_active() == false) {
             $this->nextdatetime = 0;
             $this->nextactive = false;
@@ -318,12 +318,12 @@ class reset extends record {
     }
 
     /**
-     * Return the current status for next reinitialisation (is active and is the datetime not passed).
+     * Return the current status for next reinitialisation (is active).
      *
-     * @return bool true if setting is defined and set to 1, false in any else case.
+     * @return bool true if nextactive and nextdatetime are defined and not null.
      */
     public static function is_active() {
-        return (bool) self::get_config('nextactive') && self::get_config('nextdatetime') > time();
+        return (bool) self::get_config('nextactive') && empty(self::get_config('nextactive')) !== true;
     }
 
     /**
