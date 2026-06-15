@@ -206,7 +206,12 @@ class local_apsolu_reset_form extends moodleform {
                 $mindate = new stdClass();
                 $mindate->datetime = userdate($data['minimumdatetime'], get_string('strftimedatetimewithyear', 'local_apsolu'));
                 $mindate->period = ceil(reset::MINIMUMPERIOD / 3600);
-                $errors['buttonar'] = get_string('reset_minimumdelayerror', 'local_apsolu', $mindate);
+
+                // Seuls les administrateurs du site ont le droit de ne pas respecter le délai d'activation.
+                // La date doit tout de même être dans le futur sinon la tâche ne pourra pas s'exécuter.
+                if (is_siteadmin() != true || $data['nextdatetime'] < time()) {
+                    $errors['buttonar'] = get_string('reset_minimumdelayerror', 'local_apsolu', $mindate);
+                }
             }
 
             // On n'accepte pas d'activer la tâche si tous les paramètres sont positionnés sur Non.

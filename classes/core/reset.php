@@ -181,7 +181,7 @@ class reset extends record {
 
     /**
      * Save reinitialisation settings in config table and create an event for tasks listeners.
-     *
+     * @param array $updatedsettings list of reinitialisation settings that have been actually updated.
      * @return void
      */
     public function save_settings(&$updatedsettings = []): void {
