@@ -165,7 +165,8 @@ final class reset_test extends \advanced_testcase {
         $reset->nextdatetime = reset::get_minimum_datetime();
 
         // Reset enabled. Pas d'autre changements.
-        $this->assertTrue($reset->save_settings());
+        $reset->save_settings($updatedsettings);
+        $this->assertEmpty($updatedsettings);
         $this->assertTrue($reset->nextactive);
 
         $events = $sink->get_events();
@@ -182,14 +183,17 @@ final class reset_test extends \advanced_testcase {
         $reset->allusers = false;
         $reset->oldusers = true;
 
-        $this->assertTrue($reset->save_settings());
+        $expectedupdates = ['nextdatetime', 'allusers', 'oldusers'];
+
+        $reset->save_settings($updatedsettings);
+        $this->assertEqualsCanonicalizing($expectedupdates, $updatedsettings);
 
         $events = $sink->get_events();
 
         $this->assertCount(4, $events); // 3 config logs + 1 event.
         $event = array_pop($events);
         $this->assertInstanceOf(reset_updated::class, $event);
-        $this->assertEquals($event->other, ["nextdatetime", "allusers", "oldusers"]);
+        $this->assertEqualsCanonicalizing($expectedupdates, $event->other);
 
         $sink->clear();
 
@@ -197,7 +201,10 @@ final class reset_test extends \advanced_testcase {
         $reset->nextdatetime = 0;
         $reset->manualusers = true;
 
-        $this->assertTrue($reset->save_settings());
+        $expectedupdates = ['manualusers'];
+
+        $reset->save_settings($updatedsettings);
+        $this->assertEqualsCanonicalizing($expectedupdates, $updatedsettings);
         $this->assertFalse($reset->nextactive);
 
         $events = $sink->get_events();
@@ -205,19 +212,42 @@ final class reset_test extends \advanced_testcase {
         $this->assertCount(5, $events); // 3 config logs + 2 events.
         $event = array_pop($events);
         $this->assertInstanceOf(reset_updated::class, $event);
-        $this->assertEquals($event->other, ["manualusers", "disabled"]);
+        $this->assertEqualsCanonicalizing($event->other, ["manualusers", "disabled"]);
 
         $event = array_pop($events);
         $this->assertInstanceOf(reset_disabled::class, $event);
-        $this->assertNull($event->other);
+        // Témoin noemail pour l'événement disabled ? Présent si event::updated déclenché lors de la même action.
+        $this->assertEquals(['noemail'], $event->other);
 
         $sink->clear();
 
         // Pas de changements.
-        $this->assertFalse($reset->save_settings());
+        $reset->save_settings($updatedsettings);
+        $this->assertEmpty($updatedsettings);
 
         $events = $sink->get_events();
         $this->assertCount(0, $events);
+
+        $sink->clear();
+
+        // Reset updated + enabled.
+        $reset->nextdatetime = $reset->nextdatetime + (96 * 3600 );
+        $reset->sessions = false;
+
+        $reset->save_settings($updatedsettings);
+        $this->assertEqualsCanonicalizing(['sessions'], $updatedsettings);
+
+        $events = $sink->get_events();
+
+        $this->assertCount(5, $events); // 3 config logs + 2 events.
+        $event = array_pop($events);
+        $this->assertInstanceOf(reset_updated::class, $event);
+        // Témoin noemail pour l'événement updated ? Présent si event::enabled déclenché lors de la même action.
+        $this->assertEqualsCanonicalizing($event->other, ["sessions", "enabled", "noemail"]);
+
+        $event = array_pop($events);
+        $this->assertInstanceOf(reset_enabled::class, $event);
+        $this->assertNull($event->other);
 
         $sink->close();
     }
@@ -298,6 +328,7 @@ final class reset_test extends \advanced_testcase {
         // Capture des mails sortants.
         $sinkmail = $this->redirectEmails();
 
+        // On désactive la réinitialisation pour déclencher la capture de l'événement disabled.
         $reset->nextdatetime = 0;
         $reset->save_settings();
         $events = $sinkevent->get_events();
@@ -473,7 +504,7 @@ final class reset_test extends \advanced_testcase {
         // Vérifier la sortie mtrace.
         $this->assertStringContainsString('La tâche de réinitialisation a été abandonnée', $echos);
 
-        // Vérifier l'envoi d'emails et le sujet du mail : 'Réinitialisation des espace-cours effectuée'.
+        // Vérifier l'envoi d'emails et le sujet du mail : 'Echec de la réinitialisation des espace-cours'.
         $this->assertNotEmpty($messages);
         $this->assertStringContainsString(get_string('reset_task_failed', 'local_apsolu'), $mail->subject);
 

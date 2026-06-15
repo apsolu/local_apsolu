@@ -182,9 +182,9 @@ class reset extends record {
     /**
      * Save reinitialisation settings in config table and create an event for tasks listeners.
      *
-     * @return bool true if changes have been made in conf (updates or inserts);
+     * @return void
      */
-    public function save_settings() {
+    public function save_settings(&$updatedsettings = []): void {
 
         $updatedsettings = []; // Liste des variables réellement modifiées dans la table.
         $activechanged = false; // Témoin de la modification du statut (active / non active) de l'exécution de la tâche.
@@ -205,29 +205,49 @@ class reset extends record {
             }
         }
 
-        // Enregistre un évènement (ou 2 si enabled/disabled + updated) dans les logs.
-        // Cet événement est surveillé par un observer qui va gérer la création / suppression des tâches adhoc associées.
-        if ($activechanged) { // Evénement : reset disabled ou enabled.
-            if ($this->nextactive == true) {
-                $eventclass = '\local_apsolu\event\reset_enabled'; // On créé la tâche.
-            } else {
-                $eventclass = '\local_apsolu\event\reset_disabled'; // On supprime la tâche.
-            }
-
-            $event = $eventclass::create(['context' => context_system::instance()]);
-            $event->trigger();
-        }
-
         // Variable nextdatetime : on considère qu'elle a été modifiée uniquement si la date a été changée mais pas le statut.
         if (($i = array_search('nextdatetime', $updatedsettings)) !== false && $activechanged) {
             unset($updatedsettings[$i]);
         }
 
+        // Les paramètres ont été modifiés ?
+        $settingschanged = empty($updatedsettings) !== true;
+
+        // Enregistre un évènement (ou 2 si enabled/disabled + updated) dans les logs.
+        // Cet événement est surveillé par un observer qui va gérer la création / suppression des tâches adhoc associées.
+        if ($activechanged) { // Evénement : reset disabled ou enabled.
+            $other = null;
+            if ($this->nextactive == true) {
+                // On créé la tâche.
+                $eventclass = '\local_apsolu\event\reset_enabled';
+            } else {
+                // On supprime la tâche.
+                $eventclass = '\local_apsolu\event\reset_disabled';
+                // Pas de notification envoyé pour la déprogrammation, car un mail est envoyé pour la modification des paramètres.
+                if ($settingschanged) {
+                    $other[] = 'noemail';
+                }
+            }
+
+            $event = $eventclass::create([
+                'context' => context_system::instance(),
+                'other' => $other,
+                ]);
+            $event->trigger();
+        }
+
         // Evénement : reset updated.
-        if (empty($updatedsettings) !== true) {
+        if ($settingschanged) {
             $other = array_values($updatedsettings);
+            // Le statut de la tâche a été modifié en même temps que les paramètres.
             if ($activechanged) {
-                $other[] = $this->nextactive == true ? 'enabled' : 'disabled';
+                if ($this->nextactive) {
+                    $other[] = 'enabled';
+                    // Pas de notification spécifique pour la modification car un email est déjà envoyé pour l'activation.
+                    $other[] = 'noemail';
+                } else {
+                    $other[] = 'disabled';
+                }
             }
             $event = eventUpdated::create([
                 'context' => context_system::instance(),
@@ -235,8 +255,6 @@ class reset extends record {
                 ]);
             $event->trigger();
         }
-
-        return empty($updatedsettings) !== true || $activechanged;
     }
 
      /**

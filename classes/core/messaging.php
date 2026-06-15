@@ -18,6 +18,7 @@ namespace local_apsolu\core;
 
 use core_availability\capability_checker;
 use moodle_phpmailer;
+use core\context\course;
 
 /**
  * Classe gérant les options de messagerie.
@@ -150,6 +151,7 @@ class messaging {
       * @param string $subject Sujet du courriel.
       * @param string $message Message du courriel.
       * @param bool $useadmin Permet d'ajouter les utilisateurs administrateurs qui ont par défaut toutes les permissions.
+      * @param bool $shortname Permet d'ajouter au sujet du mail l'information shortname.
       *
       * @return void
       */
@@ -158,10 +160,12 @@ class messaging {
         string $capability,
         string $subject,
         string $message,
-        bool $useadmin = true
+        bool $useadmin = true,
+        bool $shortname = true
     ): void {
 
         global $CFG;
+        global $SITE;
 
         $checker = new capability_checker($context);
         $userids = $checker->get_users_by_capability($capability);
@@ -174,6 +178,15 @@ class messaging {
         // Comme les clés du tableau sont les identifiants il n'y a pas de doublons.
         if ($useadmin) {
             $users = array_merge($users, get_admins());
+        }
+
+        if ($shortname && isset($SITE->shortname) && empty($SITE->shortname) == false) {
+            $sitename = format_string(
+                $SITE->shortname,
+                true,
+                ['context' => course::instance(SITEID), "escape" => false]
+            );
+            $subject = '[' . $sitename . '] ' . $subject;
         }
 
         foreach ($users as $user) {

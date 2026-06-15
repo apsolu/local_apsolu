@@ -241,9 +241,12 @@ class reset {
         if ($resettask === false) {
             // On supprime la tâche pour prévenir de l'exécution de la réinitialisation.
             self::delete_notify_adhoc_task();
-            // On envoie un mail aux personnes avec la permission de modifier
-            // la réinitialisation pour prévenir de la suppression de la tâche.
-            self::send_reset_disabled_notification($event);
+            // Envoi d'un email uniquement si le témoin noemail n'est pas présent dans les données du log.
+            if (empty($event->other) == true || in_array('noemail', $event->other) == false) {
+                // On envoie un mail aux personnes avec la permission de modifier
+                // la réinitialisation pour prévenir de la suppression de la tâche.
+                self::send_reset_disabled_notification($event);
+            }
         } else {
             // Si la suppression a échoué on tente de remettre les paramètres de conf en cohérence avec l'état des tâches.
             resetConf::activate($resettask->nextruntime);
@@ -344,7 +347,7 @@ class reset {
             $ignore = ['nextdatetime', 'nextactive'];
         } else {
             $first = "";
-            if (in_array('disabled', $event->other) || in_array('enabled', $event->other)) {
+            if (in_array('disabled', $event->other)) {
                 $emphasizelist[] = 'nextactive';
             }
             $ignore = ['nextdatetime'];
@@ -390,9 +393,11 @@ class reset {
                 throw new moodle_exception('reset_update_failed', 'local_apsolu');
             }
         }
-
-        // On envoie un mail aux personnes avec la permission de modifier la réinitialisation pour prévenir
-        // de la modification de la tâche et/ou des paramètres de la réinitialisation.
-        self::send_reset_updated_notification($event, isset($resettask) && $resettask !== false);
+        // Envoi d'un email uniquement si le témoin noemail n'est pas présent dans les données du log.
+        if (in_array('noemail', $event->other) == false) {
+            // On envoie un mail aux personnes avec la permission de modifier la réinitialisation pour prévenir
+            // de la modification de la tâche et/ou des paramètres de la réinitialisation.
+            self::send_reset_updated_notification($event, isset($resettask) && $resettask !== false);
+        }
     }
 }

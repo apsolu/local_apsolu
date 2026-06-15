@@ -59,11 +59,11 @@ if ($mform->is_submitted()) {
         $reset = new reset();
         $reset->set_datas($data);
 
-        // Effectue les modifications en DB, return false s'il n'y a aucun changement (ni dans la conf ni dans la date d'exécution).
-        $haschanged = $reset->save_settings($data);
+        // Effectue les modifications en DB, return false s'il n'y a aucun changement dans les paramètres de réinitialisation.
+        $reset->save_settings($updatedsettings);
 
         // Message indiquant qu'il y a eu des modifications.
-        if ($haschanged) {
+        if (empty($updatedsettings) == false) {
             $notifications['notify'][] = get_string('reset_updated', 'local_apsolu');
         }
     } else {

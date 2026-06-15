@@ -80,7 +80,7 @@ class reset_courses_notify extends \core\task\adhoc_task {
                 $resetconf->nextactive != false &&
                 $resetconf->nextdatetime != null
             ) {
-                $rundatetime = userdate($this->get_timestarted(), get_string('strftimedatetimewithyear', 'local_apsolu'));
+                $rundatetime = userdate($resettask->nextruntime, get_string('strftimedatetimewithyear', 'local_apsolu'));
                 $taskstatus =
                     rtrim(get_string('reset_is_activated', 'local_apsolu', $rundatetime), '.') .
                     get_string('reset_settings_for_activation', 'local_apsolu', '');
