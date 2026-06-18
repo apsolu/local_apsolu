@@ -1487,7 +1487,7 @@ $string['back'] = 'retour';
 $string['research_user'] = 'Rechercher un nouvel utilisateur';
 $string['error_no_payment_found'] = 'Une erreur est survenue (écriture non retrouvée).';
 $string['error_payment_not_editable'] = 'Ce paiement ne peut pas être modifié.';
-$string['error_missing_items'] = 'Vous devez cocher au moins une carte (carte sport, carte musculation ou carte ffsu).';
+$string['error_missing_items'] = 'Vous devez cocher au moins un tarif de paiement.';
 
 // Reports.
 $string['found_students'] = '{$a} utilisateur(s) trouvé(s)';
