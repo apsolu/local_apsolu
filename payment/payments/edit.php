@@ -22,6 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\payment\method;
 use UniversiteRennes2\Apsolu\Payment;
 
 defined('MOODLE_INTERNAL') || die;
@@ -75,13 +76,7 @@ if ($paymentid === null) {
 }
 
 // Build form.
-$methods = [
-    'card' => get_string('method_card', 'local_apsolu'),
-    'check' => get_string('method_check', 'local_apsolu'),
-    'coins' => get_string('method_coins', 'local_apsolu'),
-    'pass' => get_string('method_pass', 'local_apsolu'),
-    'paybox' => get_string('method_paybox', 'local_apsolu'),
-    ];
+$methods = method::get_enabled_methods();
 
 $sources = [
     'apogee' => get_string('source_apogee', 'local_apsolu'),
