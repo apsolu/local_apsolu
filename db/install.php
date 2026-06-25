@@ -28,6 +28,7 @@ use local_apsolu\core\federation\activity;
 use local_apsolu\core\federation\adhesion;
 use local_apsolu\core\messaging;
 use local_apsolu\core\municipality;
+use local_apsolu\payment\method;
 use local_apsolu\task\setup_behat_data;
 use local_apsolu\core\reset;
 
@@ -101,6 +102,9 @@ function xmldb_local_apsolu_install() {
 
     // Initialise les variables pour la réinitialisation de la plateforme.
     reset::init_config();
+
+    // Initialise les variables pour les méthodes de paiement.
+    method::init_config();
 
     // Initialise les paramètres de l'offre de formations (json_course_offerings_columns, json_course_offerings_filters
     // et json_course_offerings_ranges).

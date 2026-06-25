@@ -293,6 +293,11 @@ if ($hassiteconfig || has_any_capability($capabilities, context_system::instance
     $url = new moodle_url('/local/apsolu/payment/admin.php', ['tab' => 'dates']);
     $ADMIN->add('local_apsolu_payment', new admin_externalpage('local_apsolu_payment_dates', $str, $url, $capabilities));
 
+    // Paiements > Méthodes de paiement.
+    $str = get_string('payment_methods', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/payment/admin.php', ['tab' => 'methods']);
+    $ADMIN->add('local_apsolu_payment', new admin_externalpage('local_apsolu_payment_methods', $str, $url, $capabilities));
+
     // Paiements > Liste des paiements.
     $label = get_string('settings_payments_list', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/payment/admin.php', ['tab' => 'payments']);

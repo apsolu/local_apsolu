@@ -25,6 +25,26 @@ namespace local_apsolu\payment;
  */
 class method {
     /**
+     * Initialise la configuration des méthodes de paiement.
+     *
+     * @return void
+     */
+    public static function init_config(): void {
+        $enabled = 1;
+
+        foreach (self::get_available_methods() as $stringid => $label) {
+            $attribute = self::get_key_config($stringid);
+
+            if (get_config('local_apsolu', $attribute) !== false) {
+                // On n'écrase pas une variable qui serait déjà configurée.
+                continue;
+            }
+
+            set_config($attribute, $enabled, 'local_apsolu');
+        }
+    }
+
+    /**
      * Retourne la liste des méthodes de paiements disponibles dans APSOLU.
      *
      * @return array.

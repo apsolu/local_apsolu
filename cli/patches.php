@@ -24,12 +24,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\payment\method;
+
 define('CLI_SCRIPT', true);
 
 require(__DIR__ . '/../../../config.php');
 
 try {
     $dbman = $DB->get_manager();
+
+    // Initialise les variables pour les méthodes de paiement.
+    method::init_config();
 
     mtrace(get_string('success'));
 } catch (Exception $exception) {
