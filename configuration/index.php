@@ -32,7 +32,6 @@ $pages = [];
 $pages['calendars'] = 'calendars';
 $pages['calendarstypes'] = 'calendars_types';
 $pages['courseofferings'] = 'course_offerings';
-$pages['dates'] = 'dates';
 $pages['headermessage'] = 'header_message';
 $pages['messaging'] = 'messaging';
 $pages['userprofile'] = 'user_profile';

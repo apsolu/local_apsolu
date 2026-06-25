@@ -49,8 +49,8 @@ class local_apsolu_calendar_form extends moodleform {
         $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
         // Hidden fields.
-        $mform->addElement('hidden', 'page', 'dates');
-        $mform->setType('page', PARAM_ALPHANUM);
+        $mform->addElement('hidden', 'tab', 'dates');
+        $mform->setType('tab', PARAM_ALPHANUM);
 
         // Set default values.
         $this->set_data($defaults);

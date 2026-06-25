@@ -34,6 +34,7 @@ if (has_capability('local/apsolu:configpaybox', context_system::instance()) === 
     $tabslist['settings_payments_servers'] = 'configurations';
     $tabslist['centers'] = 'centers';
 }
+$tabslist['dates'] = 'dates';
 $tabslist['settings_payments_list'] = 'payments';
 $tabslist['dunning'] = 'notifications';
 $tabslist['payment_cards'] = 'prices';

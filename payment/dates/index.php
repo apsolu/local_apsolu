@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot . '/local/apsolu/configuration/dates_form.php');
+require_once($CFG->dirroot . '/local/apsolu/payment/dates/dates_form.php');
 
 // Build form.
 $attributes = [
@@ -40,9 +40,6 @@ foreach ($attributes as $attribute) {
 $customdata = [$defaults];
 
 $mform = new local_apsolu_calendar_form(null, $customdata);
-
-echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('dates', 'local_apsolu'));
 
 if ($data = $mform->get_data()) {
     foreach ($attributes as $attribute) {
@@ -63,4 +60,3 @@ if ($data = $mform->get_data()) {
 }
 
 $mform->display();
-echo $OUTPUT->footer();

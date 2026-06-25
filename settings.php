@@ -290,8 +290,8 @@ if ($hassiteconfig || has_any_capability($capabilities, context_system::instance
 
     // Paiements > Dates.
     $str = get_string('dates', 'local_apsolu');
-    $url = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'dates']);
-    $ADMIN->add('local_apsolu_payment', new admin_externalpage('local_apsolu_configuration_dates', $str, $url, $capabilities));
+    $url = new moodle_url('/local/apsolu/payment/admin.php', ['tab' => 'dates']);
+    $ADMIN->add('local_apsolu_payment', new admin_externalpage('local_apsolu_payment_dates', $str, $url, $capabilities));
 
     // Paiements > Liste des paiements.
     $label = get_string('settings_payments_list', 'local_apsolu');
