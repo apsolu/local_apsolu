@@ -30,15 +30,13 @@ $action = optional_param('action', 'view', PARAM_ALPHA);
 
 // Set tabs.
 $tabslist = [];
+if (has_capability('local/apsolu:configpaybox', context_system::instance()) === true) {
+    $tabslist['settings_payments_servers'] = 'configurations';
+    $tabslist['centers'] = 'centers';
+}
 $tabslist['settings_payments_list'] = 'payments';
 $tabslist['dunning'] = 'notifications';
 $tabslist['payment_cards'] = 'prices';
-if (has_capability('local/apsolu:configpaybox', context_system::instance()) === true) {
-    $advanced = [];
-    $advanced['settings_payments_servers'] = 'configurations';
-    $advanced['centers'] = 'centers';
-    $tabslist = array_merge($advanced, $tabslist);
-}
 
 $tabsbar = [];
 foreach ($tabslist as $stringid => $tabname) {
