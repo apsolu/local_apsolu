@@ -40,8 +40,6 @@ if ($user === false) {
     throw new moodle_exception('invaliduser');
 }
 
-// TODO: vérifier le témoin : sesame valide.
-
 $backurl = $CFG->wwwroot . '/local/apsolu/payment/admin.php?tab=payments&userid=' . $userid;
 
 $paymentid = optional_param('paymentid', null, PARAM_INT);
