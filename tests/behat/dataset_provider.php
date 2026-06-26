@@ -71,6 +71,7 @@ class dataset_provider {
         self::setup_periods();
         self::setup_calendars();
         self::setup_courses();
+        self::setup_collaborative_course();
         self::setup_federation_course();
         self::setup_attendances();
         self::setup_gradebooks();
@@ -1080,6 +1081,109 @@ class dataset_provider {
                 $i++;
 
                 $enroled[$record->userid] = $record->userid;
+            }
+        }
+    }
+
+    /**
+     * Met en place un cours collaboratif.
+     *
+     * @return void
+     */
+    private static function setup_collaborative_course() {
+        global $CFG, $DB;
+
+        // Crée l'espace-cours.
+        $course = new stdClass();
+        $course->fullname = 'Espace administratif du service';
+        $course->shortname = 'espace du service';
+        $course->category = 1;
+        $collaborativecourse = create_course($course);
+
+        set_config('collaborative_course', $collaborativecourse->id, 'local_apsolu');
+
+        // Récupère la méthode d'inscription manuelle.
+        $manualinstance = null;
+        foreach (enrol_get_instances($collaborativecourse->id, $enabled = null) as $instance) {
+            if ($instance->enrol === 'manual') {
+                $manualinstance = $instance;
+                break;
+            }
+        }
+
+        // Initialise la méthode d'inscription manuelle au besoin.
+        $manualplugin = enrol_get_plugin('manual');
+        if ($manualinstance === null) {
+            $instanceid = $manualplugin->add_instance($collaborativecourse, $manualplugin->get_instance_defaults());
+            $manualinstance = $DB->get_record('enrol', ['id' => $instanceid]);
+        }
+
+        // Inscrit tous les enseignants.
+        foreach ($DB->get_records('user', ['deleted' => 0]) as $user) {
+            if (str_starts_with($user->username, 'enseignant') === false && $user->username !== 'lenseignante') {
+                continue;
+            }
+
+            $manualplugin->enrol_user(
+                $manualinstance,
+                $user->id,
+                $studentroleid = 5,
+                $timestart = 0,
+                $timeend = 0,
+                $status = ENROL_USER_ACTIVE
+            );
+        }
+
+        // Ajoute du contenu à l'espace-cours.
+        $sections = [];
+        $sections[0] = new stdClass();
+        $sections[0]->name = 'Généralités';
+        $sections[0]->contents = [];
+        $sections[0]->contents[] = (object) ['type' => 'url', 'title' => 'Coordonnées des responsables des locaux techniques'];
+        $sections[0]->contents[] = (object) ['type' => 'url', 'title' => 'Coordonnées des équipes de sécurité des sites'];
+        $sections[1] = new stdClass();
+        $sections[1]->name = 'Travailler au sein du service';
+        $sections[1]->contents = [];
+        $sections[1]->contents[] = (object) ['type' => 'url', 'title' => 'Loi n°68-978 du 12 novembre 1968 (legifrance).'];
+        $sections[1]->contents[] = (object) ['type' => 'url', 'title' => 'Loi n°75-988 du 29 octobre 1975 (legifrance).'];
+        $sections[1]->contents[] = (object) ['type' => 'url', 'title' => 'Décret n°2018-792 du 13 septembre 2018 (legifrance).'];
+        $sections[1]->contents[] = (object) ['type' => 'url', 'title' => 'Décret n°2019-205 du 19 mars 2019 (legifrance).'];
+        $sections[2] = new stdClass();
+        $sections[2]->name = 'Personnels enseignants';
+        $sections[2]->contents = [];
+        $sections[2]->contents[] = (object) ['type' => 'url', 'title' => 'Horaire d’ouverture des salles'];
+        $sections[2]->contents[] = (object) ['type' => 'url', 'title' => 'Emplois du temps'];
+        $sections[2]->contents[] = (object) ['type' => 'url', 'title' => 'Modalités d’évaluation'];
+        $sections[2]->contents[] = (object) ['type' => 'url', 'title' => 'Programmation des stages d’été'];
+        // Note: l'activité "quiz" semblait générer un problème "A lock was created but not released".
+        $sections[2]->contents[] = (object) ['type' => 'feedback', 'title' => 'Bilan de l’année écoulée'];
+        $sections[3] = new stdClass();
+        $sections[3]->name = 'Personnels administratifs et techniques';
+        $sections[3]->contents = [];
+        $sections[3]->contents[] = (object) ['type' => 'url', 'title' => 'Horaire d’ouverture des bureaux d’administration'];
+        $sections[3]->contents[] = (object) ['type' => 'url', 'title' => 'Programmation des animations de printemps'];
+        // Note: l'activité "quiz" semblait générer un problème "A lock was created but not released".
+        $sections[3]->contents[] = (object) ['type' => 'feedback', 'title' => 'Rendez-vous pour les entretiens professionnels'];
+
+        $generator = new testing_data_generator();
+        foreach ($sections as $sectionnumber => $section) {
+            $record = $DB->get_record('course_sections', ['section' => $sectionnumber, 'course' => $course->id]);
+            if ($record === false) {
+                $record = course_create_section($course->id);
+            }
+
+            $record->name = $section->name;
+            $DB->update_record('course_sections', $record);
+
+            if (isset($section->contents) === false) {
+                $section->contents = [];
+            }
+
+            $options = ['course' => $course->id];
+            foreach ($section->contents as $module) {
+                $options['section'] = $record->section;
+                $options['name'] = $module->title;
+                $generator->create_module($module->type, $options);
             }
         }
     }
