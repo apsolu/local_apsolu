@@ -101,6 +101,7 @@ class dataset_provider {
 
         // Active la fonctionnalité de prise de présences par QR codes.
         set_config('qrcode_enabled', '1', 'local_apsolu');
+        set_config('qrcode_autologout', 0, 'local_apsolu');
 
         // Récupère l'utilisateur "lenseignante".
         $teacher = $DB->get_record('user', ['username' => 'lenseignante', 'deleted' => 0], $fields = '*', MUST_EXIST);
