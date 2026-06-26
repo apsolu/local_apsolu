@@ -394,8 +394,8 @@ class dataset_provider {
         add_to_config_log('enrol_plugins_enabled', $oldvalue, 'manual,guest,self,select,meta,cohort', 'core');
         set_config('enrol_plugins_enabled', 'manual,guest,self,select,meta,cohort');
 
-        set_config('functional_contact', 'contact@example.com', 'local_apsolu');
-        set_config('technical_contact', 'contact@example.com', 'local_apsolu');
+        set_config('functional_contact', 'sports@example.com', 'local_apsolu');
+        set_config('technical_contact', 'informatique@example.com', 'local_apsolu');
     }
 
     /**
