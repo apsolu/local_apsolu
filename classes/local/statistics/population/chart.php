@@ -67,30 +67,36 @@ class chart {
             $result = \local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid']);
         }
 
-        $enrolments = json_decode($result['data']);
-        if (!empty($enrolments)) {
-            $count = 0;
-            $data = [];
-            foreach ($enrolments as $enrol) {
-                $data['labels'][$count] = $enrol->institution;
-                $data['series_accepted'][$count] = $enrol->accepted;
-                $data['series_refused'][$count] = $enrol->refused;
-                $count++;
-            }
-            $accepted = new \core\chart_series(
-                get_string("statistics_accepted_atleastonce", "local_apsolu"),
-                $data['series_accepted']
-            );
-            $refused = new \core\chart_series(get_string("statistics_refused_anywhere", "local_apsolu"), $data['series_refused']);
-            $chart = new \core\chart_bar();
-            $chart->set_stacked(true);
-            $chart->set_horizontal(true);
-            $chart->add_series($accepted);
-            $chart->add_series($refused);
-            $chart->set_labels($data['labels']);
+        if ($result['success']) {
+            $enrolments = json_decode($result['data']);
+            if (!empty($enrolments)) {
+                $count = 0;
+                $data = [];
+                foreach ($enrolments as $enrol) {
+                    $data['labels'][$count] = $enrol->institution;
+                    $data['series_accepted'][$count] = $enrol->accepted;
+                    $data['series_refused'][$count] = $enrol->refused;
+                    $count++;
+                }
+                $accepted = new \core\chart_series(
+                    get_string("statistics_accepted_atleastonce", "local_apsolu"),
+                    $data['series_accepted']
+                );
+                $refused = new \core\chart_series(
+                    get_string("statistics_refused_anywhere", "local_apsolu"),
+                    $data['series_refused']
+                );
+                $chart = new \core\chart_bar();
+                $chart->set_stacked(true);
+                $chart->set_horizontal(true);
+                $chart->add_series($accepted);
+                $chart->add_series($refused);
+                $chart->set_labels($data['labels']);
 
-            return ['success' => true, 'chartdata' => json_encode($chart)];
+                return ['success' => true, 'chartdata' => json_encode($chart)];
+            }
         }
+
         return ['success' => false, 'chartdata' => json_encode(get_string("statistics_noavailabledata", "local_apsolu"))];
     }
 
@@ -118,27 +124,29 @@ class chart {
             $result = \local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid']);
         }
 
-        $enrolments = json_decode($result['data']);
+        if ($result['success']) {
+            $enrolments = json_decode($result['data']);
 
-        if (!empty($enrolments)) {
-            $data = [];
-            $data['labels'] = [];
-            $data['serie'] = [];
-            foreach ($enrolments as $enrol) {
-                if (!array_key_exists($enrol->institution, $data['labels'])) {
-                    $data['labels'][$enrol->institution] = $enrol->institution;
-                    $data['serie'][$enrol->institution] = 1;
-                } else {
-                    $data['serie'][$enrol->institution] += 1;
+            if (!empty($enrolments)) {
+                $data = [];
+                $data['labels'] = [];
+                $data['serie'] = [];
+                foreach ($enrolments as $enrol) {
+                    if (!array_key_exists($enrol->institution, $data['labels'])) {
+                        $data['labels'][$enrol->institution] = $enrol->institution;
+                        $data['serie'][$enrol->institution] = 1;
+                    } else {
+                        $data['serie'][$enrol->institution] += 1;
+                    }
                 }
+
+                $count = new \core\chart_series(get_string("statistics_number", "local_apsolu"), array_values($data['serie']));
+                $chart = new \core\chart_pie();
+                $chart->set_labels(array_values($data['labels']));
+                $chart->add_series($count);
+
+                return ['success' => true, 'chartdata' => json_encode($chart)];
             }
-
-            $count = new \core\chart_series(get_string("statistics_number", "local_apsolu"), array_values($data['serie']));
-            $chart = new \core\chart_pie();
-            $chart->set_labels(array_values($data['labels']));
-            $chart->add_series($count);
-
-            return ['success' => true, 'chartdata' => json_encode($chart)];
         }
         return ['success' => false, 'chartdata' => json_encode(get_string("statistics_noavailabledata", "local_apsolu"))];
     }
@@ -152,28 +160,31 @@ class chart {
      */
     public static function custom_apsoluhighlevelathlete($options) {
         $result = \local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid']);
-        $enrolments = json_decode($result['data']);
 
-        if (!empty($enrolments)) {
-            $data = [];
-            $data['labels'] = [];
-            $data['serie'] = [];
-            foreach ($enrolments as $enrol) {
-                $label = $enrol->institution . " - " . $enrol->ufr;
-                if (!array_key_exists($label, $data['labels'])) {
-                    $data['labels'][$label] = $label;
-                    $data['serie'][$label] = 1;
-                } else {
-                    $data['serie'][$label] += 1;
+        if ($result['success']) {
+            $enrolments = json_decode($result['data']);
+
+            if (!empty($enrolments)) {
+                $data = [];
+                $data['labels'] = [];
+                $data['serie'] = [];
+                foreach ($enrolments as $enrol) {
+                    $label = $enrol->institution . " - " . $enrol->ufr;
+                    if (!array_key_exists($label, $data['labels'])) {
+                        $data['labels'][$label] = $label;
+                        $data['serie'][$label] = 1;
+                    } else {
+                        $data['serie'][$label] += 1;
+                    }
                 }
+
+                $count = new \core\chart_series(get_string("statistics_number", "local_apsolu"), array_values($data['serie']));
+                $chart = new \core\chart_pie();
+                $chart->set_labels(array_values($data['labels']));
+                $chart->add_series($count);
+
+                return ['success' => true, 'chartdata' => json_encode($chart)];
             }
-
-            $count = new \core\chart_series(get_string("statistics_number", "local_apsolu"), array_values($data['serie']));
-            $chart = new \core\chart_pie();
-            $chart->set_labels(array_values($data['labels']));
-            $chart->add_series($count);
-
-            return ['success' => true, 'chartdata' => json_encode($chart)];
         }
         return ['success' => false, 'chartdata' => json_encode(get_string("statistics_noavailabledata", "local_apsolu"))];
     }
@@ -214,44 +225,46 @@ class chart {
             $result = \local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid']);
         }
 
-        $enrolments = json_decode($result['data']);
+        if ($result['success']) {
+            $enrolments = json_decode($result['data']);
 
-        if (!empty($enrolments)) {
-            $count = -1;
-            $data = [];
-            $institution = "";
-            $userprofiles = [];
-            foreach ($enrolments as $enrol) {
-                if (!in_array($enrol->userprofile, $userprofiles)) {
-                    $userprofiles[] = $enrol->userprofile;
-                }
-
-                if ($institution != ($enrol->institution == '' ? 'Autre' : $enrol->institution)) {
-                    $institution = ($enrol->institution == '' ? 'Autre' : $enrol->institution);
-                    $count++;
-                    $data['labels'][$count] = ($enrol->institution == '' ? 'Autre' : $enrol->institution);
-                }
-
-                $data['series'][$enrol->userprofile][$count] = $enrol->total;
-            }
-
-            $chart = new \core\chart_bar();
-            $chart->set_horizontal(true);
-            $chart->set_stacked(true);
-            $chart->set_labels($data['labels']);
-            foreach ($userprofiles as $userprofile) {
-                $dataserie = $data['series'][$userprofile];
-                foreach ($data['labels'] as $key => $institution) {
-                    if (!array_key_exists($key, $dataserie)) {
-                        $dataserie[$key] = 0;
+            if (!empty($enrolments)) {
+                $count = -1;
+                $data = [];
+                $institution = "";
+                $userprofiles = [];
+                foreach ($enrolments as $enrol) {
+                    if (!in_array($enrol->userprofile, $userprofiles)) {
+                        $userprofiles[] = $enrol->userprofile;
                     }
-                }
-                ksort($dataserie);
 
-                $serie = new \core\chart_series($userprofile, $dataserie);
-                $chart->add_series($serie);
+                    if ($institution != ($enrol->institution == '' ? 'Autre' : $enrol->institution)) {
+                        $institution = ($enrol->institution == '' ? 'Autre' : $enrol->institution);
+                        $count++;
+                        $data['labels'][$count] = ($enrol->institution == '' ? 'Autre' : $enrol->institution);
+                    }
+
+                    $data['series'][$enrol->userprofile][$count] = $enrol->total;
+                }
+
+                $chart = new \core\chart_bar();
+                $chart->set_horizontal(true);
+                $chart->set_stacked(true);
+                $chart->set_labels($data['labels']);
+                foreach ($userprofiles as $userprofile) {
+                    $dataserie = $data['series'][$userprofile];
+                    foreach ($data['labels'] as $key => $institution) {
+                        if (!array_key_exists($key, $dataserie)) {
+                            $dataserie[$key] = 0;
+                        }
+                    }
+                    ksort($dataserie);
+
+                    $serie = new \core\chart_series($userprofile, $dataserie);
+                    $chart->add_series($serie);
+                }
+                return ['success' => true, 'chartdata' => json_encode($chart)];
             }
-            return ['success' => true, 'chartdata' => json_encode($chart)];
         }
         return ['success' => false, 'chartdata' => json_encode(get_string("statistics_noavailabledata", "local_apsolu"))];
     }
@@ -303,44 +316,46 @@ class chart {
             $result = \local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid']);
         }
 
-        $enrolments = json_decode($result['data']);
+        if ($result['success']) {
+            $enrolments = json_decode($result['data']);
 
-        if (!empty($enrolments)) {
-            $count = -1;
-            $data = [];
-            $institution = "";
-            $genders = [];
-            foreach ($enrolments as $enrol) {
-                if (!in_array(($enrol->gender == "" ? "Inconnu" : $enrol->gender), $genders)) {
-                    $genders[] = ($enrol->gender == "" ? "Inconnu" : $enrol->gender);
-                }
-
-                if ($institution != ($enrol->institution == '' ? 'Autre' : $enrol->institution)) {
-                    $institution = ($enrol->institution == '' ? 'Autre' : $enrol->institution);
-                    $count++;
-                    $data['labels'][$count] = ($enrol->institution == '' ? 'Autre' : $enrol->institution);
-                }
-
-                $data['series'][($enrol->gender == "" ? "Inconnu" : $enrol->gender)][$count] = $enrol->total;
-            }
-
-            $chart = new \core\chart_bar();
-            $chart->set_horizontal(true);
-            $chart->set_stacked(true);
-            $chart->set_labels($data['labels']);
-            foreach ($genders as $gender) {
-                $dataserie = $data['series'][$gender];
-                foreach ($data['labels'] as $key => $institution) {
-                    if (!array_key_exists($key, $dataserie)) {
-                        $dataserie[$key] = 0;
+            if (!empty($enrolments)) {
+                $count = -1;
+                $data = [];
+                $institution = "";
+                $genders = [];
+                foreach ($enrolments as $enrol) {
+                    if (!in_array(($enrol->gender == "" ? "Inconnu" : $enrol->gender), $genders)) {
+                        $genders[] = ($enrol->gender == "" ? "Inconnu" : $enrol->gender);
                     }
-                }
-                ksort($dataserie);
 
-                $serie = new \core\chart_series($gender, $dataserie);
-                $chart->add_series($serie);
+                    if ($institution != ($enrol->institution == '' ? 'Autre' : $enrol->institution)) {
+                        $institution = ($enrol->institution == '' ? 'Autre' : $enrol->institution);
+                        $count++;
+                        $data['labels'][$count] = ($enrol->institution == '' ? 'Autre' : $enrol->institution);
+                    }
+
+                    $data['series'][($enrol->gender == "" ? "Inconnu" : $enrol->gender)][$count] = $enrol->total;
+                }
+
+                $chart = new \core\chart_bar();
+                $chart->set_horizontal(true);
+                $chart->set_stacked(true);
+                $chart->set_labels($data['labels']);
+                foreach ($genders as $gender) {
+                    $dataserie = $data['series'][$gender];
+                    foreach ($data['labels'] as $key => $institution) {
+                        if (!array_key_exists($key, $dataserie)) {
+                            $dataserie[$key] = 0;
+                        }
+                    }
+                    ksort($dataserie);
+
+                    $serie = new \core\chart_series($gender, $dataserie);
+                    $chart->add_series($serie);
+                }
+                return ['success' => true, 'chartdata' => json_encode($chart)];
             }
-            return ['success' => true, 'chartdata' => json_encode($chart)];
         }
         return ['success' => false, 'chartdata' => json_encode(get_string("statistics_noavailabledata", "local_apsolu"))];
     }
@@ -389,46 +404,48 @@ class chart {
             $result = \local_apsolu_webservices::get_reportdataset($options['classname'], $options['reportid']);
         }
 
-        $enrolments = json_decode($result['data']);
+        if ($result['success']) {
+            $enrolments = json_decode($result['data']);
 
-        if (!empty($enrolments)) {
-            $count = -1;
-            $data = [];
-            $institution = "";
-            $roles = [];
+            if (!empty($enrolments)) {
+                $count = -1;
+                $data = [];
+                $institution = "";
+                $roles = [];
 
-            foreach ($enrolments as $enrol) {
-                if (!in_array($enrol->roleshortname, $roles)) {
-                    $roles[] = $enrol->roleshortname;
-                }
-
-                if ($institution != ($enrol->institution == '' ? 'Autre' : $enrol->institution)) {
-                    $institution = ($enrol->institution == '' ? 'Autre' : $enrol->institution);
-                    $count++;
-                    $data['labels'][$count] = ($enrol->institution == '' ? 'Autre' : $enrol->institution);
-                }
-
-                $data['series'][$enrol->roleshortname][$count] = $enrol->total;
-            }
-
-            $chart = new \core\chart_bar();
-            $chart->set_horizontal(true);
-            $chart->set_stacked(true);
-            $chart->set_labels($data['labels']);
-            foreach ($roles as $role) {
-                $dataserie = $data['series'][$role];
-                foreach ($data['labels'] as $key => $institution) {
-                    if (!array_key_exists($key, $dataserie)) {
-                        $dataserie[$key] = 0;
+                foreach ($enrolments as $enrol) {
+                    if (!in_array($enrol->roleshortname, $roles)) {
+                        $roles[] = $enrol->roleshortname;
                     }
+
+                    if ($institution != ($enrol->institution == '' ? 'Autre' : $enrol->institution)) {
+                        $institution = ($enrol->institution == '' ? 'Autre' : $enrol->institution);
+                        $count++;
+                        $data['labels'][$count] = ($enrol->institution == '' ? 'Autre' : $enrol->institution);
+                    }
+
+                    $data['series'][$enrol->roleshortname][$count] = $enrol->total;
                 }
-                ksort($dataserie);
 
-                $serie = new \core\chart_series($role, $dataserie);
-                $chart->add_series($serie);
+                $chart = new \core\chart_bar();
+                $chart->set_horizontal(true);
+                $chart->set_stacked(true);
+                $chart->set_labels($data['labels']);
+                foreach ($roles as $role) {
+                    $dataserie = $data['series'][$role];
+                    foreach ($data['labels'] as $key => $institution) {
+                        if (!array_key_exists($key, $dataserie)) {
+                            $dataserie[$key] = 0;
+                        }
+                    }
+                    ksort($dataserie);
+
+                    $serie = new \core\chart_series($role, $dataserie);
+                    $chart->add_series($serie);
+                }
+
+                return ['success' => true, 'chartdata' => json_encode($chart)];
             }
-
-            return ['success' => true, 'chartdata' => json_encode($chart)];
         }
         return ['success' => false, 'chartdata' => json_encode(get_string("statistics_noavailabledata", "local_apsolu"))];
     }

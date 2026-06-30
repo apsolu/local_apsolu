@@ -40,7 +40,7 @@ class report {
      *
      * @param null|int|string $reportid
      *
-     * @return array
+     * @return array|null
      */
     public function getReport($reportid = null) {
         global $CFG;
@@ -57,11 +57,9 @@ class report {
         $model = self::localize_reports($model);
 
         if (!is_null($reportid)) {
-            for ($i = 0; $i < count($model->reports); $i++) {
-                $report = $model->reports[$i];
-                if ($report->id == $reportid) {
-                    return $report;
-                }
+            $report = array_filter($model->reports, fn($obj) => $obj->id === $reportid);
+            if (empty($report) == false) {
+                return current($report);
             }
             return null;
         } else {

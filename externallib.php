@@ -1384,36 +1384,38 @@ class local_apsolu_webservices extends external_api {
 
         $condition = json_decode($custom);
 
-        if (!property_exists($condition, "datatype")) {
-            // Custom report.
-            if ($classname == 'population') {
-                $params = ["WithEnrolments" => $reportobj->WithEnrolments, "WithComplementary" => $reportobj->WithComplementary];
-            }
-            if ($classname == 'programme') {
-                $params = ["WithProgramme" => $reportobj->WithProgramme];
-            }
-            if (!is_null($criterias)) {
-                $params = array_merge($params, $criterias);
-            }
-            $data = call_user_func([$class, $condition->method], $params);
+        if (empty($condition) == false) {
+            if (!property_exists($condition, "datatype")) {
+                // Custom report.
+                if ($classname == 'population') {
+                    $params = ["WithEnrolments" => $reportobj->WithEnrolments, "WithComplementary" => $reportobj->WithComplementary];
+                }
+                if ($classname == 'programme') {
+                    $params = ["WithProgramme" => $reportobj->WithProgramme];
+                }
+                if (!is_null($criterias)) {
+                    $params = array_merge($params, $criterias);
+                }
+                $data = call_user_func([$class, $condition->method], $params);
 
-            return ['success' => true,
-            'columns' => json_encode($condition->columns),
-            'data' => json_encode(array_values($data)),
-            'orders' => json_encode($condition->orders),
-            'filters' => json_encode($condition->filters),
-              ];
-        } else {
-            // Report using querybuilder.
-            $display = $reportobj->getReportDisplay($condition->datatype);
-            $data = $reportobj->getReportData($custom, $criterias);
+                return ['success' => true,
+                'columns' => json_encode($condition->columns),
+                'data' => json_encode(array_values($data)),
+                'orders' => json_encode($condition->orders),
+                'filters' => json_encode($condition->filters),
+                ];
+            } else {
+                // Report using querybuilder.
+                $display = $reportobj->getReportDisplay($condition->datatype);
+                $data = $reportobj->getReportData($custom, $criterias);
 
-            return ['success' => true,
-            'data' => json_encode(array_values($data)),
-            'columns' => json_encode($display['columns']),
-            'orders' => json_encode($display['orders']),
-            'filters' => json_encode($display['filters']),
-            ];
+                return ['success' => true,
+                'data' => json_encode(array_values($data)),
+                'columns' => json_encode($display['columns']),
+                'orders' => json_encode($display['orders']),
+                'filters' => json_encode($display['filters']),
+                ];
+            }
         }
 
         return ['success' => false, 'columns' => '',

@@ -364,7 +364,7 @@ class report extends \local_apsolu\local\statistics\report {
      *
      * @return array
      */
-    public function get_nowishes_list($params) {
+    public static function get_nowishes_list($params) {
         global $DB;
 
         $sql = $params["WithEnrolments"] . 'SELECT DISTINCT U.id,U.idnumber, U.firstname, U.lastname,
@@ -383,7 +383,7 @@ class report extends \local_apsolu\local\statistics\report {
      *
      * @return array
      */
-    public function get_SHNU_list($params) {
+    public static function get_SHNU_list($params) {
         global $DB;
 
         $sql = "SELECT DISTINCT
@@ -893,7 +893,7 @@ class report extends \local_apsolu\local\statistics\report {
      *
      * @return array
      */
-    public function enrollment_accepted_evaluated($params) {
+    public static function enrollment_accepted_evaluated($params) {
         global $DB;
 
         $sql = $params["WithEnrolments"] . ",gradable AS (
