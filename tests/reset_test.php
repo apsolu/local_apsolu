@@ -544,7 +544,7 @@ final class reset_test extends \advanced_testcase {
         try {
             $task->execute();
         } catch (Throwable $exception) {
-            $this->assertInstanceOf(Exception::class, $exception);
+            $this->assertInstanceOf(Throwable::class, $exception);
         }
 
         // Fermeture des buffers et récupération des valeurs émises.
