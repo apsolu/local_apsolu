@@ -17,6 +17,7 @@
 namespace local_apsolu\core;
 
 use core_availability\capability_checker;
+use core_user;
 use moodle_phpmailer;
 use core\context\course;
 
@@ -189,8 +190,14 @@ class messaging {
             $subject = '[' . $sitename . '] ' . $subject;
         }
 
+        $supportuser = core_user::get_support_user();
+
+        // Note: on utilise la variable $CFG->noreplyaddress pour conserver le comportement historique dans APSOLU. Un jour,
+        // il faudra peut-être supprimer la ligne ci-dessous pour utiliser l'objet core_user::get_support_user() brut.
+        $supportuser->email = $CFG->noreplyaddress;
+
         foreach ($users as $user) {
-            email_to_user($user, $CFG->noreplyaddress, $subject, $message);
+            email_to_user($user, $supportuser, $subject, $message);
         }
     }
 }
