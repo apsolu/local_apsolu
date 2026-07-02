@@ -487,7 +487,7 @@ final class reset_test extends \advanced_testcase {
 
         $reset = $task->get_reset_config();
         $this->assertInstanceOf(reset::class, $reset);
-        ob_get_clean();
+        ob_end_clean();
     }
 
     /**
@@ -522,6 +522,8 @@ final class reset_test extends \advanced_testcase {
         // Vérifier les nouvelles valeurs dans la configuration (réinitialisation désactivée).
         $this->assertFalse(get_config('local_apsolu', 'nextactive'));
         $this->assertEquals(0, get_config('local_apsolu', 'nextdatetime'));
+
+        ob_end_clean();
     }
 
     /**
@@ -669,6 +671,8 @@ final class reset_test extends \advanced_testcase {
         foreach ($purgeresults as $sql => $result) {
             $this->assertEquals(0, $result->nb);
         }
+
+        ob_end_clean();
     }
 
     /**
@@ -721,6 +725,8 @@ final class reset_test extends \advanced_testcase {
         $this->assertFalse(get_config('local_apsolu', 'nextactive'));
         $this->assertEquals(0, get_config('local_apsolu', 'nextdatetime'));
         $this->assertNotNull(get_config('local_apsolu', 'lastruntime'));
+
+        ob_end_clean();
     }
 
     /**
