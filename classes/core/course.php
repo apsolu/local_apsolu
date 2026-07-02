@@ -120,7 +120,10 @@ class course extends record {
      * @return bool true.
      */
     public function delete() {
-        global $DB;
+        global $CFG, $DB;
+
+        require_once($CFG->dirroot . '/backup/util/interfaces/checksumable.class.php');
+        require_once($CFG->dirroot . '/backup/backup.class.php');
 
         // Démarre une transaction, si ce n'est pas déjà fait.
         if ($DB->is_transaction_started() === false) {
