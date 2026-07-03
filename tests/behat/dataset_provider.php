@@ -653,7 +653,10 @@ class dataset_provider {
                 $subsections[5]->contents = [];
                 $subsections[5]->contents[0] = new stdClass();
                 $subsections[5]->contents[0]->type = 'label';
-                $subsections[5]->contents[0]->title = 'Espace visio-conférence BBB de ce cours';
+                $subsections[5]->contents[0]->title = '<p><a href="https://bigbluebutton.org/">' .
+                    '<img alt="" height="32px" src="' . $CFG->wwwroot . '/mod/bigbluebuttonbn/pix/monologo.svg" width="40px">' .
+                    ' Espace visio-conférence BBB de ce cours' .
+                    '</a></p>';
                 $subsections[6] = new stdClass();
                 $subsections[6]->name = 'Les pré-requis pour ce cours';
                 $subsections[6]->section = 0;
