@@ -1290,6 +1290,37 @@ class dataset_provider {
         $course->category = 1;
         $federationcourse = create_course($course);
 
+        // Récupère la méthode d'inscription manuelle.
+        $enrolinstances = enrol_get_instances($federationcourse->id, $enabled = null);
+
+        $manualinstance = null;
+        foreach ($enrolinstances as $instance) {
+            if ($instance->enrol !== 'manual') {
+                continue;
+            }
+
+            $manualinstance = $instance;
+            break;
+        }
+
+        // Initialise la méthode d'inscription manuelle.
+        $manualplugin = enrol_get_plugin('manual');
+        if ($manualinstance === null) {
+            $instanceid = $manualplugin->add_instance($federationcourse, $manualplugin->get_instance_defaults());
+            $manualinstance = $DB->get_record('enrol', ['id' => $instanceid]);
+        }
+
+        // Inscrit l'utilisateur lenseignante dans le cours de FFSU.
+        $user = $DB->get_record('user', ['username' => 'lenseignante', 'deleted' => 0], $fields = '*', MUST_EXIST);
+        $manualplugin->enrol_user(
+            $manualinstance,
+            $user->id,
+            $teacherroleid = 3,
+            $timestart = 0,
+            $timeend = 0,
+            $status = ENROL_USER_ACTIVE
+        );
+
         // Ajoute la méthode d'inscription.
         $plugin = enrol_get_plugin('select');
         $enrolid = $plugin->add_instance($federationcourse, $plugin->get_instance_defaults());
