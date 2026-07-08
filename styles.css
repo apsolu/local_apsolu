@@ -457,3 +457,7 @@ select.tablesorter-filter {
     text-align: left;
     font-size: 0.95rem;
 }
+
+#page-admin-local-apsolu-statistics-population-index .capitalize {
+    text-transform: capitalize;
+}

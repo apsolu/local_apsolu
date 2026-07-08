@@ -49,7 +49,7 @@ $data = (object) ['userid' => $userid, 'courseid' => $courseid,
     'enrolid' => $enrolid, 'statusid' => $statusid, 'roleid' => $roleid];
 $statuses = [];
 foreach (enrol_select_plugin::$states as $stateid => $state) {
-    $statuses[$stateid] = enrol_select_plugin::get_enrolment_list_name($stateid);
+    $statuses[$stateid] = get_enrol_list_fieldvalue($stateid, 'listname', false, false);
 }
 
 $roles = [];

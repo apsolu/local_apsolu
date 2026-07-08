@@ -3,7 +3,7 @@
     "reports":[
         {
           "id": "enrollment",
-          "label":"Nombre d'inscriptions aux activités physiques",
+          "label":"statistics_enrolments,enrol_select",
           "group" : "statistics_enrollments",
           "values": {
             "datatype":"1"
@@ -11,7 +11,7 @@
         },
         {
           "id": "enrollment_acceptedlist",
-          "label":"Nombre d'inscriptions acceptées aux activités physiques",
+          "label":"statistics_enrolments_on_status_X,enrol_select,list:ACCEPTED",
           "group" : "statistics_enrollments",
           "values": {
             "datatype":"1",
@@ -20,7 +20,7 @@
         },
         {
           "id": "enrollment_mainlist",
-          "label":"Nombre d'inscriptions sur liste principale aux activités physiques",
+          "label":"statistics_enrolments_on_status_X,enrol_select,list:MAIN",
           "group" : "statistics_enrollments",
           "values": {
             "datatype":"1",
@@ -29,7 +29,7 @@
         },
         {
           "id": "enrollment_waitinglist",
-          "label":"Nombre d'inscriptions sur liste d'attente aux activités physiques",
+          "label":"statistics_enrolments_on_status_X,enrol_select,list:WAIT",
           "group" : "statistics_enrollments",
           "values": {
             "datatype":"1",
@@ -38,7 +38,7 @@
         },
         {
           "id": "enrollment_deletedlist",
-          "label":"Nombre d'inscriptions refusé aux activités physiques",
+          "label":"statistics_enrolments_on_status_X,enrol_select,list:DELETED",
           "group" : "statistics_enrollments",
           "values": {
             "datatype":"1",
@@ -47,7 +47,7 @@
         },
         {
           "id": "enrollee",
-          "label":"Nombre d'inscrits aux activités physiques",
+          "label":"statistics_enrollees,enrol_select",
           "group" : "statistics_enrollees",
           "values": {
             "datatype":"2"
@@ -55,7 +55,7 @@
         },
         {
           "id": "enrollee_acceptedlist",
-          "label":"Nombre d'inscrits acceptés aux activités physiques",
+          "label":"statistics_enrollees_on_status_X,enrol_select,list:ACCEPTED",
           "group" : "statistics_enrollees",
           "values": {
             "datatype":"2",
@@ -64,7 +64,7 @@
         },
         {
           "id": "enrollee_mainlist",
-          "label":"Nombre d'inscrits sur liste principale aux activités physiques",
+          "label":"statistics_enrollees_on_status_X,enrol_select,list:MAIN",
           "group" : "statistics_enrollees",
           "values": {
             "datatype":"2",
@@ -73,7 +73,7 @@
         },
         {
           "id": "enrollee_waitinglist",
-          "label":"Nombre d'inscrits sur liste d'attente aux activités physiques",
+          "label":"statistics_enrollees_on_status_X,enrol_select,list:WAIT",
           "group" : "statistics_enrollees",
           "values": {
             "datatype":"2",
@@ -82,7 +82,7 @@
         },
         {
           "id": "enrollee_deletedlist",
-          "label":"Nombre d'inscrits refusé aux activités physiques",
+          "label":"statistics_enrollees_on_status_X,enrol_select,list:DELETED",
           "group" : "statistics_enrollees",
           "values": {
             "datatype":"2",
@@ -91,7 +91,7 @@
         },
         {
           "id": "complementaries_enrollment",
-          "label":"Nombre d'inscriptions aux activités complémentaires",
+          "label":"statistics_enrolments_complementary,enrol_select",
           "group" : "statistics_enrollments",
           "values": {
             "datatype":"3"
@@ -99,7 +99,7 @@
         },
         {
           "id": "complementaries_enrollee",
-          "label":"Inscrits en activité complémentaire",
+          "label":"statistics_enrollees_complementary,enrol_select",
           "group" : "statistics_enrollees",
           "values": {
             "datatype":"4",
@@ -109,14 +109,14 @@
         },
         {
           "id": "accepted_refused",
-          "label": "Inscrits ayant au moins un cours/ Refusés en cours",
+          "label": "statistics_on_status_X_accepted,enrol_select,list:ACCEPTED",
           "group" : "statistics_enrollees",
           "values": {
             "method" : "accepted_refused",
             "columns" : [
               {"data":"institution", "title":"institution,moodle"},
               {"data":"accepted", "title":"accepted_at_least_once,local_apsolu"},
-              {"data":"refused", "title":"refused_everywhere,local_apsolu"}
+              {"data":"refused", "title":"statistics_refused_anywhere,local_apsolu"}
             ],
             "orders":{"0":"asc","1":"asc"},
             "filters":{"select":[0]}
@@ -124,7 +124,7 @@
         },
         {
           "id": "distribution_userprofile",
-          "label":"Nombre d'inscrits personnels VS Nombre d'inscrits étudiants",
+          "label":"statistics_enrollees_userprofile,local_apsolu",
           "group" : "statistics_enrollees",
           "values": {
             "method" : "distribution_userprofile",
@@ -139,7 +139,7 @@
         },
         {
           "id": "distribution_genders",
-          "label":"Nombre d'inscrits garçons VS Nombre d'inscrits filles",
+          "label":"statistics_enrollees_usergender,local_apsolu",
           "group" : "statistics_enrollees",
           "values": {
             "method" : "distribution_genders",
@@ -154,7 +154,7 @@
         },
         {
           "id": "enrol_userprofile",
-          "label":"Nombre d'inscriptions personnels VS nombre d'incriptions étudiants",
+          "label":"statistics_enrolments_userprofile,local_apsolu",
           "group" : "statistics_enrollments",
           "values": {
             "method" : "enrol_userprofile",
@@ -169,7 +169,7 @@
         },
         {
           "id": "enrol_genders",
-          "label":"Nombre d'inscriptions garçons VS Nombre d'inscriptions filles",
+          "label":"statistics_enrolments_usergender,local_apsolu",
           "group" : "statistics_enrollments",
           "values": {
             "method" : "enrol_genders",
@@ -184,9 +184,9 @@
         },
         {
           "id": "accepted_once",
-          "label":"Nombre d'inscrits ayant obtenu une inscription acceptée",
+          "label":"statistics_enrollees_on_status_X_accepted,enrol_select,list:ACCEPTED",
           "group" : "statistics_enrollees",
-          "tooltip":"Affiche la liste des personnes ayant obtenues au moins une incription acceptée",
+          "tooltip":"statistics_enrollees_on_status_X_accepted_tooltip,enrol_select,list:ACCEPTED",
           "values": {
             "datatype":"2",
             "having":"accepted_list > 0 "
@@ -194,7 +194,7 @@
         },
         {
           "id": "not_accepted_once ",
-          "label":"Nombre de candidats à l'inscription n'ayant obtenu aucune inscription",
+          "label":"statistics_on_status_X_deleted,enrol_select,list:DELETED",
           "group" : "statistics_enrollees",
           "values": {
             "datatype":"2",
@@ -203,7 +203,7 @@
         },
         {
           "id": "enrol_roles",
-          "label":"Nombre d'inscriptions libres/Option évalués/Bonification évalués",
+          "label":"statistics_enrolments_roles,local_apsolu",
           "group" : "statistics_enrollments",
           "values": {
             "method" : "enrol_roles",
@@ -218,7 +218,7 @@
         },
         {
           "id": "enrollment_accepted_evaluated",
-          "label":"Nombre d'inscriptions acceptées par rôle 'évalué'",
+          "label":"statistics_on_status_X_evaluated,enrol_select,list:ACCEPTED",
           "group" : "statistics_enrollments",
           "values": {
             "method" : "enrollment_accepted_evaluated",
@@ -248,7 +248,7 @@
         },
         {
           "id": "custom_nowishes",
-          "label":"Nombre de visiteurs n'ayant pas fait de vœux",
+          "label":"statistics_nowishes_list,local_apsolu",
           "group" : "statistics_enrollees",
           "values": {
             "method" : "get_nowishes_list",
@@ -266,21 +266,21 @@
         },
         {
           "id": "dashboard",
-          "label": "Activités physiques - chiffres-clés",
+          "label": "statistics_dashboard_main,local_apsolu",
           "hidden" : true,
           "values": {
             "method" : "dashboard",
             "columns" : [
               {"data":"wish_list", "title":"wishes,enrol_select"},
-              {"data":"accepted_list", "title":"enrolment,enrol_select"},
-              {"data":"main_list", "title":"main_list_short,enrol_select"},
-              {"data":"wait_list", "title":"wait_list_short,enrol_select"},
-              {"data":"deleted_list", "title":"deleted_list_short,enrol_select"},
-              {"data":"enrollee_wish_list", "title":"enrollee_wish_list,enrol_select"},
-              {"data":"enrollee_accepted_list", "title":"enrollee_accepted_list,enrol_select"},
-              {"data":"enrollee_main_list", "title":"enrollee_main_list,enrol_select"},
-              {"data":"enrollee_wait_list", "title":"enrollee_wait_list,enrol_select"},
-              {"data":"enrollee_deleted_list", "title":"enrollee_deleted_list,enrol_select"}
+              {"data":"accepted_list", "title":"statistics_enrolment_on_statusshort_X,enrol_select,list:ACCEPTED"},
+              {"data":"main_list", "title":"statistics_enrolment_on_statusshort_X,enrol_select,list:MAIN"},
+              {"data":"wait_list", "title":"statistics_enrolment_on_statusshort_X,enrol_select,list:WAIT"},
+              {"data":"deleted_list", "title":"statistics_enrolment_on_statusshort_X,enrol_select,list:DELETED"},
+              {"data":"enrollee_wish_list", "title":"statistics_enrollee_wish_list,enrol_select"},
+              {"data":"enrollee_accepted_list", "title":"statistics_enrollee_on_status_X,enrol_select,list:ACCEPTED"},
+              {"data":"enrollee_main_list", "title":"statistics_enrollee_on_status_X,enrol_select,list:[MAIN;WAIT]"},
+              {"data":"enrollee_wait_list", "title":"statistics_enrollee_on_status_X,enrol_select,list:WAIT"},
+              {"data":"enrollee_deleted_list", "title":"statistics_enrollee_on_status_X,enrol_select,list:DELETED"}
             ],
             "orders":{},
             "filters":{}
@@ -288,13 +288,13 @@
         },
         {
           "id": "dashboard_complementaries",
-          "label": "Activités complémentaires - chiffres-clés",
+          "label": "statistics_dashboard_complementary,local_apsolu",
           "hidden" : true,
           "values": {
             "method" : "dashboard_complementaries",
             "columns" : [
               {"data":"enrollment", "title":"enrolments,enrol"},
-              {"data":"enrollee", "title":"enrollees,enrol_select"}
+              {"data":"enrollee", "title":"statistics_enrollees,local_apsolu"}
             ],
             "orders":{},
             "filters":{}
@@ -304,7 +304,7 @@
     "reportsCustomRennes": [
         {
           "id": "custom_shnu",
-          "label":"Sportifs de haut niveau qui pratiquent une activité",
+          "label":"statistics_high_level_enrolments,local_apsolu",
           "values": {
             "method" : "custom_shnu",
             "columns" : [
@@ -319,7 +319,7 @@
         },
         {
           "id": "custom_apsoluhighlevelathlete",
-          "label":"Sportifs de haut niveau inscrits sur l'espace cours",
+          "label":"statistics_high_level_athletes,local_apsolu",
           "values": {
             "method" : "custom_apsoluhighlevelathlete",
             "columns" : [
@@ -336,7 +336,7 @@
         },
         {
           "id": "custom_shnu_ufr",
-          "label":"Nombre de sportifs de haut-niveau par UFR",
+          "label":"statistics_SHNU_list,local_apsolu",
           "values": {
             "method" : "get_SHNU_list",
             "columns" : [

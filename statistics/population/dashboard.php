@@ -25,6 +25,7 @@
 defined('MOODLE_INTERNAL') || die;
 
 require_once('../../externallib.php');
+require_once($CFG->dirroot . '/enrol/select/lib.php');
 
 use local_apsolu\local\statistics\population\report;
 
@@ -45,7 +46,6 @@ $calendarstypes = $report->get_calendarstypes();
 // Actice par défaut la 1er type de calendrier : $calendarstypes[1]->active = true;.
 // Activité complémentaires.
 $complementaries = $report->get_complementaries();
-
 
 // ACTIVITÉS PHYSIQUES.
 $dashboard = $render->render_reportData(['classname' => 'population', 'reportid' => 'dashboard']);
@@ -184,6 +184,12 @@ if ($CFG->is_siuaps_rennes) {
         ['page' => 'reports', 'reportid' => 'custom_shnu']
     );
 }
+
+// Libellés.
+$data->statistics_mainlist = get_enrol_list_fieldvalue(2, 'status', false, false);
+$data->statistics_waitlist = get_enrol_list_fieldvalue(3, 'status', false, false);
+$data->statistics_declinelist = get_enrol_list_fieldvalue(4, 'status', false, false);
+
 
 echo $OUTPUT->header();
 echo $OUTPUT->tabtree($tabtree, $page);

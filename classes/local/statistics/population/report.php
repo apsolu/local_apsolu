@@ -20,6 +20,10 @@
 
 namespace local_apsolu\local\statistics\population;
 
+defined('MOODLE_INTERNAL') || die();
+
+require_once($CFG->dirroot . '/enrol/select/lib.php');
+
 /**
  * Classe Moodle.
  *
@@ -214,10 +218,10 @@ class report extends \local_apsolu\local\statistics\report {
             case 2: // Vue activités physiques par candidats.
                 $columnsdatatype = [
                 [ 'data' => "wish_list", 'title' => get_string('number_of_wishes', 'enrol_select')],
-                [ 'data' => "accepted_list", 'title' => get_string('number_of_accepted_enrolments', 'enrol_select')],
-                [ 'data' => "main_list", 'title' => get_string('number_of_enrolments_on_main_list', 'enrol_select')],
-                [ 'data' => "wait_list", 'title' => get_string('number_of_enrolments_on_waiting_list', 'enrol_select')],
-                [ 'data' => "deleted_list", 'title' => get_string('number_of_deleted_enrolments', 'enrol_select')],
+                [ 'data' => "accepted_list", 'title' => get_string_on_list_x(0, 'statistics_enrolment_nb_on_status_X')],
+                [ 'data' => "main_list", 'title' => get_string_on_list_x(2, 'statistics_enrolment_nb_on_status_X')],
+                [ 'data' => "wait_list", 'title' => get_string_on_list_x(3, 'statistics_enrolment_nb_on_status_X')],
+                [ 'data' => "deleted_list", 'title' => get_string_on_list_x(4, 'statistics_enrolment_nb_on_status_X')],
                 [ 'data' => "cohortnames", 'visible' => false, 'title' => get_string('cohort', 'cohort')],
                 ];
 
@@ -227,8 +231,8 @@ class report extends \local_apsolu\local\statistics\report {
             case 4: // Vue activités complémentaires par candidats.
                 $columnsdatatype = [
                 [ 'data' => "wish_list", 'title' => get_string('number_of_wishes', 'enrol_select')],
-                [ 'data' => "accepted_list", 'title' => get_string('number_of_accepted_enrolments', 'enrol_select')],
-                [ 'data' => "deleted_list", 'title' => get_string('number_of_deleted_enrolments', 'enrol_select')],
+                [ 'data' => "accepted_list", 'title' => get_string_on_list_x(0, 'statistics_enrolment_nb_on_status_X')],
+                [ 'data' => "deleted_list", 'title' => get_string_on_list_x(4, 'statistics_enrolment_nb_on_status_X')],
                 ];
 
                 $orders = [2 => 'asc', 3 => 'asc'];

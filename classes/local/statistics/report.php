@@ -202,6 +202,10 @@ class report {
     public static function localize_reports(stdClass $model) {
         if (isset($model->reports) === true) {
             foreach ($model->reports as $key1 => $report) {
+                if (isset($report->label) !== false) {
+                    $model->reports[$key1]->label = self::get_report_title($report->label);
+                }
+
                 if (isset($report->values->columns) === false) {
                     continue;
                 }
@@ -211,12 +215,56 @@ class report {
                         continue;
                     }
 
-                    [$stringid, $component] = explode(',', $column->title);
-                    $model->reports[$key1]->values->columns[$key2]->title = get_string($stringid, $component);
+                    $model->reports[$key1]->values->columns[$key2]->title = self::get_report_title($column->title);
                 }
             }
         }
 
         return $model;
+    }
+
+    /**
+     * Renvoie le titre d'un rapport en fonction des informations fournies dans le tableau json.
+     * Peut charger des paramètres dynamiquement, notamment pour insérer les noms des statuts d'inscription.
+     *
+     * @param string $columntitle le titre de la column : contient l'identifiant de la chaîne, le composant
+     *                      et éventuellement un paramètre (valeurs séparées par des virgules).
+     * @return string le chaîne de caractères chargée dans le fichier de langues.
+     */
+    public static function get_report_title($columntitle): string {
+        [$stringid, $component, $a] = explode(',', $columntitle);
+
+        if (empty($a) == false) {
+            // On vérifie si le paramètre dynamique correspond au pattern list:STATUT ( Ex. list:ACCEPTED ou list:[ACCEPTED;WAIT] ).
+            $reg = '/list:\[?([A-Z;]+)\]?/';
+            preg_match($reg, $a, $matches);
+
+            // On utilise la fonction du plugin enrol_select pour charger la chaîne de caractères qui contient.
+            if (empty($matches) == false && $component == 'enrol_select') {
+                $codes = [];
+                $n = 0;
+
+                // Il peut y avoir plusieurs statuts (tableau de valeurs).
+                foreach (explode(';', $matches[1]) as $state) {
+                    // On ne garde que les valeurs correctes (qui sont dans les constantes de classe).
+                    if (defined('\enrol_select_plugin::' . $state)) {
+                        $codes[] = constant('\enrol_select_plugin::' . $state);
+                        $n++;
+                    }
+                }
+                // S'il n'y a qu'un seul statut valide, on fourni un entier numérique, sinon un tableau d'entiers numériques.
+                if ($n > 0) {
+                    $status = $n == 1 ? $codes[0] : $codes;
+                    $str = get_string_on_list_x($status, $stringid);
+                    return get_string_on_list_x($status, $stringid);
+                }
+            }
+
+            // Si le pattern ne correspond pas, on charge la chaîne de caractères avec le paramètre fourni dans le titre.
+            return get_string($stringid, $component, $a);
+        }
+
+        // Pas de paramètre.
+        return get_string($stringid, $component);
     }
 }

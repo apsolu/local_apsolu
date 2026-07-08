@@ -17,6 +17,7 @@
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/formslib.php');
+require_once($CFG->dirroot . '/enrol/select/lib.php');
 
 /**
  * Classe pour le formulaire permettant de sélectionner les sessions.
@@ -56,11 +57,21 @@ class edit_select_form extends moodleform {
         $mform->setType('sessionid', PARAM_INT);
 
         // Invalid enrolments.
-        $mform->addElement('checkbox', 'invalid_enrolments', get_string('attendance_display_invalid_enrolments', 'local_apsolu'));
+        $unvalid = get_string_on_list_x(
+            [enrol_select_plugin::MAIN, enrol_select_plugin::WAIT],
+            'unvalidated_enrolments',
+            'listname',
+            true
+        );
+        $mform->addElement('checkbox', 'invalid_enrolments', get_string('attendance_display_enrolments', 'local_apsolu', $unvalid));
         $mform->setType('invalid_enrolments', PARAM_INT);
 
         // Inactive enrolments.
-        $mform->addElement('checkbox', 'inactive_enrolments', get_string('attendance_display_inactive_enrolments', 'local_apsolu'));
+        $mform->addElement(
+            'checkbox',
+            'inactive_enrolments',
+            get_string('attendance_display_enrolments', 'local_apsolu', get_string('inactive_enrolments', 'enrol_select'))
+        );
         $mform->setType('inactive_enrolments', PARAM_INT);
 
         // Page.

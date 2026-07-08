@@ -1388,7 +1388,10 @@ class local_apsolu_webservices extends external_api {
             if (!property_exists($condition, "datatype")) {
                 // Custom report.
                 if ($classname == 'population') {
-                    $params = ["WithEnrolments" => $reportobj->WithEnrolments, "WithComplementary" => $reportobj->WithComplementary];
+                    $params = [
+                        "WithEnrolments" => $reportobj->WithEnrolments,
+                        "WithComplementary" => $reportobj->WithComplementary,
+                    ];
                 }
                 if ($classname == 'programme') {
                     $params = ["WithProgramme" => $reportobj->WithProgramme];
@@ -1409,11 +1412,12 @@ class local_apsolu_webservices extends external_api {
                 $display = $reportobj->getReportDisplay($condition->datatype);
                 $data = $reportobj->getReportData($custom, $criterias);
 
-                return ['success' => true,
-                'data' => json_encode(array_values($data)),
-                'columns' => json_encode($display['columns']),
-                'orders' => json_encode($display['orders']),
-                'filters' => json_encode($display['filters']),
+                return [
+                    'success' => true,
+                    'data' => json_encode(array_values($data)),
+                    'columns' => json_encode($display['columns']),
+                    'orders' => json_encode($display['orders']),
+                    'filters' => json_encode($display['filters']),
                 ];
             }
         }
