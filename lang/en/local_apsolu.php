@@ -196,7 +196,6 @@ $string['change_status'] = 'Délai pour changer le type de présence après le d
 $string['change_status_help'] = 'Permet de changer le type de présence utilisé durant la session, passé un certain délai. Ce paramètre peut être utilisé pour saisir automatiquement les « retard ».';
 // MDL-000 TODO: course_cannot_be_deleted = 'Le créneau horaire « {$a} » ne peut pas être supprimé, car il est rattaché aux lieux suivants :'.
 $string['collaborative_course'] = 'Cours collaboratif';
-$string['college_deleted'] = 'Population supprimée';
 $string['color'] = 'Couleur';
 $string['cohort_for_federation_insurance_payment'] = 'Cohorte pour le paiement de l’assurance de la FFSU';
 $string['cohort_for_federation_insurance_payment_help'] = 'La cohorte sélectionnée doit être associée à un tarif correspondant au coût de l’assurance FFSU.
