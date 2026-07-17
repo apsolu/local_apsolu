@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+// phpcs:disable moodle.Commenting.TodoComment.MissingInfoInline
+
 namespace local_apsolu\task;
 
 use Throwable;
@@ -92,15 +94,18 @@ class reset_courses extends \core\task\adhoc_task {
                 // Supprimer les relevés de présences ?
                 if ($reset->userattendances === true) {
                     $purges['vide les présences.'] = 'TRUNCATE {apsolu_attendance_presences}';
-
-                    // Supprimer les QR codes.
-                    // TODO : passer la réinitialisation des QRcodes pour les sessions passées dans une tâche scheduled.
-                    $purges['vide les qrcodes.'] = 'TRUNCATE {apsolu_attendance_qrcodes}';
                 }
 
                 // Supprimer les sessions définies pour les cours ?
                 if ($reset->sessions === true) {
-                    $purges['vide les sessions.'] = 'TRUNCATE {apsolu_attendance_sessions}';
+                    $purges['vide les sessions passées.'] = 'DELETE FROM {apsolu_attendance_sessions}
+                                                                   WHERE sessiontime < ' . time();
+
+                    // Supprimer les QR codes.
+                    // TODO: créer une tâche scheduled qui supprime régulièrement tout au long de l'année les QR codes expirés
+                    // au lieu de passer par une réinitialisation annuelle.
+                    $purges['vide les qrcodes.'] = 'DELETE FROM {apsolu_attendance_qrcodes}
+                                                          WHERE sessionid NOT IN (SELECT id FROM {apsolu_attendance_sessions})';
                 }
 
                 // Supprimer les infos relatives aux paiements des utilisateurs ?

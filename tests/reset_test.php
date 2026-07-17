@@ -583,8 +583,10 @@ final class reset_test extends \advanced_testcase {
             '("apsoluidcardnumber", "apsoluidcardnumberexternal", "apsolufederationnumber"))';
         $sqlpurges[] = 'SELECT COUNT(*) as nb FROM {course} WHERE visible=1 AND id IN (SELECT id FROM {apsolu_courses})';
         $sqlpurges[] = 'SELECT COUNT(*) as nb FROM {apsolu_attendance_presences}';
-        $sqlpurges[] = 'SELECT COUNT(*) as nb FROM {apsolu_attendance_qrcodes}';
-        $sqlpurges[] = 'SELECT COUNT(*) as nb FROM {apsolu_attendance_sessions}';
+        $sqlpurges[] = 'SELECT COUNT(*) as nb
+                          FROM {apsolu_attendance_qrcodes}
+                         WHERE sessionid NOT IN (SELECT id FROM {apsolu_attendance_sessions} WHERE sessiontime < ' . time() . ')';
+        $sqlpurges[] = 'SELECT COUNT(*) as nb FROM {apsolu_attendance_sessions} WHERE sessiontime < ' . time();
         $sqlpurges[] = 'SELECT COUNT(*) as nb FROM {apsolu_payments}';
         $sqlpurges[] = 'SELECT COUNT(*) as nb FROM {apsolu_payments_items}';
         $sqlpurges[] = 'SELECT COUNT(*) as nb FROM {apsolu_payments_transactions}';
