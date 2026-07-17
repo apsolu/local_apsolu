@@ -346,6 +346,13 @@ define([
 
                 box.prepend(ul);
             }
-        }
+        },
+        printHandler: function() {
+            window.print();
+            window.addEventListener("afterprint", function() {
+                document.getElementById('afterprint-container').style.display = 'flex';
+                document.getElementById('qrcodes-container').style.display = 'none';
+            });
+        },
     };
 });

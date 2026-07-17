@@ -461,3 +461,95 @@ select.tablesorter-filter {
 #page-admin-local-apsolu-statistics-population-index .capitalize {
     text-transform: capitalize;
 }
+#page-local-apsolu-attendance-qrcode {
+    body,
+    body div {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+    }
+
+    .alert {
+        width: 70%;
+        margin-left: 15%;
+        margin-top: 80px;
+        margin-bottom: 8px;
+        font-size: 0.9vw;
+    }
+
+    #apsolu-topofbody,
+    footer {
+        display: none;
+    }
+
+    #afterprint-container {
+        display: none;
+        flex-direction: column;
+        font-size: 2em;
+        height: 90vh;
+        justify-content: center;
+    }
+
+    #qrcodes-container {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .session-p {
+        font-size: 1rem;
+        margin: 0 0 15px 0;
+    }
+
+    .col-3 .session-p {
+        font-size: 0.7rem;
+        margin: 0 0 15px 0;
+    }
+
+    .col-sm .session-p {
+        font-size: 1rem;
+        margin: 0 0 15px 0;
+    }
+
+    #course-p {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 15px;
+    }
+
+    .container .grid-row {
+        max-width: 600px;
+    }
+
+    .qrcode-image {
+        max-height: 300px;
+    }
+
+    .keycode-info {
+        font-size: 0.6rem;
+        font-weight: 300;
+        margin: 5px 0 10px 0;
+        align-self: end;
+    }
+
+    .col-sm,
+    .col-3 {
+        break-inside: avoid;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .col-3 {
+        margin-top: 10px;
+    }
+
+    .col-3:nth-child(4n+1):not(:first-child) {
+        break-before: auto;
+    }
+}
+
+.capitalize:first-letter {
+    text-transform: capitalize;
+}

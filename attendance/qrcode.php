@@ -189,6 +189,8 @@ if (!empty($sessionid)) {
                 // Restaure les paramètres au format objet.
                 $qrcode->settings = $settings;
 
+                $PAGE->set_periodic_refresh_delay(30);
+
                 if ($print) {
                     $print = !$print;
                     // Message sur le premier QR code uniquement
@@ -233,16 +235,25 @@ if (!empty($sessionid)) {
         );
         $data->course = html_writer::link(new moodle_url('/course/view.php', ['id' => $course->id]), $course->fullname);
         $data->user = $isloggedin === true ? fullname($USER) : get_string('loggedinnot');
+        $data->session = $session->name;
 
         // Image du QR code et informations sur la session.
         $data->qrcodes = $qrcodesdata;
-        $PAGE->set_pagelayout('print');
+
+        $PAGE->set_title($data->session . ' | ' . $sdata->sitename);
+
+        if ($print) {
+            $PAGE->requires->js_call_amd('local_apsolu/attendance', 'printHandler');
+            $PAGE->set_pagelayout('print');
+        }
 
         if (isset($notification)) {
             echo $OUTPUT->notification($notification, 'warning');
         }
+
         echo $OUTPUT->header();
         echo $OUTPUT->render_from_template('local_apsolu/attendance_qrcode', $data);
+        echo $OUTPUT->footer();
 
         exit(0);
     } else if (isset($keycode) === true) {
