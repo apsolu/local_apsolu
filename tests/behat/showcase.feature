@@ -32,7 +32,7 @@ Feature: Teste la présentation réalisée lors de démonstration de l'applicati
     And I set the following fields to these values:
       | Type d’inscription | Non évalué |
     And I press "S’inscrire"
-    Then I should see "Votre vœu a été enregistré. Vous êtes sur liste principale."
+    Then I should see "Votre vœu a été enregistré. Vous êtes sur la liste principale."
 
   @javascript
   Scenario: Valide le processus de paiement.
@@ -42,7 +42,7 @@ Feature: Teste la présentation réalisée lors de démonstration de l'applicati
     And I set the following fields to these values:
       | Users | Léo Bobet (letudiant@example.com) |
       | Role  | Non évalué                        |
-      | Liste | Liste des étudiants acceptés      |
+      | Liste | Liste des acceptés      |
     And I press "Inscrire les utilisateurs"
     And I am on the "Homepage" page logged in as "letudiant"
     And I follow "Payer"
@@ -94,9 +94,9 @@ Feature: Teste la présentation réalisée lors de démonstration de l'applicati
     Given I am on the "Basket-ball 3x3 (F) Mercredi 15:00 17:00 Expert" course page logged in as "lenseignante"
     When I follow "Gérer mes étudiants"
     And I click on "//div[@id='apsolu-manage-users']//div[contains(@class, 'show')][@role='tabpanel']//form[@class='participants-form']//table/tbody/tr[1]/td[1]/input" "xpath_element"
-    And I set the field "With selected users..." to "Déplacer dans la liste des étudiants désinscrits"
+    And I set the field "With selected users..." to "Déplacer dans la liste des désinscrits"
     When I press "Save"
-    Then I should see "Liste des étudiants désinscrits (1)"
+    Then I should see "liste des désinscrits (1)"
 
   @javascript
   Scenario: Prend les présences avec l'utilisateur "lenseignante".

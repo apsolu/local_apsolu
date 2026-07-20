@@ -255,7 +255,6 @@ class report {
                 // S'il n'y a qu'un seul statut valide, on fourni un entier numérique, sinon un tableau d'entiers numériques.
                 if ($n > 0) {
                     $status = $n == 1 ? $codes[0] : $codes;
-                    $str = get_string_on_list_x($status, $stringid);
                     return get_string_on_list_x($status, $stringid);
                 }
             }
