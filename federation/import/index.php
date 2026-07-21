@@ -138,10 +138,12 @@ if ($formdata = $mform->get_data()) {
             $oldlicenseid = $adhesion->federationnumber;
 
             $sql = "UPDATE {apsolu_federation_adhesions}
-                       SET federationnumber = :federationnumber
+                       SET federationnumber = :federationnumber,
+                           timelicensed = :time
                      WHERE id = :id
                        AND userid = :userid";
-            $DB->execute($sql, ['federationnumber' => $licenseid, 'id' => $adhesion->id, 'userid' => $adhesion->userid]);
+            $params = ['federationnumber' => $licenseid, 'time' => time(), 'id' => $adhesion->id, 'userid' => $adhesion->userid];
+            $DB->execute($sql, $params);
 
             $params = new stdClass();
             $params->licenseid = $licenseid;

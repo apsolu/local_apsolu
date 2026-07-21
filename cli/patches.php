@@ -36,6 +36,14 @@ try {
     // Initialise les variables pour les méthodes de paiement.
     method::init_config();
 
+    // Ajoute un champ "timelicensed" dans la table "apsolu_federation_adhesions".
+    $table = new xmldb_table('apsolu_federation_adhesions');
+    $field = new xmldb_field('timelicensed', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, 0, 'timemodified');
+
+    if ($dbman->field_exists($table, $field) === false) {
+        $dbman->add_field($table, $field);
+    }
+
     mtrace(get_string('success'));
 } catch (Exception $exception) {
     mtrace(get_string('error'));

@@ -147,6 +147,9 @@ class adhesion extends record {
     /** @var int|string $timemodified Timestamp Unix de modification de l'adhésion. */
     public $timemodified = 0;
 
+    /** @var int|string $timelicensed Timestamp Unix de la validation de la prise de licence. */
+    public $timelicensed = 0;
+
     /** @var int|string $userid Identifiant numérique de l'adhérant. */
     public $userid = '';
 
@@ -1690,6 +1693,7 @@ class adhesion extends record {
         if (empty($this->id) === true) {
             $this->timecreated = time();
             $this->timemodified = $this->timecreated;
+            $this->timelicensed = 0;
 
             $this->id = $DB->insert_record(self::TABLENAME, $this);
         } else {

@@ -189,9 +189,9 @@ if ($adhesion->questionnairestatus === null) {
     ) {
         $stepid = APSOLU_PAGE_MEMBERSHIP;
     }
-} else if (empty($adhesion->federationnumber) === true && $stepid === APSOLU_PAGE_SUMMARY) {
+} else if (empty($adhesion->timelicensed) === true && $stepid === APSOLU_PAGE_SUMMARY) {
     $stepid = APSOLU_PAGE_PAYMENT;
-} else if (empty($adhesion->federationnumber) === false) {
+} else if (empty($adhesion->timelicensed) === false) {
     // Le numéro FFSU a été attribué.
     $stepid = APSOLU_PAGE_SUMMARY;
     $pages = [];

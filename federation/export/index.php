@@ -195,9 +195,9 @@ if ($data = $mform->get_data()) {
 
         // Etat du numéro de licence.
         if (empty($data->licensenumber) === false) {
-            if ($data->licensenumber === APSOLU_SELECT_YES && empty($record->federationnumber) === true) {
+            if ($data->licensenumber === APSOLU_SELECT_YES && empty($record->timelicensed) === true) {
                 continue;
-            } else if ($data->licensenumber === APSOLU_SELECT_NO && empty($record->federationnumber) === false) {
+            } else if ($data->licensenumber === APSOLU_SELECT_NO && empty($record->timelicensed) === false) {
                 continue;
             }
         }
