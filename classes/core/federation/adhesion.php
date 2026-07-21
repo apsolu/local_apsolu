@@ -141,7 +141,7 @@ class adhesion extends record {
     /** @var string $data Données du formulaire d'adhésion saisies par l'étudiant au format JSON. */
     public $data = null;
 
-    /** @var int|string $timemodified Timestamp Unix de création de l'adhésion. */
+    /** @var int|string $timecreated Timestamp Unix de création de l'adhésion. */
     public $timecreated = 0;
 
     /** @var int|string $timemodified Timestamp Unix de modification de l'adhésion. */
