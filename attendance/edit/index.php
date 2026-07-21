@@ -274,7 +274,7 @@ foreach ($students as $student) {
     // Liste d'inscription.
     $processed_student->enrolment_list = "";
     if ($student->status !== null) {
-        $processed_student->enrolment_list = get_enrol_list_fieldvalue($student->status, 'statusshort', false, false);
+        $processed_student->enrolment_list = get_enrol_list_fieldvalue($student->status, 'status', false, false);
     }
 
     // Informations.

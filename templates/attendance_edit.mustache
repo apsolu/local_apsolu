@@ -170,7 +170,7 @@
                         {{#presence_activity}}<br>{{#str}}attendance_activity_presences, local_apsolu, {{presence_activity}}{{/str}}{{/presence_activity}}
                     </td>
                     <td class="text-center">{{enrolment_type}}</td>
-                    {{#invalid_enrolments}}<td class="text-center">{{enrolment_list}}</td>{{/invalid_enrolments}}
+                    {{#invalid_enrolments}}<td class="text-center capitalize">{{enrolment_list}}</td>{{/invalid_enrolments}}
                     <td class="{{#informations_alert}}table-danger{{/informations_alert}}">{{#informations}}<div>{{{.}}}</div>{{/informations}}</td>
                     <td class="text-center">
                         {{#enrolid}}<a class="btn btn-sm btn-info apsolu-attendance-edit-enrolments" data-userid="{{id}}" data-courseid="{{courseid}}" data-enrolid="{{enrolid}}" data-statusid="{{status}}" data-roleid="{{roleid}}" href="{{wwwroot}}/enrol/{{enrol}}/manage.php?enrolid={{enrolid}}">{{#str}}attendance_edit_enrolment, local_apsolu{{/str}}</a>{{/enrolid}}

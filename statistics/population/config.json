@@ -278,7 +278,7 @@
               {"data":"deleted_list", "title":"statistics_enrolment_on_statusshort_X,enrol_select,list:DELETED"},
               {"data":"enrollee_wish_list", "title":"statistics_enrollee_wish_list,enrol_select"},
               {"data":"enrollee_accepted_list", "title":"statistics_enrollee_on_status_X,enrol_select,list:ACCEPTED"},
-              {"data":"enrollee_main_list", "title":"statistics_enrollee_on_status_X,enrol_select,list:[MAIN;WAIT]"},
+              {"data":"enrollee_main_list", "title":"statistics_enrollee_on_status_X,enrol_select,list:MAIN"},
               {"data":"enrollee_wait_list", "title":"statistics_enrollee_on_status_X,enrol_select,list:WAIT"},
               {"data":"enrollee_deleted_list", "title":"statistics_enrollee_on_status_X,enrol_select,list:DELETED"}
             ],
