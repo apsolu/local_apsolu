@@ -38,7 +38,7 @@ class local_apsolu_federation_membership extends moodleform {
         global $USER;
 
         $mform = $this->_form;
-        [$adhesion, $readonly] = $this->_customdata;
+        [$adhesion, $readonly, $federationnumber] = $this->_customdata;
 
         if ($readonly === true) {
             $messages = $adhesion::get_contacts();
@@ -183,6 +183,16 @@ class local_apsolu_federation_membership extends moodleform {
                 $mform->freeze('licensetype');
             }
         }
+
+        // Numéro de licence.
+        $attributes = [];
+        if (empty($federationnumber) === false) {
+            // Un numéro de licence existe déjà dans le profil de l'utilisateur.
+            $attributes = ['disabled' => 1];
+        }
+        $mform->addElement('text', 'federationnumber', get_string('federation_number', 'local_apsolu'), $attributes);
+        $mform->addHelpButton('federationnumber', 'federation_number', 'local_apsolu');
+        $mform->setType('federationnumber', PARAM_TEXT);
 
         // Honorability.
         $mform->addElement('hidden', 'honorability', 0);

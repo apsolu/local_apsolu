@@ -111,6 +111,12 @@ if ($count === 0) {
         }
     }
 
+    $federationnumber = '';
+    if (isset($customfields->apsolufederationnumber) === true) {
+        $federationnumber = $customfields->apsolufederationnumber;
+    }
+
+    $json->federationnumber = $federationnumber;
     $json->licensetype = json_decode(get_config('local_apsolu', 'licensetype_field_default'));
     $json->licenseetype = get_config('local_apsolu', 'licenseetype_field_default');
     $json->insurance = get_config('local_apsolu', 'insurance_field_default');
@@ -121,7 +127,7 @@ if ($count === 0) {
     $adhesion->userid = $USER->id;
 
     $adhesion->federationnumberprefix = $adhesion->get_federation_number_prefix();
-    if ($adhesion->federationnumberprefix === false) {
+    if ($adhesion->federationnumberprefix === false && empty($federationnumber) === true) {
         // TODO: unenrol l'utilisateur ?
         throw new moodle_exception('cannot_attribute_federation_number_prefix', $module = 'local_apsolu');
     }

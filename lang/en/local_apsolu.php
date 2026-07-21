@@ -1229,6 +1229,9 @@ $string['federations_users_list_export_r1'] = 'Exporter la liste des adhérents 
 $string['federations_users_list_export_r2'] = 'Exporter la liste des adhérents (Rennes 2)';
 $string['no_user'] = 'Aucun adhérent';
 $string['federation_number'] = 'Numéro de licence';
+$string['federation_number_help'] = 'Si par le passé, vous avez déjà pris une licence auprès de la FFSU, merci d’indiquer votre numéro de licence. Vous pouvez le récupérer sur le site <a href="https://licencie.mysportu.com" target="_blank">de la FFSU</a>.
+
+Si vous n’avez jamais pris de licence à la FFSU, vous devez laisser ce champ vide.';
 $string['medical_certificate'] = 'Certificat médical';
 $string['federation_paid'] = 'Adhésion payée';
 

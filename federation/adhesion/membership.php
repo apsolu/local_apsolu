@@ -33,7 +33,9 @@ $PAGE->requires->js_call_amd('local_apsolu/federation_adhesion_membership', 'ini
 
 // Initialise le formulaire.
 $readonly = ($adhesion->can_edit() === false);
-$customdata = [$adhesion, $readonly];
+$customfields = profile_user_record($USER->id);
+$federationnumber = $customfields->apsolufederationnumber ?? '';
+$customdata = [$adhesion, $readonly, $federationnumber];
 $mform = new local_apsolu_federation_membership(null, $customdata);
 
 // Traite les données renvoyées.

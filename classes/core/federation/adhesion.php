@@ -1417,6 +1417,7 @@ class adhesion extends record {
                 $json->licenseetype = $data->licenseetype ?? '';
                 $json->handicap = $data->handicap;
                 $json->licensetype = $data->licensetype ?? '';
+                $json->federationnumber = $data->federationnumber ?? '';
                 $json->nationality = $data->nationality ?? '';
                 $json->birthname = $data->birthname ?? '';
                 $json->birthcountry = $data->birthcountry ?? '';
