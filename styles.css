@@ -7,7 +7,6 @@
 et améliore l'animation du menu déroulant */
 .apsolu-dropdown-menu.dropdown-menu {
     z-index: 9999;
-    transition: none;
 }
 
 .userinitials.size-40 {
