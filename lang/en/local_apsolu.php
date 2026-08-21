@@ -717,6 +717,7 @@ $string['period_has_been_deleted'] = 'La période a été supprimée.';
 $string['period_saved'] = 'Période enregistrée.';
 $string['period_updated'] = 'Période modifiée.';
 $string['periods'] = 'Périodes';
+$string['permalink_help'] = 'Copiez et partagez ce lien permanent pour retrouver rapidement la vue des activités actuellement filtrées.';
 $string['permanent_link'] = 'Lien permanent';
 $string['permission_to_use_my_personal_data'] = 'Autorisation d’utilisation de mes données personnelles';
 $string['permission_to_use_my_personal_data_description'] = '<u>Loi Informatique & Libertés (Loi du 6 janvier 1978):</u><br />

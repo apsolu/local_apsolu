@@ -282,6 +282,29 @@ select.tablesorter-filter {
     margin: 1em 0 0 0;
 }
 
+.apsolu-permalink {
+
+    & .apsolu-permalink-link {
+        background-color: $gray-100;
+        width: 80%;
+        border-radius: 0.5rem 0 0 0.5rem;
+        outline-style: none;
+        &:hover {
+            outline-style: none;
+        }
+    }
+
+    & .input-group-append button {
+        border-radius: 0 0.5rem 0.5rem 0;
+        outline-style: none;
+    }
+
+    & button:has(.fa-check) {
+        background-color: $gray-100;
+    }
+
+}
+
 #apsolu-presentation-table tbody th {
     background-color: #434241;
     color: #f39c12;

@@ -20,9 +20,8 @@
  * @copyright  2020 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-define(['jquery', 'core/modal_events', 'core/modal_factory', 'core/templates', 'enrol_select/select2'],
-    function($, ModalEvents, ModalFactory, templates) {
-
+define(['jquery', 'core/modal_events', 'core/modal', 'core/str', 'core/templates', 'enrol_select/select2'],
+    function($, ModalEvents, Modal, Str, templates) {
     return {
         initialise: function() {
             /**
@@ -111,6 +110,59 @@ define(['jquery', 'core/modal_events', 'core/modal_factory', 'core/templates', '
                         permalink.setAttribute('data-href', '#' + anchor);
                     }
                 }
+            }
+
+            /**
+             * Fonction permettant d'ajouter une bouton "copier" à côté du permalien dans la modal.
+             *
+             * @param {Object} modal L'instance de modal.
+             */
+            function initialiseCopyButton(modal) {
+                modal.getRoot().on('click', '.apsolu-permalink-copy', function(e) {
+                    var button = $(e.currentTarget);
+                    var icon = button.find('i');
+                    var value = button.attr('data-value');
+
+                    copyToClipboard(value).then(function() {
+                        // Une fois le texte copié on affiche brièvement une icône de succès.
+                        icon.removeClass('fa-copy').addClass('fa-check');
+
+                        setTimeout(function() {
+                            icon.removeClass('fa-check').addClass('fa-copy');
+                        }, 1500);
+
+                        return null;
+                    });
+                });
+            }
+
+            /**
+             * Fonction permettant de copier le contenu du permalien au clic sur l'icône dans la modal.
+             *
+             * @param {String} text Le texte à copier.
+             * @return {Promise}
+             */
+            function copyToClipboard(text) {
+                if (navigator.clipboard && window.isSecureContext) {
+                    return navigator.clipboard.writeText(text);
+                }
+
+                // Contournement pour anciens navigateurs / contexte http non sécurisé.
+                var textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.focus();
+                textarea.select();
+
+                try {
+                    document.execCommand('copy');
+                } finally {
+                    document.body.removeChild(textarea);
+                }
+
+                return Promise.resolve();
             }
 
             // Initialise les entrées HTML du formulaire contenant les filtres.
@@ -211,18 +263,31 @@ define(['jquery', 'core/modal_events', 'core/modal_factory', 'core/templates', '
             // Gère la fenêtre pour les liens permanents.
             var permalink = $('#apsolu-offerings-permalink-button');
             if (permalink) {
-                ModalFactory.create({
-                    large: true,
-                }, permalink)
-                .done(function(modal) {
-                    // Do what you want with your new modal.
-                    modal.getRoot().on(ModalEvents.shown, function() {
-                        var href = window.location.href.split('#')[0];
-                        var permalink = document.getElementById('apsolu-offerings-permalink-button');
-                        var value = href + permalink.getAttribute('data-href');
+                var modalPermalink = null;
+                permalink.on('click', function() {
+                    // On crée la modal (seulement au premier clic sur le bouton).
+                    if (!modalPermalink) {
+                        modalPermalink = Modal.create({
+                            large: true,
+                            title: Str.get_string('permanent_link', 'local_apsolu')
+                        }).then(function(modal) {
+                            modal.getRoot().on(ModalEvents.shown, function() {
+                                var href = window.location.href.split('#')[0];
+                                var permalink = document.getElementById('apsolu-offerings-permalink-button');
+                                var link = href + permalink.getAttribute('data-href');
 
-                        modal.setBody('<p><input id="apsolu-offerings-permalink-input" size="75" type="text" value="' +
-                            value + '" /></p>');
+                                templates.render('local_apsolu/presentation_permalinkmodal', {link: link}).then(function(html) {
+                                    modal.setBody(html);
+                                    initialiseCopyButton(modal);
+                                    return null;
+                                });
+                            });
+                            return modal;
+                        });
+                    }
+
+                    modalPermalink.then(function(modal) {
+                        modal.show();
                     });
                 });
             }
