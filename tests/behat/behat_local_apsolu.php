@@ -53,7 +53,7 @@ class behat_local_apsolu extends behat_base {
         $xpathcontains[] = sprintf('contains(normalize-space(.), %s)', $weekdayliteral);
         $xpathcontains[] = sprintf('contains(normalize-space(.), %s)', $timeliteral);
 
-        $xpath = sprintf("//table[@id=%s]//tr[%s]/td[1]/a", $tableid, implode(' and ', $xpathcontains));
+        $xpath = sprintf("//table[contains(@class, %s)]//tr[%s]/td[1]/a", $tableid, implode(' and ', $xpathcontains));
         $this->find('xpath', $xpath)->click();
     }
 
