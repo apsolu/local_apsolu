@@ -22,70 +22,44 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\course;
+use local_apsolu\core\customfields;
 use local_apsolu\core\federation\course as FederationCourse;
+use local_apsolu\core\grouping;
+use local_apsolu\output\courses as CoursesRenderer;
 
 defined('MOODLE_INTERNAL') || die;
 
 require_once(__DIR__ . '/../../locallib.php');
 
+$coursetypeid = optional_param('coursetypeid', null, PARAM_INT);
+
+$coursestypes = $DB->get_records('apsolu_courses_types', $conditions = null, $sort = 'sortorder');
+if (isset($coursestypes[$coursetypeid]) === false) {
+    $coursetype = current($coursestypes);
+    $coursetypeid = $coursetype->id;
+}
+$coursestypes[$coursetypeid]->selected = true;
+
+
 $currentactivity = null;
 $currentaltclass = 'odd';
 
-$sql = "SELECT c.id, cc.name AS category, ccc.name AS grouping, ac.event, ac.weekday, ac.starttime, ac.endtime,
-               ask.name AS skill, al.name AS location, city.name AS city, ap.name AS period, ac.license, c.visible, c.idnumber
-          FROM {course} c
-          JOIN {course_categories} cc ON cc.id = c.category
-          JOIN {course_categories} ccc ON ccc.id = cc.parent
-          JOIN {apsolu_courses} ac ON c.id = ac.id
-          JOIN {apsolu_courses_categories} acc ON acc.id = c.category
-          JOIN {apsolu_skills} ask ON ask.id = ac.skillid
-          JOIN {apsolu_locations} al ON al.id = ac.locationid
-          JOIN {apsolu_areas} aa ON aa.id = al.areaid
-          JOIN {apsolu_cities} city ON city.id = aa.cityid
-          JOIN {apsolu_periods} ap ON ap.id = ac.periodid
-      ORDER BY category, ac.numweekday, ac.starttime, city, location, skill";
-$cities = [];
 $courses = [];
-foreach ($DB->get_records_sql($sql) as $course) {
-    if ($currentactivity !== $course->category) {
-        $currentactivity = $course->category;
+$cities = [];
 
-        if ($currentaltclass === 'odd') {
-            $currentaltclass = 'even';
-        } else {
-            $currentaltclass = 'odd';
-        }
-    }
-
-    if (empty($course->event)) {
-        $course->fullname = $course->category;
-    } else {
-        $course->fullname = $course->category . ' (' . $course->event . ')';
-    }
-
-    $course->alt_class = $currentaltclass;
-    $course->weekday = get_string($course->weekday, 'local_apsolu');
-    $course->schedule = $course->starttime . '-' . $course->endtime;
-
-
-    $teachers = UniversiteRennes2\Apsolu\get_teachers($course->id);
-    sort($teachers);
-
-    $course->teachers = $teachers;
-
-    $cities[$course->city] = 1;
-    $courses[] = $course;
-}
-
-$federationcourse = new FederationCourse();
+$headers = CoursesRenderer::get_headers($coursetypeid, CoursesRenderer::VISIBLE_ONLY_ADMINISTRATION);
+$courses = CoursesRenderer::get_data(course::get_records_by_course_type($coursetypeid), $headers);
+$courses = Course::sort($courses);
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
 $data->courses = array_values($courses);
 $data->count_courses = count($courses);
-$data->unique_city = (count($cities) === 1);
-$data->federation_course = $federationcourse->get_courseid();
 $data->notification = '';
+$data->coursestypes = array_values($coursestypes);
+$data->coursetypeid = $coursetypeid;
+$data->headers = array_values($headers);
 
 if (isset($notificationform)) {
     $data->notification = $notificationform;

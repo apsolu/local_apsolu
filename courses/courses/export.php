@@ -26,23 +26,17 @@
 
 // phpcs:disable moodle.NamingConventions.ValidVariableName.VariableNameUnderscore
 
+use local_apsolu\core\course;
+use local_apsolu\output\courses as CoursesRenderer;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/csvlib.class.php');
 
+$coursetypeid = optional_param('coursetypeid', null, PARAM_INT);
+
 // Liste des cours.
-$sql = "SELECT c.id, c.idnumber, ccc.name AS grouping, cc.name AS category, ask.name AS skill,
-               ac.weekday, ac.starttime, ac.endtime, ac.license, al.name AS location, ap.name AS period, '-' AS teachers
-          FROM {course} c
-          JOIN {course_categories} cc ON cc.id = c.category
-          JOIN {course_categories} ccc ON ccc.id = cc.parent
-          JOIN {apsolu_courses} ac ON c.id = ac.id
-          JOIN {apsolu_courses_categories} acc ON acc.id = c.category
-          JOIN {apsolu_skills} ask ON ask.id = ac.skillid
-          JOIN {apsolu_locations} al ON al.id = ac.locationid
-          JOIN {apsolu_periods} ap ON ap.id = ac.periodid
-      ORDER BY category, ac.numweekday, ac.starttime, location, skill";
-$courses = $DB->get_records_sql($sql);
+$courses = Course::get_records_by_course_type($coursetypeid);
 
 // Liste des enseignants.
 $sql = "SELECT ctx.instanceid, u.firstname, u.lastname, u.email
@@ -135,28 +129,34 @@ foreach ($DB->get_records('enrol', ['enrol' => 'select'], $sort = 'enrolstartdat
 // Génération du fichier csv.
 $filename = str_replace(' ', '_', strtolower(get_string('courses', 'local_apsolu')));
 
-$headers = [
-    get_string('course_number', 'local_apsolu'),
-    get_string('idnumbercourse'),
-    get_string('groupings', 'local_apsolu'),
-    get_string('categories', 'local_apsolu'),
-    get_string('skills', 'local_apsolu'),
-    get_string('weekdays', 'local_apsolu'),
-    get_string('starttime', 'local_apsolu'),
-    get_string('endtime', 'local_apsolu'),
-    get_string('federation', 'local_apsolu'),
-    get_string('locations', 'local_apsolu'),
-    get_string('periods', 'local_apsolu'),
-    get_string('teachers'),
+$headers = CoursesRenderer::get_headers($coursetypeid, CoursesRenderer::VISIBLE_ONLY_ADMINISTRATION);
+$courses = CoursesRenderer::get_data(course::get_records_by_course_type($coursetypeid), $headers);
+$courses = Course::sort($courses);
+
+$defaultheaders = [
+    'id' => get_string('course_number', 'local_apsolu'),
+    'name' => get_string('name'),
+    'idnumber' => get_string('idnumbercourse'),
+    'grouping' => get_string('grouping', 'local_apsolu'),
 ];
+$headers = array_merge($defaultheaders, $headers, ['teachers' => get_string('teachers')]);
 
 $csvexport = new \csv_export_writer();
 $csvexport->set_filename($filename);
 $csvexport->add_data($headers);
 
 foreach ($courses as $course) {
-    $course->weekday = get_string($course->weekday, 'local_apsolu');
-    $csvexport->add_data((array) $course);
+    $data = [];
+    $data[] = $course->id;
+    $data[] = $course->fullname;
+    $data[] = $course->idnumber;
+    $data[] = $course->grouping;
+    foreach ($course->fields as $value) {
+        $data[] = $value;
+    }
+    $data[] = implode(', ', $course->teachers);
+
+    $csvexport->add_data($data);
 }
 
 $csvexport->download_file();

@@ -28,6 +28,8 @@ namespace UniversiteRennes2\Apsolu;
 
 defined('MOODLE_INTERNAL') || die;
 
+use local_apsolu\core\course;
+
 require_once($CFG->dirroot . '/user/selector/lib.php');
 
 /**
@@ -106,17 +108,14 @@ class local_apsolu_payment_user_selector extends \user_selector_base {
  *
  * @return array
  */
+#[\core\attribute\deprecated('local_apsolu\core\course::get_contacts')]
 function get_teachers($courseid) {
     global $DB;
 
-    $sql = "SELECT u.*" .
-        " FROM {user} u" .
-        " JOIN {role_assignments} ra ON u.id = ra.userid" .
-        " JOIN {context} c ON c.id = ra.contextid" .
-        " WHERE c.instanceid = :courseid" .
-        " AND c.contextlevel = 50" .
-        " AND ra.roleid = 3";
-    return $DB->get_records_sql($sql, ['courseid' => $courseid]);
+    $courses = $DB->get_records('course', ['id' => $courseid]);
+    Course::get_contacts($courses);
+
+    return $courses[$courseid]->managers;
 }
 
 /**

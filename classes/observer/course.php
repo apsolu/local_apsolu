@@ -79,13 +79,13 @@ class course {
 
         $context = $event->get_context();
 
-        $sql = "SELECT c.*, ac.event, ac.weekday, ac.starttime, ac.endtime, ask.name AS skill" .
-            " FROM {course} c" .
-            " JOIN {apsolu_courses} ac ON c.id = ac.id" .
-            " JOIN {apsolu_skills} ask ON ask.id = ac.skillid" .
-            " WHERE c.id = :courseid";
-        $course = $DB->get_record_sql($sql, ['courseid' => $context->instanceid]);
+        $course = apsolu_course::get_record(['id' => $context->instanceid]);
         if ($course === false) {
+            // L'id du cours n'est pas valide.
+            return;
+        }
+
+        if (isset($course->customfields['type']) === false || empty($course->customfields['type']->get_value()) === true) {
             // Ce n'est pas un cours de type APSOLU.
             return;
         }
@@ -101,16 +101,17 @@ class course {
 
         $changed = false;
 
+        // Valide la nouvelle catégorie du cours.
         if (isset($event->other['updatedfields']['category']) === true) {
             $categoryid = $event->other['updatedfields']['category'];
         } else {
             $categoryid = $course->category;
         }
 
-        $sql = "SELECT cc.id, cc.name" .
-            " FROM {course_categories} cc" .
-            " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id" .
-            " WHERE cc.id = :categoryid";
+        $sql = "SELECT cc.id, cc.name
+                  FROM {course_categories} cc
+                  JOIN {apsolu_courses_categories} acc ON cc.id = acc.id
+                 WHERE cc.id = :categoryid";
         $category = $DB->get_record_sql($sql, ['categoryid' => $categoryid]);
 
         if ($category === false) {
@@ -120,18 +121,18 @@ class course {
             $category = false;
             if (isset($matches[1]) === true) {
                 // On essaye de déterminer la catégorie d'origine du cours.
-                $sql = "SELECT cc.id, cc.name" .
-                    " FROM {course_categories} cc" .
-                    " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id" .
-                    " WHERE cc.name = :name";
+                $sql = "SELECT cc.id, cc.name
+                          FROM {course_categories} cc
+                          JOIN {apsolu_courses_categories} acc ON cc.id = acc.id
+                         WHERE cc.name = :name";
                 $category = $DB->get_record_sql($sql, ['name' => $matches[1]]);
             }
 
             if ($category === false) {
                 // On prend n'importe quelle catégorie "activité sportive".
-                $sql = "SELECT cc.id, cc.name" .
-                    " FROM {course_categories} cc" .
-                    " JOIN {apsolu_courses_categories} acc ON cc.id = acc.id";
+                $sql = "SELECT cc.id, cc.name
+                          FROM {course_categories} cc
+                          JOIN {apsolu_courses_categories} acc ON cc.id = acc.id";
                 $categories = $DB->get_records_sql($sql);
                 $category = current($categories);
             }
@@ -152,14 +153,11 @@ class course {
         }
 
         // Recalcule le nom complet du cours.
-        $fullname = apsolu_course::get_fullname(
-            $category->name,
-            $course->event,
-            $course->weekday,
-            $course->starttime,
-            $course->endtime,
-            $course->skill
-        );
+        $data = $course->get_course_data();
+        $data->id = $course->id;
+        $data->customfield_category['categoryid'] = $course->category;
+        $fullname = apsolu_course::get_fullname($data);
+
         if ($course->fullname !== $fullname) {
             // Affiche un avertissement à l'utilisateur.
             $params = new stdClass();

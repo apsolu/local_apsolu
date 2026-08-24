@@ -23,6 +23,7 @@
  */
 
 use local_apsolu\core\federation;
+use local_apsolu\core\course;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -40,24 +41,33 @@ foreach ($attributes as $attribute) {
     $defaults->{$attribute} = get_config('local_apsolu', $attribute);
 }
 
+$apsolucourses = Course::get_records();
+
 $collaborativecourses = [0 => get_string('none')];
 $sql = "SELECT c.id, c.fullname
           FROM {course} c
-         WHERE c.id NOT IN (SELECT ac.id FROM {apsolu_courses} ac)
-           AND c.id != :siteid
+         WHERE c.id != :siteid
       ORDER BY c.fullname";
 foreach ($DB->get_records_sql($sql, ['siteid' => SITEID]) as $course) {
+    if (isset($apsolucourses[$course->id]) === true) {
+        // Un cours collaboratif ne peut pas être un créneau horaire dans APSOLU.
+        continue;
+    }
     $collaborativecourses[$course->id] = $course->fullname;
 }
 
 $federationcourses = [0 => get_string('none')];
-$sql = "SELECT c.id, c.fullname
+$sql = "SELECT DISTINCT c.id, c.fullname
           FROM {course} c
           JOIN {enrol} e ON c.id = e.courseid
-         WHERE c.id NOT IN (SELECT ac.id FROM {apsolu_courses} ac)
-           AND e.enrol = 'select'
+         WHERE e.enrol = 'select'
       ORDER BY c.fullname";
 foreach ($DB->get_records_sql($sql) as $course) {
+    if (isset($apsolucourses[$course->id]) === true) {
+        // Un cours collaboratif ne peut pas être un créneau horaire dans APSOLU.
+        continue;
+    }
+
     $federationcourses[$course->id] = $course->fullname;
 }
 

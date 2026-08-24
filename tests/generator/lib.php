@@ -16,8 +16,11 @@
 
 use local_apsolu\core\category;
 use local_apsolu\core\course;
+use local_apsolu\core\coursetype;
+use local_apsolu\core\customfields;
 use local_apsolu\core\grouping;
 use local_apsolu\core\skill;
+use local_apsolu\customfields\course as CustomfieldsCourse;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -35,32 +38,21 @@ require_once($CFG->dirroot . '/local/apsolu/courses/categories/edit_form.php');
  */
 class local_apsolu_generator extends testing_module_generator {
     /**
-     * Fonction pour générer :
-     * - des groupements d'activités sportives
-     * - des activités sportives
-     * - des niveaux de pratique
-     * - des créneaux
+     * Méthode pour générer des catégories de cours (activités sportives).
      *
-     * @return void
+     * @return array Tableau de catégories de cours.
      */
-    public function create_courses() {
-        // Données pour générer les niveaux de pratiques.
-        $records = [];
-        $records[] = 'débutant';
-        $records[] = 'intermédiaire';
-        $records[] = 'expert';
+    public function create_categories(): array {
+        global $DB;
 
-        $skills = [];
-        foreach ($records as $skillname) {
-            $skill = new skill();
-            $skill->name = $skillname;
-            $skill->shortname = $skillname;
-            $skill->save();
+        // Vérifie que les données n'ont pas déjà été générées.
+        $categories = $DB->get_records('apsolu_courses_categories');
 
-            $skills[] = $skill;
+        if ($categories !== []) {
+            return $categories;
         }
 
-        // Données pour générer les groupements d'activités sportives, les activités sportives et les créneaux.
+        // Génère les catégories.
         $records = [];
         $records[] = ['Pratiques artistiques', 'Arts du cirque'];
         $records[] = ['Pratiques artistiques', 'Danse salsa'];
@@ -93,17 +85,133 @@ class local_apsolu_generator extends testing_module_generator {
             $category = new category();
             $category->save($catdata, $mform);
 
+            $categories[$category->id] = $category;
+        }
+
+        return $categories;
+    }
+
+    /**
+     * Méthode pour générer des types de cours.
+     *
+     * @return array Tableau de types de cours.
+     */
+    public function create_course_types(): array {
+        global $DB;
+
+        // Vérifie que les données n'ont pas déjà été générées.
+        $coursetypes = $DB->get_records('apsolu_courses_types', [], 'shortname, id, name, fullnametemplate, color, sortorder');
+
+        if ($coursetypes !== []) {
+            return $coursetypes;
+        }
+
+        // Génère les types de cours.
+        $customfields = CustomfieldsCourse::get_course_custom_fields();
+        $typeid = $customfields['type']->id;
+        $categoryid = $customfields['category']->id;
+        $skillid = $customfields['skill']->id;
+
+        $records = [];
+        $records[] = ['Cours', ['skill', 'period', 'location', 'weekday', 'timerange', 'federation', 'on_homepage', 'information']];
+        $records[] = ['Stage', ['skill', 'location', 'daterange']];
+
+        foreach ($records as $record) {
+            $data = new stdClass();
+            $data->name = $record[0];
+            $data->shortname = strtolower($data->name);
+            $data->fullnametemplate = sprintf('%%%02d: %%%02d (%%%02d)', $typeid, $categoryid, $skillid);
+            $data->color = '#f66151';
+            $data->fields = [];
+            foreach ($record[1] as $field) {
+                $data->fields[$field] = ['fieldid' => $customfields[$field]->id, 'admin' => '1', 'public' => '1'];
+            }
+
+            $coursetype = new CourseType();
+            $coursetype->save($data);
+            $coursetypes[$data->shortname] = $coursetype;
+        }
+
+        return $coursetypes;
+    }
+
+    /**
+     * Fonction pour générer :
+     * - des groupements d'activités sportives
+     * - des activités sportives
+     * - des niveaux de pratique
+     * - des créneaux
+     *
+     * @return array Tableau de cours.
+     */
+    public function create_courses(): array {
+        global $DB;
+
+        // Données pour générer des formats de cours.
+        $coursetypes = $this->create_course_types();
+
+        // Données pour générer les niveaux de pratiques.
+        $skills = $this->create_skills();
+
+        // Données pour générer les groupements d'activités sportives et les activités sportives.
+        $categories = $this->create_categories();
+
+        // Vérifie que les données n'ont pas déjà été générées.
+        $courses = $DB->get_records_sql('SELECT * FROM {course} WHERE category != 0');
+
+        if ($courses !== []) {
+            return $courses;
+        }
+
+        // Données pour générer créneaux horaires.
+        foreach ($categories as $category) {
             for ($i = 0; $i < 3; $i++) {
-                $data = $this->get_course_data();
-                $data->category = $category->id;
-                $data->str_category = $categoryname;
-                $data->skillid = $skills[$i]->id;
-                $data->str_skill = $skills[$i]->name;
+                $values = [];
+                $values['customfield_type'] = current($coursetypes)->id;
+                $values['customfield_category'] = ['categoryid' => $category->id, 'additionalstr' => ''];
+                $data = $this->get_course_data($values);
 
                 $course = new course();
                 $course->save($data);
+
+                $courses[$course->id] = $course;
             }
         }
+
+        return $courses;
+    }
+
+    /**
+     * Méthode pour générer des niveaux de pratique.
+     *
+     * @return array Tableau de niveaux de pratique.
+     */
+    public function create_skills(): array {
+        global $DB;
+
+        // Vérifie que les données n'ont pas déjà été générées.
+        $skills = $DB->get_records('apsolu_skills');
+
+        if ($skills !== []) {
+            return $skills;
+        }
+
+        // Génère les niveaux de pratique.
+        $records = [];
+        $records[] = 'débutant';
+        $records[] = 'intermédiaire';
+        $records[] = 'expert';
+
+        foreach ($records as $skillname) {
+            $skill = new skill();
+            $skill->name = $skillname;
+            $skill->shortname = $skillname;
+            $skill->save();
+
+            $skills[$skill->id] = $skill;
+        }
+
+        return $skills;
     }
 
     /**
@@ -153,25 +261,28 @@ class local_apsolu_generator extends testing_module_generator {
     /**
      * Function to create dummy data course.
      *
-     * @param string $event
+     * @param array $values
      *
      * @return stdClass course object
      */
-    public function get_course_data(string $event = 'event 1') {
+    public function get_course_data(array $values = []) {
+        $type = current($this->create_course_types());
+        $category = current($this->create_categories());
+        $skill = current($this->create_skills());
+
         $data = new stdClass();
-        $data->event = $event;
-        $data->weekday = 'friday';
-        $data->starttime = '12:00';
-        $data->endtime = '13:00';
-        $data->license = 1;
-        $data->on_homepage = 1;
-        $data->showpolicy = 0;
-        $data->category = 1;
-        $data->str_category = 'category';
-        $data->periodid = 1;
-        $data->locationid = 1;
-        $data->skillid = 1;
-        $data->str_skill = 'skill';
+        $data->id = 0;
+        $data->customfield_type = $type->id;
+        $data->customfield_category = ['categoryid' => $category->id, 'additionalstr' => ''];
+        $data->idnumber = '';
+        $data->customfield_timerange = ['start' => ['hour' => 13, 'minute' => 00], 'end' => ['hour' => 14, 'minute' => 30]];
+        $data->customfield_skill = $skill->id;
+        $data->customfield_weekday = 2;
+        $data->customfield_federation = 1;
+
+        foreach ($values as $key => $value) {
+            $data->$key = $value;
+        }
 
         return $data;
     }

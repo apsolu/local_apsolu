@@ -17,6 +17,7 @@
 namespace local_apsolu\observer;
 
 use local_apsolu\core\course;
+use local_apsolu\customfields\course as CustomfieldsCourse;
 use stdClass;
 
 defined('MOODLE_INTERNAL') || die();
@@ -52,6 +53,15 @@ final class course_test extends \advanced_testcase {
     public function test_deleted(): void {
         global $DB;
 
+        // Initialise la sous-requête pour récupérer les cours de type APSOLU.
+        $coursecustomfields = CustomfieldsCourse::get_apsolu_courses_custom_fields();
+        $subsql = "SELECT cd.instanceid
+                     FROM {customfield_data} cd
+                    WHERE cd.component = 'core_course'
+                      AND cd.value != 0
+                      AND cd.fieldid = :customfieldtypeid";
+        $params = ['customfieldtypeid' => $coursecustomfields['type']->id];
+
         // Teste le bon fonctionnement lors de la suppression d'un cours non APSOLU.
         $countapsolucourses = $DB->count_records(course::TABLENAME);
         $course = $this->getDataGenerator()->create_course();
@@ -59,8 +69,8 @@ final class course_test extends \advanced_testcase {
         $this->assertSame($countapsolucourses, $DB->count_records(course::TABLENAME));
 
         // Teste la suppression d'un cours via l'API de Moodle.
-        $sql = "SELECT c.* FROM {course} c JOIN {apsolu_courses} ac ON c.id = ac.id";
-        $courses = $DB->get_records_sql($sql);
+        $sql = "SELECT c.* FROM {course} c WHERE c.id IN (" . $subsql . ")";
+        $courses = $DB->get_records_sql($sql, $params);
         $course = current($courses);
         $this->assertNotSame(false, $course);
 
@@ -71,7 +81,7 @@ final class course_test extends \advanced_testcase {
         $this->assertEmpty($sessions);
 
         // Contrôle que la table apsolu_courses a été nettoyée.
-        $apsolucourse = $DB->get_record('apsolu_courses', ['id' => $course->id]);
+        $apsolucourse = Course::get_record(['id' => $course->id]);
         $this->assertFalse($apsolucourse);
     }
 
@@ -82,6 +92,15 @@ final class course_test extends \advanced_testcase {
      */
     public function test_updated(): void {
         global $DB;
+
+        // Initialise la sous-requête pour récupérer les cours de type APSOLU.
+        $coursecustomfields = CustomfieldsCourse::get_apsolu_courses_custom_fields();
+        $subsql = "SELECT cd.instanceid
+                     FROM {customfield_data} cd
+                    WHERE cd.component = 'core_course'
+                      AND cd.value != 0
+                      AND cd.fieldid = :customfieldtypeid";
+        $params = ['customfieldtypeid' => $coursecustomfields['type']->id];
 
         $moodlecategory1 = $this->getDataGenerator()->create_category();
         $moodlecategory2 = $this->getDataGenerator()->create_category();
@@ -101,8 +120,8 @@ final class course_test extends \advanced_testcase {
         $this->assertSame('Anglais', $moodlecourse->fullname);
 
         // Teste la modification d'un cours via l'API de Moodle sans modifier la catégorie.
-        $sql = "SELECT c.* FROM {course} c JOIN {apsolu_courses} ac ON c.id = ac.id";
-        $apsolucourses = $DB->get_records_sql($sql);
+        $sql = "SELECT c.* FROM {course} c WHERE c.id IN (" . $subsql . ")";
+        $apsolucourses = $DB->get_records_sql($sql, $params);
         $apsolucourse = current($apsolucourses);
         $this->assertNotSame(false, $apsolucourse);
 
@@ -144,8 +163,8 @@ final class course_test extends \advanced_testcase {
         $this->assertSame($apsolufullname, $apsolucourse->fullname);
 
         // Teste le recalcule du nom complet et abrégé.
-        $sql = "SELECT c.* FROM {course} c JOIN {apsolu_courses} ac ON c.id = ac.id";
-        $apsolucourses = $DB->get_records_sql($sql);
+        $sql = "SELECT c.* FROM {course} c WHERE c.id IN (" . $subsql . ")";
+        $apsolucourses = $DB->get_records_sql($sql, $params);
         $apsolucourse = current($apsolucourses);
         $this->assertNotSame(false, $apsolucourse);
 
@@ -165,27 +184,22 @@ final class course_test extends \advanced_testcase {
         $this->assertNotSame($fullname, $apsolucourse->fullname);
 
         // Teste le recalcule du nom complet et abrégé (sans changer de catégorie) depuis l'API APSOLU.
-        $sql = "SELECT c.*, sk.name AS str_skill, cat.name AS str_category
-                  FROM {course} c
-                  JOIN {course_categories} cat ON cat.id = c.category
-                  JOIN {apsolu_courses} ac ON c.id = ac.id
-                  JOIN {apsolu_skills} sk ON sk.id = ac.skillid";
-        $records = $DB->get_records_sql($sql);
+        $sql = "SELECT c.* FROM {course} c WHERE c.id IN (" . $subsql . ")";
+        $records = $DB->get_records_sql($sql, $params);
         $record = current($records);
         $this->assertNotSame(false, $record);
 
         $course = new course();
         $course->load($record->id);
 
-        $data = new stdClass();
-        $data->str_category = $record->str_category;
-        $data->str_skill = $record->str_skill;
-        $data->event = 'changed';
+        $event = 'changed';
+        $data = $course->get_course_data();
+        $data->customfield_category['additionalstr'] = $event;
         $course->save($data);
         // Recharge les données, car l'observateur a normalement modifié les noms du cours.
         $course->load($record->id);
 
-        $this->assertStringContainsString($data->str_category, $course->shortname);
-        $this->assertStringContainsString($data->str_category, $course->fullname);
+        $this->assertStringContainsString($event, $course->shortname);
+        $this->assertStringContainsString($event, $course->fullname);
     }
 }

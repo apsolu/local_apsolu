@@ -27,13 +27,14 @@ defined('MOODLE_INTERNAL') || die;
 use local_apsolu\core\course;
 
 $courseid = required_param('courseid', PARAM_INT);
+$coursetypeid = required_param('coursetypeid', PARAM_INT);
 $delete = optional_param('delete', '', PARAM_ALPHANUM); // Confirmation hash.
 
 $course = new Course();
 $course->load($courseid, $required = true);
 
 $deletehash = md5($course->id);
-$returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'courses']);
+$returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'courses', 'coursetypeid' => $coursetypeid]);
 
 if ($delete === $deletehash) {
     // Effectue les actions de suppression.
@@ -51,11 +52,17 @@ $datatemplate['message'] = get_string('do_you_want_to_delete_course', 'local_aps
 $message = $OUTPUT->render_from_template('local_apsolu/courses_form_delete_message', $datatemplate);
 
 // Bouton de validation.
-$urlarguments = ['tab' => 'courses', 'action' => 'delete', 'courseid' => $course->id, 'delete' => $deletehash];
+$urlarguments = [
+    'tab' => 'courses',
+    'action' => 'delete',
+    'courseid' => $course->id,
+    'coursetypeid' => $coursetypeid,
+    'delete' => $deletehash,
+];
 $confirmurl = new moodle_url('/local/apsolu/courses/index.php', $urlarguments);
 $confirmbutton = new single_button($confirmurl, get_string('delete'), 'post');
 
 // Bouton d'annulation.
-$cancelurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'courses']);
+$cancelurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'courses', 'coursetypeid' => $coursetypeid]);
 
 echo $OUTPUT->confirm($message, $confirmbutton, $cancelurl);

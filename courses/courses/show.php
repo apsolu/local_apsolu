@@ -27,8 +27,9 @@ defined('MOODLE_INTERNAL') || die;
 use local_apsolu\core\course;
 
 $courseid = required_param('courseid', PARAM_INT);
+$coursetypeid = required_param('coursetypeid', PARAM_INT);
 
-$returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'courses']);
+$returnurl = new moodle_url('/local/apsolu/courses/index.php', ['tab' => 'courses', 'coursetypeid' => $coursetypeid]);
 
 $visibility = Course::toggle_visibility($courseid);
 

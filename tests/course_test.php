@@ -22,6 +22,7 @@ use local_apsolu\core\category;
 use local_apsolu\core\course;
 use local_apsolu\core\location;
 use local_apsolu\core\period;
+use local_apsolu\customfields\course as CustomfieldsCourse;
 use moodle_exception;
 
 defined('MOODLE_INTERNAL') || die();
@@ -65,18 +66,20 @@ final class course_test extends \advanced_testcase {
             $this->assertInstanceOf('moodle_exception', $exception);
         }
 
+        $countcourses = $DB->count_records($course::TABLENAME);
+
         // Supprime un objet existant.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
         $course->save($data);
 
         $countrecords = $DB->count_records($course::TABLENAME);
-        $this->assertSame(1, $countrecords);
+        $this->assertSame($countcourses + 1, $countrecords);
 
         $result = $course->delete();
         $this->assertTrue($result);
 
         $countrecords = $DB->count_records($course::TABLENAME);
-        $this->assertSame(0, $countrecords);
+        $this->assertSame($countcourses, $countrecords);
     }
 
     /**
@@ -85,9 +88,12 @@ final class course_test extends \advanced_testcase {
      * @covers ::get_session_offset()
      */
     public function test_get_session_offset(): void {
+        $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
+        $data->customfield_weekday = 3; // Mercredi.
+        $data->customfield_timerange = ['start' => ['hour' => '16', 'minute' => '35'], 'end' => ['hour' => '18', 'minute' => '00']];
+
         $course = new course();
-        $course->numweekday = 3; // Mercredi.
-        $course->starttime = '16:35';
+        $course->save($data);
 
         $startweek = make_timestamp(2020, 7, 6, 0, 0, 0); // Début de semaine.
         $expected = make_timestamp(2020, 7, 8, 16, 35, 0);
@@ -96,7 +102,9 @@ final class course_test extends \advanced_testcase {
 
         // Test une exception.
         try {
-            $course->starttime = '16h35';
+            $timerange = ['start' => ['hour' => '99', 'minute' => '99'], 'end' => ['hour' => '99', 'minute' => '99']];
+            $data->customfield_timerange = $timerange;
+            $course->save($data);
             $offset = $course->get_session_offset();
             $this->fail('codding_exception expected on invalid starttime value.');
         } catch (coding_exception $exception) {
@@ -113,24 +121,18 @@ final class course_test extends \advanced_testcase {
         global $DB;
 
         $course = new course();
-
         $countrecords = $DB->count_records($course::TABLENAME);
-        $this->assertSame(0, $countrecords);
 
         // Enregistre un nouvel objet.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
         $course->save($data);
-
-        $countrecords = $DB->count_records($course::TABLENAME);
-        $this->assertSame(1, $countrecords);
+        $this->assertSame($countrecords + 1, $DB->count_records($course::TABLENAME));
 
         // Enregistre un nouvel objet.
-        $course->id = 0;
-        $data->event = 'event 2';
+        $data->id = 0;
+        $data->customfield_category['additionalstr'] = 'event 2';
         $course->save($data);
-
-        $countrecords = $DB->count_records($course::TABLENAME);
-        $this->assertSame(2, $countrecords);
+        $this->assertSame($countrecords + 2, $DB->count_records($course::TABLENAME));
     }
 
     /**
@@ -141,7 +143,7 @@ final class course_test extends \advanced_testcase {
     public function test_load(): void {
         // Charge un objet inexistant.
         $course = new course();
-        $course->load(1);
+        $course->load(-1);
 
         $this->assertSame(0, $course->id);
         $this->assertSame('', $course->fullname);
@@ -166,9 +168,9 @@ final class course_test extends \advanced_testcase {
         global $DB;
 
         $course = new course();
-        $category = new category();
-
         $initialcount = $DB->count_records($course::TABLENAME);
+
+        $customfields = CustomfieldsCourse::get_apsolu_courses_custom_fields();
 
         // Enregistre un objet.
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
@@ -179,12 +181,27 @@ final class course_test extends \advanced_testcase {
         $countsessions = count($sessions);
 
         // Vérifie l'objet inséré.
-        $strtime = get_string($data->weekday, 'local_apsolu') . ' ' . $data->starttime . ' ' . $data->endtime;
-        $this->assertSame(sprintf('%s %s %s %s', $data->str_category, $data->event, $strtime, $data->str_skill), $course->fullname);
+        $categoryid = $course->customfields['category']->get('intvalue');
+        $category = $DB->get_record('course_categories', ['id' => $categoryid], '*', MUST_EXIST);
+        $skillid = $course->customfields['skill']->get_value();
+        $skill = $DB->get_record('apsolu_skills', ['id' => $skillid], '*', MUST_EXIST);
+
+        $type = $DB->get_record('apsolu_courses_types', ['id' => $course->customfields['type']->get_value()], '*', MUST_EXIST);
+        $type->fullnametemplate = sprintf(
+            '%%%02d: %%%02d (%%%02d)',
+            $customfields['type']->id,
+            $customfields['category']->id,
+            $customfields['skill']->id,
+        );
+        $DB->update_record('apsolu_courses_types', $type);
+
+        $type = $DB->get_record('apsolu_courses_types', ['id' => $course->customfields['type']->get_value()], '*', MUST_EXIST);
+        $course->save($data);
+        $this->assertSame(sprintf('%s: %s (%s)', $type->name, $category->name, $skill->name), $course->fullname);
         $this->assertSame($countrecords, $initialcount + 1);
 
         // Met à jour l'objet.
-        $data->event = '';
+        $data->visible = 0;
         $course->save($data);
         $countrecords = $DB->count_records($course::TABLENAME);
 
@@ -193,21 +210,23 @@ final class course_test extends \advanced_testcase {
         $this->assertSame($sessions, $course->get_sessions());
 
         // Vérifie l'objet mis à jour.
-        $this->assertSame(sprintf('%s %s %s', $data->str_category, $strtime, $data->str_skill), $course->fullname);
+        $this->assertSame(sprintf('%s: %s (%s)', $type->name, $category->name, $skill->name), $course->fullname);
         $this->assertSame($countrecords, $initialcount + 1);
 
         // Vérifie qu'un nom abrégé est regénéré en cas de doublon.
         $course = new course();
+        $data->id = 0;
         $course->save($data);
-        $this->assertSame(sprintf('%s %s %s.', $data->str_category, $strtime, $data->str_skill), $course->shortname);
+        $this->assertSame(sprintf('%s: %s (%s)', $type->name, $category->name, $skill->name), $course->fullname);
 
         // Modifie la catégorie du créneau.
         [$catdata, $mform] = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
+        $category = new category();
         $category->save($catdata, $mform);
 
         $oldcontext = $DB->get_record('context', ['instanceid' => $course->id, 'contextlevel' => CONTEXT_COURSE]);
 
-        $data->category = $category->id;
+        $data->customfield_category['categoryid'] = $category->id;
         $course->save($data);
 
         $newcontext = $DB->get_record('context', ['instanceid' => $course->id, 'contextlevel' => CONTEXT_COURSE]);
@@ -215,7 +234,7 @@ final class course_test extends \advanced_testcase {
         $this->assertNotEquals($oldcontext->path, $newcontext->path);
 
         // Teste la création des sessions.
-        $data->startime = '21:00';
+        $data->customfield_timerange = ['start' => ['hour' => '21', 'minute' => '00'], 'end' => ['hour' => '22', 'minute' => '00']];
         foreach ($sessions as $session) {
                 $session->delete();
         }
@@ -273,8 +292,9 @@ final class course_test extends \advanced_testcase {
         $otherlocation->save();
 
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
-        $data->locationid = $location->id;
-        $data->periodid = $period1->id;
+        $data->customfield_location = $location->id;
+        $data->customfield_period = $period1->id;
+        $data->customfield_timerange = ['start' => ['hour' => '16', 'minute' => '00'], 'end' => ['hour' => '18', 'minute' => '00']];
         $course = new course();
         $course->save($data);
 
@@ -284,7 +304,7 @@ final class course_test extends \advanced_testcase {
         $this->assertEquals(2, count($sessions));
 
         // Associe la période p2. Il devrait y avoir 4 sessions à venir.
-        $data->periodid = $period2->id;
+        $data->customfield_period = $period2->id;
         $course->save($data);
         $sessions = $course->get_sessions();
         $this->assertEquals(4, count($sessions));
@@ -301,13 +321,14 @@ final class course_test extends \advanced_testcase {
         $this->assertEquals(array_keys($sessions), $sessionkeys);
 
         // Vérifie qu'en modification, les sessions obsolètes/passées ne sont pas ajoutées.
-        $course->periodid = $period3->id;
+        $data->customfield_period = $period3->id;
+        $course->save($data);
         $course->set_sessions();
         $this->assertEquals(0, count($course->get_sessions()));
 
         // Ajoute une session non prévue à une date passée.
         $pastsessiontime = '123456';
-        $pastsessionlocation = $course->locationid;
+        $pastsessionlocation = $course->customfields['location']->get_value();
         $session = new attendancesession();
         $session->name = 'Test past session';
         $session->sessiontime = $pastsessiontime;
@@ -323,13 +344,14 @@ final class course_test extends \advanced_testcase {
         $session->name = 'Test future session';
         $session->sessiontime = $futuresessiontime;
         $session->courseid = $course->id;
-        $session->locationid = $course->locationid;
+        $session->locationid = $course->customfields['location']->get_value();
         $session->save();
         $futuresessionid = $session->id;
         $this->assertEquals(2, count($course->get_sessions()));
 
         // Associe la période p2. Il devrait y avoir 4 sessions à venir et 1 session passée.
-        $course->periodid = $period2->id;
+        $data->customfield_period = $period2->id;
+        $course->save($data);
         $course->set_sessions();
         $sessions = $course->get_sessions();
         $this->assertEquals(5, count($sessions));
@@ -340,7 +362,8 @@ final class course_test extends \advanced_testcase {
         $this->assertArrayNotHasKey($futuresessionid, $sessions);
 
         // Change le lieu de pratique du cours.
-        $course->locationid = $otherlocation->id;
+        $data->customfield_location = $otherlocation->id;
+        $course->save($data);
         $course->set_sessions();
         $sessions = $course->get_sessions();
         // La session passée non prévue doit conserver son lieu de pratique.
@@ -349,7 +372,7 @@ final class course_test extends \advanced_testcase {
 
         // Les futures sessions doivent être associées au nouveau lieu de pratique.
         foreach ($sessions as $session) {
-            $this->assertEquals($course->locationid, $session->locationid);
+            $this->assertEquals($course->customfields['location']->get_value(), $session->locationid);
         }
     }
 
