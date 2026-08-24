@@ -144,10 +144,21 @@ class activity extends record {
             $transaction = $DB->start_delegated_transaction();
         }
 
-        // Réinitialise le champ license de la table apsolu_courses si l'activité FFSU n'est plus associée à une catégorie APSOLU.
+        // Réinitialise le champ federation de la table apsolu_courses si l'activité FFSU n'est plus associée à la catégorie APSOLU.
         if (empty($this->categoryid) === false) {
             if (isset($data->categoryid) === true && $data->categoryid !== $this->categoryid) {
-                $sql = "UPDATE {apsolu_courses} SET license = 0 WHERE id IN (SELECT id FROM {course} WHERE category = :categoryid)";
+                $sql = "UPDATE {customfield_data}
+                           SET intvalue = 0, value = 0, valueformat = 0
+                         WHERE fieldid = (SELECT id
+                                            FROM {customfield_field}
+                                           WHERE shortname = 'federation'
+                                             AND categoryid = (SELECT id
+                                                                 FROM {customfield_category}
+                                                                WHERE name = 'APSOLU'
+                                                                  AND component = 'core_course'
+                                                                  AND area = 'course'
+                                                              )
+                                         )";
                 $DB->execute($sql, ['categoryid' => $this->categoryid]);
             }
         }
