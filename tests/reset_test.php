@@ -503,18 +503,16 @@ final class reset_test extends \advanced_testcase {
 
         // Ouverture des buffers.
         $sinkmail = $this->redirectEmails();
-        ob_start();
 
-        $task->reset_abort('La tâche de réinitialisation a été abandonnée', $reset);
+        // Vérifier la sortie mtrace.
+        $errormsg = 'La tâche de réinitialisation a été abandonnée';
+        $this->expectOutputString($errormsg . PHP_EOL);
+        $task->reset_abort($errormsg, $reset);
 
         // Fermeture des buffers et récupération des valeurs émises.
-        $echos = ob_get_clean();
         $messages = $sinkmail->get_messages();
         $mail = reset($messages);
         $sinkmail->clear();
-
-        // Vérifier la sortie mtrace.
-        $this->assertStringContainsString('La tâche de réinitialisation a été abandonnée', $echos);
 
         // Vérifier l'envoi d'emails et le sujet du mail : 'Echec de la réinitialisation des espace-cours'.
         $this->assertNotEmpty($messages);
@@ -523,8 +521,6 @@ final class reset_test extends \advanced_testcase {
         // Vérifier les nouvelles valeurs dans la configuration (réinitialisation désactivée).
         $this->assertFalse(get_config('local_apsolu', 'nextactive'));
         $this->assertEquals(0, get_config('local_apsolu', 'nextdatetime'));
-
-        ob_end_clean();
     }
 
     /**
@@ -706,7 +702,9 @@ final class reset_test extends \advanced_testcase {
         // Ouverture des buffers.
         $sinkevent = $this->redirectEvents();
         $sinkmail = $this->redirectEmails();
-        ob_start();
+
+        // Vérification de la trace émise par l'appel de $task->completed($reset).
+        $this->expectOutputString('Tâche de réinitialisation terminée sans incident.' . PHP_EOL);
 
         // Fonction testée doit clôre la tâche de réinitialisation en effectuant les actions suivantes :
         // - écrire dans la trace.
@@ -720,10 +718,6 @@ final class reset_test extends \advanced_testcase {
         $sinkevent->close();
         $messages = $sinkmail->get_messages();
         $sinkmail->close();
-        $echos = ob_get_clean();
-
-        // Vérification de la trace émise.
-        $this->assertStringContainsStringIgnoringLineEndings('Tâche de réinitialisation terminée sans incident', $echos);
 
         // Vérifier si le mail envoyé a bien pour sujet 'Réinitialisation des espace-cours effectuée'.
         $mail = reset($messages);
@@ -738,8 +732,6 @@ final class reset_test extends \advanced_testcase {
         $this->assertFalse(get_config('local_apsolu', 'nextactive'));
         $this->assertEquals(0, get_config('local_apsolu', 'nextdatetime'));
         $this->assertNotNull(get_config('local_apsolu', 'lastruntime'));
-
-        ob_end_clean();
     }
 
     /**
