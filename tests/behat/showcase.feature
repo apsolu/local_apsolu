@@ -24,7 +24,7 @@ Feature: Teste la présentation réalisée lors de démonstration de l'applicati
     Given I am on the "Homepage" page logged in as "letudiant"
     When I follow "S’inscrire à une activité"
     And I click on "Déplier/replier toutes les activités" "button"
-    And I click on "Basket-ball" "Jeudi" "14:30" course
+    And I click on "Basket-ball" "Thursday" "14h30" course
     And I wait until "#apsolu-enrol-form" "css_element" exists
     And I should see "Évalué (option)" in the "Type d’inscription" "select"
     And I should see "Évalué (bonification)" in the "Type d’inscription" "select"
@@ -36,7 +36,7 @@ Feature: Teste la présentation réalisée lors de démonstration de l'applicati
 
   @javascript
   Scenario: Valide le processus de paiement.
-    Given I am on the "Basket-ball 5x5 (H) Jeudi 14:30 16:15 Débutant" course page logged in as "lenseignante"
+    Given I am on the "Basket-ball (5x5 (H)) Thursday 14h30-16h15 Débutant" course page logged in as "lenseignante"
     When I follow "Gérer mes étudiants"
     And I follow "Enrol users"
     And I set the following fields to these values:
@@ -91,7 +91,7 @@ Feature: Teste la présentation réalisée lors de démonstration de l'applicati
   #     5. Déposer des cours en ligne (fonctions natives Moodle)
   @javascript
   Scenario: Désinscrit un étudiant avec l'utilisateur "lenseignante".
-    Given I am on the "Basket-ball 3x3 (F) Mercredi 15:00 17:00 Expert" course page logged in as "lenseignante"
+    Given I am on the "Basket-ball (3x3 (F)) Wednesday 15h00-17h00 Expert" course page logged in as "lenseignante"
     When I follow "Gérer mes étudiants"
     And I click on "//div[@id='apsolu-manage-users']//div[contains(@class, 'show')][@role='tabpanel']//form[@class='participants-form']//table/tbody/tr[1]/td[1]/input" "xpath_element"
     And I set the field "With selected users..." to "Déplacer dans la liste des désinscrits"
@@ -100,7 +100,7 @@ Feature: Teste la présentation réalisée lors de démonstration de l'applicati
 
   @javascript
   Scenario: Prend les présences avec l'utilisateur "lenseignante".
-    Given I am on the "Basket-ball 3x3 (F) Mercredi 15:00 17:00 Expert" course page logged in as "lenseignante"
+    Given I am on the "Basket-ball (3x3 (F)) Wednesday 15h00-17h00 Expert" course page logged in as "lenseignante"
     When I follow "Prendre les présences"
     And I click on "Pour les présences" "button"
     And I click on "Présent" "button"
@@ -248,12 +248,14 @@ Feature: Teste la présentation réalisée lors de démonstration de l'applicati
       | Activité                                                           | Football        |
       | Lieu                                                               | Stade de France |
       | Niveau                                                             | Expert          |
-      | Jour                                                               | Samedi          |
-      | Heure de début                                                     | 09:09           |
-      | Heure de fin                                                       | 13:37           |
-      | Afficher sur la page d’accueil                                     | 0               |
-      | Faire accepter les recommandations médicales lors des inscriptions | 0               |
+      | Jour                                                               | Saturday        |
+      | id_customfield_timerange_start_hour                                | 9               |
+      | id_customfield_timerange_start_minute                              | 45              |
+      | id_customfield_timerange_end_hour                                  | 13              |
+      | id_customfield_timerange_end_minute                                | 5               |
+      | Afficher sur la page d’accueil                                     | 2               |
+      | Faire accepter les recommandations médicales lors des inscriptions | 2               |
       | Période                                                            | Semestre 2      |
     And I press "Save"
     Then I should see "Créneau horaire enregistré."
-    And I should see "09:09-13:37"
+    And I should see "09h45-13h05"
