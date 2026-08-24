@@ -96,6 +96,30 @@ final class attendancesession_test extends \advanced_testcase {
     }
 
     /**
+     * Teste get_duration().
+     *
+     * @return void
+     */
+    public function test_get_duration(): void {
+        // Génère un nouveau cours.
+        [$course, $location] = $this->get_dataset();
+
+        // Génère une session de cours.
+        $attendancesession = new attendancesession();
+        $attendancesession->courseid = $course->id;
+        $attendancesession->locationid = $location->id;
+
+        // Teste que la durée du cours est bien de 3600 minutes.
+        $this->assertSame(3600, $attendancesession->get_duration());
+
+        // Teste que la durée du cours est bien de 5400 minutes.
+        $data = $course->get_course_data();
+        $data->customfield_timerange = ['start' => ['hour' => '12', 'minute' => '00'], 'end' => ['hour' => '13', 'minute' => '30']];
+        $course->save($data);
+        $this->assertSame(5400, $attendancesession->get_duration());
+    }
+
+    /**
      * Teste get_records().
      *
      * @return void
