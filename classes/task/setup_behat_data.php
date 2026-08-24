@@ -16,6 +16,7 @@
 
 namespace local_apsolu\task;
 
+use coding_exception;
 use local_apsolu\tests\behat\dataset_provider;
 
 /**
