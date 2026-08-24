@@ -84,7 +84,6 @@ class notify extends \local_apsolu_notification_form {
         // Filtre: cours.
         $sql = "SELECT c.id, c.fullname
                   FROM {course} c
-                  JOIN {apsolu_courses} ac ON c.id = ac.id
               ORDER BY c.fullname";
         $courses = [];
         foreach ($DB->get_records_sql($sql) as $course) {
@@ -218,7 +217,6 @@ class notify extends \local_apsolu_notification_form {
                   JOIN {user_enrolments} ue ON u.id = ue.userid
                   JOIN {enrol} e ON e.id = ue.enrolid
                   JOIN {course} c ON c.id = e.courseid
-                  JOIN {apsolu_courses} ac ON ac.id = c.id
                   JOIN {course_categories} cc ON cc.id = c.category
                   JOIN {context} ctx ON c.id = ctx.instanceid AND ctx.contextlevel = 50
                   JOIN {role_assignments} ra ON u.id = ra.userid AND ctx.id = ra.contextid
