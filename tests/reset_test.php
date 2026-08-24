@@ -16,23 +16,24 @@
 
 namespace local_apsolu;
 
-use coding_exception;
-use local_apsolu\core\reset;
-use local_apsolu\observer\reset as observer;
-use moodle_exception;
-use Throwable;
+use DateTime;
 use Exception;
-use local_apsolu\event\reset_enabled;
+use Throwable;
+use coding_exception;
+use core\output\html_writer;
+use core\task\manager;
+use local_apsolu\core\federation\course as ffsucourse;
+use local_apsolu\core\reset;
+use local_apsolu\customfields\course as CustomfieldsCourse;
 use local_apsolu\event\reset_disabled;
+use local_apsolu\event\reset_enabled;
 use local_apsolu\event\reset_updated;
+use local_apsolu\observer\reset as observer;
 use local_apsolu\task\reset_courses as resetTask;
 use local_apsolu\task\reset_courses_notify as notifyTask;
-use core\task\manager;
-use stdClass;
-use DateTime;
-use local_apsolu\core\federation\course as ffsucourse;
-use core\output\html_writer;
 use local_apsolu\tests\phpunit\dataset_provider;
+use moodle_exception;
+use stdClass;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -534,6 +535,8 @@ final class reset_test extends \advanced_testcase {
     public function test_execute(): void {
         global $DB;
 
+        $coursecustomfields = CustomfieldsCourse::get_apsolu_courses_custom_fields();
+
         $task = new resetTask();
 
         // Ouverture des buffers.
@@ -581,7 +584,15 @@ final class reset_test extends \advanced_testcase {
         $sqlpurges[] = 'SELECT COUNT(*) as nb FROM {user_info_data} WHERE fieldid NOT IN ' .
             '(SELECT id FROM {user_info_field} WHERE shortname IN ' .
             '("apsoluidcardnumber", "apsoluidcardnumberexternal", "apsolufederationnumber"))';
-        $sqlpurges[] = 'SELECT COUNT(*) as nb FROM {course} WHERE visible=1 AND id IN (SELECT id FROM {apsolu_courses})';
+        $sqlpurges[] = 'SELECT COUNT(*) as nb
+                          FROM {course}
+                         WHERE visible=1
+                           AND id IN (
+                                      SELECT cd.instanceid
+                                        FROM {customfield_data} cd
+                                       WHERE cd.intvalue = 1
+                                         AND cd.fieldid = ' . $coursecustomfields['type']->id . '
+                                     )';
         $sqlpurges[] = 'SELECT COUNT(*) as nb FROM {apsolu_attendance_presences}';
         $sqlpurges[] = 'SELECT COUNT(*) as nb
                           FROM {apsolu_attendance_qrcodes}

@@ -19,14 +19,15 @@
 namespace local_apsolu\task;
 
 use Throwable;
-use stdClass;
-use local_apsolu\core\reset;
-use local_apsolu\event\reset_completed as event_completed;
-use local_apsolu\core\federation\course as ffsucourse;
 use core\context\course as context_course;
 use core\context\system as context_system;
-use local_apsolu\core\messaging as mailer;
 use core\output\html_writer;
+use local_apsolu\core\federation\course as ffsucourse;
+use local_apsolu\core\messaging as mailer;
+use local_apsolu\core\reset;
+use local_apsolu\customfields\course as CustomfieldsCourse;
+use local_apsolu\event\reset_completed as event_completed;
+use stdClass;
 
 /**
  * Classe représentant la tâche permettant d'exécuter la procédure de réinitalisation annuelle de la plateforme.
@@ -63,6 +64,8 @@ class reset_courses extends \core\task\adhoc_task {
         require_once($CFG->dirroot . '/enrol/meta/lib.php');
         require_once($CFG->dirroot . '/enrol/select/lib.php');
 
+        $coursecustomfields = CustomFieldsCourse::get_apsolu_courses_custom_fields();
+
         // Récupère la configuration.
         $reset = $this->get_reset_config();
 
@@ -86,9 +89,14 @@ class reset_courses extends \core\task\adhoc_task {
 
                 // Masquer la liste des créneaux dans l'interface ?
                 if ($reset->coursesvisibility === true) {
-                    $purges['masque les créneaux horaires'] = 'UPDATE {course} ' .
-                                                                'SET visible = 0, visibleold = 0 ' .
-                                                                'WHERE id IN (SELECT id FROM {apsolu_courses})';
+                    $purges['masque les créneaux horaires'] = 'UPDATE {course}
+                                                                  SET visible = 0, visibleold = 0
+                                                                WHERE id IN (
+                                                                       SELECT cd.instanceid
+                                                                         FROM {customfield_data} cd
+                                                                        WHERE cd.intvalue = 1
+                                                                          AND cd.fieldid = ' . $coursecustomfields['type']->id .
+                                                                           ')';
                 }
 
                 // Supprimer les relevés de présences ?
@@ -263,8 +271,10 @@ class reset_courses extends \core\task\adhoc_task {
                     $data->reset_gradebook_grades = 1;
                     $data->reset_checklist_progress = 0;
 
-                    $sql = "SELECT c.* FROM {course} c JOIN {apsolu_courses} ac ON c.id = ac.id";
-                    $courses = $DB->get_records_sql($sql);
+                    $sql = "SELECT c.*
+                              FROM {course} c
+                              JOIN {customfield_data} cd ON c.id = cd.instanceid AND cd.intvalue = 1 AND cd.fieldid = :typeid";
+                    $courses = $DB->get_records_sql($sql, ['typeid' => $coursecustomfields['type']->id]);
                     foreach ($courses as $course) {
                         $gradeitems = \grade_item::fetch_all(['courseid' => $course->id]);
 
