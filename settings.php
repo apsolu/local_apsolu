@@ -74,19 +74,6 @@ if ($hassiteconfig || has_any_capability($capabilities, context_system::instance
         }
     }
 
-    // Activités complémentaires.
-    if (isset($CFG->is_siuaps_rennes) === true) {
-        $ADMIN->add('apsolu', new admin_category('local_apsolu_complements', get_string('settings_complements', 'local_apsolu')));
-
-        // Activités complémentaires > Activités complémentaires.
-        $label = get_string('settings_complements', 'local_apsolu');
-        $url = new moodle_url('/local/apsolu/courses/complements.php', ['tab' => 'complements']);
-        $ADMIN->add(
-            'local_apsolu_complements',
-            new admin_externalpage('local_apsolu_complements_complements', $label, $url, $capabilities)
-        );
-    }
-
     // Configuration.
     $ADMIN->add('apsolu', new admin_category('local_apsolu_configuration', get_string('settings_configuration', 'local_apsolu')));
 

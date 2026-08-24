@@ -121,7 +121,6 @@ $queries[] = 'TRUNCATE {apsolu_cities}';
 $queries[] = 'TRUNCATE {apsolu_colleges}';
 $queries[] = 'TRUNCATE {apsolu_colleges_members}';
 $queries[] = 'TRUNCATE {apsolu_communication_templates}';
-$queries[] = 'TRUNCATE {apsolu_complements}';
 $queries[] = 'TRUNCATE {apsolu_courses_categories}';
 $queries[] = 'TRUNCATE {apsolu_courses_groupings}';
 $queries[] = 'TRUNCATE {apsolu_dunnings}';

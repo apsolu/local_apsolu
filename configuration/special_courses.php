@@ -88,25 +88,10 @@ if ($data = $mform->get_data()) {
 
         set_config($attribute, $data->{$attribute}, 'local_apsolu');
 
-        if ($attribute === 'federation_course') {
-            if (empty($data->{$attribute}) === true) {
-                // Supprime la référence au cours FFSU.
-                $DB->delete_records('apsolu_complements', ['federation' => 1]);
-            } else {
-                // Met à jour la référence au cours FFSU.
-                $complement = $DB->get_record('apsolu_complements', ['federation' => 1]);
-                if ($complement === false) {
-                    $sql = "INSERT INTO {apsolu_complements} (id, price, federation) VALUES(:id, 0, 1)";
-                    $DB->execute($sql, ['id' => $data->{$attribute}]);
-                } else {
-                    $sql = "UPDATE {apsolu_complements} SET id = :id WHERE federation = 1";
-                    $DB->execute($sql, ['id' => $data->{$attribute}]);
-                }
-
-                // Génère les groupes correspondant aux activités FFSU.
-                $course = new Federation\course();
-                $course->set_groups();
-            }
+        if ($attribute === 'federation_course' && empty($data->{$attribute}) === false) {
+            // Génère les groupes correspondant aux activités FFSU.
+            $course = new Federation\course();
+            $course->set_groups();
         }
     }
 

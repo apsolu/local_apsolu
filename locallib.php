@@ -29,6 +29,7 @@ namespace UniversiteRennes2\Apsolu;
 defined('MOODLE_INTERNAL') || die;
 
 use local_apsolu\core\course;
+use local_apsolu\core\federation\course as FederationCourse;
 
 require_once($CFG->dirroot . '/user/selector/lib.php');
 
@@ -135,18 +136,21 @@ class local_apsolu_courses_federation_user_selector extends \user_selector_base 
      */
     public function find_users($search) {
         global $DB;
+
+        $federationcourse = new FederationCourse();
+
         // By default wherecondition retrieves all users except the deleted, not confirmed and guest.
         [$wherecondition, $params] = $this->search_sql($search, 'u');
+        $params['federationcourseid'] = $federationcourse->get_courseid();
 
         $fields      = 'SELECT ' . $this->required_fields_sql('u');
         $countfields = 'SELECT COUNT(1)';
 
-        $sql = " FROM {user} u" .
-                " JOIN {role_assignments} ra ON u.id = ra.userid" .
-                " JOIN {context} ctx ON ctx.id = ra.contextid" .
-                " JOIN {course} c ON c.id = ctx.instanceid AND ctx.contextlevel = 50" .
-                " JOIN {apsolu_complements} ac ON c.id = ac.id AND ac.federation = 1" .
-                " WHERE " . $wherecondition;
+        $sql = " FROM {user} u
+                 JOIN {role_assignments} ra ON u.id = ra.userid
+                 JOIN {context} ctx ON ctx.id = ra.contextid
+                 JOIN {course} c ON c.id = ctx.instanceid AND ctx.contextlevel = 50 AND c.id = :federationcourseid
+                WHERE " . $wherecondition;
         [$sort, $sortparams] = users_order_by_sql('u', $search, $this->accesscontext);
         $order = ' ORDER BY ' . $sort;
 
