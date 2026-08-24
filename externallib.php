@@ -667,7 +667,11 @@ class local_apsolu_webservices extends external_api {
                   JOIN {customfield_data} cd ON c.id = cd.instanceid AND cd.intvalue = 1 AND cd.fieldid = :customfieldtypeid
                   JOIN {apsolu_attendance_sessions} aas ON ctx.instanceid = aas.courseid
              LEFT JOIN {apsolu_attendance_presences} aap ON aas.id = aap.sessionid AND ra.userid = aap.studentid AND
-                                                            aap.statusid IN (1, 2)  -- Present + late.
+                                                            aap.statusid IN (
+                                                                              SELECT status.id
+                                                                                FROM {apsolu_attendance_statuses} status
+                                                                               WHERE status.absence = 0
+                                                                            )
              LEFT JOIN {user_info_data} uid1 ON ra.userid = uid1.userid AND uid1.fieldid = :apsolusesame  -- Compte Sésame validé.
                  WHERE ra.component = 'enrol_select'
                    AND ue.timeend >= :now  -- Limite les méthodes d'inscription en cours.
@@ -927,14 +931,14 @@ class local_apsolu_webservices extends external_api {
             return $data;
         }
 
-        $sql = "SELECT aap.id, aap.studentid AS iduser, aas.courseid, aap.timemodified" .
-            " FROM {apsolu_attendance_presences} aap" .
-            " JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid" .
-            " JOIN {apsolu_courses} ac ON ac.id = aas.courseid" .
-            " WHERE aap.statusid IN (1,2)" . // Present + late.
-            " AND aas.sessiontime BETWEEN :from1 AND :from2" .
-            " AND aap.timemodified >= :since" .
-            " ORDER BY aas.courseid";
+        $sql = "SELECT aap.id, aap.studentid AS iduser, aas.courseid, aap.timemodified
+                  FROM {apsolu_attendance_presences} aap
+                  JOIN {apsolu_attendance_sessions} aas ON aas.id = aap.sessionid
+                  JOIN {apsolu_attendance_statuses} status ON status.id = aap.statusid
+                 WHERE status.absence = 0
+                   AND aas.sessiontime BETWEEN :from1 AND :from2
+                   AND aap.timemodified >= :since
+              ORDER BY aas.courseid";
 
         $params = [];
         $params['from1'] = $from;
