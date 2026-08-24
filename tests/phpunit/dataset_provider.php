@@ -442,6 +442,7 @@ class dataset_provider {
         $elements['skills'] = 'skill';
         $elements['periods'] = 'period';
         $elements['courses'] = 'course';
+        $elements['coursetypes'] = 'coursetype';
 
         foreach ($elements as $containers => $objectname) {
             ${$containers} = [];
@@ -592,32 +593,32 @@ class dataset_provider {
             $paymentcenters[$paymentcenter] = $paymentcenter;
 
             // Génère le créneau.
-            $fullname = Apsolu\course::get_fullname(
-                $categories[$category]->name,
-                $event,
-                $weekday,
-                $starttime,
-                $endtime,
-                $skills[$skill]->name
-            );
+            $timerange = [];
+            [$hour, $minute] = explode(':', $starttime);
+            $timerange['start'] = ['hour' => $hour, 'minute' => $minute];
+            [$hour, $minute] = explode(':', $endtime);
+            $timerange['end'] = ['hour' => $hour, 'minute' => $minute];
+
+            $coursedata = new stdClass();
+            $coursedata->id = 0;
+            $coursedata->category = $categories[$category]->id;
+            $coursedata->idnumber = '';
+            $coursedata->customfield_type = current($coursetypes)->id;
+            $coursedata->customfield_category = ['categoryid' => $categories[$category]->id, 'additionalstr' => $event];
+            $coursedata->customfield_federation = 2; // Non.
+            $coursedata->customfield_location = $locations[$location]->id;
+            $coursedata->customfield_on_homepage = 1; // Oui.
+            $coursedata->customfield_period = $periods[$period]->id;
+            $coursedata->customfield_show_policy = 2; // Non.
+            $coursedata->customfield_skill = $skills[$skill]->id;
+            $coursedata->customfield_timerange = $timerange;
+            $coursedata->customfield_weekday = $weekday;
+
+            $fullname = Apsolu\course::get_fullname($coursedata);
 
             if (isset($courses[$fullname]) === true) {
                 continue;
             }
-
-            $coursedata = new stdClass();
-            $coursedata->event = $event;
-            $coursedata->weekday = $weekday;
-            $coursedata->starttime = $starttime;
-            $coursedata->endtime = $endtime;
-            $coursedata->on_homepage = 1;
-            $coursedata->showpolicy = 0;
-            $coursedata->category = $categories[$category]->id;
-            $coursedata->str_category = $categories[$category]->name;
-            $coursedata->periodid = $periods[$period]->id;
-            $coursedata->locationid = $locations[$location]->id;
-            $coursedata->skillid = $skills[$skill]->id;
-            $coursedata->str_skill = $skills[$skill]->name;
 
             $course = new Apsolu\course();
             $course->save($coursedata);
@@ -1214,9 +1215,6 @@ class dataset_provider {
         $DB->execute('INSERT INTO {enrol_select_cards}(enrolid, cardid) VALUES(?, ?)', [$enrol->id, $card->id]);
 
         set_config('federation_course', $federationcourse->id, 'local_apsolu');
-
-        $sql = "INSERT INTO {apsolu_complements} (id, price, federation) VALUES(:id, 0, 1)";
-        $DB->execute($sql, ['id' => $federationcourse->id]);
 
         // Génère les activités FFSU et les groupes de cours correspondant.
         Federation\activity::synchronize_database();
