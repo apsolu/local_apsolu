@@ -1,0 +1,86 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_apsolu/courses_course_types
+
+    Template Moodle pour afficher la liste des gestionnaires de lieux.
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * wwwroot
+    * notification
+    * count_course_types
+    * course_types
+        * id
+        * name
+
+    Example context (json):
+    {
+        "wwwroot": "",
+        "notification": "",
+        "count_course_types": 0,
+        "course_types": []
+    }
+}}
+<h1>{{#str}}course_types_list, local_apsolu{{/str}}</h1>
+
+{{#notification}}
+    {{{notification}}}
+{{/notification}}
+
+<p class="text-right">
+    <a class="btn btn-primary" href="{{wwwroot}}/local/apsolu/courses/index.php?tab=course_types&action=edit">{{#str}}course_type_add, local_apsolu{{/str}}</a>
+</p>
+
+{{^count_course_types}}
+<p class="alert alert-info">{{#str}}no_course_types, local_apsolu{{/str}}</p>
+{{/count_course_types}}
+
+{{#count_course_types}}
+<table class="table table-striped table-sortable">
+<thead>
+    <tr>
+        <th>{{#str}}course_types, local_apsolu{{/str}}</th>
+        <th>{{#str}}actions{{/str}}</th>
+    </tr>
+</thead>
+<tbody>
+    {{#course_types}}
+    <tr>
+        <td>{{name}}</td>
+        <td>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=course_types&action=edit&coursetypeid={{id}}">{{#pix}}t/edit,core,{{#str}}edit{{/str}}{{/pix}}</a></li>
+                <li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=course_types&action=delete&coursetypeid={{id}}">{{#pix}}t/delete,core,{{#str}}delete{{/str}}{{/pix}}</a></li>
+                {{^last}}
+                <li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=course_types&action=movedown&coursetypeid={{id}}">{{#pix}}t/down,core,{{#str}}down{{/str}}{{/pix}}</a></li>
+                {{/last}}
+                {{^first}}
+                <li class="list-inline-item"><a href="{{wwwroot}}/local/apsolu/courses/index.php?tab=course_types&action=moveup&coursetypeid={{id}}">{{#pix}}t/up,core,{{#str}}up{{/str}}{{/pix}}</a></li>
+                {{/first}}
+            </ul>
+        </td>
+    </tr>
+    {{/course_types}}
+</tbody>
+</table>
+{{/count_course_types}}

@@ -24,13 +24,15 @@
 
 use core\task\manager;
 use local_apsolu\core\attendance\status as AttendanceStatus;
+use local_apsolu\core\coursetype;
 use local_apsolu\core\federation\activity;
 use local_apsolu\core\federation\adhesion;
 use local_apsolu\core\messaging;
 use local_apsolu\core\municipality;
+use local_apsolu\core\reset;
+use local_apsolu\customfields\course as CustomfieldsCourse;
 use local_apsolu\payment\method;
 use local_apsolu\task\setup_behat_data;
-use local_apsolu\core\reset;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -192,6 +194,12 @@ function xmldb_local_apsolu_install() {
 
         $DB->insert_record('user_info_field', $field);
     }
+
+    // Initialise les champs personnalisés de cours.
+    CustomfieldsCourse::initialize_course_customfields();
+
+    // Initialise un type de format "cours".
+    CourseType::initialize_course_type();
 
     // Ajoute les données dans la table des activités de la FFSU.
     Activity::synchronize_database();
