@@ -16,15 +16,16 @@
 
 namespace local_apsolu\core;
 
-use context_course;
-use context_system;
-use csv_export_writer;
 use Exception;
-use grade_grade;
-use grade_item;
 use MoodleExcelFormat;
 use MoodleExcelWorkbook;
 use PhpOffice\PhpSpreadsheet\Style\Border;
+use context_course;
+use context_system;
+use csv_export_writer;
+use grade_grade;
+use grade_item;
+use local_apsolu\customfields\course as CustomfieldsCourse;
 use stdClass;
 
 /**
@@ -122,6 +123,9 @@ class gradebook {
 
         $params = [];
         $params['context_course'] = CONTEXT_COURSE;
+        $params['context_system'] = SYSCONTEXTID;
+        $params['capability'] = 'local/apsolu:gradable';
+        $params['permission'] = CAP_ALLOW;
 
         if ($contextlevel === CONTEXT_SYSTEM) {
             // Requête pour les gestionnaires.
@@ -129,12 +133,16 @@ class gradebook {
                 " FROM {course} c" .
                 " JOIN {course_categories} cc ON cc.id = c.category" .
                 " JOIN {enrol} e ON c.id = e.courseid" .
-                " JOIN {apsolu_courses} ac ON ac.id = c.id" .
+                " JOIN {enrol_select_roles} esr ON e.id = esr.enrolid" .
+                " JOIN {role_capabilities} rc ON esr.roleid = rc.roleid" .
                 " JOIN {context} ctx ON c.id = ctx.instanceid AND ctx.contextlevel = :context_course" .
                 " JOIN {role_assignments} ra ON ctx.id = ra.contextid AND ra.roleid IN (" . implode(',', $gradableroles) . ")" .
                 " WHERE e.enrol = 'select'" .
                 " AND e.status = 0" .
-                " ORDER BY cc.name, ac.numweekday, ac.starttime";
+                " AND rc.contextid = :context_system" .
+                " AND rc.capability = :capability" .
+                " AND rc.permission = :permission" .
+                " ORDER BY cc.name, c.sortorder";
         } else {
             // Récupère la liste des rôles pouvant évaluer.
             $graderroles = array_keys(get_roles_with_capability('local/apsolu:viewgrades', $permission = CAP_ALLOW, $syscontext));
@@ -147,16 +155,20 @@ class gradebook {
                 " FROM {course} c" .
                 " JOIN {course_categories} cc ON cc.id = c.category" .
                 " JOIN {enrol} e ON c.id = e.courseid" .
-                " JOIN {apsolu_courses} ac ON ac.id = c.id" .
+                " JOIN {enrol_select_roles} esr ON e.id = esr.enrolid" .
+                " JOIN {role_capabilities} rc ON esr.roleid = rc.roleid" .
                 " JOIN {context} ctx ON c.id = ctx.instanceid AND ctx.contextlevel = :context_course" .
                 " JOIN {role_assignments} ra ON ctx.id = ra.contextid AND ra.roleid IN (" . implode(',', $gradableroles) . ")" .
                 " WHERE e.enrol = 'select'" .
                 " AND e.status = 0" .
+                " AND rc.contextid = :context_system" .
+                " AND rc.capability = :capability" .
+                " AND rc.permission = :permission" .
                 " AND ctx.id IN (SELECT contextid
                                    FROM {role_assignments}
                                   WHERE userid = :userid
                                     AND roleid IN (" . implode(',', $graderroles) . "))" .
-                " ORDER BY cc.name, ac.numweekday, ac.starttime";
+                " ORDER BY cc.name, c.sortorder";
             $params['userid'] = $USER->id;
         }
 
@@ -268,14 +280,13 @@ class gradebook {
         // Récupération des enseignants.
         $teachers = [];
         if (isset($options['teachers']) === true || isset($fields['teachers']) === true) {
-            $sql = "SELECT c.id AS courseid, u.*" .
+            $sql = "SELECT ctx.instanceid AS courseid, u.*" .
                 " FROM {user} u" .
                 " JOIN {role_assignments} ra ON u.id = ra.userid" .
-                " JOIN {context} ctx ON ctx.id = ra.contextid" .
-                " JOIN {apsolu_courses} c ON ctx.instanceid = c.id" .
+                " JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = :contextlevel" .
                 " WHERE ra.roleid = 3" . // Enseignant.
                 " ORDER BY u.lastname, u.firstname";
-            $recordset = $DB->get_recordset_sql($sql);
+            $recordset = $DB->get_recordset_sql($sql, ['contextlevel' => CONTEXT_COURSE]);
             foreach ($recordset as $record) {
                 $courseid = $record->courseid;
                 unset($record->courseid);
@@ -335,6 +346,7 @@ class gradebook {
         // Récupération des utilisateurs.
         $customfields = customfields::getCustomFields();
         $gradableroles = self::get_gradable_roles();
+        $coursecustomfields = CustomfieldsCourse::get_apsolu_courses_custom_fields();
 
         $conditions = [];
 
@@ -342,6 +354,7 @@ class gradebook {
         $params[] = $customfields['apsoluufr']->id;
         $params[] = $customfields['apsolucycle']->id;
         $params[] = $customfields['apsolusex']->id;
+        $params[] = $coursecustomfields['location']->id;
         $params[] = CONTEXT_COURSE;
 
         // Filtres.
@@ -466,8 +479,8 @@ class gradebook {
             " JOIN {course} c ON c.id = e.courseid" .
             " JOIN {course_categories} cc ON cc.id = c.category" .
             " JOIN {course_categories} cc2 ON cc2.id = cc.parent" .
-            " JOIN {apsolu_courses} ac ON ac.id = c.id" .
-            " JOIN {apsolu_locations} al ON al.id = ac.locationid" .
+            " JOIN {customfield_data} cd ON c.id = cd.instanceid AND cd.fieldid = ?" .
+            " JOIN {apsolu_locations} al ON al.id = cd.intvalue" .
             " JOIN {apsolu_areas} aa ON aa.id = al.areaid" .
             " JOIN {apsolu_cities} act ON act.id = aa.cityid" .
             " JOIN {context} ctx ON c.id = ctx.instanceid AND ctx.contextlevel = ?" .

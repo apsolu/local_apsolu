@@ -24,6 +24,7 @@
 
 use local_apsolu\core\customfields;
 use local_apsolu\core\gradebook;
+use local_apsolu\customfields\course as CustomfieldsCourse;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -145,15 +146,24 @@ if (
     APSOLU_GRADES_COURSE_SCOPE === CONTEXT_SYSTEM &&
     has_capability('local/apsolu:viewallgrades', context_system::instance()) === true
 ) {
+    $coursecustomfields = CustomfieldsCourse::get_apsolu_courses_custom_fields();
+
     $teachers = [];
-    $sql = "SELECT DISTINCT u.*" .
-        " FROM {user} u" .
-        " JOIN {role_assignments} ra ON u.id = ra.userid" .
-        " JOIN {context} ctx ON ctx.id = ra.contextid" .
-        " JOIN {apsolu_courses} c ON ctx.instanceid = c.id" .
-        " WHERE ra.roleid = 3" . // Enseignant.
-        " ORDER BY u.lastname, u.firstname";
-    foreach ($DB->get_records_sql($sql) as $user) {
+    // TODO: créer une API pour récupérer les cours par type et/ou par rôles évaluables acceptés.
+    $sql = "SELECT DISTINCT u.*
+              FROM {user} u
+              JOIN {role_assignments} ra ON u.id = ra.userid
+              JOIN {context} ctx ON ctx.id = ra.contextid
+             WHERE ra.roleid = 3  -- Enseignant.
+               AND ctx.instanceid IN (
+                                      SELECT cd.instanceid
+                                        FROM {customfield_data} cd
+                                       WHERE cd.component = 'core_course'
+                                         AND cd.value != 0
+                                         AND cd.fieldid = :customfieldtypeid
+                                     )
+          ORDER BY u.lastname, u.firstname";
+    foreach ($DB->get_records_sql($sql, ['customfieldtypeid' => $coursecustomfields['type']->id]) as $user) {
         $teachers[$user->id] = fullname($user);
     }
 }
