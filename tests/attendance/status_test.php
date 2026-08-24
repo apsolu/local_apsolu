@@ -32,6 +32,29 @@ use local_apsolu\core\location;
  * @coversDefaultClass \local_apsolu\core\attendance\status
  */
 final class status_test extends \advanced_testcase {
+    /**
+     * Génère un jeu de données pour tester les statuts.
+     *
+     * @return array
+     */
+    public function get_dataset(): array {
+        // Génère des cours.
+        $this->getDataGenerator()->get_plugin_generator('local_apsolu')->create_courses();
+
+        $courses = Course::get_records();
+        $course = current($courses);
+
+        $location = new location();
+        $location->save();
+
+        $data = $course->get_course_data();
+        $data->customfield_location = $location->id;
+        $data->customfield_timerange = ['start' => ['hour' => '12', 'minute' => '00'], 'end' => ['hour' => '13', 'minute' => '00']];
+        $course->save($data);
+
+        return [$course, $location];
+    }
+
     protected function setUp(): void {
         parent::setUp();
 
@@ -49,13 +72,7 @@ final class status_test extends \advanced_testcase {
         $this->setAdminUser();
 
         // Génère un nouveau cours.
-        $location = new location();
-        $location->save();
-
-        $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
-        $data->locationid = $location->id;
-        $course = new course();
-        $course->save($data);
+        [$course, $location] = $this->get_dataset();
 
         // Génère une session de cours.
         $attendancesession = new attendancesession();

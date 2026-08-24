@@ -24,43 +24,25 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$sql = "SELECT ap.*, ac.numweekday, ac.starttime, al.name AS location" .
-    " FROM {apsolu_periods} ap" .
-    " JOIN {apsolu_courses} ac ON ap.id = ac.periodid" .
-    " JOIN {apsolu_locations} al ON al.id = ac.locationid" .
-    " WHERE ac.id = :courseid";
-$data->period = $DB->get_record_sql($sql, ['courseid' => $courseid]);
+$time = time();
+$data->sessions = [];
+$data->count_sessions = 0;
 
-if ($data->period !== false) {
-    $time = time();
-    $weeks = explode(',', $data->period->weeks);
-    $data->sessions = [];
-    $data->count_sessions = 0;
+$sql = "SELECT aas.*, COUNT(aap.id) AS count, al.name AS location
+          FROM {apsolu_attendance_sessions} aas
+          JOIN {apsolu_locations} al ON al.id = aas.locationid
+     LEFT JOIN {apsolu_attendance_presences} aap ON aas.id = aap.sessionid
+         WHERE courseid = :courseid
+      GROUP BY aas.id
+      ORDER BY aas.sessiontime";
 
-    $sql = "SELECT aas.*, COUNT(aap.id) AS count, al.name AS location" .
-        " FROM {apsolu_attendance_sessions} aas" .
-        " JOIN {apsolu_locations} al ON al.id = aas.locationid" .
-        " LEFT JOIN {apsolu_attendance_presences} aap ON aas.id = aap.sessionid" .
-        " WHERE courseid = :courseid" .
-        " GROUP BY aas.id" .
-        " ORDER BY aas.sessiontime";
+foreach ($DB->get_records_sql($sql, ['courseid' => $courseid]) as $session) {
+    $session->sessiontimestr = userdate($session->sessiontime, get_string('strftimedatetimewithyear', 'local_apsolu'));
+    $session->durationstr = get_string('X_minutes', 'local_apsolu', $session->duration / 60);
+    $session->expired = $time > $session->sessiontime;
 
-    foreach ($DB->get_records_sql($sql, ['courseid' => $courseid]) as $session) {
-        // On calcule le premier jour de la semaine correspondant à la session.
-        $week = core_date::strftime('%Y-%m-%d', $session->sessiontime - ($data->period->numweekday - 1) * 24 * 60 * 60);
-
-        $index = array_search($week, $weeks);
-        if ($index !== false) {
-            unset($weeks[$index]);
-        }
-
-        $session->sessiontimestr = userdate($session->sessiontime, get_string('strftimedatetimewithyear', 'local_apsolu'));
-        $session->durationstr = get_string('X_minutes', 'local_apsolu', $session->duration / 60);
-        $session->expired = $time > $session->sessiontime;
-
-        $data->sessions[] = $session;
-        $data->count_sessions++;
-    }
+    $data->sessions[] = $session;
+    $data->count_sessions++;
 }
 
 $template = 'local_apsolu/attendance_sessions_view';

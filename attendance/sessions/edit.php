@@ -48,14 +48,18 @@ if ($sessionid !== 0) {
 }
 
 if (empty($session->id) === true) {
-    $apsolucourse = $DB->get_record('apsolu_courses', ['id' => $courseid]);
+    $apsolucourse = Course::get_record(['id' => $courseid], $fields = '*', MUST_EXIST);
 
     $sessions = $DB->get_records('apsolu_attendance_sessions', ['courseid' => $courseid]);
     $name = 'Cours n°' . (count($sessions) + 1);
 
     $session->name = $name;
     $session->sessiontime = 0;
-    $session->duration = course::getDuration($apsolucourse->starttime, $apsolucourse->endtime);
+    $session->duration = 0;
+    if (isset($apsolucourse->customfields['timerange']) === true) {
+        $time = $apsolucourse->customfields['timerange']->get_value();
+        $session->duration = Course::getDuration(implode(':', $time['start']), implode(':', $time['end']));
+    }
     $session->courseid = $course->id;
     $session->locationid = $apsolucourse->locationid;
 }

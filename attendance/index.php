@@ -22,6 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_apsolu\core\course;
 use local_apsolu\core\federation\activity;
 use local_apsolu\core\federation\adhesion;
 use local_apsolu\core\federation\course as FederationCourse;
@@ -48,8 +49,8 @@ $course = get_course($courseid);
 require_login($course, $autologinguest = false);
 
 // Vérifier qu'il s'agit d'une activité APSOLU.
-$activity = $DB->get_record('apsolu_courses', ['id' => $course->id]);
-if ($activity === false) {
+$activity = Course::get_record(['id' => $course->id], $fields = '*', MUST_EXIST);
+if (isset($activity->customfields['type']) === false || empty($activity->customfields['type']) === true) {
     throw new moodle_exception('taking_attendance_is_only_possible_on_a_course', 'local_apsolu');
 }
 

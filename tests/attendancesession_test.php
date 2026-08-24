@@ -30,6 +30,29 @@ use stdClass;
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(attendancesession::class)]
 final class attendancesession_test extends \advanced_testcase {
+    /**
+     * Génère un jeu de données pour tester les sessions.
+     *
+     * @return array
+     */
+    public function get_dataset(): array {
+        // Génère des cours.
+        $this->getDataGenerator()->get_plugin_generator('local_apsolu')->create_courses();
+
+        $courses = Course::get_records();
+        $course = current($courses);
+
+        $location = new location();
+        $location->save();
+
+        $data = $course->get_course_data();
+        $data->customfield_location = $location->id;
+        $data->customfield_timerange = ['start' => ['hour' => '12', 'minute' => '00'], 'end' => ['hour' => '13', 'minute' => '00']];
+        $course->save($data);
+
+        return [$course, $location];
+    }
+
     protected function setUp(): void {
         parent::setUp();
 
@@ -47,13 +70,7 @@ final class attendancesession_test extends \advanced_testcase {
         global $DB;
 
         // Génère un nouveau cours.
-        $location = new location();
-        $location->save();
-
-        $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
-        $data->locationid = $location->id;
-        $course = new course();
-        $course->save($data);
+        [$course, $location] = $this->get_dataset();
 
         // Génère une session de cours.
         $attendancesession = new attendancesession();
@@ -87,13 +104,7 @@ final class attendancesession_test extends \advanced_testcase {
         global $DB;
 
         // Génère un nouveau cours.
-        $location = new location();
-        $location->save();
-
-        $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
-        $data->locationid = $location->id;
-        $course = new course();
-        $course->save($data);
+        [$course, $location] = $this->get_dataset();
 
         // Génère une session de cours.
         $attendancesession = new attendancesession();
@@ -126,15 +137,7 @@ final class attendancesession_test extends \advanced_testcase {
      */
     public function test_has_expired(): void {
         // Génère un nouveau cours dont les sessions durent 1 heure.
-        $location = new location();
-        $location->save();
-
-        $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
-        $data->locationid = $location->id;
-        $data->starttime = '12:00';
-        $data->endtime = '13:00';
-        $course = new course();
-        $course->save($data);
+        [$course, $location] = $this->get_dataset();
 
         // Génère une session de cours.
         $attendancesession = new attendancesession();
@@ -164,15 +167,7 @@ final class attendancesession_test extends \advanced_testcase {
      */
     public function test_has_started(): void {
         // Génère un nouveau cours dont les sessions durent 1 heure.
-        $location = new location();
-        $location->save();
-
-        $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
-        $data->locationid = $location->id;
-        $data->starttime = '12:00';
-        $data->endtime = '13:00';
-        $course = new course();
-        $course->save($data);
+        [$course, $location] = $this->get_dataset();
 
         // Génère une session de cours.
         $attendancesession = new attendancesession();
@@ -202,15 +197,7 @@ final class attendancesession_test extends \advanced_testcase {
      */
     public function test_is_in_progress(): void {
         // Génère un nouveau cours dont les sessions durent 1 heure.
-        $location = new location();
-        $location->save();
-
-        $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
-        $data->locationid = $location->id;
-        $data->starttime = '12:00';
-        $data->endtime = '13:00';
-        $course = new course();
-        $course->save($data);
+        [$course, $location] = $this->get_dataset();
 
         // Génère une session de cours.
         $attendancesession = new attendancesession();
@@ -246,13 +233,7 @@ final class attendancesession_test extends \advanced_testcase {
      */
     public function test_load(): void {
         // Génère un nouveau cours.
-        $location = new location();
-        $location->save();
-
-        $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
-        $data->locationid = $location->id;
-        $course = new course();
-        $course->save($data);
+        [$course, $location] = $this->get_dataset();
 
         // Charge un objet inexistant.
         $attendancesession = new attendancesession();
@@ -283,13 +264,7 @@ final class attendancesession_test extends \advanced_testcase {
         global $DB;
 
         // Génère un nouveau cours.
-        $location = new location();
-        $location->save();
-
-        $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
-        $data->locationid = $location->id;
-        $course = new course();
-        $course->save($data);
+        [$course, $location] = $this->get_dataset();
 
         // Génère une session de cours.
         $attendancesession = new attendancesession();

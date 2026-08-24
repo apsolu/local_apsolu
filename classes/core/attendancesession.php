@@ -136,7 +136,11 @@ class attendancesession extends record {
     public function get_duration(): int|false {
         $course = course::get_record(['id' => $this->courseid], '*', MUST_EXIST);
 
-        return course::getDuration($course->starttime, $course->endtime);
+        $timerange = json_decode($course->customfields['timerange']->get('value'));
+        $starttime = sprintf('%02d:%02d', $timerange->start->hour, $timerange->start->minute);
+        $endtime = sprintf('%02d:%02d', $timerange->end->hour, $timerange->end->minute);
+
+        return course::getDuration($starttime, $endtime);
     }
 
     /**
@@ -202,6 +206,7 @@ class attendancesession extends record {
      * @return bool
      */
     public function has_expired(): bool {
+        // TODO: Pourquoi ne pas utiliser tout simplement la fonction time() ?
         $now = getdate();
         $today = make_timestamp($now['year'], $now['mon'], $now['mday'], $now['hours'], $now['minutes'], $now['seconds']);
 
@@ -216,6 +221,7 @@ class attendancesession extends record {
      * @return bool
      */
     public function has_started(): bool {
+        // TODO: Pourquoi ne pas utiliser tout simplement la fonction time() ?
         $now = getdate();
         $today = make_timestamp($now['year'], $now['mon'], $now['mday'], $now['hours'], $now['minutes'], $now['seconds']);
 
