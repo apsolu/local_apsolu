@@ -25,6 +25,7 @@
 defined('MOODLE_INTERNAL') || die;
 
 use local_apsolu\core\skill;
+use local_apsolu\customfields\course;
 
 $skillid = required_param('skillid', PARAM_INT);
 $delete = optional_param('delete', '', PARAM_ALPHANUM); // Confirmation hash.
@@ -46,8 +47,7 @@ if ($delete === $deletehash) {
 }
 
 // Vérifie si ce niveau de pratique n'est pas associé à un cours.
-$sql = "SELECT c.fullname FROM {course} c JOIN {apsolu_courses} cc ON c.id = cc.id WHERE cc.skillid = :skillid ORDER BY c.fullname";
-$courses = $DB->get_records_sql($sql, ['skillid' => $skill->id]);
+$courses = Course::find_records('apsolu_skill', $skill->id);
 if (count($courses) !== 0) {
     $datatemplate = [];
     $datatemplate['message'] = get_string('skill_cannot_be_deleted', 'local_apsolu', $skill->name);
