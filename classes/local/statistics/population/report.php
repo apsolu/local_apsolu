@@ -20,6 +20,8 @@
 
 namespace local_apsolu\local\statistics\population;
 
+use local_apsolu\customfields\course as CustomfieldsCourse;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/enrol/select/lib.php');
@@ -52,6 +54,8 @@ class report extends \local_apsolu\local\statistics\report {
     public function __construct() {
         $this->configFilePath = '/local/apsolu/statistics/population/config.json';
 
+        $customfields = CustomfieldsCourse::get_apsolu_courses_custom_fields();
+
         $this->WithEnrolments = 'WITH enrolments AS (
       		SELECT DISTINCT
             AC.id as calendarid, AC.name as calendarname,
@@ -76,9 +80,16 @@ class report extends \local_apsolu\local\statistics\report {
       				ELSE CASE WHEN UE.status = 3 THEN "Liste complémentaire"
       				ELSE CASE WHEN UE.status = 4 THEN "Liste des étudiants désinscrits"
       			END END END END AS statusname,
-                APSOLU_C.id as slotid, APSOLU_C.event as slotevent,APSOLU_C.numweekday as slotnumweekday,
-                DAYNAME(CONCAT("1970-09-2", APSOLU_C.numweekday)) as slotweekday,
-                APSOLU_C.starttime as slotstart,	APSOLU_C.endtime as slotend,
+                C.id as slotid, CUSTOMDATA2.charvalue as slotevent, CUSTOMDATA3.intvalue as slotnumweekday,
+                DAYNAME(CONCAT("1970-09-2", CUSTOMDATA3.intvalue)) as slotweekday,
+                CONCAT(
+                    JSON_EXTRACT(CUSTOMDATA4.shortcharvalue, \'$.start.hour\'), \':\',
+                    JSON_EXTRACT(CUSTOMDATA4.shortcharvalue, \'$.start.minute\')
+                ) AS slotstart,
+                CONCAT(
+                    JSON_EXTRACT(CUSTOMDATA4.shortcharvalue, \'$.end.hour\'), \':\',
+                    JSON_EXTRACT(CUSTOMDATA4.shortcharvalue, \'$.end.minute\')
+                ) AS slotend,
       			Activity.id as activityid, Activity.name as activityname,
       			Grouping.id as groupid, Grouping.name as groupname,
             (SELECT GROUP_CONCAT(DISTINCT R.shortname ORDER BY R.shortname SEPARATOR \', \')
@@ -95,7 +106,12 @@ class report extends \local_apsolu\local\statistics\report {
   					WHERE ctx.instanceid = E.courseid) as teachers,
             AL.name as locationname,
             APSOLU_S.id,APSOLU_S.name as skillsname,
-            CONCAT(APSOLU_C.starttime,\'-\',APSOLU_C.endtime) as slotstartend,
+            CONCAT(
+                JSON_EXTRACT(CUSTOMDATA4.shortcharvalue, \'$.start.hour\'), \':\',
+                JSON_EXTRACT(CUSTOMDATA4.shortcharvalue, \'$.start.minute\'), \'-\',
+                JSON_EXTRACT(CUSTOMDATA4.shortcharvalue, \'$.end.hour\'), \':\',
+                JSON_EXTRACT(CUSTOMDATA4.shortcharvalue, \'$.end.minute\')
+            ) AS slotstartend,
             (SELECT GROUP_CONCAT(DISTINCT co.name ORDER BY co.name SEPARATOR \'\r\')
   					FROM {cohort} co
   					INNER JOIN {cohort_members} com ON co.id = com.cohortid
@@ -117,9 +133,20 @@ class report extends \local_apsolu\local\statistics\report {
 
           INNER JOIN {enrol} E ON E.id = UE.enrolid AND E.enrol = \'select\'
           INNER JOIN {course} C on C.id = E.courseid
-          INNER JOIN {apsolu_courses} APSOLU_C on APSOLU_C.id = C.id
-          INNER JOIN {apsolu_skills} APSOLU_S on APSOLU_S.id = APSOLU_C.skillid
-          INNER JOIN {apsolu_locations} AL ON AL.id = APSOLU_C.locationid
+          INNER JOIN {customfield_data} CUSTOMDATA1 ON CUSTOMDATA1.instanceid = C.id
+                                                   AND CUSTOMDATA1.fieldid = ' . $customfields['type']->id . '
+          INNER JOIN {customfield_data} CUSTOMDATA2 ON CUSTOMDATA2.instanceid = C.id
+                                                   AND CUSTOMDATA2.fieldid = ' . $customfields['category']->id . '
+          INNER JOIN {customfield_data} CUSTOMDATA3 ON CUSTOMDATA3.instanceid = C.id
+                                                   AND CUSTOMDATA3.fieldid = ' . $customfields['weekday']->id . '
+          INNER JOIN {customfield_data} CUSTOMDATA4 ON CUSTOMDATA4.instanceid = C.id
+                                                   AND CUSTOMDATA4.fieldid = ' . $customfields['timerange']->id . '
+          INNER JOIN {customfield_data} CUSTOMDATA5 ON CUSTOMDATA5.instanceid = C.id
+                                                   AND CUSTOMDATA5.fieldid = ' . $customfields['skill']->id . '
+          INNER JOIN {apsolu_skills} APSOLU_S on APSOLU_S.id = CUSTOMDATA5.intvalue
+          INNER JOIN {customfield_data} CUSTOMDATA6 ON CUSTOMDATA6.instanceid = C.id
+                                                   AND CUSTOMDATA6.fieldid = ' . $customfields['location']->id . '
+          INNER JOIN {apsolu_locations} AL ON AL.id = CUSTOMDATA6.intvalue
           INNER JOIN {apsolu_areas} AA ON AA.id = AL.areaId
           INNER JOIN {apsolu_cities} ACI ON ACI.id = AA.cityId
           INNER JOIN {course_categories} Activity ON Activity.id = C.category
@@ -153,7 +180,7 @@ class report extends \local_apsolu\local\statistics\report {
       				ELSE CASE WHEN UE.status = 3 THEN "Liste complémentaire"
       				ELSE CASE WHEN UE.status = 4 THEN "Liste des étudiants désinscrits"
       			END END END END AS statusname,
-      			APSOLU_C.id as slotid,
+      			C.id as slotid,
       			C.id as activityid, C.fullname as activityname,
 				    Grouping.id as groupid, Grouping.name as groupname,
             (SELECT GROUP_CONCAT(DISTINCT R.shortname ORDER BY R.shortname SEPARATOR \', \')
@@ -181,8 +208,9 @@ class report extends \local_apsolu\local\statistics\report {
                 apsoluusertype.fieldid = (select id from mdl_user_info_field where shortname = \'apsoluusertype\')
 
           INNER JOIN {enrol} E ON E.id = UE.enrolid AND E.enrol = \'select\'
-      		INNER JOIN {course} C on C.id = E.courseid
-      		INNER JOIN {apsolu_complements} APSOLU_C on APSOLU_C.id = C.id
+          INNER JOIN {course} C on C.id = E.courseid
+          INNER JOIN {customfield_data} CUSTOMDATA1 ON CUSTOMDATA1.instanceid = C.id AND CUSTOMDATA1.intvalue > 1
+                                                   AND CUSTOMDATA1.fieldid = ' . $customfields['type']->id . '
       		INNER JOIN {course_categories} Grouping ON Grouping.id = C.category
       		LEFT JOIN {apsolu_calendars} AC ON AC.id = E.customchar1
       		LEFT JOIN {apsolu_calendars_types} ACT ON ACT.id = AC.typeid
