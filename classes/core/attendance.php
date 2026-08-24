@@ -236,10 +236,9 @@ class attendance {
 
         $courses = [];
 
-        $sql = "SELECT c.id, c.fullname, aas.name AS sessionname, aas.sessiontime," .
-            " aass.shortlabel, aass.longlabel, aass.sumlabel, aass.color, ac.starttime, ac.endtime" .
+        $sql = "SELECT c.id, c.fullname, aas.name AS sessionname, aas.sessiontime, aas.duration," .
+            " aass.shortlabel, aass.longlabel, aass.sumlabel, aass.color" .
             " FROM {course} c" .
-            " JOIN {apsolu_courses} ac ON c.id = ac.id" .
             " JOIN {apsolu_attendance_sessions} aas ON c.id = aas.courseid" .
             " JOIN {apsolu_attendance_presences} aap ON aas.id = aap.sessionid" .
             " JOIN {apsolu_attendance_statuses} aass ON aass.id = aap.statusid" .
@@ -256,7 +255,6 @@ class attendance {
                 $courses[$course->id] = $course;
             }
 
-            $record->duration = course::getDuration($record->starttime, $record->endtime);
             $record->style = self::getStatusBootstrapStyle($record->color);
             $record->status = $record->longlabel;
 

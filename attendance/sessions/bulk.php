@@ -41,15 +41,31 @@ $apsolucourse->load($courseid, $required = true);
 $default = new stdClass();
 $default->startdate = time();
 $default->enddate = null;
-$default->weekdays = [$apsolucourse->weekday => 1];
+$default->weekdays = [];
 $default->excludeholidays = 1;
-[$default->starthour, $default->startminute] = explode(':', $apsolucourse->starttime);
-$default->duration = course::getDuration($apsolucourse->starttime, $apsolucourse->endtime);
+$default->starthour = '';
+$default->startminute = '';
+$default->duration = HOURSECS * 2;
 $default->count = 1;
 $default->durationbreak = 0;
-$default->locationid = $apsolucourse->locationid;
+$default->locationid = '';
 $default->courseid = $courseid;
 $default->submitted = optional_param('previewbutton', null, PARAM_ALPHA);
+
+if (isset($apsolucourse->customfields['weekday']) === true) {
+    $default->weekdays[$apsolucourse->customfields['weekday']->get_value()] = 1;
+}
+
+if (isset($apsolucourse->customfields['timerange']) === true) {
+    $time = $apsolucourse->customfields['timerange']->get_value();
+    $default->starthour = $time['start']['hour'];
+    $default->startminute = $time['start']['minute'];
+    $default->duration = Course::getDuration(implode(':', $time['start']), implode(':', $time['end']));
+}
+
+if (isset($apsolucourse->customfields['location']) === true) {
+    $default->locationid = $apsolucourse->customfields['location']->get_value();
+}
 
 // Définit les jours de la semaine.
 $weekdays = array_keys(course::get_weekdays());

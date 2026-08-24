@@ -63,7 +63,7 @@ final class qrcode_test extends \advanced_testcase {
         // Génère une session de cours.
         $session = new attendancesession();
         $session->courseid = $course->id;
-        $session->locationid = $course->locationid;
+        $session->locationid = $location->id;
         $session->name = 'attendancesession 1';
         $session->save();
 
@@ -141,7 +141,7 @@ final class qrcode_test extends \advanced_testcase {
         // Génère une session de cours.
         $session = new attendancesession();
         $session->courseid = $course->id;
-        $session->locationid = $course->locationid;
+        $session->locationid = $location->id;
         $session->name = 'attendancesession 1';
         $session->save();
 

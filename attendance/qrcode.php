@@ -57,8 +57,8 @@ if (!empty($sessionid)) {
     $course = $DB->get_record('course', ['id' => $session->courseid], '*', MUST_EXIST);
 
     // Vérifier qu'il s'agit d'une activité APSOLU.
-    $activity = $DB->get_record('apsolu_courses', ['id' => $course->id]);
-    if ($activity === false) {
+    $activity = Course::get_record(['id' => $course->id], $fields = '*', MUST_EXIST);
+    if (isset($activity->customfields['type']) === false || empty($activity->customfields['type']) === true) {
         throw new moodle_exception('taking_attendance_is_only_possible_on_a_course', 'local_apsolu');
     }
 
@@ -122,8 +122,8 @@ if (!empty($sessionid)) {
     }
 
     // Vérifier qu'il s'agit d'une activité APSOLU.
-    $activity = $DB->get_record('apsolu_courses', ['id' => $course->id]);
-    if ($activity === false) {
+    $activity = Course::get_record(['id' => $course->id], $fields = '*', MUST_EXIST);
+    if (isset($activity->customfields['type']) === false || empty($activity->customfields['type']) === true) {
         throw new moodle_exception('taking_attendance_is_only_possible_on_a_course', 'local_apsolu');
     }
 
