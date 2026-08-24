@@ -19,6 +19,7 @@
 
 namespace local_apsolu\local\statistics;
 
+use local_apsolu\customfields\course as CustomfieldsCourse;
 use stdClass;
 
 /**
@@ -162,10 +163,14 @@ class report {
     public static function get_complementaries() {
         global $DB;
 
+        $customfields = CustomfieldsCourse::get_apsolu_courses_custom_fields();
+
         $sql = "SELECT DISTINCT c.id, shortname as name
-        FROM  mdl_apsolu_complements ac
-        INNER JOIN mdl_course c on c.id = ac.id
-        ORDER BY c.shortname";
+                  FROM  mdl_course c
+            INNER JOIN {customfield_data} CUSTOMDATA1 ON CUSTOMDATA1.instanceid = C.id
+                                                     AND CUSTOMDATA1.intvalue > 1
+                                                     AND CUSTOMDATA1.fieldid = " . $customfields['type']->id . "
+              ORDER BY c.shortname";
 
         return $DB->get_records_sql($sql);
     }
@@ -264,6 +269,9 @@ class report {
         }
 
         // Pas de paramètre.
+        if (empty($component) === true) {
+            return $stringid;
+        }
         return get_string($stringid, $component);
     }
 }

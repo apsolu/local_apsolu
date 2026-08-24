@@ -19,6 +19,8 @@
 
 namespace local_apsolu\local\statistics\programme;
 
+use local_apsolu\customfields\course as CustomfieldsCourse;
+
 /**
  * Classe pour les statistiques APSOLU.
  *
@@ -41,6 +43,8 @@ class report extends \local_apsolu\local\statistics\report {
     public function __construct() {
         $this->configFilePath = '/local/apsolu/statistics/programme/config.json';
 
+        $customfields = CustomfieldsCourse::get_apsolu_courses_custom_fields();
+
         // Note: SET lc_time_names = 'fr_FR'.
         $this->WithProgramme = 'WITH programme AS (
       	SELECT
@@ -49,9 +53,16 @@ class report extends \local_apsolu\local\statistics\report {
       		AC.id as calendarid, AC.name as calendarname,
       		ACT.id as calendartypeid,ACT.name as calendartypename,
       		ACI.id as cityid,ACI.name as cityname,
-            APSOLU_C.id as slotid, APSOLU_C.event as slotevent,APSOLU_C.numweekday as slotnumweekday,
-                DAYNAME(CONCAT("1970-09-2", APSOLU_C.numweekday)) as slotweekday,
-                APSOLU_C.starttime as slotstart,	APSOLU_C.endtime as slotend,
+            C.id as slotid, CUSTOMDATA2.charvalue as slotevent, CUSTOMDATA3.intvalue as slotnumweekday,
+                DAYNAME(CONCAT("1970-09-2", CUSTOMDATA3.intvalue)) as slotweekday,
+            CONCAT(
+                JSON_EXTRACT(CUSTOMDATA4.shortcharvalue, \'$.start.hour\'), \':\',
+                JSON_EXTRACT(CUSTOMDATA4.shortcharvalue, \'$.start.minute\')
+            ) AS slotstart,
+            CONCAT(
+                JSON_EXTRACT(CUSTOMDATA4.shortcharvalue, \'$.end.hour\'), \':\',
+                JSON_EXTRACT(CUSTOMDATA4.shortcharvalue, \'$.end.minute\')
+            ) AS slotend,
       		CASE WHEN E.customint3 THEN \'Oui\' ELSE \'Non\' END AS \'actifQuota\',
       		E.customint1 AS \'mainQuota\',
       	 	E.customint2 AS \'waitQuota\',
@@ -66,8 +77,17 @@ class report extends \local_apsolu\local\statistics\report {
           AL.id as placeid, AL.name as placename, AL.address as placeaddress
       	FROM {course} C
       	INNER JOIN {enrol} E ON E.courseid = C.id AND E.enrol = \'select\'
-      	INNER JOIN {apsolu_courses} APSOLU_C on APSOLU_C.id = C.id
-      	INNER JOIN {apsolu_locations} AL ON AL.id = APSOLU_C.locationid
+       INNER JOIN {customfield_data} CUSTOMDATA1 ON CUSTOMDATA1.instanceid = C.id
+                                                AND CUSTOMDATA1.fieldid = ' . $customfields['type']->id . '
+       INNER JOIN {customfield_data} CUSTOMDATA2 ON CUSTOMDATA2.instanceid = C.id
+                                                AND CUSTOMDATA2.fieldid = ' . $customfields['category']->id . '
+       INNER JOIN {customfield_data} CUSTOMDATA3 ON CUSTOMDATA3.instanceid = C.id
+                                                AND CUSTOMDATA3.fieldid = ' . $customfields['weekday']->id . '
+       INNER JOIN {customfield_data} CUSTOMDATA4 ON CUSTOMDATA4.instanceid = C.id
+                                                AND CUSTOMDATA4.fieldid = ' . $customfields['timerange']->id . '
+       INNER JOIN {customfield_data} CUSTOMDATA5 ON CUSTOMDATA5.instanceid = C.id
+                                                AND CUSTOMDATA5.fieldid = ' . $customfields['location']->id . '
+      	INNER JOIN {apsolu_locations} AL ON AL.id = CUSTOMDATA5.intvalue
       	INNER JOIN {apsolu_areas} AA ON AA.id = AL.areaId
       	INNER JOIN {apsolu_cities} ACI ON ACI.id = AA.cityId
       	INNER JOIN {course_categories} Activity ON Activity.id = C.category
