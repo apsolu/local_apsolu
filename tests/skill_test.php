@@ -170,6 +170,17 @@ final class skill_test extends \advanced_testcase {
         } catch (dml_write_exception $exception) {
             $this->assertInstanceOf('dml_write_exception', $exception);
         }
+    }
+
+    /**
+     * Teste la partie observer.
+     *
+     * @covers \local_apsolu\observer\skill
+     *
+     * @return void
+     */
+    public function test_observer(): void {
+        global $DB;
 
         // Teste la propagation d'un changement de nom pour un créneau.
         $this->setAdminUser();
@@ -177,15 +188,19 @@ final class skill_test extends \advanced_testcase {
 
         $sql = "SELECT c.id
                   FROM {course} c
-                 WHERE c.fullname LIKE '%expert%'
+                 WHERE c.fullname LIKE '%débutant%'
                  LIMIT 1";
         $record = $DB->get_record_sql($sql);
         $course = new course();
         $course->load($record->id);
         $oldfullname = $course->fullname;
+        $skillid = $course->customfields['skill']->get_value();
 
-        $skill->load($course->skillid);
-        $data->id = $course->skillid;
+        $skill = new skill();
+        $skill->load($skillid);
+
+        $data = new stdClass();
+        $data->id = $skillid;
         $data->name = 'avancé';
         $skill->save($data);
 

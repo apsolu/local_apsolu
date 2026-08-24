@@ -178,4 +178,12 @@ $observers = [
         'internal'    => true,
         'priority'    => 9999,
     ],
+    // Gère la mise à jour lors d'une modificaiton d'un niveau de pratique depuis l'interface d'administration.
+    [
+        'eventname'   => '\local_apsolu\event\skill_updated',
+        'callback'    => '\local_apsolu\observer\skill::updated',
+        'includefile' => null,
+        'internal'    => true,
+        'priority'    => 9999,
+    ],
 ];

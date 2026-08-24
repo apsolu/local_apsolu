@@ -16,7 +16,9 @@
 
 namespace local_apsolu\core;
 
+use context_system;
 use local_apsolu\core\course;
+use local_apsolu\event\skill_updated;
 use stdClass;
 
 /**
@@ -64,40 +66,12 @@ class skill extends record {
         } else {
             $DB->update_record(get_called_class()::TABLENAME, $this);
 
-            // Met à jour le nom complet des créneaux horaires.
-            $sql = "SELECT ac.*, c.category
-                      FROM {apsolu_courses} ac
-                      JOIN {course} c ON c.id = ac.id
-                     WHERE ac.skillid = :skillid";
-            $courses = $DB->get_records_sql($sql, ['skillid' => $this->id]);
-            if (count($courses) > 0) {
-                $categories = [];
-                $sql = "SELECT cc.*
-                          FROM {course_categories} cc
-                          JOIN {apsolu_courses_categories} acc ON cc.id = acc.id";
-                foreach ($DB->get_records_sql($sql) as $category) {
-                    $categories[$category->id] = $category->name;
-                }
-
-                foreach ($courses as $course) {
-                    $data = new stdClass();
-                    $data->str_category = $categories[$course->category];
-                    $data->str_skill = $this->name;
-
-                    $moodlecourse = new stdClass();
-                    $moodlecourse->id = $course->id;
-                    $moodlecourse->fullname = Course::get_fullname(
-                        $data->str_category,
-                        $course->event,
-                        $course->weekday,
-                        $course->starttime,
-                        $course->endtime,
-                        $data->str_skill
-                    );
-                    $moodlecourse->shortname = Course::get_shortname($course->id, $moodlecourse->fullname);
-                    $DB->update_record('course', $moodlecourse);
-                }
-            }
+            // Diffuse un évènement.
+            $event = skill_updated::create([
+                'objectid' => $this->id,
+                'context' => context_system::instance(),
+                ]);
+            $event->trigger();
         }
     }
 }
