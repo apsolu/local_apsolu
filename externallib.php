@@ -28,7 +28,9 @@ use core_external\external_multiple_structure;
 use core_external\external_single_structure;
 use core_external\external_value;
 use local_apsolu\core\attendance;
+use local_apsolu\core\course;
 use local_apsolu\core\customfields;
+use local_apsolu\customfields\course as CustomfieldsCourse;
 use UniversiteRennes2\Apsolu\Payment;
 
 defined('MOODLE_INTERNAL') || die;
@@ -44,17 +46,20 @@ require_once($CFG->dirroot . '/enrol/select/locallib.php');
 function local_apsolu_is_valid_token() {
     global $DB;
 
+    $coursecustomfields = CustomfieldsCourse::get_apsolu_courses_custom_fields();
+
     // Vérifier que le token appartienne à un enseignant du SIUAPS.
     $sql = "SELECT DISTINCT et.*
               FROM {external_tokens} et
               JOIN {external_services} es ON es.id = et.externalserviceid
               JOIN {role_assignments} ra ON et.userid = ra.userid AND ra.roleid = 3  -- Enseignant.
               JOIN {context} ctx ON ctx.id = ra.contextid
-              JOIN {apsolu_courses} c ON ctx.instanceid = c.id
+              JOIN {customfield_data} cd ON c.id = cd.instanceid AND cd.intvalue = 1 AND cd.fieldid = :customfieldtypeid
              WHERE et.token = :token
                AND et.token != ''
                AND es.component = 'local_apsolu'";
-    $token = $DB->get_record_sql($sql, ['token' => optional_param('wstoken', '', PARAM_ALPHANUM)]);
+    $params = ['customfieldtypeid' => $coursecustomfields['type']->id, 'token' => optional_param('wstoken', '', PARAM_ALPHANUM)];
+    $token = $DB->get_record_sql($sql, $params);
 
     return ($token !== false);
 }
@@ -106,6 +111,8 @@ function local_apsolu_grant_ws_access() {
         return;
     }
 
+    $coursecustomfields = CustomfieldsCourse::get_apsolu_courses_custom_fields();
+
     $webservicemanager = new \webservice();
 
     $tokens = $DB->get_records('external_tokens', ['externalserviceid' => $service->id], $sort = '', $fields = 'userid, id');
@@ -115,10 +122,10 @@ function local_apsolu_grant_ws_access() {
               FROM {user} u
               JOIN {role_assignments} ra ON u.id = ra.userid
               JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50
-              JOIN {apsolu_courses} ac ON ac.id = ctx.instanceid
+              JOIN {customfield_data} cd ON ctx.instanceid = cd.instanceid AND cd.intvalue = 1 AND cd.fieldid = :customfieldtypeid
               JOIN {course} c ON c.id = ac.id AND c.visible = 1
              WHERE ra.roleid = 3"; // Teacher.
-    $users = $DB->get_records_sql($sql);
+    $users = $DB->get_records_sql($sql, ['customfieldtypeid' => $coursecustomfields['type']->id]);
     foreach ($users as $user) {
         if (isset($tokens[$user->id]) === true) {
             continue;
@@ -289,13 +296,16 @@ class local_apsolu_webservices extends external_api {
             return $data;
         }
 
+        $coursecustomfields = CustomfieldsCourse::get_apsolu_courses_custom_fields();
+
         $sql = "SELECT DISTINCT cc.id AS idactivity, cc.name
                   FROM {course_categories} cc
                   JOIN {course} c ON cc.id = c.category
-                  JOIN {apsolu_courses} ac ON c.id = ac.id
+                  JOIN {customfield_data} cd ON c.id = cd.instanceid AND cd.intvalue = 1 AND cd.fieldid = :customfieldtypeid
                  WHERE c.timemodified >= :timemodified
               ORDER BY cc.name";
-        foreach ($DB->get_records_sql($sql, ['timemodified' => $since]) as $record) {
+        $params = ['customfieldtypeid' => $coursecustomfields['type']->id, 'timemodified' => $since];
+        foreach ($DB->get_records_sql($sql, $params) as $record) {
             $activity = new stdClass();
             $activity->idactivity = $record->idactivity;
             $activity->name = $record->name;
@@ -354,28 +364,46 @@ class local_apsolu_webservices extends external_api {
             return $data;
         }
 
+        $coursecustomfields = CustomfieldsCourse::get_apsolu_courses_custom_fields();
+
         $semester1enrolstartdate = core_date::strftime('%Y-%m-%d', get_config('local_apsolu', 'semester1_enrol_startdate'));
 
-        $sql = "SELECT c.id AS idcourse, c.category AS idactivity, ac.event, sk.name AS skill,
-                       ac.numweekday, ac.starttime, ac.endtime
+        $sql = "SELECT c.id AS idcourse, c.category AS idactivity, cd6.charvalue AS event, sk.name AS skill,
+                       cd5.intvalue AS numweekday, cd4.shortcharvalue AS timerange
                   FROM {course} c
-                  JOIN {apsolu_courses} ac ON c.id = ac.id
-                  JOIN {apsolu_skills} sk ON sk.id = ac.skillid
-                  JOIN {apsolu_periods} ap ON ap.id = ac.periodid
+                  JOIN {customfield_data} cd1 ON c.id = cd1.instanceid AND cd1.intvalue = 1 AND cd.fieldid = :customfieldtypeid
+                  JOIN {customfield_data} cd2 ON c.id = cd2.instanceid AND cd2.fieldid = :customfieldskillid
+                  JOIN {apsolu_skills} sk ON sk.id = cd2.intvalue
+                  JOIN {customfield_data} cd3 ON c.id = cd3.instanceid AND cd3.fieldid = :customfieldperiodid
+                  JOIN {apsolu_periods} ap ON ap.id = cd3.intvalue
+                  JOIN {customfield_data} cd4 ON c.id = cd4.instanceid AND cd4.fieldid = :customfieldtimerange
+                  JOIN {customfield_data} cd5 ON c.id = cd5.instanceid AND cd5.fieldid = :customfieldweekday
+                  JOIN {customfield_data} cd6 ON c.id = cd6.instanceid AND cd6.fieldid = :customfieldcategory
                  WHERE c.timemodified >= :timemodified
                     -- On ne propose que les cours de l'année en cours ; pas les cours antérieurs au S1.
                    AND ap.weeks >= :semester1_enrol_startdate
               ORDER BY c.fullname";
-        $params = ['timemodified' => $since, 'semester1_enrol_startdate' => $semester1enrolstartdate];
+        $params = [
+            'customfieldtypeid' => $coursecustomfields['type']->id,
+            'customfieldskillid' => $coursecustomfields['skill']->id,
+            'customfieldperiodid' => $coursecustomfields['period']->id,
+            'customfieldtimerange' => $coursecustomfields['timerange']->id,
+            'customfieldweekday' => $coursecustomfields['weekday']->id,
+            'customfieldcategory' => $coursecustomfields['category']->id,
+            'timemodified' => $since,
+            'semester1_enrol_startdate' => $semester1enrolstartdate,
+        ];
         foreach ($DB->get_records_sql($sql, $params) as $record) {
+            $timerange = json_decode($record->timerange, $associative = true);
+
             $course = new stdClass();
             $course->idcourse = $record->idcourse;
             $course->idactivity = $record->idactivity;
             $course->event = $record->event;
             $course->skill = $record->skill;
             $course->numweekday = $record->numweekday;
-            $course->starttime = $record->starttime;
-            $course->endtime = $record->endtime;
+            $course->starttime = sprintf('%s:%s', $timerange['start']['hour'], $timerange['start']['minute']);
+            $course->endtime = sprintf('%s:%s', $timerange['end']['hour'], $timerange['end']['minute']);
 
             $data[] = $course;
         }
@@ -425,34 +453,57 @@ class local_apsolu_webservices extends external_api {
 
         $data = [];
 
+        $coursecustomfields = CustomfieldsCourse::get_apsolu_courses_custom_fields();
+        $weekdays = Course::get_weekdays_by_num();
+
         $roles = enrol_select_get_activities_roles();
         $teachers = enrol_select_get_activities_teachers();
 
-        $sql = "SELECT DISTINCT c.id, c.fullname AS coursename, ac.event, ac.numweekday, ac.weekday, ac.starttime, ac.endtime,
+        $sql = "SELECT DISTINCT c.id, c.fullname AS coursename, cd6.charvalue AS event, cd5.intvalue AS numweekday,
+                                cd4.shortcharvalue AS timerange,
                                 cc0.id AS domainid, cc0.name AS domain, acg.url AS domainurl,
                                 cc.id AS sportid, cc.name AS sport, acc.url AS sporturl, cc.description,
-                                ac.skillid, ask.name AS skill,
-                                ac.locationid, al.name AS location, al.areaid, aa.name AS area,
+                                ask.id AS skillid, ask.name AS skill,
+                                al.id AS locationid, al.name AS location, al.areaid, aa.name AS area,
                                 aa.cityid, aci.name AS city,
-                                ac.periodid, ap.generic_name AS period
+                                ap.id AS periodid, ap.generic_name AS period
                  FROM {course} c
-                 JOIN {apsolu_courses} ac ON c.id = ac.id
+                 JOIN {customfield_data} cd1 ON c.id = cd1.instanceid AND cd1.intvalue = 1 AND cd.fieldid = :customfieldtypeid
                  JOIN {course_categories} cc ON cc.id = c.category
                  JOIN {apsolu_courses_categories} acc ON acc.id = cc.id
                  JOIN {course_categories} cc0 ON cc0.id = cc.parent
                  JOIN {apsolu_courses_groupings} acg ON acg.id = cc0.id
-                 JOIN {apsolu_skills} ask ON ask.id = ac.skillid
-                 JOIN {apsolu_locations} al ON al.id = ac.locationid
+                 JOIN {customfield_data} cd2 ON c.id = cd2.instanceid AND cd2.fieldid = :customfieldskillid
+                 JOIN {apsolu_skills} ask ON ask.id = cd2.intvalue
+                 JOIN {customfield_data} cd3 ON c.id = cd3.instanceid AND cd3.fieldid = :customfieldperiodid
+                 JOIN {apsolu_periods} ap ON ap.id = cd3.intvalue
+                 JOIN {customfield_data} cd4 ON c.id = cd4.instanceid AND cd4.fieldid = :customfieldtimerange
+                 JOIN {customfield_data} cd5 ON c.id = cd5.instanceid AND cd5.fieldid = :customfieldweekday
+                 JOIN {customfield_data} cd6 ON c.id = cd6.instanceid AND cd6.fieldid = :customfieldcategory
+                 JOIN {customfield_data} cd7 ON c.id = cd7.instanceid AND cd7.fieldid = :customfieldlocationid
+                 JOIN {apsolu_locations} al ON al.id = cd7.intvalue
                  JOIN {apsolu_areas} aa ON aa.id = al.areaid
                  JOIN {apsolu_cities} aci ON aci.id = aa.cityid
-                 JOIN {apsolu_periods} ap ON ap.id = ac.periodid
                 WHERE cc0.visible = 1
                   AND cc.visible = 1
                   AND c.visible = 1
              ORDER BY domain, sport, numweekday, starttime, event";
+        $params = [
+            'customfieldtypeid' => $coursecustomfields['type']->id,
+            'customfieldskillid' => $coursecustomfields['skill']->id,
+            'customfieldperiodid' => $coursecustomfields['period']->id,
+            'customfieldtimerange' => $coursecustomfields['timerange']->id,
+            'customfieldweekday' => $coursecustomfields['weekday']->id,
+            'customfieldcategory' => $coursecustomfields['category']->id,
+            'customfieldlocationid' => $coursecustomfields['location']->id,
+            ];
         foreach ($DB->get_records_sql($sql) as $course) {
+            $timerange = json_decode($course->timerange, $associative = true);
+
             $course->courseid = $course->id;
-            $course->weekday = get_string($course->weekday, 'local_apsolu');
+            $course->weekday = $weekdays[$course->numweekday];
+            $course->starttime = sprintf('%s:%s', $timerange['start']['hour'], $timerange['start']['minute']);
+            $course->endtime = sprintf('%s:%s', $timerange['end']['hour'], $timerange['end']['minute']);
 
             $course->roles = [];
             if (isset($roles[$course->id]) === true) {
@@ -594,6 +645,8 @@ class local_apsolu_webservices extends external_api {
 
         require_once(__DIR__ . '/classes/apsolu/payment.php');
 
+        $coursecustomfields = CustomfieldsCourse::get_apsolu_courses_custom_fields();
+
         $courses = [];
         $activities = [];
         $fields = $DB->get_records('user_info_field', $conditions = [], $sort = '', $fields = 'shortname, id');
@@ -611,7 +664,7 @@ class local_apsolu_webservices extends external_api {
                   JOIN {enrol} e ON e.id = ue.enrolid AND e.id = ra.itemid
                   JOIN {context} ctx ON ctx.id = ra.contextid
                   JOIN {course} c ON c.id = ctx.instanceid
-                  JOIN {apsolu_courses} ac ON c.id = ac.id
+                  JOIN {customfield_data} cd ON c.id = cd.instanceid AND cd.intvalue = 1 AND cd.fieldid = :customfieldtypeid
                   JOIN {apsolu_attendance_sessions} aas ON ctx.instanceid = aas.courseid
              LEFT JOIN {apsolu_attendance_presences} aap ON aas.id = aap.sessionid AND ra.userid = aap.studentid AND
                                                             aap.statusid IN (1, 2)  -- Present + late.
@@ -634,6 +687,7 @@ class local_apsolu_webservices extends external_api {
               GROUP BY ra.id, ra.userid, ctx.instanceid";
 
         $params = [];
+        $params['customfieldtypeid'] = $coursecustomfields['type']->id;
         $params['apsolusesame'] = $fields['apsolusesame']->id;
         $params['now'] = time();
         $params['timemodified1'] = $since;
@@ -803,14 +857,17 @@ class local_apsolu_webservices extends external_api {
             return $data;
         }
 
-        $sql = "SELECT ra.id, ra.userid, ctx.instanceid AS idcourse" .
-            " FROM {role_assignments} ra" .
-            " JOIN {context} ctx ON ctx.id = ra.contextid" .
-            " JOIN {apsolu_courses} c ON ctx.instanceid = c.id" .
-            " WHERE ra.timemodified >= :timemodified" .
-            " AND ra.roleid = 3" . // Enseignant.
-            " ORDER BY ra.userid, ctx.instanceid";
-        foreach ($DB->get_records_sql($sql, ['timemodified' => $since]) as $record) {
+        $coursecustomfields = CustomfieldsCourse::get_apsolu_courses_custom_fields();
+
+        $sql = "SELECT ra.id, ra.userid, ctx.instanceid AS idcourse
+                  FROM {role_assignments} ra
+                  JOIN {context} ctx ON ctx.id = ra.contextid
+                  JOIN {customfield_data} cd ON ctx.instanceid = cd.instanceid AND cd.intvalue = 1 AND cd.fieldid = :customtypeid
+                 WHERE ra.timemodified >= :timemodified
+                   AND ra.roleid = 3  -- Enseignant.
+              ORDER BY ra.userid, ctx.instanceid";
+        $params = ['customtypeid' => $coursecustomfields['type']->id, 'timemodified' => $since];
+        foreach ($DB->get_records_sql($sql, $params) as $record) {
             $teacher = new stdClass();
             $teacher->iduser = $record->userid;
             $teacher->idcourse = $record->idcourse;
