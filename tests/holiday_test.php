@@ -166,14 +166,16 @@ final class holiday_test extends \advanced_testcase {
         $location->save();
 
         $data = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_course_data();
-        $data->locationid = $location->id;
-        $data->periodid = $period1->id;
+        $data->customfield_location = $location->id;
+        $data->customfield_period = $period1->id;
+        $data->customfield_timerange = ['start' => ['hour' => '16', 'minute' => '00'], 'end' => ['hour' => '18', 'minute' => '00']];
         $course = new course();
         $course->save($data);
 
         // Ajoute un jour férié sur la prochaine session de cours.
+        $data = new stdClass();
+        $data->day = strtotime('next ' . $course->customfields['weekday']->export_value() . ' this week') + WEEKSECS;
         $holiday = new holiday();
-        $data->day = strtotime('next ' . $course->weekday . ' this week') + WEEKSECS;
         $holiday->save($data);
 
         // Vérifie qu'il y a toujours 2 sessions.
