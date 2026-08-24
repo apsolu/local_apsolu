@@ -153,20 +153,34 @@ final class category_test extends \advanced_testcase {
         // Vérifie l'objet mis à jour.
         $this->assertSame($data->name, $category->name);
         $this->assertSame($countrecords, $initialcount + 1);
+    }
+
+    /**
+     * Teste la partie observer.
+     *
+     * @covers local_apsolu\observer\category
+     *
+     * @return void
+     */
+    public function test_observer(): void {
+        global $DB;
 
         // Teste la propagation d'un changement de nom pour un créneau.
         $this->getDataGenerator()->get_plugin_generator('local_apsolu')->create_courses();
 
-        $sql = "SELECT c.id
+        $sql = "SELECT c.id, c.category
                   FROM {course} c
                  WHERE c.fullname LIKE '%Danse salsa%'
                  LIMIT 1";
-        $record = $DB->get_record_sql($sql);
+        $record = $DB->get_record_sql($sql, null, MUST_EXIST);
         $course = new course();
         $course->load($record->id);
         $oldfullname = $course->fullname;
 
-        $category->load($course->category);
+        $category = new category();
+        $category->load($record->category);
+
+        [$data, $mform] = $this->getDataGenerator()->get_plugin_generator('local_apsolu')->get_category_data();
         $data->id = $course->category;
         $data->name = 'Football';
         $category->save($data, $mform);

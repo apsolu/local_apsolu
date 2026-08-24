@@ -16,6 +16,8 @@
 
 namespace local_apsolu\observer;
 
+use customfield_apsolu_category\field_controller as customfield_apsolu_category_field_controller;
+use local_apsolu\core\course;
 use stdClass;
 
 /**
@@ -42,6 +44,9 @@ class course_category {
         if ($category !== false) {
             // C'est une catégorie d'activité sportive APSOLU.
             $DB->delete_records(\local_apsolu\core\category::TABLENAME, ['id' => $category->id]);
+
+            // Réinitialise le cache du customfield apsolu_category.
+            customfield_apsolu_category_field_controller::purge_cache();
             return;
         }
 
@@ -71,7 +76,9 @@ class course_category {
             " WHERE cc.id = :categoryid";
         $category = $DB->get_record_sql($sql, ['categoryid' => $context->instanceid]);
         if ($category !== false) {
-            // C'est une catégorie d'activité sportive APSOLU.
+            // C'est une catégorie d'activité sportive APSOLU, on réinitialise le cache du customfield apsolu_category.
+            customfield_apsolu_category_field_controller::purge_cache();
+
             // Le parent doit être une catégorie de groupement d'activités sportives APSOLU.
             $parent = $DB->get_record(\local_apsolu\core\grouping::TABLENAME, ['id' => $category->parent]);
             if ($parent === false) {
@@ -96,6 +103,32 @@ class course_category {
 
                 $category->parent = $parent->id;
                 $DB->update_record('course_categories', $category);
+            }
+
+            // On met à jour tous les libellés des cours appartenant à cette catégorie.
+            foreach ($DB->get_records('course', ['category' => $category->id]) as $course) {
+                $record = Course::get_record(['id' => $course->id]);
+                if ($record === false) {
+                    // L'id du cours n'est pas valide.
+                    continue;
+                }
+
+                if (isset($record->customfields['type']) === false) {
+                    // Ce n'est pas un cours de type APSOLU.
+                    continue;
+                }
+
+                $data = $record->get_course_data();
+                $fullname = Course::get_fullname($data);
+
+                if ($course->fullname === $fullname) {
+                    // Le nom du cours reste identique.
+                    continue;
+                }
+
+                $course->fullname = $fullname;
+                $course->shortname = Course::get_shortname($course->id, $fullname);
+                $DB->update_record('course', $course);
             }
 
             return;
