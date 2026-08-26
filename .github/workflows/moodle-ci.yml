@@ -28,7 +28,7 @@ jobs:
     # DB services you need for testing.
     services:
       mariadb:
-        image: mariadb:10.11
+        image: mariadb:11.4
         env:
           MYSQL_USER: 'root'
           MYSQL_ALLOW_EMPTY_PASSWORD: "true"

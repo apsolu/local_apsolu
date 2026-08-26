@@ -98,8 +98,7 @@ grunt:
     - git -C "$NVM_DIR" pull --ff-only origin master
     - source "$NVM_DIR/nvm.sh"
     - nvm install "$NODE_VERSION"
-    - npm --prefix "$WWWMOODLE_PATH" install
-
+    - npm --prefix "$WWWMOODLE_PATH" install --ignore-scripts
     - moodle-plugin-ci grunt --moodle "$WWWMOODLE_PATH" -- "$PLUGIN_PATH"
   rules:
     - if: $CI_COMMIT_TAG || $CI_COMMIT_BRANCH =~ /MOODLE_[0-9]+_STABLE/
@@ -159,12 +158,12 @@ phpunit:
   script:
     - apt $apt_options install mariadb-client 1> /dev/null
     # Si un dump SQL existe, on le restaure.
-    - test -f "$CACHE_SQLDUMP_PHPUNIT" && { zstdcat "$CACHE_SQLDUMP_PHPUNIT" | mysql --host=docker-mariadb --user=root moodle ; }
+    - test -f "$CACHE_SQLDUMP_PHPUNIT" && { zstdcat "$CACHE_SQLDUMP_PHPUNIT" | mysql --skip-ssl --host=docker-mariadb --user=root moodle ; }
     # Si l'environnement initialisé de PHPUnit n'est pas viable, on supprime le dump existant.
-    - php "$WWWMOODLE_PATH"/admin/tool/phpunit/cli/util.php --diag || rm -f "$CACHE_SQLDUMP_PHPUNIT"
-    - php "$WWWMOODLE_PATH"/admin/tool/phpunit/cli/init.php --disable-composer
+    - php "$WWWMOODLE_PATH"/public/admin/tool/phpunit/cli/util.php --diag || rm -f "$CACHE_SQLDUMP_PHPUNIT"
+    - php "$WWWMOODLE_PATH"/public/admin/tool/phpunit/cli/init.php --disable-composer
     # Si aucun dump SQL existe, on en fait un.
-    - test -f "$CACHE_SQLDUMP_PHPUNIT" || { mysqldump --host=docker-mariadb --user=root moodle | zstd --force --quiet -o "$CACHE_SQLDUMP_PHPUNIT" ; }
+    - test -f "$CACHE_SQLDUMP_PHPUNIT" || { mysqldump --skip-ssl --host=docker-mariadb --user=root moodle | zstd --force --quiet -o "$CACHE_SQLDUMP_PHPUNIT" ; }
     - moodle-plugin-ci phpunit --moodle "$WWWMOODLE_PATH" -- "$PLUGIN_PATH"
   rules:
     - if: $CI_COMMIT_TAG || $CI_COMMIT_BRANCH =~ /MOODLE_[0-9]+_STABLE/
@@ -219,18 +218,18 @@ behat:
     FF_NETWORK_PER_BUILD: 1
     SELENIUM_HOST: "http://docker-selenium-chrome:4444/wd/hub"
   script:
-    - /usr/bin/php -S 0.0.0.0:8000 -t /var/www/html/moodle 2> /var/log/phpserver.log &
+    - /usr/bin/php -S 0.0.0.0:8000 -t /var/www/html/moodle/public 2> /var/log/phpserver.log &
     - apt $apt_options install mariadb-client 1> /dev/null
     - test -d "$CACHE_MOODLE_BROWSER_CONFIG" || git clone https://github.com/andrewnicols/moodle-browser-config "$CACHE_MOODLE_BROWSER_CONFIG"
     - git -C "$CACHE_MOODLE_BROWSER_CONFIG" pull --ff-only origin main
     - rsync -a "$CACHE_MOODLE_BROWSER_CONFIG" "$WWWMOODLE_PATH/"
     # Si un dump SQL existe, on le restaure.
-    - test -f "$CACHE_SQLDUMP_BEHAT" && { zstdcat "$CACHE_SQLDUMP_BEHAT" | mysql --host=docker-mariadb --user=root moodle ; }
+    - test -f "$CACHE_SQLDUMP_BEHAT" && { zstdcat "$CACHE_SQLDUMP_BEHAT" | mysql --skip-ssl --host=docker-mariadb --user=root moodle ; }
     # Si l'environnement initialisé de Behat n'est pas viable, on supprime le dump existant.
-    - php "$WWWMOODLE_PATH"/admin/tool/behat/cli/util.php --diag || rm -f "$CACHE_SQLDUMP_BEHAT"
-    - php "$WWWMOODLE_PATH"/admin/tool/behat/cli/init.php --disable-composer
+    - php "$WWWMOODLE_PATH"/public/admin/tool/behat/cli/util.php --diag || rm -f "$CACHE_SQLDUMP_BEHAT"
+    - php "$WWWMOODLE_PATH"/public/admin/tool/behat/cli/init.php --disable-composer --scss-deprecations
     # Si aucun dump SQL existe, on en fait un.
-    - test -f "$CACHE_SQLDUMP_BEHAT" || { mysqldump --host=docker-mariadb --user=root moodle | zstd --force --quiet -o "$CACHE_SQLDUMP_BEHAT" ; }
+    - test -f "$CACHE_SQLDUMP_BEHAT" || { mysqldump --skip-ssl --host=docker-mariadb --user=root moodle | zstd --force --quiet -o "$CACHE_SQLDUMP_BEHAT" ; }
     - >  # Astuce pour échapper proprement le caractère ':' sans avoir à écrire la chaîne encadrée de double quotes.
       sed -i 's#localhost:4444#docker-selenium-chrome:4444#' "$CACHE_MOODLE_DATA_BEHAT/behatrun/behat/behat.yml"
     - |+
