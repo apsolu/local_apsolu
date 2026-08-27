@@ -844,7 +844,9 @@ class adhesion extends record {
             'medicalcertificatedate' => get_string('medical_certificate_date_shortened', 'local_apsolu'),
             'medicalcertifiatevalidated' => get_string('medical_certificate_validated_shortened', 'local_apsolu'),
             'schoolcertificatevalidated' => get_string('school_certificate_validated', 'local_apsolu'),
-            'activity' => get_string('disciplines', 'local_apsolu'),
+            'activities' => get_string('disciplines', 'local_apsolu'),
+            'activity' => get_string('discipline_primary', 'local_apsolu'),
+            'secondaryactivities' => get_string('disciplines_secondary', 'local_apsolu'),
             'federationnumberprefix' => get_string('section'),
         ];
     }
@@ -1311,17 +1313,19 @@ class adhesion extends record {
      * @return boolean
      */
     public function has_constraint_sports() {
+        // Récupère la liste des sports à contrainte.
         $constraintsports = [];
         foreach (Activity::get_records(['restriction' => 1]) as $activity) {
             $constraintsports[$activity->code] = $activity->name;
         }
 
+        // Vérifie les disciplines.
         $data = $this->decode_data();
-        if (isset($data->activity) === false) {
-            $data->activity = [];
+        if (isset($data->activities) === false) {
+            $data->activities = [];
         }
 
-        foreach ($data->activity as $activity) {
+        foreach ($data->activities as $activity) {
             if (isset($constraintsports[$activity]) === true) {
                 return true;
             }
@@ -1424,7 +1428,14 @@ class adhesion extends record {
                 $json->birthdepartment = '';
                 $json->birthtown = $data->birthtown ?? '';
                 $json->birthplace = $data->birthplace ?? '';
-                $json->activity = $data->activity;
+                $json->activity = $data->activity ?? '';
+                $data->secondaryactivities = $data->secondaryactivities ?? [];
+                $key = array_search($data->activity, $data->secondaryactivities, $strict = true);
+                if ($key !== false) {
+                    unset($data->secondaryactivities[$key]);
+                }
+                $json->secondaryactivities = $data->secondaryactivities;
+                $json->activities = array_merge([$data->activity], $data->secondaryactivities);
                 $json->insurance = $data->insurance ?? '';
                 $json->cursus = $data->cursus ?? '';
                 $json->studycycle = $data->studycycle ?? '';

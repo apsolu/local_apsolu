@@ -326,6 +326,21 @@ if ($data = $mform->get_data()) {
                         }
                         break;
                     case 'activity':
+                        if (is_array($record->{$field}) === true) {
+                            // TODO: hack pour la rétrocompatibilité. À supprimer après septembre 2027.
+                            $record->{$field} = current($record->{$field});
+
+                            if ($record->{$field} === false) {
+                                $record->{$field} = '';
+                            }
+                        }
+                        $row[] = $record->{$field};
+                        break;
+                    case 'activities':
+                    case 'secondaryactivities':
+                        if ($record->{$field} === '') {
+                            $record->{$field} = [];
+                        }
                         $row[] = implode(',', $record->{$field});
                         break;
                     case 'federationnumberprefix':

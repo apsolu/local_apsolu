@@ -238,7 +238,7 @@ class local_apsolu_federation_membership extends moodleform {
         $mform->hideIf('birthplace', 'birthcountry', 'eq', 'FR');
 
         // Activités.
-        $options = ['multiple' => true];
+        $options = ['multiple' => false];
         $helmetwhitecross = '&#9937;';
         $heavygreekcross = '&#10010;';
         $stethoscope = '&#129658;';
@@ -252,9 +252,15 @@ class local_apsolu_federation_membership extends moodleform {
                 $values[$record->code] .= ' ' . $stethoscope;
             }
         }
-        $mform->addElement('autocomplete', 'activity', get_string('discipline', 'local_apsolu'), $values, $options);
+        $mform->addElement('autocomplete', 'activity', get_string('discipline_primary', 'local_apsolu'), $values, $options);
         $mform->addRule('activity', get_string('required'), 'required', null, 'client');
         $mform->setType('activity', PARAM_TEXT);
+
+        $options = ['multiple' => true];
+        $label = get_string('disciplines_secondary', 'local_apsolu');
+        $mform->addElement('autocomplete', 'secondaryactivities', $label, $values, $options);
+        $mform->setType('secondaryactivities', PARAM_TEXT);
+
         $label = get_string('discipline_additional_information', 'local_apsolu', implode(', ', $restrictionactivities));
         $mform->addElement('static', 'activityinfo', '', $label);
 
@@ -425,6 +431,11 @@ class local_apsolu_federation_membership extends moodleform {
                     $errors['birthplace'] = get_string('the_field_X_has_an_invalid_value', 'local_apsolu', $label);
                 }
             }
+        }
+
+        // Contrôle qu'il n'y ait pas plus de 3 disciplines secondaires.
+        if (count($data['secondaryactivities']) > 3) {
+            $errors['secondaryactivities'] = get_string('X_choices_at_the_most', 'local_apsolu', 3);
         }
 
         if (empty($data['federaltexts']) === true) {
