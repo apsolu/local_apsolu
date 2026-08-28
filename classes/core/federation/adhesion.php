@@ -1677,7 +1677,9 @@ class adhesion extends record {
             }
 
             $activities = $DB->get_records(Activity::TABLENAME, [], $sort = 'name', $field = 'code, name');
-            foreach ($json->activity as $code) {
+
+            $json->activities ??= [];
+            foreach ($json->activities as $code) {
                 if (isset($activities[$code]) === false) {
                     continue;
                 }

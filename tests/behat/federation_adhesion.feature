@@ -45,7 +45,7 @@ Feature: Teste la procédure d'adhésion à la FFSU.
     And I set the following fields to these values:
       | Date de naissance                    | 0        |
       | Type de licence                      | SPORTIVE |
-      | Discipline                           | AVIRON   |
+      | Discipline principale                | AVIRON   |
       | Textes fédéraux                      | Yes      |
       | Conditions d’utilisation des données | Yes      |
     And I click on "Save" "button"
@@ -67,7 +67,7 @@ Feature: Teste la procédure d'adhésion à la FFSU.
     And I set the following fields to these values:
       | Date de naissance                    | 0        |
       | Type de licence                      | SPORTIVE |
-      | Discipline                           | AVIRON   |
+      | Discipline principale                | AVIRON   |
       | Textes fédéraux                      | Yes      |
       | Conditions d’utilisation des données | Yes      |
     And I click on "Save" "button"
@@ -87,7 +87,7 @@ Feature: Teste la procédure d'adhésion à la FFSU.
     And I set the following fields to these values:
       | Date de naissance                    | 0        |
       | Type de licence                      | SPORTIVE |
-      | Discipline                           | BIATHLON |
+      | Discipline principale                | BIATHLON |
       | Textes fédéraux                      | Yes      |
       | Conditions d’utilisation des données | Yes      |
     And I click on "Save" "button"
@@ -107,7 +107,7 @@ Feature: Teste la procédure d'adhésion à la FFSU.
     And I set the following fields to these values:
       | Date de naissance                    | ## 2013-01-01 ## |
       | Type de licence                      | SPORTIVE         |
-      | Discipline                           | AVIRON           |
+      | Discipline principale                | AVIRON           |
       | Textes fédéraux                      | Yes              |
       | Conditions d’utilisation des données | Yes              |
     And I click on "Save" "button"
