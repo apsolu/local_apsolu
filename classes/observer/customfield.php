@@ -16,7 +16,10 @@
 
 namespace local_apsolu\observer;
 
+use core_cache\cache;
+use core_customfield\event\field_created;
 use core_customfield\event\field_deleted;
+use core_customfield\event\field_updated;
 
 /**
  * Classe permettant d'écouter les évènements diffusés par Moodle.
@@ -26,6 +29,18 @@ use core_customfield\event\field_deleted;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class customfield {
+    /**
+     * Écoute l'évènement field_created.
+     *
+     * @param field_created $event Évènement diffusé par Moodle.
+     *
+     * @return void
+     */
+    public static function created(field_created $event): void {
+        // Invalide le cache.
+        self::invalidate_cache();
+    }
+
     /**
      * Écoute l'évènement field_deleted.
      *
@@ -38,5 +53,31 @@ class customfield {
 
         // Supprime les références du champ personnalisé supprimé dans la table apsolu_courses_fields.
         $DB->delete_records('apsolu_courses_fields', ['customfieldid' => $event->objectid]);
+
+        // Invalide le cache.
+        self::invalidate_cache();
+    }
+
+    /**
+     * Fonction interne pour invalider le cache des coursecustomfields.
+     *
+     * @return void
+     */
+    private static function invalidate_cache() {
+         // Invalide le cache des champs de cours personnalisés.
+        $cache = cache::make('local_apsolu', 'coursecustomfields');
+        $cache->purge();
+    }
+
+    /**
+     * Écoute l'évènement field_updated.
+     *
+     * @param field_updated $event Évènement diffusé par Moodle.
+     *
+     * @return void
+     */
+    public static function updated(field_updated $event): void {
+        // Invalide le cache.
+        self::invalidate_cache();
     }
 }
