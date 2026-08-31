@@ -82,6 +82,9 @@ class course {
         $cache = cache::make('local_apsolu', 'coursecustomfields');
         $cache->delete($context->instanceid);
 
+        $cache = cache::make('local_apsolu', 'courserenderer');
+        $cache->delete($context->instanceid);
+
         $url = new moodle_url('/local/apsolu/courses/index.php');
         if (PHPUNIT_TEST === false && $PAGE->url->compare($url, URL_MATCH_BASE) === true) {
             // N'applique pas ce hook lorsque la mise à jour est provoquée par l'interface de gestion des créneaux d'APSOLU.
