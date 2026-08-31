@@ -16,6 +16,8 @@
 
 namespace local_apsolu\output;
 
+use Exception;
+use core_cache\cache;
 use core_course\customfield\course_handler;
 use local_apsolu\core\course;
 use stdClass;
@@ -127,12 +129,37 @@ class courses {
      *
      * @param array $courses Tableau de cours.
      * @param array $headers Tableau lisant les entêtes à utiliser.
+     * @param bool $usecache Détermine si il faut utiliser le cache.
      *
      * @return array
      */
-    public static function get_data($courses, $headers): array {
+    public static function get_data($courses, $headers, $usecache = false): array {
         global $CFG, $DB;
 
+        $cachecourses = [];
+
+        if ($usecache === true) {
+            // Récupère les données depuis le cache.
+            $cache = cache::make('local_apsolu', 'courserenderer');
+            try {
+                // TODO: Moodle ne respecte pas la clause MUST_EXIST. Il faut attendre le bugfix.
+                // À remplacer par $cachecourses = $cache->get_many(array_keys($courses), MUST_EXIST).
+
+                $records = [];
+                $cachecourses = $cache->get_many(array_keys($courses));
+                foreach ($cachecourses as $cachecourse) {
+                    if ($cachecourse === false) {
+                        throw new Exception('Les données en cache sont incomplètes.');
+                    }
+                    $records[] = $cachecourse;
+                }
+                return $records;
+            } catch (Exception $exception) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+                // Les données en cache sont incomplètes.
+            }
+        }
+
+        // Récupère les données en base de données.
         $records = [];
 
         $currentactivity = null;
@@ -142,6 +169,11 @@ class courses {
         Course::get_contacts($courses);
 
         foreach ($courses as $course) {
+            if (isset($cachecourses[$course->id]) === true && $cachecourses[$course->id] !== false) {
+                $records[] = $cachecourses[$course->id];
+                continue;
+            }
+
             if ($currentactivity !== $course->category) {
                 $currentactivity = $course->category;
 
@@ -185,6 +217,10 @@ class courses {
             $data->teachers = $teachers;
 
             $records[] = $data;
+
+            if ($usecache === true) {
+                $cache->set($course->id, $data);
+            }
         }
 
         return $records;

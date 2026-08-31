@@ -16,6 +16,7 @@
 
 namespace local_apsolu\observer;
 
+use core_cache\cache;
 use local_apsolu\core\course;
 use local_apsolu\event\skill_updated;
 use stdClass;
@@ -65,6 +66,9 @@ class skill {
             $record->fullname = $fullname;
             $record->shortname = Course::get_shortname($course->id, $fullname);
             $DB->update_record('course', $record);
+
+            $cache = cache::make('local_apsolu', 'courserenderer');
+            $cache->delete($course->id);
         }
     }
 }

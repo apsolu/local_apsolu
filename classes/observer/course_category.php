@@ -16,6 +16,7 @@
 
 namespace local_apsolu\observer;
 
+use core_cache\cache;
 use customfield_apsolu_category\field_controller as customfield_apsolu_category_field_controller;
 use local_apsolu\core\course;
 use stdClass;
@@ -129,6 +130,9 @@ class course_category {
                 $course->fullname = $fullname;
                 $course->shortname = Course::get_shortname($course->id, $fullname);
                 $DB->update_record('course', $course);
+
+                $cache = cache::make('local_apsolu', 'courserenderer');
+                $cache->delete($course->id);
             }
 
             return;

@@ -75,6 +75,12 @@
 defined('MOODLE_INTERNAL') || die();
 
 $definitions = [
+    // Contient toutes les données décrivant un créneau horaire, indexées par courseid.
+    'courserenderer' => [
+        'mode' => cache_store::MODE_APPLICATION,
+        'simplekeys' => true,
+        'simpledata' => true,
+    ],
     // Contient toutes les données des champs personnalisés des cours, indexées par courseid.
     'coursecustomfields' => [
         'mode' => cache_store::MODE_APPLICATION,
