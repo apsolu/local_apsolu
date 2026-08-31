@@ -23,7 +23,7 @@ jobs:
   # when a job name is not provided.
   test:
     # Virtual environment to use.
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     # DB services you need for testing.
     services:
@@ -37,7 +37,7 @@ jobs:
           - 3306:3306
         options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval 10s --health-timeout 5s --health-retries 3
       postgres:
-        image: postgres:16
+        image: postgres:17
         env:
           POSTGRES_USER: 'postgres'
           POSTGRES_HOST_AUTH_METHOD: 'trust'
@@ -58,20 +58,14 @@ jobs:
       matrix:
         # Note: les tests avec pgsql ne fonctionnent pas à cause de : "A lock was created but not released".
         database: [mariadb]
-        moodle-branch: ['MOODLE_500_STABLE', 'MOODLE_501_STABLE', 'MOODLE_502_STABLE', 'main']
+        moodle-branch: ['MOODLE_502_STABLE', 'main']
         # php: ['8.1', '8.2', '8.3']
         #
         # There is an alterantive way allowing to define explicitly define which php, moodle-branch
         # and database to use:
         include:
-          - moodle-branch: 'MOODLE_500_STABLE'
-            php: '8.2'
-          - moodle-branch: 'MOODLE_500_STABLE'
+          - moodle-branch: 'MOODLE_502_STABLE'
             php: '8.3'
-          - moodle-branch: 'MOODLE_500_STABLE'
-            php: '8.4'
-          - moodle-branch: 'MOODLE_501_STABLE'
-            php: '8.4'
           - moodle-branch: 'MOODLE_502_STABLE'
             php: '8.4'
           - moodle-branch: 'main'
@@ -118,6 +112,14 @@ jobs:
           moodle-plugin-ci add-plugin --clone https://github.com/apsolu/block_apsolu_dashboard.git
           moodle-plugin-ci add-plugin --clone https://github.com/apsolu/enrol_select.git
           moodle-plugin-ci add-plugin --clone https://github.com/apsolu/theme_apsolu.git
+          moodle-plugin-ci add-plugin --clone https://github.com/apsolu/moodle-customfield_apsolu_category.git
+          moodle-plugin-ci add-plugin --clone https://github.com/apsolu/moodle-customfield_apsolu_course_type.git
+          moodle-plugin-ci add-plugin --clone https://github.com/apsolu/moodle-customfield_apsolu_location.git
+          moodle-plugin-ci add-plugin --clone https://github.com/apsolu/moodle-customfield_apsolu_period.git
+          moodle-plugin-ci add-plugin --clone https://github.com/apsolu/moodle-customfield_apsolu_skill.git
+          moodle-plugin-ci add-plugin --clone https://github.com/apsolu/moodle-customfield_daterange.git
+          moodle-plugin-ci add-plugin --clone https://github.com/apsolu/moodle-customfield_timerange.git
+          moodle-plugin-ci add-plugin --clone https://github.com/apsolu/moodle-customfield_weekday.git
           moodle-plugin-ci install --plugin ./plugin --db-host=127.0.0.1
         env:
           DB: ${{ matrix.database }}
@@ -177,4 +179,4 @@ jobs:
         # Exécute les tests Behat, sauf sur la branche 'main'.
         # if: ${{ always() && matrix.moodle-branch != 'main' }}
         if: ${{ always() }}
-        run: moodle-plugin-ci behat --profile chrome
+        run: moodle-plugin-ci behat --profile chrome --scss-deprecations
