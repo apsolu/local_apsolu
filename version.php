@@ -25,12 +25,12 @@
 defined('MOODLE_INTERNAL') || die();
 
 // The current plugin version (Date: YYYYMMDDXX).
-$plugin->version = 2026061000;
+$plugin->version = 2026083100;
 
-$plugin->release = '5.0.8';
+$plugin->release = '5.2.2';
 
-// Requires Moodle 5.0.0.
-$plugin->requires = 2025041400;
+// Requires Moodle 5.2.0.
+$plugin->requires = 2026042000;
 
 // Full name of the plugin (used for diagnostics).
 $plugin->component = 'local_apsolu';
@@ -38,8 +38,8 @@ $plugin->component = 'local_apsolu';
 // The plugin is a stable version.
 $plugin->maturity = MATURITY_STABLE;
 
-// Support Moodle from 5.0.0 to 5.0.x.
-$plugin->supported = [500, 500];
+// Support Moodle from 5.2.0 to 5.2.x.
+$plugin->supported = [502, 502];
 
 // Dependencies on another plugin.
 $plugin->dependencies = [
