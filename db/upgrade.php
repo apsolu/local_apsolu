@@ -2385,6 +2385,9 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
                             break;
                         case 'weekday':
                             $value = $course->numweekday;
+                            if ($value == 7) {
+                                $value = 0; // Dimanche devient 0.
+                            }
                             break;
                         case 'timerange':
                             $value = [];
