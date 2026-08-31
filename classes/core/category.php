@@ -86,6 +86,9 @@ class category extends record {
         // Réinitialise le cache du customfield apsolu_category.
         customfield_apsolu_category_field_controller::purge_cache();
 
+        // Vide le cache des cours.
+        Course::purge_cache();
+
         // Valide la transaction en cours.
         if (isset($transaction) === true) {
             $transaction->allow_commit();
@@ -173,6 +176,9 @@ class category extends record {
 
         // Réinitialise le cache du customfield apsolu_category.
         customfield_apsolu_category_field_controller::purge_cache();
+
+        // Vide le cache des cours.
+        Course::purge_cache();
 
         // Trie la catégorie parent.
         $category = core_course_category::get((int) $this->parent);
