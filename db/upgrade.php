@@ -2270,6 +2270,9 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
             $dbman->add_field($table, $field);
         }
 
+        // Réinitialise le cache des plugins, car sinon Moodle ne voit pas les nouveaux customfields pour apsolu.
+        \core\plugin_manager::reset_caches();
+
         // Génère les tables pour la gestion des formats de cours.
         $table = new xmldb_table('apsolu_courses_types');
         if ($dbman->table_exists($table) === false) {
