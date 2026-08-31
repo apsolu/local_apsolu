@@ -122,6 +122,9 @@ class course extends record {
         // Update course count in categories.
         fix_course_sortorder();
 
+        // Supprime les entréees dans le cache.
+        self::purge_cache($this->id);
+
         // Valide la transaction en cours.
         if (isset($transaction) === true) {
             $transaction->allow_commit();
@@ -692,6 +695,21 @@ class course extends record {
     }
 
     /**
+     * Invalide le cache du cours donné.
+     *
+     * @param int|string $courseid
+     *
+     * @return void
+     */
+    public static function purge_cache(int|string $courseid): void {
+        $cache = cache::make('local_apsolu', 'coursecustomfields');
+        $cache->delete($courseid);
+
+        $cache = cache::make('local_apsolu', 'courserenderer');
+        $cache->delete($courseid);
+    }
+
+    /**
      * Enregistre un objet en base de données.
      *
      * @throws coding_exception A coding exception is thrown when $data parameter is null.
@@ -805,6 +823,9 @@ class course extends record {
                     break;
                 }
             }
+
+            // Réinitialise le cache à chaque mise à jour.
+            self::purge_cache($this->id);
         }
 
         // Trie les cours de la catégorie.
