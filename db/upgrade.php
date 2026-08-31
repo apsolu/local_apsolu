@@ -2402,6 +2402,7 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
                             break;
                         case 'federation':
                         case 'on_homepage':
+                        case 'show_policy':
                             if (empty($course->{$shortname}) === false) {
                                 $value = 1; // Oui.
                             } else {
@@ -2418,12 +2419,6 @@ function xmldb_local_apsolu_upgrade($oldversion = 0) {
                             }
                             $value = ['text' => $course->information, 'format' => $course->informationformat];
                             $fieldnameform .= '_editor';
-                            break;
-                        case 'show_policy':
-                            $value = $course->showpolicy;
-                            if ($value === null) {
-                                $value = 0;
-                            }
                             break;
                     }
 
