@@ -73,10 +73,26 @@ $observers = [
         'internal'    => true,
         'priority'    => 9999,
     ],
+    // Gère la création des champs personnalisés depuis l'interface Administration du site > Cours > Champs personnalisés.
+    [
+        'eventname'   => '\core_customfield\event\field_created',
+        'callback'    => '\local_apsolu\observer\customfield::created',
+        'includefile' => null,
+        'internal'    => true,
+        'priority'    => 9999,
+    ],
     // Gère la suppression des champs personnalisés depuis l'interface Administration du site > Cours > Champs personnalisés.
     [
         'eventname'   => '\core_customfield\event\field_deleted',
         'callback'    => '\local_apsolu\observer\customfield::deleted',
+        'includefile' => null,
+        'internal'    => true,
+        'priority'    => 9999,
+    ],
+    // Gère la mise à jour des champs personnalisés depuis l'interface Administration du site > Cours > Champs personnalisés.
+    [
+        'eventname'   => '\core_customfield\event\field_updated',
+        'callback'    => '\local_apsolu\observer\customfield::updated',
         'includefile' => null,
         'internal'    => true,
         'priority'    => 9999,

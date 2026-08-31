@@ -20,6 +20,7 @@ use Exception;
 use core\event\course_deleted;
 use core\event\course_updated;
 use core\notification;
+use core_cache\cache;
 use local_apsolu\core\attendancesession;
 use local_apsolu\core\course as apsolu_course;
 use moodle_url;
@@ -57,6 +58,10 @@ class course {
         }
 
         $DB->delete_records(apsolu_course::TABLENAME, ['id' => $course->id]);
+
+        // Invalide le cache des champs personnalisés de ce cours.
+        $cache = cache::make('local_apsolu', 'coursecustomfields');
+        $cache->delete($context->instanceid);
     }
 
     /**
@@ -71,13 +76,17 @@ class course {
     public static function updated(course_updated $event) {
         global $DB, $OUTPUT, $PAGE;
 
+        $context = $event->get_context();
+
+        // Invalide le cache des champs personnalisés de ce cours.
+        $cache = cache::make('local_apsolu', 'coursecustomfields');
+        $cache->delete($context->instanceid);
+
         $url = new moodle_url('/local/apsolu/courses/index.php');
         if (PHPUNIT_TEST === false && $PAGE->url->compare($url, URL_MATCH_BASE) === true) {
             // N'applique pas ce hook lorsque la mise à jour est provoquée par l'interface de gestion des créneaux d'APSOLU.
             return;
         }
-
-        $context = $event->get_context();
 
         $course = apsolu_course::get_record(['id' => $context->instanceid]);
         if ($course === false) {

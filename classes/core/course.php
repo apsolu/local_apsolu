@@ -19,9 +19,11 @@
 
 namespace local_apsolu\core;
 
+use ReflectionClass;
 use coding_exception;
 use context_block;
 use context_course;
+use core_cache\cache;
 use core_course_category;
 use core_course\customfield\course_handler;
 use core_php_time_limit;
@@ -148,13 +150,44 @@ class course extends record {
      * @return array
      */
     public static function get_customfield_records(int $courseid = 0): array {
+        $cache = cache::make('local_apsolu', 'coursecustomfields');
+
+        $cacherecords = $cache->get($courseid);
+        if ($cacherecords !== false) {
+            // Utilise le cache.
+            foreach ($cacherecords as $cacherecord) {
+                $category = \core_customfield\category_controller::create(0, $cacherecord->category);
+                $formcontroller = $cacherecord->namespace . '\field_controller';
+                $field = $formcontroller::create(0, $cacherecord->field, $category);
+                $datacontroller = $cacherecord->namespace . '\data_controller';
+                $customfields[$cacherecord->shortname] = $datacontroller::create(0, $cacherecord->data, $field);
+            }
+
+            return $customfields;
+        }
+
+        // Calcule les champs personnalisés.
         $handler = course_handler::create();
 
         $customfields = [];
+        $cacherecords = [];
         foreach ($handler->get_instance_data($courseid, $returnall = true) as $customdata) {
             $shortname = $customdata->get_field()->get('shortname');
             $customfields[$shortname] = $customdata;
+
+            // Construit l'objet pour la mise un cache.
+            $reflectionclass = new ReflectionClass($customdata);
+            $cacherecord = new stdClass();
+            $cacherecord->namespace = $reflectionclass->getNamespaceName();
+            $cacherecord->shortname = $shortname;
+            $cacherecord->data = $customdata->to_record();
+            $cacherecord->field = $customdata->get_field()->to_record();
+            $cacherecord->category = $customdata->get_field()->get_category()->to_record();
+            $cacherecords[] = $cacherecord;
         }
+
+        // Place l'objet en cache.
+        $cache->set($courseid, $cacherecords);
 
         return $customfields;
     }
