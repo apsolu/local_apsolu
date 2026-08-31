@@ -210,6 +210,7 @@ $string['commercial_offers'] = 'Offres commerciales';
 $string['commercial_offers_help'] = 'J’autorise la FFSU à m’adresser des offres commerciales.';
 $string['communication'] = 'Communication';
 $string['confirm'] = 'Confirmer';
+$string['copy'] = 'Copier';
 $string['course'] = 'Créneau horaire';
 $string['course_format'] = 'Format de créneau';
 $string['course_has_been_deleted'] = 'Le créneau horaire a été supprimé.';

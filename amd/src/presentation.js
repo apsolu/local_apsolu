@@ -17,7 +17,7 @@
  * Module javascript pour l'offre de formations.
  *
  * @module     local_apsolu/presentation
- * @copyright  2020 Université Rennes 2
+ * @copyright  2026 Université Rennes 2
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 define(['jquery', 'core/modal_events', 'core/modal', 'core/str', 'core/templates', 'enrol_select/select2'],
