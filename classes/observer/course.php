@@ -20,7 +20,6 @@ use Exception;
 use core\event\course_deleted;
 use core\event\course_updated;
 use core\notification;
-use core_cache\cache;
 use local_apsolu\core\attendancesession;
 use local_apsolu\core\course as apsolu_course;
 use moodle_url;
@@ -59,9 +58,8 @@ class course {
 
         $DB->delete_records(apsolu_course::TABLENAME, ['id' => $course->id]);
 
-        // Invalide le cache des champs personnalisés de ce cours.
-        $cache = cache::make('local_apsolu', 'coursecustomfields');
-        $cache->delete($context->instanceid);
+        // Invalide le cache du cours.
+        apsolu_course::purge_cache($course->id);
     }
 
     /**
@@ -78,12 +76,8 @@ class course {
 
         $context = $event->get_context();
 
-        // Invalide le cache des champs personnalisés de ce cours.
-        $cache = cache::make('local_apsolu', 'coursecustomfields');
-        $cache->delete($context->instanceid);
-
-        $cache = cache::make('local_apsolu', 'courserenderer');
-        $cache->delete($context->instanceid);
+        // Invalide le cache du cours.
+        apsolu_course::purge_cache($context->instanceid);
 
         $url = new moodle_url('/local/apsolu/courses/index.php');
         if (PHPUNIT_TEST === false && $PAGE->url->compare($url, URL_MATCH_BASE) === true) {
