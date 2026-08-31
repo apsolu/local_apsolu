@@ -17,6 +17,7 @@
 namespace local_apsolu\core;
 
 use core_customfield\api as CustomfieldAPI;
+use local_apsolu\core\course;
 use local_apsolu\core\federation\course as federationcourse;
 use local_apsolu\customfields\course as CustomfieldsCourse;
 use stdClass;
@@ -76,6 +77,9 @@ class coursetype extends record {
 
         // Supprime l'objet en base de données.
         $DB->delete_records(self::TABLENAME, ['id' => $this->id]);
+
+        // Vide le cache des cours.
+        Course::purge_cache();
 
         // Valide la transaction en cours.
         if (isset($transaction) === true) {
@@ -279,6 +283,9 @@ class coursetype extends record {
             // On supprime les associations obsolètes.
             $DB->delete_records('apsolu_courses_fields', ['id' => $field->id]);
         }
+
+        // Vide le cache des cours.
+        Course::purge_cache();
 
         // Valide la transaction en cours.
         if (isset($transaction) === true) {

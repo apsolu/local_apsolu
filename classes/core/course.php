@@ -695,18 +695,22 @@ class course extends record {
     }
 
     /**
-     * Invalide le cache du cours donné.
+     * Invalide le cache du cours donné ou tous les caches.
      *
-     * @param int|string $courseid
+     * @param int|string|null $courseid
      *
      * @return void
      */
-    public static function purge_cache(int|string $courseid): void {
-        $cache = cache::make('local_apsolu', 'coursecustomfields');
-        $cache->delete($courseid);
+    public static function purge_cache(int|string|null $courseid = null): void {
+        foreach (['coursecustomfields', 'courserenderer'] as $area) {
+            $cache = cache::make('local_apsolu', $area);
 
-        $cache = cache::make('local_apsolu', 'courserenderer');
-        $cache->delete($courseid);
+            if ($courseid === null) {
+                $cache->purge();
+            } else {
+                $cache->delete($courseid);
+            }
+        }
     }
 
     /**

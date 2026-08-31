@@ -16,6 +16,8 @@
 
 namespace local_apsolu\core;
 
+use local_apsolu\core\course;
+
 /**
  * Classe faisant le lien entre les classes PHP apsolu et la base de données Moodle.
  *
@@ -47,6 +49,9 @@ abstract class record {
 
         // Supprime l'objet en base de données.
         $DB->delete_records(get_called_class()::TABLENAME, ['id' => $this->id]);
+
+        // Vide le cache des cours.
+        Course::purge_cache();
 
         return true;
     }
@@ -162,6 +167,9 @@ abstract class record {
         } else {
             $DB->update_record(get_called_class()::TABLENAME, $this);
         }
+
+        // Vide le cache des cours.
+        Course::purge_cache();
     }
 
     /**
