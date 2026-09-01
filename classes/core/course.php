@@ -1002,20 +1002,38 @@ class course extends record {
      * Trie les cours par ordre alphabétique.
      *
      * @param array $courses
+     * @param array $sortorder Ordre de tri.
+     *
+     * Par défaut, le tableau de cours est trié par :
+     *  - nom d'activité
+     *  - jour de la semaine
+     *  - date de début
+     *  - heure de début
+     *  - lieu
+     *  - niveau de pratique
      *
      * @return array
      */
-    public static function sort(array $courses): array {
+    public static function sort(
+        array $courses,
+        array $sortorder = ['category', 'weekday', 'daterange', 'timerange', 'location', 'skill']
+    ): array {
+        $GLOBALS['apsolu_sortorder'] = $sortorder;
         uasort($courses, function ($a, $b) {
-            $fields = [];
-            $fields[] = 'category'; // Trie par activité.
-            $fields[] = 'weekday'; // Trie par jour de la semaine.
-            $fields[] = 'daterange'; // Trie par date de début.
-            $fields[] = 'timerange'; // Trie par heure de début.
-            $fields[] = 'location'; // Trie par lieu.
-            $fields[] = 'skill'; // Trie par niveau.
+            $fields = $GLOBALS['apsolu_sortorder'];
 
             foreach ($fields as $field) {
+                if ($field === 'visible') {
+                    // Note: on inverse les champs comparés pour avoir d'abord les cours visibles, puis les cours cachés.
+                    $return = strcoll($b->$field, $a->$field);
+
+                    if ($return !== 0) {
+                        return $return;
+                    }
+
+                    continue;
+                }
+
                 if (isset($a->customfields[$field], $b->customfields[$field]) === false) {
                     continue;
                 }
@@ -1037,6 +1055,8 @@ class course extends record {
 
             return 0;
         });
+
+        unset($GLOBALS['apsolu_sortorder']);
 
         return $courses;
     }
