@@ -158,7 +158,7 @@ final class category_test extends \advanced_testcase {
     /**
      * Teste la partie observer.
      *
-     * @covers \local_apsolu\observer\category
+     * @covers \local_apsolu\observer\course_category
      *
      * @return void
      */
