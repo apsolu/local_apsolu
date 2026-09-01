@@ -522,14 +522,14 @@ class course extends record {
                   FROM {course} c
                   JOIN {enrol} e ON e.courseid = c.id
                   JOIN {context} ctx ON c.id = ctx.instanceid AND ctx.contextlevel = :courselevel
-                  JOIN {role_assignment} ra ON ra.contextid = ctx.id
-                  JOIN {role} ra ON r.id = ra.roleid
+                  JOIN {role_assignments} ra ON ra.contextid = ctx.id
+                  JOIN {role} r ON r.id = ra.roleid
                  WHERE e.enrol = 'select'
                    AND ra.userid = :userid";
         $params = ['courselevel' => CONTEXT_COURSE, 'userid' => $userid];
 
         if (empty($roleid) === false) {
-            $sql .= " ra.roleid = :roleid";
+            $sql .= " AND ra.roleid = :roleid";
             $params['roleid'] = $roleid;
         }
 
