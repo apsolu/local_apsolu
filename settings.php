@@ -54,7 +54,7 @@ if ($hassiteconfig || has_any_capability($capabilities, context_system::instance
     );
 
     $items = [];
-    $items['courses'] = ['groupings', 'categories', 'courses', 'course_types'];
+    $items['courses'] = ['course_types', 'groupings', 'categories', 'courses'];
     $items['locations'] = ['locations', 'areas', 'cities', 'managers'];
     $items['periods'] = ['periods', 'holidays'];
     $items['skills'] = ['skills'];
