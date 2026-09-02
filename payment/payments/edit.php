@@ -74,7 +74,9 @@ if ($paymentid === null) {
 }
 
 // Build form.
-$methods = method::get_enabled_methods();
+$enabledmethod = method::get_enabled_methods();
+$nopaymentmethod = method::get_no_payment_method();
+$methods = $enabledmethod + $nopaymentmethod;
 
 $sources = [
     'apogee' => get_string('source_apogee', 'local_apsolu'),
@@ -109,6 +111,7 @@ foreach ($DB->get_records('apsolu_payments_cards', $conditions = [], $sort = 'fu
 
 $customdata = ['payment' => $payment, 'methods' => $methods, 'sources' => $sources,
     'statuses' => $statuses, 'centers' => $centers, 'cards' => $cards];
+$customdata['nopaymentmethod'] = array_key_first($nopaymentmethod);
 $mform = new local_apsolu_payment_payments_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
@@ -135,9 +138,6 @@ if ($data = $mform->get_data()) {
     switch ($payment->status) {
         case Payment::PAID:
         case Payment::GIFT:
-            if ($payment->status === Payment::GIFT) {
-                $payment->amount = 0;
-            }
             $payment->timepaid = $payment->timemodified;
             break;
         default:

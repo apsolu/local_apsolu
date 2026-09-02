@@ -517,6 +517,7 @@ Ce cours doit être un cours « normal » au sens Moodle. Il ne doit pas être
 $string['introduction'] = 'Présentation';
 $string['invalid_free_amount'] = 'Montant invalide : un paiement avec le statut « {$a} » doit être égal à 0';
 $string['invalid_paid_amount'] = 'Montant invalide : un paiement avec le statut « {$a} » doit être supérieur à 0';
+$string['invalid_payment_method'] = 'La méthode de paiement sélectionnée n’est pas compatible avec le statut « {$a} »';
 $string['invalidate'] = 'Invalider';
 $string['is_an_absence'] = 'Est une absence ?';
 $string['join_the_sports_association'] = 'Adhérer à l’AS (Licence FFSU)';
@@ -1507,6 +1508,7 @@ $string['method_apogee'] = 'Apogée';
 $string['method_card'] = 'Carte bancaire';
 $string['method_check'] = 'Chèque';
 $string['method_coins'] = 'Espèce';
+$string['method_none'] = 'Aucun';
 $string['method_pass'] = 'Pass Sport';
 $string['method_paybox'] = 'PayBox';
 $string['source_apogee'] = 'Apogée';
