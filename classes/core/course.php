@@ -833,9 +833,11 @@ class course extends record {
         }
 
         // Trie les cours de la catégorie.
-        $category = core_course_category::get((int) $data->customfield_category);
-        if ($category->can_resort_courses()) {
-            \core_course\management\helper::action_category_resort_courses($category, $sort = 'fullname');
+        if (isset($data->customfield_category['categoryid']) === true) {
+            $category = core_course_category::get((int) $data->customfield_category['categoryid']);
+            if ($category->can_resort_courses()) {
+                \core_course\management\helper::action_category_resort_courses($category, $sort = 'fullname');
+            }
         }
 
         // Valide la transaction en cours.
