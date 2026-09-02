@@ -196,10 +196,9 @@ if ($data = $mform->get_data()) {
     }
 
     if ($success === true) {
-        // Display notification and display elements list.
-        $notification = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
-
-        require(__DIR__ . '/view.php');
+        // Display notification and go back to user's paiement list.
+        $notification = get_string('changessaved');
+        redirect($backurl, $notification, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
     } else {
         // Display form.
         echo '<h1>' . get_string('add_payment', 'local_apsolu') . '</h1>';
