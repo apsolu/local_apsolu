@@ -44,6 +44,9 @@ class grant_ws_access extends \core\task\scheduled_task {
 
         require_once($CFG->dirroot . '/local/apsolu/externallib.php');
 
+        // Note: au 2 septembre 2026, cette tâche ne sert probablement plus à rien. Elle se contente de vider la table des tokens.
+        // À voir à l'avenir si il faut réactiver cette tâche ou la supprimer définitivement.
+
         // Crée des accès aux webservices pour les enseignants du SIUAPS.
         local_apsolu_grant_ws_access();
     }

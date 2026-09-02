@@ -126,6 +126,7 @@ function local_apsolu_grant_ws_access() {
               JOIN {customfield_data} cd ON c.id = cd.instanceid AND cd.intvalue = 1 AND cd.fieldid = :customfieldtypeid
              WHERE ra.roleid = 3"; // Teacher.
     $users = $DB->get_records_sql($sql, ['customfieldtypeid' => $coursecustomfields['type']->id]);
+    $users = []; // La création de tokens n'a peut-être plus trop de sens actuellement. Il est préférable de tout supprimer.
     foreach ($users as $user) {
         if (isset($tokens[$user->id]) === true) {
             continue;
