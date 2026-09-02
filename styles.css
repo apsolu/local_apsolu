@@ -225,9 +225,20 @@ select.tablesorter-filter {
     margin-bottom: 1em;
 }
 
-#page-admin-local-apsolu-payment-admin form select[multiple='multiple'] {
-    max-width: 500px;
+#page-admin-local-apsolu-payment-admin form {
+    & select[multiple='multiple'] {
+        max-width: 500px;
+    }
+
+    & .col-form-label p {
+        font-weight: inherit;
+    }
+
+    & label[class^="form-check-inline"] {
+        margin-left: 0.9rem !important; /* stylelint-disable-line declaration-no-important */
+    }
 }
+
 
 #apsolu-payment-total-div {
     border-top: 1px solid gray;

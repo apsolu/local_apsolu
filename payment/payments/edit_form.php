@@ -16,6 +16,8 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+use UniversiteRennes2\Apsolu\Payment;
+
 require_once($CFG->libdir . '/formslib.php');
 
 /**
@@ -62,11 +64,14 @@ class local_apsolu_payment_payments_edit_form extends moodleform {
         $mform->setType('center', PARAM_INT);
         $mform->addRule('center', get_string('required'), 'required', null, 'client');
 
-        // Courses field.
+        // Cards field.
+        $cardopts = [];
         foreach ($cards as $cardid => $cardname) {
-            $mform->addElement('checkbox', 'card' . $cardid, $cardname);
-            $mform->setType('card' . $cardid, PARAM_INT);
+            $cardopts[] = $mform->createElement('advcheckbox', 'card' . $cardid, '', $cardname);
         }
+
+        $mform->addGroup($cardopts, 'cards', get_string('card', 'local_apsolu'), [' '], false);
+        $mform->setType('cards', PARAM_INT);
 
         // TODO: disable les checkboxes en fonction des centres de paiement.
 
@@ -100,5 +105,51 @@ class local_apsolu_payment_payments_edit_form extends moodleform {
 
         // Set default values.
         $this->set_data($payment);
+    }
+
+    /**
+     * Validation.
+     *
+     * @param array $data
+     * @param array $files
+     *
+     * @return array the errors that were found
+     */
+    public function validation($data, $files): array {
+        global $DB;
+
+        $errors = parent::validation($data, $files);
+
+        // Contrôle qu'une des cartes a été sélectionnée.
+        $cards = $this->_customdata['cards'];
+        if (empty($cards == false)) {
+            $checked = false;
+            foreach ($cards as $id => $card) {
+                $name = 'card' . $id;
+                if (empty($data[$name]) === false) {
+                    $checked = true;
+                    break;
+                }
+            }
+            if ($checked == false) {
+                $errors['cards'] = get_string('no_payment_card', 'local_apsolu');
+            }
+        } else {
+            // Aucune carte encore à payer : le paiement ne devrait jamais être possible.
+            $errors['cards'] = get_string('no_card_due', 'local_apsolu');
+        }
+
+        // Le montant doit être supérieur à 0 si le statut est PAID ou DUE et égal à 0 si le statut est GIFT.
+        if ((int) $data['status'] === Payment::GIFT) {
+            if ((float) $data['amount'] != 0) {
+                $errors['amount'] = get_string('invalid_free_amount', 'local_apsolu', $this->_customdata['statuses'][$data['status']]);
+            }
+        } else {
+            if ((float) $data['amount'] <= 0) {
+                $errors['amount'] = get_string('invalid_paid_amount', 'local_apsolu', $this->_customdata['statuses'][$data['status']]);
+            }
+        }
+
+        return $errors;
     }
 }

@@ -515,6 +515,8 @@ $string['internal_collaborative_course_help'] = 'Cours mis en avant dans un ongl
 
 Ce cours doit être un cours « normal » au sens Moodle. Il ne doit pas être créé via le menu « créneau horaire ».';
 $string['introduction'] = 'Présentation';
+$string['invalid_free_amount'] = 'Montant invalide : un paiement avec le statut « {$a} » doit être égal à 0';
+$string['invalid_paid_amount'] = 'Montant invalide : un paiement avec le statut « {$a} » doit être supérieur à 0';
 $string['invalidate'] = 'Invalider';
 $string['is_an_absence'] = 'Est une absence ?';
 $string['join_the_sports_association'] = 'Adhérer à l’AS (Licence FFSU)';
@@ -622,6 +624,7 @@ $string['newsletter'] = 'Lettre d’informations';
 $string['newsletter_help'] = 'Je souhaite m’abonner à la newsletter fédérale.';
 $string['next'] = 'Continuer';
 $string['no_attendance_statuses'] = 'Aucun type de présence';
+$string['no_card_due'] = 'L’utilisateur n’a aucune carte en attente de paiement';
 $string['no_club_medical_certificate_will_be_accepted'] = '<strong>Important :</strong> aucune licence <u>fédérale</u> ne sera acceptée.';
 $string['no_course_sessions_found'] = 'Aucune session de cours trouvée';
 $string['no_course_sessions_found_please_check_the_period_settings'] = 'Aucune session de cours trouvée. Merci de contrôler le paramétrage de la période de pratique.';
@@ -1474,6 +1477,7 @@ $string['status_cancel'] = 'Paiement annulé.';
 $string['status_unknown'] = 'Le retour du paiement ne s’est pas passé comme prévu. Merci de prendre contact avec le SIUAPS.';
 $string['sportcard'] = 'Carte sport';
 $string['cards'] = 'Cartes';
+$string['card'] = 'Carte';
 $string['activitiesdescription'] = 'Accès aux cours, aux installations extérieures';
 $string['bodybuilding'] = 'Carte musculation';
 $string['bodybuildingdescription'] = 'Accès aux salles de musculation en autonomie sur des créneaux dédiés';
@@ -1536,7 +1540,7 @@ $string['back'] = 'retour';
 $string['research_user'] = 'Rechercher un nouvel utilisateur';
 $string['error_no_payment_found'] = 'Une erreur est survenue (écriture non retrouvée).';
 $string['error_payment_not_editable'] = 'Ce paiement ne peut pas être modifié.';
-$string['error_missing_items'] = 'Vous devez cocher au moins un tarif de paiement.';
+$string['error_missing_items'] = 'Carte(s) non reconnue(s) : immpossible d’enregistrer un paiement s´il ne concerne pas au moins une carte valide.';
 
 // Reports.
 $string['found_students'] = '{$a} utilisateur(s) trouvé(s)';

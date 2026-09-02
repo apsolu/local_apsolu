@@ -102,7 +102,7 @@ foreach ($DB->get_records('apsolu_payments_cards', $conditions = [], $sort = 'fu
         " AND api.cardid = :cardid" .
         " AND ap.userid = :userid";
     if ($DB->get_record_sql($sql, ['cardid' => $card->id, 'userid' => $userid]) !== false) {
-        continue;
+        continue; // La carte a déjà été payée.
     }
     $cards[$card->id] = $card->fullname;
 }
@@ -116,7 +116,7 @@ if ($data = $mform->get_data()) {
     $items = [];
     foreach ($cards as $cardid => $cardname) {
         $name = 'card' . $cardid;
-        if (isset($data->{$name}) === true) {
+        if (empty($data->{$name}) === false) {
             $items[] = $cardid;
         }
     }
