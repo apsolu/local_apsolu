@@ -41,10 +41,17 @@ if (isset($userid)) {
     $data->wwwroot = $CFG->wwwroot;
     $data->userid = $userid;
     $data->useridentity = $OUTPUT->render(new user_picture($user)) . ' ' . fullname($user);
+    // Liste des paiements à afficher dans le tableau.
     $data->payments = [];
     $data->count_payments = 0;
+
+    // Cartes dues (carte FFSU, carte Sport etc....).
     $data->due_payments = [];
     $data->count_due_payments = 0;
+
+    // Transactions qui n'ont pas de date de paiement (=> paiements dus).
+    $data->count_due_transactions = 0;
+
     $data->has_sesame = (isset($customfields->apsolusesame) && $customfields->apsolusesame == 1);
     $data->user_auth = get_string('pluginname', 'auth_' . $user->auth);
 
@@ -55,7 +62,6 @@ if (isset($userid)) {
             if (Payment::get_user_card_status($card, $userid) !== Payment::DUE) {
                 continue;
             }
-
             $data->due_payments[] = $card->name;
             $data->count_due_payments++;
         }
@@ -73,9 +79,12 @@ if (isset($userid)) {
                 // Logiquement, ça ne devrait pas arriver...
                 $payment->timepaid = null;
             }
-        } else if ($showalltransactions === 0) {
-            // On ne traite pas ce paiement si la date de paiement n'est pas définie et qu'on n'affiche pas toutes les transactions.
-            continue;
+        } else { // Paiement sans date de paiement (statut DUE ou FREE).
+            $data->count_due_transactions++;
+            if ($showalltransactions === 0) {
+                // On n'affiche pas ce paiement si l'option afficher toutes les transactions n'est pas choisie.
+                continue;
+            }
         }
 
         // Affiche le préfixe PayBox.
