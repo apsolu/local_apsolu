@@ -54,7 +54,7 @@ function local_apsolu_is_valid_token() {
               JOIN {external_services} es ON es.id = et.externalserviceid
               JOIN {role_assignments} ra ON et.userid = ra.userid AND ra.roleid = 3  -- Enseignant.
               JOIN {context} ctx ON ctx.id = ra.contextid
-              JOIN {customfield_data} cd ON c.id = cd.instanceid AND cd.intvalue = 1 AND cd.fieldid = :customfieldtypeid
+              JOIN {customfield_data} cd ON ctx.instanceid = cd.instanceid AND cd.intvalue = 1 AND cd.fieldid = :customfieldtypeid
              WHERE et.token = :token
                AND et.token != ''
                AND es.component = 'local_apsolu'";
@@ -122,8 +122,8 @@ function local_apsolu_grant_ws_access() {
               FROM {user} u
               JOIN {role_assignments} ra ON u.id = ra.userid
               JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = 50
-              JOIN {customfield_data} cd ON ctx.instanceid = cd.instanceid AND cd.intvalue = 1 AND cd.fieldid = :customfieldtypeid
-              JOIN {course} c ON c.id = ac.id AND c.visible = 1
+              JOIN {course} c ON c.id = ctx.instanceid AND c.visible = 1
+              JOIN {customfield_data} cd ON c.id = cd.instanceid AND cd.intvalue = 1 AND cd.fieldid = :customfieldtypeid
              WHERE ra.roleid = 3"; // Teacher.
     $users = $DB->get_records_sql($sql, ['customfieldtypeid' => $coursecustomfields['type']->id]);
     foreach ($users as $user) {
