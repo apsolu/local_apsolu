@@ -575,6 +575,11 @@ class course extends record {
             throw new moodle_exception('Unexpected value of weekday (' . $numweekday . ') for ' . __METHOD__ . '.');
         }
 
+        if ($numweekday === 0) {
+            // Traite le cas particulier du dimanche.
+            $numweekday = 7;
+        }
+
         $offset = 0;
         $offset += (($numweekday - 1) * 24 * 60 * 60);
         $offset += ($hours * 60 * 60);
