@@ -549,22 +549,30 @@ class course extends record {
     /**
      * Retourne le nombre de secondes écoulées entre le début de la semaine et le début du cours.
      *
-     * @throws moodle_exception Lève une exception lorsque l'heure de début du cours est mal formatés.
+     * @throws moodle_exception Lève une exception lorsque l'heure de début du cours ou le jour de la semaine sont mal formatés.
      *
      * @return int
      */
     public function get_session_offset(): int {
+        // Traite la valeur de l'heure de début de semaine.
         $timerange = json_decode($this->customfields['timerange']->get_value(), $associative = true);
         $hours = $timerange['start']['hour'];
         $minutes = $timerange['start']['minute'];
 
-        $numweekday = $this->customfields['weekday']->get_value();
-
+        // Contrôle la valeur de l'heure de début de semaine.
         if (
             in_array($hours, range(0, 23), $strict = true) === false ||
             in_array($minutes, range(0, 59), $strict = true) === false
         ) {
             throw new moodle_exception('Unexpected value of starttime (' . $hours . ':' . $minutes . ') for ' . __METHOD__ . '.');
+        }
+
+        // Traite la valeur du jour de la semaine.
+        $numweekday = $this->customfields['weekday']->get_value();
+
+        // Contrôle la valeur du jour de la semaine.
+        if (in_array($numweekday, range(0, 6), $strict = true) === false) {
+            throw new moodle_exception('Unexpected value of weekday (' . $numweekday . ') for ' . __METHOD__ . '.');
         }
 
         $offset = 0;
@@ -933,7 +941,12 @@ class course extends record {
         }
 
         // Récupère le nombre de secondes entre le début de la semaine et la date de début du cours.
-        $offset = $this->get_session_offset();
+        try {
+            $offset = $this->get_session_offset();
+        } catch (moodle_exception $exception) {
+            // La valeur de l'heure ou du jour de la semaine sont incorrectes. Ce cours n'utilise probablement pas ces champs.
+            return;
+        }
 
         $sessions = [];
 
