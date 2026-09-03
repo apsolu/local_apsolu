@@ -762,8 +762,6 @@ class course extends record {
             $coursedata->idnumber = $this->idnumber;
         }
 
-        // TODO: controler que endtime n'est pas inférieur à startime.
-
         // Démarre une transaction, si ce n'est pas déjà fait.
         if ($DB->is_transaction_started() === false) {
             $transaction = $DB->start_delegated_transaction();
@@ -809,21 +807,21 @@ class course extends record {
             $block = block_instance($blocktype, $blockinstance);
             $block->instance_create();
 
-            // Génére les sessions de cours.
+            // Recharge les champs personnalisés.
             $this->customfields = self::get_customfield_records($this->id);
 
-            $periodid = $this->customfields['period']->get_value();
-            if (empty($periodid) === false) {
-                $this->set_sessions();
-            }
+            // Génére les sessions de cours.
+            $this->set_sessions();
         } else {
             $oldcourse = new course();
             $oldcourse->load($this->id, $required = true);
 
             update_course($coursedata);
+
+            // Recharge les champs personnalisés.
             $this->customfields = self::get_customfield_records($this->id);
 
-            // TODO: Vérifie que les informations liées aux sessions de cours n'ont pas été modifiées.
+            // Vérifie que les informations liées aux sessions de cours n'ont pas été modifiées.
             $useperiod = $DB->get_record('apsolu_courses_fields', [
                 'coursetypeid' => $this->customfields['type']->get('value'),
                 'customfieldid' => $this->customfields['period']->get('fieldid'),
