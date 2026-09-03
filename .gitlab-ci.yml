@@ -10,6 +10,14 @@ variables:
   MOODLE_EXTRA_PLUGINS: >
     https://github.com/apsolu/block_apsolu_course.git;public/blocks/apsolu_course
     https://github.com/apsolu/block_apsolu_dashboard.git;public/blocks/apsolu_dashboard
+    https://gitlab.univ-rennes2.fr/applis-fir-siuaps/moodle-customfield_apsolu_category.git;public/customfield/field/apsolu_category
+    https://gitlab.univ-rennes2.fr/applis-fir-siuaps/moodle-customfield_apsolu_course_type.git;public/customfield/field/apsolu_course_type
+    https://gitlab.univ-rennes2.fr/applis-fir-siuaps/moodle-customfield_apsolu_location.git;public/customfield/field/apsolu_location
+    https://gitlab.univ-rennes2.fr/applis-fir-siuaps/moodle-customfield_apsolu_period.git;public/customfield/field/apsolu_period
+    https://gitlab.univ-rennes2.fr/applis-fir-siuaps/moodle-customfield_apsolu_skill.git;public/customfield/field/apsolu_skill
+    https://gitlab.univ-rennes2.fr/applis-fir-siuaps/moodle-customfield_daterange.git;public/customfield/field/daterange
+    https://gitlab.univ-rennes2.fr/applis-fir-siuaps/moodle-customfield_timerange.git;public/customfield/field/timerange
+    https://gitlab.univ-rennes2.fr/applis-fir-siuaps/moodle-customfield_weekday.git;public/customfield/field/weekday
     https://github.com/apsolu/enrol_select.git;public/enrol/select
     https://github.com/apsolu/theme_apsolu.git;public/theme/apsolu
 
