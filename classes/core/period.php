@@ -131,8 +131,16 @@ class period extends record {
 
             // On régénère les sessions.
             if ($oldperiod->weeks !== $this->weeks) {
-                $courses = course::get_records(['periodid' => $this->id]);
+                $courses = course::get_records();
                 foreach ($courses as $course) {
+                    if (isset($course->customfields['period']) === false) {
+                        continue;
+                    }
+
+                    if ($course->customfields['period']->get('intvalue') != $this->id) {
+                        continue;
+                    }
+
                     $course->set_sessions();
                 }
             }
