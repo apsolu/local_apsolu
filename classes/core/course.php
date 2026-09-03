@@ -549,7 +549,7 @@ class course extends record {
     /**
      * Retourne le nombre de secondes écoulées entre le début de la semaine et le début du cours.
      *
-     * @throws coding_exception Lève une exception lorsque la date de début du cours est mal formatée.
+     * @throws moodle_exception Lève une exception lorsque l'heure de début du cours est mal formatés.
      *
      * @return int
      */
@@ -564,7 +564,7 @@ class course extends record {
             in_array($hours, range(0, 23), $strict = true) === false ||
             in_array($minutes, range(0, 59), $strict = true) === false
         ) {
-            throw new coding_exception('Unexpected value of starttime (' . $hours . ':' . $minutes . ') for ' . __METHOD__ . '.');
+            throw new moodle_exception('Unexpected value of starttime (' . $hours . ':' . $minutes . ') for ' . __METHOD__ . '.');
         }
 
         $offset = 0;

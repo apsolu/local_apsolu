@@ -106,9 +106,9 @@ final class course_test extends \advanced_testcase {
             $data->customfield_timerange = $timerange;
             $course->save($data);
             $offset = $course->get_session_offset();
-            $this->fail('codding_exception expected on invalid starttime value.');
-        } catch (coding_exception $exception) {
-            $this->assertInstanceOf('coding_exception', $exception);
+            $this->fail('moodle_exception expected on invalid starttime value.');
+        } catch (moodle_exception $exception) {
+            $this->assertInstanceOf('moodle_exception', $exception);
         }
     }
 
