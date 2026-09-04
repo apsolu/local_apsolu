@@ -47,38 +47,37 @@ class local_apsolu_payment_payments_edit_form extends moodleform {
         // Method field.
         $mform->addElement('select', 'method', get_string('method', 'local_apsolu'), $methods);
         $mform->setType('method', PARAM_ALPHA);
-        $mform->addRule('method', get_string('required'), 'required', null, 'client');
+        $mform->hideIf('method', 'atouts[atoutsopt]', 'eq', 'allatouts');
+
+        // Amount field.
+        $mform->addElement('float', 'amount', get_string('amount', 'local_apsolu'), ['class' => 'input-sm']);
+        $mform->addRule('amount', get_string('required'), 'required', null, 'client');
 
         // Source field.
         $mform->addElement('select', 'source', get_string('source', 'local_apsolu'), $sources);
         $mform->setType('source', PARAM_ALPHA);
-        $mform->addRule('source', get_string('required'), 'required', null, 'client');
 
         // Status field.
         $mform->addElement('select', 'status', get_string('status', 'local_apsolu'), $statuses);
         $mform->setType('status', PARAM_INT);
-        $mform->addRule('status', get_string('required'), 'required', null, 'client');
 
         // Centers field.
         $mform->addElement('select', 'center', get_string('centers', 'local_apsolu'), $centers);
         $mform->setType('center', PARAM_INT);
-        $mform->addRule('center', get_string('required'), 'required', null, 'client');
 
         // Cards field.
         $cardopts = [];
         foreach ($cards as $cardid => $cardname) {
-            $cardopts[] = $mform->createElement('advcheckbox', 'card' . $cardid, '', $cardname);
+            // Carte sélectionnée ? (mode édition).
+            $attr = in_array($cardid, $this->_customdata['checkedcards']) ? ['checked' => true] : [];
+            $cardopts[] = $mform->createElement('advcheckbox', 'card' . $cardid, '', $cardname, $attr);
         }
 
         $mform->addGroup($cardopts, 'cards', get_string('card', 'local_apsolu'), [' '], false);
         $mform->setType('cards', PARAM_INT);
+        $mform->addRule('cards', get_string('required'), 'required', null, 'client');
 
         // TODO: disable les checkboxes en fonction des centres de paiement.
-
-        // Amount field.
-        $mform->addElement('text', 'amount', get_string('amount', 'local_apsolu'));
-        $mform->setType('amount', PARAM_LOCALISEDFLOAT);
-        $mform->addRule('amount', get_string('required'), 'required', null, 'client');
 
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));

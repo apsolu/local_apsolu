@@ -66,11 +66,15 @@ if ($paymentid === null) {
     $payment->timemodified = '';
     $payment->userid = $userid;
     $payment->paymentcenterid = '1';
+
+    $formtitle = get_string('add_payment', 'local_apsolu');
 } else {
     foreach ($DB->get_records('apsolu_payments_items', ['paymentid' => $payment->id]) as $item) {
         $cardname = 'card' . $item->cardid;
         $payment->{$cardname} = 1;
     }
+
+    $formtitle = get_string('edit_payment', 'local_apsolu');
 }
 
 // Build form.
@@ -86,9 +90,12 @@ $sources = [
 
 $statuses = [
     Payment::PAID => get_string('paymentpaid', 'local_apsolu'),
-    Payment::DUE => get_string('paymentdue', 'local_apsolu'),
     Payment::GIFT => get_string('paymentgift', 'local_apsolu'),
     ];
+
+if ($paymentid !== null) {
+    $statuses[Payment::DUE] = get_string('paymentdue', 'local_apsolu'); // Mode édition uniquement.
+}
 
 $centers = [];
 foreach ($DB->get_records('apsolu_payments_centers') as $center) {
@@ -96,6 +103,7 @@ foreach ($DB->get_records('apsolu_payments_centers') as $center) {
 }
 
 $cards = [];
+$checkedcards = [];
 foreach ($DB->get_records('apsolu_payments_cards', $conditions = [], $sort = 'fullname') as $card) {
     $sql = "SELECT *" .
         " FROM {apsolu_payments} ap" .
@@ -103,15 +111,44 @@ foreach ($DB->get_records('apsolu_payments_cards', $conditions = [], $sort = 'fu
         " WHERE ap.timepaid IS NOT NULL" .
         " AND api.cardid = :cardid" .
         " AND ap.userid = :userid";
-    if ($DB->get_record_sql($sql, ['cardid' => $card->id, 'userid' => $userid]) !== false) {
-        continue; // La carte a déjà été payée.
+
+    if ($DB->get_record_sql($sql, ['cardid' => $card->id, 'userid' => $userid]) == false) {
+        $cards[$card->id] = $card->fullname; // La carte n'a pas encore été payée.
     }
-    $cards[$card->id] = $card->fullname;
+
+    if ($payment->id != null) {
+        $sql = "SELECT *" .
+            " FROM {apsolu_payments_items} api" .
+            " WHERE api.paymentid = :paymentid" .
+            " AND api.cardid = :cardid";
+        $paymentitem = $DB->get_record_sql($sql, ['cardid' => $card->id, 'paymentid' => $payment->id]);
+        if ($DB->get_record_sql($sql, ['cardid' => $card->id, 'paymentid' => $payment->id]) != false) {
+            // Mode édition : la carte avait été sélectionnée lors de la saisie initiale du paiement.
+            $checkedcards[] = $card->id;
+            $cards[$card->id] = $card->fullname; // La carte n'a pas encore été payée.
+        }
+    }
 }
 
-$customdata = ['payment' => $payment, 'methods' => $methods, 'sources' => $sources,
-    'statuses' => $statuses, 'centers' => $centers, 'cards' => $cards];
-$customdata['nopaymentmethod'] = array_key_first($nopaymentmethod);
+// Atouts Normandie (activé dans la configuration, et hors contexte d'édition de paiement).
+$enableatouts = get_config('local_apsolu', 'enable_atouts') && $payment->id == null;
+$atoutsopts = [];
+if (empty($enableatouts) == false) {
+    $atoutsopts = ['noatouts' => get_string('do_not_use', 'local_apsolu'), 'allatouts' => get_string('total_amount', 'local_apsolu'), 'partatouts' => get_string('partial_amount', 'local_apsolu')];
+}
+
+$customdata = [
+    'payment' => $payment,
+    'methods' => $methods,
+    'sources' => $sources,
+    'statuses' => $statuses,
+    'centers' => $centers,
+    'cards' => $cards,
+    'nopaymentmethod' => array_key_first($nopaymentmethod),
+    'atoutsopts' => $atoutsopts,
+    'checkedcards' => $checkedcards,
+];
+
 $mform = new local_apsolu_payment_payments_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
@@ -201,13 +238,13 @@ if ($data = $mform->get_data()) {
         redirect($backurl, $notification, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
     } else {
         // Display form.
-        echo '<h1>' . get_string('add_payment', 'local_apsolu') . '</h1>';
+        echo '<h1>' . $formtitle . '</h1>';
         echo $OUTPUT->notification(get_string('cannotsavedata', 'error'));
         $mform->display();
     }
 } else {
     // Display form.
-    echo '<h1>' . get_string('add_payment', 'local_apsolu') . '</h1>';
+    echo '<h1>' . $formtitle . '</h1>';
 
     $mform->display();
 }
