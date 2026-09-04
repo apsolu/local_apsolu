@@ -237,6 +237,11 @@ select.tablesorter-filter {
     & label[class^="form-check-inline"] {
         margin-left: 0.9rem !important; /* stylelint-disable-line declaration-no-important */
     }
+
+    & .input-sm input {
+        max-width: 100px;
+        min-width: 80px;
+    }
 }
 
 

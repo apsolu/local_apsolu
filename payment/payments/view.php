@@ -85,6 +85,8 @@ if (isset($userid)) {
                 // On n'affiche pas ce paiement si l'option afficher toutes les transactions n'est pas choisie.
                 continue;
             }
+            $timepaid = new DateTime($payment->timecreated);
+            $payment->timepaid = core_date::strftime('%c', $timepaid->getTimestamp());
         }
 
         // Affiche le préfixe PayBox.
