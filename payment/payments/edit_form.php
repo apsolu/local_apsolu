@@ -174,7 +174,10 @@ class local_apsolu_payment_payments_edit_form extends moodleform {
                 $errors['amount'] = get_string('invalid_paid_amount', 'local_apsolu', get_string('paymentgift', 'local_apsolu'));
             }
             // Le moyen de paiement doit être différent de 'Aucun' (sauf paiement intégral Atouts Normandie).
-            if ($data['method'] == $this->_customdata['nopaymentmethod'] && (!$atoutspayment || $data['atouts']['atoutsopt'] !== 'allatouts')) {
+            if (
+                $data['method'] == $this->_customdata['nopaymentmethod']
+                && (!$atoutspayment || $data['atouts']['atoutsopt'] !== 'allatouts')
+            ) {
                 $errors['method'] = get_string('invalid_payment_method', 'local_apsolu', $status);
             }
         }

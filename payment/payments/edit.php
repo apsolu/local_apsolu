@@ -135,7 +135,11 @@ foreach ($DB->get_records('apsolu_payments_cards', $conditions = [], $sort = 'fu
 $enableatouts = get_config('local_apsolu', 'enable_atouts') && $payment->id == null;
 $atoutsopts = [];
 if (empty($enableatouts) == false) {
-    $atoutsopts = ['noatouts' => get_string('do_not_use', 'local_apsolu'), 'allatouts' => get_string('total_amount', 'local_apsolu'), 'partatouts' => get_string('partial_amount', 'local_apsolu')];
+    $atoutsopts = [
+        'noatouts' => get_string('do_not_use', 'local_apsolu'),
+        'allatouts' => get_string('total_amount', 'local_apsolu'),
+        'partatouts' => get_string('partial_amount', 'local_apsolu'),
+    ];
 }
 
 $customdata = [
