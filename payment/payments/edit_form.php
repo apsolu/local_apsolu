@@ -38,11 +38,22 @@ class local_apsolu_payment_payments_edit_form extends moodleform {
 
         $mform = $this->_form;
         $payment = $this->_customdata['payment'];
+        $atoutsopts = $this->_customdata['atoutsopts'];
         $methods = $this->_customdata['methods'];
         $sources = $this->_customdata['sources'];
         $statuses = $this->_customdata['statuses'];
         $centers = $this->_customdata['centers'];
         $cards = $this->_customdata['cards'];
+
+        // Atouts Normandie.
+        if (empty($atoutsopts) === false) {
+            $atouts[] = &$mform->createElement('select', 'atoutsopt', '', $atoutsopts);
+            $atouts[] = $mform->createElement('float', 'amountatouts', '', ['class' => 'input-sm']);
+            $atouts[] = $mform->createElement('html', '<span class="ms-1 fs-6">€</span>');
+            $mform->addGroup($atouts, 'atouts', get_string('use_atouts_payment', 'local_apsolu'));
+
+            $mform->hideIf('atouts[amountatouts]', 'atouts[atoutsopt]', '!=', 'partatouts');
+        }
 
         // Method field.
         $mform->addElement('select', 'method', get_string('method', 'local_apsolu'), $methods);
@@ -119,6 +130,9 @@ class local_apsolu_payment_payments_edit_form extends moodleform {
 
         $errors = parent::validation($data, $files);
 
+        // Paiement via Atouts Normandie ?
+        $atoutspayment = empty($this->_customdata['atoutsopts']) === false && $data['atouts']['atoutsopt'] !== 'noatouts';
+
         // Contrôle qu'une des cartes a été sélectionnée.
         $cards = $this->_customdata['cards'];
         if (empty($cards == false)) {
@@ -138,22 +152,36 @@ class local_apsolu_payment_payments_edit_form extends moodleform {
             $errors['cards'] = get_string('no_card_due', 'local_apsolu');
         }
 
-        // Si le statut est GIFT : montant à 0 et moyen de paiement 'Aucun'.
         $status = $this->_customdata['statuses'][$data['status']];
+        // Si le statut est GIFT.
         if ((int) $data['status'] === Payment::GIFT) {
-            if ((float) $data['amount'] != 0) {
-                $errors['amount'] = get_string('invalid_free_amount', 'local_apsolu', $status);
+            // Statut offert non possible si le paiement est fait en entier via Atouts Normandie.
+            if ($atoutspayment && $data['atouts']['atoutsopt'] === 'allatouts') {
+                $errors['status'] = get_string('invalid_payment_gift_status', 'local_apsolu', $status);
+            } else {
+                // Le montant doit être égal à 0.
+                if ((float) $data['amount'] != 0) {
+                    $errors['amount'] = get_string('invalid_free_amount', 'local_apsolu', $status);
+                }
+                // Le moyen de paiement doit être 'Aucun'.
+                if ($data['method'] != $this->_customdata['nopaymentmethod']) {
+                    $errors['method'] = get_string('invalid_payment_method', 'local_apsolu', $status);
+                }
             }
-            if ($data['method'] != $this->_customdata['nopaymentmethod']) {
-                $errors['method'] = get_string('invalid_payment_method', 'local_apsolu', $status);
-            }
-        } else { // Si le statut est PEID ou DUE : montant > 0 et moyen de paiement différent de 'Aucun'.
+        } else { // Si le statut est PAID ou DUE.
+            // Le montant doit être supérieur à 0.
             if ((float) $data['amount'] <= 0) {
-                $errors['amount'] = get_string('invalid_paid_amount', 'local_apsolu', $status);
+                $errors['amount'] = get_string('invalid_paid_amount', 'local_apsolu', get_string('paymentgift', 'local_apsolu'));
             }
-            if ($data['method'] == $this->_customdata['nopaymentmethod']) {
+            // Le moyen de paiement doit être différent de 'Aucun' (sauf paiement intégral Atouts Normandie).
+            if ($data['method'] == $this->_customdata['nopaymentmethod'] && (!$atoutspayment || $data['atouts']['atoutsopt'] !== 'allatouts')) {
                 $errors['method'] = get_string('invalid_payment_method', 'local_apsolu', $status);
             }
+        }
+
+        // Paiement partiel via Atouts Normandie.
+        if ($atoutspayment && $data['atouts']['atoutsopt'] === 'partatouts' && (float) $data['atouts']['amountatouts'] <= 0) {
+            $errors['atouts'] = get_string('invalid_partial_amount', 'local_apsolu');
         }
 
         return $errors;

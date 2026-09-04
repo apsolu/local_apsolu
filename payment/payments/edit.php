@@ -47,7 +47,8 @@ if ($paymentid !== null) {
     $payment = $DB->get_record('apsolu_payments', ['id' => $paymentid, 'userid' => $userid]);
     if ($payment === false) {
         $paymentid = null;
-    } else if (empty($payment->timepaid) === false) {
+    } else if (empty($payment->timepaid) === false || $payment->method == 'atouts') {
+        // Les paiements déjà validés (statut PAID & GIFT), et les paiements Atouts Normandie ne peuvent pas être modifiés.
         redirect($backurl, get_string('error_payment_not_editable', 'local_apsolu'), null, \core\output\notification::NOTIFY_ERROR);
         exit(1);
     }
@@ -181,6 +182,26 @@ if ($data = $mform->get_data()) {
             $payment->timepaid = null;
     }
 
+    // Atouts Normandie.
+    $complement = false;
+    if (empty($enableatouts) == false && $data->atouts['atoutsopt'] !== 'noatouts') {
+        if ($data->atouts['atoutsopt'] === 'allatouts') {
+            $payment->method = 'atouts'; // Le paiement effectué en intégralité via Atouts Normandie.
+            $payment->status = Payment::PAID; // Devrait toujours être le cas (règle de validation).
+            $payment->timepaid = $payment->timemodified;
+            $payment->timecreated = $payment->timemodified;
+            unset($payment->id);
+        } else {
+            $complement = clone $payment; // Complément de paiement (ex. Atouts Normandie).
+            $complement->method = 'atouts';
+            $complement->amount = $data->atouts['amountatouts'];
+            $complement->status = Payment::PAID;
+            $complement->timepaid = $payment->timemodified;
+            $complement->timecreated = $payment->timemodified;
+            unset($complement->id);
+        }
+    }
+
     try {
         $transaction = $DB->start_delegated_transaction();
 
@@ -213,6 +234,15 @@ if ($data = $mform->get_data()) {
             'other' => ['items' => $items],
         ]);
         $event->trigger();
+
+
+        // Complément de paiement ex. Atouts Normandie.
+        if ($complement !== false) {
+            // Uniquement en saisie (nouveau paiement, interface gestionnaire) : statut PAID accepté uniquement.
+            // On ne lie pas le paiement partiel à un item (carte). Seul le paiement principal y fait référence.
+            $complement->id = $DB->insert_record('apsolu_payments', $complement);
+            $eventclassname = '\local_apsolu\event\payment_created';
+        }
 
         if ($payment->status !== Payment::DUE) {
             // Enregistre l'évènement de réussite du paiement.
