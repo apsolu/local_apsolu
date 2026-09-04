@@ -50,7 +50,7 @@ $cities = [];
 
 $headers = CoursesRenderer::get_headers($coursetypeid, CoursesRenderer::VISIBLE_ONLY_ADMINISTRATION);
 $courses = CoursesRenderer::get_data(course::get_records_by_course_type($coursetypeid), $headers);
-$courses = Course::sort($courses);
+$courses = Course::sort($courses, $sortorder = ['visible', 'category', 'weekday', 'daterange', 'timerange', 'location', 'skill']);
 
 $data = new stdClass();
 $data->wwwroot = $CFG->wwwroot;
