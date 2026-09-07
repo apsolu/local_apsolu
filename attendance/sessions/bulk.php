@@ -41,7 +41,7 @@ $apsolucourse->load($courseid, $required = true);
 $default = new stdClass();
 $default->startdate = time();
 $default->enddate = null;
-$default->weekdays = [];
+$default->weekdays = null;
 $default->excludeholidays = 1;
 $default->starthour = '';
 $default->startminute = '';
@@ -53,7 +53,7 @@ $default->courseid = $courseid;
 $default->submitted = optional_param('previewbutton', null, PARAM_ALPHA);
 
 if (isset($apsolucourse->customfields['weekday']) === true) {
-    $default->weekdays[$apsolucourse->customfields['weekday']->get_value()] = 1;
+    $default->weekdays = [$apsolucourse->customfields['weekday']->get_value() => 1];
 }
 
 if (isset($apsolucourse->customfields['timerange']) === true) {
@@ -70,7 +70,7 @@ if (isset($apsolucourse->customfields['location']) === true) {
 }
 
 // Définit les jours de la semaine.
-$weekdays = array_keys(course::get_weekdays());
+$weekdays = customfield_weekday\field_controller::$days;
 
 // Définit les lieux d'activités.
 $locations = [];

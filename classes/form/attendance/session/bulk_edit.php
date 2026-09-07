@@ -54,9 +54,12 @@ class bulk_edit extends moodleform {
         // Champ "Jours".
         $checkboxes = [];
         foreach ($weekdays as $numday => $day) {
-            $checkboxes[] = $mform->createElement('advcheckbox', sprintf('weekdays[%s]', $day), '', get_string($day, 'calendar'));
-            if ($numday < 5) {
-                $mform->setDefault($day, true);
+            $weekdayid = sprintf('weekdays[%s]', $numday);
+            $checkboxes[] = $mform->createElement('advcheckbox', $weekdayid, '', get_string($day, 'calendar'));
+            if (isset($default->weekdays) === false) {
+                if ($numday > 0 && $numday < 6) {
+                    $mform->setDefault($weekdayid, true);
+                }
             }
         }
         $mform->addGroup($checkboxes, 'weekdaygroup', get_string('weekdays', 'local_apsolu'), null, false);
