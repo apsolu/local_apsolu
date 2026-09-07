@@ -241,7 +241,7 @@ if (!empty($sessionid)) {
         // Image du QR code et informations sur la session.
         $data->qrcodes = $qrcodesdata;
 
-        $PAGE->set_title($data->session . ' | ' . $sdata->sitename);
+        $PAGE->set_title($data->session . ' | ' . $data->sitename);
 
         if ($print) {
             $PAGE->requires->js_call_amd('local_apsolu/attendance', 'printHandler');
