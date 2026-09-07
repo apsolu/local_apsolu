@@ -27,6 +27,7 @@
 use core\exception\moodle_exception;
 use local_apsolu\attendance\qrcode;
 use local_apsolu\core\attendancesession as Session;
+use local_apsolu\core\course;
 use core_qrcode;
 
 require_once(__DIR__ . '/../../../config.php');
