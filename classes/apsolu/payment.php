@@ -227,7 +227,7 @@ class Payment {
             if (defined('BEHAT_SITE_RUNNING') === false) {
                 debugging('Carte ' . $card->fullname . ' payée !', $level = DEBUG_DEVELOPER);
             }
-            return $payment->status; // Valeur possible : self::PAID or self::GIFT.
+            return (int) $payment->status; // Valeur possible : self::PAID or self::GIFT.
         }
 
         $enrols = self::get_user_enrols_by_card($card->id, $userid);

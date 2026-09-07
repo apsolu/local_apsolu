@@ -47,7 +47,8 @@ if ($paymentid !== null) {
     $payment = $DB->get_record('apsolu_payments', ['id' => $paymentid, 'userid' => $userid]);
     if ($payment === false) {
         $paymentid = null;
-    } else if (empty($payment->timepaid) === false) {
+    } else if (empty($payment->timepaid) === false || $payment->method == 'atouts') {
+        // Les paiements déjà validés (statut PAID & GIFT), et les paiements Atouts Normandie ne peuvent pas être modifiés.
         redirect($backurl, get_string('error_payment_not_editable', 'local_apsolu'), null, \core\output\notification::NOTIFY_ERROR);
         exit(1);
     }
@@ -66,15 +67,21 @@ if ($paymentid === null) {
     $payment->timemodified = '';
     $payment->userid = $userid;
     $payment->paymentcenterid = '1';
+
+    $formtitle = get_string('add_payment', 'local_apsolu');
 } else {
     foreach ($DB->get_records('apsolu_payments_items', ['paymentid' => $payment->id]) as $item) {
         $cardname = 'card' . $item->cardid;
         $payment->{$cardname} = 1;
     }
+
+    $formtitle = get_string('edit_payment', 'local_apsolu');
 }
 
 // Build form.
-$methods = method::get_enabled_methods();
+$enabledmethod = method::get_enabled_methods();
+$nopaymentmethod = method::get_no_payment_method();
+$methods = $enabledmethod + $nopaymentmethod;
 
 $sources = [
     'apogee' => get_string('source_apogee', 'local_apsolu'),
@@ -84,9 +91,12 @@ $sources = [
 
 $statuses = [
     Payment::PAID => get_string('paymentpaid', 'local_apsolu'),
-    Payment::DUE => get_string('paymentdue', 'local_apsolu'),
     Payment::GIFT => get_string('paymentgift', 'local_apsolu'),
     ];
+
+if ($paymentid !== null) {
+    $statuses[Payment::DUE] = get_string('paymentdue', 'local_apsolu'); // Mode édition uniquement.
+}
 
 $centers = [];
 foreach ($DB->get_records('apsolu_payments_centers') as $center) {
@@ -94,6 +104,7 @@ foreach ($DB->get_records('apsolu_payments_centers') as $center) {
 }
 
 $cards = [];
+$checkedcards = [];
 foreach ($DB->get_records('apsolu_payments_cards', $conditions = [], $sort = 'fullname') as $card) {
     $sql = "SELECT *" .
         " FROM {apsolu_payments} ap" .
@@ -101,14 +112,48 @@ foreach ($DB->get_records('apsolu_payments_cards', $conditions = [], $sort = 'fu
         " WHERE ap.timepaid IS NOT NULL" .
         " AND api.cardid = :cardid" .
         " AND ap.userid = :userid";
-    if ($DB->get_record_sql($sql, ['cardid' => $card->id, 'userid' => $userid]) !== false) {
-        continue;
+
+    if ($DB->get_record_sql($sql, ['cardid' => $card->id, 'userid' => $userid]) == false) {
+        $cards[$card->id] = $card->fullname; // La carte n'a pas encore été payée.
     }
-    $cards[$card->id] = $card->fullname;
+
+    if ($payment->id != null) {
+        $sql = "SELECT *" .
+            " FROM {apsolu_payments_items} api" .
+            " WHERE api.paymentid = :paymentid" .
+            " AND api.cardid = :cardid";
+        $paymentitem = $DB->get_record_sql($sql, ['cardid' => $card->id, 'paymentid' => $payment->id]);
+        if ($DB->get_record_sql($sql, ['cardid' => $card->id, 'paymentid' => $payment->id]) != false) {
+            // Mode édition : la carte avait été sélectionnée lors de la saisie initiale du paiement.
+            $checkedcards[] = $card->id;
+            $cards[$card->id] = $card->fullname; // La carte n'a pas encore été payée.
+        }
+    }
 }
 
-$customdata = ['payment' => $payment, 'methods' => $methods, 'sources' => $sources,
-    'statuses' => $statuses, 'centers' => $centers, 'cards' => $cards];
+// Atouts Normandie (activé dans la configuration, et hors contexte d'édition de paiement).
+$enableatouts = get_config('local_apsolu', 'enable_atouts') && $payment->id == null;
+$atoutsopts = [];
+if (empty($enableatouts) == false) {
+    $atoutsopts = [
+        'noatouts' => get_string('do_not_use', 'local_apsolu'),
+        'allatouts' => get_string('total_amount', 'local_apsolu'),
+        'partatouts' => get_string('partial_amount', 'local_apsolu'),
+    ];
+}
+
+$customdata = [
+    'payment' => $payment,
+    'methods' => $methods,
+    'sources' => $sources,
+    'statuses' => $statuses,
+    'centers' => $centers,
+    'cards' => $cards,
+    'nopaymentmethod' => array_key_first($nopaymentmethod),
+    'atoutsopts' => $atoutsopts,
+    'checkedcards' => $checkedcards,
+];
+
 $mform = new local_apsolu_payment_payments_edit_form(null, $customdata);
 
 if ($data = $mform->get_data()) {
@@ -116,7 +161,7 @@ if ($data = $mform->get_data()) {
     $items = [];
     foreach ($cards as $cardid => $cardname) {
         $name = 'card' . $cardid;
-        if (isset($data->{$name}) === true) {
+        if (empty($data->{$name}) === false) {
             $items[] = $cardid;
         }
     }
@@ -135,13 +180,30 @@ if ($data = $mform->get_data()) {
     switch ($payment->status) {
         case Payment::PAID:
         case Payment::GIFT:
-            if ($payment->status === Payment::GIFT) {
-                $payment->amount = 0;
-            }
             $payment->timepaid = $payment->timemodified;
             break;
         default:
             $payment->timepaid = null;
+    }
+
+    // Atouts Normandie.
+    $complement = false;
+    if (empty($enableatouts) == false && $data->atouts['atoutsopt'] !== 'noatouts') {
+        if ($data->atouts['atoutsopt'] === 'allatouts') {
+            $payment->method = 'atouts'; // Le paiement effectué en intégralité via Atouts Normandie.
+            $payment->status = Payment::PAID; // Devrait toujours être le cas (règle de validation).
+            $payment->timepaid = $payment->timemodified;
+            $payment->timecreated = $payment->timemodified;
+            unset($payment->id);
+        } else {
+            $complement = clone $payment; // Complément de paiement (ex. Atouts Normandie).
+            $complement->method = 'atouts';
+            $complement->amount = $data->atouts['amountatouts'];
+            $complement->status = Payment::PAID;
+            $complement->timepaid = $payment->timemodified;
+            $complement->timecreated = $payment->timemodified;
+            unset($complement->id);
+        }
     }
 
     try {
@@ -177,6 +239,15 @@ if ($data = $mform->get_data()) {
         ]);
         $event->trigger();
 
+
+        // Complément de paiement ex. Atouts Normandie.
+        if ($complement !== false) {
+            // Uniquement en saisie (nouveau paiement, interface gestionnaire) : statut PAID accepté uniquement.
+            // On ne lie pas le paiement partiel à un item (carte). Seul le paiement principal y fait référence.
+            $complement->id = $DB->insert_record('apsolu_payments', $complement);
+            $eventclassname = '\local_apsolu\event\payment_created';
+        }
+
         if ($payment->status !== Payment::DUE) {
             // Enregistre l'évènement de réussite du paiement.
             $event = \local_apsolu\event\payment_approved::create([
@@ -196,19 +267,18 @@ if ($data = $mform->get_data()) {
     }
 
     if ($success === true) {
-        // Display notification and display elements list.
-        $notification = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
-
-        require(__DIR__ . '/view.php');
+        // Display notification and go back to user's paiement list.
+        $notification = get_string('changessaved');
+        redirect($backurl, $notification, $delay = null, \core\output\notification::NOTIFY_SUCCESS);
     } else {
         // Display form.
-        echo '<h1>' . get_string('add_payment', 'local_apsolu') . '</h1>';
+        echo '<h1>' . $formtitle . '</h1>';
         echo $OUTPUT->notification(get_string('cannotsavedata', 'error'));
         $mform->display();
     }
 } else {
     // Display form.
-    echo '<h1>' . get_string('add_payment', 'local_apsolu') . '</h1>';
+    echo '<h1>' . $formtitle . '</h1>';
 
     $mform->display();
 }

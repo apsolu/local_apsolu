@@ -91,4 +91,14 @@ class method {
     public static function get_key_config(string $stringid): string {
         return sprintf('payment_method_%s', $stringid);
     }
+
+    /**
+     * Retourne la valeur à enregistrer dans la table de paiements lorsque le montant est offert (aucun moyen de paiement).
+     * get_no_payment_method().
+     *
+     * @return array
+     */
+    public static function get_no_payment_method(): array {
+        return ['none' => get_string('method_none', 'local_apsolu')];
+    }
 }

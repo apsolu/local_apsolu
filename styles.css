@@ -225,9 +225,29 @@ select.tablesorter-filter {
     margin-bottom: 1em;
 }
 
-#page-admin-local-apsolu-payment-admin form select[multiple='multiple'] {
-    max-width: 500px;
+#page-admin-local-apsolu-payment-admin form {
+    & select[multiple='multiple'] {
+        max-width: 500px;
+    }
+
+    & .col-form-label p {
+        font-weight: inherit;
+    }
+
+    & label[class^="form-check-inline"] {
+        margin-left: 0.9rem !important; /* stylelint-disable-line declaration-no-important */
+    }
+
+    & .input-sm input {
+        max-width: 100px;
+        min-width: 80px;
+    }
+
+    & .input-currency[hidden] + .text-currency {
+        display: none;
+    }
 }
+
 
 #apsolu-payment-total-div {
     border-top: 1px solid gray;
@@ -248,7 +268,6 @@ select.tablesorter-filter {
 
 .apsolu-payment-user-profile {
     border-bottom: 1px lightgray solid;
-    border-top: 1px lightgray solid;
     margin: 1em 0;
     padding: .5em 0;
 }
