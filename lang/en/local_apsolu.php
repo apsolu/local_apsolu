@@ -1649,7 +1649,7 @@ $string['reset_settings_bold'] = '(en gras, les valeurs qui ont été modifiées
 $string['reset_task_failed'] = 'Echec de la réinitialisation des espace-cours';
 $string['reset_task_failed_details'] = 'La tâche de réinitialisation des espaces-cours, lancée {$a} avec les paramètres ci-dessous, a échoué.';
 $string['reset_task_success'] = 'Réinitialisation des espace-cours effectuée';
-$string['reset_task_success_details'] = 'La tâche de réinitialisation des espaces-cours, lancée {$a} avec les paramètres ci-dessous, a été effectuée sans incidents.';
+$string['reset_task_success_details'] = 'La tâche de réinitialisation des espaces-cours, lancée {$a} avec les paramètres ci-dessous, a été effectuée sans incident.';
 $string['reset_last_activation'] = 'La plateforme a été réinitialisée pour la dernière fois le <strong>{$a}</strong> (consultez votre boite mail pour plus de précisions).';
 
 // Tasks.
