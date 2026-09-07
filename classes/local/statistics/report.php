@@ -167,7 +167,7 @@ class report {
 
         $sql = "SELECT DISTINCT c.id, shortname as name
                   FROM  mdl_course c
-            INNER JOIN {customfield_data} CUSTOMDATA1 ON CUSTOMDATA1.instanceid = C.id
+            INNER JOIN {customfield_data} CUSTOMDATA1 ON CUSTOMDATA1.instanceid = c.id
                                                      AND CUSTOMDATA1.intvalue > 1
                                                      AND CUSTOMDATA1.fieldid = " . $customfields['type']->id . "
               ORDER BY c.shortname";
