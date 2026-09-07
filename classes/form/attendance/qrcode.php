@@ -54,6 +54,7 @@ class qrcode extends moodleform {
         // Formulaire pour modifier un QR code d'une session ou tous les QR codes des sessions à venir.
         // Session id (input caché).
         $mform->addElement('hidden', 'sessionid', $default->sessionid);
+        $mform->setType('sessionid', PARAM_INT);
 
         // Avant le début de la session.
         $mform->addElement('header', 'before', get_string('before_the_start_of_the_session', 'local_apsolu'));
