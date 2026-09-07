@@ -48,8 +48,8 @@ class local_apsolu_payment_payments_edit_form extends moodleform {
         // Atouts Normandie.
         if (empty($atoutsopts) === false) {
             $atouts[] = &$mform->createElement('select', 'atoutsopt', '', $atoutsopts);
-            $atouts[] = $mform->createElement('float', 'amountatouts', '', ['class' => 'input-sm']);
-            $atouts[] = $mform->createElement('html', '<span class="ms-1 fs-6">€</span>');
+            $atouts[] = $mform->createElement('float', 'amountatouts', '', ['class' => 'input-sm input-currency']);
+            $atouts[] = $mform->createElement('html', '<span class="ms-1 fs-6 text-currency">€</span>');
             $mform->addGroup($atouts, 'atouts', get_string('use_atouts_payment', 'local_apsolu'));
 
             $mform->hideIf('atouts[amountatouts]', 'atouts[atoutsopt]', '!=', 'partatouts');

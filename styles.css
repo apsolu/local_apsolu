@@ -242,6 +242,10 @@ select.tablesorter-filter {
         max-width: 100px;
         min-width: 80px;
     }
+
+    & .input-currency[hidden] + .text-currency {
+        display: none;
+    }
 }
 
 
