@@ -128,42 +128,6 @@
           }
         },
         {
-          "id": "slotevent",
-          "label": "event,local_apsolu",
-          "type": "string",
-          "input": "select",
-          "operators": ["equal", "not_equal"],
-          "values" : {
-            "table" : "apsolu_courses",
-            "fields" : "event",
-            "sort" : "event"
-          }
-        },
-        {
-          "id": "slotstart",
-          "label": "coursestartdate,local_apsolu",
-          "type": "string",
-          "input": "select",
-          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
-          "values" : {
-              "table" : "apsolu_courses",
-              "fields" : "starttime",
-              "sort" : "starttime"
-          }
-        },
-        {
-          "id": "slotend",
-          "label": "courseenddate,local_apsolu",
-          "type": "string",
-          "input": "select",
-          "operators": ["equal", "not_equal", "is_null", "is_not_null"],
-          "values" : {
-              "table" : "apsolu_courses",
-              "fields" : "endtime",
-              "sort" : "endtime"
-          }
-        },
-        {
           "id": "actifQuota",
           "label": "statistics_active_quota,local_apsolu",
           "type": "integer",
