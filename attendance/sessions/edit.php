@@ -57,8 +57,10 @@ if (empty($session->id) === true) {
     $session->sessiontime = 0;
     $session->duration = 0;
     if (isset($apsolucourse->customfields['timerange']) === true) {
-        $time = $apsolucourse->customfields['timerange']->get_value();
-        $session->duration = Course::getDuration(implode(':', $time['start']), implode(':', $time['end']));
+        $time = json_decode($apsolucourse->customfields['timerange']->get_value(), $associative = true);
+        if (isset($time['start'], $time['end']) === true) {
+            $session->duration = Course::getDuration(implode(':', $time['start']), implode(':', $time['end']));
+        }
     }
     $session->courseid = $course->id;
     $session->locationid = $apsolucourse->locationid;

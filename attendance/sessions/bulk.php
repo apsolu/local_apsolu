@@ -57,10 +57,12 @@ if (isset($apsolucourse->customfields['weekday']) === true) {
 }
 
 if (isset($apsolucourse->customfields['timerange']) === true) {
-    $time = $apsolucourse->customfields['timerange']->get_value();
-    $default->starthour = $time['start']['hour'];
-    $default->startminute = $time['start']['minute'];
-    $default->duration = Course::getDuration(implode(':', $time['start']), implode(':', $time['end']));
+    $time = json_decode($apsolucourse->customfields['timerange']->get_value(), $associative = true);
+    if (isset($time['start'], $time['end']) === true) {
+        $default->starthour = $time['start']['hour'];
+        $default->startminute = $time['start']['minute'];
+        $default->duration = Course::getDuration(implode(':', $time['start']), implode(':', $time['end']));
+    }
 }
 
 if (isset($apsolucourse->customfields['location']) === true) {
