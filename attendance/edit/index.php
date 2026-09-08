@@ -44,7 +44,8 @@ $inactive_enrolments = optional_param('inactive_enrolments', 0, PARAM_INT);
 $sessions = attendancesession::get_records(['courseid' => $courseid], $sort = 'sessiontime');
 
 if (count($sessions) === 0) {
-    throw new moodle_exception('no_course_sessions_found_please_check_the_period_settings', 'local_apsolu');
+    $redirecturl = new moodle_url('/local/apsolu/attendance/index.php', ['page' => 'sessions', 'courseid' => $courseid]);
+    redirect($redirecturl);
 }
 
 // Si la session n'est pas définie, on essaye de déterminer la prochaine session à venir.
