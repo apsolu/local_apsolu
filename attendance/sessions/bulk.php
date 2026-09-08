@@ -61,7 +61,9 @@ if (isset($apsolucourse->customfields['timerange']) === true) {
     if (isset($time['start'], $time['end']) === true) {
         $default->starthour = $time['start']['hour'];
         $default->startminute = $time['start']['minute'];
-        $default->duration = Course::getDuration(implode(':', $time['start']), implode(':', $time['end']));
+        if ($time['start'] !== $time['end']) {
+            $default->duration = Course::getDuration(implode(':', $time['start']), implode(':', $time['end']));
+        }
     }
 }
 
