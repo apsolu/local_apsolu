@@ -1052,10 +1052,29 @@ class course extends record {
                     continue;
                 }
 
+                // Traite le cas particulier du nom de catégorie.
+                if ($field === 'categoryname') {
+                    if (isset($a->customfields['category'], $b->customfields['category']) === false) {
+                        continue;
+                    }
+
+                    $value1 = $a->customfields['category']->get_apsolu_category_name() ?? '';
+                    $value2 = $b->customfields['category']->get_apsolu_category_name() ?? '';
+
+                    $return = strcoll($value1, $value2);
+
+                    if ($return !== 0) {
+                        return $return;
+                    }
+
+                    continue;
+                }
+
                 if (isset($a->customfields[$field], $b->customfields[$field]) === false) {
                     continue;
                 }
 
+                // Traite les autres champs.
                 if ($field === 'weekday') {
                     $value1 = $a->customfields[$field]->get_value() ?? '';
                     $value2 = $b->customfields[$field]->get_value() ?? '';
