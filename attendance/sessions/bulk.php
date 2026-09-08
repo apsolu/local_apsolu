@@ -240,6 +240,9 @@ if ($mdata = $mform->get_data()) {
 
                 messaging::notify_functional_address($subject, $body);
             }
+
+            $redirecturl = new moodle_url('/local/apsolu/attendance/index.php', ['page' => 'sessions', 'courseid' => $course->id]);
+            redirect($redirecturl);
         }
     } else {
         // Le bouton "aperçu" a été utilisé.
