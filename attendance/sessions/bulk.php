@@ -95,10 +95,10 @@ if ($mdata = $mform->get_data()) {
     }
 
     // Calcule les jours.
-    $n = 1;
+    $n = 0;
     $days = [];
-    foreach ($weekdays as $day) {
-        if (isset($mdata->weekdays[$day]) === true && empty($mdata->weekdays[$day]) === false) {
+    foreach ($weekdays as $numday => $unused) {
+        if (isset($mdata->weekdays[$numday]) === true && empty($mdata->weekdays[$numday]) === false) {
             $days[$n] = 1;
         } else {
             $days[$n] = 0;
@@ -117,14 +117,15 @@ if ($mdata = $mform->get_data()) {
     }
 
     // Calcule les sessions à ajouter.
-    $n = date('N', $startdate);
+    $n = date('w', $startdate);
     while ($startdate <= $enddate) {
         if ($days[$n] === 0) {
+            // Si le jour de la session n'est pas sélectionné, on passe au jour suivant.
             $n++;
             $startdate += DAYSECS;
 
-            if ($n === 8) {
-                $n = 1;
+            if ($n === 7) {
+                $n = 0;
             }
             continue;
         }
@@ -205,8 +206,8 @@ if ($mdata = $mform->get_data()) {
 
         $n++;
         $startdate += DAYSECS;
-        if ($n === 8) {
-            $n = 1;
+        if ($n === 7) {
+            $n = 0;
         }
     }
 
