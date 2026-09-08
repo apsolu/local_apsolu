@@ -107,11 +107,14 @@ class local_apsolu_attendance_sessions_edit_form extends moodleform {
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
 
-        // Is valid URL ?
-        if (!empty($data['url'])) {
-            if (filter_var($data['url'], FILTER_VALIDATE_URL) === false) {
-                $errors['area'] = get_string('courses_bad_url', 'local_apsolu', get_string('url'));
-            }
+        // Valide la durée.
+        if (isset($data['duration']) === false || empty($data['duration']) === true) {
+            $errors['duration'] = get_string('required_fields', 'local_apsolu');
+        }
+
+        // Valide qu'un lieu a été saisi.
+        if (isset($data['locationid']) === false || empty($data['locationid']) === true) {
+            $errors['locationid'] = get_string('required_fields', 'local_apsolu');
         }
 
         return $errors;

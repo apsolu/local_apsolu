@@ -75,7 +75,7 @@ if (isset($apsolucourse->customfields['location']) === true) {
 $weekdays = customfield_weekday\field_controller::$days;
 
 // Définit les lieux d'activités.
-$locations = [];
+$locations = [0 => ''];
 foreach ($DB->get_records('apsolu_locations', $conditions = null, $sort = 'name') as $location) {
     $locations[$location->id] = $location->name;
 }

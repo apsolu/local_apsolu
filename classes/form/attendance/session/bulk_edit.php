@@ -172,6 +172,11 @@ class bulk_edit extends moodleform {
             $errors['duration'] = get_string('the_value_must_be_greater_than_or_equal_to_X', 'local_apsolu', 1);
         }
 
+        // Valide qu'un lieu a été saisi.
+        if (isset($data['locationid']) === false || empty($data['locationid']) === true) {
+            $errors['locationid'] = get_string('required_fields', 'local_apsolu');
+        }
+
         return $errors;
     }
 }
