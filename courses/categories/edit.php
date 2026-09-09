@@ -69,6 +69,11 @@ $editor = file_prepare_standard_editor(
     'description',
     $itemid
 );
+
+if (empty($category->id) === true) {
+    $editor->description_editor['format'] = FORMAT_HTML; // Force le format HTML.
+}
+
 $mform->set_data($editor);
 
 if ($data = $mform->get_data()) {

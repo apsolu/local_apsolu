@@ -60,6 +60,7 @@ class local_apsolu_courses_categories_edit_form extends moodleform {
             null,
             $this->get_description_editor_options()
         );
+        $mform->setType('description_editor', PARAM_RAW);
 
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('save', 'admin'));
