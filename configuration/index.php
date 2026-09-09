@@ -33,6 +33,7 @@ $pages['calendars'] = 'calendars';
 $pages['calendarstypes'] = 'calendars_types';
 $pages['courseofferings'] = 'course_offerings';
 $pages['headermessage'] = 'header_message';
+$pages['overviewheader'] = 'enrol_overview_header';
 $pages['messaging'] = 'messaging';
 $pages['userprofile'] = 'user_profile';
 $pages['attendancestatuses'] = 'attendance_statuses';

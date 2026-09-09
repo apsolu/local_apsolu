@@ -340,6 +340,14 @@ if ($hassiteconfig || has_any_capability($capabilities, context_system::instance
         new admin_externalpage('local_apsolu_configuration_header_message', $str, $url, $capabilities)
     );
 
+    // Présentation > Bandeau d'information au-dessus des inscriptions.
+    $str = get_string('enrol_overview_message', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'overviewheader']);
+    $ADMIN->add(
+        'local_apsolu_appearance',
+        new admin_externalpage('local_apsolu_configuration_enrol_overview_header', $str, $url, $capabilities)
+    );
+
     // Statistiques.
     $ADMIN->add('apsolu', new admin_category('local_apsolu_statistics', get_string('statistics', 'local_apsolu')));
     $ADMIN->add(

@@ -32,7 +32,7 @@ $defaults->apsoluheaderactive = get_config('local_apsolu', 'apsoluheaderactive')
 $defaults->apsoluheaderstyle = get_config('local_apsolu', 'apsoluheaderstyle');
 $defaults->apsoluheadercontent = ['text' => get_config('local_apsolu', 'apsoluheadercontent'), 'format' => 1];
 
-$customdata = [$defaults];
+$customdata = [$defaults, 'headermessage'];
 $mform = new local_apsolu_header_form(null, $customdata);
 
 $notification = '';

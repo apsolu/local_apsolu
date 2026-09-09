@@ -34,10 +34,10 @@ class local_apsolu_header_form extends moodleform {
     protected function definition() {
         $mform = $this->_form;
 
-        [$defaults] = $this->_customdata;
+        [$defaults, $page] = $this->_customdata;
 
         // Active.
-        $mform->addElement('checkbox', 'apsoluheaderactive', 'Afficher le message');
+        $mform->addElement('selectyesno', 'apsoluheaderactive', get_string('enable_header_message', 'local_apsolu'));
         $mform->setType('apsoluheaderactive', PARAM_INT);
 
         // Stylage de l'entete.
@@ -59,6 +59,12 @@ class local_apsolu_header_form extends moodleform {
         $mform->addElement('editor', 'apsoluheadercontent', get_string('message', 'local_apsolu'));
         $mform->setType('apsoluheadercontent', PARAM_RAW);
 
+        // Dismissible.
+        if ($page == 'overviewheader') {
+            $mform->addElement('selectyesno', 'apsoluheaderdismiss', get_string('enable_dismiss', 'local_apsolu'));
+            $mform->setType('apsoluheaderdismiss', PARAM_INT);
+        }
+
         // Submit buttons.
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
 
@@ -66,7 +72,7 @@ class local_apsolu_header_form extends moodleform {
         $mform->closeHeaderBefore('buttonar');
 
         // Hidden fields.
-        $mform->addElement('hidden', 'page', 'headermessage');
+        $mform->addElement('hidden', 'page', $page);
         $mform->setType('page', PARAM_ALPHANUM);
 
         // Set default values.
