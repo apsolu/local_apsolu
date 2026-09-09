@@ -22,6 +22,7 @@ use local_apsolu\core\grouping;
 use local_apsolu\core\course;
 use local_apsolu\core\role;
 use enrol_select_plugin;
+use local_apsolu\customfields\course as CustomfieldsCourse;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -211,6 +212,8 @@ class notify extends \local_apsolu_notification_form {
     public function get_filtered_users($data): array {
         global $DB;
 
+        $coursecustomfields = CustomfieldsCourse::get_apsolu_courses_custom_fields();
+
         // Récupère tous les utilisateurs inscrits à au moins un créneau.
         $sql = "SELECT DISTINCT u.id, u.firstname, u.lastname, u.idnumber, u.email
                   FROM {user} u
@@ -295,7 +298,14 @@ class notify extends \local_apsolu_notification_form {
         if (isset($data->locations) === true && count($data->locations) > 0) {
             [$insql, $namedparams] = $DB->get_in_or_equal($data->locations, SQL_PARAMS_NAMED, 'locationid_');
 
-            $conditions[] = 'ac.locationid ' . $insql;
+            $locationid = 0;
+            if (is_numeric($coursecustomfields['location']->id) === true) {
+                $locationid = $coursecustomfields['location']->id;
+            }
+
+            $sql .= " JOIN {customfield_data} cd1 ON c.id = cd1.instanceid AND cd1.fieldid = " . $locationid;
+
+            $conditions[] = 'cd1.intvalue ' . $insql;
             $params = array_merge($params, $namedparams);
         }
 
@@ -303,7 +313,13 @@ class notify extends \local_apsolu_notification_form {
         if (isset($data->cities) === true && count($data->cities) > 0) {
             [$insql, $namedparams] = $DB->get_in_or_equal($data->cities, SQL_PARAMS_NAMED, 'cityid_');
 
-            $sql .= " JOIN {apsolu_locations} al ON al.id = ac.locationid
+            $locationid = 0;
+            if (is_numeric($coursecustomfields['location']->id) === true) {
+                $locationid = $coursecustomfields['location']->id;
+            }
+
+            $sql .= " JOIN {customfield_data} cd2 ON c.id = cd2.instanceid AND cd2.fieldid = " . $locationid . "
+                      JOIN {apsolu_locations} al ON al.id = cd2.intvalue
                       JOIN {apsolu_areas} aa ON aa.id = al.areaid";
             $conditions[] = 'aa.cityid ' . $insql;
             $params = array_merge($params, $namedparams);
