@@ -594,3 +594,7 @@ select.tablesorter-filter {
 .capitalize:first-letter {
     text-transform: capitalize;
 }
+
+#page-my-index:has(#globaloverviewnotallowed) a[href$='apsolu/enrol/select/overview.php'] {
+    display: none;
+}
