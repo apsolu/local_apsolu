@@ -595,6 +595,7 @@ select.tablesorter-filter {
     text-transform: capitalize;
 }
 
-#page-my-index:has(#globaloverviewnotallowed) a[href$='apsolu/enrol/select/overview.php'] {
-    display: none;
+.custom-alert-header a.btn {
+    color: var(--bs-btn-color);
+    font-weight: var(--bs-btn-font-weight);
 }
