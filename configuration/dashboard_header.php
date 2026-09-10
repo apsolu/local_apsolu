@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Page permettant de modifier le bandeau d'informations au-dessus de la page d'inscription.
+ * Page permettant de modifier le bandeau d'informations au-dessus du tableau de bord.
  *
  * @package    local_apsolu
  * @copyright  2026 Université Rennes 2
@@ -28,16 +28,18 @@ require_once($CFG->dirroot . '/local/apsolu/configuration/header_message_form.ph
 
 // Build form.
 $defaults = new stdClass();
-$defaults->apsoluheaderactive = get_config('local_apsolu', 'apsoluoverviewheaderactive');
-$defaults->apsoluheaderstyle = get_config('local_apsolu', 'apsoluoverviewheaderstyle');
+$defaults->apsoluheaderactive = get_config('local_apsolu', 'apsoludashboardheaderactive');
+$defaults->apsoluheaderstyle = get_config('local_apsolu', 'apsoludashboardheaderstyle');
+$headercontent = get_config('local_apsolu', 'apsoludashboardheadercontent');
 if (empty($headercontent) !== true) {
     $defaults->apsoluheadercontent = ['text' => $headercontent, 'format' => 1];
 } else {
     $defaults->apsoluheadercontent = null;
 }
-$defaults->apsoluheaderdismiss = get_config('local_apsolu', 'apsoluoverviewheaderdismiss');
+$defaults->apsoluheadercontent = ['text' => get_config('local_apsolu', 'apsoludashboardheadercontent'), 'format' => 1];
+$defaults->apsoluheaderdismiss = get_config('local_apsolu', 'apsoludashboardheaderdismiss');
 
-$customdata = [$defaults, 'overviewheader'];
+$customdata = [$defaults, 'dashboardheader'];
 $mform = new local_apsolu_header_form(null, $customdata);
 
 $notification = '';
@@ -47,37 +49,37 @@ if ($data = $mform->get_data()) {
     }
 
     if ($data->apsoluheaderactive != $defaults->apsoluheaderactive) {
-        add_to_config_log('apsoluoverviewheaderactive', $defaults->apsoluheaderactive, $data->apsoluheaderactive, 'local_apsolu');
-        set_config('apsoluoverviewheaderactive', $data->apsoluheaderactive, 'local_apsolu');
+        add_to_config_log('apsoludashboardheaderactive', $defaults->apsoluheaderactive, $data->apsoluheaderactive, 'local_apsolu');
+        set_config('apsoludashboardheaderactive', $data->apsoluheaderactive, 'local_apsolu');
     }
 
     if ($data->apsoluheaderstyle != $defaults->apsoluheaderstyle) {
-        add_to_config_log('apsoluoverviewheaderstyle', $defaults->apsoluheaderstyle, $data->apsoluheaderstyle, 'local_apsolu');
-        set_config('apsoluoverviewheaderstyle', $data->apsoluheaderstyle, 'local_apsolu');
+        add_to_config_log('apsoludashboardheaderstyle', $defaults->apsoluheaderstyle, $data->apsoluheaderstyle, 'local_apsolu');
+        set_config('apsoludashboardheaderstyle', $data->apsoluheaderstyle, 'local_apsolu');
     }
 
     if ($data->apsoluheaderdismiss != $defaults->apsoluheaderdismiss) {
         add_to_config_log(
-            'apsoluoverviewheaderdismiss',
+            'apsoludashboardheaderdismiss',
             $defaults->apsoluheaderdismiss,
             $data->apsoluheaderdismiss,
             'local_apsolu'
         );
-        set_config('apsoluoverviewheaderdismiss', $data->apsoluheaderdismiss, 'local_apsolu');
+        set_config('apsoludashboardheaderdismiss', $data->apsoluheaderdismiss, 'local_apsolu');
     }
 
     if ($data->apsoluheadercontent['text'] != $defaults->apsoluheadercontent['text']) {
         $oldvalue = $defaults->apsoluheadercontent['text'];
         $newvalue = $data->apsoluheadercontent['text'];
-        add_to_config_log('apsoluoverviewheadercontent', $oldvalue, $newvalue, 'local_apsolu');
-        set_config('apsoluoverviewheadercontent', $data->apsoluheadercontent['text'], 'local_apsolu');
+        add_to_config_log('apsoludashboardheadercontent', $oldvalue, $newvalue, 'local_apsolu');
+        set_config('apsoludashboardheadercontent', $data->apsoluheadercontent['text'], 'local_apsolu');
     }
 
     $notification = $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
 }
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('enrol_overview_message', 'local_apsolu'));
+echo $OUTPUT->heading(get_string('dashboard_message', 'local_apsolu'));
 echo $notification;
 $mform->display();
 echo $OUTPUT->footer();

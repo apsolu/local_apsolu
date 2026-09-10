@@ -39,6 +39,7 @@ class local_apsolu_header_form extends moodleform {
         // Active.
         $mform->addElement('selectyesno', 'apsoluheaderactive', get_string('enable_header_message', 'local_apsolu'));
         $mform->setType('apsoluheaderactive', PARAM_INT);
+        $mform->addHelpButton('apsoluheaderactive', $page, 'local_apsolu');
 
         // Stylage de l'entete.
         $stylearray = [

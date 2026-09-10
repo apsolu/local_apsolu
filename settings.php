@@ -332,19 +332,33 @@ if ($hassiteconfig || has_any_capability($capabilities, context_system::instance
         new admin_externalpage('local_apsolu_configuration_course_offerings', $str, $url, $capabilities)
     );
 
-    // Présentation > Message d'entête.
+    // Présentation > Bandeaux personnalisés.
+    $ADMIN->add(
+        'local_apsolu_appearance',
+        new admin_category('local_apsolu_appearance_headers', get_string('headers', 'local_apsolu'))
+    );
+
+    // Présentation > Bandeaux personnalisés > Message d'entête.
     $str = get_string('header_message', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'headermessage']);
     $ADMIN->add(
-        'local_apsolu_appearance',
+        'local_apsolu_appearance_headers',
         new admin_externalpage('local_apsolu_configuration_header_message', $str, $url, $capabilities)
     );
 
-    // Présentation > Bandeau d'information au-dessus des inscriptions.
+    // Présentation > Bandeaux personnalisés > Message du tableau de bord.
+    $str = get_string('dashboard_message', 'local_apsolu');
+    $url = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'dashboardheader']);
+    $ADMIN->add(
+        'local_apsolu_appearance_headers',
+        new admin_externalpage('local_apsolu_configuration_dashboard_header', $str, $url, $capabilities)
+    );
+
+    // Présentation > Bandeaux personnalisés > Informations préalables aux inscriptions.
     $str = get_string('enrol_overview_message', 'local_apsolu');
     $url = new moodle_url('/local/apsolu/configuration/index.php', ['page' => 'overviewheader']);
     $ADMIN->add(
-        'local_apsolu_appearance',
+        'local_apsolu_appearance_headers',
         new admin_externalpage('local_apsolu_configuration_enrol_overview_header', $str, $url, $capabilities)
     );
 

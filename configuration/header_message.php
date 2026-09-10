@@ -30,7 +30,11 @@ require_once($CFG->dirroot . '/local/apsolu/configuration/header_message_form.ph
 $defaults = new stdClass();
 $defaults->apsoluheaderactive = get_config('local_apsolu', 'apsoluheaderactive');
 $defaults->apsoluheaderstyle = get_config('local_apsolu', 'apsoluheaderstyle');
-$defaults->apsoluheadercontent = ['text' => get_config('local_apsolu', 'apsoluheadercontent'), 'format' => 1];
+if (empty($headercontent) !== true) {
+    $defaults->apsoluheadercontent = ['text' => $headercontent, 'format' => 1];
+} else {
+    $defaults->apsoluheadercontent = null;
+}
 
 $customdata = [$defaults, 'headermessage'];
 $mform = new local_apsolu_header_form(null, $customdata);
