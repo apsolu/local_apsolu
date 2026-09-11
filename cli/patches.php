@@ -26,10 +26,43 @@
 
 define('CLI_SCRIPT', true);
 
+use local_apsolu\core\attendancesession;
+use local_apsolu\core\course;
+
 require(__DIR__ . '/../../../config.php');
 
 try {
     $dbman = $DB->get_manager();
+
+    // Renomme le nom des sessions des cours.
+    $courseid = null;
+
+    $courses = Course::get_records();
+    foreach (Attendancesession::get_records($conditions = null, $sort = 'courseid, sessiontime') as $session) {
+        if (isset($courses[$session->courseid]) === false) {
+            continue;
+        }
+
+        if ($courseid !== $session->courseid) {
+            // Initialise le compteur de sessions du cours.
+            $count = 0;
+            $courseid = $session->courseid;
+        }
+
+        if (empty($session->duration) === true) {
+            $session->duration = 1;
+        }
+
+        $count++;
+        $oldname = $session->name;
+
+        $session->set_name($count, $courses[$session->courseid]);
+        if ($oldname === $session->name) {
+            continue;
+        }
+
+        $session->save();
+    }
 
     mtrace(get_string('success'));
 } catch (Exception $exception) {

@@ -999,7 +999,7 @@ class course extends record {
             $sessionid = $session->id;
             $sessionname = $session->name;
 
-            $session->set_name($count);
+            $session->set_name($count, $this);
 
             if ($sessionid !== 0 && $sessionname === $session->name && $session->locationid === $locationid) {
                 // La session n'est pas nouvelle, le nom et le lieu sont identiques.
