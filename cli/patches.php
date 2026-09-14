@@ -50,7 +50,8 @@ try {
         }
 
         if (empty($session->duration) === true) {
-            $session->duration = 1;
+            // La session n'a pas une durée valide.
+            continue;
         }
 
         $count++;
