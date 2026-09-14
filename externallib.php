@@ -469,7 +469,7 @@ class local_apsolu_webservices extends external_api {
                                 aa.cityid, aci.name AS city,
                                 ap.id AS periodid, ap.generic_name AS period
                  FROM {course} c
-                 JOIN {customfield_data} cd1 ON c.id = cd1.instanceid AND cd1.intvalue = 1 AND cd.fieldid = :customfieldtypeid
+                 JOIN {customfield_data} cd1 ON c.id = cd1.instanceid AND cd1.intvalue = 1 AND cd1.fieldid = :customfieldtypeid
                  JOIN {course_categories} cc ON cc.id = c.category
                  JOIN {apsolu_courses_categories} acc ON acc.id = cc.id
                  JOIN {course_categories} cc0 ON cc0.id = cc.parent
@@ -488,7 +488,7 @@ class local_apsolu_webservices extends external_api {
                 WHERE cc0.visible = 1
                   AND cc.visible = 1
                   AND c.visible = 1
-             ORDER BY domain, sport, numweekday, starttime, event";
+             ORDER BY domain, sport, numweekday, timerange, event";
         $params = [
             'customfieldtypeid' => $coursecustomfields['type']->id,
             'customfieldskillid' => $coursecustomfields['skill']->id,
@@ -498,7 +498,7 @@ class local_apsolu_webservices extends external_api {
             'customfieldcategory' => $coursecustomfields['category']->id,
             'customfieldlocationid' => $coursecustomfields['location']->id,
             ];
-        foreach ($DB->get_records_sql($sql) as $course) {
+        foreach ($DB->get_records_sql($sql, $params) as $course) {
             $timerange = json_decode($course->timerange, $associative = true);
 
             $course->courseid = $course->id;
