@@ -287,6 +287,25 @@ class coursetype extends record {
         // Vide le cache des cours.
         Course::purge_cache();
 
+        // Recalcule le nom des cours.
+        $courses = $DB->get_records('course');
+        foreach (Course::get_records_by_course_type($this->id) as $course) {
+            if (isset($courses[$course->id]) === false) {
+                continue;
+            }
+
+            $data = $course->get_course_data();
+            $fullname = Course::get_fullname($data);
+
+            if ($course->fullname === $fullname) {
+                continue;
+            }
+
+            $courses[$course->id]->fullname = $fullname;
+            $courses[$course->id]->shortname = Course::get_shortname($course->id, $fullname);
+            $DB->update_record('course', $courses[$course->id]);
+        }
+
         // Valide la transaction en cours.
         if (isset($transaction) === true) {
             $transaction->allow_commit();
