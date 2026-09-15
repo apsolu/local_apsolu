@@ -42,12 +42,6 @@ $pages['roles'] = 'roles';
 $pages['specialcourses'] = 'special_courses';
 $pages['exportsettings'] = 'export_settings';
 
-$tabtree = [];
-foreach ($pages as $pagename => $name) {
-    $url = new moodle_url('/local/apsolu/index.php', ['page' => $pagename]);
-    $tabtree[] = new tabobject($name, $url, get_string($name, 'local_apsolu'));
-}
-
 // Set default tabs.
 if (isset($pages[$page]) === false) {
     $page = $pages['calendars'];
