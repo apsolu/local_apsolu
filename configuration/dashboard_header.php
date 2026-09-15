@@ -36,7 +36,6 @@ if (empty($headercontent) !== true) {
 } else {
     $defaults->apsoluheadercontent = null;
 }
-$defaults->apsoluheadercontent = ['text' => get_config('local_apsolu', 'apsoludashboardheadercontent'), 'format' => 1];
 $defaults->apsoluheaderdismiss = get_config('local_apsolu', 'apsoludashboardheaderdismiss');
 
 $customdata = [$defaults, 'dashboardheader'];
