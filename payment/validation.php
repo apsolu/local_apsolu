@@ -134,42 +134,45 @@ foreach ($paymentcenters as $centerid => $paymentcenter) {
     if ($paymentcenter->due_amount > 0) {
         $transaction = $DB->start_delegated_transaction();
 
-        // On récupère ou on crée l'enregistrement de paiement principal (mdl_apsolu_payments).
-        $payment = $DB->get_record('apsolu_payments', [
-            'userid' => $USER->id,
-            'paymentcenterid' => $paymentcenter->id,
-            'status' => 0,
-        ], '*', IGNORE_MULTIPLE);
+        if (true) {
+            // Atouts Normandie est activé.
+            // On récupère ou on crée l'enregistrement de paiement principal (mdl_apsolu_payments).
+            $payment = $DB->get_record('apsolu_payments', [
+                'userid' => $USER->id,
+                'paymentcenterid' => $paymentcenter->id,
+                'status' => 0,
+            ], '*', IGNORE_MULTIPLE);
 
-        if (!$payment) {
-            // Création si inexistant.
-            $payment = new \stdClass();
-            $payment->method = 'paybox';
-            $payment->source = 'apsolu';
-            $payment->amount = $paymentcenter->due_amount;
-            $payment->status = 0;
-            $payment->timecreated = core_date::strftime('%FT%T');
-            $payment->timemodified = $payment->timecreated;
-            $payment->userid = $USER->id;
-            $payment->paymentcenterid = $paymentcenter->id;
-            $payment->id = $DB->insert_record('apsolu_payments', $payment);
-        } else {
-            // Mise à jour du montant si le panier a changé.
-            $payment->amount = $paymentcenter->due_amount;
-            $payment->timemodified = core_date::strftime('%FT%T');
-            $DB->update_record('apsolu_payments', $payment);
+            if (!$payment) {
+                // Création si inexistant.
+                $payment = new \stdClass();
+                $payment->method = 'paybox';
+                $payment->source = 'apsolu';
+                $payment->amount = $paymentcenter->due_amount;
+                $payment->status = 0;
+                $payment->timecreated = core_date::strftime('%FT%T');
+                $payment->timemodified = $payment->timecreated;
+                $payment->userid = $USER->id;
+                $payment->paymentcenterid = $paymentcenter->id;
+                $payment->id = $DB->insert_record('apsolu_payments', $payment);
+            } else {
+                // Mise à jour du montant si le panier a changé.
+                $payment->amount = $paymentcenter->due_amount;
+                $payment->timemodified = core_date::strftime('%FT%T');
+                $DB->update_record('apsolu_payments', $payment);
 
-            // Nettoyage des anciens items pour les recréer proprement.
-            $DB->delete_records('apsolu_payments_items', ['paymentid' => $payment->id]);
-        }
+                // Nettoyage des anciens items pour les recréer proprement.
+                $DB->delete_records('apsolu_payments_items', ['paymentid' => $payment->id]);
+            }
 
-        // GESTION ATOUTS NORMANDIE.
-        // On cherche une réduction Atouts (status 0 ou 1) liée à cet ID de paiement.
-        $atoutrecord = $DB->get_record('apsolu_atouts_payments', ['paymentid' => $payment->id]);
+            // GESTION ATOUTS NORMANDIE.
+            // On cherche une réduction Atouts (status 0 ou 1) liée à cet ID de paiement.
+            $atoutrecord = $DB->get_record('apsolu_atouts_payments', ['paymentid' => $payment->id]);
 
-        $atoutdeduction = 0;
-        if ($atoutrecord) {
-            $atoutdeduction = $atoutrecord->amount;
+            $atoutdeduction = 0;
+            if ($atoutrecord) {
+                $atoutdeduction = $atoutrecord->amount;
+            }
         }
 
         // Calcul du reliquat pour la Carte Bancaire (Paybox).
