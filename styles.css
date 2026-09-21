@@ -599,3 +599,10 @@ select.tablesorter-filter {
     color: var(--bs-btn-color);
     font-weight: var(--bs-btn-font-weight);
 }
+
+/* Solution temporaire en attendant la résolution du bug MDL-85523. */
+#page-local-apsolu-attendance-index table tbody th,
+#page-local-apsolu-attendance-index table tbody td {
+    background-color: var(--bs-table-bg) !important; /* stylelint-disable-line declaration-no-important */
+}
+/* Fin de la solution temporaire en attendant la résolution du bug MDL-85523. */
