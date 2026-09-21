@@ -146,7 +146,7 @@ class coursetype extends record {
             $fields['skill']
         );
         $record->color = '#f66151';
-        $record->sortorder = 1;
+        $record->sortorder = 0;
         if ($DB->get_record('apsolu_courses_types', ['shortname' => $record->shortname]) === false) {
             $DB->insert_record('apsolu_courses_types', $record);
         }
