@@ -50,10 +50,13 @@ if ($sessionid !== 0) {
 if (empty($session->id) === true) {
     $apsolucourse = Course::get_record(['id' => $courseid], $fields = '*', MUST_EXIST);
 
-    $sessions = $DB->get_records('apsolu_attendance_sessions', ['courseid' => $courseid]);
-    $name = 'Cours n°' . (count($sessions) + 1);
+    $countsessions = 0;
+    if (empty($apsolucourse->customfields['period']->get_value()) === false) {
+        // Si le cours est associé à une période, on affiche le numéro de session.
+        $countsessions = $DB->count_records('apsolu_attendance_sessions', ['courseid' => $courseid]) + 1;
+    }
 
-    $session->name = $name;
+    $session->set_name($countsessions, $apsolucourse);
     $session->sessiontime = 0;
     $session->duration = 0;
     if (isset($apsolucourse->customfields['timerange']) === true) {
