@@ -66,7 +66,7 @@ if (empty($session->id) === true) {
         }
     }
     $session->courseid = $course->id;
-    $session->locationid = $apsolucourse->locationid;
+    $session->locationid = $apsolucourse->customfields['location']->get_value();
 }
 
 // Load locations.
