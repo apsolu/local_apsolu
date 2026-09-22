@@ -328,9 +328,6 @@ class attendancesession extends record {
      * @return void
      */
     public function set_name(int $count, ?Course $course) {
-        $params = new stdClass();
-        $params->count = $count;
-
         $type = null;
         if (isset($course->customfields['type']) === true) {
             $type = $course->customfields['type']->export_value();
@@ -341,16 +338,23 @@ class attendancesession extends record {
             $activity = $course->customfields['category']->get_apsolu_category_name();
         }
 
+        $params = new stdClass();
+        $params->count = $count;
+        $params->activity = $activity;
+        $params->type = $type;
+
         if ($activity === null || $type === null) {
             // Exemple de format utilisé : Cours n°2 du mercredi 12 septembre à 18h30.
             $params->strdatetime = userdate($this->sessiontime, get_string('strftimedaydatetime'));
 
             $this->name = get_string('session_:count:_of_the_:strdatetime:', 'local_apsolu', $params);
+        } else if (empty($count) === true) {
+            // Exemple de format utilisé : Basket-ball - Cours.
+            unset($params->count);
+
+            $this->name = get_string('session_:activity:_:type:', 'local_apsolu', $params);
         } else {
             // Exemple de format utilisé : Basket-ball - Cours - Session n°2.
-            $params->activity = $activity;
-            $params->type = $type;
-
             $this->name = get_string('session_:activity:_:type:_:count:', 'local_apsolu', $params);
         }
     }

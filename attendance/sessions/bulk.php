@@ -193,14 +193,7 @@ if ($mdata = $mform->get_data()) {
 
             // Génère une nouvelle session pour l'afficher dans le message d'aperçu ou l'enregistrer.
             $session = new AttendanceSession();
-            $session->name = get_string(
-                'session_from_the_X_to_the_Y',
-                'local_apsolu',
-                [
-                    'starttime' => userdate($sessiontime, get_string('strftimedatetimefrom', 'local_apsolu')),
-                    'endtime' => userdate($sessiontime + $mdata->duration, get_string('strftimetime', 'local_apsolu')),
-                ]
-            );
+            $session->set_name(0, $apsolucourse);
             $session->sessiontime = $sessiontime;
             $session->duration = $mdata->duration;
             $session->locationid = $mdata->locationid;
