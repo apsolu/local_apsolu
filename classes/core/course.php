@@ -1075,15 +1075,14 @@ class course extends record {
                 }
 
                 // Traite les autres champs.
-                if ($field === 'weekday') {
-                    $value1 = $a->customfields[$field]->get_value() ?? '';
-                    $value2 = $b->customfields[$field]->get_value() ?? '';
+                if (method_exists($a->customfields[$field], 'compare_with') === true) {
+                    $return = $a->customfields[$field]->compare_with($b->customfields[$field]);
                 } else {
                     $value1 = $a->customfields[$field]->export_value() ?? '';
                     $value2 = $b->customfields[$field]->export_value() ?? '';
-                }
 
-                $return = strcoll($value1, $value2);
+                    $return = strcoll($value1, $value2);
+                }
 
                 if ($return !== 0) {
                     return $return;
