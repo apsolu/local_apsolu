@@ -89,11 +89,13 @@ if ($mdata = $mform->get_data()) {
     $sessions = [];
 
     // Calcule l'intervalle de début et de fin pour ajouter des sessions.
-    $startdate = $mdata->startdate;
+    $startdate = new DateTime();
+    $startdate->setTimestamp($mdata->startdate);
     if (empty($mdata->enddate) === true) {
-        $enddate = $startdate;
+        $enddate = clone $startdate;
     } else {
-        $enddate = $mdata->enddate;
+        $enddate = new DateTime();
+        $enddate->setTimestamp($mdata->enddate);
     }
 
     // Calcule les jours.
@@ -119,12 +121,12 @@ if ($mdata = $mform->get_data()) {
     }
 
     // Calcule les sessions à ajouter.
-    $n = date('w', $startdate);
+    $n = date('w', $startdate->getTimestamp());
     while ($startdate <= $enddate) {
         if ($days[$n] === 0) {
             // Si le jour de la session n'est pas sélectionné, on passe au jour suivant.
             $n++;
-            $startdate += DAYSECS;
+            $startdate->add(new DateInterval('P1D'));
 
             if ($n === 7) {
                 $n = 0;
@@ -132,9 +134,10 @@ if ($mdata = $mform->get_data()) {
             continue;
         }
 
-        $startdatetime = $startdate + ($mdata->starthour * HOURSECS) + ($mdata->startminute * MINSECS);
+        $startdatetime = clone $startdate;
+        $startdatetime->add(new DateInterval('PT' . ($mdata->starthour * HOURSECS) + ($mdata->startminute * MINSECS) . 'S'));
         for ($i = 0; $i < $mdata->count; $i++) {
-            $sessiontime = $startdatetime + ($i * $mdata->duration + $i * $mdata->breakduration);
+            $sessiontime = $startdatetime->getTimestamp() + ($i * $mdata->duration + $i * $mdata->breakduration);
 
             $day = date('Ymd', $sessiontime);
             if (isset($holidays[$day]) === true) {
@@ -207,7 +210,7 @@ if ($mdata = $mform->get_data()) {
         }
 
         $n++;
-        $startdate += DAYSECS;
+        $startdate->add(new DateInterval('P1D'));
         if ($n === 7) {
             $n = 0;
         }
