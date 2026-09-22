@@ -1034,7 +1034,7 @@ class course extends record {
      */
     public static function sort(
         array $courses,
-        array $sortorder = ['category', 'weekday', 'daterange', 'timerange', 'location', 'skill']
+        array $sortorder = ['categoryname', 'daterange', 'weekday', 'timerange', 'location', 'skill']
     ): array {
         $GLOBALS['apsolu_sortorder'] = $sortorder;
         uasort($courses, function ($a, $b) {
