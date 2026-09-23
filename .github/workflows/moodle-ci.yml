@@ -108,10 +108,10 @@ jobs:
       #   MUSTACHE_IGNORE_NAMES: 'broken.mustache'
       - name: Install moodle-plugin-ci
         run: |
-          moodle-plugin-ci add-plugin --clone https://github.com/apsolu/block_apsolu_course.git
-          moodle-plugin-ci add-plugin --clone https://github.com/apsolu/block_apsolu_dashboard.git
-          moodle-plugin-ci add-plugin --clone https://github.com/apsolu/enrol_select.git
-          moodle-plugin-ci add-plugin --clone https://github.com/apsolu/theme_apsolu.git
+          moodle-plugin-ci add-plugin --clone https://github.com/apsolu/moodle-block_apsolu_course.git
+          moodle-plugin-ci add-plugin --clone https://github.com/apsolu/moodle-block_apsolu_dashboard.git
+          moodle-plugin-ci add-plugin --clone https://github.com/apsolu/moodle-enrol_select.git
+          moodle-plugin-ci add-plugin --clone https://github.com/apsolu/moodle-theme_apsolu.git
           moodle-plugin-ci add-plugin --clone https://github.com/apsolu/moodle-customfield_apsolu_category.git
           moodle-plugin-ci add-plugin --clone https://github.com/apsolu/moodle-customfield_apsolu_course_type.git
           moodle-plugin-ci add-plugin --clone https://github.com/apsolu/moodle-customfield_apsolu_location.git
