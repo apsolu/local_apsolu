@@ -34,6 +34,29 @@ require(__DIR__ . '/../../../config.php');
 try {
     $dbman = $DB->get_manager();
 
+    // Ajoute un champ "manual" à la table "apsolu_attendance_sessions".
+    $table = new xmldb_table('apsolu_attendance_sessions');
+
+    $nullable = null;
+    $sequence = null;
+    $default = 0;
+    $previous = 'duration';
+    $field = new xmldb_field('manual', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, $nullable, $sequence, $default, $previous);
+
+    if ($dbman->field_exists($table, $field) === false) {
+        $dbman->add_field($table, $field);
+    }
+
+    // Initialise la colonne "manual" pour les sessions qui n'ont pas été créée automatiquement.
+    foreach ($DB->get_records('apsolu_attendance_sessions') as $session) {
+        if (str_starts_with($session->name, 'Session du ') === false && preg_match('/^Cours n°[0-9]+$/', $session->name) !== 1) {
+            continue;
+        }
+
+        $session->manual = 1;
+        $DB->update_record('apsolu_attendance_sessions', $session);
+    }
+
     // Renomme le nom des sessions des cours.
     $courseid = null;
 
@@ -51,6 +74,11 @@ try {
 
         if (empty($session->duration) === true) {
             // La session n'a pas une durée valide.
+            continue;
+        }
+
+        if (empty($session->manual) === false) {
+            // La session a été créée manuellement.
             continue;
         }
 

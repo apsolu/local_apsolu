@@ -981,6 +981,12 @@ class course extends record {
                 continue;
             }
 
+            if (empty($session->manual) === false) {
+                // On conserve toutes les sessions créées manuellement.
+                $sessions[$sessiontime] = $session;
+                continue;
+            }
+
             // Toutes les autres sessions, on les supprime.
             $session->delete();
         }
@@ -993,6 +999,11 @@ class course extends record {
 
             if ($session->has_started() === true && $createpastsessions === false) {
                 // On ne modifie jamais les sessions passées.
+                continue;
+            }
+
+            if (empty($session->manual) === false) {
+                // On ne modifie jamais les sessions créées manuellement.
                 continue;
             }
 
