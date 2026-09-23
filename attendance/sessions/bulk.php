@@ -196,6 +196,7 @@ if ($mdata = $mform->get_data()) {
             $session->set_name(0, $apsolucourse);
             $session->sessiontime = $sessiontime;
             $session->duration = $mdata->duration;
+            $session->manual = 1;
             $session->locationid = $mdata->locationid;
             $session->courseid = $apsolucourse->id;
 

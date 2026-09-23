@@ -47,6 +47,9 @@ class attendancesession extends record {
     /** @var int|string $duration Durée en secondes de la session. */
     public $duration = '';
 
+    /** @var int|string $manual Détermine si la session a été créée manuellement ou automatiquement. */
+    public $manual = 0;
+
     /** @var int|string $courseid Identifiant du cours auquel est rattachée la session. */
     public $courseid = '';
 

@@ -981,6 +981,12 @@ class course extends record {
                 continue;
             }
 
+            if (empty($session->manual) === false) {
+                // On conserve toutes les sessions créées manuellement.
+                $sessions[$sessiontime] = $session;
+                continue;
+            }
+
             // Toutes les autres sessions, on les supprime.
             $session->delete();
         }
@@ -989,6 +995,12 @@ class course extends record {
         $count = 0;
         ksort($sessions);
         foreach ($sessions as $sessiontime => $session) {
+            if (empty($session->manual) === false) {
+                // On ne modifie jamais les sessions créées manuellement.
+                // De plus, ces sessions ne sont pas prises en compte dans le calcul du numéro de session.
+                continue;
+            }
+
             $count++;
 
             if ($session->has_started() === true && $createpastsessions === false) {

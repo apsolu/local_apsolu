@@ -59,6 +59,7 @@ if (empty($session->id) === true) {
     $session->set_name($countsessions, $apsolucourse);
     $session->sessiontime = 0;
     $session->duration = 0;
+    $session->manual = 1;
     if (isset($apsolucourse->customfields['timerange']) === true) {
         $time = json_decode($apsolucourse->customfields['timerange']->get_value(), $associative = true);
         if (isset($time['start'], $time['end']) === true) {
