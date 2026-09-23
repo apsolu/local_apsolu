@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/apsolu/local_apsolu/actions/workflows/moodle-ci.yml/badge.svg?branch=main)](https://github.com/apsolu/local_apsolu/actions)
 [![Coverage Status](https://coveralls.io/repos/github/apsolu/local_apsolu/badge.svg?branch=main)](https://coveralls.io/github/apsolu/local_apsolu?branch=main)
-[![Moodle Status](https://img.shields.io/badge/moodle-5.0-blue)](https://moodle.org)
+[![Moodle Status](https://img.shields.io/badge/moodle-5.2-blue)](https://moodle.org)
 
 
 ## Description
@@ -22,7 +22,7 @@ Module principal d'APSOLU permettant de piloter l'ensemble des fonctionnalités.
 
 ```bash
 cd /your/moodle/path
-git clone https://github.com/apsolu/local_apsolu local/apsolu
+git clone https://github.com/apsolu/moodle-local_apsolu local/apsolu
 php admin/cli/upgrade.php
 ```
 

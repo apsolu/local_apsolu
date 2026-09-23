@@ -25,9 +25,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 // The current plugin version (Date: YYYYMMDDXX).
-$plugin->version = 2026083100;
+$plugin->version = 2026092300;
 
-$plugin->release = '5.2.2';
+$plugin->release = '5.2.3';
 
 // Requires Moodle 5.2.0.
 $plugin->requires = 2026042000;
@@ -43,12 +43,12 @@ $plugin->supported = [502, 502];
 
 // Dependencies on another plugin.
 $plugin->dependencies = [
-    'customfield_apsolu_category' => '2021051700',
-    'customfield_apsolu_course_type' => '2021051700',
-    'customfield_apsolu_location' => '2021051700',
-    'customfield_apsolu_period' => '2021051700',
-    'customfield_apsolu_skill' => '2021051700',
-    'customfield_daterange' => '2021051700',
-    'customfield_timerange' => '2021051700',
-    'customfield_weekday' => '2021051700',
+    'customfield_apsolu_category' => '2026092300',
+    'customfield_apsolu_course_type' => '2026092300',
+    'customfield_apsolu_location' => '2026092300',
+    'customfield_apsolu_period' => '2026092300',
+    'customfield_apsolu_skill' => '2026092300',
+    'customfield_daterange' => '2026092300',
+    'customfield_timerange' => '2026092300',
+    'customfield_weekday' => '2026092300',
 ];
