@@ -237,7 +237,6 @@ if (!empty($sessionid)) {
         $data->course = html_writer::link(new moodle_url('/course/view.php', ['id' => $course->id]), $course->fullname);
         $data->user = $isloggedin === true ? fullname($USER) : get_string('loggedinnot');
         $data->session = $session->name;
-        $data->sessiontime = $session->sessiontime;
 
         // Image du QR code et informations sur la session.
         $data->qrcodes = $qrcodesdata;

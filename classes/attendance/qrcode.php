@@ -393,6 +393,7 @@ class qrcode extends record {
         // Affichage du QR code.
         $data = new stdClass();
         $data->sessionname = $session->name;
+        $data->sessiontime = $session->sessiontime;
         $data->session = html_writer::link($sessionurl, $session->name);
         $data->image = implode(PHP_EOL, $lines);
         if (empty($CFG->debugdisplay) === false) {
