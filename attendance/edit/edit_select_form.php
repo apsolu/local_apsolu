@@ -51,7 +51,8 @@ class edit_select_form extends moodleform {
         // Sessions.
         $sessions = [];
         foreach ($this->_customdata['sessions'] as $session) {
-            $sessions[$session->id] = $session->name;
+            $sessiontime = userdate($session->sessiontime, get_string('strftimedatetimeshort', 'local_apsolu'));
+            $sessions[$session->id] = sprintf('%s - %s', $session->name, $sessiontime);
         }
         $mform->addElement('select', 'sessionid', get_string('attendance_select_session', 'local_apsolu'), $sessions);
         $mform->setType('sessionid', PARAM_INT);

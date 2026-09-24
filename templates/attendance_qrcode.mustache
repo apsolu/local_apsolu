@@ -54,19 +54,19 @@
     <p id="course-p" class="mv-2 row">{{{ course }}}</p>
     <div class='row grid-row'>
     {{# qrcodes }}
-    
+
         {{# multiple }}
         <div class="qrcode col-3">
         {{/ multiple}}
-    
+
         {{^ multiple}}
         <div class="qrcode col-sm">
         {{/ multiple}}
-        
-            <p class="session-p mt-0">{{{ session }}}</p>
+
+            <p class="session-p mt-0">{{{ session }}}<br>{{#userdate}}{{ sessiontime }}, {{#str}}strftimedatetimeshort, local_apsolu{{/str}}{{/userdate}}</p>
             <div class="qrcode-image">
                 {{# debugurl }}<a href="{{{ debugurl }}}">{{/ debugurl }}{{{ image }}}{{# debugurl }}</a>{{/ debugurl }}
-                
+
             </div>
             <span class="keycode-info">keycode= xxx{{ keycodeinfo }}</span>
 
@@ -95,6 +95,6 @@
         <dt>{{# str }}role, local_apsolu{{/ str }}</dt>
         <dd>{{ roles }}</dd>
     </dl>
-</div> 
+</div>
 
 {{/display_qrcode}}
